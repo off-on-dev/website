@@ -42,9 +42,19 @@ const LevelCard = ({ level }: { level: typeof ADVENTURES[0]["levels"][0] }) => {
       >
         Open in GitHub Codespaces →
       </a>
-      <p className="mt-3 text-xs text-[hsl(var(--text-faint))] font-mono">
-        Free GitHub account required · Environment provisions in ~60 seconds
-      </p>
+      <div className="mt-3 flex items-center justify-between">
+        <p className="text-xs text-[hsl(var(--text-faint))] font-mono">
+          Free GitHub account required · Environment provisions in ~60 seconds
+        </p>
+        <a
+          href={level.discussionUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs font-medium text-primary hover:underline"
+        >
+          Discussion →
+        </a>
+      </div>
     </div>
   );
 };
