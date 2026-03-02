@@ -2,7 +2,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const steps = [
   { num: "01", title: "Choose a challenge", desc: "Browse by difficulty tier — Starter, Builder, or Architect. Each challenge has a narrative, clear objectives, and estimated time." },
-  { num: "02", title: "Launch the environment", desc: "Interactive terminals and simulations run directly in your browser. No local setup, no cloud account. Just start debugging." },
+  { num: "02", title: "Launch the environment", desc: "Full cloud dev environment with VS Code, terminal, and all tools — powered by Gitpod. Just sign in with GitHub and go." },
   { num: "03", title: "Fix. Validate. Ship.", desc: "Work through the broken environment using real tools. Built-in validation tells you when you've nailed it." },
   { num: "04", title: "Share your approach", desc: "Post your solution in the community discussion below each challenge. Learn from how others solved the same problem differently." },
 ];

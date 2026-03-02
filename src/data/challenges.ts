@@ -4,10 +4,9 @@ export interface Challenge {
   subtitle: string;
   difficulty: "Starter" | "Builder" | "Architect";
   tags: string[];
-  type: "simulation" | "killercoda";
+  type: "simulation" | "interactive";
   simulationUrl?: string;
-  killercodaUrl?: string;
-  repoUrl?: string;
+  gitpodUrl?: string;
   completions: number;
   discussions: number;
   status: "live" | "coming_soon";
@@ -23,8 +22,8 @@ export const CHALLENGES: Challenge[] = [
     subtitle: "A deep space signal has gone silent. Can you restore the telemetry pipeline?",
     difficulty: "Starter",
     tags: ["Kubernetes", "Observability", "Prometheus"],
-    type: "simulation",
-    simulationUrl: "https://opensource-europe.org/challenges/echoes",
+    type: "interactive",
+    gitpodUrl: "https://gitpod.io/#https://github.com/open-ecosystem/echoes-lost-in-orbit",
     completions: 142,
     discussions: 23,
     status: "live",
@@ -43,9 +42,8 @@ export const CHALLENGES: Challenge[] = [
     subtitle: "A deployment went out. Nothing broke. Nothing works either.",
     difficulty: "Builder",
     tags: ["GitOps", "ArgoCD", "Helm"],
-    type: "killercoda",
-    killercodaUrl: "https://killercoda.com/open-ecosystem/scenario/silent-deploy",
-    repoUrl: "https://codespaces.new/open-ecosystem/silent-deploy?quickstart=1",
+    type: "interactive",
+    gitpodUrl: "https://gitpod.io/#https://github.com/open-ecosystem/the-silent-deploy",
     completions: 87,
     discussions: 15,
     status: "live",
@@ -84,9 +82,8 @@ export const CHALLENGES: Challenge[] = [
     subtitle: "Three clusters. Three different realities. One source of truth — supposedly.",
     difficulty: "Builder",
     tags: ["IaC", "Terraform", "Policy"],
-    type: "killercoda",
-    killercodaUrl: "https://killercoda.com/open-ecosystem/scenario/config-drift",
-    repoUrl: "https://codespaces.new/open-ecosystem/config-drift?quickstart=1",
+    type: "interactive",
+    gitpodUrl: "https://gitpod.io/#https://github.com/open-ecosystem/the-config-drift",
     completions: 63,
     discussions: 19,
     status: "live",
@@ -105,9 +102,8 @@ export const CHALLENGES: Challenge[] = [
     subtitle: "A CVE dropped at 3am. Your containers are affected. All of them.",
     difficulty: "Starter",
     tags: ["Security", "Container Scanning", "SBOM"],
-    type: "killercoda",
-    killercodaUrl: "https://killercoda.com/open-ecosystem/scenario/zero-day-morning",
-    repoUrl: "https://codespaces.new/open-ecosystem/zero-day-morning?quickstart=1",
+    type: "interactive",
+    gitpodUrl: "https://gitpod.io/#https://github.com/open-ecosystem/zero-day-morning",
     completions: 198,
     discussions: 32,
     status: "live",
