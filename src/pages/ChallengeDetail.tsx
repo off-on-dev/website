@@ -26,12 +26,16 @@ const EnvironmentTab = ({ challenge }: { challenge: typeof CHALLENGES[0] }) => {
             <span className="h-3 w-3 rounded-full bg-green-500/60" />
           </div>
           <span className="ml-2 flex-1 rounded-md bg-secondary/50 px-3 py-1 font-mono text-xs text-muted-foreground truncate">
-            {challenge.simulationUrl}
+            https://opensource-europe.org
           </span>
         </div>
-        <div className="flex h-80 items-center justify-center text-muted-foreground">
-          <p className="font-mono text-sm">Simulation iframe loads here</p>
-        </div>
+        <iframe
+          src="https://opensource-europe.org"
+          className="w-full border-0"
+          style={{ height: "600px" }}
+          allow="clipboard-write"
+          title="Simulation environment"
+        />
       </div>
     );
   }
