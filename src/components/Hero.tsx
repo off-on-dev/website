@@ -16,10 +16,12 @@ export const Hero = () => {
               </span>
             </div>
              <h1 className="animate-fade-up-delay-1 text-5xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl">
-               <span className="text-foreground">Learn platform engineering</span>
-               <br />
                <span className="bg-gradient-to-r from-primary via-teal to-[hsl(var(--purple))] bg-clip-text text-transparent">
-                 by breaking things.
+                 Break things.
+               </span>
+               <br />
+               <span className="text-foreground">
+                 Learn everything.
                </span>
              </h1>
             <p className="animate-fade-up-delay-2 mx-auto mt-6 max-w-xl text-lg leading-relaxed text-[hsl(var(--text-secondary))]">
