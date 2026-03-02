@@ -1,15 +1,13 @@
-import { Link } from "react-router-dom";
+import logoDark from "@/assets/logo-dark.png";
 
 export const Footer = () => {
   return (
     <footer className="border-t border-[hsl(var(--surface-border))] py-10 px-6">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 md:flex-row">
         <div className="flex items-center gap-3">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary/20 text-primary font-mono text-xs">
-            ⟐
-          </div>
+          <img src={logoDark} alt="Open Ecosystem" className="h-5" />
           <span className="text-sm text-muted-foreground">
-            Open Ecosystem · Vendor-neutral platform engineering education
+            · Vendor-neutral platform engineering education
           </span>
         </div>
         <div className="flex items-center gap-6 text-sm text-muted-foreground">
