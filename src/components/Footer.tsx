@@ -1,19 +1,27 @@
+import { useTheme } from "@/hooks/useTheme";
 import logoDark from "@/assets/logo-dark.png";
+import logoLight from "@/assets/logo-light.png";
 
 export const Footer = () => {
+  const { theme } = useTheme();
+
   return (
     <footer className="border-t border-[hsl(var(--surface-border))] py-10 px-6">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 md:flex-row">
         <div className="flex items-center gap-3">
-          <img src={logoDark} alt="Open Ecosystem" className="h-5" />
+          <img
+            src={theme === "dark" ? logoDark : logoLight}
+            alt="Open Ecosystem"
+            className="h-5"
+          />
           <span className="text-sm text-muted-foreground">
             · Vendor-neutral platform engineering education
           </span>
         </div>
         <div className="flex items-center gap-6 text-sm text-muted-foreground">
           <a href="https://community.open-ecosystem.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Community</a>
-           <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Challenges Repo</a>
-           <a href="https://github.com/dynatrace-oss/open-ecosystem-challenge-verifier" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Verifier</a>
+          <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Challenges Repo</a>
+          <a href="https://github.com/dynatrace-oss/open-ecosystem-challenge-verifier" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Verifier</a>
           <a href="#about" className="hover:text-foreground transition-colors">About</a>
         </div>
       </div>

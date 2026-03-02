@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root, .dark {
     --background: 240 20% 3%;
     --foreground: 240 5% 95%;
 
@@ -65,6 +65,66 @@
     --sidebar-accent-foreground: 240 5% 95%;
     --sidebar-border: 0 0% 100% / 0.05;
     --sidebar-ring: 160 60% 52%;
+  }
+
+  .light {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 10%;
+
+    --card: 240 5% 97%;
+    --card-foreground: 240 10% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 10%;
+
+    --primary: 160 60% 40%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 5% 92%;
+    --secondary-foreground: 240 5% 35%;
+
+    --muted: 240 5% 94%;
+    --muted-foreground: 240 4% 46%;
+
+    --accent: 160 60% 40%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 5% 87%;
+    --input: 240 5% 87%;
+    --ring: 160 60% 40%;
+
+    /* Custom tokens */
+    --text-primary: 240 10% 10%;
+    --text-secondary: 240 4% 40%;
+    --text-muted: 240 4% 50%;
+    --text-faint: 240 4% 65%;
+
+    --surface: 240 5% 96%;
+    --surface-border: 240 5% 90%;
+    --surface-hover: 240 5% 93%;
+
+    --emerald: 160 60% 40%;
+    --teal: 174 60% 40%;
+    --purple: 270 60% 50%;
+
+    --difficulty-starter: 160 60% 40%;
+    --difficulty-builder: 45 90% 45%;
+    --difficulty-architect: 0 75% 45%;
+
+    --type-simulation: 270 50% 45%;
+    --type-interactive: 160 60% 40%;
+
+    --sidebar-background: 240 5% 97%;
+    --sidebar-foreground: 240 10% 10%;
+    --sidebar-primary: 160 60% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 5% 92%;
+    --sidebar-accent-foreground: 240 10% 10%;
+    --sidebar-border: 240 5% 90%;
+    --sidebar-ring: 160 60% 40%;
   }
 }
 
@@ -143,9 +203,9 @@
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: hsl(240 20% 3%);
+  background: hsl(var(--background));
 }
 ::-webkit-scrollbar-thumb {
-  background: hsl(240 5% 20%);
+  background: hsl(var(--muted));
   border-radius: 3px;
 }
