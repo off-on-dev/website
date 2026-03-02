@@ -4,124 +4,87 @@ import { CHALLENGES } from "@/data/challenges";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
-const EnvironmentTab = ({ challenge }: { challenge: typeof CHALLENGES[0] }) => {
-  const [launched, setLaunched] = useState(false);
-  const [loading, setLoading] = useState(false);
+const GitpodEnvironment = ({ challenge }: { challenge: typeof CHALLENGES[0] }) => {
+  const features = [
+    { title: "VS Code in browser", desc: "Full editor with extensions" },
+    { title: "Pre-broken environment", desc: "Kubernetes cluster with the challenge scenario pre-loaded" },
+    { title: "Built-in validation", desc: "Run the verify script to check your solution" },
+    { title: "4 vCPUs · 16 GB RAM", desc: "Real compute, not a sandbox" },
+  ];
 
-  const handleLaunch = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setLaunched(true);
-    }, 2500);
-  };
-
-  if (challenge.type === "simulation") {
-    return (
-      <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] overflow-hidden">
-        <div className="flex items-center gap-2 border-b border-[hsl(var(--surface-border))] px-4 py-2">
-          <div className="flex gap-1.5">
-            <span className="h-3 w-3 rounded-full bg-red-500/60" />
-            <span className="h-3 w-3 rounded-full bg-yellow-500/60" />
-            <span className="h-3 w-3 rounded-full bg-green-500/60" />
-          </div>
-          <span className="ml-2 flex-1 rounded-md bg-secondary/50 px-3 py-1 font-mono text-xs text-muted-foreground truncate">
-            https://opensource-europe.org
-          </span>
-        </div>
-        <iframe
-          src="https://opensource-europe.org"
-          className="w-full border-0"
-          style={{ height: "600px" }}
-          allow="clipboard-write"
-          title="Simulation environment"
-        />
-      </div>
-    );
-  }
-
-  // Killercoda type
-  if (!launched) {
-    return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] py-20">
-        {loading ? (
-          <div className="flex flex-col items-center gap-4">
-            <div className="flex gap-1.5">
-              {[0, 1, 2].map((i) => (
-                <span key={i} className="h-2.5 w-2.5 rounded-full bg-primary" style={{ animation: `pulse-dot 1.2s ease-in-out ${i * 0.2}s infinite` }} />
-              ))}
-            </div>
-            <span className="font-mono text-sm text-muted-foreground">Starting Kubernetes cluster...</span>
-          </div>
-        ) : (
-          <>
-            <button
-              onClick={handleLaunch}
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-8 py-4 text-base font-medium text-primary-foreground transition-all hover:brightness-110"
-            >
-              ▶ Launch Environment
-            </button>
-            {challenge.repoUrl && (
-              <a
-                href={challenge.repoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                ↗ Prefer GitHub Codespaces?
-              </a>
-            )}
-          </>
-        )}
-      </div>
-    );
-  }
-
-  // Mock terminal UI
   return (
-    <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] overflow-hidden">
-      <div className="flex items-center justify-between border-b border-[hsl(var(--surface-border))] px-4 py-2">
-        <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-primary" />
-          <span className="font-mono text-xs text-primary">Running</span>
-        </div>
-        <div className="flex gap-2">
-          <button className="rounded-md border border-[hsl(var(--surface-border))] px-3 py-1 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors">Reset</button>
-          <button className="rounded-md border border-[hsl(var(--surface-border))] px-3 py-1 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors">Fullscreen</button>
-        </div>
+    <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-10 text-center">
+      <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/15 text-primary mx-auto mb-5 text-2xl">
+        ⟐
       </div>
-      <div className="grid md:grid-cols-2 min-h-[400px]">
-        <div className="border-r border-[hsl(var(--surface-border))] p-6">
-          <h4 className="font-mono text-xs uppercase tracking-widest text-primary mb-4">Mission Briefing</h4>
-          <p className="text-sm text-muted-foreground leading-relaxed mb-6">{challenge.narrative}</p>
-          <h4 className="font-mono text-xs uppercase tracking-widest text-primary mb-3">Objectives</h4>
-          <ul className="space-y-2">
-            {challenge.objectives.map((obj, i) => (
-              <li key={i} className="flex gap-2 text-sm text-muted-foreground">
-                <span className="font-mono text-xs text-[hsl(var(--text-faint))]">{String(i + 1).padStart(2, "0")}</span>
-                {obj}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="bg-[hsl(240,20%,4%)] p-4 font-mono text-xs">
-          <div className="text-muted-foreground">
-            <p className="text-primary">$ kubectl get pods -n monitoring</p>
-            <p className="mt-1">NAME                          READY   STATUS             RESTARTS   AGE</p>
-            <p>prometheus-server-0            1/1     Running            0          12m</p>
-            <p className="text-red-400">prometheus-adapter-6b8f7c     0/1     CrashLoopBackOff   4          12m</p>
-            <p>grafana-5d4c8b7f9-x2k4l      1/1     Running            0          12m</p>
-            <p className="mt-3 text-primary">$ kubectl logs prometheus-adapter-6b8f7c -n monitoring</p>
-            <p className="mt-1 text-red-400">Error: failed to load config: invalid metric relabeling configuration</p>
-            <p className="text-red-400">  at /etc/prometheus/rules/relabel.yaml:14</p>
-          </div>
-          <div className="mt-6 border-t border-[hsl(var(--surface-border))] pt-4 text-[hsl(var(--text-faint))]">
-            {`// Production: <iframe src="${challenge.killercodaUrl}" />`}
-          </div>
+      <h3 className="text-xl font-semibold text-foreground mb-2">Cloud Development Environment</h3>
+      <p className="text-sm text-muted-foreground max-w-md mx-auto mb-8">
+        Full VS Code editor with terminal, kubectl, and all tools pre-installed. 4 vCPUs, 16 GB RAM — powered by Gitpod.
+      </p>
+      <a
+        href={challenge.gitpodUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 rounded-lg bg-primary px-8 py-4 text-base font-medium text-primary-foreground transition-all hover:brightness-110"
+      >
+        Open in Gitpod →
+      </a>
+      <p className="mt-4 text-xs text-[hsl(var(--text-faint))] font-mono">
+        Requires a free GitHub account · Environment auto-provisions in ~30 seconds
+      </p>
+
+      <div className="mt-10 border-t border-[hsl(var(--surface-border))] pt-8">
+        <h4 className="font-mono text-xs uppercase tracking-widest text-primary mb-5">What you'll get</h4>
+        <div className="grid grid-cols-2 gap-4">
+          {features.map((f) => (
+            <div key={f.title} className="rounded-lg border border-[hsl(var(--surface-border))] bg-background p-4 text-left">
+              <span className="text-sm font-medium text-foreground">{f.title}</span>
+              <p className="mt-1 text-xs text-muted-foreground">{f.desc}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
+};
+
+const SimulationEnvironment = ({ challenge }: { challenge: typeof CHALLENGES[0] }) => (
+  <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] overflow-hidden">
+    <div className="flex items-center gap-2 border-b border-[hsl(var(--surface-border))] px-4 py-2">
+      <div className="flex gap-1.5">
+        <span className="h-3 w-3 rounded-full bg-red-500/60" />
+        <span className="h-3 w-3 rounded-full bg-yellow-500/60" />
+        <span className="h-3 w-3 rounded-full bg-green-500/60" />
+      </div>
+      <span className="ml-2 flex-1 rounded-md bg-secondary/50 px-3 py-1 font-mono text-xs text-muted-foreground truncate">
+        {challenge.simulationUrl}
+      </span>
+    </div>
+    <div className="flex flex-col items-center justify-center py-20">
+      <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-purple-500/15 text-purple-400 mx-auto mb-5 text-2xl">
+        ⚡
+      </div>
+      <h3 className="text-xl font-semibold text-foreground mb-2">Browser Simulation</h3>
+      <p className="text-sm text-muted-foreground max-w-md mx-auto mb-6">
+        This challenge runs as an interactive simulation directly in your browser.
+      </p>
+      <a
+        href={challenge.simulationUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 rounded-lg bg-purple-500 px-8 py-4 text-base font-medium text-white transition-all hover:brightness-110"
+      >
+        Launch Simulation →
+      </a>
+    </div>
+  </div>
+);
+
+const EnvironmentTab = ({ challenge }: { challenge: typeof CHALLENGES[0] }) => {
+  if (challenge.type === "interactive") {
+    return <GitpodEnvironment challenge={challenge} />;
+  }
+  return <SimulationEnvironment challenge={challenge} />;
 };
 
 const DiscussionTab = () => {
