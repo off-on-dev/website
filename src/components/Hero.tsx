@@ -16,16 +16,14 @@ export const Hero = () => {
               </span>
             </div>
              <h1 className="animate-fade-up-delay-1 text-5xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl">
-               <span className="bg-gradient-to-r from-primary via-teal to-[hsl(var(--purple))] bg-clip-text text-transparent">
-                 Break things.
-               </span>
+               <span className="text-foreground">Learn platform engineering</span>
                <br />
-               <span className="text-foreground">
-                 Learn everything.
+               <span className="bg-gradient-to-r from-primary via-teal to-[hsl(var(--purple))] bg-clip-text text-transparent">
+                 by breaking things.
                </span>
              </h1>
             <p className="animate-fade-up-delay-2 mx-auto mt-6 max-w-xl text-lg leading-relaxed text-[hsl(var(--text-secondary))]">
-              Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, interactive environments running in your browser.
+              Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, cloud dev environments powered by GitHub Codespaces.
             </p>
             <div className="animate-fade-up-delay-3 mt-10 flex items-center justify-center gap-4">
               <a

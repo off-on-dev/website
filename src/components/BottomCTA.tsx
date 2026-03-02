@@ -11,12 +11,12 @@ export const BottomCTA = () => {
             <div className="cta-glow absolute inset-0 pointer-events-none" />
             <div className="relative z-10">
               <h2 className="text-3xl font-bold text-foreground">Ready to break something?</h2>
-              <p className="mt-3 text-muted-foreground">No signup wall. No credit card. Just pick a challenge and start debugging.</p>
+              <p className="mt-3 text-muted-foreground">Pick an adventure, launch a Codespace, and start debugging. Free GitHub account is all you need.</p>
               <a
                 href="#challenges"
                 className="mt-8 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all hover:brightness-110"
               >
-                Browse challenges
+                Choose an adventure
               </a>
             </div>
           </div>

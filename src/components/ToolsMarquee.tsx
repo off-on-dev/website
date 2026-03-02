@@ -1,6 +1,6 @@
 const tools = [
   "Kubernetes", "Prometheus", "ArgoCD", "Terraform", "OpenTelemetry",
-  "Helm", "Grafana", "OPA", "Jaeger", "Docker", "SBOM", "GitOps",
+  "Helm", "Grafana", "OPA", "Jaeger", "Docker", "OpenTofu", "GitOps",
 ];
 
 export const ToolsMarquee = () => {
