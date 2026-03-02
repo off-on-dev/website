@@ -15,13 +15,15 @@ export const Hero = () => {
                 Vendor-neutral · Open source · Community-driven
               </span>
             </div>
-            <h1 className="animate-fade-up-delay-1 text-5xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl">
-              <span className="text-foreground">Learn platform engineering</span>
-              <br />
-              <span className="bg-gradient-to-r from-primary via-teal to-[hsl(var(--purple))] bg-clip-text text-transparent">
-                by breaking things.
-              </span>
-            </h1>
+             <h1 className="animate-fade-up-delay-1 text-5xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl">
+               <span className="bg-gradient-to-r from-primary via-teal to-[hsl(var(--purple))] bg-clip-text text-transparent">
+                 Break things.
+               </span>
+               <br />
+               <span className="text-foreground">
+                 Learn everything.
+               </span>
+             </h1>
             <p className="animate-fade-up-delay-2 mx-auto mt-6 max-w-xl text-lg leading-relaxed text-[hsl(var(--text-secondary))]">
               Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, interactive environments running in your browser.
             </p>
