@@ -14,7 +14,8 @@ export const Footer = () => {
         </div>
         <div className="flex items-center gap-6 text-sm text-muted-foreground">
           <a href="https://community.open-ecosystem.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Community</a>
-          <a href="https://github.com/open-ecosystem" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a>
+           <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Challenges Repo</a>
+           <a href="https://github.com/dynatrace-oss/open-ecosystem-challenge-verifier" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Verifier</a>
           <a href="#about" className="hover:text-foreground transition-colors">About</a>
         </div>
       </div>

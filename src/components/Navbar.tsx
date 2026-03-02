@@ -20,9 +20,9 @@ export const Navbar = () => {
           <a href="#about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             About
           </a>
-          <a href="#" className="rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-4 py-1.5 font-mono text-xs text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all">
-            Sign in
-          </a>
+           <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges" target="_blank" rel="noopener noreferrer" className="rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-4 py-1.5 font-mono text-xs text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all">
+             GitHub ↗
+           </a>
         </div>
       </div>
     </nav>
