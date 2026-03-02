@@ -1,10 +1,10 @@
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const steps = [
-  { num: "01", title: "Choose a challenge", desc: "Browse by difficulty tier — Starter, Builder, or Architect. Each challenge has a narrative, clear objectives, and estimated time." },
-  { num: "02", title: "Launch the environment", desc: "Full cloud dev environment with VS Code, terminal, and all tools — powered by Gitpod. Just sign in with GitHub and go." },
-  { num: "03", title: "Fix. Validate. Ship.", desc: "Work through the broken environment using real tools. Built-in validation tells you when you've nailed it." },
-  { num: "04", title: "Share your approach", desc: "Post your solution in the community discussion below each challenge. Learn from how others solved the same problem differently." },
+  { num: "01", title: "Choose an adventure", desc: "Browse by adventure and pick your difficulty — Beginner, Intermediate, or Expert. Each level has its own narrative, objectives, and pre-configured environment." },
+  { num: "02", title: "Launch the Codespace", desc: "One click opens a full cloud dev environment with VS Code, terminal, and all tools pre-installed. No local setup needed — just a GitHub account." },
+  { num: "03", title: "Fix. Validate. Ship.", desc: "Work through the broken environment using real tools. Run the smoke test locally, then push and trigger GitHub Actions for full verification." },
+  { num: "04", title: "Share your approach", desc: "Post your solution in the community discussion. Learn from how others solved the same problem differently." },
 ];
 
 export const HowItWorks = () => {

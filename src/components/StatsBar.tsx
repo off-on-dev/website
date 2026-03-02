@@ -2,9 +2,9 @@ import { CountUp } from "./CountUp";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const stats = [
-  { value: 6, label: "Challenges Live" },
-  { value: 545, label: "Completions" },
-  { value: 168, label: "Discussions" },
+  { value: 3, label: "Adventures Live" },
+  { value: 54, label: "Forks" },
+  { value: 3, label: "Difficulty Levels" },
   { value: 14, prefix: "<", suffix: "d", label: "Avg. Time to First Contribution" },
 ];
 
