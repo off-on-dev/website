@@ -15,6 +15,7 @@ export interface Adventure {
   tags: string[];
   forks: number;
   status: "live" | "coming_soon";
+  category: "technical" | "non-technical";
   levels: AdventureLevel[];
 }
 
@@ -27,6 +28,7 @@ export const ADVENTURES: Adventure[] = [
     tags: ["Argo CD", "Argo Rollouts", "OpenTelemetry", "Jaeger", "PromQL"],
     forks: 54,
     status: "live",
+    category: "technical",
     levels: [
       {
         id: "beginner",
@@ -62,6 +64,7 @@ export const ADVENTURES: Adventure[] = [
     tags: ["OpenTofu", "Terraform", "GitHub Actions", "Trivy", "TDD"],
     forks: 54,
     status: "live",
+    category: "technical",
     levels: [
       {
         id: "beginner",
@@ -97,6 +100,7 @@ export const ADVENTURES: Adventure[] = [
     tags: ["OpenTelemetry", "OpenLLMetry", "Jaeger", "Prometheus", "Python"],
     forks: 54,
     status: "live",
+    category: "technical",
     levels: [
       {
         id: "beginner",
