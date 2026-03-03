@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ADVENTURES } from "@/data/adventures";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { ChevronDown, X } from "lucide-react";
 
 const difficulties = ["All", "Beginner", "Intermediate", "Expert"] as const;
 
@@ -17,15 +18,36 @@ const difficultyDot: Record<string, string> = {
   Expert: "bg-red-400",
 };
 
+const allTags = Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort();
+
 export const ChallengesGrid = () => {
   const { ref, isVisible } = useScrollAnimation();
   const [filter, setFilter] = useState<string>("All");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [tagDropdownOpen, setTagDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setTagDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prev) => prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]);
+  };
 
   const allLevels = ADVENTURES.flatMap((adventure) =>
     adventure.levels.map((level) => ({ ...level, adventure }))
   );
 
-  const filtered = filter === "All" ? allLevels : allLevels.filter((l) => l.difficulty === filter);
+  const filtered = allLevels
+    .filter((l) => filter === "All" || l.difficulty === filter)
+    .filter((l) => selectedTags.length === 0 || selectedTags.some((t) => l.adventure.tags.includes(t)));
 
   return (
     <section id="challenges" ref={ref} className="py-24 px-6">
@@ -59,6 +81,58 @@ export const ChallengesGrid = () => {
               ))}
             </div>
 
+            {/* Tag filter */}
+            <div className="animate-fade-up-delay-1 mb-8 flex flex-wrap items-center gap-2">
+              <div ref={dropdownRef} className="relative">
+                <button
+                  onClick={() => setTagDropdownOpen((o) => !o)}
+                  className="flex items-center gap-2 rounded-lg border border-[hsl(var(--surface-border))] px-4 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground hover:border-primary/30 hover:text-foreground transition-all"
+                >
+                  Tags {selectedTags.length > 0 && `(${selectedTags.length})`}
+                  <ChevronDown className="h-3 w-3" />
+                </button>
+                {tagDropdownOpen && (
+                  <div className="absolute left-0 top-full z-20 mt-1 w-56 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-2 shadow-xl">
+                    {allTags.map((tag) => (
+                      <button
+                        key={tag}
+                        onClick={() => toggleTag(tag)}
+                        className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                          selectedTags.includes(tag)
+                            ? "bg-primary/10 text-primary"
+                            : "text-muted-foreground hover:bg-[hsl(var(--surface-border))] hover:text-foreground"
+                        }`}
+                      >
+                        <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border text-[10px] ${
+                          selectedTags.includes(tag) ? "border-primary bg-primary text-primary-foreground" : "border-[hsl(var(--surface-border))]"
+                        }`}>
+                          {selectedTags.includes(tag) && "✓"}
+                        </span>
+                        {tag}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {selectedTags.map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => toggleTag(tag)}
+                  className="inline-flex items-center gap-1 rounded-lg border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-all hover:bg-primary/20"
+                >
+                  {tag}
+                  <X className="h-3 w-3" />
+                </button>
+              ))}
+              {selectedTags.length > 0 && (
+                <button
+                  onClick={() => setSelectedTags([])}
+                  className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Clear all
+                </button>
+              )}
+            </div>
             {/* Level cards */}
             <div className="animate-fade-up-delay-2 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {filtered.map((level) => (
