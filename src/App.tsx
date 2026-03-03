@@ -9,6 +9,9 @@ import AdventureDetail from "./pages/AdventureDetail";
 import Sponsors from "./pages/Sponsors";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
+import SimulatorRPG from "./pages/SimulatorRPG";
+import SimulatorStrategic from "./pages/SimulatorStrategic";
+import SimulatorOpenFuture from "./pages/SimulatorOpenFuture";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +28,9 @@ const App = () => (
             <Route path="/adventures/:id/levels/:levelId" element={<AdventureDetail />} />
             <Route path="/sponsors" element={<Sponsors />} />
             <Route path="/about" element={<About />} />
+            <Route path="/simulator/rpg" element={<SimulatorRPG />} />
+            <Route path="/simulator/strategic" element={<SimulatorStrategic />} />
+            <Route path="/simulator/open-future" element={<SimulatorOpenFuture />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
