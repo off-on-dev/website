@@ -66,7 +66,8 @@ const LevelCard = ({ level, adventure }: { level: Adventure["levels"][0]; advent
       ))}
     </div>
   </Link>
-);
+  );
+};
 
 /** Card for a full adventure (all 3 levels) */
 const AdventureCard = ({ adventure }: { adventure: Adventure }) => (
