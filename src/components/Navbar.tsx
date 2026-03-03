@@ -13,22 +13,22 @@ export const Navbar = () => {
           <img
             src={theme === "dark" ? logoDark : logoLight}
             alt="Open Ecosystem"
-            className="h-6"
+            className="h-8"
           />
         </Link>
-        <div className="flex items-center gap-6">
-          <a href="#challenges" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <div className="flex items-center gap-8">
+          <a href="#challenges" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
             Challenges
           </a>
-          <a href="https://community.open-ecosystem.com" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <a href="https://community.open-ecosystem.com" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
             Community
           </a>
-          <a href="#about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <a href="#about" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
             About
           </a>
           <button
             onClick={toggle}
-            className="flex h-8 w-8 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all"
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground hover:border-primary/30 transition-all"
             aria-label="Toggle theme"
           >
             {theme === "dark" ? (
@@ -37,7 +37,7 @@ export const Navbar = () => {
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             )}
           </button>
-          <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges" target="_blank" rel="noopener noreferrer" className="rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-4 py-1.5 font-mono text-xs text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all">
+          <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges" target="_blank" rel="noopener noreferrer" className="rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-4 py-2 text-sm font-medium text-foreground/70 hover:text-foreground hover:border-primary/30 transition-all">
             GitHub ↗
           </a>
         </div>
