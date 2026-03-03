@@ -5,6 +5,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { ChevronDown, X } from "lucide-react";
 
 const difficulties = ["All", "Beginner", "Intermediate", "Expert"] as const;
+const categories = ["All", "Technical", "Non-Technical"] as const;
 
 const difficultyColor: Record<string, string> = {
   Beginner: "text-primary border-primary/30 bg-primary/10",
@@ -23,6 +24,7 @@ const allTags = Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort();
 export const ChallengesGrid = () => {
   const { ref, isVisible } = useScrollAnimation();
   const [filter, setFilter] = useState<string>("All");
+  const [categoryFilter, setCategoryFilter] = useState<string>("All");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [tagDropdownOpen, setTagDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -47,7 +49,8 @@ export const ChallengesGrid = () => {
 
   const filtered = allLevels
     .filter((l) => filter === "All" || l.difficulty === filter)
-    .filter((l) => selectedTags.length === 0 || selectedTags.some((t) => l.adventure.tags.includes(t)));
+    .filter((l) => selectedTags.length === 0 || selectedTags.some((t) => l.adventure.tags.includes(t)))
+    .filter((l) => categoryFilter === "All" || l.adventure.category === categoryFilter.toLowerCase());
 
   return (
     <section id="challenges" ref={ref} className="py-24 px-6">
@@ -77,6 +80,22 @@ export const ChallengesGrid = () => {
                   <span className="ml-2 text-[hsl(var(--text-faint))]">
                     {d === "All" ? allLevels.length : allLevels.filter((l) => l.difficulty === d).length}
                   </span>
+                </button>
+              ))}
+
+              <div className="mx-1 h-6 w-px bg-[hsl(var(--surface-border))]" />
+
+              {categories.map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setCategoryFilter(c)}
+                  className={`rounded-lg border px-4 py-2 font-mono text-xs uppercase tracking-wider transition-all ${
+                    categoryFilter === c
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-[hsl(var(--surface-border))] text-muted-foreground hover:border-primary/30 hover:text-foreground"
+                  }`}
+                >
+                  {c}
                 </button>
               ))}
 
