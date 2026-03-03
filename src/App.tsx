@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/hooks/useTheme";
 import Index from "./pages/Index";
 import AdventureDetail from "./pages/AdventureDetail";
 import Sponsors from "./pages/Sponsors";
+import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/adventures/:id" element={<AdventureDetail />} />
             <Route path="/sponsors" element={<Sponsors />} />
+            <Route path="/about" element={<About />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

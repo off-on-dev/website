@@ -2,7 +2,6 @@ import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { HowItWorks } from "@/components/HowItWorks";
 import { ChallengesGrid } from "@/components/ChallengesGrid";
-import { AboutSection } from "@/components/AboutSection";
 import { BottomCTA } from "@/components/BottomCTA";
 import { Footer } from "@/components/Footer";
 
@@ -13,7 +12,6 @@ const Index = () => {
       <Hero />
       <HowItWorks />
       <ChallengesGrid />
-      <AboutSection />
       <BottomCTA />
       <Footer />
     </div>
