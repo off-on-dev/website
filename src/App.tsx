@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/hooks/useTheme";
 import Index from "./pages/Index";
 import AdventureDetail from "./pages/AdventureDetail";
+import Sponsors from "./pages/Sponsors";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/adventures/:id" element={<AdventureDetail />} />
+            <Route path="/sponsors" element={<Sponsors />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
