@@ -221,7 +221,7 @@ export const ChallengesGrid = () => {
                   <ChevronDown className="h-3 w-3" />
                 </button>
                 {tagDropdownOpen && (
-                  <div className="absolute left-0 top-full z-20 mt-1 w-56 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-2 shadow-xl">
+                  <div className="absolute left-0 top-full z-50 mt-1 w-56 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-2 shadow-xl">
                     {allTags.map((tag) => (
                       <button
                         key={tag}
