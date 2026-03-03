@@ -155,7 +155,7 @@ export const ChallengesGrid = () => {
             <div className="animate-fade-up-delay-2 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {filtered.map((level) => (
                 <Link
-                  to={`/adventures/${level.adventure.id}`}
+                  to={`/adventures/${level.adventure.id}/levels/${level.id}`}
                   key={`${level.adventure.id}-${level.id}`}
                   className="group relative rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5"
                 >
