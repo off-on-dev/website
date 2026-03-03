@@ -15,7 +15,7 @@ export const Footer = () => {
             className="h-5"
           />
           <span className="text-sm text-muted-foreground">
-            · Vendor-neutral platform engineering education
+            · Vendor-neutral open source &amp; cloud-native education
           </span>
         </div>
         <div className="flex items-center gap-6 text-sm text-muted-foreground">
