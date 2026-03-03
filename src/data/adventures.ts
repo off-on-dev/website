@@ -17,6 +17,7 @@ export interface Adventure {
   status: "live" | "coming_soon";
   category: "technical" | "non-technical";
   levels: AdventureLevel[];
+  simulatorRoute?: string;
 }
 
 export const ADVENTURES: Adventure[] = [
