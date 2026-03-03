@@ -4,7 +4,7 @@ import { StatsBar } from "@/components/StatsBar";
 import { ToolsMarquee } from "@/components/ToolsMarquee";
 import { HowItWorks } from "@/components/HowItWorks";
 import { ChallengesGrid } from "@/components/ChallengesGrid";
-import { CommunitySection } from "@/components/CommunitySection";
+
 import { BottomCTA } from "@/components/BottomCTA";
 import { Footer } from "@/components/Footer";
 
@@ -17,7 +17,7 @@ const Index = () => {
       <ToolsMarquee />
       <HowItWorks />
       <ChallengesGrid />
-      <CommunitySection />
+      
       <BottomCTA />
       <Footer />
     </div>
