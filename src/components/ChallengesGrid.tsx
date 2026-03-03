@@ -61,8 +61,8 @@ export const ChallengesGrid = () => {
               Choose your adventure
             </h2>
 
-            {/* Difficulty filter */}
-            <div className="animate-fade-up-delay-1 mb-8 flex flex-wrap gap-2">
+            {/* Filters */}
+            <div className="animate-fade-up-delay-1 mb-8 flex flex-wrap items-center gap-2">
               {difficulties.map((d) => (
                 <button
                   key={d}
@@ -79,10 +79,9 @@ export const ChallengesGrid = () => {
                   </span>
                 </button>
               ))}
-            </div>
 
-            {/* Tag filter */}
-            <div className="animate-fade-up-delay-1 mb-8 flex flex-wrap items-center gap-2">
+              <div className="mx-1 h-6 w-px bg-[hsl(var(--surface-border))]" />
+
               <div ref={dropdownRef} className="relative">
                 <button
                   onClick={() => setTagDropdownOpen((o) => !o)}
