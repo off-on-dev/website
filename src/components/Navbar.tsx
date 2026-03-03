@@ -23,9 +23,9 @@ export const Navbar = () => {
           <a href="https://community.open-ecosystem.com" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
             Community
           </a>
-          <a href="#about" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
+          <Link to="/about" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
             About
-          </a>
+          </Link>
           <Link to="/sponsors" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
             Sponsors
           </Link>
