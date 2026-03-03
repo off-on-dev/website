@@ -249,8 +249,9 @@ const DiscussionSection = ({ discussionUrls }: { discussionUrls: string[] }) => 
 };
 
 const AdventureDetail = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id, levelId } = useParams<{ id: string; levelId: string }>();
   const adventure = ADVENTURES.find((a) => a.id === id);
+  const selectedLevel = adventure?.levels.find((l) => l.id === levelId);
 
   if (!adventure) {
     return (
@@ -284,11 +285,15 @@ const AdventureDetail = () => {
           </div>
         </div>
 
-        {/* Level cards */}
+        {/* Level card(s) */}
         <div className="space-y-5 mb-10">
-          {adventure.levels.map((level) => (
-            <LevelCard key={level.id} level={level} />
-          ))}
+          {selectedLevel ? (
+            <LevelCard level={selectedLevel} />
+          ) : (
+            adventure.levels.map((level) => (
+              <LevelCard key={level.id} level={level} />
+            ))
+          )}
         </div>
 
         {/* Verification */}
@@ -297,7 +302,7 @@ const AdventureDetail = () => {
         </div>
 
         {/* Discussion */}
-        <DiscussionSection discussionUrls={adventure.levels.map((l) => l.discussionUrl)} />
+        <DiscussionSection discussionUrls={selectedLevel ? [selectedLevel.discussionUrl] : adventure.levels.map((l) => l.discussionUrl)} />
       </div>
       <Footer />
     </div>
