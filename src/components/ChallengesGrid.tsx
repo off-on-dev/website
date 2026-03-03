@@ -112,6 +112,7 @@ const AdventureCard = ({ adventure }: { adventure: Adventure }) => (
 
 export const ChallengesGrid = () => {
   const { ref, isVisible } = useScrollAnimation();
+  const [viewMode, setViewMode] = useState<"challenges" | "adventures">("challenges");
   const [filter, setFilter] = useState<string>("All");
   const [categoryFilter, setCategoryFilter] = useState<string>("All");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -160,6 +161,22 @@ export const ChallengesGrid = () => {
 
             {/* Filters */}
             <div className="animate-fade-up-delay-1 mb-8 flex flex-wrap items-center gap-2">
+              {/* View mode toggle */}
+              {(["challenges", "adventures"] as const).map((mode) => (
+                <button
+                  key={mode}
+                  onClick={() => setViewMode(mode)}
+                  className={`rounded-lg border px-4 py-2 font-mono text-xs uppercase tracking-wider transition-all ${
+                    viewMode === mode
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-[hsl(var(--surface-border))] text-muted-foreground hover:border-primary/30 hover:text-foreground"
+                  }`}
+                >
+                  {mode === "challenges" ? "Challenges" : "Adventures"}
+                </button>
+              ))}
+
+              <div className="mx-1 h-6 w-px bg-[hsl(var(--surface-border))]" />
               {difficulties.map((d) => (
                 <button
                   key={d}
@@ -246,29 +263,16 @@ export const ChallengesGrid = () => {
               )}
             </div>
 
-            {/* Adventure cards (full challenge) */}
-            {filteredAdventures.length > 0 && (
-              <div className="animate-fade-up-delay-2 mb-8">
-                <h3 className="mb-4 font-mono text-xs font-medium uppercase tracking-widest text-muted-foreground">Full Adventures</h3>
-                <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-                  {filteredAdventures.map((adventure) => (
+            {/* Cards based on view mode */}
+            <div className="animate-fade-up-delay-2 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {viewMode === "adventures"
+                ? filteredAdventures.map((adventure) => (
                     <AdventureCard key={adventure.id} adventure={adventure} />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Individual level cards */}
-            {filteredLevels.length > 0 && (
-              <div className="animate-fade-up-delay-2">
-                <h3 className="mb-4 font-mono text-xs font-medium uppercase tracking-widest text-muted-foreground">Individual Levels</h3>
-                <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-                  {filteredLevels.map((level) => (
+                  ))
+                : filteredLevels.map((level) => (
                     <LevelCard key={`${level.adventure.id}-${level.id}`} level={level} adventure={level.adventure} />
                   ))}
-                </div>
-              </div>
-            )}
+            </div>
           </>
         )}
       </div>
