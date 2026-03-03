@@ -57,10 +57,6 @@ export const ChallengesGrid = () => {
                     ))}
                   </div>
 
-                  <div className="mt-5 flex items-center gap-4 border-t border-[hsl(var(--surface-border))] pt-4 text-xs text-muted-foreground font-mono">
-                    <span>{adventure.forks} forks</span>
-                    <span>3 levels</span>
-                  </div>
                 </Link>
               ))}
             </div>
