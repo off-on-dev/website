@@ -22,9 +22,11 @@ const difficultyDot: Record<string, string> = {
 const allTags = Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort();
 
 /** Card for a single level */
-const LevelCard = ({ level, adventure }: { level: Adventure["levels"][0]; adventure: Adventure }) => (
+const LevelCard = ({ level, adventure }: { level: Adventure["levels"][0]; adventure: Adventure }) => {
+  const linkTo = adventure.simulatorRoute || `/adventures/${adventure.id}/levels/${level.id}`;
+  return (
   <Link
-    to={`/adventures/${adventure.id}/levels/${level.id}`}
+    to={linkTo}
     key={`${adventure.id}-${level.id}`}
     className="group relative rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5"
   >
