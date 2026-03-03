@@ -26,6 +26,9 @@ export const Navbar = () => {
           <a href="#about" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
             About
           </a>
+          <Link to="/sponsors" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
+            Sponsors
+          </Link>
           <button
             onClick={toggle}
             className="flex h-8 w-8 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground hover:border-primary/30 transition-all"
