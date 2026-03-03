@@ -1,4 +1,15 @@
-import { StrategicTurnData } from "@/components/simulator/strategic/StrategicTurn";
+export interface StrategicTurnOption {
+  id: string;
+  shortLabel: string;
+  text: string;
+}
+
+export interface StrategicTurnData {
+  turnNumber: number;
+  year: number;
+  narrative: string;
+  options: StrategicTurnOption[];
+}
 
 // Hidden dynamics that affect the game (not shown to player)
 export interface HiddenDynamics {
