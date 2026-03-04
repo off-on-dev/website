@@ -25,9 +25,6 @@ const App = () => (
             <Route path="/adventures/:id/levels/:levelId" element={<AdventureDetail />} />
             <Route path="/sponsors" element={<Sponsors />} />
             <Route path="/about" element={<About />} />
-            <Route path="/simulator/rpg" element={<SimulatorRPG />} />
-            <Route path="/simulator/strategic" element={<SimulatorStrategic />} />
-            <Route path="/simulator/open-future" element={<SimulatorOpenFuture />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
