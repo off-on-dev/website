@@ -23,7 +23,7 @@ const allTags = Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort();
 
 /** Card for a single level */
 const LevelCard = ({ level, adventure }: { level: Adventure["levels"][0]; adventure: Adventure }) => {
-  const linkTo = adventure.simulatorRoute || `/adventures/${adventure.id}/levels/${level.id}`;
+  const linkTo = `/adventures/${adventure.id}/levels/${level.id}`;
   return (
   <Link
     to={linkTo}
@@ -72,7 +72,7 @@ const LevelCard = ({ level, adventure }: { level: Adventure["levels"][0]; advent
 /** Card for a full adventure (all 3 levels) */
 const AdventureCard = ({ adventure }: { adventure: Adventure }) => (
   <Link
-    to={adventure.simulatorRoute || `/adventures/${adventure.id}`}
+    to={`/adventures/${adventure.id}`}
     className="group relative rounded-xl border-2 border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
   >
     <div className="flex items-center justify-between mb-3">
