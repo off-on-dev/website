@@ -23,7 +23,7 @@ const allTags = Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort();
 
 /** Card for a single level */
 const LevelCard = ({ level, adventure }: { level: Adventure["levels"][0]; adventure: Adventure }) => {
-  const linkTo = adventure.simulatorRoute || `/adventures/${adventure.id}/levels/${level.id}`;
+  const linkTo = `/adventures/${adventure.id}/levels/${level.id}`;
   return (
   <Link
     to={linkTo}
