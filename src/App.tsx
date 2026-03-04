@@ -9,9 +9,6 @@ import AdventureDetail from "./pages/AdventureDetail";
 import Sponsors from "./pages/Sponsors";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
-import SimulatorRPG from "./pages/SimulatorRPG";
-import SimulatorStrategic from "./pages/SimulatorStrategic";
-import SimulatorOpenFuture from "./pages/SimulatorOpenFuture";
 
 const queryClient = new QueryClient();
 
