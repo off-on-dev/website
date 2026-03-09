@@ -20,7 +20,7 @@ export const Navbar = () => {
           <a href="#challenges" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
             Challenges
           </a>
-          <a href="https://community.open-effon.ffon.devel="noopener noreferrer" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
+          <a href="https://community.offon.dev" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
             Community
           </a>
           <Link to="/about" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
