@@ -35,24 +35,24 @@ export const ADVENTURES: Adventure[] = [
         name: "Broken Echoes",
         difficulty: "Beginner",
         learnings: ["Debug GitOps flows with Argo CD", "ApplicationSet templating & pitfalls", "Environment isolation & namespaces", "Sync policies: automated, prune & self-heal"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
-        discussionUrl: "https://community.open-ecosystem.com/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
+        codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
+        discussionUrl: "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
       },
       {
         id: "intermediate",
         name: "The Silent Canary",
         difficulty: "Intermediate",
         learnings: ["Progressive delivery with Argo Rollouts", "Canary deployments & automated analysis", "Write PromQL queries for health validation", "Kube-state-metrics for deployment decisions"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
-        discussionUrl: "https://community.open-ecosystem.com/t/adventure-01-echoes-lost-in-orbit-intermediate-the-silent-canary/310/8"
+        codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
+        discussionUrl: "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-intermediate-the-silent-canary/310/8"
       },
       {
         id: "expert",
         name: "Hyperspace Operations & Transport",
         difficulty: "Expert",
         learnings: ["Configure OpenTelemetry Collector pipelines", "Spanmetrics connector (traces → metrics)", "Detect idle canaries with traffic validation", "Distributed tracing with Jaeger"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
-        discussionUrl: "https://community.open-ecosystem.com/t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351/4"
+        codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
+        discussionUrl: "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351/4"
       }
     ]
   },
