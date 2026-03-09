@@ -71,24 +71,24 @@ export const ADVENTURES: Adventure[] = [
         name: "The Foundation Stones",
         difficulty: "Beginner",
         learnings: ["Infrastructure as Code with OpenTofu", "Remote state management with GCS backend", "Dynamic & conditional resources"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
-        discussionUrl: "https://community.open-ecosystem.com/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
+        codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
+        discussionUrl: "https://community.offon.dev/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
       },
       {
         id: "intermediate",
         name: "The Modular Metropolis",
         difficulty: "Intermediate",
         learnings: ["OpenTofu module testing with tofu test", "Test-Driven Development (TDD) workflow", "Input validation with regex"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
-        discussionUrl: "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10"
+        codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
+        discussionUrl: "https://community.offon.dev/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10"
       },
       {
         id: "expert",
         name: "The Guardian Protocols",
         difficulty: "Expert",
         learnings: ["GitHub Actions for drift detection and plan/apply", "Integration tests with service containers", "Security scanning with Trivy"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
-        discussionUrl: "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
+        codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
+        discussionUrl: "https://community.offon.dev/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
       }
     ]
   },
