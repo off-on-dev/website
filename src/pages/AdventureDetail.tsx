@@ -81,7 +81,7 @@ const VerificationSection = () => (
       </div>
     </div>
     <a
-      href="https://github.com/dynatrace-oss/open-ecosystem-challenges"
+      href="https://github.com/dynatrace-oss/offones"
       target="_blank"
       rel="noopener noreferrer"
       className="mt-4 inline-flex text-sm font-medium text-primary hover:underline"
@@ -144,7 +144,7 @@ const DiscussionSection = ({ discussionUrls }: { discussionUrls: string[] }) => 
           if (!topicId) continue;
           try {
             const res = await fetch(
-              `https://community.open-ecosystem.com/t/${topicId}.json`
+              `https://community.open-ecosyffon.devcId}.json`
             );
             if (!res.ok) continue;
             const data = await res.json();
@@ -197,12 +197,12 @@ const DiscussionSection = ({ discussionUrls }: { discussionUrls: string[] }) => 
           </p>
         </div>
         <a
-          href={discussionUrls[0] || "https://community.open-ecosystem.com"}
+          href={discussionUrls[0] || "https://community.offon.dev"}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-4 inline-flex text-sm font-medium text-primary hover:underline"
         >
-          Join the discussion on community.open-ecosystem.com →
+          Join the discussion on community.offon.dev →
         </a>
       </div>
     );
@@ -237,12 +237,12 @@ const DiscussionSection = ({ discussionUrls }: { discussionUrls: string[] }) => 
         </a>
       ))}
       <a
-        href={discussionUrls[0] || "https://community.open-ecosystem.com"}
+        href={discussionUrls[0] || "https://community.offon.dev"}
         target="_blank"
         rel="noopener noreferrer"
         className="mt-4 inline-flex text-sm font-medium text-primary hover:underline"
       >
-        Join the discussion on community.open-ecosystem.com →
+        Join the discussion on community.offon.dev →
       </a>
     </div>
   );

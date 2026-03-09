@@ -12,7 +12,7 @@ export const Navbar = () => {
         <Link to="/" className="flex items-center">
           <img
             src={theme === "dark" ? logoDark : logoLight}
-            alt="Open Ecosystem"
+            alt="offon.dev"
             className="h-8"
           />
         </Link>
@@ -20,7 +20,7 @@ export const Navbar = () => {
           <a href="#challenges" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
             Challenges
           </a>
-          <a href="https://community.open-ecosystem.com" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
+          <a href="https://community.offon.dev" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
             Community
           </a>
           <Link to="/about" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
@@ -40,7 +40,7 @@ export const Navbar = () => {
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             )}
           </button>
-          <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges" target="_blank" rel="noopener noreferrer" className="rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-4 py-2 text-sm font-medium text-foreground/70 hover:text-foreground hover:border-primary/30 transition-all">
+          <a href="https://github.com/dynatrace-oss/offon-challenges" target="_blank" rel="noopener noreferrer" className="rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-4 py-2 text-sm font-medium text-foreground/70 hover:text-foreground hover:border-primary/30 transition-all">
             GitHub ↗
           </a>
         </div>

@@ -13,7 +13,7 @@ export const BottomCTA = () => {
               <h2 className="text-3xl font-bold text-foreground">Help us break something</h2>
               <p className="mt-3 text-muted-foreground">Have an idea for a challenge? Contribute a scenario based on real-world incidents and help others learn by breaking things.</p>
               <a
-                href="https://github.com/dynatrace-oss/open-ecosystem-challenges"
+                 href="https://github.com/dynatrace-oss/offon-challenges"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-8 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all hover:brightness-110"

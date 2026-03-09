@@ -53,7 +53,7 @@ const whyReasons = [
   {
     icon: "🌍",
     title: "Reach a global community",
-    desc: "Thousands of developers, DevOps engineers, and SREs use Open Ecosystem challenges to sharpen their open source and cloud-native skills.",
+    desc: "Thousands of developers, DevOps engineers, and SREs use offon.devsharpen their open source and cloud-native skills.",
   },
   {
     icon: "🎯",
@@ -88,7 +88,7 @@ const Sponsors = () => {
             Power the next generation of learning
           </h1>
           <p className="mt-4 text-[hsl(var(--text-secondary))] leading-relaxed text-lg">
-            Open Ecosystem challenges are free for everyone. Sponsors make that possible by funding infrastructure, content creation, and community growth.
+            Open offonoffonoffon.deveveryone. Sponsors make that possible by funding infrastructure, content creation, and community growth.
           </p>
         </div>
 
@@ -136,7 +136,7 @@ const Sponsors = () => {
                   ))}
                 </ul>
                 <a
-                  href="mailto:sponsors@open-ecosystem.com?subject=Sponsorship Inquiry — {tier.name}"
+                  href="mailto:sponsors@open-ecosysffon.devpoffon.dev— {tier.name}"
                   className="mt-6 inline-flex w-full items-center justify-center rounded-lg border border-primary/30 bg-primary/10 px-4 py-2.5 text-sm font-medium text-primary transition-all hover:bg-primary/20"
                 >
                   Get in touch
@@ -179,7 +179,7 @@ const Sponsors = () => {
               We'd love to hear from you. Reach out and we'll find the right sponsorship fit for your goals.
             </p>
             <a
-              href="mailto:sponsors@open-ecosystem.com?subject=Sponsorship Inquiry"
+              href="mailto:sponsors@offon.dev?subject=Sponsorship Inquiry"
               className="mt-8 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all hover:brightness-110"
             >
               Contact us →
