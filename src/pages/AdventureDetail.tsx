@@ -81,7 +81,7 @@ const VerificationSection = () => (
       </div>
     </div>
     <a
-      href="https://github.com/dynatrace-oss/open-ecosystem-challenges"
+      href="https://github.com/dynatrace-oss/offon-challenges"
       target="_blank"
       rel="noopener noreferrer"
       className="mt-4 inline-flex text-sm font-medium text-primary hover:underline"
