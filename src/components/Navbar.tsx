@@ -12,7 +12,8 @@ export const Navbar = () => {
         <Link to="/" className="flex items-center">
           <img
             src={theme === "dark" ? logoDark : logoLight}
-            alt="offon.dev    className="h-8"
+            alt="offon.dev"
+            className="h-8"
           />
         </Link>
         <div className="flex items-center gap-8">
