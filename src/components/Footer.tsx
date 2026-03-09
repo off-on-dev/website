@@ -11,7 +11,7 @@ export const Footer = () => {
         <div className="flex items-center gap-3">
           <img
             src={theme === "dark" ? logoDark : logoLight}
-            alt="Open Ecosystem"
+            alt="offon.dev"
             className="h-5"
           />
           <span className="text-sm text-muted-foreground">
