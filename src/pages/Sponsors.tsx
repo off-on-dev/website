@@ -53,7 +53,7 @@ const whyReasons = [
   {
     icon: "🌍",
     title: "Reach a global community",
-    desc: "Thousands of developers, DevOps engineers, and SREs use Open Ecosystem challenges to sharpen their open source and cloud-native skills.",
+    desc: "Thousands of developers, DevOps engineers, and SREs use offon.dev challenges to sharpen their open source and cloud-native skills.",
   },
   {
     icon: "🎯",
