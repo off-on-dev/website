@@ -34,8 +34,8 @@ export const Hero = () => {
               >
                 Start a challenge ↓
               </a>
-              <a
-                href="https://community.open-ecosystem.com"
+          <a
+                 href="https://community.offon.dev"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-lg border border-[hsl(var(--surface-border))] bg-transparent px-6 py-3 text-sm font-medium text-foreground transition-all hover:bg-[hsl(var(--surface-hover))]"

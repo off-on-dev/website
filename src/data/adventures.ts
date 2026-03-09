@@ -107,24 +107,24 @@ export const ADVENTURES: Adventure[] = [
         name: "Calibrating the Lens",
         difficulty: "Beginner",
         learnings: ["Instrument Python AI apps with OpenLLMetry", "Analyze traces in Jaeger"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
-        discussionUrl: "https://community.open-ecosystem.com/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
+        codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
+        discussionUrl: "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
       },
       {
         id: "intermediate",
         name: "The Distracted Pilot",
         difficulty: "Intermediate",
         learnings: ["Instrument RAG pipelines with OpenLLMetry", "Create custom OpenTelemetry metrics in Python", "Write PromQL queries & recording rules in Prometheus"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
-        discussionUrl: "https://community.open-ecosystem.com/t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936/2"
+        codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
+        discussionUrl: "https://community.offon.dev/t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936/2"
       },
       {
         id: "expert",
         name: "The Noise Filter",
         difficulty: "Expert",
         learnings: ["OpenTelemetry GenAI semantic conventions", "Tail sampling in the OTel Collector"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
-        discussionUrl: "https://community.open-ecosystem.com/t/reduce-telemetry-noise-adventure-03-expert-is-live/999/1"
+        codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
+        discussionUrl: "https://community.offon.dev/t/reduce-telemetry-noise-adventure-03-expert-is-live/999/1"
       }
     ]
   },

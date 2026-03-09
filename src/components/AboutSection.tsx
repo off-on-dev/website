@@ -40,7 +40,7 @@ export const AboutSection = () => {
               </div>
               <div className="flex flex-col justify-center">
                 <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
-                  Open Ecosystem is a collection of free, hands-on challenges that teach cloud-native technologies through realistic debugging scenarios. Born out of the Dynatrace open source program, we believe that the best engineers aren't the ones who memorize docs — they're the ones who've broken things and fixed them.
+                  offon.dev is a collection of free, hands-on challenges that teach cloud-native technologies through realistic debugging scenarios. Born out of the Dynatrace open source program, we believe that the best engineers aren't the ones who memorize docs — they're the ones who've broken things and fixed them.
                 </p>
                 <p className="mt-4 text-[hsl(var(--text-secondary))] leading-relaxed">
                   Each adventure drops you into a pre-built environment with something intentionally wrong. Your job is to find it, understand it, and fix it — using the same tools and workflows you'd use in production.
