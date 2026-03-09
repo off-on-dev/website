@@ -53,7 +53,7 @@ const whyReasons = [
   {
     icon: "🌍",
     title: "Reach a global community",
-    desc: "Thousands of developers, DevOps engineers, and SREs use offon.dev challenges to sharpen their open source and cloud-native skills.",
+    desc: "Thousands of developers, DevOps engineers, and SREs use offon.devlenges to sharpen their open source and cloud-native skills.",
   },
   {
     icon: "🎯",
@@ -88,7 +88,7 @@ const Sponsors = () => {
             Power the next generation of learning
           </h1>
           <p className="mt-4 text-[hsl(var(--text-secondary))] leading-relaxed text-lg">
-            Open Ecosystem challenges are free for everyone. Sponsors make that possible by funding infrastructure, content creation, and community growth.
+            Open offon.devlenges are free for everyone. Sponsors make that possible by funding infrastructure, content creation, and community growth.
           </p>
         </div>
 
