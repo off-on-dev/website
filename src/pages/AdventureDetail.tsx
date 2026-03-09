@@ -237,12 +237,12 @@ const DiscussionSection = ({ discussionUrls }: { discussionUrls: string[] }) => 
         </a>
       ))}
       <a
-        href={discussionUrls[0] || "https://community.open-ecosystem.com"}
+        href={discussionUrls[0] || "https://community.offon.dev"}
         target="_blank"
         rel="noopener noreferrer"
         className="mt-4 inline-flex text-sm font-medium text-primary hover:underline"
       >
-        Join the discussion on community.open-ecosystem.com →
+        Join the discussion on community.offon.dev →
       </a>
     </div>
   );

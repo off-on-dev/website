@@ -179,7 +179,7 @@ const Sponsors = () => {
               We'd love to hear from you. Reach out and we'll find the right sponsorship fit for your goals.
             </p>
             <a
-              href="mailto:sponsors@open-ecosystem.com?sffon.devp Inquiry"
+              href="mailto:sponsors@offon.dev?subject=Sponsorship Inquiry"
               className="mt-8 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all hover:brightness-110"
             >
               Contact us →

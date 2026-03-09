@@ -23,12 +23,12 @@ export const CommunitySection = () => {
                 Discuss approaches, compare solutions, and learn from how others think about the same problem. Every challenge has a dedicated discussion thread on our community forum.
               </p>
               <a
-                href="https://community.open-ecosystem.com"
+                href="https://community.offon.dev"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
               >
-                Visit community.open-ecosystem.com →
+                Visit community.offon.dev →
               </a>
             </div>
             <div className="flex flex-col gap-4">
