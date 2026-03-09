@@ -53,7 +53,7 @@ const whyReasons = [
   {
     icon: "🌍",
     title: "Reach a global community",
-    desc: "Thousands of developers, DevOps engineers, and SREs use offon.devlenges to sharpen their open source and cloud-native skills.",
+    desc: "Thousands of developers, DevOps engineers, and SREs use offon.devs to sharpen their open source and cloud-native skills.",
   },
   {
     icon: "🎯",
@@ -88,7 +88,7 @@ const Sponsors = () => {
             Power the next generation of learning
           </h1>
           <p className="mt-4 text-[hsl(var(--text-secondary))] leading-relaxed text-lg">
-            Open offon.devlenges are free for everyone. Sponsors make that possible by funding infrastructure, content creation, and community growth.
+            Open offonoffon.dev free for everyone. Sponsors make that possible by funding infrastructure, content creation, and community growth.
           </p>
         </div>
 
@@ -136,7 +136,7 @@ const Sponsors = () => {
                   ))}
                 </ul>
                 <a
-                  href="mailto:sponsors@open-ecosystem.com?subject=Sponsorship Inquiry — {tier.name}"
+                  href="mailto:sponsors@open-ecosysffon.devponsorship Inquiry — {tier.name}"
                   className="mt-6 inline-flex w-full items-center justify-center rounded-lg border border-primary/30 bg-primary/10 px-4 py-2.5 text-sm font-medium text-primary transition-all hover:bg-primary/20"
                 >
                   Get in touch
