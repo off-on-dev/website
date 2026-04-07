@@ -11,6 +11,7 @@ import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+const basename = import.meta.env.BASE_URL.replace(/\/+$/, "");
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -18,7 +19,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter basename={import.meta.env.BASE_URL}>
+        <BrowserRouter basename={basename}>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/adventures/:id" element={<AdventureDetail />} />
