@@ -4,19 +4,19 @@ import { ADVENTURES } from "@/data/adventures";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
-const difficultyIndicator: Record<string, { color: string; dot: string }> = {
-  Beginner: { color: "text-primary border-primary/30 bg-primary/10", dot: "bg-primary" },
-  Intermediate: { color: "text-yellow-400 border-yellow-400/30 bg-yellow-400/10", dot: "bg-yellow-400" },
-  Expert: { color: "text-red-400 border-red-400/30 bg-red-400/10", dot: "bg-red-400" },
+const difficultyIndicator: Record<string, { badge: string; dot: string }> = {
+  Beginner: { badge: "badge-difficulty badge-beginner", dot: "bg-primary" },
+  Intermediate: { badge: "badge-difficulty badge-intermediate", dot: "bg-[hsl(var(--difficulty-builder))]" },
+  Expert: { badge: "badge-difficulty badge-expert", dot: "bg-[hsl(var(--difficulty-architect))]" },
 };
 
 const LevelCard = ({ level }: { level: typeof ADVENTURES[0]["levels"][0] }) => {
-  const indicator = difficultyIndicator[level.difficulty];
+  const indicator = difficultyIndicator[level.difficulty] ?? { badge: "badge-difficulty badge-beginner", dot: "bg-primary" };
 
   return (
     <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6">
       <div className="flex items-center gap-3 mb-4">
-        <span className={`inline-flex items-center gap-1.5 rounded-[5px] border px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider ${indicator.color}`}>
+        <span className={indicator.badge}>
           <span className={`h-2 w-2 rounded-full ${indicator.dot}`} />
           {level.difficulty}
         </span>
@@ -39,7 +39,7 @@ const LevelCard = ({ level }: { level: typeof ADVENTURES[0]["levels"][0] }) => {
         href={level.codespacesUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all hover:brightness-110"
+        className="btn-primary"
       >
         Open in GitHub Codespaces →
       </a>

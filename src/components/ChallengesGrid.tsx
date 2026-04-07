@@ -8,15 +8,15 @@ const difficulties = ["All", "Beginner", "Intermediate", "Expert"] as const;
 const categories = ["All", "Technical", "Non-Technical"] as const;
 
 const difficultyColor: Record<string, string> = {
-  Beginner: "text-primary border-primary/30 bg-primary/10",
-  Intermediate: "text-yellow-400 border-yellow-400/30 bg-yellow-400/10",
-  Expert: "text-red-400 border-red-400/30 bg-red-400/10",
+  Beginner: "badge-difficulty badge-beginner",
+  Intermediate: "badge-difficulty badge-intermediate",
+  Expert: "badge-difficulty badge-expert",
 };
 
 const difficultyDot: Record<string, string> = {
   Beginner: "bg-primary",
-  Intermediate: "bg-yellow-400",
-  Expert: "bg-red-400",
+  Intermediate: "bg-[hsl(var(--difficulty-builder))]",
+  Expert: "bg-[hsl(var(--difficulty-architect))]",
 };
 
 const allTags = Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort();
@@ -35,7 +35,7 @@ const LevelCard = ({ level, adventure }: { level: Adventure["levels"][0]; advent
     </span>
 
     <div className="mb-3">
-      <span className={`inline-flex items-center gap-1.5 rounded-[5px] border px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider ${difficultyColor[level.difficulty]}`}>
+      <span className={difficultyColor[level.difficulty]}>
         <span className={`h-2 w-2 rounded-full ${difficultyDot[level.difficulty]}`} />
         {level.difficulty}
       </span>
@@ -95,7 +95,7 @@ const AdventureCard = ({ adventure }: { adventure: Adventure }) => (
       {adventure.levels.map((level) => (
         <span
           key={level.id}
-          className={`inline-flex items-center gap-1 rounded-[5px] border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider ${difficultyColor[level.difficulty]}`}
+          className={difficultyColor[level.difficulty]}
         >
           <span className={`h-1.5 w-1.5 rounded-full ${difficultyDot[level.difficulty]}`} />
           {level.difficulty}
@@ -169,7 +169,7 @@ export const ChallengesGrid = () => {
                 <button
                   key={mode}
                   onClick={() => setViewMode(mode)}
-                  className={`rounded-lg border px-4 py-2 font-mono text-xs uppercase tracking-wider transition-all ${
+                  className={`rounded-full border px-4 py-2 font-mono text-xs uppercase tracking-wider transition-all ${
                     viewMode === mode
                       ? "border-primary bg-primary/10 text-primary"
                       : "border-[hsl(var(--surface-border))] text-muted-foreground hover:border-primary/30 hover:text-foreground"
@@ -184,7 +184,7 @@ export const ChallengesGrid = () => {
                 <button
                   key={d}
                   onClick={() => setFilter(d)}
-                  className={`rounded-lg border px-4 py-2 font-mono text-xs uppercase tracking-wider transition-all ${
+                  className={`rounded-full border px-4 py-2 font-mono text-xs uppercase tracking-wider transition-all ${
                     filter === d
                       ? "border-primary bg-primary/10 text-primary"
                       : "border-[hsl(var(--surface-border))] text-muted-foreground hover:border-primary/30 hover:text-foreground"
@@ -203,7 +203,7 @@ export const ChallengesGrid = () => {
                 <button
                   key={c}
                   onClick={() => setCategoryFilter(c)}
-                  className={`rounded-lg border px-4 py-2 font-mono text-xs uppercase tracking-wider transition-all ${
+                  className={`rounded-full border px-4 py-2 font-mono text-xs uppercase tracking-wider transition-all ${
                     categoryFilter === c
                       ? "border-primary bg-primary/10 text-primary"
                       : "border-[hsl(var(--surface-border))] text-muted-foreground hover:border-primary/30 hover:text-foreground"
@@ -218,7 +218,7 @@ export const ChallengesGrid = () => {
               <div ref={dropdownRef} className="relative">
                 <button
                   onClick={() => setTagDropdownOpen((o) => !o)}
-                  className="flex items-center gap-2 rounded-lg border border-[hsl(var(--surface-border))] px-4 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground hover:border-primary/30 hover:text-foreground transition-all"
+                  className="flex items-center gap-2 rounded-full border border-[hsl(var(--surface-border))] px-4 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground hover:border-primary/30 hover:text-foreground transition-all"
                 >
                   Tags {selectedTags.length > 0 && `(${selectedTags.length})`}
                   <ChevronDown className="h-3 w-3" />
@@ -250,7 +250,7 @@ export const ChallengesGrid = () => {
                 <button
                   key={tag}
                   onClick={() => toggleTag(tag)}
-                  className="inline-flex items-center gap-1 rounded-lg border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-all hover:bg-primary/20"
+                  className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary transition-all hover:bg-primary/20"
                 >
                   {tag}
                   <X className="h-3 w-3" />

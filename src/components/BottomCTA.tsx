@@ -16,7 +16,7 @@ export const BottomCTA = () => {
                  href="https://github.com/dynatrace-oss/offon-challenges"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-8 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all hover:brightness-110"
+                className="mt-8 btn-primary"
               >
                 Contribute a challenge →
               </a>

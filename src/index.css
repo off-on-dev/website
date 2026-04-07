@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Azeret+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Azeret+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,125 +6,125 @@
 
 @layer base {
   :root, .dark {
-    --background: 240 20% 3%;
-    --foreground: 240 5% 95%;
+    --background: 0 0% 4%;
+    --foreground: 0 0% 95%;
 
-    --card: 240 5% 7%;
-    --card-foreground: 240 5% 95%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 240 5% 7%;
-    --popover-foreground: 240 5% 95%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 160 60% 52%;
-    --primary-foreground: 240 20% 3%;
+    --primary: 40 100% 60%;
+    --primary-foreground: 0 0% 4%;
 
-    --secondary: 240 5% 12%;
-    --secondary-foreground: 240 5% 75%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 75%;
 
-    --muted: 240 5% 12%;
-    --muted-foreground: 240 4% 53%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 53%;
 
-    --accent: 160 60% 52%;
-    --accent-foreground: 240 20% 3%;
+    --accent: 40 100% 60%;
+    --accent-foreground: 0 0% 4%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 0 0% 100% / 0.05;
     --input: 0 0% 100% / 0.05;
-    --ring: 160 60% 52%;
+    --ring: 40 100% 60%;
 
     --radius: 0.625rem;
 
     /* Custom tokens */
-    --text-primary: 240 5% 95%;
-    --text-secondary: 240 4% 66%;
-    --text-muted: 240 4% 53%;
-    --text-faint: 240 4% 36%;
+    --text-primary: 0 0% 95%;
+    --text-secondary: 0 0% 66%;
+    --text-muted: 0 0% 53%;
+    --text-faint: 0 0% 42%;
 
     --surface: 0 0% 100% / 0.025;
     --surface-border: 0 0% 100% / 0.05;
     --surface-hover: 0 0% 100% / 0.04;
 
-    --emerald: 160 60% 52%;
-    --teal: 174 60% 50%;
-    --purple: 270 60% 60%;
+    --emerald: 40 100% 60%;
+    --teal: 40 78% 51%;
+    --purple: 30 100% 45%;
 
-    --difficulty-starter: 160 60% 52%;
-    --difficulty-builder: 45 90% 55%;
+    --difficulty-starter: 40 100% 60%;
+    --difficulty-builder: 25 90% 55%;
     --difficulty-architect: 0 75% 55%;
 
-    --type-simulation: 270 50% 55%;
-    --type-interactive: 160 60% 52%;
+    --type-simulation: 40 78% 51%;
+    --type-interactive: 40 100% 60%;
 
-    --sidebar-background: 240 5% 7%;
-    --sidebar-foreground: 240 5% 95%;
-    --sidebar-primary: 160 60% 52%;
-    --sidebar-primary-foreground: 240 20% 3%;
-    --sidebar-accent: 240 5% 12%;
-    --sidebar-accent-foreground: 240 5% 95%;
+    --sidebar-background: 0 0% 7%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 40 100% 60%;
+    --sidebar-primary-foreground: 0 0% 4%;
+    --sidebar-accent: 0 0% 12%;
+    --sidebar-accent-foreground: 0 0% 95%;
     --sidebar-border: 0 0% 100% / 0.05;
-    --sidebar-ring: 160 60% 52%;
+    --sidebar-ring: 40 100% 60%;
   }
 
   .light {
     --background: 0 0% 100%;
-    --foreground: 240 10% 10%;
+    --foreground: 0 0% 7%;
 
-    --card: 240 5% 97%;
-    --card-foreground: 240 10% 10%;
+    --card: 0 0% 97%;
+    --card-foreground: 0 0% 7%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 10%;
+    --popover-foreground: 0 0% 7%;
 
-    --primary: 160 60% 40%;
+    --primary: 221 100% 40%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 5% 92%;
-    --secondary-foreground: 240 5% 35%;
+    --secondary: 0 0% 92%;
+    --secondary-foreground: 0 0% 35%;
 
-    --muted: 240 5% 94%;
-    --muted-foreground: 240 4% 46%;
+    --muted: 0 0% 94%;
+    --muted-foreground: 0 0% 44%;
 
-    --accent: 160 60% 40%;
+    --accent: 221 100% 40%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 50%;
+    --destructive: 0 84% 40%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 5% 87%;
-    --input: 240 5% 87%;
-    --ring: 160 60% 40%;
+    --border: 0 0% 87%;
+    --input: 0 0% 87%;
+    --ring: 221 100% 40%;
 
     /* Custom tokens */
-    --text-primary: 240 10% 10%;
-    --text-secondary: 240 4% 40%;
-    --text-muted: 240 4% 50%;
-    --text-faint: 240 4% 65%;
+    --text-primary: 0 0% 7%;
+    --text-secondary: 0 0% 40%;
+    --text-muted: 0 0% 44%;
+    --text-faint: 0 0% 50%;
 
-    --surface: 240 5% 96%;
-    --surface-border: 240 5% 90%;
-    --surface-hover: 240 5% 93%;
+    --surface: 0 0% 96%;
+    --surface-border: 0 0% 90%;
+    --surface-hover: 0 0% 93%;
 
-    --emerald: 160 60% 40%;
-    --teal: 174 60% 40%;
-    --purple: 270 60% 50%;
+    --emerald: 221 100% 40%;
+    --teal: 221 80% 45%;
+    --purple: 250 80% 45%;
 
-    --difficulty-starter: 160 60% 40%;
-    --difficulty-builder: 45 90% 45%;
-    --difficulty-architect: 0 75% 45%;
+    --difficulty-starter: 221 100% 40%;
+    --difficulty-builder: 25 90% 35%;
+    --difficulty-architect: 0 75% 40%;
 
-    --type-simulation: 270 50% 45%;
-    --type-interactive: 160 60% 40%;
+    --type-simulation: 221 80% 45%;
+    --type-interactive: 221 100% 40%;
 
-    --sidebar-background: 240 5% 97%;
-    --sidebar-foreground: 240 10% 10%;
-    --sidebar-primary: 160 60% 40%;
+    --sidebar-background: 0 0% 97%;
+    --sidebar-foreground: 0 0% 7%;
+    --sidebar-primary: 221 100% 40%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 5% 92%;
-    --sidebar-accent-foreground: 240 10% 10%;
-    --sidebar-border: 240 5% 90%;
-    --sidebar-ring: 160 60% 40%;
+    --sidebar-accent: 0 0% 92%;
+    --sidebar-accent-foreground: 0 0% 7%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 221 100% 40%;
   }
 }
 
@@ -135,11 +135,11 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Lexend', sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Lexend', sans-serif;
   }
 
   code, .font-mono {
@@ -191,21 +191,49 @@
 
 /* Glow effects */
 .hero-glow {
-  background: radial-gradient(ellipse 600px 400px at 50% 50%, hsl(160 60% 52% / 0.08), transparent);
+  background: radial-gradient(ellipse 600px 400px at 50% 50%, hsl(40 100% 60% / 0.08), transparent);
 }
 
 .cta-glow {
-  background: radial-gradient(ellipse 400px 250px at 50% 100%, hsl(160 60% 52% / 0.06), transparent);
+  background: radial-gradient(ellipse 400px 250px at 50% 100%, hsl(40 100% 60% / 0.06), transparent);
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: hsl(var(--background));
-}
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted));
-  border-radius: 3px;
+@layer components {
+  /* Primary filled pill button */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all duration-150 hover:brightness-105 hover:shadow-md active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2;
+  }
+
+  /* Ghost/outline pill button */
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-full border border-[hsl(var(--surface-border))] bg-transparent px-6 py-2.5 text-sm font-semibold text-foreground transition-all duration-150 hover:bg-[hsl(var(--surface-hover))] hover:border-foreground/20 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2;
+  }
+
+  /* Soft tinted pill button (uses primary tint) */
+  .btn-soft {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-5 py-2 text-sm font-semibold text-primary transition-all duration-150 hover:bg-primary/20 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2;
+  }
+
+  /* Difficulty badge base */
+  .badge-difficulty {
+    @apply inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider;
+  }
+
+  .badge-beginner {
+    color: hsl(var(--primary));
+    border-color: hsl(var(--primary) / 0.3);
+    background-color: hsl(var(--primary) / 0.1);
+  }
+
+  .badge-intermediate {
+    color: hsl(var(--difficulty-builder));
+    border-color: hsl(var(--difficulty-builder) / 0.3);
+    background-color: hsl(var(--difficulty-builder) / 0.1);
+  }
+
+  .badge-expert {
+    color: hsl(var(--difficulty-architect));
+    border-color: hsl(var(--difficulty-architect) / 0.3);
+    background-color: hsl(var(--difficulty-architect) / 0.1);
+  }
 }

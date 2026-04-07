@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["DM Sans", "sans-serif"],
+        sans: ["Lexend", "sans-serif"],
         mono: ["Azeret Mono", "monospace"],
       },
       colors: {

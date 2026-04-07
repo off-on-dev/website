@@ -137,7 +137,7 @@ const Sponsors = () => {
                 </ul>
                 <a
                   href="mailto:sponsors@open-ecosysffon.devpoffon.dev— {tier.name}"
-                  className="mt-6 inline-flex w-full items-center justify-center rounded-lg border border-primary/30 bg-primary/10 px-4 py-2.5 text-sm font-medium text-primary transition-all hover:bg-primary/20"
+                  className="mt-6 btn-soft w-full"
                 >
                   Get in touch
                 </a>
@@ -180,7 +180,7 @@ const Sponsors = () => {
             </p>
             <a
               href="mailto:sponsors@offon.dev?subject=Sponsorship Inquiry"
-              className="mt-8 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all hover:brightness-110"
+              className="mt-8 btn-primary"
             >
               Contact us →
             </a>
