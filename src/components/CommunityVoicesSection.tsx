@@ -15,23 +15,9 @@ const pillars = [
     cta: "Ask a question →",
     href: "https://community.offon.dev",
   },
-  {
-    icon: "🏆",
-    title: "Challenges",
-    desc: "Hands-on missions to practice OpenTelemetry, AI, and cloud-native skills. Fix broken setups, modernize infrastructure, and earn points on the leaderboard.",
-    cta: "See current challenges ↓",
-    href: "#challenges",
-  },
-  {
-    icon: "👋",
-    title: "Connect",
-    desc: "Say hello, find events near you, and meet people who care about the same things. Find local meetups, add upcoming events, and introduce yourself.",
-    cta: "Find your people →",
-    href: "https://community.offon.dev",
-  },
 ];
 
-export const HowItWorks = () => {
+export const CommunityVoicesSection = () => {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
@@ -41,29 +27,29 @@ export const HowItWorks = () => {
           <>
             <div className="animate-fade-up mb-3">
               <span className="font-mono text-xs font-medium uppercase tracking-widest text-primary">
-                Get Involved
+                Community
               </span>
             </div>
             <h2 className="animate-fade-up-delay-1 mb-3 text-3xl font-bold text-foreground md:text-4xl">
-              Start here
+              Share and learn together
             </h2>
             <p className="animate-fade-up-delay-1 mb-12 max-w-xl text-[hsl(var(--text-secondary))] leading-relaxed">
-              Share what you have built, write about what you have learned, or ask the community for help.
+              Post what you've built, write about what you've learned, or ask the community for help. Every contribution counts.
             </p>
-            <div className="animate-fade-up-delay-2 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="animate-fade-up-delay-2 grid gap-6 md:grid-cols-2">
               {pillars.map((p) => (
                 <div
                   key={p.title}
-                  className="card-glow flex flex-col rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6"
+                  className="card-glow flex flex-col rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8"
                 >
-                  <span className="text-2xl mb-3">{p.icon}</span>
-                  <h3 className="text-base font-semibold text-foreground">{p.title}</h3>
+                  <span className="text-3xl mb-4">{p.icon}</span>
+                  <h3 className="text-lg font-semibold text-foreground">{p.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground flex-1">{p.desc}</p>
                   <a
                     href={p.href}
-                    target={p.href.startsWith("http") ? "_blank" : undefined}
-                    rel={p.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    className="mt-4 text-sm font-medium text-primary hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-5 text-sm font-medium text-primary hover:underline"
                   >
                     {p.cta}
                   </a>

@@ -30,7 +30,7 @@ const LevelCard = ({ level, adventure }: { level: Adventure["levels"][0]; advent
     key={`${adventure.id}-${level.id}`}
     className="group relative rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5"
   >
-    <span className="inline-block mb-3 rounded-[5px] border border-[hsl(var(--surface-border))] px-2 py-0.5 font-mono text-[10px] text-[hsl(var(--text-faint))] uppercase tracking-wider">
+    <span className="inline-block mb-3 rounded-[5px] border border-[hsl(var(--surface-border))] px-2 py-0.5 font-mono text-xs text-[hsl(var(--text-faint))] uppercase tracking-wider">
       {adventure.month}
     </span>
 
@@ -60,7 +60,7 @@ const LevelCard = ({ level, adventure }: { level: Adventure["levels"][0]; advent
 
     <div className="mt-4 flex flex-wrap gap-1.5">
       {adventure.tags.slice(0, 3).map((tag) => (
-        <span key={tag} className="rounded-[5px] border border-[hsl(var(--surface-border))] px-2 py-0.5 text-[11px] text-[hsl(var(--text-faint))]">
+        <span key={tag} className="rounded-[5px] border border-[hsl(var(--surface-border))] px-2 py-0.5 text-[13px] text-[hsl(var(--text-faint))]">
           {tag}
         </span>
       ))}
@@ -76,10 +76,10 @@ const AdventureCard = ({ adventure }: { adventure: Adventure }) => (
     className="group relative rounded-xl border-2 border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
   >
     <div className="flex items-center justify-between mb-3">
-      <span className="inline-block rounded-[5px] border border-[hsl(var(--surface-border))] px-2 py-0.5 font-mono text-[10px] text-[hsl(var(--text-faint))] uppercase tracking-wider">
+      <span className="inline-block rounded-[5px] border border-[hsl(var(--surface-border))] px-2 py-0.5 font-mono text-xs text-[hsl(var(--text-faint))] uppercase tracking-wider">
         {adventure.month}
       </span>
-      <span className="inline-flex items-center gap-1.5 rounded-[5px] border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-primary">
+      <span className="inline-flex items-center gap-1.5 rounded-[5px] border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-xs uppercase tracking-wider text-primary">
         <Layers className="h-3 w-3" />
         3 Levels
       </span>
@@ -105,7 +105,7 @@ const AdventureCard = ({ adventure }: { adventure: Adventure }) => (
 
     <div className="mt-4 flex flex-wrap gap-1.5">
       {adventure.tags.slice(0, 4).map((tag) => (
-        <span key={tag} className="rounded-[5px] border border-[hsl(var(--surface-border))] px-2 py-0.5 text-[11px] text-[hsl(var(--text-faint))]">
+        <span key={tag} className="rounded-[5px] border border-[hsl(var(--surface-border))] px-2 py-0.5 text-[13px] text-[hsl(var(--text-faint))]">
           {tag}
         </span>
       ))}
@@ -169,25 +169,25 @@ export const ChallengesGrid = () => {
                 <button
                   key={mode}
                   onClick={() => setViewMode(mode)}
-                  className={`rounded-full border px-4 py-2 font-mono text-xs uppercase tracking-wider transition-all ${
+                  className={`rounded-full px-4 py-2.5 font-mono text-xs uppercase tracking-wider transition-colors outline-none ${
                     viewMode === mode
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-[hsl(var(--surface-border))] text-muted-foreground hover:border-primary/30 hover:text-foreground"
+                      ? "border border-primary bg-primary/10 text-primary"
+                      : "border border-foreground/25 text-foreground/60 hover:border-foreground/45 hover:text-foreground"
                   }`}
                 >
                   {mode === "challenges" ? "Challenges" : "Adventures"}
                 </button>
               ))}
 
-              <div className="mx-1 h-6 w-px bg-[hsl(var(--surface-border))]" />
+              <div className="mx-1 h-6 w-px bg-foreground/15" />
               {difficulties.map((d) => (
                 <button
                   key={d}
                   onClick={() => setFilter(d)}
-                  className={`rounded-full border px-4 py-2 font-mono text-xs uppercase tracking-wider transition-all ${
+                  className={`rounded-full px-4 py-2.5 font-mono text-xs uppercase tracking-wider transition-colors outline-none ${
                     filter === d
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-[hsl(var(--surface-border))] text-muted-foreground hover:border-primary/30 hover:text-foreground"
+                      ? "border border-primary bg-primary/10 text-primary"
+                      : "border border-foreground/25 text-foreground/60 hover:border-foreground/45 hover:text-foreground"
                   }`}
                 >
                   {d}
@@ -197,28 +197,28 @@ export const ChallengesGrid = () => {
                 </button>
               ))}
 
-              <div className="mx-1 h-6 w-px bg-[hsl(var(--surface-border))]" />
+              <div className="mx-1 h-6 w-px bg-foreground/15" />
 
               {categories.map((c) => (
                 <button
                   key={c}
                   onClick={() => setCategoryFilter(c)}
-                  className={`rounded-full border px-4 py-2 font-mono text-xs uppercase tracking-wider transition-all ${
+                  className={`rounded-full px-4 py-2.5 font-mono text-xs uppercase tracking-wider transition-colors outline-none ${
                     categoryFilter === c
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-[hsl(var(--surface-border))] text-muted-foreground hover:border-primary/30 hover:text-foreground"
+                      ? "border border-primary bg-primary/10 text-primary"
+                      : "border border-foreground/25 text-foreground/60 hover:border-foreground/45 hover:text-foreground"
                   }`}
                 >
                   {c}
                 </button>
               ))}
 
-              <div className="mx-1 h-6 w-px bg-[hsl(var(--surface-border))]" />
+              <div className="mx-1 h-6 w-px bg-foreground/15" />
 
               <div ref={dropdownRef} className="relative">
                 <button
                   onClick={() => setTagDropdownOpen((o) => !o)}
-                  className="flex items-center gap-2 rounded-full border border-[hsl(var(--surface-border))] px-4 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground hover:border-primary/30 hover:text-foreground transition-all"
+                  className="flex items-center gap-2 rounded-full border border-foreground/25 px-4 py-2.5 font-mono text-xs uppercase tracking-wider text-foreground/60 hover:border-foreground/45 hover:text-foreground transition-colors outline-none"
                 >
                   Tags {selectedTags.length > 0 && `(${selectedTags.length})`}
                   <ChevronDown className="h-3 w-3" />
@@ -235,7 +235,7 @@ export const ChallengesGrid = () => {
                             : "text-muted-foreground hover:bg-[hsl(var(--surface-border))] hover:text-foreground"
                         }`}
                       >
-                        <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border text-[10px] ${
+                        <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border text-xs ${
                           selectedTags.includes(tag) ? "border-primary bg-primary text-primary-foreground" : "border-[hsl(var(--surface-border))]"
                         }`}>
                           {selectedTags.includes(tag) && "✓"}

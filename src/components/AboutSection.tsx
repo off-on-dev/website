@@ -33,24 +33,24 @@ export const AboutSection = () => {
           <div className="animate-fade-up">
             <div className="grid gap-12 lg:grid-cols-2 mb-16">
               <div>
-                <span className="font-mono text-xs font-medium uppercase tracking-widest text-primary">About</span>
+                <span className="font-mono text-xs font-medium uppercase tracking-widest text-primary">Our Mission</span>
                 <h2 className="mt-3 text-3xl font-bold text-foreground md:text-4xl">
-                  Hands-on cloud-native education for everyone
+                  Creating the contributors and maintainers of tomorrow
                 </h2>
               </div>
-              <div className="flex flex-col justify-center">
+              <div className="flex flex-col justify-center gap-4">
                 <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
-                  offon.dev is a collection of free, hands-on challenges that teach cloud-native technologies through realistic debugging scenarios. Born out of the Dynatrace open source program, we believe that the best engineers aren't the ones who memorize docs — they're the ones who've broken things and fixed them.
+                  We are focused on what matters: supporting contributors and maintainers as open source faces new realities around regulation, digital sovereignty, and AI.
                 </p>
-                <p className="mt-4 text-[hsl(var(--text-secondary))] leading-relaxed">
-                  Each adventure drops you into a pre-built environment with something intentionally wrong. Your job is to find it, understand it, and fix it — using the same tools and workflows you'd use in production.
+                <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
+                  This community has one clear goal: helping people grow from curious users to confident contributors, and from contributors to sustainable maintainers.
                 </p>
               </div>
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {values.map((v) => (
-                <div key={v.title} className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6">
+                <div key={v.title} className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6">
                   <span className="text-2xl">{v.icon}</span>
                   <h3 className="mt-3 text-base font-semibold text-foreground">{v.title}</h3>
                   <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{v.desc}</p>

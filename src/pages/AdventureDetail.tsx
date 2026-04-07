@@ -271,7 +271,7 @@ const AdventureDetail = () => {
 
         {/* Header */}
         <div className="mb-10">
-          <span className="inline-block mb-4 rounded-[5px] border border-[hsl(var(--surface-border))] px-2 py-0.5 font-mono text-[10px] text-[hsl(var(--text-faint))] uppercase tracking-wider">
+          <span className="inline-block mb-4 rounded-[5px] border border-[hsl(var(--surface-border))] px-2 py-0.5 font-mono text-xs text-[hsl(var(--text-faint))] uppercase tracking-wider">
             {adventure.month}
           </span>
           <h1 className="text-4xl font-bold text-foreground mb-4">{adventure.title}</h1>

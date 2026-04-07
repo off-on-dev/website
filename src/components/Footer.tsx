@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
 import logoDark from "@/assets/logo-dark.png";
 import logoLight from "@/assets/logo-light.png";
@@ -14,15 +15,16 @@ export const Footer = () => {
             alt="offon.dev"
             className="h-5"
           />
-          <span className="text-sm text-muted-foreground">
-            · Vendor-neutral open source &amp; cloud-native education
+          <span className="text-sm text-foreground/60">
+            · Vendor-neutral · Open source · Community-driven
           </span>
         </div>
         <div className="flex items-center gap-6 text-sm text-muted-foreground">
           <a href="https://community.offon.dev" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Community</a>
+          <Link to="/docs" className="hover:text-foreground transition-colors">Docs</Link>
           <a href="https://github.com/dynatrace-oss/offon-challenges" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Challenges Repo</a>
-          <a href="https://github.com/dynatrace-oss/offon-challenge-verifier" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Verifier</a>
-          <a href="#about" className="hover:text-foreground transition-colors">About</a>
+          <Link to="/about" className="hover:text-foreground transition-colors">About</Link>
+          <Link to="/sponsors" className="hover:text-foreground transition-colors">Sponsors</Link>
         </div>
       </div>
     </footer>

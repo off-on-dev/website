@@ -2,10 +2,10 @@ import { CountUp } from "./CountUp";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const stats = [
-  { value: 3, label: "Adventures Live" },
-  { value: 54, label: "Forks" },
-  { value: 3, label: "Difficulty Levels" },
-  { value: 14, prefix: "<", suffix: "d", label: "Avg. Time to First Contribution" },
+  { value: 265, label: "Members" },
+  { value: 10, label: "Admins" },
+  { value: 6, label: "Moderators" },
+  { value: 6, suffix: " mo", label: "Community Age" },
 ];
 
 export const StatsBar = () => {

@@ -15,7 +15,7 @@
     --popover: 0 0% 7%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 40 100% 60%;
+    --primary: 45 100% 65%;
     --primary-foreground: 0 0% 4%;
 
     --secondary: 0 0% 12%;
@@ -24,7 +24,7 @@
     --muted: 0 0% 12%;
     --muted-foreground: 0 0% 53%;
 
-    --accent: 40 100% 60%;
+    --accent: 45 100% 65%;
     --accent-foreground: 0 0% 4%;
 
     --destructive: 0 84% 60%;
@@ -32,7 +32,7 @@
 
     --border: 0 0% 100% / 0.05;
     --input: 0 0% 100% / 0.05;
-    --ring: 40 100% 60%;
+    --ring: 45 100% 65%;
 
     --radius: 0.625rem;
 
@@ -43,28 +43,30 @@
     --text-faint: 0 0% 42%;
 
     --surface: 0 0% 100% / 0.025;
-    --surface-border: 0 0% 100% / 0.05;
-    --surface-hover: 0 0% 100% / 0.04;
+    --surface-border: 0 0% 100% / 0.07;
+    --surface-hover: 0 0% 100% / 0.05;
 
-    --emerald: 40 100% 60%;
-    --teal: 40 78% 51%;
-    --purple: 30 100% 45%;
+    /* Electric accent colors for the lightning gradient */
+    --electric: 45 100% 65%;
+    --emerald: 45 100% 65%;
+    --teal: 38 100% 58%;
+    --purple: 32 100% 52%;
 
-    --difficulty-starter: 40 100% 60%;
+    --difficulty-starter: 45 100% 65%;
     --difficulty-builder: 25 90% 55%;
     --difficulty-architect: 0 75% 55%;
 
-    --type-simulation: 40 78% 51%;
-    --type-interactive: 40 100% 60%;
+    --type-simulation: 38 100% 58%;
+    --type-interactive: 45 100% 65%;
 
     --sidebar-background: 0 0% 7%;
     --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 40 100% 60%;
+    --sidebar-primary: 45 100% 65%;
     --sidebar-primary-foreground: 0 0% 4%;
     --sidebar-accent: 0 0% 12%;
     --sidebar-accent-foreground: 0 0% 95%;
     --sidebar-border: 0 0% 100% / 0.05;
-    --sidebar-ring: 40 100% 60%;
+    --sidebar-ring: 45 100% 65%;
   }
 
   .light {
@@ -77,7 +79,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 7%;
 
-    --primary: 221 100% 40%;
+    --primary: 214 100% 34%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 92%;
@@ -86,7 +88,7 @@
     --muted: 0 0% 94%;
     --muted-foreground: 0 0% 44%;
 
-    --accent: 221 100% 40%;
+    --accent: 214 100% 34%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 40%;
@@ -94,7 +96,7 @@
 
     --border: 0 0% 87%;
     --input: 0 0% 87%;
-    --ring: 221 100% 40%;
+    --ring: 214 100% 34%;
 
     /* Custom tokens */
     --text-primary: 0 0% 7%;
@@ -106,25 +108,26 @@
     --surface-border: 0 0% 90%;
     --surface-hover: 0 0% 93%;
 
-    --emerald: 221 100% 40%;
-    --teal: 221 80% 45%;
-    --purple: 250 80% 45%;
+    --electric: 214 100% 34%;
+    --emerald: 214 100% 34%;
+    --teal: 210 100% 40%;
+    --purple: 225 80% 45%;
 
-    --difficulty-starter: 221 100% 40%;
+    --difficulty-starter: 214 100% 34%;
     --difficulty-builder: 25 90% 35%;
     --difficulty-architect: 0 75% 40%;
 
-    --type-simulation: 221 80% 45%;
-    --type-interactive: 221 100% 40%;
+    --type-simulation: 200 100% 38%;
+    --type-interactive: 214 100% 34%;
 
     --sidebar-background: 0 0% 97%;
     --sidebar-foreground: 0 0% 7%;
-    --sidebar-primary: 221 100% 40%;
+    --sidebar-primary: 214 100% 34%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 0 0% 92%;
     --sidebar-accent-foreground: 0 0% 7%;
     --sidebar-border: 0 0% 90%;
-    --sidebar-ring: 221 100% 40%;
+    --sidebar-ring: 214 100% 34%;
   }
 }
 
@@ -138,6 +141,16 @@
     font-family: 'Lexend', sans-serif;
   }
 
+  /* Subtle electric dot grid — only in dark mode */
+  :root body, .dark body {
+    background-image: radial-gradient(circle, hsl(45 100% 65% / 0.035) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+
+  .light body {
+    background-image: none;
+  }
+
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Lexend', sans-serif;
   }
@@ -147,93 +160,169 @@
   }
 }
 
-/* Animations */
+/* ─── Animations ──────────────────────────────────────────── */
+
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes marquee {
-  0% { transform: translateX(0); }
+  0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+  50%       { opacity: 0.3; }
 }
 
-.animate-fade-up {
-  animation: fadeUp 0.6s ease-out both;
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.75; transform: scale(1); }
+  50%       { opacity: 1;    transform: scale(1.04); }
 }
 
-.animate-fade-up-delay-1 {
-  animation: fadeUp 0.6s ease-out 0.1s both;
+@keyframes fireflyFloat {
+  0%   { transform: translate(0,    0);     opacity: 0.4; }
+  20%  { transform: translate(14px, -22px); opacity: 1;   }
+  45%  { transform: translate(-8px, -14px); opacity: 0.3; }
+  70%  { transform: translate(10px,  8px);  opacity: 0.9; }
+  100% { transform: translate(0,    0);     opacity: 0.4; }
 }
 
-.animate-fade-up-delay-2 {
-  animation: fadeUp 0.6s ease-out 0.2s both;
-}
+.animate-fade-up            { animation: fadeUp 0.6s ease-out both; }
+.animate-fade-up-delay-1    { animation: fadeUp 0.6s ease-out 0.1s both; }
+.animate-fade-up-delay-2    { animation: fadeUp 0.6s ease-out 0.2s both; }
+.animate-fade-up-delay-3    { animation: fadeUp 0.6s ease-out 0.3s both; }
+.animate-marquee            { animation: marquee 30s linear infinite; }
 
-.animate-fade-up-delay-3 {
-  animation: fadeUp 0.6s ease-out 0.3s both;
-}
+/* ─── Firefly particles ───────────────────────────────────── */
 
-.animate-marquee {
-  animation: marquee 30s linear infinite;
+.firefly {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: hsl(var(--primary));
+  box-shadow:
+    0 0 6px 3px  hsl(var(--primary) / 0.9),
+    0 0 20px 8px hsl(var(--primary) / 0.35);
+  animation: fireflyFloat ease-in-out infinite;
 }
+/* vary each dot's position + timing */
+.firefly:nth-child(1) { top: 12%; left: 8%;  animation-duration: 7s;  animation-delay: 0s; }
+.firefly:nth-child(2) { top: 28%; right: 12%; animation-duration: 9s;  animation-delay: 1.3s; }
+.firefly:nth-child(3) { top: 62%; left: 18%; animation-duration: 8.5s; animation-delay: 2.1s; }
+.firefly:nth-child(4) { top: 42%; right: 22%; animation-duration: 11s; animation-delay: 0.7s; }
+.firefly:nth-child(5) { top: 78%; left: 42%; animation-duration: 6.5s; animation-delay: 3.2s; }
+.firefly:nth-child(6) { top: 18%; left: 55%; animation-duration: 10s; animation-delay: 1.8s; }
+.firefly:nth-child(7) { top: 82%; right: 8%;  animation-duration: 7.5s; animation-delay: 4s; }
+.firefly:nth-child(8) { top: 50%; left: 72%; animation-duration: 8s;  animation-delay: 2.6s; }
 
-/* Glow effects */
+/* ─── Glow backgrounds ───────────────────────────────────── */
+
 .hero-glow {
-  background: radial-gradient(ellipse 600px 400px at 50% 50%, hsl(40 100% 60% / 0.08), transparent);
+  background:
+    radial-gradient(ellipse 900px 600px at 50% 45%, hsl(45 100% 65% / 0.16), transparent),
+    radial-gradient(ellipse 400px 250px at 18% 65%, hsl(38 100% 58% / 0.07), transparent),
+    radial-gradient(ellipse 350px 220px at 82% 22%, hsl(32 100% 52% / 0.05), transparent);
+  animation: glowPulse 7s ease-in-out infinite;
 }
 
 .cta-glow {
-  background: radial-gradient(ellipse 400px 250px at 50% 100%, hsl(40 100% 60% / 0.06), transparent);
+  background:
+    radial-gradient(ellipse 500px 300px at 50% 110%, hsl(45 100% 65% / 0.1), transparent),
+    radial-gradient(ellipse 250px 150px at 20% 80%, hsl(38 100% 58% / 0.06), transparent);
 }
+
+/* ─── Component classes ──────────────────────────────────── */
 
 @layer components {
   /* Primary filled pill button */
   .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all duration-150 hover:brightness-105 hover:shadow-md active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground shadow-sm transition-all duration-200 hover:brightness-110 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2;
   }
 
   /* Ghost/outline pill button */
   .btn-ghost {
-    @apply inline-flex items-center gap-2 rounded-full border border-[hsl(var(--surface-border))] bg-transparent px-6 py-2.5 text-sm font-semibold text-foreground transition-all duration-150 hover:bg-[hsl(var(--surface-hover))] hover:border-foreground/20 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-full border border-foreground/25 bg-transparent px-7 py-3.5 text-base font-semibold text-foreground transition-all duration-200 hover:bg-foreground/[.06] hover:border-foreground/40 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2;
   }
 
-  /* Soft tinted pill button (uses primary tint) */
+  /* Soft tinted pill button */
   .btn-soft {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-5 py-2 text-sm font-semibold text-primary transition-all duration-150 hover:bg-primary/20 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-6 py-3 text-base font-semibold text-primary transition-all duration-200 hover:bg-primary/20 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2;
   }
 
   /* Difficulty badge base */
   .badge-difficulty {
-    @apply inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider;
+    @apply inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 font-mono text-[13px] uppercase tracking-wider;
   }
 
   .badge-beginner {
     color: hsl(var(--primary));
-    border-color: hsl(var(--primary) / 0.3);
+    border-color: hsl(var(--primary) / 0.35);
     background-color: hsl(var(--primary) / 0.1);
   }
 
   .badge-intermediate {
     color: hsl(var(--difficulty-builder));
-    border-color: hsl(var(--difficulty-builder) / 0.3);
+    border-color: hsl(var(--difficulty-builder) / 0.35);
     background-color: hsl(var(--difficulty-builder) / 0.1);
   }
 
   .badge-expert {
     color: hsl(var(--difficulty-architect));
-    border-color: hsl(var(--difficulty-architect) / 0.3);
+    border-color: hsl(var(--difficulty-architect) / 0.35);
     background-color: hsl(var(--difficulty-architect) / 0.1);
   }
+}
+
+/* ─── Electric glow effects ──────────────────────────────── */
+
+/* Button primary: electric glow on hover */
+.btn-primary:hover {
+  box-shadow:
+    0 0 22px -4px hsl(var(--primary) / 0.65),
+    0 2px 8px -2px hsl(0 0% 0% / 0.25);
+}
+
+/* Ghost button: subtle glow on hover */
+.btn-ghost:hover {
+  box-shadow: 0 0 14px -4px hsl(var(--primary) / 0.25);
+}
+
+/* Glowing card hover — add card-glow class to cards */
+.card-glow {
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.card-glow:hover {
+  box-shadow:
+    0 0 0 1px hsl(var(--primary) / 0.25),
+    0 0 32px -6px hsl(var(--primary) / 0.2),
+    0 0 60px -12px hsl(38 100% 58% / 0.1);
+  border-color: hsl(var(--primary) / 0.25) !important;
+}
+
+/* ─── Light mode overrides ───────────────────────────────── */
+
+.light .hero-glow {
+  background:
+    radial-gradient(ellipse 900px 600px at 50% 45%, hsl(214 100% 34% / 0.06), transparent),
+    radial-gradient(ellipse 400px 250px at 18% 65%, hsl(210 100% 40% / 0.03), transparent),
+    radial-gradient(ellipse 350px 220px at 82% 22%, hsl(225 80% 45% / 0.03), transparent);
+}
+
+.light .card-glow:hover {
+  box-shadow:
+    0 0 0 1px hsl(214 100% 34% / 0.18),
+    0 0 28px -6px hsl(214 100% 40% / 0.1),
+    0 0 50px -12px hsl(214 100% 45% / 0.07);
+  border-color: hsl(214 100% 34% / 0.18) !important;
+}
+
+.light .firefly {
+  background-color: hsl(214 100% 50%);
+  box-shadow:
+    0 0 6px 3px  hsl(214 100% 55% / 0.5),
+    0 0 18px 6px hsl(214 100% 60% / 0.2);
 }

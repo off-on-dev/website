@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
-import { HowItWorks } from "@/components/HowItWorks";
 import { ChallengesGrid } from "@/components/ChallengesGrid";
+import { CommunityVoicesSection } from "@/components/CommunityVoicesSection";
+import { ConnectSection } from "@/components/ConnectSection";
 import { BottomCTA } from "@/components/BottomCTA";
 import { Footer } from "@/components/Footer";
 
@@ -18,12 +19,14 @@ const Index = () => {
       }
     }
   }, [hash]);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <Hero />
-      <HowItWorks />
       <ChallengesGrid />
+      <CommunityVoicesSection />
+      <ConnectSection />
       <BottomCTA />
       <Footer />
     </div>

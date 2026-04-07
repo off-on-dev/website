@@ -23,6 +23,9 @@ export const Navbar = () => {
           <a href="https://community.offon.dev" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
             Community
           </a>
+          <Link to="/docs" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
+            Docs
+          </Link>
           <Link to="/about" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
             About
           </Link>
