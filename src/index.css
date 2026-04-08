@@ -1,4 +1,44 @@
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Azeret+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&display=swap');
+
+@font-face {
+  font-family: 'Syne';
+  src: url('/fonts/Syne-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Syne';
+  src: url('/fonts/Syne-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Syne';
+  src: url('/fonts/Syne-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Syne';
+  src: url('/fonts/Syne-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Syne';
+  src: url('/fonts/Syne-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
 
 @tailwind base;
 @tailwind components;
@@ -15,7 +55,7 @@
     --popover: 0 0% 7%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 45 100% 65%;
+    --primary: 41 100% 60%;
     --primary-foreground: 0 0% 4%;
 
     --secondary: 0 0% 12%;
@@ -24,7 +64,7 @@
     --muted: 0 0% 12%;
     --muted-foreground: 0 0% 53%;
 
-    --accent: 45 100% 65%;
+    --accent: 41 100% 60%;
     --accent-foreground: 0 0% 4%;
 
     --destructive: 0 84% 60%;
@@ -32,7 +72,7 @@
 
     --border: 0 0% 100% / 0.05;
     --input: 0 0% 100% / 0.05;
-    --ring: 45 100% 65%;
+    --ring: 41 100% 60%;
 
     --radius: 0.625rem;
 
@@ -47,21 +87,21 @@
     --surface-hover: 0 0% 100% / 0.05;
 
     /* Electric accent colors for the lightning gradient */
-    --electric: 45 100% 65%;
-    --emerald: 45 100% 65%;
+    --electric: 41 100% 60%;
+    --emerald: 41 100% 60%;
     --teal: 38 100% 58%;
     --purple: 32 100% 52%;
 
-    --difficulty-starter: 45 100% 65%;
+    --difficulty-starter: 41 100% 60%;
     --difficulty-builder: 25 90% 55%;
     --difficulty-architect: 0 75% 55%;
 
     --type-simulation: 38 100% 58%;
-    --type-interactive: 45 100% 65%;
+    --type-interactive: 41 100% 60%;
 
     --sidebar-background: 0 0% 7%;
     --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 45 100% 65%;
+    --sidebar-primary: 41 100% 60%;
     --sidebar-primary-foreground: 0 0% 4%;
     --sidebar-accent: 0 0% 12%;
     --sidebar-accent-foreground: 0 0% 95%;
@@ -138,12 +178,12 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Lexend', sans-serif;
+    font-family: 'Syne', sans-serif;
   }
 
   /* Subtle electric dot grid — only in dark mode */
   :root body, .dark body {
-    background-image: radial-gradient(circle, hsl(45 100% 65% / 0.035) 1px, transparent 1px);
+    background-image: radial-gradient(circle, hsl(41 100% 60% / 0.035) 1px, transparent 1px);
     background-size: 44px 44px;
   }
 
@@ -152,7 +192,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Lexend', sans-serif;
+    font-family: 'Syne', sans-serif;
   }
 
   code, .font-mono {
@@ -223,10 +263,12 @@
 
 .hero-glow {
   background:
-    radial-gradient(ellipse 900px 600px at 50% 45%, hsl(45 100% 65% / 0.16), transparent),
-    radial-gradient(ellipse 400px 250px at 18% 65%, hsl(38 100% 58% / 0.07), transparent),
-    radial-gradient(ellipse 350px 220px at 82% 22%, hsl(32 100% 52% / 0.05), transparent);
-  animation: glowPulse 7s ease-in-out infinite;
+    radial-gradient(ellipse 800px 500px at 50% 40%, hsl(41 100% 60% / 0.08), transparent),
+    radial-gradient(ellipse 350px 200px at 18% 65%, hsl(38 100% 58% / 0.04), transparent),
+    radial-gradient(ellipse 300px 180px at 82% 22%, hsl(32 100% 52% / 0.03), transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 70%, transparent 100%);
+  animation: glowPulse 9s ease-in-out infinite;
 }
 
 .cta-glow {
@@ -307,9 +349,11 @@
 
 .light .hero-glow {
   background:
-    radial-gradient(ellipse 900px 600px at 50% 45%, hsl(214 100% 34% / 0.06), transparent),
-    radial-gradient(ellipse 400px 250px at 18% 65%, hsl(210 100% 40% / 0.03), transparent),
-    radial-gradient(ellipse 350px 220px at 82% 22%, hsl(225 80% 45% / 0.03), transparent);
+    radial-gradient(ellipse 800px 500px at 50% 40%, hsl(214 100% 34% / 0.04), transparent),
+    radial-gradient(ellipse 350px 200px at 18% 65%, hsl(210 100% 40% / 0.02), transparent),
+    radial-gradient(ellipse 300px 180px at 82% 22%, hsl(225 80% 45% / 0.02), transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 70%, transparent 100%);
 }
 
 .light .card-glow:hover {

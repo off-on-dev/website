@@ -14,8 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Lexend", "sans-serif"],
+        sans: ["Syne", "sans-serif"],
         mono: ["Azeret Mono", "monospace"],
+        heading: ["Syne", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

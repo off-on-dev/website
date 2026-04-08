@@ -18,12 +18,12 @@ export const Hero = () => {
       <div className="relative z-10 mx-auto max-w-3xl text-center">
         {isVisible && (
           <>
-            <div className="animate-fade-up mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-[hsl(var(--surface))] px-4 py-1.5" style={{ boxShadow: '0 0 20px -6px hsl(45 100% 65% / 0.3)' }}>
-              <span className="h-2 w-2 rounded-full bg-primary" style={{ boxShadow: '0 0 4px 1px hsl(45 100% 65% / 0.4)' }} />
+            <div className="animate-fade-up mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-[hsl(var(--surface))] px-4 py-1.5">
+              <span className="h-2 w-2 rounded-full bg-primary" />
               <span className="font-mono text-xs text-foreground">Vendor-neutral</span>
-              <span className="h-2 w-2 rounded-full bg-primary" style={{ boxShadow: '0 0 4px 1px hsl(45 100% 65% / 0.4)' }} />
+              <span className="h-2 w-2 rounded-full bg-primary" />
               <span className="font-mono text-xs text-foreground">Open source</span>
-              <span className="h-2 w-2 rounded-full bg-primary" style={{ boxShadow: '0 0 4px 1px hsl(45 100% 65% / 0.4)' }} />
+              <span className="h-2 w-2 rounded-full bg-primary" />
               <span className="font-mono text-xs text-foreground">Community-driven</span>
             </div>
             <h1 className="animate-fade-up-delay-1 text-5xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl">
