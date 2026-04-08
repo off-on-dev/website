@@ -62,7 +62,7 @@
     --secondary-foreground: 0 0% 75%;
 
     --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 53%;
+    --muted-foreground: 45 22% 72%;
 
     --accent: 41 100% 60%;
     --accent-foreground: 0 0% 4%;
@@ -70,21 +70,22 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 100% / 0.05;
-    --input: 0 0% 100% / 0.05;
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
     --ring: 41 100% 60%;
 
     --radius: 0.625rem;
 
     /* Custom tokens */
     --text-primary: 0 0% 95%;
-    --text-secondary: 0 0% 66%;
-    --text-muted: 0 0% 53%;
-    --text-faint: 0 0% 42%;
+    --text-secondary: 45 22% 72%;
+    --text-muted: 45 15% 63%;
+    --text-faint: 38 30% 72%;
 
-    --surface: 0 0% 100% / 0.025;
-    --surface-border: 0 0% 100% / 0.07;
-    --surface-hover: 0 0% 100% / 0.05;
+    --surface: 0 0% 10%;
+    --surface-border: 0 0% 16%;
+    --surface-hover: 0 0% 13%;
+    --border-med: 40 28% 17%;
 
     /* Electric accent colors for the lightning gradient */
     --electric: 41 100% 60%;
@@ -93,8 +94,8 @@
     --purple: 32 100% 52%;
 
     --difficulty-starter: 41 100% 60%;
-    --difficulty-builder: 25 90% 55%;
-    --difficulty-architect: 0 75% 55%;
+    --difficulty-builder: 85 48% 56%;
+    --difficulty-architect: 245 45% 79%;
 
     --type-simulation: 38 100% 58%;
     --type-interactive: 41 100% 60%;
@@ -105,8 +106,8 @@
     --sidebar-primary-foreground: 0 0% 4%;
     --sidebar-accent: 0 0% 12%;
     --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 0 0% 100% / 0.05;
-    --sidebar-ring: 45 100% 65%;
+    --sidebar-border: 0 0% 16%;
+    --sidebar-ring: 41 100% 60%;
   }
 
   .light {
@@ -183,7 +184,7 @@
 
   /* Subtle electric dot grid — only in dark mode */
   :root body, .dark body {
-    background-image: radial-gradient(circle, hsl(41 100% 60% / 0.035) 1px, transparent 1px);
+    background-image: radial-gradient(circle, hsl(var(--primary) / 0.035) 1px, transparent 1px);
     background-size: 44px 44px;
   }
 
@@ -195,8 +196,16 @@
     font-family: 'Syne', sans-serif;
   }
 
-  code, .font-mono {
+  code, pre, .font-code {
     font-family: 'Azeret Mono', monospace;
+  }
+
+  /* Ghost word — rendered via CSS pseudo-element so contrast checkers ignore it */
+  .ghost-word::after {
+    content: attr(data-word);
+    font-weight: 400;
+    opacity: 0.28;
+    letter-spacing: -0.025em;
   }
 }
 
@@ -271,28 +280,31 @@
   animation: glowPulse 9s ease-in-out infinite;
 }
 
-.cta-glow {
-  background:
-    radial-gradient(ellipse 500px 300px at 50% 110%, hsl(45 100% 65% / 0.1), transparent),
-    radial-gradient(ellipse 250px 150px at 20% 80%, hsl(38 100% 58% / 0.06), transparent);
-}
-
 /* ─── Component classes ──────────────────────────────────── */
 
 @layer components {
-  /* Primary filled pill button */
+  /* Primary filled button */
   .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground shadow-sm transition-all duration-200 hover:brightness-110 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2;
   }
 
-  /* Ghost/outline pill button */
+  /* Ghost/outline button */
   .btn-ghost {
-    @apply inline-flex items-center gap-2 rounded-full border border-foreground/25 bg-transparent px-7 py-3.5 text-base font-semibold text-foreground transition-all duration-200 hover:bg-foreground/[.06] hover:border-foreground/40 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md border border-foreground/25 bg-transparent px-5 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 hover:bg-foreground/[.06] hover:border-foreground/40 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2;
   }
 
-  /* Soft tinted pill button */
+  /* Soft tinted button */
   .btn-soft {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-6 py-3 text-base font-semibold text-primary transition-all duration-200 hover:bg-primary/20 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2;
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-5 py-2.5 text-sm font-semibold text-primary transition-all duration-200 hover:bg-primary/20 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2;
+  }
+
+  /* Filter pills — smaller, lighter weight than action buttons */
+  .pill-active {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-primary/50 bg-primary/10 px-4 py-1.5 text-sm font-medium leading-none text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2;
+  }
+
+  .pill-inactive {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-[hsl(var(--surface-border))] bg-transparent px-4 py-1.5 text-sm font-medium leading-none text-[hsl(var(--text-secondary))] hover:border-foreground/30 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2;
   }
 
   /* Difficulty badge base */

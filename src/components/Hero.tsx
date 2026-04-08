@@ -6,10 +6,10 @@ export const Hero = () => {
   return (
     <section ref={ref} className="relative flex min-h-screen items-center justify-center px-6 pt-20 overflow-hidden">
       {/* Multi-color animated glow */}
-      <div className="hero-glow absolute inset-0 pointer-events-none" />
+      <div className="hero-glow absolute inset-0 pointer-events-none" aria-hidden="true" />
 
       {/* Firefly particles */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         {Array.from({ length: 8 }).map((_, i) => (
           <span key={i} className="firefly" />
         ))}
@@ -18,13 +18,13 @@ export const Hero = () => {
       <div className="relative z-10 mx-auto max-w-3xl text-center">
         {isVisible && (
           <>
-            <div className="animate-fade-up mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-[hsl(var(--surface))] px-4 py-1.5">
-              <span className="h-2 w-2 rounded-full bg-primary" />
-              <span className="font-mono text-xs text-foreground">Vendor-neutral</span>
-              <span className="h-2 w-2 rounded-full bg-primary" />
-              <span className="font-mono text-xs text-foreground">Open source</span>
-              <span className="h-2 w-2 rounded-full bg-primary" />
-              <span className="font-mono text-xs text-foreground">Community-driven</span>
+            <div className="animate-fade-up mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-[hsl(var(--surface))] px-4 py-1.5" aria-label="Vendor-neutral, Open source, Community-driven">
+              <span className="h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
+              <span className="text-xs text-foreground">Vendor-neutral</span>
+              <span className="h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
+              <span className="text-xs text-foreground">Open source</span>
+              <span className="h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
+              <span className="text-xs text-foreground">Community-driven</span>
             </div>
             <h1 className="animate-fade-up-delay-1 text-5xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl">
               <span className="bg-gradient-to-r from-primary via-primary/70 to-[hsl(var(--teal))] bg-clip-text text-transparent">

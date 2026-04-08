@@ -17,19 +17,19 @@ export const Navbar = () => {
           />
         </Link>
         <div className="flex items-center gap-8">
-          <a href="#challenges" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
+          <a href="#challenges" className="text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-foreground transition-colors">
             Challenges
           </a>
-          <a href="https://community.offon.dev" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
+          <a href="https://community.offon.dev" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-foreground transition-colors">
             Community
           </a>
-          <Link to="/docs" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
+          <Link to="/docs" className="text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-foreground transition-colors">
             Docs
           </Link>
-          <Link to="/about" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
+          <Link to="/about" className="text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-foreground transition-colors">
             About
           </Link>
-          <Link to="/sponsors" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
+          <Link to="/sponsors" className="text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-foreground transition-colors">
             Sponsors
           </Link>
           <button

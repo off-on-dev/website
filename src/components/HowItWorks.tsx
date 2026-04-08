@@ -56,7 +56,7 @@ export const HowItWorks = () => {
                   key={p.title}
                   className="card-glow flex flex-col rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6"
                 >
-                  <span className="text-2xl mb-3">{p.icon}</span>
+                  <span className="text-2xl mb-3" aria-hidden="true">{p.icon}</span>
                   <h3 className="text-base font-semibold text-foreground">{p.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground flex-1">{p.desc}</p>
                   <a

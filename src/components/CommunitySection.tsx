@@ -36,9 +36,7 @@ export const CommunitySection = () => {
                   Browse the forum →
                 </a>
                 <a
-                  href="https://community.offon.dev"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/docs"
                   className="btn-ghost"
                 >
                   Getting started guide
@@ -48,7 +46,7 @@ export const CommunitySection = () => {
             <div className="flex flex-col gap-4">
               {highlights.map((h, i) => (
                 <div key={i} className="flex items-start gap-4 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-                  <span className="text-xl shrink-0 mt-0.5">{h.emoji}</span>
+                  <span className="text-xl shrink-0 mt-0.5" aria-hidden="true">{h.emoji}</span>
                   <p className="text-sm leading-relaxed text-muted-foreground">{h.text}</p>
                 </div>
               ))}

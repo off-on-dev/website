@@ -42,7 +42,7 @@ export const ConnectSection = () => {
                   key={item.title}
                   className="card-glow flex flex-col rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8"
                 >
-                  <span className="text-3xl mb-4">{item.icon}</span>
+                  <span className="text-3xl mb-4" aria-hidden="true">{item.icon}</span>
                   <h3 className="text-lg font-semibold text-foreground">{item.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground flex-1">{item.desc}</p>
                   <a

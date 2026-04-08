@@ -169,11 +169,7 @@ export const ChallengesGrid = () => {
                 <button
                   key={mode}
                   onClick={() => setViewMode(mode)}
-                  className={`rounded-full px-4 py-2.5 font-mono text-xs uppercase tracking-wider transition-colors outline-none ${
-                    viewMode === mode
-                      ? "border border-primary bg-primary/10 text-primary"
-                      : "border border-foreground/25 text-foreground/60 hover:border-foreground/45 hover:text-foreground"
-                  }`}
+                  className={viewMode === mode ? "pill-active" : "pill-inactive"}
                 >
                   {mode === "challenges" ? "Challenges" : "Adventures"}
                 </button>
@@ -184,14 +180,10 @@ export const ChallengesGrid = () => {
                 <button
                   key={d}
                   onClick={() => setFilter(d)}
-                  className={`rounded-full px-4 py-2.5 font-mono text-xs uppercase tracking-wider transition-colors outline-none ${
-                    filter === d
-                      ? "border border-primary bg-primary/10 text-primary"
-                      : "border border-foreground/25 text-foreground/60 hover:border-foreground/45 hover:text-foreground"
-                  }`}
+                  className={filter === d ? "pill-active" : "pill-inactive"}
                 >
                   {d}
-                  <span className="ml-2 text-[hsl(var(--text-faint))]">
+                  <span className="text-[hsl(var(--text-faint))] tabular-nums">
                     {d === "All" ? allLevels.length : allLevels.filter((l) => l.difficulty === d).length}
                   </span>
                 </button>
@@ -203,11 +195,7 @@ export const ChallengesGrid = () => {
                 <button
                   key={c}
                   onClick={() => setCategoryFilter(c)}
-                  className={`rounded-full px-4 py-2.5 font-mono text-xs uppercase tracking-wider transition-colors outline-none ${
-                    categoryFilter === c
-                      ? "border border-primary bg-primary/10 text-primary"
-                      : "border border-foreground/25 text-foreground/60 hover:border-foreground/45 hover:text-foreground"
-                  }`}
+                  className={categoryFilter === c ? "pill-active" : "pill-inactive"}
                 >
                   {c}
                 </button>
@@ -218,7 +206,7 @@ export const ChallengesGrid = () => {
               <div ref={dropdownRef} className="relative">
                 <button
                   onClick={() => setTagDropdownOpen((o) => !o)}
-                  className="flex items-center gap-2 rounded-full border border-foreground/25 px-4 py-2.5 font-mono text-xs uppercase tracking-wider text-foreground/60 hover:border-foreground/45 hover:text-foreground transition-colors outline-none"
+                  className="pill-inactive flex items-center gap-1.5"
                 >
                   Tags {selectedTags.length > 0 && `(${selectedTags.length})`}
                   <ChevronDown className="h-3 w-3" />

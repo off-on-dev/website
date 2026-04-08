@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Syne", "sans-serif"],
-        mono: ["Azeret Mono", "monospace"],
+        mono: ["Syne", "sans-serif"],
         heading: ["Syne", "sans-serif"],
       },
       colors: {
