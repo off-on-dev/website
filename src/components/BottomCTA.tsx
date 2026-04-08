@@ -8,10 +8,10 @@ export const BottomCTA = () => {
       {isVisible && (
         <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* Left — headline */}
-          <h2 className="animate-fade-up text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background" aria-label="Every firefly glows alone. Together they synchronize.">
+          <h2 className="animate-fade-up text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background">
             Every firefly<br />
             glows{" "}
-            <span className="ghost-word" data-word="alone." aria-hidden="true" />
+            <span className="ghost-word">alone.</span>
             <br />
             Together they<br />
             synchronize.

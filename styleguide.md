@@ -4,12 +4,209 @@
 
 ### Fonts
 
-| Role | Family | Weights |
-|---|---|---|
-| Body & UI | Syne | 400, 500, 600, 700, 800 |
-| Code / Mono | Azeret Mono | 400, 500, 600 |
+| Role | Family | Weights | Source |
+|---|---|---|---|
+| Headings (`h1`–`h6`) | Syne | 400, 500, 600, 700, 800 | Self-hosted `public/fonts/Syne-*.ttf` |
+| Body & UI (`font-sans`) | Inter | 400, 500, 600, 700 | Self-hosted `public/fonts/Inter_18pt-*.ttf` |
+| Code / Mono (`font-mono`, `code`, `pre`) | Azeret Mono | 400, 500, 600 | Self-hosted `public/fonts/AzeretMono-*.ttf` |
 
-Font files are self-hosted in `public/fonts/`. No Google Fonts dependency for Syne.
+All fonts are fully self-hosted. No external network requests.
+
+### Tailwind font utilities
+
+| Utility | Resolves to |
+|---|---|
+| `font-sans` | Inter |
+| `font-mono` | Azeret Mono |
+| `font-heading` | Syne |
+
+### Scale (Tailwind defaults)
+
+| Element | Class example | Notes |
+|---|---|---|
+| H1 | `text-4xl font-bold` md:`text-5xl` | Syne, weight 700 |
+| H2 | `text-3xl font-bold` md:`text-4xl` | Syne, weight 700 |
+| H3 | `text-lg font-semibold` | Syne, weight 600 |
+| Body | `text-base` | Inter, weight 400 |
+| Small / caption | `text-sm` | Inter, weight 400 |
+| Overline label | `font-mono text-xs font-medium uppercase tracking-widest` | Azeret Mono |
+| Badge / tag | `font-mono text-xs uppercase tracking-wider` | Azeret Mono |
+
+---
+
+## Colors
+
+### Dark Mode (default — `:root, .dark`)
+
+| Token | HSL | Approx hex | Usage |
+|---|---|---|---|
+| `--background` | `0 0% 4%` | `#0a0a0a` | Page background |
+| `--foreground` | `0 0% 95%` | `#f2f2f2` | Primary text |
+| `--card` | `0 0% 7%` | `#121212` | Card / panel background |
+| `--card-foreground` | `0 0% 95%` | `#f2f2f2` | Text on cards |
+| `--popover` | `0 0% 7%` | `#121212` | Popover background |
+| `--primary` | `41 100% 60%` | `#ffc034` | Buttons, links, highlights |
+| `--primary-foreground` | `0 0% 4%` | `#0a0a0a` | Text on primary |
+| `--secondary` | `0 0% 12%` | `#1f1f1f` | Secondary backgrounds |
+| `--secondary-foreground` | `0 0% 75%` | `#bfbfbf` | Secondary text |
+| `--muted` | `0 0% 12%` | `#1f1f1f` | Muted backgrounds |
+| `--muted-foreground` | `45 22% 72%` | `#c8bfa0` | Muted / placeholder text |
+| `--accent` | `41 100% 60%` | `#ffc034` | Accent highlights |
+| `--destructive` | `0 84% 60%` | `#f03f3f` | Error / destructive |
+| `--border` | `0 0% 16%` | `#292929` | Borders |
+| `--input` | `0 0% 16%` | `#292929` | Input borders |
+| `--ring` | `41 100% 60%` | `#ffc034` | Focus ring |
+| `--radius` | `0.625rem` | 10px | Border radius base |
+
+#### Custom text tokens (dark)
+
+| Token | HSL | Approx | Usage |
+|---|---|---|---|
+| `--text-primary` | `0 0% 95%` | `#f2f2f2` | Main content |
+| `--text-secondary` | `45 22% 72%` | `#c8bfa0` | Supporting text, nav links |
+| `--text-muted` | `45 15% 63%` | `#b0a98c` | Captions, hints |
+| `--text-faint` | `38 30% 72%` | `#c9bfa5` | Disabled / very subtle, counts |
+
+#### Surface tokens (dark)
+
+| Token | HSL | Usage |
+|---|---|---|
+| `--surface` | `0 0% 10%` | Card / section backgrounds |
+| `--surface-border` | `0 0% 16%` | Surface borders |
+| `--surface-hover` | `0 0% 13%` | Hover states on surfaces |
+| `--border-med` | `40 28% 17%` | Medium warm border |
+
+#### Accent / effect palette (dark)
+
+| Token | HSL | Usage |
+|---|---|---|
+| `--electric` | `41 100% 60%` | Primary glow / electric yellow |
+| `--teal` | `38 100% 58%` | Secondary warm accent |
+| `--purple` | `32 100% 52%` | Tertiary warm accent |
+
+#### Difficulty badges (dark)
+
+| Token | HSL | Color |
+|---|---|---|
+| `--difficulty-starter` | `41 100% 60%` | Amber/yellow |
+| `--difficulty-builder` | `85 48% 56%` | Green |
+| `--difficulty-architect` | `245 45% 79%` | Lavender/purple |
+
+---
+
+### Light Mode (`.light`)
+
+| Token | HSL | Approx hex | Usage |
+|---|---|---|---|
+| `--background` | `0 0% 100%` | `#ffffff` | Page background |
+| `--foreground` | `0 0% 7%` | `#121212` | Primary text |
+| `--card` | `0 0% 97%` | `#f7f7f7` | Card background |
+| `--primary` | `214 100% 34%` | `#005eb8` | Buttons, links |
+| `--primary-foreground` | `0 0% 100%` | `#ffffff` | Text on primary |
+| `--muted-foreground` | `0 0% 44%` | `#707070` | Muted text |
+| `--border` | `0 0% 87%` | `#dedede` | Borders |
+| `--input` | `0 0% 87%` | `#dedede` | Input borders |
+| `--ring` | `214 100% 34%` | `#005eb8` | Focus ring |
+
+#### Difficulty badges (light)
+
+| Token | HSL | Color |
+|---|---|---|
+| `--difficulty-starter` | `214 100% 34%` | Blue |
+| `--difficulty-builder` | `25 90% 35%` | Burnt orange |
+| `--difficulty-architect` | `0 75% 40%` | Dark red |
+
+---
+
+## Component Classes
+
+### Buttons
+
+| Class | Style |
+|---|---|
+| `.btn-primary` | Filled amber, `rounded-md px-5 py-2.5 text-sm font-semibold`, electric glow on hover |
+| `.btn-ghost` | Outlined, `border-foreground/25`, subtle glow on hover |
+| `.btn-soft` | Tinted `bg-primary/10 border-primary/30`, no glow |
+
+### Pills (filter toggles)
+
+| Class | Style |
+|---|---|
+| `.pill-active` | `rounded-full bg-primary/10 border-primary/50 text-primary` |
+| `.pill-inactive` | `rounded-full bg-transparent border-surface-border text-text-secondary` |
+
+Both use `px-4 py-1.5 text-sm font-medium leading-none inline-flex items-center` and include `focus-visible` ring styles.
+
+### Difficulty Badges
+
+| Class | Usage |
+|---|---|
+| `.badge-difficulty` | Base: `rounded-md border px-2.5 py-1 font-mono text-[13px] uppercase tracking-wider` |
+| `.badge-beginner` | Amber (primary) color |
+| `.badge-intermediate` | Green (`--difficulty-builder`) |
+| `.badge-expert` | Lavender (`--difficulty-architect`) |
+
+### Ghost Word
+
+| Class | Style |
+|---|---|
+| `.ghost-word` | `color: transparent`, `-webkit-text-stroke: 1.5px`, `font-weight: 800`, `letter-spacing: -0.025em` |
+
+Used in `BottomCTA` on the word "alone." — text is in the DOM for screen readers; stroke outline makes it visually distinct from filled text.
+
+### Card Glow
+
+Add `.card-glow` to any card to get a primary-colored glow + border highlight on hover (transitioning `box-shadow` and `border-color`).
+
+---
+
+## Background Texture
+
+Dark mode uses a subtle dot grid overlay on `body`:
+
+```css
+background-image: radial-gradient(circle, hsl(var(--primary) / 0.035) 1px, transparent 1px);
+background-size: 44px 44px;
+```
+
+Light mode: no background texture.
+
+---
+
+## Animations
+
+| Class | Keyframe | Duration |
+|---|---|---|
+| `.animate-fade-up` | fadeUp (slide up 14px + fade in) | 0.6s ease-out |
+| `.animate-fade-up-delay-1` | fadeUp | 0.6s, 0.1s delay |
+| `.animate-fade-up-delay-2` | fadeUp | 0.6s, 0.2s delay |
+| `.animate-fade-up-delay-3` | fadeUp | 0.6s, 0.3s delay |
+| `.animate-marquee` | horizontal scroll left | 30s linear infinite |
+
+### Firefly particles
+
+`.firefly` — 3×3px dot with `box-shadow` glow in `--primary` color, animated with `fireflyFloat` (8 particles, varying `animation-duration` 6.5–11s and `animation-delay`).
+
+### Hero glow
+
+`.hero-glow` — three radial gradients (amber 8%, warm 4%, orange 3%) with a mask gradient that fades at top/bottom 10% and 70–100%. Animated with `glowPulse` (9s ease-in-out, opacity 0.75→1, scale 1→1.04).
+
+---
+
+## Electric Glow Effects
+
+- `.btn-primary:hover` — 22px amber `box-shadow`
+- `.btn-ghost:hover` — 14px subtle amber `box-shadow`
+- `.card-glow:hover` — 1px border glow + 32px / 60px radial shadows
+
+Light mode overrides disable or reduce all glow intensities.
+
+---
+
+## Sidebar Tokens
+
+Sidebar uses the same token namespace (`--sidebar-*`) mirroring the main tokens. Not currently in use in any page component.
+
 
 ### Scale (Tailwind defaults)
 

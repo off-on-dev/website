@@ -9,6 +9,7 @@ import AdventureDetail from "./pages/AdventureDetail";
 import Sponsors from "./pages/Sponsors";
 import About from "./pages/About";
 import Docs from "./pages/Docs";
+import CommunityGuide from "./pages/CommunityGuide";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/sponsors" element={<Sponsors />} />
             <Route path="/about" element={<About />} />
             <Route path="/docs" element={<Docs />} />
+            <Route path="/docs/community-guide" element={<CommunityGuide />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

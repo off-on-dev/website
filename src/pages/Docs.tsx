@@ -30,7 +30,21 @@ const Docs = () => {
         </div>
 
         <div className="mt-16 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8 text-left">
-          <h2 className="text-lg font-semibold text-foreground mb-4">What we're planning to document</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-4">Available docs</h2>
+          <ul className="space-y-3">
+            <li>
+              <Link to="/docs/community-guide" className="flex items-center gap-3 group">
+                <span className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                <span className="text-sm text-[hsl(var(--text-secondary))] group-hover:text-primary transition-colors leading-relaxed">
+                  Community Guide — welcome, quick start, posting guidelines, leaderboards, and contact
+                </span>
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        <div className="mt-8 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8 text-left">
+          <h2 className="text-lg font-semibold text-foreground mb-4">Coming soon</h2>
           <ul className="space-y-3">
             {[
               "Getting started — joining the community, your first post",

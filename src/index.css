@@ -1,4 +1,58 @@
-@import url('https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&display=swap');
+@font-face {
+  font-family: 'Azeret Mono';
+  src: url('/fonts/AzeretMono-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Azeret Mono';
+  src: url('/fonts/AzeretMono-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Azeret Mono';
+  src: url('/fonts/AzeretMono-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter_18pt-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter_18pt-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter_18pt-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter_18pt-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 @font-face {
   font-family: 'Syne';
@@ -179,7 +233,7 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Syne', sans-serif;
+    font-family: 'Inter', sans-serif;
   }
 
   /* Subtle electric dot grid — only in dark mode */
@@ -200,12 +254,12 @@
     font-family: 'Azeret Mono', monospace;
   }
 
-  /* Ghost word — rendered via CSS pseudo-element so contrast checkers ignore it */
-  .ghost-word::after {
-    content: attr(data-word);
-    font-weight: 400;
-    opacity: 0.28;
+  /* Ghost word — outline/stroke text, visible but clearly decorative */
+  .ghost-word {
+    -webkit-text-stroke: 1.5px hsl(var(--primary-foreground));
+    color: transparent;
     letter-spacing: -0.025em;
+    font-weight: 800;
   }
 }
 
