@@ -45,7 +45,7 @@ const LevelCard = ({ level }: { level: typeof ADVENTURES[0]["levels"][0] }) => {
       </a>
       <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs text-[hsl(var(--text-faint))] font-mono">
-          Free GitHub account required · Environment provisions in ~60 seconds
+          Free GitHub account required
         </p>
         <a
           href={level.discussionUrl}
@@ -63,23 +63,9 @@ const LevelCard = ({ level }: { level: typeof ADVENTURES[0]["levels"][0] }) => {
 const VerificationSection = () => (
   <div className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6">
     <h3 className="text-lg font-semibold text-foreground mb-4">Verification</h3>
-    <p className="text-sm text-muted-foreground mb-6">
-      Each level uses a two-step verification process to validate your solution.
+    <p className="text-sm text-muted-foreground mb-4">
+      Run the verification script inside your Codespace. It checks your solution and reports the result.
     </p>
-    <div className="grid gap-4 sm:grid-cols-2">
-      <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-background p-4">
-        <span className="font-mono text-xs text-primary">Step 1</span>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Run the smoke test locally in your Codespace for quick validation
-        </p>
-      </div>
-      <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-background p-4">
-        <span className="font-mono text-xs text-primary">Step 2</span>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Push your solution and trigger the GitHub Actions workflow for full verification
-        </p>
-      </div>
-    </div>
     <a
       href="https://github.com/dynatrace-oss/offones"
       target="_blank"

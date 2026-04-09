@@ -146,14 +146,6 @@ Both use `px-4 py-1.5 text-sm font-medium leading-none inline-flex items-center`
 | `.badge-intermediate` | Green (`--difficulty-builder`) |
 | `.badge-expert` | Lavender (`--difficulty-architect`) |
 
-### Ghost Word
-
-| Class | Style |
-|---|---|
-| `.ghost-word` | `color: transparent`, `-webkit-text-stroke: 1.5px`, `font-weight: 800`, `letter-spacing: -0.025em` |
-
-Used in `BottomCTA` on the word "alone." The text is in the DOM for screen readers; stroke outline makes it visually distinct from filled text.
-
 ### Card Glow
 
 Add `.card-glow` to any card to get a primary-colored glow + border highlight on hover (transitioning `box-shadow` and `border-color`).
