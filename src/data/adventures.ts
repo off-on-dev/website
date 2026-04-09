@@ -36,7 +36,7 @@ export const ADVENTURES: Adventure[] = [
         difficulty: "Beginner",
         learnings: ["Debug GitOps flows with Argo CD", "ApplicationSet templating & pitfalls", "Environment isolation & namespaces", "Sync policies: automated, prune & self-heal"],
         codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
-        discussionUrl: "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
+        discussionUrl: "https://community.open-ecosystem.com/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
       },
       {
         id: "intermediate",
@@ -44,7 +44,7 @@ export const ADVENTURES: Adventure[] = [
         difficulty: "Intermediate",
         learnings: ["Progressive delivery with Argo Rollouts", "Canary deployments & automated analysis", "Write PromQL queries for health validation", "Kube-state-metrics for deployment decisions"],
         codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
-        discussionUrl: "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-intermediate-the-silent-canary/310/8"
+        discussionUrl: "https://community.open-ecosystem.com/t/adventure-01-echoes-lost-in-orbit-intermediate-the-silent-canary/310/8"
       },
       {
         id: "expert",
@@ -52,7 +52,7 @@ export const ADVENTURES: Adventure[] = [
         difficulty: "Expert",
         learnings: ["Configure OpenTelemetry Collector pipelines", "Spanmetrics connector (traces → metrics)", "Detect idle canaries with traffic validation", "Distributed tracing with Jaeger"],
         codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
-        discussionUrl: "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351/4"
+        discussionUrl: "https://community.open-ecosystem.com/t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351/4"
       }
     ]
   },
@@ -72,7 +72,7 @@ export const ADVENTURES: Adventure[] = [
         difficulty: "Beginner",
         learnings: ["Infrastructure as Code with OpenTofu", "Remote state management with GCS backend", "Dynamic & conditional resources"],
         codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
-        discussionUrl: "https://community.offon.dev/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
+        discussionUrl: "https://community.open-ecosystem.com/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
       },
       {
         id: "intermediate",
@@ -80,7 +80,7 @@ export const ADVENTURES: Adventure[] = [
         difficulty: "Intermediate",
         learnings: ["OpenTofu module testing with tofu test", "Test-Driven Development (TDD) workflow", "Input validation with regex"],
         codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
-        discussionUrl: "https://community.offon.dev/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10"
+        discussionUrl: "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10"
       },
       {
         id: "expert",
@@ -88,7 +88,7 @@ export const ADVENTURES: Adventure[] = [
         difficulty: "Expert",
         learnings: ["GitHub Actions for drift detection and plan/apply", "Integration tests with service containers", "Security scanning with Trivy"],
         codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
-        discussionUrl: "https://community.offon.dev/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
+        discussionUrl: "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
       }
     ]
   },
@@ -108,7 +108,7 @@ export const ADVENTURES: Adventure[] = [
         difficulty: "Beginner",
         learnings: ["Instrument Python AI apps with OpenLLMetry", "Analyze traces in Jaeger"],
         codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
-        discussionUrl: "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
+        discussionUrl: "https://community.open-ecosystem.com/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
       },
       {
         id: "intermediate",
@@ -116,7 +116,7 @@ export const ADVENTURES: Adventure[] = [
         difficulty: "Intermediate",
         learnings: ["Instrument RAG pipelines with OpenLLMetry", "Create custom OpenTelemetry metrics in Python", "Write PromQL queries & recording rules in Prometheus"],
         codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
-        discussionUrl: "https://community.offon.dev/t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936/2"
+        discussionUrl: "https://community.open-ecosystem.com/t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936/2"
       },
       {
         id: "expert",
@@ -124,7 +124,7 @@ export const ADVENTURES: Adventure[] = [
         difficulty: "Expert",
         learnings: ["OpenTelemetry GenAI semantic conventions", "Tail sampling in the OTel Collector"],
         codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
-        discussionUrl: "https://community.offon.dev/t/reduce-telemetry-noise-adventure-03-expert-is-live/999/1"
+        discussionUrl: "https://community.open-ecosystem.com/t/reduce-telemetry-noise-adventure-03-expert-is-live/999/1"
       }
     ]
   },

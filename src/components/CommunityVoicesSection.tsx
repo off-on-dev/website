@@ -6,14 +6,14 @@ const pillars = [
     title: "Community Voices",
     desc: "Share tutorials, showcase projects, post open source news, and write about what you have learned. The home for community-created content.",
     cta: "Share something →",
-    href: "https://community.offon.dev",
+    href: "https://community.open-ecosystem.com",
   },
   {
     icon: "❓",
     title: "Q&A",
     desc: "Stuck on a technical problem or not sure where to start with open source? Post a clear question and get answers from the community. No question is too basic.",
     cta: "Ask a question →",
-    href: "https://community.offon.dev",
+    href: "https://community.open-ecosystem.com",
   },
 ];
 
@@ -30,7 +30,7 @@ export const CommunityVoicesSection = () => {
                 Community
               </span>
             </div>
-            <h2 className="animate-fade-up-delay-1 mb-3 text-3xl font-bold text-foreground md:text-4xl">
+            <h2 className="animate-fade-up-delay-1 mb-3 text-3xl font-bold text-primary md:text-4xl">
               Share and learn together
             </h2>
             <p className="animate-fade-up-delay-1 mb-12 max-w-xl text-[hsl(var(--text-secondary))] leading-relaxed">
@@ -42,7 +42,7 @@ export const CommunityVoicesSection = () => {
                   key={p.title}
                   className="card-glow flex flex-col rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8"
                 >
-                  <span className="text-3xl mb-4">{p.icon}</span>
+                  <span className="text-3xl mb-4" aria-hidden="true">{p.icon}</span>
                   <h3 className="text-lg font-semibold text-foreground">{p.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground flex-1">{p.desc}</p>
                   <a

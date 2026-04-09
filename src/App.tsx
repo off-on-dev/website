@@ -10,6 +10,7 @@ import Sponsors from "./pages/Sponsors";
 import About from "./pages/About";
 import Docs from "./pages/Docs";
 import CommunityGuide from "./pages/CommunityGuide";
+import TopicPage from "./pages/TopicPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,7 +22,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter basename={basename}>
+        <BrowserRouter basename={basename} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/adventures/:id" element={<AdventureDetail />} />
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/docs" element={<Docs />} />
             <Route path="/docs/community-guide" element={<CommunityGuide />} />
+            <Route path="/topics/:tag" element={<TopicPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

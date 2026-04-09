@@ -20,7 +20,7 @@ const CommunityGuide = () => {
           Community Guide
         </h1>
         <p className="mt-5 text-lg text-[hsl(var(--text-secondary))] leading-relaxed">
-          A practical, friendly space for builders working with open standards and cloud-native tools. We focus on reproducible, hands-on knowledge — tutorials, Q&A with accepted solutions, and recurring challenges.
+          A practical, friendly space for builders working with open standards and cloud-native tools. We focus on reproducible, hands-on knowledge: tutorials, Q&A with accepted solutions, and recurring challenges.
         </p>
 
         <div className="mt-12 space-y-10">
@@ -30,12 +30,12 @@ const CommunityGuide = () => {
             <h2 className="text-xl font-bold text-foreground mb-3">Quick start</h2>
             <ul className="space-y-2">
               <li>
-                <a href="https://community.offon.dev/t/what-is-the-community-about-and-who-is-it-for/35" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                <a href="https://community.open-ecosystem.com/t/what-is-the-community-about-and-who-is-it-for/35" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                   What the community is about, and who it's for →
                 </a>
               </li>
               <li>
-                <a href="https://community.offon.dev/t/getting-started/36" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                <a href="https://community.open-ecosystem.com/t/getting-started/36" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                   Getting started in the community →
                 </a>
               </li>
@@ -47,11 +47,11 @@ const CommunityGuide = () => {
             <h2 className="text-xl font-bold text-foreground mb-3">Docs index</h2>
             <ul className="space-y-2">
               {[
-                { label: "Posting Guidelines", href: "https://community.offon.dev/t/posting-guidelines/30" },
-                { label: "Code of Conduct", href: "https://community.offon.dev/t/code-of-conduct/31" },
-                { label: "Categories", href: "https://community.offon.dev/categories" },
-                { label: "Stay in the Loop", href: "https://community.offon.dev/t/stay-in-the-loop/33" },
-                { label: "Questions & Feedback", href: "https://community.offon.dev/t/questions-feedback/34" },
+                { label: "Posting Guidelines", href: "https://community.open-ecosystem.com/t/posting-guidelines/30" },
+                { label: "Code of Conduct", href: "https://community.open-ecosystem.com/t/code-of-conduct/31" },
+                { label: "Categories", href: "https://community.open-ecosystem.com/categories" },
+                { label: "Stay in the Loop", href: "https://community.open-ecosystem.com/t/stay-in-the-loop/33" },
+                { label: "Questions & Feedback", href: "https://community.open-ecosystem.com/t/questions-feedback/34" },
               ].map((item) => (
                 <li key={item.label} className="flex items-center gap-2 text-sm">
                   <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" aria-hidden="true" />
@@ -67,8 +67,8 @@ const CommunityGuide = () => {
           <section>
             <h2 className="text-xl font-bold text-foreground mb-3">Vendor-agnostic policy</h2>
             <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
-              We're vendor-agnostic. Technical product mentions are welcome when neutral and reproducible — avoid promotional content. Marketing posts will be removed; repeated violations may lead to moderation actions. See{" "}
-              <a href="https://community.offon.dev/t/posting-guidelines/30" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Posting Guidelines</a>.
+              We're vendor-agnostic. Technical product mentions are welcome when neutral and reproducible. Avoid promotional content. Marketing posts will be removed; repeated violations may lead to moderation actions. See{" "}
+              <a href="https://community.open-ecosystem.com/t/posting-guidelines/30" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Posting Guidelines</a>.
             </p>
           </section>
 
@@ -80,12 +80,12 @@ const CommunityGuide = () => {
             </p>
             <ul className="space-y-2">
               <li>
-                <a href="https://community.offon.dev/leaderboard/8" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-sm">
+                <a href="https://community.open-ecosystem.com/leaderboard/8" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-sm">
                   Hall of Fame →
                 </a>
               </li>
               <li>
-                <a href="https://community.offon.dev/leaderboard/6" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-sm">
+                <a href="https://community.open-ecosystem.com/leaderboard/6" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-sm">
                   Leaderboards →
                 </a>
               </li>
@@ -103,7 +103,7 @@ const CommunityGuide = () => {
               <li className="flex items-start gap-2">
                 <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0" aria-hidden="true" />
                 DM{" "}
-                <a href="https://community.offon.dev/groups/moderators" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                <a href="https://community.open-ecosystem.com/groups/moderators" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                   @moderators
                 </a>{" "}
                 for sensitive issues
@@ -118,7 +118,7 @@ const CommunityGuide = () => {
           <Link to="/docs" className="btn-ghost">
             ← Back to Docs
           </Link>
-          <a href="https://community.offon.dev" target="_blank" rel="noopener noreferrer" className="btn-primary">
+          <a href="https://community.open-ecosystem.com" target="_blank" rel="noopener noreferrer" className="btn-primary">
             Open the community →
           </a>
         </div>

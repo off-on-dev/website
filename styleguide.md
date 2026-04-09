@@ -152,7 +152,7 @@ Both use `px-4 py-1.5 text-sm font-medium leading-none inline-flex items-center`
 |---|---|
 | `.ghost-word` | `color: transparent`, `-webkit-text-stroke: 1.5px`, `font-weight: 800`, `letter-spacing: -0.025em` |
 
-Used in `BottomCTA` on the word "alone." — text is in the DOM for screen readers; stroke outline makes it visually distinct from filled text.
+Used in `BottomCTA` on the word "alone." The text is in the DOM for screen readers; stroke outline makes it visually distinct from filled text.
 
 ### Card Glow
 
@@ -185,19 +185,19 @@ Light mode: no background texture.
 
 ### Firefly particles
 
-`.firefly` — 3×3px dot with `box-shadow` glow in `--primary` color, animated with `fireflyFloat` (8 particles, varying `animation-duration` 6.5–11s and `animation-delay`).
+`.firefly` -- 3x3px dot with `box-shadow` glow in `--primary` color, animated with `fireflyFloat` (8 particles, varying `animation-duration` 6.5-11s and `animation-delay`).
 
 ### Hero glow
 
-`.hero-glow` — three radial gradients (amber 8%, warm 4%, orange 3%) with a mask gradient that fades at top/bottom 10% and 70–100%. Animated with `glowPulse` (9s ease-in-out, opacity 0.75→1, scale 1→1.04).
+`.hero-glow` -- three radial gradients (amber 8%, warm 4%, orange 3%) with a mask gradient that fades at top/bottom 10% and 70-100%. Animated with `glowPulse` (9s ease-in-out, opacity 0.75 to 1, scale 1 to 1.04).
 
 ---
 
 ## Electric Glow Effects
 
-- `.btn-primary:hover` — 22px amber `box-shadow`
-- `.btn-ghost:hover` — 14px subtle amber `box-shadow`
-- `.card-glow:hover` — 1px border glow + 32px / 60px radial shadows
+- `.btn-primary:hover` -- 22px amber `box-shadow`
+- `.btn-ghost:hover` -- 14px subtle amber `box-shadow`
+- `.card-glow:hover` -- 1px border glow + 32px / 60px radial shadows
 
 Light mode overrides disable or reduce all glow intensities.
 
@@ -342,3 +342,51 @@ Light mode has no background texture.
 | `.animate-marquee` | horizontal scroll | 30s linear infinite |
 
 Firefly particles use `.firefly` with `fireflyFloat` easing, primary color glow via `box-shadow`.
+
+---
+
+## Writing and Copy Rules
+
+- **No em dashes.** Never use `--` or `—` in UI copy. Use a colon, semicolon, or rewrite the sentence.
+- **No ellipsis (`...`)** in button labels or links. Use a full phrase.
+- **Arrow conventions:** Use `→` for forward navigation, `↓` for scroll-down actions, `↗` for external links.
+- **Sentence case** everywhere. No title case in body copy, cards, or descriptions.
+- **Community domain:** All links to the community forum use `https://community.open-ecosystem.com`. Update in `src/data/adventures.ts` and across all pages when the domain changes.
+
+---
+
+## Routing
+
+| Path | Page | Notes |
+|---|---|---|
+| `/` | Home (`Index.tsx`) | Hero, Adventures grid, CommunityVoicesSection, ConnectSection |
+| `/adventures/:id` | Adventure detail | All 3 level cards or filtered to one level |
+| `/adventures/:id/levels/:levelId` | Adventure detail | Same page, filtered to selected level |
+| `/topics/:tag` | Topic page | All challenges tagged with this keyword |
+| `/docs` | Docs index | Links to on-site docs + community forum docs |
+| `/docs/community-guide` | Community Guide | Quick start, docs index, vendor policy, leaderboards, contact |
+| `/about` | About | PageHero + content + BottomCTA |
+| `/sponsors` | Sponsors | PageHero + sponsor tiers + BottomCTA |
+| `*` | 404 | NotFound |
+
+---
+
+## Community Forum Links
+
+All hosted on `https://community.open-ecosystem.com`. Linked from Docs page and CommunityGuide.
+
+| Label | URL |
+|---|---|
+| Forum root | `/` |
+| Getting Started | `/t/getting-started/36` |
+| What the community is about | `/t/what-is-the-community-about-and-who-is-it-for/35` |
+| Community Guide | `/t/community-guide/29` |
+| Posting Guidelines | `/t/posting-guidelines/30` |
+| Code of Conduct | `/t/code-of-conduct/31/1` |
+| Stay in the Loop | `/t/stay-in-the-loop/33` |
+| Questions and Feedback | `/t/questions-feedback/34` |
+| FAQ and Guidelines | `/t/faq-guidelines/4` |
+| Privacy Policy | `/t/privacy-policy/22` |
+| Hall of Fame leaderboard | `/leaderboard/8` |
+| Leaderboards | `/leaderboard/6` |
+| Moderators group | `/groups/moderators` |

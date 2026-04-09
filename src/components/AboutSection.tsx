@@ -34,7 +34,7 @@ export const AboutSection = () => {
             <div className="grid gap-12 lg:grid-cols-2 mb-16">
               <div>
                 <span className="font-mono text-xs font-medium uppercase tracking-widest text-primary">Our Mission</span>
-                <h2 className="mt-3 text-3xl font-bold text-foreground md:text-4xl">
+                <h2 className="mt-3 text-3xl font-bold text-primary md:text-4xl">
                   Creating the contributors and maintainers of tomorrow
                 </h2>
               </div>

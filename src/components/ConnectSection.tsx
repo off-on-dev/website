@@ -6,14 +6,14 @@ const items = [
     title: "Introduce yourself",
     desc: "New here? Drop a post and say hello. Tell us what you're working on, what you're curious about, and where you're from. This is how connections start.",
     cta: "Say hello →",
-    href: "https://community.offon.dev",
+    href: "https://community.open-ecosystem.com",
   },
   {
     icon: "📅",
     title: "Events & meetups",
     desc: "Find upcoming events, add local meetups to the community calendar, and connect with members in your city or timezone. Open source is better in person.",
     cta: "See upcoming events →",
-    href: "https://community.offon.dev",
+    href: "https://community.open-ecosystem.com",
   },
 ];
 
@@ -30,7 +30,7 @@ export const ConnectSection = () => {
                 Connect
               </span>
             </div>
-            <h2 className="animate-fade-up-delay-1 mb-3 text-3xl font-bold text-foreground md:text-4xl">
+            <h2 className="animate-fade-up-delay-1 mb-3 text-3xl font-bold text-primary md:text-4xl">
               Meet the people behind the code
             </h2>
             <p className="animate-fade-up-delay-1 mb-12 max-w-xl text-[hsl(var(--text-secondary))] leading-relaxed">

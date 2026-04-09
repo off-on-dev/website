@@ -101,22 +101,22 @@
 @layer base {
   :root, .dark {
     --background: 0 0% 4%;
-    --foreground: 0 0% 95%;
+    --foreground: 47 54% 98%;
 
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 95%;
+    --card: 240 9% 9%;
+    --card-foreground: 47 54% 98%;
 
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 47 54% 98%;
 
     --primary: 41 100% 60%;
     --primary-foreground: 0 0% 4%;
 
     --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 75%;
+    --secondary-foreground: 43 27% 92%;
 
     --muted: 0 0% 12%;
-    --muted-foreground: 45 22% 72%;
+    --muted-foreground: 43 36% 94%;
 
     --accent: 41 100% 60%;
     --accent-foreground: 0 0% 4%;
@@ -124,22 +124,24 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 16%;
-    --input: 0 0% 16%;
+    --border: 219 36% 18%;
+    --input: 218 37% 23%;
     --ring: 41 100% 60%;
 
     --radius: 0.625rem;
 
     /* Custom tokens */
-    --text-primary: 0 0% 95%;
-    --text-secondary: 45 22% 72%;
-    --text-muted: 45 15% 63%;
-    --text-faint: 38 30% 72%;
+    --text-primary: 47 54% 98%;
+    --text-secondary: 43 27% 92%;
+    --text-tertiary: 43 36% 94%;
+    --text-muted: 43 36% 94%;
+    --text-faint: 43 36% 94%;
 
-    --surface: 0 0% 10%;
-    --surface-border: 0 0% 16%;
-    --surface-hover: 0 0% 13%;
-    --border-med: 40 28% 17%;
+    --surface: 240 9% 9%;
+    --surface-border: 219 36% 18%;
+    --surface-hover: 0 0% 10%;
+    --border-med: 219 36% 18%;
+    --accent-subtle: 221 57% 12%;
 
     /* Electric accent colors for the lightning gradient */
     --electric: 41 100% 60%;
@@ -154,75 +156,77 @@
     --type-simulation: 38 100% 58%;
     --type-interactive: 41 100% 60%;
 
-    --sidebar-background: 0 0% 7%;
-    --sidebar-foreground: 0 0% 95%;
+    --sidebar-background: 240 9% 9%;
+    --sidebar-foreground: 47 54% 98%;
     --sidebar-primary: 41 100% 60%;
     --sidebar-primary-foreground: 0 0% 4%;
     --sidebar-accent: 0 0% 12%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 0 0% 16%;
+    --sidebar-accent-foreground: 47 54% 98%;
+    --sidebar-border: 219 36% 18%;
     --sidebar-ring: 41 100% 60%;
   }
 
   .light {
     --background: 0 0% 100%;
-    --foreground: 0 0% 7%;
+    --foreground: 230 42% 9%;
 
-    --card: 0 0% 97%;
-    --card-foreground: 0 0% 7%;
+    --card: 223 100% 99%;
+    --card-foreground: 230 42% 9%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 7%;
+    --popover: 223 100% 99%;
+    --popover-foreground: 230 42% 9%;
 
-    --primary: 214 100% 34%;
+    --primary: 220 77% 49%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 92%;
-    --secondary-foreground: 0 0% 35%;
+    --secondary: 221 45% 89%;
+    --secondary-foreground: 229 39% 19%;
 
-    --muted: 0 0% 94%;
-    --muted-foreground: 0 0% 44%;
+    --muted: 221 45% 89%;
+    --muted-foreground: 228 46% 17%;
 
-    --accent: 214 100% 34%;
+    --accent: 220 77% 49%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 40%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 87%;
-    --input: 0 0% 87%;
-    --ring: 214 100% 34%;
+    --border: 222 73% 78%;
+    --input: 223 67% 73%;
+    --ring: 220 77% 49%;
 
     /* Custom tokens */
-    --text-primary: 0 0% 7%;
-    --text-secondary: 0 0% 40%;
-    --text-muted: 0 0% 44%;
-    --text-faint: 0 0% 50%;
+    --text-primary: 230 42% 9%;
+    --text-secondary: 229 39% 19%;
+    --text-tertiary: 228 46% 17%;
+    --text-muted: 228 46% 17%;
+    --text-faint: 228 46% 17%;
 
-    --surface: 0 0% 96%;
-    --surface-border: 0 0% 90%;
-    --surface-hover: 0 0% 93%;
+    --surface: 223 100% 99%;
+    --surface-border: 222 73% 78%;
+    --surface-hover: 221 45% 96%;
+    --accent-subtle: 221 92% 95%;
 
-    --electric: 214 100% 34%;
-    --emerald: 214 100% 34%;
+    --electric: 220 77% 49%;
+    --emerald: 220 77% 49%;
     --teal: 210 100% 40%;
     --purple: 225 80% 45%;
 
-    --difficulty-starter: 214 100% 34%;
+    --difficulty-starter: 220 77% 49%;
     --difficulty-builder: 25 90% 35%;
     --difficulty-architect: 0 75% 40%;
 
     --type-simulation: 200 100% 38%;
-    --type-interactive: 214 100% 34%;
+    --type-interactive: 220 77% 49%;
 
-    --sidebar-background: 0 0% 97%;
-    --sidebar-foreground: 0 0% 7%;
-    --sidebar-primary: 214 100% 34%;
+    --sidebar-background: 223 100% 99%;
+    --sidebar-foreground: 230 42% 9%;
+    --sidebar-primary: 220 77% 49%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 92%;
-    --sidebar-accent-foreground: 0 0% 7%;
-    --sidebar-border: 0 0% 90%;
-    --sidebar-ring: 214 100% 34%;
+    --sidebar-accent: 221 45% 89%;
+    --sidebar-accent-foreground: 230 42% 9%;
+    --sidebar-border: 222 73% 78%;
+    --sidebar-ring: 220 77% 49%;
   }
 }
 
@@ -248,6 +252,7 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Syne', sans-serif;
+    color: hsl(var(--primary));
   }
 
   code, pre, .font-code {
@@ -339,12 +344,12 @@
 @layer components {
   /* Primary filled button */
   .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:brightness-110 hover:scale-[1.02] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2;
   }
 
   /* Ghost/outline button */
   .btn-ghost {
-    @apply inline-flex items-center gap-2 rounded-md border border-foreground/25 bg-transparent px-5 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 hover:bg-foreground/[.06] hover:border-foreground/40 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md border border-foreground/35 bg-transparent px-5 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 hover:bg-primary/10 hover:border-primary/60 hover:text-primary active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2;
   }
 
   /* Soft tinted button */
@@ -390,44 +395,47 @@
 /* Button primary: electric glow on hover */
 .btn-primary:hover {
   box-shadow:
-    0 0 22px -4px hsl(var(--primary) / 0.65),
-    0 2px 8px -2px hsl(0 0% 0% / 0.25);
+    0 0 28px -2px hsl(var(--primary) / 0.8),
+    0 0 60px -8px hsl(var(--primary) / 0.4),
+    0 2px 8px -2px hsl(0 0% 0% / 0.3);
 }
 
-/* Ghost button: subtle glow on hover */
+/* Ghost button: electric glow on hover */
 .btn-ghost:hover {
-  box-shadow: 0 0 14px -4px hsl(var(--primary) / 0.25);
+  box-shadow:
+    0 0 20px -4px hsl(var(--primary) / 0.45),
+    0 0 40px -8px hsl(var(--primary) / 0.2);
 }
 
 /* Glowing card hover — add card-glow class to cards */
 .card-glow {
-  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
 }
 .card-glow:hover {
   box-shadow:
-    0 0 0 1px hsl(var(--primary) / 0.25),
-    0 0 32px -6px hsl(var(--primary) / 0.2),
-    0 0 60px -12px hsl(38 100% 58% / 0.1);
-  border-color: hsl(var(--primary) / 0.25) !important;
+    0 0 0 1px hsl(var(--primary) / 0.3),
+    0 0 32px -6px hsl(var(--primary) / 0.25),
+    0 0 60px -12px hsl(38 100% 58% / 0.12);
+  border-color: hsl(var(--primary) / 0.3) !important;
 }
 
 /* ─── Light mode overrides ───────────────────────────────── */
 
 .light .hero-glow {
   background:
-    radial-gradient(ellipse 800px 500px at 50% 40%, hsl(214 100% 34% / 0.04), transparent),
-    radial-gradient(ellipse 350px 200px at 18% 65%, hsl(210 100% 40% / 0.02), transparent),
-    radial-gradient(ellipse 300px 180px at 82% 22%, hsl(225 80% 45% / 0.02), transparent);
+    radial-gradient(ellipse 800px 500px at 50% 40%, hsl(220 77% 49% / 0.10), transparent),
+    radial-gradient(ellipse 350px 200px at 18% 65%, hsl(210 100% 40% / 0.06), transparent),
+    radial-gradient(ellipse 300px 180px at 82% 22%, hsl(225 80% 45% / 0.05), transparent);
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 70%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 70%, transparent 100%);
 }
 
 .light .card-glow:hover {
   box-shadow:
-    0 0 0 1px hsl(214 100% 34% / 0.18),
-    0 0 28px -6px hsl(214 100% 40% / 0.1),
-    0 0 50px -12px hsl(214 100% 45% / 0.07);
-  border-color: hsl(214 100% 34% / 0.18) !important;
+    0 0 0 1.5px hsl(220 77% 49% / 0.45),
+    0 0 28px -4px hsl(220 77% 49% / 0.25),
+    0 0 50px -10px hsl(220 77% 49% / 0.15);
+  border-color: hsl(220 77% 49% / 0.45) !important;
 }
 
 .light .firefly {

@@ -7,48 +7,45 @@ export const BottomCTA = () => {
     <section ref={ref} className="bg-primary py-16 px-6 md:px-16">
       {isVisible && (
         <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          {/* Left — headline */}
+          {/* Left - headline */}
           <h2 className="animate-fade-up text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background">
-            Every firefly<br />
-            glows{" "}
-            <span className="ghost-word">alone.</span>
-            <br />
-            Together they<br />
-            synchronize.
+            Start curious.<br />
+            Break things.<br />
+            Learn together.<br />
+            Glow brighter.
           </h2>
 
-          {/* Right — copy + buttons */}
+          {/* Right - copy + buttons */}
           <div className="animate-fade-up-delay-1 flex flex-col gap-4">
-            <p className="font-mono text-sm leading-relaxed text-background/75">
-              Some species of fireflies synchronize their flashing — thousands lighting up
-              in perfect unison, creating something far more spectacular than any single light could.
+            <p className="font-mono text-sm leading-relaxed text-background/90">
+              A firefly's light means nothing in isolation. The magic is in the synchrony: thousands of individuals, each doing their own thing, creating something none of them could alone.
             </p>
-            <p className="font-mono text-sm leading-relaxed text-background/75">
-              That's offon.{" "}
-              <strong className="opacity-100 font-medium text-background">
-                Everyone brings their own expertise, their own spark.
+            <p className="font-mono text-sm leading-relaxed text-background/90">
+              That's this community.{" "}
+              <strong className="font-medium text-background">
+                You bring your questions, your fixes, your half-finished ideas.
               </strong>{" "}
-              The community is where those sparks synchronize into something that lights up the whole forest.
+              We bring the challenges, the tooling, and the people who care about the same things you do.
             </p>
             <p className="font-mono text-sm font-medium text-background">
-              always on, always open.
+              Always on. Always open. Always learning.
             </p>
             <div className="flex gap-3 flex-wrap mt-2">
               <a
-                href="https://community.offon.dev"
+                href="https://community.open-ecosystem.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-background text-primary font-bold text-sm px-5 py-2.5 rounded-md transition-all hover:brightness-110 active:scale-[0.97]"
+              className="bg-background text-primary font-bold text-sm px-5 py-2.5 rounded-md border-2 border-primary transition-all hover:bg-primary hover:border-primary-foreground hover:text-primary-foreground hover:scale-[1.02] active:scale-[0.97]"
               >
-                Join the community →
+                Join the community →<span className="sr-only"> (opens in new tab)</span>
               </a>
               <a
                 href="https://github.com/dynatrace-oss/offon-challenges"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-transparent text-background font-bold text-sm px-5 py-2.5 rounded-md border-2 border-background transition-all hover:bg-background/10 active:scale-[0.97]"
+              className="bg-transparent text-background font-bold text-sm px-5 py-2.5 rounded-md border-2 border-background/70 transition-all hover:bg-primary-foreground hover:border-primary-foreground hover:text-primary hover:scale-[1.02] active:scale-[0.97]"
               >
-                GitHub ↗
+                GitHub ↗<span className="sr-only"> (opens in new tab)</span>
               </a>
             </div>
           </div>

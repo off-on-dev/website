@@ -26,7 +26,7 @@ export const Hero = () => {
               <span className="h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
               <span className="text-xs text-foreground">Community-driven</span>
             </div>
-            <h1 className="animate-fade-up-delay-1 text-5xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl">
+            <h1 className="animate-fade-up-delay-1 text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
               <span className="bg-gradient-to-r from-primary via-primary/70 to-[hsl(var(--teal))] bg-clip-text text-transparent">
                 Break things.
               </span>
@@ -38,12 +38,12 @@ export const Hero = () => {
             <p className="animate-fade-up-delay-2 mx-auto mt-6 max-w-xl text-lg leading-relaxed text-[hsl(var(--text-secondary))]">
               Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, cloud dev environments powered by GitHub Codespaces.
             </p>
-            <div className="animate-fade-up-delay-3 mt-10 flex items-center justify-center gap-3">
+            <div className="animate-fade-up-delay-3 mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
               <a href="#challenges" className="btn-primary">
                 Start a challenge ↓
               </a>
               <a
-                href="https://community.offon.dev"
+                href="https://community.open-ecosystem.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-ghost"

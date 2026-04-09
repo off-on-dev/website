@@ -14,13 +14,13 @@ const LevelCard = ({ level }: { level: typeof ADVENTURES[0]["levels"][0] }) => {
   const indicator = difficultyIndicator[level.difficulty] ?? { badge: "badge-difficulty badge-beginner", dot: "bg-primary" };
 
   return (
-    <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6">
+    <div className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6">
       <div className="flex items-center gap-3 mb-4">
         <span className={indicator.badge}>
           <span className={`h-2 w-2 rounded-full ${indicator.dot}`} />
           {level.difficulty}
         </span>
-        <h3 className="text-lg font-semibold text-foreground">{level.name}</h3>
+        <h3 className="text-lg font-semibold text-foreground min-w-0 flex-1">{level.name}</h3>
       </div>
 
       <div className="mb-6">
@@ -43,7 +43,7 @@ const LevelCard = ({ level }: { level: typeof ADVENTURES[0]["levels"][0] }) => {
       >
         Open in GitHub Codespaces →
       </a>
-      <div className="mt-3 flex items-center justify-between">
+      <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs text-[hsl(var(--text-faint))] font-mono">
           Free GitHub account required · Environment provisions in ~60 seconds
         </p>
@@ -61,7 +61,7 @@ const LevelCard = ({ level }: { level: typeof ADVENTURES[0]["levels"][0] }) => {
 };
 
 const VerificationSection = () => (
-  <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6">
+  <div className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6">
     <h3 className="text-lg font-semibold text-foreground mb-4">Verification</h3>
     <p className="text-sm text-muted-foreground mb-6">
       Each level uses a two-step verification process to validate your solution.
@@ -144,7 +144,7 @@ const DiscussionSection = ({ discussionUrls }: { discussionUrls: string[] }) => 
           if (!topicId) continue;
           try {
             const res = await fetch(
-              `https://community.open-ecosyffon.devcId}.json`
+              `https://community.open-ecosystem.com/t/${topicId}.json`
             );
             if (!res.ok) continue;
             const data = await res.json();
@@ -191,18 +191,18 @@ const DiscussionSection = ({ discussionUrls }: { discussionUrls: string[] }) => 
     return (
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-foreground mb-4">Discussion</h3>
-        <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8 text-center">
+        <div className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8 text-center">
           <p className="text-muted-foreground text-sm">
-            {error ? "Couldn't load discussions right now." : "No community posts yet — be the first to share!"}
+            {error ? "Couldn't load discussions right now." : "No community posts yet. Be the first to share!"}
           </p>
         </div>
         <a
-          href={discussionUrls[0] || "https://community.offon.dev"}
+          href={discussionUrls[0] || "https://community.open-ecosystem.com"}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-4 inline-flex text-sm font-medium text-primary hover:underline"
         >
-          Join the discussion on community.offon.dev →
+          Join the discussion on community.open-ecosystem.com →
         </a>
       </div>
     );
@@ -217,7 +217,7 @@ const DiscussionSection = ({ discussionUrls }: { discussionUrls: string[] }) => 
           href={post.topicUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="block rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5 transition-all hover:border-primary/20"
+          className="block card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5 transition-all"
         >
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
@@ -237,12 +237,12 @@ const DiscussionSection = ({ discussionUrls }: { discussionUrls: string[] }) => 
         </a>
       ))}
       <a
-        href={discussionUrls[0] || "https://community.offon.dev"}
+        href={discussionUrls[0] || "https://community.open-ecosystem.com"}
         target="_blank"
         rel="noopener noreferrer"
         className="mt-4 inline-flex text-sm font-medium text-primary hover:underline"
       >
-        Join the discussion on community.offon.dev →
+        Join the discussion on community.open-ecosystem.com →
       </a>
     </div>
   );
@@ -265,10 +265,6 @@ const AdventureDetail = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="mx-auto max-w-4xl px-6 pt-28 pb-24">
-        <Link to="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors mb-8">
-          ← Back to Home
-        </Link>
-
         {/* Header */}
         <div className="mb-10">
           <span className="inline-block mb-4 rounded-[5px] border border-[hsl(var(--surface-border))] px-2 py-0.5 font-mono text-xs text-[hsl(var(--text-faint))] uppercase tracking-wider">
@@ -278,9 +274,13 @@ const AdventureDetail = () => {
           <p className="text-[hsl(var(--text-secondary))] leading-relaxed mb-6">{adventure.story}</p>
           <div className="flex flex-wrap gap-1.5">
             {adventure.tags.map((tag) => (
-              <span key={tag} className="rounded-[5px] border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))]">
+              <Link
+                key={tag}
+                to={`/topics/${encodeURIComponent(tag)}`}
+                className="rounded-[5px] border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary/40 hover:text-primary transition-colors"
+              >
                 {tag}
-              </span>
+              </Link>
             ))}
           </div>
         </div>

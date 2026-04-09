@@ -6,14 +6,14 @@ const pillars = [
     title: "Community Voices",
     desc: "Share tutorials, showcase projects, post open source news, and write about what you have learned. The home for community-created content.",
     cta: "Share something →",
-    href: "https://community.offon.dev",
+    href: "https://community.open-ecosystem.com",
   },
   {
     icon: "❓",
     title: "Q&A",
     desc: "Stuck on a technical problem or not sure where to start with open source? Post a clear question and get answers from the community. No question is too basic.",
     cta: "Ask a question →",
-    href: "https://community.offon.dev",
+    href: "https://community.open-ecosystem.com",
   },
   {
     icon: "🏆",
@@ -27,7 +27,7 @@ const pillars = [
     title: "Connect",
     desc: "Say hello, find events near you, and meet people who care about the same things. Find local meetups, add upcoming events, and introduce yourself.",
     cta: "Find your people →",
-    href: "https://community.offon.dev",
+    href: "https://community.open-ecosystem.com",
   },
 ];
 
@@ -44,13 +44,13 @@ export const HowItWorks = () => {
                 Get Involved
               </span>
             </div>
-            <h2 className="animate-fade-up-delay-1 mb-3 text-3xl font-bold text-foreground md:text-4xl">
+            <h2 className="animate-fade-up-delay-1 mb-3 text-3xl font-bold text-primary md:text-4xl">
               Start here
             </h2>
             <p className="animate-fade-up-delay-1 mb-12 max-w-xl text-[hsl(var(--text-secondary))] leading-relaxed">
               Share what you have built, write about what you have learned, or ask the community for help.
             </p>
-            <div className="animate-fade-up-delay-2 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="animate-fade-up-delay-2 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {pillars.map((p) => (
                 <div
                   key={p.title}
