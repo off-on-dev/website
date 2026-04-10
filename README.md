@@ -1,6 +1,6 @@
-# Website
+# offon.dev
 
-A React web application initially scaffolded with [Lovable](https://lovable.dev) and adapted for deployment on GitHub Pages.
+The source for [offon.dev](https://off-on-dev.github.io/website/) — a static React website for the Open Ecosystem community. Hands-on challenges, documentation, and community links.
 
 ## Tech Stack
 
@@ -13,7 +13,7 @@ A React web application initially scaffolded with [Lovable](https://lovable.dev)
 
 ## Getting Started
 
-Node.js and npm are required. Install Node via [nvm](https://github.com/nvm-sh/nvm#installing-and-updating) if needed.
+Node.js 22 (or later) and npm 11 (or later) are required. Check `package.json` for pinned versions.
 
 ```sh
 # Clone the repo
@@ -23,7 +23,7 @@ cd website
 # Install dependencies
 npm install
 
-# Start the development server
+# Start the development server (http://localhost:8080)
 npm run dev
 ```
 
@@ -32,25 +32,46 @@ npm run dev
 | Script | Description |
 |---|---|
 | `npm run dev` | Start local dev server with HMR |
-| `npm run build` | Production build |
+| `npm run build` | Production build → `dist/` |
 | `npm run build:dev` | Development build |
 | `npm run preview` | Preview the production build locally |
 | `npm run lint` | Run ESLint |
 | `npm test` | Run tests once |
 | `npm run test:watch` | Run tests in watch mode |
 
+Run `npm run lint` and `npm test` before marking any work done.
+
 ## Deployment
 
-The site is deployed via GitHub Pages. Push to the main branch to trigger a deployment (configure via GitHub Actions or the Pages settings as appropriate for this repo).
+Deployment is fully automated via GitHub Actions:
+
+- **Push to `main`** → [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) builds and deploys to GitHub Pages (`gh-pages` branch).
+- **Open a PR** → [`.github/workflows/preview.yml`](.github/workflows/preview.yml) builds a preview at `/website/pr-preview/pr-<n>/`.
+
+The `dist/index.html` is copied to `dist/404.html` so that React Router's client-side routing works on direct URL loads.
 
 ## Project Structure
 
 ```
 src/
-  components/   # Reusable UI components
+  components/   # Reusable UI components (named exports, PascalCase)
+  components/ui # shadcn/ui primitives — do not edit directly
   pages/        # Route-level page components
-  data/         # Static data files
+                # All page components are lazy-loaded via React.lazy + Suspense in App.tsx
+  data/         # Static data (TypeScript objects/arrays)
   hooks/        # Custom React hooks
-  lib/          # Shared utilities
-  assets/       # Static assets
+  lib/          # Shared utilities (cn())
+  assets/       # Static assets bundled by Vite
+public/
+  fonts/        # Self-hosted Inter, Syne, Azeret Mono
+  robots.txt
+  og.png
+.github/
+  workflows/
+    deploy.yml  # Production deploy on push to main
+    preview.yml # PR preview deploy
 ```
+
+## Contributing
+
+See [`AGENTS.md`](AGENTS.md) for coding conventions, design tokens, and contribution guidelines.

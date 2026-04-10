@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const highlights = [
@@ -7,7 +8,7 @@ const highlights = [
   { emoji: "🌱", text: "A welcoming space to introduce yourself, ask questions, and grow in public" },
 ];
 
-export const CommunitySection = () => {
+export const CommunitySection = (): JSX.Element => {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
@@ -35,12 +36,12 @@ export const CommunitySection = () => {
                 >
                   Browse the forum →
                 </a>
-                <a
-                  href="/docs"
+                <Link
+                  to="/docs"
                   className="btn-ghost"
                 >
                   Getting started guide
-                </a>
+                </Link>
               </div>
             </div>
             <div className="flex flex-col gap-4">

@@ -3,7 +3,7 @@ const tools = [
   "Helm", "Grafana", "OPA", "Jaeger", "Docker", "OpenTofu", "GitOps",
 ];
 
-export const ToolsMarquee = () => {
+export const ToolsMarquee = (): JSX.Element => {
   const doubled = [...tools, ...tools];
 
   return (

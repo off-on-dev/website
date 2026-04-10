@@ -17,7 +17,7 @@ const items = [
   },
 ];
 
-export const ConnectSection = () => {
+export const ConnectSection = (): JSX.Element => {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
@@ -49,7 +49,7 @@ export const ConnectSection = () => {
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-5 text-sm font-medium text-primary hover:underline"
+                    className="mt-5 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
                   >
                     {item.cta}
                   </a>

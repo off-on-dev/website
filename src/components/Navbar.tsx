@@ -5,11 +5,11 @@ import { useTheme } from "@/hooks/useTheme";
 import logoDark from "@/assets/logo-dark.png";
 import logoLight from "@/assets/logo-light.png";
 
-export const Navbar = () => {
+export const Navbar = (): JSX.Element => {
   const { theme, toggle } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const linkCls = "text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-primary transition-colors";
+  const linkCls = "text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2";
   const activeCls = "text-primary";
 
   return (
@@ -26,14 +26,14 @@ export const Navbar = () => {
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-8">
           <NavLink to="/" className={linkCls} activeClassName={activeCls} end>Home</NavLink>
-          <a href="/#challenges" className={linkCls}>Challenges</a>
+          <Link to="/#challenges" className={linkCls}>Challenges</Link>
           <a href="https://community.open-ecosystem.com" target="_blank" rel="noopener noreferrer" className={linkCls}>Community</a>
           <NavLink to="/docs" className={linkCls} activeClassName={activeCls}>Docs</NavLink>
           <NavLink to="/about" className={linkCls} activeClassName={activeCls}>About</NavLink>
           <NavLink to="/sponsors" className={linkCls} activeClassName={activeCls}>Sponsors</NavLink>
           <button
             onClick={toggle}
-            className="flex h-8 w-8 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground hover:border-primary/30 transition-all"
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground hover:border-primary/30 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
             aria-label="Toggle theme"
           >
             {theme === "dark" ? (
@@ -42,7 +42,7 @@ export const Navbar = () => {
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             )}
           </button>
-          <a href="https://github.com/dynatrace-oss/offon-challenges" target="_blank" rel="noopener noreferrer" className="rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-4 py-2 text-sm font-medium text-foreground/70 hover:text-primary hover:border-primary/30 transition-all">
+          <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges" target="_blank" rel="noopener noreferrer" className="rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-4 py-2 text-sm font-medium text-foreground/70 hover:text-primary hover:border-primary/30 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2">
             GitHub ↗
           </a>
         </div>
@@ -51,7 +51,7 @@ export const Navbar = () => {
         <div className="flex md:hidden items-center gap-3">
           <button
             onClick={toggle}
-            className="flex h-8 w-8 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all"
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
             aria-label="Toggle theme"
           >
             {theme === "dark" ? (
@@ -62,7 +62,7 @@ export const Navbar = () => {
           </button>
           <button
             onClick={() => setMenuOpen((o) => !o)}
-            className="flex h-8 w-8 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all"
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
           >
@@ -79,12 +79,12 @@ export const Navbar = () => {
       {menuOpen && (
         <div className="md:hidden border-t border-[hsl(var(--surface-border))] bg-background px-6 py-4 flex flex-col gap-4">
           <NavLink to="/" className={linkCls} activeClassName={activeCls} end onClick={() => setMenuOpen(false)}>Home</NavLink>
-          <a href="/#challenges" className={linkCls} onClick={() => setMenuOpen(false)}>Challenges</a>
+          <Link to="/#challenges" className={linkCls} onClick={() => setMenuOpen(false)}>Challenges</Link>
           <a href="https://community.open-ecosystem.com" target="_blank" rel="noopener noreferrer" className={linkCls} onClick={() => setMenuOpen(false)}>Community</a>
           <NavLink to="/docs" className={linkCls} activeClassName={activeCls} onClick={() => setMenuOpen(false)}>Docs</NavLink>
           <NavLink to="/about" className={linkCls} activeClassName={activeCls} onClick={() => setMenuOpen(false)}>About</NavLink>
           <NavLink to="/sponsors" className={linkCls} activeClassName={activeCls} onClick={() => setMenuOpen(false)}>Sponsors</NavLink>
-          <a href="https://github.com/dynatrace-oss/offon-challenges" target="_blank" rel="noopener noreferrer" className="rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-4 py-2 text-sm font-medium text-foreground/70 hover:text-primary hover:border-primary/30 transition-all text-center">
+          <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges" target="_blank" rel="noopener noreferrer" className="rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-4 py-2 text-sm font-medium text-foreground/70 hover:text-primary hover:border-primary/30 transition-all text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2">
             GitHub ↗
           </a>
         </div>

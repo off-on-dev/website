@@ -240,7 +240,7 @@
     font-family: 'Inter', sans-serif;
   }
 
-  /* Subtle electric dot grid — only in dark mode */
+  /* Subtle electric dot grid - only in dark mode */
   :root body, .dark body {
     background-image: radial-gradient(circle, hsl(var(--primary) / 0.035) 1px, transparent 1px);
     background-size: 44px 44px;
@@ -259,7 +259,7 @@
     font-family: 'Azeret Mono', monospace;
   }
 
-  /* Ghost word — outline/stroke text, visible but clearly decorative */
+  /* Ghost word - outline/stroke text, visible but clearly decorative */
   .ghost-word {
     -webkit-text-stroke: 1.5px hsl(var(--primary-foreground));
     color: transparent;
@@ -331,9 +331,9 @@
 
 .hero-glow {
   background:
-    radial-gradient(ellipse 800px 500px at 50% 40%, hsl(41 100% 60% / 0.08), transparent),
-    radial-gradient(ellipse 350px 200px at 18% 65%, hsl(38 100% 58% / 0.04), transparent),
-    radial-gradient(ellipse 300px 180px at 82% 22%, hsl(32 100% 52% / 0.03), transparent);
+    radial-gradient(ellipse 800px 500px at 50% 40%, hsl(var(--electric) / 0.08), transparent),
+    radial-gradient(ellipse 350px 200px at 18% 65%, hsl(var(--teal) / 0.04), transparent),
+    radial-gradient(ellipse 300px 180px at 82% 22%, hsl(var(--purple) / 0.03), transparent);
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 70%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 70%, transparent 100%);
   animation: glowPulse 9s ease-in-out infinite;
@@ -357,7 +357,17 @@
     @apply inline-flex items-center justify-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-5 py-2.5 text-sm font-semibold text-primary transition-all duration-200 hover:bg-primary/20 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2;
   }
 
-  /* Filter pills — smaller, lighter weight than action buttons */
+  /* Inverse button - for use on primary-colored section backgrounds */
+  .btn-inverse {
+    @apply inline-flex items-center gap-2 rounded-md bg-background text-primary font-bold text-sm px-5 py-2.5 border-2 border-primary transition-all hover:bg-primary hover:border-primary-foreground hover:text-primary-foreground hover:scale-[1.02] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2;
+  }
+
+  /* Ghost inverse button - for use on primary-colored section backgrounds */
+  .btn-ghost-inverse {
+    @apply inline-flex items-center gap-2 rounded-md bg-transparent text-background font-bold text-sm px-5 py-2.5 border-2 border-background/70 transition-all hover:bg-primary-foreground hover:border-primary-foreground hover:text-primary hover:scale-[1.02] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background/60 focus-visible:ring-offset-2;
+  }
+
+  /* Filter pills - smaller, lighter weight than action buttons */
   .pill-active {
     @apply inline-flex items-center gap-1.5 rounded-full border border-primary/50 bg-primary/10 px-4 py-1.5 text-sm font-medium leading-none text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2;
   }
@@ -366,28 +376,6 @@
     @apply inline-flex items-center gap-1.5 rounded-full border border-[hsl(var(--surface-border))] bg-transparent px-4 py-1.5 text-sm font-medium leading-none text-[hsl(var(--text-secondary))] hover:border-foreground/30 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2;
   }
 
-  /* Difficulty badge base */
-  .badge-difficulty {
-    @apply inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 font-mono text-[13px] uppercase tracking-wider;
-  }
-
-  .badge-beginner {
-    color: hsl(var(--primary));
-    border-color: hsl(var(--primary) / 0.35);
-    background-color: hsl(var(--primary) / 0.1);
-  }
-
-  .badge-intermediate {
-    color: hsl(var(--difficulty-builder));
-    border-color: hsl(var(--difficulty-builder) / 0.35);
-    background-color: hsl(var(--difficulty-builder) / 0.1);
-  }
-
-  .badge-expert {
-    color: hsl(var(--difficulty-architect));
-    border-color: hsl(var(--difficulty-architect) / 0.35);
-    background-color: hsl(var(--difficulty-architect) / 0.1);
-  }
 }
 
 /* ─── Electric glow effects ──────────────────────────────── */
@@ -407,7 +395,7 @@
     0 0 40px -8px hsl(var(--primary) / 0.2);
 }
 
-/* Glowing card hover — add card-glow class to cards */
+/* Glowing card hover - add card-glow class to cards */
 .card-glow {
   transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
 }
@@ -415,7 +403,7 @@
   box-shadow:
     0 0 0 1px hsl(var(--primary) / 0.3),
     0 0 32px -6px hsl(var(--primary) / 0.25),
-    0 0 60px -12px hsl(38 100% 58% / 0.12);
+    0 0 60px -12px hsl(var(--teal) / 0.12);
   border-color: hsl(var(--primary) / 0.3) !important;
 }
 
@@ -423,24 +411,24 @@
 
 .light .hero-glow {
   background:
-    radial-gradient(ellipse 800px 500px at 50% 40%, hsl(220 77% 49% / 0.10), transparent),
-    radial-gradient(ellipse 350px 200px at 18% 65%, hsl(210 100% 40% / 0.06), transparent),
-    radial-gradient(ellipse 300px 180px at 82% 22%, hsl(225 80% 45% / 0.05), transparent);
+    radial-gradient(ellipse 800px 500px at 50% 40%, hsl(var(--electric) / 0.10), transparent),
+    radial-gradient(ellipse 350px 200px at 18% 65%, hsl(var(--teal) / 0.06), transparent),
+    radial-gradient(ellipse 300px 180px at 82% 22%, hsl(var(--purple) / 0.05), transparent);
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 70%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 70%, transparent 100%);
 }
 
 .light .card-glow:hover {
   box-shadow:
-    0 0 0 1.5px hsl(220 77% 49% / 0.45),
-    0 0 28px -4px hsl(220 77% 49% / 0.25),
-    0 0 50px -10px hsl(220 77% 49% / 0.15);
-  border-color: hsl(220 77% 49% / 0.45) !important;
+    0 0 0 1.5px hsl(var(--primary) / 0.45),
+    0 0 28px -4px hsl(var(--primary) / 0.25),
+    0 0 50px -10px hsl(var(--primary) / 0.15);
+  border-color: hsl(var(--primary) / 0.45) !important;
 }
 
 .light .firefly {
-  background-color: hsl(214 100% 50%);
+  background-color: hsl(var(--primary));
   box-shadow:
-    0 0 6px 3px  hsl(214 100% 55% / 0.5),
-    0 0 18px 6px hsl(214 100% 60% / 0.2);
+    0 0 6px 3px  hsl(var(--primary) / 0.5),
+    0 0 18px 6px hsl(var(--primary) / 0.2);
 }

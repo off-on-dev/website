@@ -23,7 +23,7 @@ const values = [
   },
 ];
 
-export const AboutSection = () => {
+export const AboutSection = (): JSX.Element => {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
@@ -35,7 +35,7 @@ export const AboutSection = () => {
               <div>
                 <span className="font-mono text-xs font-medium uppercase tracking-widest text-primary">Our Mission</span>
                 <h2 className="mt-3 text-3xl font-bold text-primary md:text-4xl">
-                  Creating the contributors and maintainers of tomorrow
+                  Our values
                 </h2>
               </div>
               <div className="flex flex-col justify-center gap-4">

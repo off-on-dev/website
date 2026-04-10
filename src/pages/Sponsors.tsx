@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/Navbar";
+import { Helmet } from "react-helmet-async";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
@@ -7,9 +8,22 @@ const currentSponsors = [
   { name: "Dynatrace", role: "Founding Sponsor", url: "https://dynatrace.com" },
 ];
 
-const Sponsors = () => {
+const Sponsors = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>Sponsors - Offon</title>
+        <meta name="description" content="Sponsors provide financial support and participate as community members, but do not control technical direction or governance." />
+        <meta property="og:title" content="Sponsors - Offon" />
+        <meta property="og:description" content="Sponsors provide financial support and participate as community members, but do not control technical direction or governance." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://off-on-dev.github.io/website/sponsors" />
+        <meta property="og:image" content="https://off-on-dev.github.io/website/og.png" />
+        <meta name="twitter:title" content="Sponsors - Offon" />
+        <meta name="twitter:description" content="Sponsors provide financial support and participate as community members, but do not control technical direction or governance." />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="https://off-on-dev.github.io/website/og.png" />
+      </Helmet>
       <Navbar />
       <PageHero
         eyebrow="Sponsors"
@@ -33,7 +47,7 @@ const Sponsors = () => {
                 href={s.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="card-glow flex items-center gap-4 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all"
+                className="card-glow flex items-center gap-4 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
               >
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-lg font-bold text-primary">
                   {s.name[0]}

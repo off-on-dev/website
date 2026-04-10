@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/Navbar";
+import { Helmet } from "react-helmet-async";
 import { Footer } from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { PageHero } from "@/components/PageHero";
@@ -25,9 +26,22 @@ const forumDocs = [
   { label: "Privacy Policy", href: "https://community.open-ecosystem.com/t/privacy-policy/22" },
 ];
 
-const Docs = () => {
+const Docs = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>Docs - Offon</title>
+        <meta name="description" content="Guides for getting started, running challenges, contributing, and everything in between." />
+        <meta property="og:title" content="Docs - Offon" />
+        <meta property="og:description" content="Guides for getting started, running challenges, contributing, and everything in between." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://off-on-dev.github.io/website/docs" />
+        <meta property="og:image" content="https://off-on-dev.github.io/website/og.png" />
+        <meta name="twitter:title" content="Docs - Offon" />
+        <meta name="twitter:description" content="Guides for getting started, running challenges, contributing, and everything in between." />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="https://off-on-dev.github.io/website/og.png" />
+      </Helmet>
       <Navbar />
       <PageHero
         eyebrow="Documentation"

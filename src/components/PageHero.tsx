@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 
-interface Cta {
+type Cta = {
   label: string;
   href: string;
   external?: boolean;
 }
 
-interface PageHeroProps {
+type PageHeroProps = {
   eyebrow?: string;
   title: string;
   description: string;
@@ -14,11 +14,9 @@ interface PageHeroProps {
   secondaryCta?: Cta;
 }
 
-const renderCta = (cta: Cta, isPrimary: boolean) => {
-  const primaryCls =
-    "bg-background text-primary font-bold text-sm px-5 py-2.5 rounded-md border-2 border-primary transition-all hover:bg-primary hover:border-primary-foreground hover:text-primary-foreground hover:scale-[1.02] active:scale-[0.97]";
-  const secondaryCls =
-    "bg-transparent text-background font-bold text-sm px-5 py-2.5 rounded-md border-2 border-background/70 transition-all hover:bg-primary-foreground hover:border-primary-foreground hover:text-primary hover:scale-[1.02] active:scale-[0.97]";
+const renderCta = (cta: Cta, isPrimary: boolean): JSX.Element => {
+  const primaryCls = "btn-inverse";
+  const secondaryCls = "btn-ghost-inverse";
   const cls = isPrimary ? primaryCls : secondaryCls;
 
   if (cta.external) {
@@ -43,12 +41,12 @@ const renderCta = (cta: Cta, isPrimary: boolean) => {
   );
 };
 
-export const PageHero = ({ eyebrow, title, description, primaryCta, secondaryCta }: PageHeroProps) => {
+export const PageHero = ({ eyebrow, title, description, primaryCta, secondaryCta }: PageHeroProps): JSX.Element => {
   return (
     <section className="bg-primary pt-32 pb-20 px-6 md:px-16">
       <div className="mx-auto max-w-4xl">
         {eyebrow && (
-          <span className="font-mono text-xs font-medium uppercase tracking-widest text-background/70 block mb-4">
+          <span className="font-mono text-xs font-medium uppercase tracking-widest text-background/90 block mb-4">
             {eyebrow}
           </span>
         )}

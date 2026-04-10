@@ -8,11 +8,11 @@ const stats = [
   { value: 6, suffix: " mo", label: "Community Age" },
 ];
 
-interface StatsBarProps {
+type StatsBarProps = {
   variant?: "default" | "accent";
 }
 
-export const StatsBar = ({ variant = "default" }: StatsBarProps) => {
+export const StatsBar = ({ variant = "default" }: StatsBarProps): JSX.Element => {
   const { ref, isVisible } = useScrollAnimation();
   const isAccent = variant === "accent";
 
@@ -29,7 +29,7 @@ export const StatsBar = ({ variant = "default" }: StatsBarProps) => {
             className={`text-center ${i > 0 ? `md:border-l ${isAccent ? 'md:border-background/30' : 'md:border-[hsl(var(--surface-border))]'}` : ''}`}
           >
             <div className={`font-mono text-3xl font-semibold ${isAccent ? 'text-background' : 'text-foreground'}`}>
-              <CountUp end={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
+              <CountUp end={stat.value} suffix={stat.suffix} />
             </div>
             <div className={`mt-1 text-sm ${isAccent ? 'text-background/80' : 'text-muted-foreground'}`}>{stat.label}</div>
           </div>

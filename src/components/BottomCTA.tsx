@@ -1,6 +1,6 @@
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
-export const BottomCTA = () => {
+export const BottomCTA = (): JSX.Element => {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
@@ -38,15 +38,15 @@ export const BottomCTA = () => {
                 href="https://community.open-ecosystem.com"
                 target="_blank"
                 rel="noopener noreferrer"
-              className="bg-background text-primary font-bold text-sm px-5 py-2.5 rounded-md border-2 border-primary transition-all hover:bg-primary hover:border-primary-foreground hover:text-primary-foreground hover:scale-[1.02] active:scale-[0.97]"
+              className="btn-inverse"
               >
                 Join the community →<span className="sr-only"> (opens in new tab)</span>
               </a>
               <a
-                href="https://github.com/dynatrace-oss/offon-challenges"
+                href="https://github.com/dynatrace-oss/open-ecosystem-challenges"
                 target="_blank"
                 rel="noopener noreferrer"
-              className="bg-transparent text-background font-bold text-sm px-5 py-2.5 rounded-md border-2 border-background/70 transition-all hover:bg-primary-foreground hover:border-primary-foreground hover:text-primary hover:scale-[1.02] active:scale-[0.97]"
+              className="btn-ghost-inverse"
               >
                 GitHub ↗<span className="sr-only"> (opens in new tab)</span>
               </a>

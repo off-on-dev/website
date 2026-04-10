@@ -1,16 +1,30 @@
 import { Navbar } from "@/components/Navbar";
+import { Helmet } from "react-helmet-async";
 import { Footer } from "@/components/Footer";
 import { Link } from "react-router-dom";
 
-const CommunityGuide = () => {
+const CommunityGuide = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>Community Guide - Offon Docs</title>
+        <meta name="description" content="Welcome, quick start, posting guidelines, leaderboards, and contact for the Offon community." />
+        <meta property="og:title" content="Community Guide - Offon Docs" />
+        <meta property="og:description" content="Welcome, quick start, posting guidelines, leaderboards, and contact for the Offon community." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://off-on-dev.github.io/website/docs/community-guide" />
+        <meta property="og:image" content="https://off-on-dev.github.io/website/og.png" />
+        <meta name="twitter:title" content="Community Guide - Offon Docs" />
+        <meta name="twitter:description" content="Welcome, quick start, posting guidelines, leaderboards, and contact for the Offon community." />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="https://off-on-dev.github.io/website/og.png" />
+      </Helmet>
       <Navbar />
       <div className="mx-auto max-w-3xl px-6 pt-28 pb-24">
 
         {/* Breadcrumb */}
         <div className="mb-8 flex items-center gap-2 text-sm text-[hsl(var(--text-faint))]">
-          <Link to="/docs" className="hover:text-foreground transition-colors">Docs</Link>
+          <Link to="/docs" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">Docs</Link>
           <span aria-hidden="true">/</span>
           <span className="text-[hsl(var(--text-secondary))]">Community Guide</span>
         </div>
@@ -30,12 +44,12 @@ const CommunityGuide = () => {
             <h2 className="text-xl font-bold text-foreground mb-3">Quick start</h2>
             <ul className="space-y-2">
               <li>
-                <a href="https://community.open-ecosystem.com/t/what-is-the-community-about-and-who-is-it-for/35" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                <a href="https://community.open-ecosystem.com/t/what-is-the-community-about-and-who-is-it-for/35" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">
                   What the community is about, and who it's for →
                 </a>
               </li>
               <li>
-                <a href="https://community.open-ecosystem.com/t/getting-started/36" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                <a href="https://community.open-ecosystem.com/t/getting-started/36" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">
                   Getting started in the community →
                 </a>
               </li>
@@ -55,7 +69,7 @@ const CommunityGuide = () => {
               ].map((item) => (
                 <li key={item.label} className="flex items-center gap-2 text-sm">
                   <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" aria-hidden="true" />
-                  <a href={item.href} target="_blank" rel="noopener noreferrer" className="text-[hsl(var(--text-secondary))] hover:text-foreground transition-colors">
+                  <a href={item.href} target="_blank" rel="noopener noreferrer" className="text-[hsl(var(--text-secondary))] hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">
                     {item.label}
                   </a>
                 </li>
@@ -68,7 +82,7 @@ const CommunityGuide = () => {
             <h2 className="text-xl font-bold text-foreground mb-3">Vendor-agnostic policy</h2>
             <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
               We're vendor-agnostic. Technical product mentions are welcome when neutral and reproducible. Avoid promotional content. Marketing posts will be removed; repeated violations may lead to moderation actions. See{" "}
-              <a href="https://community.open-ecosystem.com/t/posting-guidelines/30" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Posting Guidelines</a>.
+              <a href="https://community.open-ecosystem.com/t/posting-guidelines/30" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">Posting Guidelines</a>.
             </p>
           </section>
 
@@ -80,12 +94,12 @@ const CommunityGuide = () => {
             </p>
             <ul className="space-y-2">
               <li>
-                <a href="https://community.open-ecosystem.com/leaderboard/8" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-sm">
+                <a href="https://community.open-ecosystem.com/leaderboard/8" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">
                   Hall of Fame →
                 </a>
               </li>
               <li>
-                <a href="https://community.open-ecosystem.com/leaderboard/6" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-sm">
+                <a href="https://community.open-ecosystem.com/leaderboard/6" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">
                   Leaderboards →
                 </a>
               </li>
@@ -103,7 +117,7 @@ const CommunityGuide = () => {
               <li className="flex items-start gap-2">
                 <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0" aria-hidden="true" />
                 DM{" "}
-                <a href="https://community.open-ecosystem.com/groups/moderators" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                <a href="https://community.open-ecosystem.com/groups/moderators" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">
                   @moderators
                 </a>{" "}
                 for sensitive issues

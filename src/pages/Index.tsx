@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
@@ -8,7 +9,7 @@ import { ConnectSection } from "@/components/ConnectSection";
 import { BottomCTA } from "@/components/BottomCTA";
 import { Footer } from "@/components/Footer";
 
-const Index = () => {
+const Index = (): JSX.Element => {
   const { hash } = useLocation();
 
   useEffect(() => {
@@ -22,6 +23,19 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>Offon - Vendor-neutral. Open Source. Community Driven.</title>
+        <meta name="description" content="Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, cloud dev environments." />
+        <meta property="og:title" content="Offon - Vendor-neutral. Open Source. Community Driven." />
+        <meta property="og:description" content="Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, cloud dev environments." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://off-on-dev.github.io/website/" />
+        <meta property="og:image" content="https://off-on-dev.github.io/website/og.png" />
+        <meta name="twitter:title" content="Offon - Vendor-neutral. Open Source. Community Driven." />
+        <meta name="twitter:description" content="Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, cloud dev environments." />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="https://off-on-dev.github.io/website/og.png" />
+      </Helmet>
       <Navbar />
       <Hero />
       <ChallengesGrid />
@@ -39,7 +53,7 @@ const Index = () => {
                 href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-background text-primary font-bold text-sm px-5 py-2.5 rounded-md border-2 border-primary transition-all hover:bg-primary hover:border-primary-foreground hover:text-primary-foreground hover:scale-[1.02] active:scale-[0.97]"
+                className="btn-inverse"
               >
                 Propose an adventure idea ↗<span className="sr-only"> (opens in new tab)</span>
               </a>

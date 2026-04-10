@@ -1,10 +1,6 @@
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-
-export const Hero = () => {
-  const { ref, isVisible } = useScrollAnimation();
-
+export const Hero = (): JSX.Element => {
   return (
-    <section ref={ref} className="relative flex min-h-screen items-center justify-center px-6 pt-20 overflow-hidden">
+    <section className="relative flex min-h-screen items-center justify-center px-6 pt-20 overflow-hidden">
       {/* Multi-color animated glow */}
       <div className="hero-glow absolute inset-0 pointer-events-none" aria-hidden="true" />
 
@@ -16,8 +12,6 @@ export const Hero = () => {
       </div>
 
       <div className="relative z-10 mx-auto max-w-3xl text-center">
-        {isVisible && (
-          <>
             <div className="animate-fade-up mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-[hsl(var(--surface))] px-4 py-1.5" aria-label="Vendor-neutral, Open source, Community-driven">
               <span className="h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
               <span className="text-xs text-foreground">Vendor-neutral</span>
@@ -51,8 +45,6 @@ export const Hero = () => {
                 Join the community →
               </a>
             </div>
-          </>
-        )}
       </div>
     </section>
   );

@@ -31,7 +31,7 @@ const pillars = [
   },
 ];
 
-export const HowItWorks = () => {
+export const HowItWorks = (): JSX.Element => {
   const { ref, isVisible } = useScrollAnimation();
 
   return (

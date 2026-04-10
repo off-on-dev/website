@@ -17,7 +17,7 @@ const pillars = [
   },
 ];
 
-export const CommunityVoicesSection = () => {
+export const CommunityVoicesSection = (): JSX.Element => {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
@@ -49,7 +49,7 @@ export const CommunityVoicesSection = () => {
                     href={p.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-5 text-sm font-medium text-primary hover:underline"
+                    className="mt-5 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
                   >
                     {p.cta}
                   </a>
