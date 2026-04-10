@@ -13,7 +13,7 @@ The source for [offon.dev](https://off-on-dev.github.io/website/) — a static R
 
 ## Getting Started
 
-Node.js 22 (or later) and npm 11 (or later) are required. Check `package.json` for pinned versions.
+Node.js version is specified in .nvmrc. Use nvm use to switch to the correct version automatically, or check .nvmrc for the required version.
 
 ```sh
 # Clone the repo
