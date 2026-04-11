@@ -4,6 +4,7 @@ import { Footer } from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
+import { COMMUNITY_URL } from "@/data/constants";
 
 const sitePages = [
   {
@@ -15,15 +16,15 @@ const sitePages = [
 ];
 
 const forumDocs = [
-  { label: "Getting Started", href: "https://community.open-ecosystem.com/t/getting-started/36" },
-  { label: "What the community is about and who it is for", href: "https://community.open-ecosystem.com/t/what-is-the-community-about-and-who-is-it-for/35" },
-  { label: "Community Guide (forum)", href: "https://community.open-ecosystem.com/t/community-guide/29" },
-  { label: "Posting Guidelines", href: "https://community.open-ecosystem.com/t/posting-guidelines/30" },
-  { label: "Code of Conduct", href: "https://community.open-ecosystem.com/t/code-of-conduct/31/1" },
-  { label: "Stay in the Loop", href: "https://community.open-ecosystem.com/t/stay-in-the-loop/33" },
-  { label: "Questions and Feedback", href: "https://community.open-ecosystem.com/t/questions-feedback/34" },
-  { label: "FAQ and Guidelines", href: "https://community.open-ecosystem.com/t/faq-guidelines/4" },
-  { label: "Privacy Policy", href: "https://community.open-ecosystem.com/t/privacy-policy/22" },
+  { label: "Getting Started", href: `${COMMUNITY_URL}/t/getting-started/36` },
+  { label: "What the community is about and who it is for", href: `${COMMUNITY_URL}/t/what-is-the-community-about-and-who-is-it-for/35` },
+  { label: "Community Guide (forum)", href: `${COMMUNITY_URL}/t/community-guide/29` },
+  { label: "Posting Guidelines", href: `${COMMUNITY_URL}/t/posting-guidelines/30` },
+  { label: "Code of Conduct", href: `${COMMUNITY_URL}/t/code-of-conduct/31/1` },
+  { label: "Stay in the Loop", href: `${COMMUNITY_URL}/t/stay-in-the-loop/33` },
+  { label: "Questions and Feedback", href: `${COMMUNITY_URL}/t/questions-feedback/34` },
+  { label: "FAQ and Guidelines", href: `${COMMUNITY_URL}/t/faq-guidelines/4` },
+  { label: "Privacy Policy", href: `${COMMUNITY_URL}/t/privacy-policy/22` },
 ];
 
 const Docs = (): JSX.Element => {
@@ -47,7 +48,7 @@ const Docs = (): JSX.Element => {
         eyebrow="Documentation"
         title="Documentation"
         description="Guides for getting started, running challenges, contributing, and everything in between."
-        primaryCta={{ label: "Browse the community", href: "https://community.open-ecosystem.com", external: true }}
+        primaryCta={{ label: "Browse the community", href: COMMUNITY_URL, external: true }}
         secondaryCta={{ label: "View challenges", href: "/#challenges" }}
       />
       <div className="mx-auto max-w-3xl px-6 py-16">

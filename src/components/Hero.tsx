@@ -1,3 +1,5 @@
+import { COMMUNITY_URL } from "@/data/constants";
+
 export const Hero = (): JSX.Element => {
   return (
     <section className="relative flex min-h-screen items-center justify-center px-6 pt-20 overflow-hidden">
@@ -37,7 +39,7 @@ export const Hero = (): JSX.Element => {
                 Start a challenge ↓
               </a>
               <a
-                href="https://community.open-ecosystem.com"
+                href={COMMUNITY_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-ghost"

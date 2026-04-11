@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
+import { COMMUNITY_URL } from "@/data/constants";
 
 const currentSponsors = [
   { name: "Dynatrace", role: "Founding Sponsor", url: "https://dynatrace.com" },
@@ -30,7 +31,7 @@ const Sponsors = (): JSX.Element => {
         title="Sponsorship and Independence"
         description="Sponsors provide financial support and participate as community members, but do not control technical direction, content priorities, or governance. This community belongs to its members."
         primaryCta={{ label: "Get in touch →", href: "mailto:sponsors@offon.dev?subject=Sponsorship Inquiry" }}
-        secondaryCta={{ label: "Join the community →", href: "https://community.open-ecosystem.com", external: true }}
+        secondaryCta={{ label: "Join the community →", href: COMMUNITY_URL, external: true }}
       />
 
       <div className="mx-auto max-w-4xl px-6 py-16">

@@ -2,6 +2,7 @@ import { Navbar } from "@/components/Navbar";
 import { Helmet } from "react-helmet-async";
 import { Footer } from "@/components/Footer";
 import { Link } from "react-router-dom";
+import { COMMUNITY_URL } from "@/data/constants";
 
 const CommunityGuide = (): JSX.Element => {
   return (
@@ -44,12 +45,12 @@ const CommunityGuide = (): JSX.Element => {
             <h2 className="text-xl font-bold text-foreground mb-3">Quick start</h2>
             <ul className="space-y-2">
               <li>
-                <a href="https://community.open-ecosystem.com/t/what-is-the-community-about-and-who-is-it-for/35" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">
+                <a href={`${COMMUNITY_URL}/t/what-is-the-community-about-and-who-is-it-for/35`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">
                   What the community is about, and who it's for →
                 </a>
               </li>
               <li>
-                <a href="https://community.open-ecosystem.com/t/getting-started/36" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">
+                <a href={`${COMMUNITY_URL}/t/getting-started/36`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">
                   Getting started in the community →
                 </a>
               </li>
@@ -61,11 +62,11 @@ const CommunityGuide = (): JSX.Element => {
             <h2 className="text-xl font-bold text-foreground mb-3">Docs index</h2>
             <ul className="space-y-2">
               {[
-                { label: "Posting Guidelines", href: "https://community.open-ecosystem.com/t/posting-guidelines/30" },
-                { label: "Code of Conduct", href: "https://community.open-ecosystem.com/t/code-of-conduct/31" },
-                { label: "Categories", href: "https://community.open-ecosystem.com/categories" },
-                { label: "Stay in the Loop", href: "https://community.open-ecosystem.com/t/stay-in-the-loop/33" },
-                { label: "Questions & Feedback", href: "https://community.open-ecosystem.com/t/questions-feedback/34" },
+                { label: "Posting Guidelines", href: `${COMMUNITY_URL}/t/posting-guidelines/30` },
+                { label: "Code of Conduct", href: `${COMMUNITY_URL}/t/code-of-conduct/31` },
+                { label: "Categories", href: `${COMMUNITY_URL}/categories` },
+                { label: "Stay in the Loop", href: `${COMMUNITY_URL}/t/stay-in-the-loop/33` },
+                { label: "Questions & Feedback", href: `${COMMUNITY_URL}/t/questions-feedback/34` },
               ].map((item) => (
                 <li key={item.label} className="flex items-center gap-2 text-sm">
                   <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" aria-hidden="true" />
@@ -82,7 +83,7 @@ const CommunityGuide = (): JSX.Element => {
             <h2 className="text-xl font-bold text-foreground mb-3">Vendor-agnostic policy</h2>
             <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
               We're vendor-agnostic. Technical product mentions are welcome when neutral and reproducible. Avoid promotional content. Marketing posts will be removed; repeated violations may lead to moderation actions. See{" "}
-              <a href="https://community.open-ecosystem.com/t/posting-guidelines/30" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">Posting Guidelines</a>.
+              <a href={`${COMMUNITY_URL}/t/posting-guidelines/30`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">Posting Guidelines</a>.
             </p>
           </section>
 
@@ -94,12 +95,12 @@ const CommunityGuide = (): JSX.Element => {
             </p>
             <ul className="space-y-2">
               <li>
-                <a href="https://community.open-ecosystem.com/leaderboard/8" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">
+                <a href={`${COMMUNITY_URL}/leaderboard/8`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">
                   Hall of Fame →
                 </a>
               </li>
               <li>
-                <a href="https://community.open-ecosystem.com/leaderboard/6" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">
+                <a href={`${COMMUNITY_URL}/leaderboard/6`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">
                   Leaderboards →
                 </a>
               </li>
@@ -117,7 +118,7 @@ const CommunityGuide = (): JSX.Element => {
               <li className="flex items-start gap-2">
                 <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0" aria-hidden="true" />
                 DM{" "}
-                <a href="https://community.open-ecosystem.com/groups/moderators" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">
+                <a href={`${COMMUNITY_URL}/groups/moderators`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm">
                   @moderators
                 </a>{" "}
                 for sensitive issues
@@ -132,7 +133,7 @@ const CommunityGuide = (): JSX.Element => {
           <Link to="/docs" className="btn-ghost">
             ← Back to Docs
           </Link>
-          <a href="https://community.open-ecosystem.com" target="_blank" rel="noopener noreferrer" className="btn-primary">
+          <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">
             Open the community →
           </a>
         </div>

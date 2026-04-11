@@ -45,7 +45,7 @@ Run `npm run lint` and `npm test` before marking any work done.
 
 Deployment is fully automated via GitHub Actions:
 
-- **Push to `main`** → [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) builds and deploys to GitHub Pages (`gh-pages` branch).
+- **Push to `main`** → [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) builds with `npm run build`, uploads artifacts, and deploys to GitHub Pages using the official [`actions/deploy-pages`](https://github.com/actions/deploy-pages).
 - **Open a PR** → [`.github/workflows/preview.yml`](.github/workflows/preview.yml) builds a preview at `/website/pr-preview/pr-<n>/`.
 
 The `dist/index.html` is copied to `dist/404.html` so that React Router's client-side routing works on direct URL loads.

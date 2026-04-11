@@ -1,4 +1,5 @@
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { COMMUNITY_URL } from "@/data/constants";
 
 const pillars = [
   {
@@ -6,14 +7,14 @@ const pillars = [
     title: "Community Voices",
     desc: "Share tutorials, showcase projects, post open source news, and write about what you have learned. The home for community-created content.",
     cta: "Share something →",
-    href: "https://community.open-ecosystem.com",
+    href: COMMUNITY_URL,
   },
   {
     icon: "❓",
     title: "Q&A",
     desc: "Stuck on a technical problem or not sure where to start with open source? Post a clear question and get answers from the community. No question is too basic.",
     cta: "Ask a question →",
-    href: "https://community.open-ecosystem.com",
+    href: COMMUNITY_URL,
   },
   {
     icon: "🏆",
@@ -27,7 +28,7 @@ const pillars = [
     title: "Connect",
     desc: "Say hello, find events near you, and meet people who care about the same things. Find local meetups, add upcoming events, and introduce yourself.",
     cta: "Find your people →",
-    href: "https://community.open-ecosystem.com",
+    href: COMMUNITY_URL,
   },
 ];
 

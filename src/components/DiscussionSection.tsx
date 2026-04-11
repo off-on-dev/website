@@ -1,4 +1,5 @@
 import { useState, useEffect, type CSSProperties } from "react";
+import { COMMUNITY_URL } from "@/data/constants";
 
 type DiscoursePost = {
   username: string;
@@ -56,7 +57,7 @@ export const DiscussionSection = ({ discussionUrls }: DiscussionSectionProps): J
           const topicId = extractTopicId(url);
           if (!topicId) continue;
           try {
-            const res = await fetch(`https://community.open-ecosystem.com/t/${topicId}.json`);
+            const res = await fetch(`${COMMUNITY_URL}/t/${topicId}.json`);
             if (!res.ok) continue;
             const data = await res.json();
             const topicPosts: DiscoursePost[] = data.post_stream?.posts || [];
@@ -104,7 +105,7 @@ export const DiscussionSection = ({ discussionUrls }: DiscussionSectionProps): J
             </p>
           </div>
           <a
-            href={discussionUrls[0] || "https://community.open-ecosystem.com"}
+            href={discussionUrls[0] || COMMUNITY_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-4 inline-flex text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
@@ -143,7 +144,7 @@ export const DiscussionSection = ({ discussionUrls }: DiscussionSectionProps): J
             </a>
           ))}
           <a
-            href={discussionUrls[0] || "https://community.open-ecosystem.com"}
+            href={discussionUrls[0] || COMMUNITY_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-4 inline-flex text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"

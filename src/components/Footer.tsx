@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
-import logoDark from "@/assets/logo-dark.png";
-import logoLight from "@/assets/logo-light.png";
+import { COMMUNITY_URL } from "@/data/constants";
+import logoDark from "@/assets/offon-logo-dark-color.svg";
+import logoLight from "@/assets/offon-logo-light-color.svg";
 
 export const Footer = (): JSX.Element => {
   const { theme } = useTheme();
@@ -39,20 +40,20 @@ export const Footer = (): JSX.Element => {
           {/* Community */}
           <nav aria-label="Community">
             <p className="text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">Community</p>
-            <a href="https://community.open-ecosystem.com" target="_blank" rel="noopener noreferrer" className={lnk}>Forum<span className="sr-only"> (opens in new tab)</span></a>
-            <a href="https://community.open-ecosystem.com/c/community-voices/38" target="_blank" rel="noopener noreferrer" className={lnk}>Community Voices<span className="sr-only"> (opens in new tab)</span></a>
-            <a href="https://community.open-ecosystem.com/c/challenges/11" target="_blank" rel="noopener noreferrer" className={lnk}>Challenges<span className="sr-only"> (opens in new tab)</span></a>
-            <a href="https://community.open-ecosystem.com/c/general/q-a/10" target="_blank" rel="noopener noreferrer" className={lnk}>Q&amp;A<span className="sr-only"> (opens in new tab)</span></a>
-            <a href="https://community.open-ecosystem.com/c/events-and-talks/12" target="_blank" rel="noopener noreferrer" className={lnk}>Events and Talks<span className="sr-only"> (opens in new tab)</span></a>
-            <a href="https://community.open-ecosystem.com/c/local-meetups-and-groups/19" target="_blank" rel="noopener noreferrer" className={lnk}>Local Meetups<span className="sr-only"> (opens in new tab)</span></a>
+            <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className={lnk}>Forum<span className="sr-only"> (opens in new tab)</span></a>
+            <a href={`${COMMUNITY_URL}/c/community-voices/38`} target="_blank" rel="noopener noreferrer" className={lnk}>Community Voices<span className="sr-only"> (opens in new tab)</span></a>
+            <a href={`${COMMUNITY_URL}/c/challenges/11`} target="_blank" rel="noopener noreferrer" className={lnk}>Challenges<span className="sr-only"> (opens in new tab)</span></a>
+            <a href={`${COMMUNITY_URL}/c/general/q-a/10`} target="_blank" rel="noopener noreferrer" className={lnk}>Q&amp;A<span className="sr-only"> (opens in new tab)</span></a>
+            <a href={`${COMMUNITY_URL}/c/events-and-talks/12`} target="_blank" rel="noopener noreferrer" className={lnk}>Events and Talks<span className="sr-only"> (opens in new tab)</span></a>
+            <a href={`${COMMUNITY_URL}/c/local-meetups-and-groups/19`} target="_blank" rel="noopener noreferrer" className={lnk}>Local Meetups<span className="sr-only"> (opens in new tab)</span></a>
           </nav>
 
           {/* Policies */}
           <nav aria-label="Legal and policies" className="col-span-2 md:col-span-1">
             <p className="text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">Policies</p>
-            <a href="https://community.open-ecosystem.com/t/code-of-conduct/31/1" target="_blank" rel="noopener noreferrer" className={lnk}>Code of Conduct<span className="sr-only"> (opens in new tab)</span></a>
-            <a href="https://community.open-ecosystem.com/t/posting-guidelines/30" target="_blank" rel="noopener noreferrer" className={lnk}>Posting Guidelines<span className="sr-only"> (opens in new tab)</span></a>
-            <a href="https://community.open-ecosystem.com/t/privacy-policy/22" target="_blank" rel="noopener noreferrer" className={lnk}>Privacy Policy<span className="sr-only"> (opens in new tab)</span></a>
+            <a href={`${COMMUNITY_URL}/t/code-of-conduct/31/1`} target="_blank" rel="noopener noreferrer" className={lnk}>Code of Conduct<span className="sr-only"> (opens in new tab)</span></a>
+            <a href={`${COMMUNITY_URL}/t/posting-guidelines/30`} target="_blank" rel="noopener noreferrer" className={lnk}>Posting Guidelines<span className="sr-only"> (opens in new tab)</span></a>
+            <a href={`${COMMUNITY_URL}/t/privacy-policy/22`} target="_blank" rel="noopener noreferrer" className={lnk}>Privacy Policy<span className="sr-only"> (opens in new tab)</span></a>
             <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" className={lnk}>Contributing<span className="sr-only"> (opens in new tab)</span></a>
           </nav>
 

@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import { useTheme } from "@/hooks/useTheme";
-import logoDark from "@/assets/logo-dark.png";
-import logoLight from "@/assets/logo-light.png";
+import { COMMUNITY_URL } from "@/data/constants";
+import logoDark from "@/assets/offon-logo-dark-color.svg";
+import logoLight from "@/assets/offon-logo-light-color.svg";
 
 export const Navbar = (): JSX.Element => {
   const { theme, toggle } = useTheme();
@@ -27,7 +28,7 @@ export const Navbar = (): JSX.Element => {
         <div className="hidden md:flex items-center gap-8">
           <NavLink to="/" className={linkCls} activeClassName={activeCls} end>Home</NavLink>
           <Link to="/#challenges" className={linkCls}>Challenges</Link>
-          <a href="https://community.open-ecosystem.com" target="_blank" rel="noopener noreferrer" className={linkCls}>Community</a>
+          <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className={linkCls}>Community</a>
           <NavLink to="/docs" className={linkCls} activeClassName={activeCls}>Docs</NavLink>
           <NavLink to="/about" className={linkCls} activeClassName={activeCls}>About</NavLink>
           <NavLink to="/sponsors" className={linkCls} activeClassName={activeCls}>Sponsors</NavLink>
@@ -80,7 +81,7 @@ export const Navbar = (): JSX.Element => {
         <div className="md:hidden border-t border-[hsl(var(--surface-border))] bg-background px-6 py-4 flex flex-col gap-4">
           <NavLink to="/" className={linkCls} activeClassName={activeCls} end onClick={() => setMenuOpen(false)}>Home</NavLink>
           <Link to="/#challenges" className={linkCls} onClick={() => setMenuOpen(false)}>Challenges</Link>
-          <a href="https://community.open-ecosystem.com" target="_blank" rel="noopener noreferrer" className={linkCls} onClick={() => setMenuOpen(false)}>Community</a>
+          <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className={linkCls} onClick={() => setMenuOpen(false)}>Community</a>
           <NavLink to="/docs" className={linkCls} activeClassName={activeCls} onClick={() => setMenuOpen(false)}>Docs</NavLink>
           <NavLink to="/about" className={linkCls} activeClassName={activeCls} onClick={() => setMenuOpen(false)}>About</NavLink>
           <NavLink to="/sponsors" className={linkCls} activeClassName={activeCls} onClick={() => setMenuOpen(false)}>Sponsors</NavLink>

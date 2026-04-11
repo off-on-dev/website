@@ -1,4 +1,5 @@
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { COMMUNITY_URL } from "@/data/constants";
 
 export const BottomCTA = (): JSX.Element => {
   const { ref, isVisible } = useScrollAnimation();
@@ -35,7 +36,7 @@ export const BottomCTA = (): JSX.Element => {
             </p>
             <div className="flex gap-3 flex-wrap mt-2">
               <a
-                href="https://community.open-ecosystem.com"
+                href={COMMUNITY_URL}
                 target="_blank"
                 rel="noopener noreferrer"
               className="btn-inverse"

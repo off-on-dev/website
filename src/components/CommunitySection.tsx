@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { COMMUNITY_URL } from "@/data/constants";
 
 const highlights = [
   { emoji: "💬", text: "Active discussions on open source challenges, tutorials, and real-world incidents" },
@@ -29,7 +30,7 @@ export const CommunitySection = (): JSX.Element => {
               </p>
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <a
-                  href="https://community.open-ecosystem.com"
+                  href={COMMUNITY_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-primary"
