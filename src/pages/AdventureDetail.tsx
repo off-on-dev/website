@@ -4,6 +4,7 @@ import { ADVENTURES } from "@/data/adventures";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
+import { SITE_URL } from "@/data/constants";
 
 const AdventureDetail = (): JSX.Element => {
   const { id } = useParams<{ id: string }>();
@@ -19,22 +20,23 @@ const AdventureDetail = (): JSX.Element => {
 
   const pageTitle = `${adventure.title} - Offon Adventures`;
   const pageDesc = adventure.story;
-  const pageUrl = `https://off-on-dev.github.io/website/adventures/${adventure.id}`;
+  const pageUrl = `${SITE_URL}/adventures/${adventure.id}`;
 
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
         <title>{pageTitle}</title>
+        <link rel="canonical" href={pageUrl} />
         <meta name="description" content={pageDesc} />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDesc} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={pageUrl} />
-        <meta property="og:image" content="https://off-on-dev.github.io/website/og.png" />
+        <meta property="og:image" content={`${SITE_URL}/og.png`} />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDesc} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="https://off-on-dev.github.io/website/og.png" />
+        <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
       </Helmet>
       <Navbar />
       <div className="mx-auto max-w-4xl px-6 pt-28 pb-24">

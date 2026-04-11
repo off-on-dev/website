@@ -20,6 +20,8 @@ export const Navbar = (): JSX.Element => {
           <img
             src={theme === "dark" ? logoDark : logoLight}
             alt="offon.dev"
+            width={130}
+            height={33}
             className="h-8"
           />
         </Link>

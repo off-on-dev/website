@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
-import { COMMUNITY_URL } from "@/data/constants";
+import { COMMUNITY_URL, SITE_URL } from "@/data/constants";
 
 const currentSponsors = [
   { name: "Dynatrace", role: "Founding Sponsor", url: "https://dynatrace.com" },
@@ -14,16 +14,17 @@ const Sponsors = (): JSX.Element => {
     <div className="min-h-screen bg-background">
       <Helmet>
         <title>Sponsors - Offon</title>
+        <link rel="canonical" href={SITE_URL + "/sponsors"} />
         <meta name="description" content="Sponsors provide financial support and participate as community members, but do not control technical direction or governance." />
         <meta property="og:title" content="Sponsors - Offon" />
         <meta property="og:description" content="Sponsors provide financial support and participate as community members, but do not control technical direction or governance." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://off-on-dev.github.io/website/sponsors" />
-        <meta property="og:image" content="https://off-on-dev.github.io/website/og.png" />
+        <meta property="og:url" content={`${SITE_URL}/sponsors`} />
+        <meta property="og:image" content={`${SITE_URL}/og.png`} />
         <meta name="twitter:title" content="Sponsors - Offon" />
         <meta name="twitter:description" content="Sponsors provide financial support and participate as community members, but do not control technical direction or governance." />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="https://off-on-dev.github.io/website/og.png" />
+        <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
       </Helmet>
       <Navbar />
       <PageHero

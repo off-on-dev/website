@@ -7,14 +7,14 @@ const pillars = [
     title: "Community Voices",
     desc: "Share tutorials, showcase projects, post open source news, and write about what you have learned. The home for community-created content.",
     cta: "Share something →",
-    href: COMMUNITY_URL,
+    href: `${COMMUNITY_URL}/c/community-voices/38`,
   },
   {
     icon: "❓",
     title: "Q&A",
     desc: "Stuck on a technical problem or not sure where to start with open source? Post a clear question and get answers from the community. No question is too basic.",
     cta: "Ask a question →",
-    href: COMMUNITY_URL,
+    href: `${COMMUNITY_URL}/c/general/q-a/10`,
   },
 ];
 

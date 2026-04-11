@@ -8,6 +8,7 @@ import { CommunityVoicesSection } from "@/components/CommunityVoicesSection";
 import { ConnectSection } from "@/components/ConnectSection";
 import { BottomCTA } from "@/components/BottomCTA";
 import { Footer } from "@/components/Footer";
+import { SITE_URL } from "@/data/constants";
 
 const Index = (): JSX.Element => {
   const { hash } = useLocation();
@@ -25,16 +26,17 @@ const Index = (): JSX.Element => {
     <div className="min-h-screen bg-background">
       <Helmet>
         <title>Offon - Vendor-neutral. Open Source. Community Driven.</title>
+        <link rel="canonical" href={SITE_URL + "/"} />
         <meta name="description" content="Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, cloud dev environments." />
         <meta property="og:title" content="Offon - Vendor-neutral. Open Source. Community Driven." />
         <meta property="og:description" content="Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, cloud dev environments." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://off-on-dev.github.io/website/" />
-        <meta property="og:image" content="https://off-on-dev.github.io/website/og.png" />
+        <meta property="og:url" content={`${SITE_URL}/`} />
+        <meta property="og:image" content={`${SITE_URL}/og.png`} />
         <meta name="twitter:title" content="Offon - Vendor-neutral. Open Source. Community Driven." />
         <meta name="twitter:description" content="Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, cloud dev environments." />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="https://off-on-dev.github.io/website/og.png" />
+        <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
       </Helmet>
       <Navbar />
       <Hero />

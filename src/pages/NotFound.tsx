@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { SITE_URL } from "@/data/constants";
 
 const NotFound = (): JSX.Element => {
 
@@ -13,12 +14,12 @@ const NotFound = (): JSX.Element => {
         <meta property="og:title" content="Page Not Found - Offon" />
         <meta property="og:description" content="The page you are looking for does not exist or has been moved." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://off-on-dev.github.io/website" />
-        <meta property="og:image" content="https://off-on-dev.github.io/website/og.png" />
+        <meta property="og:url" content={SITE_URL} />
+        <meta property="og:image" content={`${SITE_URL}/og.png`} />
         <meta name="twitter:title" content="Page Not Found - Offon" />
         <meta name="twitter:description" content="The page you are looking for does not exist or has been moved." />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="https://off-on-dev.github.io/website/og.png" />
+        <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
       </Helmet>
       <Navbar />
       <div className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">

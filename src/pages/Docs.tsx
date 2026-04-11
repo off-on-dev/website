@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
-import { COMMUNITY_URL } from "@/data/constants";
+import { COMMUNITY_URL, SITE_URL } from "@/data/constants";
 
 const sitePages = [
   {
@@ -32,16 +32,17 @@ const Docs = (): JSX.Element => {
     <div className="min-h-screen bg-background">
       <Helmet>
         <title>Docs - Offon</title>
+        <link rel="canonical" href={SITE_URL + "/docs"} />
         <meta name="description" content="Guides for getting started, running challenges, contributing, and everything in between." />
         <meta property="og:title" content="Docs - Offon" />
         <meta property="og:description" content="Guides for getting started, running challenges, contributing, and everything in between." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://off-on-dev.github.io/website/docs" />
-        <meta property="og:image" content="https://off-on-dev.github.io/website/og.png" />
+        <meta property="og:url" content={`${SITE_URL}/docs`} />
+        <meta property="og:image" content={`${SITE_URL}/og.png`} />
         <meta name="twitter:title" content="Docs - Offon" />
         <meta name="twitter:description" content="Guides for getting started, running challenges, contributing, and everything in between." />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="https://off-on-dev.github.io/website/og.png" />
+        <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
       </Helmet>
       <Navbar />
       <PageHero

@@ -7,14 +7,14 @@ const items = [
     title: "Introduce yourself",
     desc: "New here? Drop a post and say hello. Tell us what you're working on, what you're curious about, and where you're from. This is how connections start.",
     cta: "Say hello →",
-    href: COMMUNITY_URL,
+    href: `${COMMUNITY_URL}/c/general/introductions/18`,
   },
   {
     icon: "📅",
     title: "Events & meetups",
     desc: "Find upcoming events, add local meetups to the community calendar, and connect with members in your city or timezone. Open source is better in person.",
     cta: "See upcoming events →",
-    href: COMMUNITY_URL,
+    href: `${COMMUNITY_URL}/c/events-and-talks/12`,
   },
 ];
 

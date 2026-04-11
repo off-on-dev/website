@@ -1,15 +1,15 @@
 # offon.dev
 
-The source for [offon.dev](https://off-on-dev.github.io/website/) — a static React website for the Open Ecosystem community. Hands-on challenges, documentation, and community links.
+The source for [offon.dev](https://off-on-dev.github.io/website/), a static React website for the Open Ecosystem community. Hands-on challenges, documentation, and community links.
 
 ## Tech Stack
 
-- **Vite** — build tooling and dev server
+- **Vite** - build tooling and dev server
 - **React 18** + **TypeScript**
-- **Tailwind CSS** — utility-first styling
-- **shadcn/ui** — accessible component library built on Radix UI
-- **React Router** — client-side routing
-- **Vitest** — unit testing
+- **Tailwind CSS** - utility-first styling
+- **shadcn/ui** - accessible component library built on Radix UI
+- **React Router** - client-side routing
+- **Vitest** - unit testing
 
 ## Getting Started
 
@@ -50,12 +50,69 @@ Deployment is fully automated via GitHub Actions:
 
 The `dist/index.html` is copied to `dist/404.html` so that React Router's client-side routing works on direct URL loads.
 
+## Custom Domain Migration Checklist
+
+Complete these steps in order when switching offon.dev to GitHub Pages.
+
+### 1. GoDaddy DNS
+- Log into GoDaddy and go to DNS Management for offon.dev
+- Add 4 A records pointing the apex domain to GitHub Pages IPs:
+  - 185.199.108.153
+  - 185.199.109.153
+  - 185.199.110.153
+  - 185.199.111.153
+- Add a CNAME record: name www, value off-on-dev.github.io
+- Save and allow up to 24 hours for DNS propagation
+
+### 2. GitHub Pages settings
+- Go to the repository Settings, then Pages
+- Under Custom domain, enter offon.dev and click Save
+- Wait for the DNS check to pass and the Let's Encrypt certificate to be provisioned (can take up to 24 hours)
+- Once the certificate is issued, enable Enforce HTTPS
+
+### 3. Verify the domain is live
+- Visit https://offon.dev and confirm the site loads over HTTPS
+- Visit https://www.offon.dev and confirm it redirects to https://offon.dev
+- Check the browser padlock to confirm the certificate is valid
+
+### 4. Update vite.config.ts
+- Change base: "/website/" to base: "/"
+- This is required because GitHub Pages serves from the root with a custom domain, not a subdirectory
+
+### 5. Update PR preview paths
+- In .github/workflows/preview.yml, update the build step base path from /website/pr-preview/pr-${{ github.event.number }}/ to /pr-preview/pr-${{ github.event.number }}/
+- Verify PR previews still work after the change
+
+### 6. Update constants.ts
+- In src/data/constants.ts, change SITE_URL from https://off-on-dev.github.io/website to https://offon.dev
+
+### 7. Update index.html manually
+- Update og:url content to https://offon.dev/
+- Update og:image content to https://offon.dev/og.png
+- Update twitter:image content to https://offon.dev/og.png
+- Remove the TODO comment above og:url
+
+### 8. Update AGENTS.md
+- In the URLs and External Organisations section, update the GitHub Pages URL to https://offon.dev
+- Update the og:image URL
+- Update the community.offon.dev reference if the Discourse URL has changed
+
+### 9. Update README.md
+- Update any remaining references to off-on-dev.github.io/website to offon.dev
+- Update the Getting Started and Deployment sections if anything changed
+
+### 10. Run a full audit
+- Run npm run lint and npm test
+- Check all pages for correct canonical URLs, og:url, og:image, and twitter:image
+- Run a Lighthouse audit on the live site and check for SEO and performance regressions
+- Verify PR previews still deploy and route correctly
+
 ## Project Structure
 
 ```
 src/
   components/   # Reusable UI components (named exports, PascalCase)
-  components/ui # shadcn/ui primitives — do not edit directly
+  components/ui # shadcn/ui primitives, do not edit directly
   pages/        # Route-level page components
                 # All page components are lazy-loaded via React.lazy + Suspense in App.tsx
   data/         # Static data (TypeScript objects/arrays)

@@ -2,23 +2,24 @@ import { Navbar } from "@/components/Navbar";
 import { Helmet } from "react-helmet-async";
 import { Footer } from "@/components/Footer";
 import { Link } from "react-router-dom";
-import { COMMUNITY_URL } from "@/data/constants";
+import { COMMUNITY_URL, SITE_URL } from "@/data/constants";
 
 const CommunityGuide = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
         <title>Community Guide - Offon Docs</title>
+        <link rel="canonical" href={SITE_URL + "/docs/community-guide"} />
         <meta name="description" content="Welcome, quick start, posting guidelines, leaderboards, and contact for the Offon community." />
         <meta property="og:title" content="Community Guide - Offon Docs" />
         <meta property="og:description" content="Welcome, quick start, posting guidelines, leaderboards, and contact for the Offon community." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://off-on-dev.github.io/website/docs/community-guide" />
-        <meta property="og:image" content="https://off-on-dev.github.io/website/og.png" />
+        <meta property="og:url" content={`${SITE_URL}/docs/community-guide`} />
+        <meta property="og:image" content={`${SITE_URL}/og.png`} />
         <meta name="twitter:title" content="Community Guide - Offon Docs" />
         <meta name="twitter:description" content="Welcome, quick start, posting guidelines, leaderboards, and contact for the Offon community." />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="https://off-on-dev.github.io/website/og.png" />
+        <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
       </Helmet>
       <Navbar />
       <div className="mx-auto max-w-3xl px-6 pt-28 pb-24">

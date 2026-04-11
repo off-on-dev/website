@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { BottomCTA } from "@/components/BottomCTA";
 import { ADVENTURES } from "@/data/adventures";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
+import { SITE_URL } from "@/data/constants";
 
 const TopicPage = (): JSX.Element => {
   const { tag } = useParams<{ tag: string }>();
@@ -27,16 +28,17 @@ const TopicPage = (): JSX.Element => {
     <div className="min-h-screen bg-background">
       <Helmet>
         <title>{pageTitle}</title>
+        <link rel="canonical" href={`${SITE_URL}/topics/${encodeURIComponent(decoded)}`} />
         <meta name="description" content={pageDesc} />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDesc} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={`https://off-on-dev.github.io/website/topics/${encodeURIComponent(decoded)}`} />
-        <meta property="og:image" content="https://off-on-dev.github.io/website/og.png" />
+        <meta property="og:url" content={`${SITE_URL}/topics/${encodeURIComponent(decoded)}`} />
+        <meta property="og:image" content={`${SITE_URL}/og.png`} />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDesc} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="https://off-on-dev.github.io/website/og.png" />
+        <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
       </Helmet>
       <Navbar />
 
