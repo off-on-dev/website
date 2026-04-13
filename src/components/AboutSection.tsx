@@ -4,7 +4,7 @@ const values = [
   {
     icon: "💥",
     title: "Learn by breaking",
-    desc: "The best way to understand complex systems is to debug them. Every challenge is a real-world scenario with broken environments, misconfigured pipelines, and invisible failures, powered by GitHub Codespaces so you go from zero to debugging in under 60 seconds.",
+    desc: "The best way to understand complex systems is to debug them. Every challenge is a real-world scenario with broken environments, misconfigured pipelines, and invisible failures, powered by GitHub Codespaces.",
   },
   {
     icon: "🌱",
