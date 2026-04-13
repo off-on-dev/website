@@ -27,6 +27,18 @@ Discourse functionality here.
 
 ---
 
+## URLs and External Organisations
+
+- The GitHub Pages URL for this site is https://off-on-dev.github.io/website
+- The custom domain offon.dev is not yet configured. Do not use it in any URLs until it is set up on GitHub Pages.
+- og:url, og:image, and all absolute URLs must use https://off-on-dev.github.io/website until the custom domain is live.
+- The og:image file is public/og.png and its full URL is https://off-on-dev.github.io/website/og.png.
+- The open source challenges content lives in a separate organisation at https://github.com/dynatrace-oss/open-ecosystem-challenges. This is an intentional external link and must never be changed or flagged as a violation.
+- The community Discourse instance is at https://community.open-ecosystem.com. Use the COMMUNITY_URL constant from src/data/constants.ts, never hardcode this URL.
+
+---
+
+
 ## Repository Layout
 
 ```
@@ -185,6 +197,14 @@ Check the following on every component you write or modify.
 - Prefer `getByRole` and `getByLabelText` queries over `getByTestId`. They also
   validate accessibility.
 - Never ship code that causes test or lint failures.
+- Every new hook, utility function, or stateful component must have tests covering:
+  - The happy path (expected inputs produce expected outputs)
+  - Edge cases (empty state, expired data, missing provider, etc.)
+  - All state transitions for any multi-state feature
+- Tests must be written as part of the implementation, not as an afterthought.
+- If a component or hook has side effects (DOM mutations, localStorage, external scripts),
+  mock those side effects in tests and assert they are called correctly.
+- When fixing a bug, add a regression test that would have caught it before writing the fix.
 
 ---
 
@@ -277,6 +297,52 @@ these rules.
 
 ---
 
+## Before Submitting Code
+
+Every code change must pass all of these checks before being considered done.
+State the result of each check explicitly before finishing a task.
+
+### Mandatory checks (non-negotiable)
+
+1. **Run lint:** `npm run lint` must exit with zero errors. No warnings suppressed
+   with eslint-disable unless the reason is documented in a comment on the same line.
+
+2. **Run tests:** `npm test` must pass with zero failures. No tests skipped or
+   commented out.
+
+3. **Run build:** `npm run build` must complete with no TypeScript errors or
+   bundling failures. Run this for any change that touches types, imports, or
+   component interfaces.
+
+4. **Re-read every file you changed:** After making changes, re-read the full
+   affected section of each modified file to verify the final state is correct.
+   Never assume an edit landed correctly without checking.
+
+5. **Check all call sites:** If you changed a function signature, component props,
+   or exported type, search for all usages and confirm they are updated.
+
+6. **Check imports:** Every import must resolve. No unused imports. No circular
+   dependencies introduced.
+
+### Before writing any code
+
+1. Read the relevant files first. Never edit a file you have not read in this session.
+2. If the change touches more than one file, list all affected files before starting.
+3. If the change involves a state machine, enumerate all transitions first.
+4. If the change involves shared state, confirm a context provider is used.
+5. If the change involves a side effect (DOM, localStorage, external scripts),
+   write the test before or alongside the implementation, not after.
+
+### Red flags that require stopping and flagging to the user
+
+- A fix requires changing more than 3 files you did not plan to change
+- A type error requires adding a cast or suppression to resolve
+- A test requires mocking something that was not mocked before
+- The same bug has been fixed more than once in this session
+- A replacement did not change the file (silent no-op)
+
+---
+
 ## Do Not
 
 - Do not add a backend, API routes, or server-side rendering.
@@ -307,17 +373,77 @@ these rules.
 
 ## After Making Changes
 
-After completing any non-trivial change, update documentation to reflect it.
+Documentation updates are not optional. They are part of completing a task.
+A task is not done until the relevant docs are updated. Run this checklist
+before every commit:
 
-- **New component, hook, or utility:** add a brief entry to `styleguide.md` under
-  the relevant section (e.g. a new color token under Colors, a new component pattern
-  under Components).
-- **New page or route:** update `README.md` to list the route and its purpose.
-- **New environment variable, constant, or configuration value:** document it in
-  `README.md` and, if it affects visual output, in `styleguide.md`.
-- **Changed build, deploy, or dev workflow:** update the Commands section in both
-  this file and `README.md`.
-- **Changed brand rules, tone, or copy standards:** update `styleguide.md` first,
-  then apply the change across the codebase.
-- Do not document trivial fixes (typos, one-line patches) unless they change a rule
-  or pattern others should follow.
+### Always check these four things after any non-trivial change:
+
+1. **Did you add or change a component, hook, or utility?**
+   If yes, update `styleguide.md` with a brief entry under the relevant section.
+   Include: what it does, its props or return type, and any usage notes.
+   Do not skip this even for small hooks.
+
+2. **Did you add or change a page or route?**
+   If yes, update the routes table in `README.md` with the path and purpose.
+
+3. **Did you add or change an environment variable, constant, or config value?**
+   If yes, document it in `README.md`. If it affects visual output, add it to
+   `styleguide.md` too. Never reference a constant value directly in docs,
+   point to the file it lives in instead.
+
+4. **Did you change a build, deploy, or dev workflow?**
+   If yes, update the Commands section in both `AGENTS.md` and `README.md`.
+
+### After completing any task, explicitly state:
+- Which of the four checks above applied
+- What was updated in each doc, or why it was skipped
+- If nothing needed updating, say so and explain why
+
+### Triggers and what to update:
+
+| Change | Update |
+|---|---|
+| New component | styleguide.md: component entry with props and usage |
+| New hook | styleguide.md: hook entry with return type and behavior |
+| New utility function | styleguide.md: brief entry if it affects patterns |
+| New page or route | README.md: routes table |
+| New constant | README.md: constants section, styleguide.md if visual |
+| New workflow step | README.md: commands section, AGENTS.md if it changes a rule |
+| New brand or copy rule | styleguide.md first, then apply across codebase |
+| Bug fix that reveals a missing rule | AGENTS.md: add the rule to prevent recurrence |
+| New test pattern | AGENTS.md: add to Testing section if it sets a precedent |
+
+Do not document trivial fixes (typos, one-line patches) unless they change a
+rule or pattern others should follow.
+
+---
+
+## Implementation Rules
+
+These rules exist to prevent specific classes of mistakes. Follow them unconditionally.
+
+### Shared state
+- If a hook or piece of state is consumed by more than one sibling component, it must
+  be a React context provider, not a plain hook. Verify this at design time before
+  writing any code.
+
+### File edits
+- After any multi-step or multi-replace file edit, re-read the full affected section
+  to verify the final state is correct. Never assume sequential replacements composed
+  correctly without checking.
+
+### File extensions
+- Any file that renders or returns JSX must use the `.tsx` extension. Files that are
+  pure TypeScript logic with no JSX use `.ts`. Catch this before writing, not after lint.
+
+### React hooks
+- Each `useEffect` must have a single responsibility. Never combine side effects that
+  have different trigger conditions into one effect with a merged dependency array.
+  Split them into separate `useEffect` calls.
+
+### State machines
+- When implementing any feature with multiple states (e.g. consent: granted / denied /
+  null), enumerate every transition before writing code. For each transition, list every
+  system that must be updated (storage, UI state, external APIs, DOM). Verify all of
+  them are handled before marking the task done.

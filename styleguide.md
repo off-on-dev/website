@@ -48,7 +48,7 @@ All fonts are fully self-hosted. No external network requests.
 
 All color tokens are CSS custom properties defined in `src/index.css` and exposed as Tailwind utilities via `tailwind.config.ts`. Always use the Tailwind class that references the token; never hardcode hex values.
 
-### Dark Mode (default — `:root, .dark`)
+### Dark Mode (default, `:root, .dark`)
 
 | Token | HSL | Approx hex | Usage |
 |---|---|---|---|
@@ -233,19 +233,19 @@ Light mode: no background texture.
 
 ### Firefly particles
 
-`.firefly` — 3×3 px dot with `box-shadow` glow in `--primary` color, animated with `fireflyFloat` (8 particles, varying `animation-duration` 6.5–11 s and `animation-delay`).
+`.firefly` - 3×3 px dot with `box-shadow` glow in `--primary` color, animated with `fireflyFloat` (8 particles, varying `animation-duration` 6.5–11 s and `animation-delay`).
 
 ### Hero glow
 
-`.hero-glow` — three radial gradients (amber 8%, warm 4%, orange 3%) with a mask gradient that fades at top/bottom 10% and 70–100%. Animated with `glowPulse` (9 s ease-in-out, opacity 0.75 → 1, scale 1 → 1.04).
+`.hero-glow` - three radial gradients (amber 8%, warm 4%, orange 3%) with a mask gradient that fades at top/bottom 10% and 70–100%. Animated with `glowPulse` (9 s ease-in-out, opacity 0.75 → 1, scale 1 → 1.04).
 
 ---
 
 ## Electric Glow Effects
 
-- `.btn-primary:hover` — 28 px amber `box-shadow`
-- `.btn-ghost:hover` — 20 px subtle amber `box-shadow`
-- `.card-glow:hover` — 1 px border glow + 32 px / 60 px radial shadows
+- `.btn-primary:hover` - 28 px amber `box-shadow`
+- `.btn-ghost:hover` - 20 px subtle amber `box-shadow`
+- `.card-glow:hover` - 1 px border glow + 32 px / 60 px radial shadows
 
 Light mode overrides reduce glow intensities.
 
@@ -273,7 +273,7 @@ Adjust `ring-offset-1` for inline elements or `ring-offset-2` for block elements
 
 ### `useConsent`
 
-`src/hooks/useConsent.ts`
+`src/hooks/useConsent.tsx`
 
 Manages analytics consent state for GDPR Consent Mode v2.
 
@@ -298,9 +298,16 @@ Consent is stored in `localStorage` under the key `analytics_consent` as `{ valu
 
 `src/components/ConsentBanner.tsx`
 
-Fixed bottom bar. Renders only when `useConsent().consent === null` (no decision yet). Disappears on accept or decline and never mounts again until the choice expires or is reset.
+Dual-mode component. Renders differently based on whether the user has made a consent decision:
 
-No props. Uses `useConsent` internally.
+- **No decision yet (`consent === null`):** renders a full-width fixed bottom bar with Decline / Accept analytics buttons and a link to `/privacy`.
+- **Decision made (`consent !== null`):** renders a single 44×44 px floating cookie icon button fixed at `bottom-right`. Clicking it calls `reset()` to re-show the banner.
+
+The banner uses `paddingBottom: env(safe-area-inset-bottom)` and the floating button uses `bottom: calc(env(safe-area-inset-bottom) + 1rem)` so both respect the iOS home indicator safe area. `index.html` must include `viewport-fit=cover` in the viewport meta tag for this to work.
+
+Touch target is 44×44 px (`h-11 w-11`) to meet WCAG 2.5.5 (minimum 44×44 px).
+
+No props. Uses `useConsent` context internally.
 
 ### `CookiePreferencesLink`
 

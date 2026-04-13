@@ -6,13 +6,15 @@ import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-route
 import { lazy, Suspense, useEffect } from "react";
 import { ThemeProvider } from "@/hooks/useTheme";
 import { ConsentBanner } from "@/components/ConsentBanner";
-import { useConsent } from "@/hooks/useConsent";
+import { ConsentProvider, useConsent } from "@/hooks/useConsent";
 
 const ScrollToTop = (): null => {
   const { pathname } = useLocation();
   const { consent } = useConsent();
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, [pathname]);
+  useEffect(() => {
     if (consent === "granted" && typeof window.gtag === "function") {
       window.gtag("event", "page_view", { page_path: pathname });
     }
@@ -39,6 +41,7 @@ const App = (): JSX.Element => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <ConsentProvider>
         <BrowserRouter basename={basename} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <ScrollToTop />
           <ConsentBanner />
@@ -57,6 +60,7 @@ const App = (): JSX.Element => (
           </Routes>
           </Suspense>
         </BrowserRouter>
+        </ConsentProvider>
       </TooltipProvider>
     </ThemeProvider>
   </QueryClientProvider>

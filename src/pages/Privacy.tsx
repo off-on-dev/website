@@ -23,6 +23,9 @@ const Privacy = (): JSX.Element => {
         <meta property="og:description" content="Privacy policy for offon.dev." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/privacy`} />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={`Privacy Policy - ${BRAND_NAME}`} />
+        <meta name="twitter:description" content="Privacy policy for offon.dev. Explains how we collect and use analytics data and your rights under GDPR." />
         <meta name="robots" content="noindex" />
       </Helmet>
       <Navbar />

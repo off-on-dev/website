@@ -151,12 +151,12 @@ The site uses Google Analytics 4 with Consent Mode v2. No data is collected unti
 
 ### Configuration
 
-`GA_MEASUREMENT_ID` in `src/data/constants.ts` holds the GA4 Measurement ID (`G-YEYE9DFHWE`). The gtag snippet in `index.html` must match this value. If you update the ID, change it in both places.
+`GA_MEASUREMENT_ID` in `src/data/constants.ts` holds the GA4 Measurement ID. The gtag snippet in `index.html` must match this value. If you update the ID, change it in both places.
 
 ### How it works
 
 - `index.html` loads gtag.js with all consent signals set to `denied` by default (Consent Mode v2).
-- `src/hooks/useConsent.ts` manages the user's choice, stored in `localStorage` as `analytics_consent` with a 6-month expiry. On grant, it calls `gtag('consent', 'update', { analytics_storage: 'granted' })`.
+- `src/hooks/useConsent.tsx` manages the user's choice, stored in `localStorage` as `analytics_consent` with a 6-month expiry. On grant, it calls `gtag('consent', 'update', { analytics_storage: 'granted' })`.
 - `src/components/ConsentBanner.tsx` renders a fixed bottom bar until the user makes a choice.
 - `src/components/CookiePreferencesLink.tsx` is placed in the Footer and calls `reset()` from `useConsent` to re-show the banner.
 - `src/App.tsx` fires a `page_view` event on every route change, but only when consent is `"granted"`.
