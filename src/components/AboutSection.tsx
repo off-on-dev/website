@@ -4,7 +4,7 @@ import { BRAND_NAME } from "@/data/constants";
 const values = [
   {
     icon: "💥",
-    title: "Learn by breaking",
+    title: "Learn by doing",
     desc: "The best way to understand complex systems is to debug them. Every challenge is a real-world scenario with broken environments, misconfigured pipelines, and invisible failures, powered by GitHub Codespaces.",
   },
   {
