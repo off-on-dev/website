@@ -2,9 +2,17 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { lazy, Suspense, useEffect } from "react";
 import { ThemeProvider } from "@/hooks/useTheme";
+
+const ScrollToTop = (): null => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
 
 const Index = lazy(() => import("./pages/Index"));
 const AdventureDetail = lazy(() => import("./pages/AdventureDetail"));
@@ -26,6 +34,7 @@ const App = (): JSX.Element => (
         <Toaster />
         <Sonner />
         <BrowserRouter basename={basename} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <ScrollToTop />
           <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<Index />} />
