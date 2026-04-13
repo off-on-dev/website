@@ -32,7 +32,7 @@ export const Hero = (): JSX.Element => {
               </span>
             </h1>
             <p className="animate-fade-up-delay-2 mx-auto mt-6 max-w-xl text-lg leading-relaxed text-[hsl(var(--text-secondary))]">
-              Hands-on challenges with real open source tools and broken-on-purpose environments powered by GitHub Codespaces. Practical, reproducible, and built for one purpose: growing the contributors and maintainers of tomorrow.
+              Hands-on challenges with real open source tools and broken-on-purpose environments powered by GitHub Codespaces. Practical, reproducible, and built for one purpose: building the contributors and maintainers of tomorrow.
             </p>
             <div className="animate-fade-up-delay-3 mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
               <a href="#challenges" className="btn-primary">
