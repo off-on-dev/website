@@ -31,8 +31,7 @@ const Sponsors = (): JSX.Element => {
         eyebrow="Sponsors"
         title="Sponsorship and Independence"
         description="Sponsors provide financial support and participate as community members, but do not control technical direction, content priorities, or governance. This community belongs to its members."
-        primaryCta={{ label: "Get in touch →", href: "mailto:sponsors@offon.dev?subject=Sponsorship Inquiry" }}
-        secondaryCta={{ label: "Join the community →", href: COMMUNITY_URL, external: true }}
+        primaryCta={{ label: "Get in touch →", href: `${COMMUNITY_URL}/groups/moderators`, external: true }}
       />
 
       <div className="mx-auto max-w-4xl px-6 py-16">

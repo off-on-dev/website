@@ -5,14 +5,14 @@ const items = [
   {
     icon: "👋",
     title: "Introduce yourself",
-    desc: "New here? Drop a post and say hello. Tell us what you're working on, what you're curious about, and where you're from. This is how connections start.",
+    desc: "New here? Tell us about yourself. Share your role, what you're building or learning, and one thing you want to get out of the community.",
     cta: "Say hello →",
     href: `${COMMUNITY_URL}/c/general/introductions/18`,
   },
   {
     icon: "📅",
     title: "Events & meetups",
-    desc: "Find upcoming events, add local meetups to the community calendar, and connect with members in your city or timezone. Open source is better in person.",
+    desc: "Find upcoming events, add local meetups to the community calendar, and connect with members in your city. Open source is better in person.",
     cta: "See upcoming events →",
     href: `${COMMUNITY_URL}/c/events-and-talks/12`,
   },
@@ -32,11 +32,10 @@ export const ConnectSection = (): JSX.Element => {
               </span>
             </div>
             <h2 className="animate-fade-up-delay-1 mb-3 text-3xl font-bold text-primary md:text-4xl">
-              Meet the people behind the code
+              Stronger together
             </h2>
             <p className="animate-fade-up-delay-1 mb-12 max-w-xl text-[hsl(var(--text-secondary))] leading-relaxed">
-              Open source communities thrive when people know each other. Find events near you, say hello, and build relationships that last.
-            </p>
+              Open source thrives when passionate people find each other. Start by introducing yourself to the community, find events near you, and meet the builders and maintainers who share your drive.            </p>
             <div className="animate-fade-up-delay-2 grid gap-6 md:grid-cols-2">
               {items.map((item) => (
                 <div

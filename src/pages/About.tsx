@@ -28,7 +28,7 @@ const About = (): JSX.Element => {
         eyebrow="About"
         title="Creating the contributors and maintainers of tomorrow"
         description="Focused on what matters: helping people grow from curious users to confident contributors, and from contributors to sustainable maintainers. Vendor-neutral. Open source. Community-driven."
-        primaryCta={{ label: "Our mission ↓", href: "#about" }}
+        primaryCta={{ label: "Our mission ↓", href: "#mission" }}
         secondaryCta={{ label: "Join the community →", href: COMMUNITY_URL, external: true }}
       />
       <AboutSection />

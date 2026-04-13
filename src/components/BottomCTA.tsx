@@ -24,12 +24,12 @@ export const BottomCTA = (): JSX.Element => {
             <p className="font-mono text-sm leading-relaxed text-background/90">
               That's offon.{" "}
               <strong className="font-medium text-background">
-                You bring your questions, your fixes, your half-finished PRs.
+                You bring your questions, your fixes, your ideas.
               </strong>{" "}
               We bring the challenges, the tooling, and the engineers who care about the same problems you do.
             </p>
             <p className="font-mono text-sm leading-relaxed text-background/90">
-              Everyone ships their own spark. The community is where those signals synchronize to illuminate the entire ecosystem.
+              Every spark starts with one person. Together, we illuminate the whole open source ecosystem.
             </p>
             <p className="font-mono text-sm font-medium text-background">
               Always on. Always open. Always learning.
