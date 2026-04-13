@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { SITE_URL, COMMUNITY_URL } from "@/data/constants";
+import { SITE_URL, COMMUNITY_URL, BRAND_NAME } from "@/data/constants";
 
 // Last reviewed date - update this whenever the policy content changes
 const LAST_UPDATED = "13 April 2026";
@@ -16,10 +16,10 @@ const Privacy = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Privacy Policy - Offon</title>
+        <title>Privacy Policy - {BRAND_NAME}</title>
         <link rel="canonical" href={`${SITE_URL}/privacy`} />
         <meta name="description" content="Privacy policy for offon.dev. Explains how we collect and use analytics data and your rights under GDPR." />
-        <meta property="og:title" content="Privacy Policy - Offon" />
+        <meta property="og:title" content={`Privacy Policy - ${BRAND_NAME}`} />
         <meta property="og:description" content="Privacy policy for offon.dev." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/privacy`} />
