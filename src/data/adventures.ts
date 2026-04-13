@@ -1,4 +1,6 @@
-export interface AdventureLevel {
+import { COMMUNITY_URL } from "@/data/constants";
+
+export type AdventureLevel = {
   id: string;
   name: string;
   difficulty: "Beginner" | "Intermediate" | "Expert";
@@ -7,7 +9,7 @@ export interface AdventureLevel {
   discussionUrl: string;
 }
 
-export interface Adventure {
+export type Adventure = {
   id: string;
   title: string;
   month: string;
@@ -35,24 +37,24 @@ export const ADVENTURES: Adventure[] = [
         name: "Broken Echoes",
         difficulty: "Beginner",
         learnings: ["Debug GitOps flows with Argo CD", "ApplicationSet templating & pitfalls", "Environment isolation & namespaces", "Sync policies: automated, prune & self-heal"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
-        discussionUrl: "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
+        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
+        discussionUrl: `${COMMUNITY_URL}/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40`
       },
       {
         id: "intermediate",
         name: "The Silent Canary",
         difficulty: "Intermediate",
         learnings: ["Progressive delivery with Argo Rollouts", "Canary deployments & automated analysis", "Write PromQL queries for health validation", "Kube-state-metrics for deployment decisions"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
-        discussionUrl: "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-intermediate-the-silent-canary/310/8"
+        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
+        discussionUrl: `${COMMUNITY_URL}/t/adventure-01-echoes-lost-in-orbit-intermediate-the-silent-canary/310/8`
       },
       {
         id: "expert",
         name: "Hyperspace Operations & Transport",
         difficulty: "Expert",
         learnings: ["Configure OpenTelemetry Collector pipelines", "Spanmetrics connector (traces → metrics)", "Detect idle canaries with traffic validation", "Distributed tracing with Jaeger"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
-        discussionUrl: "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351/4"
+        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
+        discussionUrl: `${COMMUNITY_URL}/t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351/4`
       }
     ]
   },
@@ -71,24 +73,24 @@ export const ADVENTURES: Adventure[] = [
         name: "The Foundation Stones",
         difficulty: "Beginner",
         learnings: ["Infrastructure as Code with OpenTofu", "Remote state management with GCS backend", "Dynamic & conditional resources"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
-        discussionUrl: "https://community.offon.dev/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
+        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
+        discussionUrl: `${COMMUNITY_URL}/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656`
       },
       {
         id: "intermediate",
         name: "The Modular Metropolis",
         difficulty: "Intermediate",
         learnings: ["OpenTofu module testing with tofu test", "Test-Driven Development (TDD) workflow", "Input validation with regex"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
-        discussionUrl: "https://community.offon.dev/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10"
+        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
+        discussionUrl: `${COMMUNITY_URL}/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10`
       },
       {
         id: "expert",
         name: "The Guardian Protocols",
         difficulty: "Expert",
         learnings: ["GitHub Actions for drift detection and plan/apply", "Integration tests with service containers", "Security scanning with Trivy"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
-        discussionUrl: "https://community.offon.dev/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
+        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
+        discussionUrl: `${COMMUNITY_URL}/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8`
       }
     ]
   },
@@ -107,24 +109,24 @@ export const ADVENTURES: Adventure[] = [
         name: "Calibrating the Lens",
         difficulty: "Beginner",
         learnings: ["Instrument Python AI apps with OpenLLMetry", "Analyze traces in Jaeger"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
-        discussionUrl: "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
+        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
+        discussionUrl: `${COMMUNITY_URL}/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8`
       },
       {
         id: "intermediate",
         name: "The Distracted Pilot",
         difficulty: "Intermediate",
         learnings: ["Instrument RAG pipelines with OpenLLMetry", "Create custom OpenTelemetry metrics in Python", "Write PromQL queries & recording rules in Prometheus"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
-        discussionUrl: "https://community.offon.dev/t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936/2"
+        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
+        discussionUrl: `${COMMUNITY_URL}/t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936/2`
       },
       {
         id: "expert",
         name: "The Noise Filter",
         difficulty: "Expert",
         learnings: ["OpenTelemetry GenAI semantic conventions", "Tail sampling in the OTel Collector"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/offon-challenges?quickstart=1",
-        discussionUrl: "https://community.offon.dev/t/reduce-telemetry-noise-adventure-03-expert-is-live/999/1"
+        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
+        discussionUrl: `${COMMUNITY_URL}/t/reduce-telemetry-noise-adventure-03-expert-is-live/999/1`
       }
     ]
   },

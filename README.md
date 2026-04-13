@@ -1,73 +1,134 @@
-# Welcome to your Lovable project
+# offon.dev
 
-## Project info
+The source for [offon.dev](https://off-on-dev.github.io/website/), a static React website for the Open Ecosystem community. Hands-on challenges, documentation, and community links.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Tech Stack
 
-## How can I edit this code?
+- **Vite** - build tooling and dev server
+- **React 18** + **TypeScript**
+- **Tailwind CSS** - utility-first styling
+- **shadcn/ui** - accessible component library built on Radix UI
+- **React Router** - client-side routing
+- **Vitest** - unit testing
 
-There are several ways of editing your application.
+## Getting Started
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+Node.js version is specified in .nvmrc. Use nvm use to switch to the correct version automatically, or check .nvmrc for the required version.
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Clone the repo
+git clone https://github.com/off-on-dev/website
+cd website
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Install dependencies
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start the development server (http://localhost:8080)
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Available Scripts
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+| Script | Description |
+|---|---|
+| `npm run dev` | Start local dev server with HMR |
+| `npm run build` | Production build → `dist/` |
+| `npm run build:dev` | Development build |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Run ESLint |
+| `npm test` | Run tests once |
+| `npm run test:watch` | Run tests in watch mode |
 
-**Use GitHub Codespaces**
+Run `npm run lint` and `npm test` before marking any work done.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Deployment
 
-## What technologies are used for this project?
+Deployment is fully automated via GitHub Actions:
 
-This project is built with:
+- **Push to `main`** → [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) builds with `npm run build`, uploads artifacts, and deploys to GitHub Pages using the official [`actions/deploy-pages`](https://github.com/actions/deploy-pages).
+- **Open a PR** → [`.github/workflows/preview.yml`](.github/workflows/preview.yml) builds a preview at `/website/pr-preview/pr-<n>/`.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+The `dist/index.html` is copied to `dist/404.html` so that React Router's client-side routing works on direct URL loads.
 
-## How can I deploy this project?
+## Custom Domain Migration Checklist
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+Complete these steps in order when switching offon.dev to GitHub Pages.
 
-## Can I connect a custom domain to my Lovable project?
+### 1. GoDaddy DNS
+- Log into GoDaddy and go to DNS Management for offon.dev
+- Add 4 A records pointing the apex domain to GitHub Pages IPs:
+  - 185.199.108.153
+  - 185.199.109.153
+  - 185.199.110.153
+  - 185.199.111.153
+- Add a CNAME record: name www, value off-on-dev.github.io
+- Save and allow up to 24 hours for DNS propagation
 
-Yes, you can!
+### 2. GitHub Pages settings
+- Go to the repository Settings, then Pages
+- Under Custom domain, enter offon.dev and click Save
+- Wait for the DNS check to pass and the Let's Encrypt certificate to be provisioned (can take up to 24 hours)
+- Once the certificate is issued, enable Enforce HTTPS
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### 3. Verify the domain is live
+- Visit https://offon.dev and confirm the site loads over HTTPS
+- Visit https://www.offon.dev and confirm it redirects to https://offon.dev
+- Check the browser padlock to confirm the certificate is valid
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+### 4. Update vite.config.ts
+- Change base: "/website/" to base: "/"
+- This is required because GitHub Pages serves from the root with a custom domain, not a subdirectory
+
+### 5. Update PR preview paths
+- In .github/workflows/preview.yml, update the build step base path from /website/pr-preview/pr-${{ github.event.number }}/ to /pr-preview/pr-${{ github.event.number }}/
+- Verify PR previews still work after the change
+
+### 6. Update constants.ts
+- In src/data/constants.ts, change SITE_URL from https://off-on-dev.github.io/website to https://offon.dev
+
+### 7. Update index.html manually
+- Update og:url content to https://offon.dev/
+- Update og:image content to https://offon.dev/og.png
+- Update twitter:image content to https://offon.dev/og.png
+- Remove the TODO comment above og:url
+
+### 8. Update AGENTS.md
+- In the URLs and External Organisations section, update the GitHub Pages URL to https://offon.dev
+- Update the og:image URL
+- Update the community.offon.dev reference if the Discourse URL has changed
+
+### 9. Update README.md
+- Update any remaining references to off-on-dev.github.io/website to offon.dev
+- Update the Getting Started and Deployment sections if anything changed
+
+### 10. Run a full audit
+- Run npm run lint and npm test
+- Check all pages for correct canonical URLs, og:url, og:image, and twitter:image
+- Run a Lighthouse audit on the live site and check for SEO and performance regressions
+- Verify PR previews still deploy and route correctly
+
+## Project Structure
+
+```
+src/
+  components/   # Reusable UI components (named exports, PascalCase)
+  components/ui # shadcn/ui primitives, do not edit directly
+  pages/        # Route-level page components
+                # All page components are lazy-loaded via React.lazy + Suspense in App.tsx
+  data/         # Static data (TypeScript objects/arrays)
+  hooks/        # Custom React hooks
+  lib/          # Shared utilities (cn())
+  assets/       # Static assets bundled by Vite
+public/
+  fonts/        # Self-hosted Inter, Syne, Azeret Mono
+  robots.txt
+  og.png
+.github/
+  workflows/
+    deploy.yml  # Production deploy on push to main
+    preview.yml # PR preview deploy
+```
+
+## Contributing
+
+See [`AGENTS.md`](AGENTS.md) for coding conventions, design tokens, and contribution guidelines.

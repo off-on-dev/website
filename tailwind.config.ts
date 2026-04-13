@@ -1,3 +1,4 @@
+import animate from "tailwindcss-animate";
 import type { Config } from "tailwindcss";
 
 export default {
@@ -14,8 +15,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Lexend", "sans-serif"],
+        sans: ["Inter", "sans-serif"],
         mono: ["Azeret Mono", "monospace"],
+        heading: ["Syne", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -85,5 +87,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [animate],
 } satisfies Config;

@@ -3,11 +3,11 @@ const tools = [
   "Helm", "Grafana", "OPA", "Jaeger", "Docker", "OpenTofu", "GitOps",
 ];
 
-export const ToolsMarquee = () => {
+export const ToolsMarquee = (): JSX.Element => {
   const doubled = [...tools, ...tools];
 
   return (
-    <section className="border-y border-[hsl(var(--surface-border))] overflow-hidden py-5">
+    <section className="border-y border-[hsl(var(--surface-border))] overflow-hidden py-5" aria-hidden="true">
       <div className="animate-marquee flex whitespace-nowrap">
         {doubled.map((tool, i) => (
           <span

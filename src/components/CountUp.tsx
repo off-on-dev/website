@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
-interface CountUpProps {
+type CountUpProps = {
   end: number;
   prefix?: string;
   suffix?: string;
   duration?: number;
 }
 
-export const CountUp = ({ end, prefix = "", suffix = "", duration = 1500 }: CountUpProps) => {
+export const CountUp = ({ end, prefix = "", suffix = "", duration = 1500 }: CountUpProps): JSX.Element => {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
   const hasAnimated = useRef(false);

@@ -1,13 +1,38 @@
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { COMMUNITY_URL } from "@/data/constants";
 
-const steps = [
-  { num: "01", title: "Choose an adventure", desc: "Browse by adventure and pick your difficulty — Beginner, Intermediate, or Expert. Each level has its own narrative, objectives, and pre-configured environment." },
-  { num: "02", title: "Launch the Codespace", desc: "One click opens a full cloud dev environment with VS Code, terminal, and all tools pre-installed. No local setup needed — just a GitHub account." },
-  { num: "03", title: "Fix. Validate. Ship.", desc: "Work through the broken environment using real tools. Run the smoke test locally, then push and trigger GitHub Actions for full verification." },
-  { num: "04", title: "Share your journey", desc: "Post your successes, failures, or questions in the community discussion. Learn from how others tackled the same challenge." },
+const pillars = [
+  {
+    icon: "🎙️",
+    title: "Community Voices",
+    desc: "Share tutorials, showcase projects, post open source news, and write about what you have learned. The home for community-created content.",
+    cta: "Share something →",
+    href: `${COMMUNITY_URL}/c/community-voices/38`,
+  },
+  {
+    icon: "❓",
+    title: "Q&A",
+    desc: "Stuck on a technical problem or not sure where to start with open source? Post a clear question and get answers from the community. No question is too basic.",
+    cta: "Ask a question →",
+    href: `${COMMUNITY_URL}/c/general/q-a/10`,
+  },
+  {
+    icon: "🏆",
+    title: "Challenges",
+    desc: "Hands-on missions to practice OpenTelemetry, AI, and cloud-native skills. Fix broken setups, modernize infrastructure, and earn points on the leaderboard.",
+    cta: "See current challenges ↓",
+    href: "#challenges",
+  },
+  {
+    icon: "👋",
+    title: "Connect",
+    desc: "Say hello, find events near you, and meet people who care about the same things. Find local meetups, add upcoming events, and introduce yourself.",
+    cta: "Find your people →",
+    href: `${COMMUNITY_URL}/c/general/introductions/18`,
+  },
 ];
 
-export const HowItWorks = () => {
+export const HowItWorks = (): JSX.Element => {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
@@ -17,21 +42,32 @@ export const HowItWorks = () => {
           <>
             <div className="animate-fade-up mb-3">
               <span className="font-mono text-xs font-medium uppercase tracking-widest text-primary">
-                How it works
+                Get Involved
               </span>
             </div>
-            <h2 className="animate-fade-up-delay-1 mb-12 text-3xl font-bold text-foreground md:text-4xl">
-              From zero to solved in four steps
+            <h2 className="animate-fade-up-delay-1 mb-3 text-3xl font-bold text-primary md:text-4xl">
+              Start here
             </h2>
-            <div className="animate-fade-up-delay-2 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {steps.map((step) => (
+            <p className="animate-fade-up-delay-1 mb-12 max-w-xl text-[hsl(var(--text-secondary))] leading-relaxed">
+              Share what you have built, write about what you have learned, or ask the community for help.
+            </p>
+            <div className="animate-fade-up-delay-2 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {pillars.map((p) => (
                 <div
-                  key={step.num}
-                  className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-colors hover:bg-[hsl(var(--surface-hover))]"
+                  key={p.title}
+                  className="card-glow flex flex-col rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6"
                 >
-                  <span className="font-mono text-xs text-primary">{step.num}</span>
-                  <h3 className="mt-3 text-base font-semibold text-foreground">{step.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.desc}</p>
+                  <span className="text-2xl mb-3" aria-hidden="true">{p.icon}</span>
+                  <h3 className="text-base font-semibold text-foreground">{p.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground flex-1">{p.desc}</p>
+                  <a
+                    href={p.href}
+                    target={p.href.startsWith("http") ? "_blank" : undefined}
+                    rel={p.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="mt-4 text-sm font-medium text-primary hover:underline"
+                  >
+                    {p.cta}
+                  </a>
                 </div>
               ))}
             </div>

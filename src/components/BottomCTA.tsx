@@ -1,29 +1,60 @@
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { COMMUNITY_URL } from "@/data/constants";
 
-export const BottomCTA = () => {
+export const BottomCTA = (): JSX.Element => {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
-    <section ref={ref} className="py-24 px-6">
-      <div className="mx-auto max-w-2xl">
-        {isVisible && (
-          <div className="animate-fade-up relative rounded-2xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-12 text-center overflow-hidden">
-            <div className="cta-glow absolute inset-0 pointer-events-none" />
-            <div className="relative z-10">
-              <h2 className="text-3xl font-bold text-foreground">Help us break something</h2>
-              <p className="mt-3 text-muted-foreground">Have an idea for a challenge? Contribute a scenario based on real-world incidents and help others learn by breaking things.</p>
+    <section ref={ref} className="bg-primary py-16 px-6 md:px-16">
+      {isVisible && (
+        <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          {/* Left - headline */}
+          <h2 className="animate-fade-up text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background">
+            Start curious.<br />
+            Break things.<br />
+            Learn together.<br />
+            Glow brighter.
+          </h2>
+
+          {/* Right - copy + buttons */}
+          <div className="animate-fade-up-delay-1 flex flex-col gap-4">
+            <p className="font-mono text-sm leading-relaxed text-background/90">
+              Some species of fireflies synchronize their flashing. Thousands of individuals, each emitting their own signal, collectively producing something far more powerful than any single light source could output.
+            </p>
+            <p className="font-mono text-sm leading-relaxed text-background/90">
+              That's offon.{" "}
+              <strong className="font-medium text-background">
+                You bring your questions, your fixes, your half-finished PRs.
+              </strong>{" "}
+              We bring the challenges, the tooling, and the engineers who care about the same problems you do.
+            </p>
+            <p className="font-mono text-sm leading-relaxed text-background/90">
+              Everyone ships their own spark. The community is where those signals synchronize to illuminate the entire ecosystem.
+            </p>
+            <p className="font-mono text-sm font-medium text-background">
+              Always on. Always open. Always learning.
+            </p>
+            <div className="flex gap-3 flex-wrap mt-2">
               <a
-                 href="https://github.com/dynatrace-oss/offon-challenges"
+                href={COMMUNITY_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-8 btn-primary"
+              className="btn-inverse"
               >
-                Contribute a challenge →
+                Join the community →<span className="sr-only"> (opens in new tab)</span>
+              </a>
+              <a
+                href="https://github.com/dynatrace-oss/open-ecosystem-challenges"
+                target="_blank"
+                rel="noopener noreferrer"
+              className="btn-ghost-inverse"
+              >
+                GitHub ↗<span className="sr-only"> (opens in new tab)</span>
               </a>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </section>
   );
 };

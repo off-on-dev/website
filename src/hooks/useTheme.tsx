@@ -7,9 +7,10 @@ const ThemeContext = createContext<{ theme: Theme; toggle: () => void }>({
   toggle: () => {},
 });
 
-export const useTheme = () => useContext(ThemeContext);
+// eslint-disable-next-line react-refresh/only-export-components -- intentional: context hook + provider in one file
+export const useTheme = (): { theme: Theme; toggle: () => void } => useContext(ThemeContext);
 
-export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+export const ThemeProvider = ({ children }: { children: React.ReactNode }): JSX.Element => {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== "undefined") {
       return (localStorage.getItem("theme") as Theme) || "dark";
