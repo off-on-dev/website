@@ -290,6 +290,9 @@ these rules.
 
 ## When Suggesting Code
 
+- Always read `styleguide.md` before making any UI, copy, or component changes.
+  It is the source of truth for typography, color tokens, spacing, and brand rules.
+  Never introduce values that contradict it.
 - Always check `tailwind.config.ts` and `src/index.css` for existing tokens before
   introducing new values.
 - Always check `src/components/ui/` for existing shadcn components before building
@@ -299,3 +302,22 @@ these rules.
 - Prefer simple, readable solutions over clever ones.
 - If something could be done multiple ways, briefly explain the tradeoff and
   recommend one approach.
+
+---
+
+## After Making Changes
+
+After completing any non-trivial change, update documentation to reflect it.
+
+- **New component, hook, or utility:** add a brief entry to `styleguide.md` under
+  the relevant section (e.g. a new color token under Colors, a new component pattern
+  under Components).
+- **New page or route:** update `README.md` to list the route and its purpose.
+- **New environment variable, constant, or configuration value:** document it in
+  `README.md` and, if it affects visual output, in `styleguide.md`.
+- **Changed build, deploy, or dev workflow:** update the Commands section in both
+  this file and `README.md`.
+- **Changed brand rules, tone, or copy standards:** update `styleguide.md` first,
+  then apply the change across the codebase.
+- Do not document trivial fixes (typos, one-line patches) unless they change a rule
+  or pattern others should follow.

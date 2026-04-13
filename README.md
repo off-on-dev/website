@@ -84,7 +84,8 @@ Complete these steps in order when switching offon.dev to GitHub Pages.
 - Verify PR previews still work after the change
 
 ### 6. Update constants.ts
-- In src/data/constants.ts, change SITE_URL from https://off-on-dev.github.io/website to https://offon.dev
+- In `src/data/constants.ts`, change `SITE_URL` from `https://off-on-dev.github.io/website` to `https://offon.dev`
+- Update `GA_MEASUREMENT_ID` if a new property is needed for the custom domain (the GA4 data stream must include both the old and new hostnames, or you create a new property)
 
 ### 7. Update index.html manually
 - Update og:url content to https://offon.dev/
@@ -128,6 +129,38 @@ public/
     deploy.yml  # Production deploy on push to main
     preview.yml # PR preview deploy
 ```
+
+## Routes
+
+| Path | Page | Purpose |
+|---|---|---|
+| `/` | `Index.tsx` | Home page |
+| `/adventures/:id` | `AdventureDetail.tsx` | Adventure landing |
+| `/adventures/:id/levels/:levelId` | `ChallengeDetail.tsx` | Individual challenge |
+| `/sponsors` | `Sponsors.tsx` | Sponsorship info |
+| `/about` | `About.tsx` | About the community |
+| `/docs` | redirects to `/docs/community-guide` | |
+| `/docs/community-guide` | `CommunityGuide.tsx` | Community documentation |
+| `/topics/:tag` | `TopicPage.tsx` | Topic / tag filtered view |
+| `/privacy` | `Privacy.tsx` | GDPR-compliant privacy policy |
+| `*` | `NotFound.tsx` | 404 fallback |
+
+## Analytics and Privacy
+
+The site uses Google Analytics 4 with Consent Mode v2. No data is collected until the user explicitly accepts via the consent banner.
+
+### Configuration
+
+`GA_MEASUREMENT_ID` in `src/data/constants.ts` holds the GA4 Measurement ID (`G-YEYE9DFHWE`). The gtag snippet in `index.html` must match this value. If you update the ID, change it in both places.
+
+### How it works
+
+- `index.html` loads gtag.js with all consent signals set to `denied` by default (Consent Mode v2).
+- `src/hooks/useConsent.ts` manages the user's choice, stored in `localStorage` as `analytics_consent` with a 6-month expiry. On grant, it calls `gtag('consent', 'update', { analytics_storage: 'granted' })`.
+- `src/components/ConsentBanner.tsx` renders a fixed bottom bar until the user makes a choice.
+- `src/components/CookiePreferencesLink.tsx` is placed in the Footer and calls `reset()` from `useConsent` to re-show the banner.
+- `src/App.tsx` fires a `page_view` event on every route change, but only when consent is `"granted"`.
+- `/privacy` (`src/pages/Privacy.tsx`) is the GDPR Art. 13 privacy policy. Contact: offondev@gmail.com and `${COMMUNITY_URL}/groups/moderators`.
 
 ## Contributing
 

@@ -5,12 +5,18 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
 import { ThemeProvider } from "@/hooks/useTheme";
+import { ConsentBanner } from "@/components/ConsentBanner";
+import { useConsent } from "@/hooks/useConsent";
 
 const ScrollToTop = (): null => {
   const { pathname } = useLocation();
+  const { consent } = useConsent();
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [pathname]);
+    if (consent === "granted" && typeof window.gtag === "function") {
+      window.gtag("event", "page_view", { page_path: pathname });
+    }
+  }, [pathname, consent]);
   return null;
 };
 
@@ -22,6 +28,7 @@ const About = lazy(() => import("./pages/About"));
 const CommunityGuide = lazy(() => import("./pages/CommunityGuide"));
 const TopicPage = lazy(() => import("./pages/TopicPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Privacy = lazy(() => import("./pages/Privacy"));
 
 const queryClient = new QueryClient();
 const basename = import.meta.env.BASE_URL.replace(/\/+$/, "");
@@ -34,6 +41,7 @@ const App = (): JSX.Element => (
         <Sonner />
         <BrowserRouter basename={basename} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <ScrollToTop />
+          <ConsentBanner />
           <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<Index />} />
@@ -44,6 +52,7 @@ const App = (): JSX.Element => (
             <Route path="/docs" element={<Navigate to="/docs/community-guide" replace />} />
             <Route path="/docs/community-guide" element={<CommunityGuide />} />
             <Route path="/topics/:tag" element={<TopicPage />} />
+            <Route path="/privacy" element={<Privacy />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           </Suspense>

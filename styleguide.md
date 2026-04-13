@@ -266,3 +266,50 @@ focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 fo
 ```
 
 Adjust `ring-offset-1` for inline elements or `ring-offset-2` for block elements as appropriate.
+
+---
+
+## Hooks
+
+### `useConsent`
+
+`src/hooks/useConsent.ts`
+
+Manages analytics consent state for GDPR Consent Mode v2.
+
+```ts
+const { consent, grant, deny, reset } = useConsent();
+```
+
+| Return | Type | Description |
+|---|---|---|
+| `consent` | `"granted" \| "denied" \| null` | `null` = not yet decided (show banner) |
+| `grant()` | `() => void` | Accept analytics, updates gtag and localStorage |
+| `deny()` | `() => void` | Decline analytics, updates localStorage |
+| `reset()` | `() => void` | Clears stored choice, re-shows banner, resets gtag to denied |
+
+Consent is stored in `localStorage` under the key `analytics_consent` as `{ value, timestamp }`. It expires after 6 months and the user is re-prompted.
+
+---
+
+## Components
+
+### `ConsentBanner`
+
+`src/components/ConsentBanner.tsx`
+
+Fixed bottom bar. Renders only when `useConsent().consent === null` (no decision yet). Disappears on accept or decline and never mounts again until the choice expires or is reset.
+
+No props. Uses `useConsent` internally.
+
+### `CookiePreferencesLink`
+
+`src/components/CookiePreferencesLink.tsx`
+
+Inline `<button>` that calls `reset()` from `useConsent`, re-showing the `ConsentBanner`. Used in the Footer Policies nav column.
+
+| Prop | Type | Description |
+|---|---|---|
+| `className` | `string` | Applied to the button element |
+
+Use the same `lnk` class string as other Footer links to maintain visual consistency.
