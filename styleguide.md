@@ -1,4 +1,14 @@
-# Offon Style Guide
+# OffOn Style Guide
+
+## Brand Name
+
+The brand is always written **OffOn** (camelCase). Never "offon", "Offon", or "OFFON".
+
+In code, use the `BRAND_NAME` constant from `src/data/constants.ts` instead of hardcoding the string.
+
+The domain `offon.dev` is always lowercase (it is a URL, not a brand mention).
+
+---
 
 ## Typography
 

@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { BottomCTA } from "@/components/BottomCTA";
 import { ADVENTURES } from "@/data/adventures";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
-import { SITE_URL } from "@/data/constants";
+import { SITE_URL, BRAND_NAME } from "@/data/constants";
 
 const TopicPage = (): JSX.Element => {
   const { tag } = useParams<{ tag: string }>();
@@ -22,7 +22,7 @@ const TopicPage = (): JSX.Element => {
       a.levels.map((level) => ({ level, adventure: a }))
     );
 
-  const pageTitle = decoded ? `${decoded} Challenges - Offon` : "Topic - Offon";
+  const pageTitle = decoded ? `${decoded} Challenges - ${BRAND_NAME}` : `Topic - ${BRAND_NAME}`;
   const pageDesc = decoded ? `Hands-on challenges tagged with ${decoded}. Practice real-world open source skills.` : "Browse challenges by topic.";
   return (
     <div className="min-h-screen bg-background">

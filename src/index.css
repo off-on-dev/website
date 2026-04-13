@@ -373,7 +373,7 @@
   }
 
   .pill-inactive {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-[hsl(var(--surface-border))] bg-transparent px-4 py-1.5 text-sm font-medium leading-none text-[hsl(var(--text-secondary))] hover:border-foreground/30 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-[hsl(var(--surface-border))] bg-transparent px-4 py-1.5 text-sm font-medium leading-none text-[hsl(var(--text-secondary))] hover:border-primary/60 hover:text-primary hover:bg-primary/5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2;
   }
 
 }
@@ -386,6 +386,20 @@
     0 0 28px -2px hsl(var(--primary) / 0.8),
     0 0 60px -8px hsl(var(--primary) / 0.4),
     0 2px 8px -2px hsl(0 0% 0% / 0.3);
+}
+
+/* Tag pill: electric glow on hover */
+.pill-inactive:hover {
+  box-shadow:
+    0 0 14px -3px hsl(var(--primary) / 0.55),
+    0 0 30px -8px hsl(var(--primary) / 0.25);
+}
+
+/* Tag chip (compact inline tags): electric glow on hover */
+.tag-chip:hover {
+  box-shadow:
+    0 0 12px -2px hsl(var(--primary) / 0.55),
+    0 0 24px -6px hsl(var(--primary) / 0.25);
 }
 
 /* Ghost button: electric glow on hover */
@@ -424,6 +438,18 @@
     0 0 28px -4px hsl(var(--primary) / 0.25),
     0 0 50px -10px hsl(var(--primary) / 0.15);
   border-color: hsl(var(--primary) / 0.45) !important;
+}
+
+.light .pill-inactive:hover {
+  box-shadow:
+    0 0 10px -2px hsl(var(--primary) / 0.4),
+    0 0 20px -6px hsl(var(--primary) / 0.2);
+}
+
+.light .tag-chip:hover {
+  box-shadow:
+    0 0 8px -2px hsl(var(--primary) / 0.4),
+    0 0 16px -5px hsl(var(--primary) / 0.2);
 }
 
 .light .firefly {

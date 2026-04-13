@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
-import { COMMUNITY_URL, SITE_URL } from "@/data/constants";
+import { COMMUNITY_URL, SITE_URL, BRAND_NAME } from "@/data/constants";
 
 const currentSponsors = [
   { name: "Dynatrace", role: "Founding Sponsor", url: "https://dynatrace.com" },
@@ -13,15 +13,15 @@ const Sponsors = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Sponsors - Offon</title>
+        <title>{`Sponsors - ${BRAND_NAME}`}</title>
         <link rel="canonical" href={SITE_URL + "/sponsors"} />
         <meta name="description" content="Sponsors provide financial support and participate as community members, but do not control technical direction or governance." />
-        <meta property="og:title" content="Sponsors - Offon" />
+        <meta property="og:title" content={`Sponsors - ${BRAND_NAME}`} />
         <meta property="og:description" content="Sponsors provide financial support and participate as community members, but do not control technical direction or governance." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/sponsors`} />
         <meta property="og:image" content={`${SITE_URL}/og.png`} />
-        <meta name="twitter:title" content="Sponsors - Offon" />
+        <meta name="twitter:title" content={`Sponsors - ${BRAND_NAME}`} />
         <meta name="twitter:description" content="Sponsors provide financial support and participate as community members, but do not control technical direction or governance." />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
@@ -31,8 +31,7 @@ const Sponsors = (): JSX.Element => {
         eyebrow="Sponsors"
         title="Sponsorship and Independence"
         description="Sponsors provide financial support and participate as community members, but do not control technical direction, content priorities, or governance. This community belongs to its members."
-        primaryCta={{ label: "Get in touch →", href: "mailto:sponsors@offon.dev?subject=Sponsorship Inquiry" }}
-        secondaryCta={{ label: "Join the community →", href: COMMUNITY_URL, external: true }}
+        primaryCta={{ label: "Get in touch →", href: `${COMMUNITY_URL}/groups/moderators`, external: true }}
       />
 
       <div className="mx-auto max-w-4xl px-6 py-16">

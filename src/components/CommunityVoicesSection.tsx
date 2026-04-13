@@ -12,7 +12,7 @@ const pillars = [
   {
     icon: "❓",
     title: "Q&A",
-    desc: "Stuck on a technical problem or not sure where to start with open source? Post a clear question and get answers from the community. No question is too basic.",
+    desc: "Stuck on a technical problem or not sure where to start with open source? Post a question and get answers from the community. No question is too basic.",
     cta: "Ask a question →",
     href: `${COMMUNITY_URL}/c/general/q-a/10`,
   },

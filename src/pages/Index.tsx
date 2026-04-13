@@ -8,7 +8,7 @@ import { CommunityVoicesSection } from "@/components/CommunityVoicesSection";
 import { ConnectSection } from "@/components/ConnectSection";
 import { BottomCTA } from "@/components/BottomCTA";
 import { Footer } from "@/components/Footer";
-import { SITE_URL } from "@/data/constants";
+import { SITE_URL, BRAND_NAME } from "@/data/constants";
 
 const Index = (): JSX.Element => {
   const { hash } = useLocation();
@@ -25,15 +25,15 @@ const Index = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Offon - Vendor-neutral. Open Source. Community Driven.</title>
+        <title>{`${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`}</title>
         <link rel="canonical" href={SITE_URL + "/"} />
         <meta name="description" content="Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, cloud dev environments." />
-        <meta property="og:title" content="Offon - Vendor-neutral. Open Source. Community Driven." />
+        <meta property="og:title" content={`${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`} />
         <meta property="og:description" content="Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, cloud dev environments." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/`} />
         <meta property="og:image" content={`${SITE_URL}/og.png`} />
-        <meta name="twitter:title" content="Offon - Vendor-neutral. Open Source. Community Driven." />
+        <meta name="twitter:title" content={`${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`} />
         <meta name="twitter:description" content="Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, cloud dev environments." />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
@@ -48,7 +48,7 @@ const Index = (): JSX.Element => {
           </h2>
           <div className="flex flex-col gap-4">
             <p className="font-mono text-sm leading-relaxed text-background/90">
-              Adventures are community-shaped. If you have an idea for a hands-on challenge, submit a concept and help decide what the community learns next.
+              Shape what the community learns next. Got a scenario worth exploring? Submit a concept and help it become the next adventure.
             </p>
             <div className="flex gap-3 flex-wrap mt-2">
               <a

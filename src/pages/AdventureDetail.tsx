@@ -4,7 +4,7 @@ import { ADVENTURES } from "@/data/adventures";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
-import { SITE_URL } from "@/data/constants";
+import { SITE_URL, BRAND_NAME } from "@/data/constants";
 
 const AdventureDetail = (): JSX.Element => {
   const { id } = useParams<{ id: string }>();
@@ -18,7 +18,7 @@ const AdventureDetail = (): JSX.Element => {
     );
   }
 
-  const pageTitle = `${adventure.title} - Offon Adventures`;
+  const pageTitle = `${adventure.title} - ${BRAND_NAME} Adventures`;
   const pageDesc = adventure.story;
   const pageUrl = `${SITE_URL}/adventures/${adventure.id}`;
 
@@ -52,7 +52,7 @@ const AdventureDetail = (): JSX.Element => {
               <Link
                 key={tag}
                 to={`/topics/${encodeURIComponent(tag)}`}
-                className="rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary/40 hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1"
+                className="tag-chip rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary/60 hover:text-primary hover:bg-primary/5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1"
               >
                 {tag}
               </Link>
