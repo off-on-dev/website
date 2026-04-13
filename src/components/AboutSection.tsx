@@ -1,4 +1,5 @@
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { BRAND_NAME } from "@/data/constants";
 
 const values = [
   {
@@ -39,7 +40,7 @@ const values = [
   {
     icon: "🔋",
     title: "Built to last",
-    desc: "offon is built for the long term. We're committed to maintaining an inclusive, respectful space where contributors and maintainers can grow, regardless of shifting market trends or corporate interests.",
+    desc: `${BRAND_NAME} is built for the long term. We're committed to maintaining an inclusive, respectful space where contributors and maintainers can grow, regardless of shifting market trends or corporate interests.`,
   },
 ];
 
@@ -58,7 +59,7 @@ export const AboutSection = (): JSX.Element => {
                   We are focused on what matters: supporting contributors and maintainers as open source faces new realities around regulation, digital sovereignty, and AI.
                 </p>
                 <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
-                  offon has one clear goal: creating the contributors and maintainers of tomorrow by helping people grow from curious users to confident contributors, and from contributors to sustainable maintainers.
+                  {BRAND_NAME} has one clear goal: Building the contributors and maintainers of tomorrow by helping people grow from curious users to confident contributors, and from contributors to sustainable maintainers.
                 </p>
               </div>
             </div>

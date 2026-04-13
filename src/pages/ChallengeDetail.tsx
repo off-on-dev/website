@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { LevelCard } from "@/components/LevelCard";
 import { VerificationSection } from "@/components/VerificationSection";
 import { DiscussionSection } from "@/components/DiscussionSection";
-import { SITE_URL } from "@/data/constants";
+import { SITE_URL, BRAND_NAME } from "@/data/constants";
 
 const ChallengeDetail = (): JSX.Element => {
   const { id, levelId } = useParams<{ id: string; levelId: string }>();
@@ -22,7 +22,7 @@ const ChallengeDetail = (): JSX.Element => {
   }
 
   const learningsSummary = level.learnings.slice(0, 2).join("; ");
-  const pageTitle = `${level.name} - ${adventure.title} - Offon`;
+  const pageTitle = `${level.name} - ${adventure.title} - ${BRAND_NAME}`;
   const pageDesc = `${level.difficulty} challenge: ${learningsSummary}.`.slice(0, 160);
   const pageUrl = `${SITE_URL}/adventures/${adventure.id}/levels/${level.id}`;
 

@@ -1,5 +1,5 @@
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { COMMUNITY_URL } from "@/data/constants";
+import { COMMUNITY_URL, BRAND_NAME } from "@/data/constants";
 
 export const BottomCTA = (): JSX.Element => {
   const { ref, isVisible } = useScrollAnimation();
@@ -22,7 +22,7 @@ export const BottomCTA = (): JSX.Element => {
               Some species of fireflies synchronize their flashing. Thousands of individuals, each emitting their own signal, collectively producing something far more powerful than any single light source could output.
             </p>
             <p className="font-mono text-sm leading-relaxed text-background/90">
-              That's offon.{" "}
+              That's {BRAND_NAME}.{" "}
               <strong className="font-medium text-background">
                 You bring your questions, your fixes, your ideas.
               </strong>{" "}

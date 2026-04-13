@@ -4,7 +4,7 @@ import { ADVENTURES } from "@/data/adventures";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
-import { SITE_URL } from "@/data/constants";
+import { SITE_URL, BRAND_NAME } from "@/data/constants";
 
 const AdventureDetail = (): JSX.Element => {
   const { id } = useParams<{ id: string }>();
@@ -18,7 +18,7 @@ const AdventureDetail = (): JSX.Element => {
     );
   }
 
-  const pageTitle = `${adventure.title} - Offon Adventures`;
+  const pageTitle = `${adventure.title} - ${BRAND_NAME} Adventures`;
   const pageDesc = adventure.story;
   const pageUrl = `${SITE_URL}/adventures/${adventure.id}`;
 

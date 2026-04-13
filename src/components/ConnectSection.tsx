@@ -12,7 +12,7 @@ const items = [
   {
     icon: "📅",
     title: "Events & meetups",
-    desc: "Find upcoming events, add local meetups to the community calendar, and connect with members in your city. Open source is better in person.",
+    desc: "Find upcoming events, add local meetups to the community calendar, and connect with members in your city. Some of the best connections happen face to face.",
     cta: "See upcoming events →",
     href: `${COMMUNITY_URL}/c/events-and-talks/12`,
   },

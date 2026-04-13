@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/Navbar";
 import { Helmet } from "react-helmet-async";
 import { Footer } from "@/components/Footer";
-import { COMMUNITY_URL, SITE_URL } from "@/data/constants";
+import { COMMUNITY_URL, SITE_URL, BRAND_NAME } from "@/data/constants";
 
 const extLink = "text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm";
 
@@ -9,17 +9,17 @@ const CommunityGuide = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Community Guide - Offon</title>
+        <title>{`Community Guide - ${BRAND_NAME}`}</title>
         <link rel="canonical" href={`${SITE_URL}/docs/community-guide`} />
-        <meta name="description" content="Everything you need to get started, participate, and grow in the offon community." />
-        <meta property="og:title" content="Community Guide - Offon" />
-        <meta property="og:description" content="Everything you need to get started, participate, and grow in the offon community." />
+        <meta name="description" content={`Everything you need to get started, participate, and grow in the ${BRAND_NAME} community.`} />
+        <meta property="og:title" content={`Community Guide - ${BRAND_NAME}`} />
+        <meta property="og:description" content={`Everything you need to get started, participate, and grow in the ${BRAND_NAME} community.`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/docs/community-guide`} />
         <meta property="og:image" content={`${SITE_URL}/og.png`} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Community Guide - Offon" />
-        <meta name="twitter:description" content="Everything you need to get started, participate, and grow in the offon community." />
+        <meta name="twitter:title" content={`Community Guide - ${BRAND_NAME}`} />
+        <meta name="twitter:description" content={`Everything you need to get started, participate, and grow in the ${BRAND_NAME} community.`} />
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
       </Helmet>
       <Navbar />
@@ -30,16 +30,16 @@ const CommunityGuide = (): JSX.Element => {
           Community Guide
         </h1>
         <p className="mt-5 text-lg text-[hsl(var(--text-secondary))] leading-relaxed">
-          Everything you need to get started, participate, and grow in the offon community.
+          Everything you need to get started, participate, and grow in the {BRAND_NAME} community.
         </p>
 
         <div className="mt-12 space-y-12">
 
-          {/* What is offon */}
+          {/* What is OffOn */}
           <section aria-labelledby="what-is-offon">
-            <h2 id="what-is-offon" className="text-xl font-bold text-foreground mb-3">What is offon and who is it for?</h2>
+            <h2 id="what-is-offon" className="text-xl font-bold text-foreground mb-3">What is {BRAND_NAME} and who is it for?</h2>
             <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed mb-6">
-              A practical, welcoming space for builders working with open standards and cloud-native technologies. offon focuses on reproducible, hands-on knowledge: tutorials, Q&amp;A with accepted solutions, and recurring challenges, so members can learn quickly, share real-world implementations, and help each other succeed.
+              A practical, welcoming space for builders working with open standards and cloud-native technologies. {BRAND_NAME} focuses on reproducible, hands-on knowledge: tutorials, Q&amp;A with accepted solutions, and recurring challenges, so members can learn quickly, share real-world implementations, and help each other succeed.
             </p>
 
             <h3 className="text-sm font-semibold text-foreground mb-2">What we stand for</h3>
@@ -79,7 +79,7 @@ const CommunityGuide = (): JSX.Element => {
             <ul className="space-y-2">
               <li>
                 <a href={`${COMMUNITY_URL}/t/getting-started-welcome-to-the-open-ecosystem/36`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Getting started in the offon community ↗
+                  Getting started in the {BRAND_NAME} community ↗
                 </a>
               </li>
             </ul>
@@ -151,7 +151,7 @@ const CommunityGuide = (): JSX.Element => {
           <section aria-labelledby="vendor-agnostic">
             <h2 id="vendor-agnostic" className="text-xl font-bold text-foreground mb-3">Vendor-agnostic Policy</h2>
             <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
-              offon is vendor-agnostic. Technical product mentions are welcome when neutral and reproducible. Avoid promotional content. Marketing posts will be removed and repeated violations may lead to moderation actions. See{" "}
+              {BRAND_NAME} is vendor-agnostic. Technical product mentions are welcome when neutral and reproducible. Avoid promotional content. Marketing posts will be removed and repeated violations may lead to moderation actions. See{" "}
               <a href={`${COMMUNITY_URL}/t/posting-guidelines/30`} target="_blank" rel="noopener noreferrer" className={extLink}>
                 Posting Guidelines ↗
               </a>.

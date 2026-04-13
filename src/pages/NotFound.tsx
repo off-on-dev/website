@@ -2,21 +2,21 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { SITE_URL } from "@/data/constants";
+import { SITE_URL, BRAND_NAME } from "@/data/constants";
 
 const NotFound = (): JSX.Element => {
 
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Page Not Found - Offon</title>
+        <title>{`Page Not Found - ${BRAND_NAME}`}</title>
         <meta name="description" content="The page you are looking for does not exist or has been moved." />
-        <meta property="og:title" content="Page Not Found - Offon" />
+        <meta property="og:title" content={`Page Not Found - ${BRAND_NAME}`} />
         <meta property="og:description" content="The page you are looking for does not exist or has been moved." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={SITE_URL} />
         <meta property="og:image" content={`${SITE_URL}/og.png`} />
-        <meta name="twitter:title" content="Page Not Found - Offon" />
+        <meta name="twitter:title" content={`Page Not Found - ${BRAND_NAME}`} />
         <meta name="twitter:description" content="The page you are looking for does not exist or has been moved." />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />

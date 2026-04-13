@@ -6,7 +6,7 @@ Guidance for AI coding agents working in this repository.
 
 ## Project Overview
 
-**offon.dev** is the main website for Offon, a platform for open source enthusiasts.
+**offon.dev** is the main website for OffOn, a platform for open source enthusiasts.
 It is fully static with no backend, no SSR, and no database.
 
 Community activity happens on a separate Discourse instance at **community.offon.dev**,
@@ -223,6 +223,11 @@ This is a fully static React site. Apply these practices on every page.
 
 All written content, code comments, commit messages, and documentation must follow
 these rules.
+
+### Brand Name
+- The brand is always written **OffOn** (camelCase). Never "offon", "Offon", or "OFFON".
+- In code, always use the `BRAND_NAME` constant from `src/data/constants.ts` instead of hardcoding the string.
+- The domain `offon.dev` is always lowercase (it is a URL, not a brand mention).
 
 ### Tone
 - Direct, positive, and community-focused.
