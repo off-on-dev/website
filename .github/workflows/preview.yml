@@ -26,7 +26,7 @@ jobs:
         run: npm ci
 
       - if: github.event.action != 'closed'
-        run: npm run build -- --base=/website/pr-preview/pr-${{ github.event.number }}/
+        run: npm run build -- --base=/pr-preview/pr-${{ github.event.number }}/
 
       - if: github.event.action != 'closed'
         run: cp dist/index.html dist/404.html

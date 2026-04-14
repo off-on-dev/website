@@ -29,10 +29,10 @@ Discourse functionality here.
 
 ## URLs and External Organisations
 
-- The GitHub Pages URL for this site is https://off-on-dev.github.io/website
-- The custom domain offon.dev is not yet configured. Do not use it in any URLs until it is set up on GitHub Pages.
-- og:url, og:image, and all absolute URLs must use https://off-on-dev.github.io/website until the custom domain is live.
-- The og:image file is public/og.png and its full URL is https://off-on-dev.github.io/website/og.png.
+- The canonical domain for this site is https://offon.dev.
+- og:url, og:image, and all absolute URLs must use https://offon.dev.
+- The og:image file is public/og.png and its full URL is https://offon.dev/og.png.
+- PR preview deployments are served from the gh-pages branch under /pr-preview/pr-{number}/.
 - The open source challenges content lives in a separate organisation at https://github.com/dynatrace-oss/open-ecosystem-challenges. This is an intentional external link and must never be changed or flagged as a violation.
 - The community Discourse instance is at https://community.open-ecosystem.com. Use the COMMUNITY_URL constant from src/data/constants.ts, never hardcode this URL.
 
