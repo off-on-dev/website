@@ -72,7 +72,7 @@ const ChallengeDetail = (): JSX.Element => {
           <h1 className="text-4xl font-bold text-foreground mb-2">{level.name}</h1>
           <p className="text-sm font-mono text-[hsl(var(--text-faint))] mb-4">{adventure.title}</p>
           <div className="flex flex-wrap gap-1.5">
-            {Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort().map((tag) => (
+            {adventure.tags.map((tag) => (
               <span
                 key={tag}
                 className="rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))]"
