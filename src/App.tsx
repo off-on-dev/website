@@ -54,6 +54,7 @@ const App = (): JSX.Element => (
             <Route path="/docs" element={<Navigate to="/docs/community-guide" replace />} />
             <Route path="/docs/community-guide" element={<CommunityGuide />} />
             <Route path="/privacy" element={<Privacy />} />
+            <Route path="/topics/:tag" element={<Navigate to={{ pathname: "/", hash: "#challenges" }} replace />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           </Suspense>

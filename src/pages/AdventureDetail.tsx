@@ -24,17 +24,17 @@ const AdventureDetail = (): JSX.Element => {
   const pageDesc = adventure.story;
   const pageUrl = `${SITE_URL}/adventures/${adventure.id}`;
 
-  const relatedLevels = ADVENTURES
-    .filter((a) =>
-      (activeTech ? a.tags.includes(activeTech) : false)
-    )
-    .flatMap((a) =>
-      a.levels.map((lvl) => ({
-        level: lvl,
-        adventureId: a.id,
-        adventureTitle: a.title,
-      }))
-    );
+  const relatedLevels = activeTech
+    ? ADVENTURES
+        .filter((a) => a.tags.includes(activeTech))
+        .flatMap((a) =>
+          a.levels.map((lvl) => ({
+            level: lvl,
+            adventureId: a.id,
+            adventureTitle: a.title,
+          }))
+        )
+    : [];
 
   return (
     <div className="min-h-screen bg-background">

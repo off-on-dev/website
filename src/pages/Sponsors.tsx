@@ -108,9 +108,9 @@ const Sponsors = (): JSX.Element => {
 
         {/* Ways to support */}
         <section className="mb-16">
-          <h2 className="text-2xl font-bold text-primary mb-4">Ways to Support OffOn</h2>
+          <h2 className="text-2xl font-bold text-primary mb-4">Ways to Support {BRAND_NAME}</h2>
           <p className="text-muted-foreground leading-relaxed mb-8 max-w-2xl">
-            There are multiple ways organisations can get involved with the OffOn community, beyond financial sponsorship.
+            There are multiple ways organisations can get involved with the {BRAND_NAME} community, beyond financial sponsorship.
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             {supportWays.map((way) => (
