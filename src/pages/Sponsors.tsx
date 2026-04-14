@@ -10,7 +10,6 @@ import dtLogoLight from "@/assets/Dynatrace_Logo_color_positive_horizontal.svg";
 
 type Sponsor = {
   name: string;
-  role: string;
   url: string;
   logoDark?: string;
   logoLight?: string;
@@ -19,7 +18,6 @@ type Sponsor = {
 const currentSponsors: Sponsor[] = [
   {
     name: "Dynatrace",
-    role: "Founding Sponsor",
     url: "https://dynatrace.com",
     logoDark: dtLogoDark,
     logoLight: dtLogoLight,

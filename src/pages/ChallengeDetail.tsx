@@ -10,6 +10,8 @@ import { VerificationSection } from "@/components/VerificationSection";
 import { DiscussionSection } from "@/components/DiscussionSection";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 
+const ALL_TAGS = Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort();
+
 const ChallengeDetail = (): JSX.Element => {
   const { id, levelId } = useParams<{ id: string; levelId: string }>();
   const adventure = ADVENTURES.find((a) => a.id === id);
@@ -104,7 +106,7 @@ const ChallengeDetail = (): JSX.Element => {
             Find challenges by technology
           </h2>
           <div className="mb-6 flex flex-wrap gap-2">
-            {Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort().map((tag) => (
+            {ALL_TAGS.map((tag) => (
               <button
                 key={tag}
                 type="button"

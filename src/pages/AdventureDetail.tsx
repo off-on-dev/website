@@ -7,6 +7,8 @@ import { Footer } from "@/components/Footer";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 
+const ALL_TAGS = Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort();
+
 const AdventureDetail = (): JSX.Element => {
   const { id } = useParams<{ id: string }>();
   const adventure = ADVENTURES.find((a) => a.id === id);
@@ -108,7 +110,7 @@ const AdventureDetail = (): JSX.Element => {
             Find challenges by technology
           </h2>
           <div className="mb-6 flex flex-wrap gap-2">
-            {Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort().map((tag) => (
+            {ALL_TAGS.map((tag) => (
               <button
                 key={tag}
                 type="button"
