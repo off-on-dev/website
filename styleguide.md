@@ -320,3 +320,42 @@ Inline `<button>` that calls `reset()` from `useConsent`, re-showing the `Consen
 | `className` | `string` | Applied to the button element |
 
 Use the same `lnk` class string as other Footer links to maintain visual consistency.
+---
+
+## Patterns
+
+### Inline Challenge Card
+
+Used in `ChallengesGrid`, `AdventureDetail`, and `ChallengeDetail` when filtering challenges by technology tag.
+
+Cards use `flex flex-col` so `mt-auto` works on the bottom row. Standard classes:
+
+```
+card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6
+transition-all duration-200 hover:-translate-y-[3px] flex flex-col
+focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2
+```
+
+Bottom row layout:
+
+```
+mt-auto pt-4 flex flex-wrap gap-1.5 items-center justify-between
+```
+
+Inside the bottom row:
+- Left: `<span className="font-mono text-xs text-muted-foreground">Challenge</span>`
+- Right: `<span className="rounded-sm border border-[hsl(var(--surface-border))] px-2 py-0.5 text-xs text-[hsl(var(--text-faint))]">{adventureTitle}</span>`
+
+### Technology Filter Pattern
+
+Used on the home page (`ChallengesGrid`), `AdventureDetail`, and `ChallengeDetail` to filter challenge cards by technology tag.
+
+```ts
+const [activeTech, setActiveTech] = useState<string | null>(null);
+```
+
+- Filter chips render with `.pill-active` when selected and `.pill-inactive` otherwise.
+- Each chip sets `aria-pressed={activeTech === tag}`.
+- Clicking an already-active chip deselects it: `setActiveTech(activeTech === tag ? null : tag)`.
+- No URL change and no page navigation occur on selection.
+- The filtered results grid only renders when `activeTech` is non-null and results exist.

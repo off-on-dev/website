@@ -1,5 +1,5 @@
 import { useState, useEffect, type CSSProperties } from "react";
-import { COMMUNITY_URL } from "@/data/constants";
+import { COMMUNITY_URL, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
 
 type DiscoursePost = {
   username: string;
@@ -110,7 +110,7 @@ export const DiscussionSection = ({ discussionUrls }: DiscussionSectionProps): J
             rel="noopener noreferrer"
             className="mt-4 inline-flex text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
           >
-            Join the discussion on community.open-ecosystem.com →
+            Join the discussion on {COMMUNITY_DISPLAY_NAME} →
           </a>
         </>
       ) : (
@@ -149,7 +149,7 @@ export const DiscussionSection = ({ discussionUrls }: DiscussionSectionProps): J
             rel="noopener noreferrer"
             className="mt-4 inline-flex text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
           >
-            Join the discussion on community.open-ecosystem.com →
+            Join the discussion on {COMMUNITY_DISPLAY_NAME} →
           </a>
         </>
       )}

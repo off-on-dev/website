@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ADVENTURES, Adventure } from "@/data/adventures";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -13,9 +14,7 @@ const AdventureCard = ({ adventure }: { adventure: Adventure }): JSX.Element => 
     className="group card-glow relative rounded-xl border-2 border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
   >
     <div className="flex items-center justify-between mb-3">
-      <span className="inline-block rounded-sm border border-[hsl(var(--surface-border))] px-2 py-0.5 font-mono text-xs text-[hsl(var(--text-faint))] uppercase tracking-wider">
-        {adventure.month}
-      </span>
+      <span className="font-mono text-xs text-muted-foreground">Adventure</span>
       <span className="inline-flex items-center gap-1.5 rounded-sm border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-xs uppercase tracking-wider text-primary">
         <Layers className="h-3 w-3" />
         3 Levels
@@ -28,7 +27,7 @@ const AdventureCard = ({ adventure }: { adventure: Adventure }): JSX.Element => 
     <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{adventure.story}</p>
 
     {/* Level difficulty pills */}
-      <div className="mt-4 flex flex-wrap items-center gap-2">
+    <div className="mt-4 flex flex-wrap items-center gap-2">
       {adventure.levels.map((level) => (
         <DifficultyBadge key={level.id} difficulty={level.difficulty} />
       ))}
@@ -46,6 +45,19 @@ const AdventureCard = ({ adventure }: { adventure: Adventure }): JSX.Element => 
 
 export const ChallengesGrid = (): JSX.Element => {
   const { ref, isVisible } = useScrollAnimation();
+  const [activeTopic, setActiveTopic] = useState<string | null>(null);
+
+  const filteredLevels = activeTopic
+    ? ADVENTURES
+        .filter((a) => a.tags.includes(activeTopic))
+        .flatMap((a) =>
+          a.levels.map((level) => ({
+            level,
+            adventureId: a.id,
+            adventureTitle: a.title,
+          }))
+        )
+    : [];
 
   return (
     <section id="challenges" ref={ref} className="py-24 px-6">
@@ -59,25 +71,65 @@ export const ChallengesGrid = (): JSX.Element => {
               Choose your adventure
             </h2>
 
-            {/* Tag links */}
+            {/* Topic filter chips */}
             <div className="animate-fade-up-delay-1 mb-8 flex flex-wrap items-center gap-2">
               {allTags.map((tag) => (
-                <Link
+                <button
                   key={tag}
-                  to={`/topics/${encodeURIComponent(tag)}`}
-                  className="pill-inactive"
+                  type="button"
+                  onClick={() => setActiveTopic(activeTopic === tag ? null : tag)}
+                  className={activeTopic === tag ? "pill-active" : "pill-inactive"}
+                  aria-pressed={activeTopic === tag}
                 >
                   {tag}
-                </Link>
+                </button>
               ))}
             </div>
 
-            {/* Adventure cards */}
-            <div className="animate-fade-up-delay-2 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {ADVENTURES.map((adventure) => (
-                <AdventureCard key={adventure.id} adventure={adventure} />
-              ))}
-            </div>
+            {activeTopic ? (
+              <>
+                <p className="animate-fade-up mb-6 font-mono text-xs font-medium uppercase tracking-widest text-primary">
+                  Challenges tagged with {activeTopic}
+                </p>
+                <div key={activeTopic} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                  {filteredLevels.map(({ level, adventureId, adventureTitle }) => (
+                    <Link
+                      key={`${adventureId}-${level.id}`}
+                      to={`/adventures/${adventureId}/levels/${level.id}`}
+                      className="group card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
+                    >
+                      <div className="mb-3">
+                        <DifficultyBadge difficulty={level.difficulty} showDot />
+                      </div>
+                      <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+                        {level.name}
+                      </h3>
+                      <ul className="mt-3 space-y-1.5">
+                        {level.learnings.slice(0, 3).map((learning, i) => (
+                          <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                            {learning}
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="mt-auto pt-4 flex flex-wrap gap-1.5 items-center justify-between">
+                        <span className="font-mono text-xs text-muted-foreground">Challenge</span>
+                        <span className="rounded-sm border border-[hsl(var(--surface-border))] px-2 py-0.5 text-xs text-[hsl(var(--text-faint))]">
+                          {adventureTitle}
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </>
+            ) : (
+              /* Adventure cards */
+              <div className="animate-fade-up-delay-2 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                {ADVENTURES.map((adventure) => (
+                  <AdventureCard key={adventure.id} adventure={adventure} />
+                ))}
+              </div>
+            )}
           </>
         )}
       </div>

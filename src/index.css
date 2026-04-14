@@ -150,8 +150,8 @@
     --purple: 32 100% 52%;
 
     --difficulty-starter: 41 100% 60%;
-    --difficulty-builder: 85 48% 56%;
-    --difficulty-architect: 245 45% 79%;
+    --difficulty-builder: 39 95% 52%;
+    --difficulty-architect: 36 90% 44%;
 
     --type-simulation: 38 100% 58%;
     --type-interactive: 41 100% 60%;
@@ -213,8 +213,8 @@
     --purple: 225 80% 45%;
 
     --difficulty-starter: 220 77% 49%;
-    --difficulty-builder: 25 90% 35%;
-    --difficulty-architect: 0 75% 40%;
+    --difficulty-builder: 220 77% 40%;
+    --difficulty-architect: 222 75% 30%;
 
     --type-simulation: 200 100% 38%;
     --type-interactive: 220 77% 49%;

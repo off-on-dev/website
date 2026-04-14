@@ -1,44 +1,51 @@
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { BRAND_NAME } from "@/data/constants";
+import { Zap, GitBranch, Megaphone, Users, Heart, Unlock, MapPin, Shield, LucideIcon } from "lucide-react";
 
-const values = [
+type Value = {
+  icon: LucideIcon;
+  title: string;
+  desc: string;
+};
+
+const values: Value[] = [
   {
-    icon: "💥",
+    icon: Zap,
     title: "Learn by doing",
     desc: "The best way to understand complex systems is to debug them. Every challenge is a real-world scenario with broken environments, misconfigured pipelines, and invisible failures, powered by GitHub Codespaces.",
   },
   {
-    icon: "🌱",
+    icon: GitBranch,
     title: "Open source first",
     desc: "Every challenge, tool, and piece of infrastructure is open source. Practical, reproducible across technologies, and built around the tooling the community actually uses.",
   },
   {
-    icon: "📢",
+    icon: Megaphone,
     title: "Share what you know",
     desc: "Post tutorials, design docs, and real-world case studies in Community Voices. Document what works, share what you've learned, and help others avoid the same hard lessons.",
   },
   {
-    icon: "🌀",
+    icon: Users,
     title: "Grow together",
     desc: "Mentor and be mentored. Ask questions in Q&A, share your experience, and help shape the next generation of contributors and maintainers.",
   },
   {
-    icon: "🙌",
+    icon: Heart,
     title: "People first",
     desc: "Open source work is often invisible, underfunded, and emotionally demanding. Whether you're contributing code, answering questions, writing tutorials, or simply showing up to learn, your work is visible, valued, and supported here.",
   },
   {
-    icon: "🔓",
+    icon: Unlock,
     title: "Vendor agnostic",
     desc: "The best knowledge should be accessible to everyone. Technical product mentions are welcome when neutral and reproducible. No vendor influences what you learn here.",
   },
   {
-    icon: "🗺️",
+    icon: MapPin,
     title: "Events & meetups",
     desc: "Host your events and local meetups for free. Keep your community engaged, your content accessible, and your connections alive outside the forum.",
   },
   {
-    icon: "🔋",
+    icon: Shield,
     title: "Built to last",
     desc: `${BRAND_NAME} is built for the long term. We're committed to maintaining an inclusive, respectful space where contributors and maintainers can grow, regardless of shifting market trends or corporate interests.`,
   },
@@ -66,13 +73,16 @@ export const AboutSection = (): JSX.Element => {
 
             <span className="font-mono text-xs font-medium uppercase tracking-widest text-primary">Our Values</span>
             <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {values.map((v) => (
-                <div key={v.title} className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6">
-                  <span className="text-2xl" aria-hidden="true">{v.icon}</span>
-                  <h3 className="mt-3 text-base font-semibold text-foreground">{v.title}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{v.desc}</p>
-                </div>
-              ))}
+              {values.map((v) => {
+                const Icon = v.icon;
+                return (
+                  <div key={v.title} className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6">
+                    <Icon className="h-6 w-6 text-primary" aria-hidden="true" />
+                    <h3 className="mt-3 text-base font-semibold text-foreground">{v.title}</h3>
+                    <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{v.desc}</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}

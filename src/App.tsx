@@ -28,7 +28,6 @@ const ChallengeDetail = lazy(() => import("./pages/ChallengeDetail"));
 const Sponsors = lazy(() => import("./pages/Sponsors"));
 const About = lazy(() => import("./pages/About"));
 const CommunityGuide = lazy(() => import("./pages/CommunityGuide"));
-const TopicPage = lazy(() => import("./pages/TopicPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 
@@ -54,7 +53,6 @@ const App = (): JSX.Element => (
             <Route path="/about" element={<About />} />
             <Route path="/docs" element={<Navigate to="/docs/community-guide" replace />} />
             <Route path="/docs/community-guide" element={<CommunityGuide />} />
-            <Route path="/topics/:tag" element={<TopicPage />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
