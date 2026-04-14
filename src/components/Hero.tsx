@@ -28,7 +28,7 @@ export const Hero = (): JSX.Element => {
               </span>
               <br />
               <span className="text-foreground">
-                Learn everything.
+                Learn together.
               </span>
             </h1>
             <p className="animate-fade-up-delay-2 mx-auto mt-6 max-w-xl text-lg leading-relaxed text-[hsl(var(--text-secondary))]">
