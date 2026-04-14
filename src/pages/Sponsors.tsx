@@ -4,12 +4,48 @@ import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME } from "@/data/constants";
+import { useTheme } from "@/hooks/useTheme";
+import dtLogoDark from "@/assets/Dynatrace_Logo_color_negative_horizontal.svg";
+import dtLogoLight from "@/assets/Dynatrace_Logo_color_positive_horizontal.svg";
 
-const currentSponsors = [
-  { name: "Dynatrace", role: "Founding Sponsor", url: "https://dynatrace.com" },
+type Sponsor = {
+  name: string;
+  url: string;
+  logoDark?: string;
+  logoLight?: string;
+};
+
+const currentSponsors: Sponsor[] = [
+  {
+    name: "Dynatrace",
+    url: "https://dynatrace.com",
+    logoDark: dtLogoDark,
+    logoLight: dtLogoLight,
+  },
+];
+
+const supportWays = [
+  {
+    title: "Swag",
+    description: "Provide swag for community members and event attendees.",
+  },
+  {
+    title: "Software Licenses",
+    description: "Offer software licenses for open source contributors.",
+  },
+  {
+    title: "Distribution",
+    description: "Act as a distribution partner to help reach more developers.",
+  },
+  {
+    title: "Adventures and Challenges",
+    description: "Sponsor specific adventures or challenges.",
+  },
 ];
 
 const Sponsors = (): JSX.Element => {
+  const { theme } = useTheme();
+
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
@@ -38,27 +74,51 @@ const Sponsors = (): JSX.Element => {
       <div className="mx-auto max-w-4xl px-6 py-16">
         {/* Founding Sponsor */}
         <section className="mb-16">
-          <h2 className="text-2xl font-bold text-primary mb-4">Founding Sponsor</h2>
+          <h2 className="text-2xl font-bold text-primary mb-8">Founding Sponsor</h2>
+          <div className="flex flex-col sm:flex-row items-start gap-8">
+            <p className="text-muted-foreground leading-relaxed">
+              Dynatrace is the founding sponsor of {BRAND_NAME}. There is Dynatrace-related content in one dedicated category which you can choose to join, but the rest of the content is vendor-neutral and community-driven.
+            </p>
+            {currentSponsors.map((s) => {
+              const logoSrc = s.logoDark && s.logoLight
+                ? (theme === "dark" ? s.logoDark : s.logoLight)
+                : null;
+              return (
+                <a
+                  key={s.name}
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="card-glow shrink-0 flex items-center justify-center rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-8 py-6 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
+                >
+                  {logoSrc ? (
+                    <img src={logoSrc} alt={s.name} width={240} height={43} className="h-10 w-auto" />
+                  ) : (
+                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-lg font-bold text-primary">
+                      {s.name[0]}
+                    </div>
+                  )}
+                </a>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Ways to support */}
+        <section className="mb-16">
+          <h2 className="text-2xl font-bold text-primary mb-4">Ways to Support {BRAND_NAME}</h2>
           <p className="text-muted-foreground leading-relaxed mb-8 max-w-2xl">
-            Dynatrace is the founding sponsor of Open Ecosystem. There is Dynatrace-related content in one dedicated category which you can choose to join, but the rest of the content is vendor-neutral and community-driven.
+            There are multiple ways organisations can get involved with the {BRAND_NAME} community, beyond financial sponsorship.
           </p>
-          <div className="flex flex-wrap gap-5">
-            {currentSponsors.map((s) => (
-              <a
-                key={s.name}
-                href={s.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="card-glow flex items-center gap-4 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
+          <div className="grid gap-4 sm:grid-cols-2">
+            {supportWays.map((way) => (
+              <div
+                key={way.title}
+                className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-lg font-bold text-primary">
-                  {s.name[0]}
-                </div>
-                <div>
-                  <p className="font-semibold text-foreground">{s.name}</p>
-                  <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider">{s.role}</p>
-                </div>
-              </a>
+                <h3 className="text-base font-semibold text-foreground mb-2">{way.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{way.description}</p>
+              </div>
             ))}
           </div>
         </section>

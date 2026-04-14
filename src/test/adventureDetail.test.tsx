@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ConsentProvider } from '@/hooks/useConsent';
@@ -77,5 +77,72 @@ describe('ChallengeDetail', () => {
       </ConsentProvider>
     );
     expect(screen.getByText('Challenge not found.')).toBeTruthy();
+  });
+});
+
+describe('AdventureDetail - technology filter', () => {
+  const wrapper = (
+    <ConsentProvider>
+      <HelmetProvider>
+        <MemoryRouter initialEntries={[`/adventures/${adventure.id}`]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <Routes>
+            <Route path="/adventures/:id" element={<AdventureDetail />} />
+            <Route path="/adventures/:id/levels/:levelId" element={<ChallengeDetail />} />
+          </Routes>
+        </MemoryRouter>
+      </HelmetProvider>
+    </ConsentProvider>
+  );
+
+  it('clicking a technology chip shows related challenge cards', () => {
+    render(wrapper);
+    const tag = adventure.tags[0];
+    const chip = screen.getByRole('button', { name: tag });
+    const initialOccurrences = screen.getAllByText(adventure.levels[0].name).length;
+    fireEvent.click(chip);
+    expect(screen.getByRole('button', { name: tag }).getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getAllByText(adventure.levels[0].name).length).toBeGreaterThan(initialOccurrences);
+  });
+
+  it('clicking the same technology chip again hides the challenge cards', () => {
+    render(wrapper);
+    const tag = adventure.tags[0];
+    const chip = screen.getByRole('button', { name: tag });
+    fireEvent.click(chip);
+    fireEvent.click(chip);
+    expect(chip.getAttribute('aria-pressed')).toBe('false');
+  });
+});
+
+describe('ChallengeDetail - technology filter', () => {
+  const wrapper = (
+    <ConsentProvider>
+      <HelmetProvider>
+        <MemoryRouter initialEntries={[`/adventures/${adventure.id}/levels/${level.id}`]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <Routes>
+            <Route path="/adventures/:id/levels/:levelId" element={<ChallengeDetail />} />
+          </Routes>
+        </MemoryRouter>
+      </HelmetProvider>
+    </ConsentProvider>
+  );
+
+  it('clicking a technology chip shows related challenge cards', () => {
+    render(wrapper);
+    const tag = adventure.tags[0];
+    const chip = screen.getByRole('button', { name: tag });
+    const initialOccurrences = screen.getAllByText(adventure.levels[0].name).length;
+    fireEvent.click(chip);
+    expect(chip.getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getAllByText(adventure.levels[0].name).length).toBeGreaterThan(initialOccurrences);
+  });
+
+  it('clicking the same technology chip again hides the challenge cards', () => {
+    render(wrapper);
+    const tag = adventure.tags[0];
+    const chip = screen.getByRole('button', { name: tag });
+    fireEvent.click(chip);
+    fireEvent.click(chip);
+    expect(chip.getAttribute('aria-pressed')).toBe('false');
   });
 });

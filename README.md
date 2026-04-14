@@ -1,6 +1,6 @@
 # offon.dev
 
-The source for [offon.dev](https://offon.dev/), a static React website for the Open Ecosystem community. Hands-on challenges, documentation, and community links.
+The source for [offon.dev](https://offon.dev/), a static React website for the OffOn community. Hands-on challenges, documentation, and community links.
 
 ## Tech Stack
 
@@ -84,9 +84,10 @@ public/
 | `/about` | `About.tsx` | About the community |
 | `/docs` | redirects to `/docs/community-guide` | |
 | `/docs/community-guide` | `CommunityGuide.tsx` | Community documentation |
-| `/topics/:tag` | `TopicPage.tsx` | Topic / tag filtered view |
 | `/privacy` | `Privacy.tsx` | GDPR-compliant privacy policy |
 | `*` | `NotFound.tsx` | 404 fallback |
+
+> **Technology tag filtering** is handled inline on the home page, adventure detail, and challenge detail pages via local `useState`. There is no dedicated `/topics/:tag` route.
 
 ## Analytics and Privacy
 

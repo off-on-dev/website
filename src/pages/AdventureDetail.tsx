@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { ADVENTURES } from "@/data/adventures";
@@ -6,9 +7,12 @@ import { Footer } from "@/components/Footer";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 
+const ALL_TAGS = Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort();
+
 const AdventureDetail = (): JSX.Element => {
   const { id } = useParams<{ id: string }>();
   const adventure = ADVENTURES.find((a) => a.id === id);
+  const [activeTech, setActiveTech] = useState<string | null>(null);
 
   if (!adventure) {
     return (
@@ -21,6 +25,18 @@ const AdventureDetail = (): JSX.Element => {
   const pageTitle = `${adventure.title} - ${BRAND_NAME} Adventures`;
   const pageDesc = adventure.story;
   const pageUrl = `${SITE_URL}/adventures/${adventure.id}`;
+
+  const relatedLevels = activeTech
+    ? ADVENTURES
+        .filter((a) => a.tags.includes(activeTech))
+        .flatMap((a) =>
+          a.levels.map((lvl) => ({
+            level: lvl,
+            adventureId: a.id,
+            adventureTitle: a.title,
+          }))
+        )
+    : [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -46,22 +62,11 @@ const AdventureDetail = (): JSX.Element => {
             {adventure.month}
           </span>
           <h1 className="text-4xl font-bold text-foreground mb-4">{adventure.title}</h1>
-          <p className="text-[hsl(var(--text-secondary))] leading-relaxed mb-6">{adventure.story}</p>
-          <div className="flex flex-wrap gap-1.5">
-            {adventure.tags.map((tag) => (
-              <Link
-                key={tag}
-                to={`/topics/${encodeURIComponent(tag)}`}
-                className="tag-chip rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary/60 hover:text-primary hover:bg-primary/5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1"
-              >
-                {tag}
-              </Link>
-            ))}
-          </div>
+          <p className="text-[hsl(var(--text-secondary))] leading-relaxed">{adventure.story}</p>
         </div>
 
         {/* Challenges */}
-        <div>
+        <div className="mb-16">
           <h2 className="font-mono text-xs font-medium uppercase tracking-widest text-primary mb-6">
             Challenges
           </h2>
@@ -97,6 +102,58 @@ const AdventureDetail = (): JSX.Element => {
               </Link>
             ))}
           </div>
+        </div>
+
+        {/* Find challenges by technology */}
+        <div>
+          <h2 className="font-mono text-xs font-medium uppercase tracking-widest text-primary mb-4">
+            Find challenges by technology
+          </h2>
+          <div className="mb-6 flex flex-wrap gap-2">
+            {ALL_TAGS.map((tag) => (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => setActiveTech(activeTech === tag ? null : tag)}
+                className={activeTech === tag ? "pill-active" : "pill-inactive"}
+                aria-pressed={activeTech === tag}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+          {activeTech && relatedLevels.length > 0 && (
+            <div key={activeTech} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {relatedLevels.map(({ level, adventureId, adventureTitle }) => (
+                <Link
+                  key={`${adventureId}-${level.id}`}
+                  to={`/adventures/${adventureId}/levels/${level.id}`}
+                  className="group card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 animate-fade-up-delay-1"
+                >
+                  <div className="mb-3">
+                    <DifficultyBadge difficulty={level.difficulty} showDot />
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+                    {level.name}
+                  </h3>
+                  <ul className="mt-3 space-y-1.5">
+                    {level.learnings.slice(0, 3).map((learning, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                        {learning}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-auto pt-4 flex flex-wrap gap-1.5 items-center justify-between">
+                    <span className="font-mono text-xs text-muted-foreground">Challenge</span>
+                    <span className="rounded-sm border border-[hsl(var(--surface-border))] px-2 py-0.5 text-xs text-[hsl(var(--text-faint))]">
+                      {adventureTitle}
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
       <Footer />

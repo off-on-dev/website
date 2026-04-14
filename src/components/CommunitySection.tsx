@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { COMMUNITY_URL } from "@/data/constants";
+import { COMMUNITY_URL, COMMUNITY_DISPLAY_NAME, BRAND_NAME } from "@/data/constants";
 
 const highlights = [
   { emoji: "💬", text: "Active discussions on open source challenges, tutorials, and real-world incidents" },
   { emoji: "🎤", text: "Community-hosted events, webinars, and local meetups you can add to the calendar" },
-  { emoji: "📍", text: "Local Open Ecosystem meetups: find your city and join community discussions" },
+  { emoji: "📍", text: `Local ${BRAND_NAME} meetups: find your city and join community discussions` },
   { emoji: "🌱", text: "A welcoming space to introduce yourself, ask questions, and grow in public" },
 ];
 
@@ -23,7 +23,7 @@ export const CommunitySection = (): JSX.Element => {
                 Find your people
               </h2>
               <p className="mt-4 text-[hsl(var(--text-secondary))] leading-relaxed">
-                community.open-ecosystem.com is where the conversations happen. Browse discussions, share what you've built, ask questions, and connect with people who care about the same things.
+                {COMMUNITY_DISPLAY_NAME} is where the conversations happen. Browse discussions, share what you've built, ask questions, and connect with people who care about the same things.
               </p>
               <p className="mt-3 text-[hsl(var(--text-secondary))] leading-relaxed">
                 Mission-driven. Community-powered. Open by design.

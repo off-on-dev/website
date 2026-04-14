@@ -35,6 +35,7 @@ Discourse functionality here.
 - PR preview deployments are served from the gh-pages branch under /pr-preview/pr-{number}/.
 - The open source challenges content lives in a separate organisation at https://github.com/dynatrace-oss/open-ecosystem-challenges. This is an intentional external link and must never be changed or flagged as a violation.
 - The community Discourse instance is at https://community.open-ecosystem.com. Use the COMMUNITY_URL constant from src/data/constants.ts, never hardcode this URL.
+- COMMUNITY_DISPLAY_NAME is defined in src/data/constants.ts as the user-facing display name for the community URL. Use it for visible text, use COMMUNITY_URL for href attributes.
 
 ---
 
@@ -246,6 +247,7 @@ these rules.
 
 ### Brand Name
 - The brand is always written **OffOn** (camelCase). Never "offon", "Offon", or "OFFON".
+- The community was previously known as "Open Ecosystem". That name is retired. Never use it anywhere in code, copy, comments, or documentation.
 - In code, always use the `BRAND_NAME` constant from `src/data/constants.ts` instead of hardcoding the string.
 - The domain `offon.dev` is always lowercase (it is a URL, not a brand mention).
 
