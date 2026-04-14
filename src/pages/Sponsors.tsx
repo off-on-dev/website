@@ -92,7 +92,7 @@ const Sponsors = (): JSX.Element => {
                   className="card-glow shrink-0 flex items-center justify-center rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-8 py-6 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
                 >
                   {logoSrc ? (
-                    <img src={logoSrc} alt="Dynatrace" width={240} height={43} className="h-10 w-auto" />
+                    <img src={logoSrc} alt={s.name} width={240} height={43} className="h-10 w-auto" />
                   ) : (
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-lg font-bold text-primary">
                       {s.name[0]}

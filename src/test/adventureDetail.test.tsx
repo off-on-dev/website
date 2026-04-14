@@ -98,10 +98,10 @@ describe('AdventureDetail - technology filter', () => {
     render(wrapper);
     const tag = adventure.tags[0];
     const chip = screen.getByRole('button', { name: tag });
+    const initialOccurrences = screen.getAllByText(adventure.levels[0].name).length;
     fireEvent.click(chip);
     expect(screen.getByRole('button', { name: tag }).getAttribute('aria-pressed')).toBe('true');
-    // The level names from this adventure should now appear in the related section
-    expect(screen.getAllByText(adventure.levels[0].name).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(adventure.levels[0].name).length).toBeGreaterThan(initialOccurrences);
   });
 
   it('clicking the same technology chip again hides the challenge cards', () => {
@@ -131,9 +131,10 @@ describe('ChallengeDetail - technology filter', () => {
     render(wrapper);
     const tag = adventure.tags[0];
     const chip = screen.getByRole('button', { name: tag });
+    const initialOccurrences = screen.getAllByText(adventure.levels[0].name).length;
     fireEvent.click(chip);
     expect(chip.getAttribute('aria-pressed')).toBe('true');
-    expect(screen.getAllByText(adventure.levels[0].name).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(adventure.levels[0].name).length).toBeGreaterThan(initialOccurrences);
   });
 
   it('clicking the same technology chip again hides the challenge cards', () => {
