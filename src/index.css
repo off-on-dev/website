@@ -167,66 +167,75 @@
   }
 
   .light {
+    /* Core */
     --background: 0 0% 100%;
-    --foreground: 230 42% 9%;
+    --foreground: 204 22% 9%;
 
-    --card: 223 100% 99%;
-    --card-foreground: 230 42% 9%;
+    --card: 230 100% 99%;
+    --card-foreground: 204 22% 9%;
 
-    --popover: 223 100% 99%;
-    --popover-foreground: 230 42% 9%;
+    --popover: 230 100% 99%;
+    --popover-foreground: 204 22% 9%;
 
-    --primary: 220 77% 49%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 43 100% 50%;
+    --primary-foreground: 204 22% 9%;
 
-    --secondary: 221 45% 89%;
-    --secondary-foreground: 229 39% 19%;
+    --secondary: 230 60% 97%;
+    --secondary-foreground: 204 22% 9%;
 
-    --muted: 221 45% 89%;
-    --muted-foreground: 228 46% 17%;
+    --muted: 230 60% 97%;
+    --muted-foreground: 0 0% 29%;
 
-    --accent: 220 77% 49%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 43 100% 46%;
+    --accent-foreground: 204 22% 9%;
 
     --destructive: 0 84% 40%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 222 73% 78%;
-    --input: 223 67% 73%;
-    --ring: 220 77% 49%;
+    --border: 230 20% 85%;
+    --input: 230 20% 85%;
+    --ring: 204 22% 9%;
 
-    /* Custom tokens */
-    --text-primary: 230 42% 9%;
-    --text-secondary: 229 39% 19%;
-    --text-tertiary: 228 46% 17%;
-    --text-muted: 228 46% 17%;
-    --text-faint: 228 46% 17%;
+    /* Custom text tokens */
+    --text-primary: 204 22% 9%;
+    --text-secondary: 0 0% 20%;
+    --text-tertiary: 0 0% 29%;
+    --text-muted: 0 0% 29%;
+    --text-faint: 0 0% 29%;
 
-    --surface: 223 100% 99%;
-    --surface-border: 222 73% 78%;
-    --surface-hover: 221 45% 96%;
-    --accent-subtle: 221 92% 95%;
+    /* Custom surface tokens */
+    --surface: 230 100% 99%;
+    --surface-border: 230 20% 85%;
+    --surface-hover: 230 40% 95%;
+    --accent-subtle: 43 100% 94%;
 
-    --electric: 220 77% 49%;
-    --emerald: 220 77% 49%;
-    --teal: 210 100% 40%;
-    --purple: 225 80% 45%;
+    /* Color aliases */
+    --electric: 43 100% 46%;
+    --emerald: 43 100% 46%;
+    --teal: 204 22% 9%;
+    --purple: 204 22% 9%;
 
-    --difficulty-starter: 220 77% 49%;
-    --difficulty-builder: 220 77% 40%;
-    --difficulty-architect: 222 75% 30%;
+    /* Difficulty badges */
+    --difficulty-starter: 204 22% 9%;
+    --difficulty-builder: 204 22% 9%;
+    --difficulty-architect: 204 22% 9%;
 
-    --type-simulation: 200 100% 38%;
-    --type-interactive: 220 77% 49%;
+    /* Type badges */
+    --type-simulation: 204 22% 9%;
+    --type-interactive: 204 22% 9%;
 
-    --sidebar-background: 223 100% 99%;
-    --sidebar-foreground: 230 42% 9%;
-    --sidebar-primary: 220 77% 49%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 221 45% 89%;
-    --sidebar-accent-foreground: 230 42% 9%;
-    --sidebar-border: 222 73% 78%;
-    --sidebar-ring: 220 77% 49%;
+    /* Sidebar */
+    --sidebar-background: 230 100% 99%;
+    --sidebar-foreground: 204 22% 9%;
+    --sidebar-primary: 43 100% 46%;
+    --sidebar-primary-foreground: 204 22% 9%;
+    --sidebar-accent: 230 60% 97%;
+    --sidebar-accent-foreground: 204 22% 9%;
+    --sidebar-border: 0 0% 83%;
+    --sidebar-ring: 204 22% 9%;
+
+    /* text-primary used as text color overrides */
+    --primary-text-override: 204 22% 9%;
   }
 }
 
@@ -253,6 +262,115 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Syne', sans-serif;
     color: hsl(var(--primary));
+  }
+
+  .light h1,
+  .light h2,
+  .light h3,
+  .light h4,
+  .light h5,
+  .light h6 {
+    color: hsl(204 22% 9%);
+  }
+
+  .light .text-primary {
+    color: hsl(204 22% 9%);
+  }
+
+  .light a.text-primary,
+  .light a:hover.text-primary {
+    color: hsl(204 22% 9%);
+  }
+
+  .light .btn-ghost:hover {
+    color: hsl(204 22% 9%);
+  }
+
+  .light .btn-soft {
+    color: hsl(204 22% 9%);
+    background-color: hsl(43 100% 50% / 0.12);
+    border-color: hsl(43 100% 50% / 0.35);
+    outline: 1.5px solid hsl(43 100% 50% / 0.5);
+    outline-offset: 1px;
+  }
+
+  .light .btn-primary {
+    box-shadow: 0 0 0 2px hsl(43 100% 40% / 0.4);
+  }
+
+  .light .pill-active {
+    color: hsl(204 22% 9%);
+    background-color: hsl(43 100% 50% / 0.15);
+    border-color: hsl(43 100% 50% / 0.5);
+  }
+
+  .light .pill-inactive:hover {
+    color: hsl(204 22% 9%);
+  }
+
+  .light .bg-primary .text-background,
+  .light .bg-primary .text-background\/90,
+  .light .bg-primary h1,
+  .light .bg-primary h2,
+  .light .bg-primary h3,
+  .light .bg-primary p,
+  .light .bg-primary strong,
+  .light .bg-primary span {
+    color: hsl(204 22% 9%);
+  }
+
+  .light .btn-ghost-inverse {
+    color: hsl(204 22% 9%);
+    border-color: hsl(204 22% 9% / 0.5);
+  }
+
+  .light .btn-ghost-inverse:hover {
+    background-color: hsl(204 22% 9%);
+    border-color: hsl(204 22% 9%);
+    color: hsl(43 100% 50%);
+  }
+
+  .light .bg-primary .btn-inverse {
+    background-color: hsl(204 22% 9%);
+    color: hsl(43 100% 50%);
+    border-color: hsl(204 22% 9%);
+  }
+
+  .light .bg-primary .btn-inverse:hover {
+    background-color: hsl(204 22% 9%);
+    color: hsl(43 100% 50%);
+    border-color: hsl(43 100% 50%);
+    outline: 2px solid hsl(43 100% 50%);
+    outline-offset: 2px;
+  }
+
+  .light .bg-primary .btn-ghost-inverse {
+    background-color: transparent;
+    color: hsl(204 22% 9%);
+    border-color: hsl(204 22% 9% / 0.6);
+  }
+
+  .light .bg-primary .btn-ghost-inverse:hover {
+    background-color: hsl(204 22% 9%);
+    color: hsl(43 100% 50%);
+    border-color: hsl(204 22% 9%);
+  }
+
+  .light nav a {
+    padding: 2px 8px;
+    border-radius: 4px;
+    transition: background-color 0.15s ease;
+  }
+
+  .light nav a:hover {
+    color: hsl(204 22% 9%);
+    background-color: hsl(43 100% 50% / 0.08);
+  }
+
+  .light nav a.text-primary {
+    color: hsl(204 22% 9%);
+    font-weight: 600;
+    background-color: hsl(43 100% 50% / 0.12);
   }
 
   code, pre, .font-code {
@@ -359,12 +477,24 @@
 
   /* Inverse button - for use on primary-colored section backgrounds */
   .btn-inverse {
-    @apply inline-flex items-center gap-2 rounded-md bg-background text-primary font-bold text-sm px-5 py-2.5 border-2 border-primary transition-all hover:bg-primary hover:border-primary-foreground hover:text-primary-foreground hover:scale-[1.02] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md bg-background text-primary font-bold text-sm px-5 py-2.5 border-2 border-primary transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2;
+  }
+  .btn-inverse:hover {
+    background-color: hsl(var(--primary));
+    border-color: hsl(var(--primary-foreground));
+    color: hsl(var(--primary-foreground));
+    transform: scale(1.02);
   }
 
   /* Ghost inverse button - for use on primary-colored section backgrounds */
   .btn-ghost-inverse {
-    @apply inline-flex items-center gap-2 rounded-md bg-transparent text-background font-bold text-sm px-5 py-2.5 border-2 border-background/70 transition-all hover:bg-primary-foreground hover:border-primary-foreground hover:text-primary hover:scale-[1.02] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background/60 focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md bg-transparent text-background font-bold text-sm px-5 py-2.5 border-2 border-background/70 transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background/60 focus-visible:ring-offset-2;
+  }
+  .btn-ghost-inverse:hover {
+    background-color: hsl(var(--primary-foreground));
+    border-color: hsl(var(--primary-foreground));
+    color: hsl(var(--primary));
+    transform: scale(1.02);
   }
 
   /* Filter pills - smaller, lighter weight than action buttons */

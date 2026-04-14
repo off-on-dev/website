@@ -6,9 +6,9 @@ type Difficulty = AdventureLevel["difficulty"];
 
 const badgeStyle: Record<Difficulty, CSSProperties> = {
   Beginner: {
-    color: "hsl(var(--primary))",
-    borderColor: "hsl(var(--primary) / 0.35)",
-    backgroundColor: "hsl(var(--primary) / 0.1)",
+    color: "hsl(var(--difficulty-starter))",
+    borderColor: "hsl(var(--difficulty-starter) / 0.35)",
+    backgroundColor: "hsl(var(--difficulty-starter) / 0.1)",
   },
   Intermediate: {
     color: "hsl(var(--difficulty-builder))",
@@ -23,7 +23,7 @@ const badgeStyle: Record<Difficulty, CSSProperties> = {
 };
 
 const dotColorClass: Record<Difficulty, string> = {
-  Beginner: "bg-primary",
+  Beginner: "bg-[hsl(var(--difficulty-starter))]",
   Intermediate: "bg-[hsl(var(--difficulty-builder))]",
   Expert: "bg-[hsl(var(--difficulty-architect))]",
 };

@@ -23,7 +23,7 @@ export const Hero = (): JSX.Element => {
               <span className="text-xs text-foreground">Community-driven</span>
             </div>
             <h1 className="animate-fade-up-delay-1 text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-              <span className="bg-gradient-to-r from-primary via-primary/70 to-[hsl(var(--teal))] bg-clip-text text-transparent">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground/70 to-[hsl(var(--teal))] dark:from-primary dark:via-primary/70 dark:to-[hsl(var(--teal))]">
                 Break things.
               </span>
               <br />

@@ -31,7 +31,7 @@ function stripHtml(html: string): string {
 }
 
 const avatarPalette: CSSProperties[] = [
-  { backgroundColor: "hsl(var(--primary) / 0.2)", color: "hsl(var(--primary))" },
+  { backgroundColor: "hsl(var(--primary) / 0.2)", color: "hsl(var(--foreground))" },
   { backgroundColor: "hsl(var(--difficulty-architect) / 0.2)", color: "hsl(var(--difficulty-architect))" },
   { backgroundColor: "hsl(var(--teal) / 0.2)", color: "hsl(var(--teal))" },
   { backgroundColor: "hsl(var(--difficulty-builder) / 0.2)", color: "hsl(var(--difficulty-builder))" },
