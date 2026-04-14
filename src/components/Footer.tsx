@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
-import { COMMUNITY_URL } from "@/data/constants";
+import { COMMUNITY_URL, BRAND_NAME } from "@/data/constants";
 import { CookiePreferencesLink } from "@/components/CookiePreferencesLink";
 import logoDark from "@/assets/offon-logo-dark-color.svg";
 import logoLight from "@/assets/offon-logo-light-color.svg";
@@ -65,7 +65,11 @@ export const Footer = (): JSX.Element => {
       {/* Bottom strip */}
       <div className="border-t border-[hsl(var(--surface-border))] py-4">
         <div className="mx-auto max-w-6xl flex items-center justify-between gap-4">
-          <span className="text-xs text-[hsl(var(--text-faint))]">Vendor-neutral · Open source · Community-driven</span>
+          <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
+            <span className="text-xs text-[hsl(var(--text-faint))]">© {new Date().getFullYear()} {BRAND_NAME}. All rights reserved.</span>
+            <span className="hidden sm:inline text-xs text-[hsl(var(--text-faint))]">·</span>
+            <span className="text-xs text-[hsl(var(--text-faint))]">Vendor-neutral · Open source · Community-driven</span>
+          </div>
           {/* Social icons - add more here as needed */}
           <div className="flex items-center gap-3">
             <a
