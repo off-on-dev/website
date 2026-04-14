@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
-import { COMMUNITY_URL } from "@/data/constants";
+import { COMMUNITY_URL, BRAND_NAME } from "@/data/constants";
+import { CookiePreferencesLink } from "@/components/CookiePreferencesLink";
 import logoDark from "@/assets/offon-logo-dark-color.svg";
 import logoLight from "@/assets/offon-logo-light-color.svg";
 
@@ -53,7 +54,8 @@ export const Footer = (): JSX.Element => {
             <p className="text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">Policies</p>
             <a href={`${COMMUNITY_URL}/t/code-of-conduct/31/1`} target="_blank" rel="noopener noreferrer" className={lnk}>Code of Conduct<span className="sr-only"> (opens in new tab)</span></a>
             <a href={`${COMMUNITY_URL}/t/posting-guidelines/30`} target="_blank" rel="noopener noreferrer" className={lnk}>Posting Guidelines<span className="sr-only"> (opens in new tab)</span></a>
-            <a href={`${COMMUNITY_URL}/t/privacy-policy/22`} target="_blank" rel="noopener noreferrer" className={lnk}>Privacy Policy<span className="sr-only"> (opens in new tab)</span></a>
+            <Link to="/privacy" className={lnk}>Privacy Policy</Link>
+            <CookiePreferencesLink className={lnk} />
             <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" className={lnk}>Contributing<span className="sr-only"> (opens in new tab)</span></a>
           </nav>
 
@@ -63,7 +65,11 @@ export const Footer = (): JSX.Element => {
       {/* Bottom strip */}
       <div className="border-t border-[hsl(var(--surface-border))] py-4">
         <div className="mx-auto max-w-6xl flex items-center justify-between gap-4">
-          <span className="text-xs text-[hsl(var(--text-faint))]">Vendor-neutral · Open source · Community-driven</span>
+          <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
+            <span className="text-xs text-[hsl(var(--text-faint))]">© {new Date().getFullYear()} {BRAND_NAME}. All rights reserved.</span>
+            <span className="hidden sm:inline text-xs text-[hsl(var(--text-faint))]">·</span>
+            <span className="text-xs text-[hsl(var(--text-faint))]">Vendor-neutral · Open source · Community-driven</span>
+          </div>
           {/* Social icons - add more here as needed */}
           <div className="flex items-center gap-3">
             <a
