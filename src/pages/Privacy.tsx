@@ -7,8 +7,8 @@ import { SITE_URL, COMMUNITY_URL, BRAND_NAME } from "@/data/constants";
 const LAST_UPDATED = "13 April 2026";
 
 const Privacy = (): JSX.Element => {
-  const h2 = "text-lg font-heading font-semibold text-foreground mt-10 mb-3";
-  const h3 = "text-base font-heading font-semibold text-foreground mt-6 mb-2";
+  const h2 = "text-xl font-heading font-semibold text-foreground mt-10 mb-3";
+  const h3 = "text-lg font-heading font-semibold text-foreground mt-6 mb-2";
   const p = "text-sm text-muted-foreground leading-relaxed mb-4";
   const ul = "list-disc list-inside space-y-1 text-sm text-muted-foreground mb-4 ml-2";
   const a = "underline underline-offset-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm";
@@ -23,7 +23,9 @@ const Privacy = (): JSX.Element => {
         <meta property="og:description" content="Privacy policy for offon.dev." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/privacy`} />
-        <meta name="twitter:card" content="summary" />
+        <meta property="og:image" content={`${SITE_URL}/og.png`} />
+        <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`Privacy Policy - ${BRAND_NAME}`} />
         <meta name="twitter:description" content="Privacy policy for offon.dev. Explains how we collect and use analytics data and your rights under GDPR." />
         <meta name="robots" content="noindex" />

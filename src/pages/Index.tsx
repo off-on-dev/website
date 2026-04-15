@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
+import { ArrowUpRight } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { ChallengesGrid } from "@/components/ChallengesGrid";
@@ -39,33 +40,35 @@ const Index = (): JSX.Element => {
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
       </Helmet>
       <Navbar />
-      <Hero />
-      <ChallengesGrid />
-      <section className="bg-primary py-16 px-6 md:px-16">
-        <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <h2 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background">
-            Got an idea<br />for an adventure?
-          </h2>
-          <div className="flex flex-col gap-4">
-            <p className="font-mono text-sm leading-relaxed text-background/90">
-              Shape what the community learns next. Got a scenario worth exploring? Submit a concept and help it become the next adventure.
-            </p>
-            <div className="flex gap-3 flex-wrap mt-2">
-              <a
-                href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-inverse"
-              >
-                Propose an adventure idea ↗<span className="sr-only"> (opens in new tab)</span>
-              </a>
+      <main>
+        <Hero />
+        <ChallengesGrid />
+        <section className="bg-primary py-16 px-6 md:px-16">
+          <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <h2 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background">
+              Got an idea<br />for an adventure?
+            </h2>
+            <div className="flex flex-col gap-4">
+              <p className="font-mono text-sm leading-relaxed text-background/90">
+                Shape what the community learns next. Got a scenario worth exploring? Submit a concept and help it become the next adventure.
+              </p>
+              <div className="flex gap-3 flex-wrap mt-2">
+                <a
+                  href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-inverse"
+                >
+                  Propose an adventure idea <ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-      <CommunityVoicesSection />
-      <ConnectSection />
-      <BottomCTA />
+        </section>
+        <CommunityVoicesSection />
+        <ConnectSection />
+        <BottomCTA />
+      </main>
       <Footer />
     </div>
   );

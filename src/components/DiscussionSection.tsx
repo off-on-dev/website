@@ -1,4 +1,5 @@
 import { useState, useEffect, type CSSProperties } from "react";
+import { ArrowRight } from "lucide-react";
 import { COMMUNITY_URL, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
 
 type DiscoursePost = {
@@ -108,9 +109,9 @@ export const DiscussionSection = ({ discussionUrls }: DiscussionSectionProps): J
             href={discussionUrls[0] || COMMUNITY_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 inline-flex text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
+            className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
           >
-            Join the discussion on {COMMUNITY_DISPLAY_NAME} →
+            Join the discussion on {COMMUNITY_DISPLAY_NAME} <ArrowRight size={13} aria-hidden="true" />
           </a>
         </>
       ) : (
@@ -147,9 +148,9 @@ export const DiscussionSection = ({ discussionUrls }: DiscussionSectionProps): J
             href={discussionUrls[0] || COMMUNITY_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 inline-flex text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
+            className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
           >
-            Join the discussion on {COMMUNITY_DISPLAY_NAME} →
+            Join the discussion on {COMMUNITY_DISPLAY_NAME} <ArrowRight size={13} aria-hidden="true" />
           </a>
         </>
       )}

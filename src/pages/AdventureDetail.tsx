@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { ArrowRight } from "lucide-react";
 import { ADVENTURES } from "@/data/adventures";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -55,7 +56,7 @@ const AdventureDetail = (): JSX.Element => {
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
       </Helmet>
       <Navbar />
-      <div className="mx-auto max-w-4xl px-6 pt-28 pb-24">
+      <main className="mx-auto max-w-4xl px-6 pt-28 pb-24">
         {/* Header */}
         <div className="mb-10">
           <span className="inline-block mb-4 rounded-sm border border-[hsl(var(--surface-border))] px-2 py-0.5 font-mono text-xs text-[hsl(var(--text-faint))] uppercase tracking-wider">
@@ -80,7 +81,7 @@ const AdventureDetail = (): JSX.Element => {
                 <div className="mb-3">
                   <DifficultyBadge difficulty={level.difficulty} showDot />
                 </div>
-                <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors mb-3">
+                <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors mb-3">
                   {level.name}
                 </h3>
                 <ul className="space-y-1.5 flex-1">
@@ -96,8 +97,8 @@ const AdventureDetail = (): JSX.Element => {
                     </li>
                   )}
                 </ul>
-                <span className="mt-5 text-xs font-medium text-primary group-hover:underline">
-                  Start challenge →
+                <span className="mt-5 inline-flex items-center gap-1 text-xs font-medium text-primary group-hover:underline">
+                  Start challenge <ArrowRight size={12} aria-hidden="true" />
                 </span>
               </Link>
             ))}
@@ -155,7 +156,7 @@ const AdventureDetail = (): JSX.Element => {
             </div>
           )}
         </div>
-      </div>
+      </main>
       <Footer />
     </div>
   );

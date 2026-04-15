@@ -15,7 +15,7 @@ const AdventureCard = ({ adventure }: { adventure: Adventure }): JSX.Element => 
   >
     <div className="flex items-center justify-between mb-3">
       <span className="font-mono text-xs text-muted-foreground">Adventure</span>
-      <span className="inline-flex items-center gap-1.5 rounded-sm border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-xs uppercase tracking-wider text-primary">
+      <span className="badge-levels inline-flex items-center gap-1.5 rounded-sm border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-xs uppercase tracking-wider text-primary">
         <Layers className="h-3 w-3" />
         3 Levels
       </span>
@@ -65,7 +65,7 @@ export const ChallengesGrid = (): JSX.Element => {
         {isVisible && (
           <>
             <div className="animate-fade-up mb-3">
-              <span className="font-mono text-xs font-medium uppercase tracking-widest text-primary">Adventures</span>
+              <span className="section-label font-mono text-xs font-medium uppercase tracking-widest text-primary">Adventures</span>
             </div>
             <h2 className="animate-fade-up-delay-1 mb-6 text-3xl font-bold text-primary md:text-4xl">
               Choose your adventure

@@ -1,19 +1,29 @@
+import { type ReactNode } from "react";
+import { ArrowRight, Megaphone, CircleHelp } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { COMMUNITY_URL } from "@/data/constants";
 
-const pillars = [
+type Pillar = {
+  icon: ReactNode;
+  title: string;
+  desc: string;
+  cta: string;
+  href: string;
+}
+
+const pillars: Pillar[] = [
   {
-    icon: "🎙️",
+    icon: <Megaphone size={28} aria-hidden="true" />,
     title: "Community Voices",
     desc: "Share tutorials, showcase projects, post open source news, and write about what you have learned. The home for community-created content.",
-    cta: "Share something →",
+    cta: "Share something",
     href: `${COMMUNITY_URL}/c/community-voices/38`,
   },
   {
-    icon: "❓",
+    icon: <CircleHelp size={28} aria-hidden="true" />,
     title: "Q&A",
     desc: "Stuck on a technical problem or not sure where to start with open source? Post a question and get answers from the community. No question is too basic.",
-    cta: "Ask a question →",
+    cta: "Ask a question",
     href: `${COMMUNITY_URL}/c/general/q-a/10`,
   },
 ];
@@ -27,7 +37,7 @@ export const CommunityVoicesSection = (): JSX.Element => {
         {isVisible && (
           <>
             <div className="animate-fade-up mb-3">
-              <span className="font-mono text-xs font-medium uppercase tracking-widest text-primary">
+              <span className="section-label font-mono text-xs font-medium uppercase tracking-widest text-primary">
                 Community
               </span>
             </div>
@@ -43,16 +53,16 @@ export const CommunityVoicesSection = (): JSX.Element => {
                   key={p.title}
                   className="card-glow flex flex-col rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8"
                 >
-                  <span className="text-3xl mb-4" aria-hidden="true">{p.icon}</span>
-                  <h3 className="text-lg font-semibold text-foreground">{p.title}</h3>
+                  <span className="mb-4 text-primary">{p.icon}</span>
+                  <h3 className="text-xl font-semibold text-foreground">{p.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground flex-1">{p.desc}</p>
                   <a
                     href={p.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-5 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
+                    className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
                   >
-                    {p.cta}
+                    {p.cta} <ArrowRight size={13} aria-hidden="true" />
                   </a>
                 </div>
               ))}
