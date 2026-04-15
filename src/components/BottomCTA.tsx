@@ -1,3 +1,4 @@
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { COMMUNITY_URL, BRAND_NAME } from "@/data/constants";
 
@@ -41,7 +42,7 @@ export const BottomCTA = (): JSX.Element => {
                 rel="noopener noreferrer"
               className="btn-inverse"
               >
-                Join the community →<span className="sr-only"> (opens in new tab)</span>
+                Join the community <ArrowRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
               </a>
               <a
                 href="https://github.com/dynatrace-oss/open-ecosystem-challenges"
@@ -49,7 +50,7 @@ export const BottomCTA = (): JSX.Element => {
                 rel="noopener noreferrer"
               className="btn-ghost-inverse"
               >
-                GitHub ↗<span className="sr-only"> (opens in new tab)</span>
+                GitHub <ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
               </a>
             </div>
           </div>

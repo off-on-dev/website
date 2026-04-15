@@ -14,13 +14,30 @@ The domain `offon.dev` is always lowercase (it is a URL, not a brand mention).
 
 ### Fonts
 
-| Role | Family | Weights | Source |
+| Role | Family | Key weights | Format |
 |---|---|---|---|
-| Headings (`h1`–`h6`) | Syne | 400, 500, 600, 700, 800 | Self-hosted `public/fonts/Syne-*.ttf` |
-| Body & UI (`font-sans`) | Inter | 400, 500, 600, 700 | Self-hosted `public/fonts/Inter_18pt-*.ttf` |
-| Code / Mono (`font-mono`, `code`, `pre`) | Azeret Mono | 400, 500, 600 | Self-hosted `public/fonts/AzeretMono-*.ttf` |
+| Headings / display (`font-heading`) | Syne | 700 primary (400–800 available) | WOFF2 only (`public/fonts/syne-*.woff2`) |
+| Body & UI (`font-sans`) | Inter | 400, 500, 600 primary (700 available) | WOFF2 only (`public/fonts/inter-*.woff2`) |
+| Code / mono (`font-mono`, `code`, `pre`) | Azeret Mono | 400 primary (500, 600 available) | WOFF2 only (`public/fonts/azeret-mono-*.woff2`) |
 
-All fonts are fully self-hosted. No external network requests.
+All fonts are fully self-hosted as WOFF2. No TTF fallbacks. No external network requests.
+
+Subset coverage (via `unicode-range` in `src/index.css` -- only the needed subset downloads per user):
+
+| Family | Subsets |
+|---|---|
+| Inter | latin, latin-ext, cyrillic-ext, cyrillic, greek-ext, greek, vietnamese |
+| Syne | latin, latin-ext, greek |
+| Azeret Mono | latin, latin-ext |
+
+### Font preload
+
+Two Inter variants are preloaded in `index.html` to avoid the three-level font discovery delay (HTML parse → CSS parse → font file request):
+
+- `inter-latin-600-normal.woff2` — used by nav links and subheadings
+- `inter-latin-500-normal.woff2` — used by body medium weight
+
+Only Latin subset variants are preloaded. Other subsets (cyrillic, greek, vietnamese, etc.) are served from `public/fonts/` but are not preloaded.
 
 ### Tailwind font utilities
 
@@ -114,52 +131,26 @@ All color tokens are CSS custom properties defined in `src/index.css` and expose
 
 ### Light Mode (`.light`)
 
-| Token | HSL | Approx hex | Usage |
+| Token | Value | Hex | Notes |
 |---|---|---|---|
-| `--background` | `0 0% 100%` | `#ffffff` | Page background |
-| `--foreground` | `230 42% 9%` | `#0d1020` | Primary text |
-| `--card` | `223 100% 99%` | `#f8f9ff` | Card background |
-| `--card-foreground` | `230 42% 9%` | `#0d1020` | Text on cards |
-| `--primary` | `220 77% 49%` | `#2272e2` | Buttons, links |
-| `--primary-foreground` | `0 0% 100%` | `#ffffff` | Text on primary |
-| `--secondary` | `221 45% 89%` | `#ccd5ed` | Secondary backgrounds |
-| `--secondary-foreground` | `229 39% 19%` | `#1e2342` | Text on secondary |
-| `--muted` | `221 45% 89%` | `#ccd5ed` | Muted backgrounds |
-| `--muted-foreground` | `228 46% 17%` | `#1b2141` | Muted text |
-| `--accent` | `220 77% 49%` | `#2272e2` | Accent highlights |
-| `--accent-foreground` | `0 0% 100%` | `#ffffff` | Text on accent |
-| `--destructive` | `0 84% 40%` | `#bc1717` | Error / destructive |
-| `--destructive-foreground` | `0 0% 100%` | `#ffffff` | Text on destructive |
-| `--border` | `222 73% 78%` | `#91aae4` | Borders |
-| `--input` | `223 67% 73%` | `#84a0dc` | Input borders |
-| `--ring` | `220 77% 49%` | `#2272e2` | Focus ring |
+| Background | `hsl(230 100% 99%)` | `#FAFBFF` | |
+| Surface/card | `hsl(230 100% 98%)` | `#F5F7FF` | |
+| Surface hover | `hsl(225 100% 97%)` | `#F0F4FF` | |
+| Primary accent | `hsl(41 100% 60%)` | `#ffc034` | Fill only, never text |
+| Primary foreground | `hsl(0 0% 0%)` | `#000000` | Text on yellow |
+| Foreground/body | `hsl(240 30% 6%)` | `#0A0B14` | |
+| Headings | `hsl(0 0% 0%)` | `#000000` | |
+| Muted text | `hsl(0 0% 29%)` | `#4A4A4A` | |
+| Border | `hsl(230 20% 85%)` | | |
+| Badge: Beginner | `hsl(41 100% 82%)` | | Black text |
+| Badge: Intermediate | `hsl(41 100% 76%)` | | Black text |
+| Badge: Expert | `hsl(41 100% 68%)` | | Black text |
 
-#### Custom text tokens (light)
+#### `.light` override strategy
 
-| Token | HSL | Usage |
-|---|---|---|
-| `--text-primary` | `230 42% 9%` | Main content |
-| `--text-secondary` | `229 39% 19%` | Supporting text, nav links |
-| `--text-tertiary` | `228 46% 17%` | Tertiary text |
-| `--text-muted` | `228 46% 17%` | Captions, hints |
-| `--text-faint` | `228 46% 17%` | Disabled / very subtle |
+Yellow (`hsl(41 100% 60%)`) is the global `--primary` color and is safe as a fill or border. It must **never** be used as a text color in light mode because it fails contrast requirements.
 
-#### Surface tokens (light)
-
-| Token | HSL | Usage |
-|---|---|---|
-| `--surface` | `223 100% 99%` | Card / section backgrounds |
-| `--surface-border` | `222 73% 78%` | Surface borders |
-| `--surface-hover` | `221 45% 96%` | Hover states on surfaces |
-| `--accent-subtle` | `221 92% 95%` | Very subtle accent tint |
-
-#### Difficulty badges (light)
-
-| Token | HSL | Color |
-|---|---|---|
-| `--difficulty-starter` | `220 77% 49%` | Blue |
-| `--difficulty-builder` | `25 90% 35%` | Burnt orange |
-| `--difficulty-architect` | `0 75% 40%` | Dark red |
+All `text-primary` usages are overridden to black (`#000000`) in light mode via unlayered CSS rules at the bottom of `src/index.css`, scoped to `.light`. These rules must **not** be placed inside `@layer base`. Rules inside `@layer base` are always overridden by `@layer utilities` regardless of specificity, so the override would be silently ignored. Keeping the overrides unlayered gives them the specificity needed to win against utility classes.
 
 ---
 
@@ -167,11 +158,21 @@ All color tokens are CSS custom properties defined in `src/index.css` and expose
 
 ### Buttons
 
-| Class | Style |
-|---|---|
-| `.btn-primary` | Filled amber, `rounded-md px-5 py-2.5 text-sm font-semibold`, electric glow on hover |
-| `.btn-ghost` | Outlined, `border-foreground/35`, subtle glow on hover |
-| `.btn-soft` | Tinted `bg-primary/10 border-primary/30`, no glow |
+| Class | Style | Usage |
+|---|---|---|
+| `.btn-primary` | Filled amber, `rounded-md px-5 py-2.5 text-sm font-semibold`, electric glow on hover | Default CTA on page background |
+| `.btn-ghost` | Outlined, `border-foreground/35`, subtle glow on hover | Secondary CTA on page background |
+| `.btn-soft` | Tinted `bg-primary/10 border-primary/30`, no glow | Tertiary / low-emphasis action |
+| `.btn-inverse` | White/background fill with primary border, primary text — inverts on hover to primary bg | Primary CTA inside a `bg-primary` section (e.g. `PageHero`, `BottomCTA`) |
+| `.btn-ghost-inverse` | Transparent with background-colored border and text — inverts on hover to background fill | Secondary CTA inside a `bg-primary` section |
+
+#### Button contrast rule (light mode)
+
+Never place any button directly on a `bg-primary` background using `.btn-primary` or `.btn-ghost`. Those classes are designed for page-background contexts and will produce yellow text on yellow background in light mode.
+
+For buttons inside `bg-primary` sections (e.g. `PageHero`, `BottomCTA`), always use `.btn-inverse` or `.btn-ghost-inverse`. The `.light .bg-primary .btn-inverse` and `.light .bg-primary .btn-ghost-inverse` rules in `src/index.css` (unlayered section) enforce correct contrast: black text on yellow fill at rest, yellow text on black fill on hover.
+
+Never add a `bg-primary` section button without adding or verifying the corresponding `.light .bg-primary .btn-*` override in the unlayered section of `src/index.css`.
 
 ### Pills (filter toggles)
 
@@ -190,6 +191,20 @@ Both use `px-4 py-1.5 text-sm font-medium leading-none inline-flex items-center`
 | `.badge-beginner` | Amber (primary) color |
 | `.badge-intermediate` | Green (`--difficulty-builder`) |
 | `.badge-expert` | Lavender (`--difficulty-architect`) |
+
+### Nav and Footer Links
+
+Link hover and active states use an underline that is always rendered in the DOM but invisible by default. This avoids layout shift on hover.
+
+| State | Classes |
+|---|---|
+| Default | `underline decoration-transparent underline-offset-2 transition-colors duration-200` |
+| Hover | `hover:decoration-primary/60` |
+| Active / current route | `decoration-primary` |
+
+This pattern is applied to all navigation links in `Navbar.tsx` and all footer column links in `Footer.tsx`.
+
+---
 
 ### Card Glow
 
@@ -270,6 +285,25 @@ Adjust `ring-offset-1` for inline elements or `ring-offset-2` for block elements
 ---
 
 ## Hooks
+
+### `useTheme`
+
+`src/hooks/useTheme.tsx`
+
+Manages the light/dark theme. Applies `.light` or `.dark` class to the `<html>` element and persists the choice in `localStorage` under the key `theme`.
+
+```ts
+const { theme, setTheme } = useTheme();
+```
+
+| Return | Type | Description |
+|---|---|---|
+| `theme` | `"light" \| "dark"` | Current active theme |
+| `setTheme(t)` | `(t: "light" \| "dark") => void` | Change and persist the theme |
+
+The default is dark. All light mode color overrides live in `src/index.css` as unlayered CSS rules scoped to `.light`. Never place light mode overrides inside `@layer base` — they would be silently overridden by `@layer utilities`.
+
+---
 
 ### `useConsent`
 
@@ -359,3 +393,68 @@ const [activeTech, setActiveTech] = useState<string | null>(null);
 - Clicking an already-active chip deselects it: `setActiveTech(activeTech === tag ? null : tag)`.
 - No URL change and no page navigation occur on selection.
 - The filtered results grid only renders when `activeTech` is non-null and results exist.
+
+---
+
+## Icons
+
+All icons use **lucide-react** (already a project dependency; no other icon library may be added).
+
+### Sizes
+
+| Context | Size prop |
+|---|---|
+| Inline with `text-sm` body or link text | `size={13}` |
+| Inline with `text-base` or larger | `size={16}` |
+| Section card icon (standalone, above heading) | `size={28}` |
+| Button icon (paired with button label) | `size={14}` |
+
+### Alignment
+
+When pairing an icon with text inside a link or button, always use `inline-flex items-center gap-1` on the container.
+Never put a raw SVG icon next to text inside a plain `inline` or `block` element — the icon will drop below the baseline.
+
+```tsx
+// Correct
+<a className="inline-flex items-center gap-1 ...">
+  Share something <ArrowRight size={13} aria-hidden="true" />
+</a>
+
+// Incorrect — icon drops below text baseline
+<a className="text-sm ...">
+  Share something <ArrowRight size={13} />
+</a>
+```
+
+### Accessibility
+
+- Decorative icons (paired with visible text): `aria-hidden="true"`, no `aria-label`.
+- Icon-only interactive elements: no `aria-hidden`, always include `aria-label` on the parent.
+
+### Icon map (current usage)
+
+| Icon | Lucide name | Where used |
+|---|---|---|
+| External link (navigation) | `ArrowUpRight` | Navbar GitHub button, BottomCTA GitHub button, CommunityGuide links |
+| Navigate forward / CTA | `ArrowRight` | Inline text links (DiscussionSection, VerificationSection, CommunityVoicesSection, ConnectSection, BottomCTA) |
+| Navigate back | `ArrowLeft` | ChallengeDetail breadcrumb |
+| Scroll down / anchor | `ArrowDown` | Hero primary CTA, About PageHero primary CTA |
+| Community Voices section | `Megaphone` | CommunityVoicesSection card icon |
+| Q&A section | `CircleHelp` | CommunityVoicesSection card icon |
+| Introduce yourself section | `UserPlus` | ConnectSection card icon |
+| Events & meetups section | `CalendarDays` | ConnectSection card icon |
+
+---
+
+## Performance
+
+### Lighthouse scores (production build)
+
+Measured against the production build at https://offon.dev.
+
+| Category | Score |
+|---|---|
+| Performance | 96 |
+| Accessibility | 100 |
+| Best Practices | 100 |
+| SEO | 100 |

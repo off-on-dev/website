@@ -60,7 +60,7 @@ export const AboutSection = (): JSX.Element => {
         {isVisible && (
           <div className="animate-fade-up">
             <div className="mb-16">
-              <span className="font-mono text-xs font-medium uppercase tracking-widest text-primary">Our Mission</span>
+              <h2 className="font-mono text-xs font-medium uppercase tracking-widest text-primary">Our Mission</h2>
               <div className="mt-4 flex flex-col gap-4 max-w-2xl">
                 <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
                   We are focused on what matters: supporting contributors and maintainers as open source faces new realities around regulation, digital sovereignty, and AI.
@@ -71,14 +71,14 @@ export const AboutSection = (): JSX.Element => {
               </div>
             </div>
 
-            <span className="font-mono text-xs font-medium uppercase tracking-widest text-primary">Our Values</span>
+            <h2 className="font-mono text-xs font-medium uppercase tracking-widest text-primary">Our Values</h2>
             <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {values.map((v) => {
                 const Icon = v.icon;
                 return (
                   <div key={v.title} className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6">
                     <Icon className="h-6 w-6 text-primary" aria-hidden="true" />
-                    <h3 className="mt-3 text-base font-semibold text-foreground">{v.title}</h3>
+                    <h3 className="mt-3 text-lg font-semibold text-foreground">{v.title}</h3>
                     <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{v.desc}</p>
                   </div>
                 );

@@ -25,7 +25,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }): JSX.
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  const toggle = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+  const toggle = (): void => setTheme((t) => (t === "dark" ? "light" : "dark"));
 
   return (
     <ThemeContext.Provider value={{ theme, toggle }}>

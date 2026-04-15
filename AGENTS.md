@@ -4,6 +4,16 @@ Guidance for AI coding agents working in this repository.
 
 ---
 
+## Icons
+
+- Always use **lucide-react** for all icons. Do not add any other icon library.
+- Decorative icons next to visible text: `aria-hidden="true"`, no `aria-label`.
+- Icon-only interactive elements: add `aria-label` to the parent element, do not use `aria-hidden`.
+- When placing an icon next to text in a link or button, always add `inline-flex items-center gap-1` to the container. A lone icon inside a plain `inline` element drops below the text baseline.
+- See the Icons section of `styleguide.md` for the full icon map, size conventions, and current usage.
+
+---
+
 ## Project Overview
 
 **offon.dev** is the main website for OffOn, a platform for open source enthusiasts.
@@ -122,6 +132,12 @@ Always run `npm run lint` and `npm test` before declaring a task done.
 - Page-level components go in `src/pages/`. Reusable components go in `src/components/`.
 - Extract sub-components into `src/components/` rather than nesting them inline.
 
+### Component CSS patterns
+
+- `hero-badge` class on the hero pill `<div>` in `Hero.tsx` — used for CSS scoping of light mode overrides.
+- `logo-link` class on the Navbar logo `<Link>` — used to exclude the logo from nav link hover styles.
+- `data-difficulty` attribute on `DifficultyBadge` — used for CSS targeting of badge text color.
+
 ---
 
 ## Data
@@ -145,6 +161,20 @@ Always run `npm run lint` and `npm test` before declaring a task done.
 - All fonts are self-hosted under `public/fonts/`. Never add Google Fonts or external font URLs.
 - Never write custom CSS unless Tailwind genuinely cannot do the job.
   If you must, add it to `src/index.css` with a comment explaining why.
+- When adding light mode overrides for Tailwind utility classes (e.g. `text-primary`,
+  `bg-primary`), do NOT put them inside `@layer base`. Rules in `@layer base` are always
+  overridden by `@layer utilities` regardless of specificity. Instead, add unlayered rules
+  to the "Light mode overrides" section at the bottom of `src/index.css`, scoped to the
+  `.light` selector.
+
+### Design system rules
+
+- Light mode uses `.light` class on `<html>`, set by the `useTheme` hook.
+- Yellow `#ffc034` is accent-only in light mode. Never use it as a text color.
+- All light mode color overrides are unlayered rules at the bottom of `src/index.css`, scoped to `.light`.
+- Do NOT put light mode overrides inside `@layer base` — they will be silently overridden by `@layer utilities`.
+- Dark mode uses `:root` and `.dark`. Never modify these when fixing light mode issues.
+- Every time a new static page is added to `src/pages/` and registered in `src/App.tsx`, add its URL to `public/sitemap.xml`.
 
 ---
 
@@ -287,6 +317,16 @@ these rules.
 | `security` | Security fixes |
 | `config` | Configuration changes |
 | `revert` | Reverting a previous commit |
+
+---
+
+## Site Maintenance
+
+### Sitemap
+- Every time a new static page is added to `src/pages/` and registered as a route in `src/App.tsx`, its URL must also be added to `public/sitemap.xml`.
+- Dynamic routes (e.g. `/adventures/:id`) should not be added to the sitemap unless the IDs are statically known.
+- The sitemap lives at `public/sitemap.xml` and is served at `https://offon.dev/sitemap.xml`.
+- `robots.txt` at `public/robots.txt` must include: `Sitemap: https://offon.dev/sitemap.xml`
 
 ---
 
@@ -449,3 +489,42 @@ These rules exist to prevent specific classes of mistakes. Follow them unconditi
   null), enumerate every transition before writing code. For each transition, list every
   system that must be updated (storage, UI state, external APIs, DOM). Verify all of
   them are handled before marking the task done.
+
+---
+
+## SEO Checklist — required for every new page
+
+- Add `<title>` and `<meta name="description">` via react-helmet-async
+- Add `og:title`, `og:description`, `og:url`, `og:image` meta tags
+- Add `twitter:card`, `twitter:title`, `twitter:description`, `twitter:image` meta tags
+- Add canonical link tag
+- Add the page URL to `public/sitemap.xml` (static routes only)
+- Use correct heading hierarchy: one `h1` per page, `h2` for sections, `h3` for subsections
+- Dynamic routes are not added to `sitemap.xml` unless IDs are statically known
+
+---
+
+## WCAG AA Checklist — required for every new component
+
+- All text must meet 4.5:1 contrast ratio for normal text, 3:1 for large text (18px+ or 14px+ bold)
+- Never use `hsl(41 100% 60%)` (`#ffc034` yellow) as text color in light mode — it fails contrast
+- Never place `text-primary` or any text on a `bg-primary` background without verifying the contrast combination in light mode
+- All interactive elements must have visible focus-visible styles: `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm`
+- All images must have descriptive `alt` text (empty `alt` only for decorative images)
+- Do not put light mode color overrides inside `@layer base` — use unlayered rules scoped to `.light` at the bottom of `index.css`
+- Verify hover states do not change layout properties (padding, border, font-weight, width) — color and opacity only
+- Use semantic HTML: `<main>`, `<nav>`, `<footer>`, `<section>`, `<article>` landmarks where appropriate
+- Heading hierarchy must not skip levels
+- Always test both light and dark mode when adding or modifying any component
+
+---
+
+## Performance Checklist — required when adding fonts, images, or new routes
+
+- Preload critical fonts in `index.html` with `<link rel="preload" as="font" type="font/woff2" crossorigin="anonymous">`
+- Only preload fonts used above the fold — currently `inter-latin-600-normal.woff2` and `inter-latin-500-normal.woff2`
+- Do not lazy-load LCP images — remove `loading="lazy"` from any above-the-fold image
+- Add `fetchpriority="high"` to the LCP image
+- New routes are automatically code-split by Vite — no manual action needed
+- Always run Lighthouse against the production build: `npm run build && npx serve dist` — never against the dev server
+- Current baseline scores (production): Performance 96, Accessibility 100, Best Practices 100, SEO 100

@@ -1,19 +1,18 @@
 # offon.dev
 
-The source for [offon.dev](https://offon.dev/), a static React website for the OffOn community. Hands-on challenges, documentation, and community links.
+Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for open source enthusiasts. The site is fully static with no backend or SSR. It hosts hands-on open source challenges, community documentation, and links to the OffOn community.
 
 ## Tech Stack
 
-- **Vite** - build tooling and dev server
-- **React 18** + **TypeScript**
-- **Tailwind CSS** - utility-first styling
-- **shadcn/ui** - accessible component library built on Radix UI
-- **React Router** - client-side routing
-- **Vitest** - unit testing
+- **React 18** + **TypeScript** — UI and type safety
+- **Vite** — build tooling and dev server
+- **Tailwind CSS** — utility-first styling
+- **shadcn/ui** — accessible component primitives built on Radix UI
+- **React Router v6** — client-side routing
+- **Vitest** — unit testing
+- **GitHub Pages** — hosting and deployment
 
 ## Getting Started
-
-Node.js version is specified in .nvmrc. Use nvm use to switch to the correct version automatically, or check .nvmrc for the required version.
 
 ```sh
 # Clone the repo
@@ -27,50 +26,38 @@ npm install
 npm run dev
 ```
 
-## Available Scripts
+Node.js **22** is required. Version is pinned in `.nvmrc` — run `nvm use` to switch automatically.
+
+## Scripts
 
 | Script | Description |
 |---|---|
-| `npm run dev` | Start local dev server with HMR |
-| `npm run build` | Production build → `dist/` |
-| `npm run build:dev` | Development build |
-| `npm run preview` | Preview the production build locally |
-| `npm run lint` | Run ESLint |
-| `npm test` | Run tests once |
+| `npm run dev` | Start local dev server at http://localhost:8080 |
+| `npm run build` | Production build to `dist/` |
+| `npm run build:dev` | Dev-mode build (source maps, no minification) |
+| `npm run preview` | Serve the production build locally |
+| `npm run lint` | Run ESLint across the project |
+| `npm test` | Run the full test suite once |
 | `npm run test:watch` | Run tests in watch mode |
 
 Run `npm run lint` and `npm test` before marking any work done.
-
-## Deployment
-
-Deployment is fully automated via GitHub Actions:
-
-- **Push to `main`** → [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) builds with `npm run build`, uploads artifacts, and deploys to GitHub Pages using the official [`actions/deploy-pages`](https://github.com/actions/deploy-pages).
-- **Open a PR** → [`.github/workflows/preview.yml`](.github/workflows/preview.yml) builds a preview at `/pr-preview/pr-<n>/`.
-
-The `dist/index.html` is copied to `dist/404.html` so that React Router's client-side routing works on direct URL loads.
-
 
 ## Project Structure
 
 ```
 src/
-  components/   # Reusable UI components (named exports, PascalCase)
-  components/ui # shadcn/ui primitives, do not edit directly
-  pages/        # Route-level page components
-                # All page components are lazy-loaded via React.lazy + Suspense in App.tsx
-  data/         # Static data (TypeScript objects/arrays)
-  hooks/        # Custom React hooks
-  lib/          # Shared utilities (cn())
-  assets/       # Static assets bundled by Vite
+  components/     # Reusable UI components (named exports, PascalCase files)
+  components/ui/  # shadcn/ui primitives — do not edit directly
+  pages/          # Route-level page components (lazy-loaded via React.lazy)
+  data/           # Static content as typed TypeScript objects and arrays
+  hooks/          # Custom React hooks
+  lib/            # Shared utilities
+  test/           # Vitest + Testing Library test files
 public/
-  fonts/        # Self-hosted Inter, Syne, Azeret Mono
+  fonts/          # Self-hosted Inter, Syne, and Azeret Mono font files
+  sitemap.xml
   robots.txt
   og.png
-.github/
-  workflows/
-    deploy.yml  # Production deploy on push to main
-    preview.yml # PR preview deploy
 ```
 
 ## Routes
@@ -106,6 +93,18 @@ The site uses Google Analytics 4 with Consent Mode v2. No data is collected unti
 - `src/App.tsx` fires a `page_view` event on every route change, but only when consent is `"granted"`.
 - `/privacy` (`src/pages/Privacy.tsx`) is the GDPR Art. 13 privacy policy. Contact: offondev@gmail.com and `${COMMUNITY_URL}/groups/moderators`.
 
-## Contributing
+---
 
-See [`AGENTS.md`](AGENTS.md) for coding conventions, design tokens, and contribution guidelines.
+## Deployment
+
+Deployment is automated via GitHub Actions:
+
+- **Push to `main`** triggers [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which builds and deploys to GitHub Pages. Production URL: **https://offon.dev**.
+- **Open a PR** triggers [`.github/workflows/preview.yml`](.github/workflows/preview.yml), which deploys a preview at `/pr-preview/pr-<n>/`.
+
+`dist/index.html` is copied to `dist/404.html` so React Router's client-side routing works on direct URL loads.
+
+## Further Reading
+
+- [`styleguide.md`](styleguide.md) — design system: color tokens, typography, component patterns, and light/dark mode rules.
+- [`AGENTS.md`](AGENTS.md) — contributor conventions: code quality rules, commit format, testing requirements, and accessibility standards.

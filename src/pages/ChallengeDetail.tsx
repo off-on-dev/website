@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { ArrowLeft } from "lucide-react";
 import { ADVENTURES } from "@/data/adventures";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -60,13 +61,13 @@ const ChallengeDetail = (): JSX.Element => {
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
       </Helmet>
       <Navbar />
-      <div className="mx-auto max-w-4xl px-6 pt-28 pb-24">
+      <main className="mx-auto max-w-4xl px-6 pt-28 pb-24">
         {/* Breadcrumb */}
         <Link
           to={`/adventures/${adventure.id}`}
           className="inline-flex items-center gap-1.5 text-sm text-[hsl(var(--text-faint))] hover:text-primary transition-colors mb-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
         >
-          ← {adventure.title}
+          <ArrowLeft size={14} aria-hidden="true" /> {adventure.title}
         </Link>
 
         {/* Header */}
@@ -151,7 +152,7 @@ const ChallengeDetail = (): JSX.Element => {
             </div>
           )}
         </div>
-      </div>
+      </main>
       <Footer />
     </div>
   );

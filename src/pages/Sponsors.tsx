@@ -1,3 +1,4 @@
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Helmet } from "react-helmet-async";
 import { Footer } from "@/components/Footer";
@@ -67,14 +68,14 @@ const Sponsors = (): JSX.Element => {
         eyebrow="Sponsors"
         title="Sponsorship and Independence"
         description="Sponsors provide financial support and participate as community members, but do not control technical direction, content priorities, or governance. This community belongs to its members."
-        primaryCta={{ label: "Get in touch →", href: `${COMMUNITY_URL}/groups/moderators`, external: true }}
-        secondaryCta={{ label: "Join the community →", href: COMMUNITY_URL, external: true }}
+        primaryCta={{ label: <span className="inline-flex items-center gap-2">Get in touch <ArrowUpRight size={14} aria-hidden="true" /></span>, href: `${COMMUNITY_URL}/groups/moderators`, external: true }}
+        secondaryCta={{ label: <span className="inline-flex items-center gap-2">Join the community <ArrowRight size={14} aria-hidden="true" /></span>, href: COMMUNITY_URL, external: true }}
       />
 
-      <div className="mx-auto max-w-4xl px-6 py-16">
+      <main className="mx-auto max-w-4xl px-6 py-16">
         {/* Founding Sponsor */}
         <section className="mb-16">
-          <h2 className="text-2xl font-bold text-primary mb-8">Founding Sponsor</h2>
+          <h2 className="text-3xl font-bold text-primary mb-8">Founding Sponsor</h2>
           <div className="flex flex-col sm:flex-row items-start gap-8">
             <p className="text-muted-foreground leading-relaxed">
               Dynatrace is the founding sponsor of {BRAND_NAME}. There is Dynatrace-related content in one dedicated category which you can choose to join, but the rest of the content is vendor-neutral and community-driven.
@@ -106,7 +107,7 @@ const Sponsors = (): JSX.Element => {
 
         {/* Ways to support */}
         <section className="mb-16">
-          <h2 className="text-2xl font-bold text-primary mb-4">Ways to Support {BRAND_NAME}</h2>
+          <h2 className="text-3xl font-bold text-primary mb-4">Ways to Support {BRAND_NAME}</h2>
           <p className="text-muted-foreground leading-relaxed mb-8 max-w-2xl">
             There are multiple ways organisations can get involved with the {BRAND_NAME} community, beyond financial sponsorship.
           </p>
@@ -116,7 +117,7 @@ const Sponsors = (): JSX.Element => {
                 key={way.title}
                 className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6"
               >
-                <h3 className="text-base font-semibold text-foreground mb-2">{way.title}</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-2">{way.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{way.description}</p>
               </div>
             ))}
@@ -125,7 +126,7 @@ const Sponsors = (): JSX.Element => {
 
         {/* Independence note */}
         <section className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8">
-          <h2 className="text-xl font-bold text-primary mb-4">How We Maintain Trust</h2>
+          <h2 className="text-2xl font-bold text-primary mb-4">How We Maintain Trust</h2>
           <ul className="space-y-3">
             {[
               "Sponsors do not control technical direction, content priorities, or community governance.",
@@ -140,7 +141,7 @@ const Sponsors = (): JSX.Element => {
             ))}
           </ul>
         </section>
-      </div>
+      </main>
 
       <BottomCTA />
       <Footer />

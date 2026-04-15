@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { ArrowUpRight } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SITE_URL, BRAND_NAME, COMMUNITY_URL } from "@/data/constants";
@@ -38,10 +39,12 @@ const NotFound = (): JSX.Element => {
         <meta name="twitter:description" content="The page you are looking for does not exist or has been moved." />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
+        <meta name="robots" content="noindex, nofollow" />
+        <link rel="canonical" href={SITE_URL} />
       </Helmet>
       <Navbar />
-      <div className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
-        <span className="font-mono text-xs font-medium uppercase tracking-widest text-primary mb-4">404</span>
+      <main className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
+        <span className="section-label font-mono text-xs font-medium uppercase tracking-widest text-primary mb-4">404</span>
         <h1 className="text-4xl font-bold text-foreground mb-3">Page not found</h1>
         <p className="text-muted-foreground mb-2 max-w-sm leading-relaxed">
           This is not the page you were looking for.
@@ -72,9 +75,9 @@ const NotFound = (): JSX.Element => {
           rel="noopener noreferrer"
           className="btn-primary"
         >
-          Open the community ↗
+          Open the community <ArrowUpRight size={14} aria-hidden="true" />
         </a>
-      </div>
+      </main>
       <Footer />
     </div>
   );

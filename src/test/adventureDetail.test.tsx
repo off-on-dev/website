@@ -28,7 +28,7 @@ describe('AdventureDetail', () => {
       </ConsentProvider>
     );
     expect(screen.getByText(adventure.title)).toBeTruthy();
-    expect(screen.getAllByText('Start challenge →').length).toBe(adventure.levels.length);
+    expect(screen.getAllByText(/^Start challenge/).length).toBe(adventure.levels.length);
   });
 
   it('shows not found for unknown adventure id', () => {
@@ -61,7 +61,7 @@ describe('ChallengeDetail', () => {
       </ConsentProvider>
     );
     expect(screen.getByRole('heading', { level: 1, name: level.name })).toBeTruthy();
-    expect(screen.getByText(`← ${adventure.title}`)).toBeTruthy();
+    expect(screen.getByRole('link', { name: adventure.title })).toBeTruthy();
   });
 
   it('shows not found for unknown level id', () => {
