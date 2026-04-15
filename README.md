@@ -26,7 +26,7 @@ npm install
 npm run dev
 ```
 
-Node.js version is specified in `.nvmrc`. Run `nvm use` to switch automatically.
+Node.js **22** is required. Version is pinned in `.nvmrc` — run `nvm use` to switch automatically.
 
 ## Scripts
 
@@ -34,8 +34,11 @@ Node.js version is specified in `.nvmrc`. Run `nvm use` to switch automatically.
 |---|---|
 | `npm run dev` | Start local dev server at http://localhost:8080 |
 | `npm run build` | Production build to `dist/` |
+| `npm run build:dev` | Dev-mode build (source maps, no minification) |
+| `npm run preview` | Serve the production build locally |
 | `npm run lint` | Run ESLint across the project |
 | `npm test` | Run the full test suite once |
+| `npm run test:watch` | Run tests in watch mode |
 
 Run `npm run lint` and `npm test` before marking any work done.
 
@@ -68,8 +71,29 @@ public/
 | `/about` | `About.tsx` | About the community |
 | `/docs` | redirects to `/docs/community-guide` | |
 | `/docs/community-guide` | `CommunityGuide.tsx` | Community documentation |
-| `/privacy` | `Privacy.tsx` | Privacy policy |
+| `/privacy` | `Privacy.tsx` | GDPR-compliant privacy policy |
 | `*` | `NotFound.tsx` | 404 fallback |
+
+> **Technology tag filtering** is handled inline on the home page, adventure detail, and challenge detail pages via local `useState`. There is no dedicated `/topics/:tag` route.
+
+## Analytics and Privacy
+
+The site uses Google Analytics 4 with Consent Mode v2. No data is collected until the user explicitly accepts via the consent banner.
+
+### Configuration
+
+`GA_MEASUREMENT_ID` in `src/data/constants.ts` holds the GA4 Measurement ID. The gtag snippet in `index.html` must match this value. If you update the ID, change it in both places.
+
+### How it works
+
+- `index.html` loads gtag.js with all consent signals set to `denied` by default (Consent Mode v2).
+- `src/hooks/useConsent.tsx` manages the user's choice, stored in `localStorage` as `analytics_consent` with a 6-month expiry. On grant, it calls `gtag('consent', 'update', { analytics_storage: 'granted' })`.
+- `src/components/ConsentBanner.tsx` renders a fixed bottom bar until the user makes a choice.
+- `src/components/CookiePreferencesLink.tsx` is placed in the Footer and calls `reset()` from `useConsent` to re-show the banner.
+- `src/App.tsx` fires a `page_view` event on every route change, but only when consent is `"granted"`.
+- `/privacy` (`src/pages/Privacy.tsx`) is the GDPR Art. 13 privacy policy. Contact: offondev@gmail.com and `${COMMUNITY_URL}/groups/moderators`.
+
+---
 
 ## Deployment
 
