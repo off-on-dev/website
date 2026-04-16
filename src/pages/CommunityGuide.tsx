@@ -26,7 +26,7 @@ const CommunityGuide = (): JSX.Element => {
       <Navbar />
       <main className="mx-auto max-w-3xl px-6 pt-28 pb-24">
 
-        <span className="section-label font-mono text-xs font-medium uppercase tracking-widest text-primary">Community Guide</span>
+        <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">Community Guide</span>
         <h1 className="mt-3 text-4xl font-bold text-foreground md:text-5xl">
           Community Guide
         </h1>

@@ -19,20 +19,20 @@ export const BottomCTA = (): JSX.Element => {
 
           {/* Right - copy + buttons */}
           <div className="animate-fade-up-delay-1 flex flex-col gap-4">
-            <p className="font-mono text-sm leading-relaxed text-background/90">
+            <p className="font-sans text-sm leading-relaxed text-background/90">
               Some species of fireflies synchronize their flashing. Thousands of individuals, each emitting their own signal, collectively producing something far more powerful than any single light source could output.
             </p>
-            <p className="font-mono text-sm leading-relaxed text-background/90">
+            <p className="font-sans text-sm leading-relaxed text-background/90">
               That's {BRAND_NAME}.{" "}
               <strong className="font-medium text-background">
                 You bring your questions, your fixes, your ideas.
               </strong>{" "}
               We bring the challenges, the tooling, and the engineers who care about the same problems you do.
             </p>
-            <p className="font-mono text-sm leading-relaxed text-background/90">
+            <p className="font-sans text-sm leading-relaxed text-background/90">
               Every spark starts with one person. Together, we illuminate the whole open source ecosystem.
             </p>
-            <p className="font-mono text-sm font-medium text-background">
+            <p className="font-sans text-sm font-medium text-background">
               Always on. Always open. Always learning.
             </p>
             <div className="flex gap-3 flex-wrap mt-2">

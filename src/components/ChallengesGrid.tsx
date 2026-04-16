@@ -65,7 +65,7 @@ export const ChallengesGrid = (): JSX.Element => {
         {isVisible && (
           <>
             <div className="animate-fade-up mb-3">
-              <span className="section-label font-mono text-xs font-medium uppercase tracking-widest text-primary">Adventures</span>
+              <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">Adventures</span>
             </div>
             <h2 className="animate-fade-up-delay-1 mb-6 text-3xl font-bold text-primary md:text-4xl">
               Choose your adventure
@@ -88,7 +88,7 @@ export const ChallengesGrid = (): JSX.Element => {
 
             {activeTopic ? (
               <>
-                <p className="animate-fade-up mb-6 font-mono text-xs font-medium uppercase tracking-widest text-primary">
+                <p className="animate-fade-up mb-6 font-sans text-sm font-medium uppercase tracking-widest text-primary">
                   Challenges tagged with {activeTopic}
                 </p>
                 <div key={activeTopic} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">

@@ -60,18 +60,18 @@ export const AboutSection = (): JSX.Element => {
         {isVisible && (
           <div className="animate-fade-up">
             <div className="mb-16">
-              <h2 className="font-mono text-xs font-medium uppercase tracking-widest text-primary">Our Mission</h2>
+              <h2 className="font-sans text-sm font-medium uppercase tracking-widest text-primary">Our Mission</h2>
               <div className="mt-4 flex flex-col gap-4 max-w-2xl">
                 <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
-                  We are focused on what matters: supporting contributors and maintainers as open source faces new realities around regulation, digital sovereignty, and AI.
+                  {BRAND_NAME} is a vendor-neutral, community-driven space built around one goal: supporting the open source contributors and maintainers of tomorrow.
                 </p>
                 <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
-                  {BRAND_NAME} has one clear goal: Building the contributors and maintainers of tomorrow by helping people grow from curious users to confident contributors, and from contributors to sustainable maintainers.
+                   As open source navigates new realities around regulation, digital sovereignty, and AI, {BRAND_NAME} gives the community a place to learn, share their work, and grow, from curious users to confident contributors, and from contributors to sustainable maintainers.
                 </p>
               </div>
             </div>
 
-            <h2 className="font-mono text-xs font-medium uppercase tracking-widest text-primary">Our Values</h2>
+            <h2 className="font-sans text-sm font-medium uppercase tracking-widest text-primary">Our Values</h2>
             <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {values.map((v) => {
                 const Icon = v.icon;

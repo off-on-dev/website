@@ -49,7 +49,7 @@ const Index = (): JSX.Element => {
               Got an idea<br />for an adventure?
             </h2>
             <div className="flex flex-col gap-4">
-              <p className="font-mono text-sm leading-relaxed text-background/90">
+              <p className="font-sans text-sm leading-relaxed text-background/90">
                 Shape what the community learns next. Got a scenario worth exploring? Submit a concept and help it become the next adventure.
               </p>
               <div className="flex gap-3 flex-wrap mt-2">

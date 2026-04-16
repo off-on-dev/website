@@ -103,7 +103,7 @@ const ChallengeDetail = (): JSX.Element => {
 
         {/* Find challenges by technology */}
         <div>
-          <h2 className="font-mono text-xs font-medium uppercase tracking-widest text-primary mb-4">
+          <h2 className="font-sans text-sm font-medium uppercase tracking-widest text-primary mb-4">
             Find challenges by technology
           </h2>
           <div className="mb-6 flex flex-wrap gap-2">

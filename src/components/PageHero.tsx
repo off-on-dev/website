@@ -47,14 +47,14 @@ export const PageHero = ({ eyebrow, title, description, primaryCta, secondaryCta
     <section className="bg-primary pt-32 pb-20 px-6 md:px-16">
       <div className="mx-auto max-w-4xl">
         {eyebrow && (
-          <span className="font-mono text-xs font-medium uppercase tracking-widest text-background/90 block mb-4">
+          <span className="font-sans text-sm font-medium uppercase tracking-widest text-background/90 block mb-4">
             {eyebrow}
           </span>
         )}
         <h1 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background mb-5">
           {title}
         </h1>
-        <p className="font-mono text-sm leading-relaxed text-background/90 max-w-2xl mb-8">
+        <p className="font-sans text-sm leading-relaxed text-background/90 max-w-2xl mb-8">
           {description}
         </p>
         {(primaryCta || secondaryCta) && (

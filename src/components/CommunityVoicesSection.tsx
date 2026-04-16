@@ -37,7 +37,7 @@ export const CommunityVoicesSection = (): JSX.Element => {
         {isVisible && (
           <>
             <div className="animate-fade-up mb-3">
-              <span className="section-label font-mono text-xs font-medium uppercase tracking-widest text-primary">
+              <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">
                 Community
               </span>
             </div>

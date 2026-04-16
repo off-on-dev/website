@@ -61,7 +61,7 @@ src/
   lib/          # Shared utilities
   assets/       # Static assets bundled by Vite
 public/
-  fonts/        # Self-hosted fonts (Inter, Syne, Azeret Mono)
+  fonts/        # Self-hosted fonts (Inter, Syne, JetBrains Mono)
 .github/
   workflows/
     deploy.yml  # Production deploy to GitHub Pages (push to main)
@@ -157,7 +157,7 @@ Always run `npm run lint` and `npm test` before declaring a task done.
   `text-foreground`) that shadcn sets up. Never hardcode a color that only works in one mode.
 - Never add a `dark:` override without a corresponding base (light) style.
 - Mobile first. Write base styles for mobile, then add `sm:`, `md:`, `lg:` breakpoints as needed.
-- Font utilities: `font-heading` (Syne), `font-sans` (Inter), `font-mono` (Azeret Mono).
+- For font utilities, type scale, component class patterns (buttons, pills, badges, overline labels), and animations, see `styleguide.md` — it is the source of truth. Do not duplicate those details here.
 - All fonts are self-hosted under `public/fonts/`. Never add Google Fonts or external font URLs.
 - Never write custom CSS unless Tailwind genuinely cannot do the job.
   If you must, add it to `src/index.css` with a comment explaining why.

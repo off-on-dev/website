@@ -18,7 +18,7 @@ The domain `offon.dev` is always lowercase (it is a URL, not a brand mention).
 |---|---|---|---|
 | Headings / display (`font-heading`) | Syne | 700 primary (400–800 available) | WOFF2 only (`public/fonts/syne-*.woff2`) |
 | Body & UI (`font-sans`) | Inter | 400, 500, 600 primary (700 available) | WOFF2 only (`public/fonts/inter-*.woff2`) |
-| Code / mono (`font-mono`, `code`, `pre`) | Azeret Mono | 400 primary (500, 600 available) | WOFF2 only (`public/fonts/azeret-mono-*.woff2`) |
+| Code / mono (`font-mono`, `code`, `pre`) | JetBrains Mono | 400 primary (500, 600 available) | WOFF2 only (`public/fonts/jetbrains-mono-*.woff2`) |
 
 All fonts are fully self-hosted as WOFF2. No TTF fallbacks. No external network requests.
 
@@ -28,7 +28,7 @@ Subset coverage (via `unicode-range` in `src/index.css` -- only the needed subse
 |---|---|
 | Inter | latin, latin-ext, cyrillic-ext, cyrillic, greek-ext, greek, vietnamese |
 | Syne | latin, latin-ext, greek |
-| Azeret Mono | latin, latin-ext |
+| JetBrains Mono | latin, latin-ext |
 
 ### Font preload
 
@@ -44,7 +44,7 @@ Only Latin subset variants are preloaded. Other subsets (cyrillic, greek, vietna
 | Utility | Resolves to |
 |---|---|
 | `font-sans` | Inter |
-| `font-mono` | Azeret Mono |
+| `font-mono` | JetBrains Mono |
 | `font-heading` | Syne |
 
 ### Scale (Tailwind defaults)
@@ -56,8 +56,8 @@ Only Latin subset variants are preloaded. Other subsets (cyrillic, greek, vietna
 | H3 | `text-lg font-semibold` | Syne, weight 600 |
 | Body | `text-base` | Inter, weight 400 |
 | Small / caption | `text-sm` | Inter, weight 400 |
-| Overline label | `font-mono text-xs font-medium uppercase tracking-widest` | Azeret Mono |
-| Badge / tag | `font-mono text-xs uppercase tracking-wider` | Azeret Mono |
+| Overline label | `font-sans text-sm font-medium uppercase tracking-widest` | Inter |
+| Badge / tag | `font-mono text-xs uppercase tracking-wider` | JetBrains Mono |
 
 ---
 
@@ -249,10 +249,6 @@ Light mode: no background texture.
 ### Firefly particles
 
 `.firefly` - 3×3 px dot with `box-shadow` glow in `--primary` color, animated with `fireflyFloat` (8 particles, varying `animation-duration` 6.5–11 s and `animation-delay`).
-
-### Hero glow
-
-`.hero-glow` - three radial gradients (amber 8%, warm 4%, orange 3%) with a mask gradient that fades at top/bottom 10% and 70–100%. Animated with `glowPulse` (9 s ease-in-out, opacity 0.75 → 1, scale 1 → 1.04).
 
 ---
 

@@ -54,7 +54,7 @@ src/
   lib/            # Shared utilities
   test/           # Vitest + Testing Library test files
 public/
-  fonts/          # Self-hosted Inter, Syne, and Azeret Mono font files
+  fonts/          # Self-hosted Inter, Syne, and JetBrains Mono font files
   sitemap.xml
   robots.txt
   og.png

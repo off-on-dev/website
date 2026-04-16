@@ -14,7 +14,7 @@ export const LevelCard = ({ level }: LevelCardProps): JSX.Element => (
     </div>
 
     <div className="mb-6">
-      <h3 className="font-mono text-xs uppercase tracking-widest text-primary mb-3">Key Learnings</h3>
+      <h3 className="font-sans text-sm uppercase tracking-widest text-primary mb-3">Key Learnings</h3>
       <ul className="space-y-2">
         {level.learnings.map((learning, i) => (
           <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">

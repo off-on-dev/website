@@ -1,46 +1,46 @@
 @font-face {
-  font-family: 'Azeret Mono';
-  src: url('/fonts/azeret-mono-latin-ext-400-normal.woff2') format('woff2');
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono-latin-ext-400-normal.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
   unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
-  font-family: 'Azeret Mono';
-  src: url('/fonts/azeret-mono-latin-400-normal.woff2') format('woff2');
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: 'Azeret Mono';
-  src: url('/fonts/azeret-mono-latin-ext-500-normal.woff2') format('woff2');
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono-latin-ext-500-normal.woff2') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
   unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
-  font-family: 'Azeret Mono';
-  src: url('/fonts/azeret-mono-latin-500-normal.woff2') format('woff2');
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono-latin-500-normal.woff2') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: 'Azeret Mono';
-  src: url('/fonts/azeret-mono-latin-ext-600-normal.woff2') format('woff2');
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono-latin-ext-600-normal.woff2') format('woff2');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
   unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
-  font-family: 'Azeret Mono';
-  src: url('/fonts/azeret-mono-latin-600-normal.woff2') format('woff2');
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono-latin-600-normal.woff2') format('woff2');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -678,7 +678,7 @@
   }
 
   code, pre {
-    font-family: 'Azeret Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
   }
 
   /* Ghost word - outline/stroke text, visible but clearly decorative */
@@ -705,11 +705,6 @@
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.3; }
-}
-
-@keyframes glowPulse {
-  0%, 100% { opacity: 0.75; transform: scale(1); }
-  50%       { opacity: 1;    transform: scale(1.04); }
 }
 
 @keyframes fireflyFloat {
@@ -749,18 +744,6 @@
 .firefly:nth-child(6) { top: 18%; left: 55%; animation-duration: 10s; animation-delay: 1.8s; }
 .firefly:nth-child(7) { top: 82%; right: 8%;  animation-duration: 7.5s; animation-delay: 4s; }
 .firefly:nth-child(8) { top: 50%; left: 72%; animation-duration: 8s;  animation-delay: 2.6s; }
-
-/* ─── Glow backgrounds ───────────────────────────────────── */
-
-.hero-glow {
-  background:
-    radial-gradient(ellipse 800px 500px at 50% 40%, hsl(var(--electric) / 0.08), transparent),
-    radial-gradient(ellipse 350px 200px at 18% 65%, hsl(var(--teal) / 0.04), transparent),
-    radial-gradient(ellipse 300px 180px at 82% 22%, hsl(var(--purple) / 0.03), transparent);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 70%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 70%, transparent 100%);
-  animation: glowPulse 9s ease-in-out infinite;
-}
 
 /* ─── Component classes ──────────────────────────────────── */
 
@@ -850,11 +833,6 @@
 }
 
 /* ─── Light mode overrides ───────────────────────────────── */
-
-.light .hero-glow {
-  background: none;
-  animation: none;
-}
 
 .light .card-glow:hover {
   box-shadow:

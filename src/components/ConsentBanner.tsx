@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { useConsent } from "@/hooks/useConsent";
 
 function CookieIcon(): JSX.Element {
@@ -55,23 +54,22 @@ export function ConsentBanner(): JSX.Element {
           </p>
         </div>
         <div className="flex shrink-0 flex-wrap gap-2 sm:items-center">
-          <Button
+          <button
             type="button"
-            variant="outline"
-            size="sm"
             onClick={deny}
             aria-label="Decline analytics cookies"
+            className="btn-ghost"
           >
             Decline
-          </Button>
-          <Button
+          </button>
+          <button
             type="button"
-            size="sm"
             onClick={grant}
             aria-label="Accept analytics cookies"
+            className="btn-primary"
           >
             Accept analytics
-          </Button>
+          </button>
         </div>
       </div>
     </div>
