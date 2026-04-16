@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ADVENTURES, Adventure } from "@/data/adventures";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Layers } from "lucide-react";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 
@@ -43,6 +44,7 @@ const AdventureCard = ({ adventure }: { adventure: Adventure }): JSX.Element => 
 );
 
 export const ChallengesGrid = (): JSX.Element => {
+  const { ref, isVisible } = useScrollAnimation();
   const [activeTopic, setActiveTopic] = useState<string | null>(null);
 
   const filteredLevels = activeTopic
@@ -58,76 +60,78 @@ export const ChallengesGrid = (): JSX.Element => {
     : [];
 
   return (
-    <section id="challenges" className="py-24 px-6">
+    <section id="challenges" ref={ref} className="py-24 px-6">
       <div className="mx-auto max-w-6xl">
-        <>
-          <div className="animate-fade-up mb-3">
-            <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">Adventures</span>
-          </div>
-          <h2 className="animate-fade-up-delay-1 mb-6 text-3xl font-bold text-primary md:text-4xl">
-            Choose your adventure
-          </h2>
+        {isVisible && (
+          <>
+            <div className="animate-fade-up mb-3">
+              <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">Adventures</span>
+            </div>
+            <h2 className="animate-fade-up-delay-1 mb-6 text-3xl font-bold text-primary md:text-4xl">
+              Choose your adventure
+            </h2>
 
-          {/* Topic filter chips */}
-          <div className="animate-fade-up-delay-1 mb-8 flex flex-wrap items-center gap-2">
-            {allTags.map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                onClick={() => setActiveTopic(activeTopic === tag ? null : tag)}
-                className={activeTopic === tag ? "pill-active" : "pill-inactive"}
-                aria-pressed={activeTopic === tag}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
-
-          {activeTopic ? (
-            <>
-              <p className="animate-fade-up mb-6 font-sans text-sm font-medium uppercase tracking-widest text-primary">
-                Challenges tagged with {activeTopic}
-              </p>
-              <div key={activeTopic} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-                {filteredLevels.map(({ level, adventureId, adventureTitle }) => (
-                  <Link
-                    key={`${adventureId}-${level.id}`}
-                    to={`/adventures/${adventureId}/levels/${level.id}`}
-                    className="group card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
-                  >
-                    <div className="mb-3">
-                      <DifficultyBadge difficulty={level.difficulty} showDot />
-                    </div>
-                    <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
-                      {level.name}
-                    </h3>
-                    <ul className="mt-3 space-y-1.5">
-                      {level.learnings.slice(0, 3).map((learning, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                          <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                          {learning}
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="mt-auto pt-4 flex flex-wrap gap-1.5 items-center justify-between">
-                      <span className="font-mono text-xs text-muted-foreground">Challenge</span>
-                      <span className="rounded-sm border border-[hsl(var(--surface-border))] px-2 py-0.5 text-xs text-[hsl(var(--text-faint))]">
-                        {adventureTitle}
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </>
-          ) : (
-            /* Adventure cards */
-            <div className="animate-fade-up-delay-2 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {ADVENTURES.map((adventure) => (
-                <AdventureCard key={adventure.id} adventure={adventure} />
+            {/* Topic filter chips */}
+            <div className="animate-fade-up-delay-1 mb-8 flex flex-wrap items-center gap-2">
+              {allTags.map((tag) => (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => setActiveTopic(activeTopic === tag ? null : tag)}
+                  className={activeTopic === tag ? "pill-active" : "pill-inactive"}
+                  aria-pressed={activeTopic === tag}
+                >
+                  {tag}
+                </button>
               ))}
             </div>
-          )}
-        </>
+
+            {activeTopic ? (
+              <>
+                <p className="animate-fade-up mb-6 font-sans text-sm font-medium uppercase tracking-widest text-primary">
+                  Challenges tagged with {activeTopic}
+                </p>
+                <div key={activeTopic} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                  {filteredLevels.map(({ level, adventureId, adventureTitle }) => (
+                    <Link
+                      key={`${adventureId}-${level.id}`}
+                      to={`/adventures/${adventureId}/levels/${level.id}`}
+                      className="group card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
+                    >
+                      <div className="mb-3">
+                        <DifficultyBadge difficulty={level.difficulty} showDot />
+                      </div>
+                      <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+                        {level.name}
+                      </h3>
+                      <ul className="mt-3 space-y-1.5">
+                        {level.learnings.slice(0, 3).map((learning, i) => (
+                          <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                            {learning}
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="mt-auto pt-4 flex flex-wrap gap-1.5 items-center justify-between">
+                        <span className="font-mono text-xs text-muted-foreground">Challenge</span>
+                        <span className="rounded-sm border border-[hsl(var(--surface-border))] px-2 py-0.5 text-xs text-[hsl(var(--text-faint))]">
+                          {adventureTitle}
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </>
+            ) : (
+              /* Adventure cards */
+              <div className="animate-fade-up-delay-2 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                {ADVENTURES.map((adventure) => (
+                  <AdventureCard key={adventure.id} adventure={adventure} />
+                ))}
+              </div>
+            )}
+          </>
+        )}
       </div>
     </section>
   );

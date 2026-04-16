@@ -20,12 +20,11 @@ export const Hero = (): JSX.Element => {
               <svg aria-hidden="true" className="h-3 w-3 text-foreground" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z"/></svg>
               <span className="text-xs text-foreground">Community-driven</span>
             </div>
-            <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-              <span className="text-foreground dark:text-[#ffc034]">
+            <h1 aria-label="Always On. Always Open." className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+              <span className="block text-foreground dark:text-[#ffc034]" aria-hidden="true">
                 Always On.
               </span>
-              <br />
-              <span className="text-foreground">
+              <span className="block text-foreground" aria-hidden="true">
                 Always Open.
               </span>
             </h1>
