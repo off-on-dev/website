@@ -329,6 +329,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* WCAG 2.4.11 Focus Not Obscured: prevent fixed navbar and consent banner from fully hiding focused elements */
+html {
+  scroll-padding-top: 80px;
+  scroll-padding-bottom: 120px;
+}
+
 /* Skip navigation link — visually hidden until focused (WCAG 2.4.1 Bypass Blocks) */
 .skip-nav {
   position: absolute;

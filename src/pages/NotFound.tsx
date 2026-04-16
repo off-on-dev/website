@@ -35,10 +35,16 @@ const NotFound = (): JSX.Element => {
         <meta property="og:type" content="website" />
         <meta property="og:url" content={SITE_URL} />
         <meta property="og:image" content={`${SITE_URL}/og.png`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={`Page Not Found - ${BRAND_NAME}`} />
+        <meta property="og:site_name" content={BRAND_NAME} />
+        <meta property="og:locale" content="en_GB" />
         <meta name="twitter:title" content={`Page Not Found - ${BRAND_NAME}`} />
         <meta name="twitter:description" content="The page you are looking for does not exist or has been moved." />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
+        <meta name="twitter:image:alt" content={`Page Not Found - ${BRAND_NAME}`} />
         <meta name="robots" content="noindex, nofollow" />
         <link rel="canonical" href={SITE_URL} />
       </Helmet>
