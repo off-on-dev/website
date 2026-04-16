@@ -10,11 +10,11 @@ export const BottomCTA = (): JSX.Element => {
       {isVisible && (
         <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* Left - headline */}
-          <h2 className="animate-fade-up text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background">
-            Start curious.<br />
-            Break things.<br />
-            Learn together.<br />
-            Glow brighter.
+          <h2 aria-label="Start curious. Break things. Learn together. Glow brighter." className="animate-fade-up text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background">
+            <span className="block" aria-hidden="true">Start curious.</span>
+            <span className="block" aria-hidden="true">Break things.</span>
+            <span className="block" aria-hidden="true">Learn together.</span>
+            <span className="block" aria-hidden="true">Glow brighter.</span>
           </h2>
 
           {/* Right - copy + buttons */}

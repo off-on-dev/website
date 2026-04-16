@@ -29,7 +29,7 @@ const ChallengeDetail = (): JSX.Element => {
 
   const learningsSummary = level.learnings.slice(0, 2).join("; ");
   const pageTitle = `${level.name} - ${adventure.title} - ${BRAND_NAME}`;
-  const pageDesc = `${level.difficulty} challenge: ${learningsSummary}.`.slice(0, 160);
+  const pageDesc = `Build skills with ${level.name}, a ${level.difficulty.toLowerCase()} challenge in ${adventure.title}. Learn ${learningsSummary} in a hands-on scenario on ${BRAND_NAME}.`.slice(0, 160);
   const pageUrl = `${SITE_URL}/adventures/${adventure.id}/levels/${level.id}`;
 
   const relatedLevels = activeTech

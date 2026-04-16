@@ -28,9 +28,9 @@ const Index = (): JSX.Element => {
       <Helmet>
         <title>{`${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`}</title>
         <link rel="canonical" href={SITE_URL + "/"} />
-        <meta name="description" content="Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, cloud dev environments." />
+        <meta name="description" content="A welcoming open source community. Learn through hands-on challenges to build skills. Share expertise and projects. Ask for help anytime." />
         <meta property="og:title" content={`${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`} />
-        <meta property="og:description" content="Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, cloud dev environments." />
+        <meta property="og:description" content="A welcoming open source community. Learn through hands-on challenges to build skills. Share expertise and projects. Ask for help anytime." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/`} />
         <meta property="og:image" content={`${SITE_URL}/og.png`} />
@@ -40,7 +40,7 @@ const Index = (): JSX.Element => {
         <meta property="og:site_name" content={BRAND_NAME} />
         <meta property="og:locale" content="en_GB" />
         <meta name="twitter:title" content={`${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`} />
-        <meta name="twitter:description" content="Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, cloud dev environments." />
+        <meta name="twitter:description" content="A welcoming open source community. Learn through hands-on challenges to build skills. Share expertise and projects. Ask for help anytime." />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
         <meta name="twitter:image:alt" content={`${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`} />
@@ -51,8 +51,9 @@ const Index = (): JSX.Element => {
         <ChallengesGrid />
         <section className="bg-primary py-16 px-6 md:px-16">
           <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <h2 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background">
-              Got an idea<br />for an adventure?
+            <h2 aria-label="Got an idea for an adventure?" className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background">
+              <span className="block" aria-hidden="true">Got an idea</span>
+              <span className="block" aria-hidden="true">for an adventure?</span>
             </h2>
             <div className="flex flex-col gap-4">
               <p className="font-sans text-base leading-relaxed text-background/90">
