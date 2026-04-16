@@ -42,6 +42,12 @@ const App = (): JSX.Element => (
         <Sonner />
         <ConsentProvider>
         <BrowserRouter basename={basename} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <a
+            href="#main-content"
+            className="skip-nav"
+          >
+            Skip to main content
+          </a>
           <ScrollToTop />
           <ConsentBanner />
           <Suspense fallback={null}>

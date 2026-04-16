@@ -52,7 +52,7 @@ const Privacy = (): JSX.Element => {
           <li>
             Community moderators:{" "}
             <a href={`${COMMUNITY_URL}/groups/moderators`} target="_blank" rel="noopener noreferrer" className={a}>
-              @moderators
+              @moderators<span className="sr-only"> (opens in new tab)</span>
             </a>
           </li>
         </ul>
@@ -103,11 +103,11 @@ const Privacy = (): JSX.Element => {
           EU-U.S. Data Privacy Framework and Standard Contractual Clauses as appropriate
           safeguards. For more information, see{" "}
           <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className={a}>
-            Google's Privacy Policy
+            Google's Privacy Policy<span className="sr-only"> (opens in new tab)</span>
           </a>{" "}
           and{" "}
           <a href="https://support.google.com/analytics/answer/6004245" target="_blank" rel="noopener noreferrer" className={a}>
-            Google Analytics data safeguards
+            Google Analytics data safeguards<span className="sr-only"> (opens in new tab)</span>
           </a>
           .
         </p>
@@ -172,7 +172,7 @@ const Privacy = (): JSX.Element => {
           protection authority in your country of residence or the country where the alleged
           violation occurred. A list of EU supervisory authorities is available from the{" "}
           <a href="https://edpb.europa.eu/about-edpb/about-edpb/members_en" target="_blank" rel="noopener noreferrer" className={a}>
-            European Data Protection Board
+            European Data Protection Board<span className="sr-only"> (opens in new tab)</span>
           </a>
           . We do ask that you contact us first so we have an opportunity to address the issue
           directly.
@@ -199,7 +199,7 @@ const Privacy = (): JSX.Element => {
           at <a href="mailto:offondev@gmail.com" className={a}>offondev@gmail.com</a> or via
           the{" "}
           <a href={`${COMMUNITY_URL}/groups/moderators`} target="_blank" rel="noopener noreferrer" className={a}>
-            @moderators on the forum
+            @moderators on the forum<span className="sr-only"> (opens in new tab)</span>
           </a>
           .
         </p>

@@ -16,7 +16,7 @@ const AdventureCard = ({ adventure }: { adventure: Adventure }): JSX.Element => 
     <div className="flex items-center justify-between mb-3">
       <span className="font-mono text-xs text-muted-foreground">Adventure</span>
       <span className="badge-levels inline-flex items-center gap-1.5 rounded-sm border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-xs uppercase tracking-wider text-primary">
-        <Layers className="h-3 w-3" />
+        <Layers className="h-3 w-3" aria-hidden="true" />
         3 Levels
       </span>
     </div>

@@ -61,7 +61,7 @@ const ChallengeDetail = (): JSX.Element => {
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
       </Helmet>
       <Navbar />
-      <main className="mx-auto max-w-4xl px-6 pt-28 pb-24">
+      <main id="main-content" className="mx-auto max-w-4xl px-6 pt-28 pb-24">
         {/* Breadcrumb */}
         <Link
           to={`/adventures/${adventure.id}`}

@@ -111,7 +111,7 @@ export const DiscussionSection = ({ discussionUrls }: DiscussionSectionProps): J
             rel="noopener noreferrer"
             className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
           >
-            Join the discussion on {COMMUNITY_DISPLAY_NAME} <ArrowRight size={13} aria-hidden="true" />
+            Join the discussion on {COMMUNITY_DISPLAY_NAME} <ArrowRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
           </a>
         </>
       ) : (
@@ -124,6 +124,7 @@ export const DiscussionSection = ({ discussionUrls }: DiscussionSectionProps): J
               rel="noopener noreferrer"
               className="block card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
             >
+              <span className="sr-only">(opens in new tab) </span>
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <div
@@ -136,7 +137,11 @@ export const DiscussionSection = ({ discussionUrls }: DiscussionSectionProps): J
                   <span className="text-xs text-[hsl(var(--text-faint))]">{timeAgo(post.created_at)}</span>
                 </div>
                 {post.like_count > 0 && (
-                  <span className="text-xs text-muted-foreground">♥ {post.like_count}</span>
+                  <span className="text-xs text-muted-foreground">
+                    <span aria-hidden="true">♥</span>
+                    <span className="sr-only">Likes: </span>
+                    {post.like_count}
+                  </span>
                 )}
               </div>
               <p className="text-sm leading-relaxed text-muted-foreground line-clamp-3">
@@ -150,7 +155,7 @@ export const DiscussionSection = ({ discussionUrls }: DiscussionSectionProps): J
             rel="noopener noreferrer"
             className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
           >
-            Join the discussion on {COMMUNITY_DISPLAY_NAME} <ArrowRight size={13} aria-hidden="true" />
+            Join the discussion on {COMMUNITY_DISPLAY_NAME} <ArrowRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
           </a>
         </>
       )}

@@ -54,7 +54,7 @@ export const PageHero = ({ eyebrow, title, description, primaryCta, secondaryCta
         <h1 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background mb-5">
           {title}
         </h1>
-        <p className="font-sans text-sm leading-relaxed text-background/90 max-w-2xl mb-8">
+        <p className="font-sans text-base leading-relaxed text-background/90 max-w-2xl mb-8">
           {description}
         </p>
         {(primaryCta || secondaryCta) && (

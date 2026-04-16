@@ -142,7 +142,7 @@ All color tokens are CSS custom properties defined in `src/index.css` and expose
 | Headings | `hsl(0 0% 0%)` | `#000000` | |
 | Muted text | `hsl(0 0% 29%)` | `#4A4A4A` | |
 | Border | `hsl(230 20% 85%)` | | |
-| Badge: Beginner | `hsl(41 100% 82%)` | | Black text |
+| Badge: Beginner | `#ffe2a3` | | Black text |
 | Badge: Intermediate | `hsl(41 100% 76%)` | | Black text |
 | Badge: Expert | `hsl(41 100% 68%)` | | Black text |
 
@@ -280,6 +280,24 @@ Adjust `ring-offset-1` for inline elements or `ring-offset-2` for block elements
 
 ---
 
+## Skip Navigation
+
+Every page must support keyboard bypass of the navigation bar (WCAG 2.4.1).
+
+- The skip link is rendered as the first child of `<BrowserRouter>` in `App.tsx` and always targets `#main-content`.
+- It is styled with the `.skip-nav` class defined in `src/index.css`: visually hidden (`top: -100%`) until focused, at which point it appears at `top: 1rem`.
+- Every page's `<main>` element must have `id="main-content"`. Do not omit this on new pages.
+
+```tsx
+// In App.tsx (already present — do not duplicate)
+<a href="#main-content" className="skip-nav">Skip to main content</a>
+
+// On every page
+<main id="main-content" ...>
+```
+
+---
+
 ## Hooks
 
 ### `useTheme`
@@ -298,6 +316,39 @@ const { theme, setTheme } = useTheme();
 | `setTheme(t)` | `(t: "light" \| "dark") => void` | Change and persist the theme |
 
 The default is dark. All light mode color overrides live in `src/index.css` as unlayered CSS rules scoped to `.light`. Never place light mode overrides inside `@layer base` — they would be silently overridden by `@layer utilities`.
+
+---
+
+### `useActiveSection`
+
+`src/hooks/useActiveSection.ts`
+
+Observes a list of section element IDs using `IntersectionObserver` and returns the ID of whichever section is currently visible in the viewport, or `null` if none are.
+
+Designed for anchor-based nav items on single-page layouts. Runs off the main thread with zero scroll listeners.
+
+```ts
+const activeSection = useActiveSection(["challenges", "about"]);
+// returns "challenges" | "about" | null
+```
+
+| Param | Type | Description |
+|---|---|---|
+| `sectionIds` | `string[]` | Array of element IDs to observe. Pass a stable module-level constant to prevent unnecessary re-runs. |
+
+| Return | Type | Description |
+|---|---|---|
+| (value) | `string \| null` | ID of the intersecting section, or `null` when none are in view |
+
+The observer fires at `threshold: 0.2` (20% visibility). The observer is disconnected on unmount.
+
+Usage in `Navbar.tsx`:
+
+```ts
+const OBSERVED_SECTIONS = ["challenges"]; // stable constant, outside component
+const activeSection = useActiveSection(OBSERVED_SECTIONS);
+const challengesActive = location.pathname === "/" && activeSection === "challenges";
+```
 
 ---
 
@@ -426,19 +477,21 @@ Never put a raw SVG icon next to text inside a plain `inline` or `block` element
 
 - Decorative icons (paired with visible text): `aria-hidden="true"`, no `aria-label`.
 - Icon-only interactive elements: no `aria-hidden`, always include `aria-label` on the parent.
+- Never omit `aria-hidden="true"` from a decorative icon next to visible text. The icon will be announced redundantly by screen readers if omitted.
 
 ### Icon map (current usage)
 
 | Icon | Lucide name | Where used |
 |---|---|---|
 | External link (navigation) | `ArrowUpRight` | Navbar GitHub button, BottomCTA GitHub button, CommunityGuide links |
-| Navigate forward / CTA | `ArrowRight` | Inline text links (DiscussionSection, VerificationSection, CommunityVoicesSection, ConnectSection, BottomCTA) |
+| Navigate forward / CTA | `ArrowRight` | Inline text links (DiscussionSection, VerificationSection, CommunityVoicesSection, ConnectSection, BottomCTA, LevelCard) |
 | Navigate back | `ArrowLeft` | ChallengeDetail breadcrumb |
 | Scroll down / anchor | `ArrowDown` | Hero primary CTA, About PageHero primary CTA |
 | Community Voices section | `Megaphone` | CommunityVoicesSection card icon |
 | Q&A section | `CircleHelp` | CommunityVoicesSection card icon |
 | Introduce yourself section | `UserPlus` | ConnectSection card icon |
 | Events & meetups section | `CalendarDays` | ConnectSection card icon |
+| Adventure levels badge | `Layers` | ChallengesGrid adventure card |
 
 ---
 

@@ -21,7 +21,7 @@ export const Hero = (): JSX.Element => {
               <span className="text-xs text-foreground">Community-driven</span>
             </div>
             <h1 className="animate-fade-up-delay-1 text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground/70 to-[hsl(var(--teal))] dark:from-primary dark:via-primary/70 dark:to-[hsl(var(--teal))]">
+              <span className="text-foreground dark:text-[#ffc034]">
                 Always On.
               </span>
               <br />
@@ -42,7 +42,7 @@ export const Hero = (): JSX.Element => {
                 rel="noopener noreferrer"
                 className="btn-ghost"
               >
-                Join the community <ArrowRight size={16} aria-hidden="true" />
+                Join the community <ArrowRight size={16} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
               </a>
             </div>
       </div>

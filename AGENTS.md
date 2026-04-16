@@ -182,6 +182,12 @@ Always run `npm run lint` and `npm test` before declaring a task done.
 
 Check the following on every component you write or modify.
 
+### Skip navigation
+- Every page must have a skip link as the first focusable element so keyboard users can bypass the nav bar.
+- The skip link in `App.tsx` targets `#main-content`. Every page's `<main>` element must carry `id="main-content"`.
+- The skip link is styled with the `.skip-nav` class in `src/index.css`. Never remove this class or its focus rules.
+- When adding a new page, always add `id="main-content"` to its `<main>` element.
+
 ### Color contrast
 - Normal text (under 18px / non-bold under 14px): minimum 4.5:1 ratio
 - Large text (18px+ or bold 14px+): minimum 3:1 ratio
@@ -197,11 +203,21 @@ Check the following on every component you write or modify.
   (adjust ring offset as needed; use `ring-offset-1` for inline elements, `ring-offset-2` for blocks)
 - Modals must trap focus while open and return focus on close. Use shadcn `Dialog`.
 
+### External links
+- Every `<a target="_blank">` link must include `<span className="sr-only"> (opens in new tab)</span>` as its last child.
+- Never add `target="_blank"` without this span. Keyboard and screen reader users must know the link opens a new tab.
+- Exception: icon-only buttons with `aria-label` already state the new-tab behavior in the label.
+
 ### Semantic HTML
 - Use the correct element for the job (`<button>` for actions, `<a>` for navigation,
   `<nav>`, `<main>`, `<header>`, `<footer>`, `<article>`, `<section>`).
 - Never use a `<div>` or `<span>` as an interactive element. Use the right element instead.
 - One `<h1>` per page. No skipped heading levels.
+- Every page's primary content must live inside a single `<main id="main-content">` element. Do not split the page content across multiple `<main>` elements or leave major sections (e.g. `PageHero`, `BottomCTA`) outside `<main>`.
+
+### Icons and special characters
+- Decorative icons paired with visible text: always add `aria-hidden="true"`. Do not omit it.
+- Never use raw Unicode characters (e.g. `→`, `♥`, `✓`) to convey meaning. Use proper text, lucide-react icons with `aria-hidden`, or an `aria-label`/`<span className="sr-only">` for screen readers.
 
 ### ARIA
 - Only add ARIA attributes when semantic HTML is not enough.
@@ -516,6 +532,12 @@ These rules exist to prevent specific classes of mistakes. Follow them unconditi
 - Use semantic HTML: `<main>`, `<nav>`, `<footer>`, `<section>`, `<article>` landmarks where appropriate
 - Heading hierarchy must not skip levels
 - Always test both light and dark mode when adding or modifying any component
+- Every new page must include `id="main-content"` on its `<main>` element (required for the skip navigation link in `App.tsx`)
+- Every `<a target="_blank">` must include `<span className="sr-only"> (opens in new tab)</span>` as its last child
+- Never add `target="_blank"` to a link without the above span
+- Do not use raw Unicode arrow or symbol characters (`→`, `♥`, `✓`, `★`) in visible content — use lucide-react icons with `aria-hidden="true"` instead, or wrap the character in `aria-hidden="true"` and pair with visible text or an sr-only label
+- Every decorative icon next to visible text must have `aria-hidden="true"` — never omit it
+- All page content (including `PageHero` and `BottomCTA`) must be inside the single `<main id="main-content">` element
 
 ---
 

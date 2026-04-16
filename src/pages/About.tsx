@@ -25,7 +25,7 @@ const About = (): JSX.Element => {
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
       </Helmet>
       <Navbar />
-      <main>
+      <main id="main-content">
       <PageHero
         eyebrow="About"
         title="Building the contributors and maintainers of tomorrow"

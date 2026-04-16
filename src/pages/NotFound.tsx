@@ -43,7 +43,7 @@ const NotFound = (): JSX.Element => {
         <link rel="canonical" href={SITE_URL} />
       </Helmet>
       <Navbar />
-      <main className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
+      <main id="main-content" className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
         <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary mb-4">404</span>
         <h1 className="text-4xl font-bold text-foreground mb-3">Page not found</h1>
         <p className="text-muted-foreground mb-2 max-w-sm leading-relaxed">
@@ -75,7 +75,7 @@ const NotFound = (): JSX.Element => {
           rel="noopener noreferrer"
           className="btn-primary"
         >
-          Open the community <ArrowUpRight size={14} aria-hidden="true" />
+          Open the community <ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
         </a>
       </main>
       <Footer />

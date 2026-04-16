@@ -64,6 +64,7 @@ const Sponsors = (): JSX.Element => {
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
       </Helmet>
       <Navbar />
+      <main id="main-content">
       <PageHero
         eyebrow="Sponsors"
         title="Sponsorship and Independence"
@@ -72,7 +73,7 @@ const Sponsors = (): JSX.Element => {
         secondaryCta={{ label: <span className="inline-flex items-center gap-2">Join the community <ArrowRight size={14} aria-hidden="true" /></span>, href: COMMUNITY_URL, external: true }}
       />
 
-      <main className="mx-auto max-w-4xl px-6 py-16">
+      <div className="mx-auto max-w-4xl px-6 py-16">
         {/* Founding Sponsor */}
         <section className="mb-16">
           <h2 className="text-3xl font-bold text-primary mb-8">Founding Sponsor</h2>
@@ -99,6 +100,7 @@ const Sponsors = (): JSX.Element => {
                       {s.name[0]}
                     </div>
                   )}
+                  <span className="sr-only"> (opens in new tab)</span>
                 </a>
               );
             })}
@@ -141,9 +143,10 @@ const Sponsors = (): JSX.Element => {
             ))}
           </ul>
         </section>
-      </main>
+      </div>
 
       <BottomCTA />
+      </main>
       <Footer />
     </div>
   );

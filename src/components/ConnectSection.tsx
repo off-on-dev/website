@@ -53,7 +53,7 @@ export const ConnectSection = (): JSX.Element => {
                     rel="noopener noreferrer"
                     className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
                   >
-                    {item.cta} <ArrowRight size={13} aria-hidden="true" />
+                    {item.cta} <ArrowRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                   </a>
                 </div>
               ))}

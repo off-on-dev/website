@@ -22,12 +22,6 @@ const badgeStyle: Record<Difficulty, CSSProperties> = {
   },
 };
 
-const dotColorClass: Record<Difficulty, string> = {
-  Beginner: "bg-[hsl(var(--difficulty-starter))]",
-  Intermediate: "bg-[hsl(var(--difficulty-builder))]",
-  Expert: "bg-[hsl(var(--difficulty-architect))]",
-};
-
 type DifficultyBadgeProps = {
   difficulty: Difficulty;
   showDot?: boolean;
@@ -41,7 +35,7 @@ export const DifficultyBadge = ({ difficulty, showDot = false }: DifficultyBadge
     data-difficulty={difficulty}
   >
     {showDot && (
-      <span className={`h-2 w-2 rounded-full ${dotColorClass[difficulty]}`} aria-hidden="true" />
+      <span className="h-2 w-2 rounded-full bg-current" aria-hidden="true" />
     )}
     {difficulty}
   </Badge>

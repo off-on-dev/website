@@ -56,7 +56,7 @@ const AdventureDetail = (): JSX.Element => {
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
       </Helmet>
       <Navbar />
-      <main className="mx-auto max-w-4xl px-6 pt-28 pb-24">
+      <main id="main-content" className="mx-auto max-w-4xl px-6 pt-28 pb-24">
         {/* Header */}
         <div className="mb-10">
           <span className="inline-block mb-4 rounded-sm border border-[hsl(var(--surface-border))] px-2 py-0.5 font-mono text-xs text-[hsl(var(--text-faint))] uppercase tracking-wider">

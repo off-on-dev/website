@@ -329,6 +329,26 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Skip navigation link — visually hidden until focused (WCAG 2.4.1 Bypass Blocks) */
+.skip-nav {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.5rem 1rem;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border: 2px solid hsl(var(--primary));
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.1s;
+}
+.skip-nav:focus {
+  top: 1rem;
+}
+
 @layer base {
   :root, .dark {
     --background: 0 0% 4%;
@@ -885,4 +905,30 @@
 
 .light a.text-primary {
   color: hsl(204 22% 9%);
+}
+
+/* ─── CommunityGuide external link states ──────────────── */
+/* Dark mode (default): yellow underline, foreground text */
+.docs-ext-link {
+  color: hsl(var(--foreground));
+  text-decoration-color: hsl(var(--primary));
+  transition: color 200ms ease, text-decoration-color 200ms ease;
+}
+
+/* Dark mode hover: soft warm yellow */
+.docs-ext-link:hover {
+  color: #ffe2a3;
+  text-decoration-color: #ffe2a3;
+}
+
+/* Light mode: near-black text; underline tracks text color via currentColor */
+.light .docs-ext-link {
+  color: hsl(var(--foreground));
+  text-decoration-color: currentColor;
+}
+
+/* Light mode hover: muted dark grey; underline tracks text color via currentColor */
+.light .docs-ext-link:hover {
+  color: hsl(var(--muted-foreground));
+  text-decoration-color: currentColor;
 }
