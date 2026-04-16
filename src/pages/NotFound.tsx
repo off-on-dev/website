@@ -43,14 +43,14 @@ const NotFound = (): JSX.Element => {
         <link rel="canonical" href={SITE_URL} />
       </Helmet>
       <Navbar />
-      <main className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
-        <span className="section-label font-mono text-xs font-medium uppercase tracking-widest text-primary mb-4">404</span>
+      <main id="main-content" className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
+        <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary mb-4">404</span>
         <h1 className="text-4xl font-bold text-foreground mb-3">Page not found</h1>
         <p className="text-muted-foreground mb-2 max-w-sm leading-relaxed">
           This is not the page you were looking for.
         </p>
         <p className="text-muted-foreground mb-10 max-w-sm leading-relaxed">
-          Please check the links below for more help.
+          Please check the links below for more information.
         </p>
 
         <nav aria-label="Helpful links">
@@ -62,7 +62,7 @@ const NotFound = (): JSX.Element => {
                   className="card-glow flex flex-col gap-1.5 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5 h-full hover:border-primary/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
                 >
                   <span className="text-sm font-semibold text-foreground">{link.label}</span>
-                  <span className="text-xs text-muted-foreground leading-relaxed">{link.desc}</span>
+                  <span className="text-sm text-muted-foreground leading-relaxed">{link.desc}</span>
                 </Link>
               </li>
             ))}
@@ -75,7 +75,7 @@ const NotFound = (): JSX.Element => {
           rel="noopener noreferrer"
           className="btn-primary"
         >
-          Open the community <ArrowUpRight size={14} aria-hidden="true" />
+          Open the community <ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
         </a>
       </main>
       <Footer />

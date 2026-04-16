@@ -8,7 +8,7 @@ import logoLight from "@/assets/offon-logo-light-color.svg";
 export const Footer = (): JSX.Element => {
   const { theme } = useTheme();
 
-  const lnk = "flex items-center min-h-[48px] font-mono text-sm text-[hsl(var(--text-secondary))] hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm";
+  const lnk = "flex items-center min-h-[48px] font-sans text-sm text-[hsl(var(--text-secondary))] hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm";
 
   return (
     <footer className="bg-background border-t border-[hsl(var(--surface-border))] px-6 sm:px-8 md:px-16 lg:px-20">
@@ -19,8 +19,10 @@ export const Footer = (): JSX.Element => {
           <div className="mb-4">
             <img src={theme === "dark" ? logoDark : logoLight} alt="offon.dev" width={104} height={26} className="h-5" />
           </div>
-          <p className="font-mono text-xs text-[hsl(var(--text-secondary))] leading-relaxed md:max-w-xs">
-            A welcoming community for open source enthusiasts to learn, share knowledge, and build together.
+          <p className="flex flex-col font-sans text-sm text-[hsl(var(--text-secondary))] leading-relaxed md:max-w-xs">
+            <span>A welcoming community</span>
+            <span>for open source enthusiasts to</span>
+            <span>learn, share knowledge, and build together.</span>
           </p>
         </div>
 

@@ -12,7 +12,7 @@ export const VerificationSection = (): JSX.Element => (
       rel="noopener noreferrer"
       className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
     >
-      View full verification guide on GitHub <ArrowRight size={13} aria-hidden="true" />
+      View full verification guide on GitHub <ArrowRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
     </a>
   </div>
 );

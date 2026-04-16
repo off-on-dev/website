@@ -1,5 +1,6 @@
 import type { AdventureLevel } from "@/data/adventures";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
+import { ArrowRight } from "lucide-react";
 
 type LevelCardProps = {
   level: AdventureLevel;
@@ -14,7 +15,7 @@ export const LevelCard = ({ level }: LevelCardProps): JSX.Element => (
     </div>
 
     <div className="mb-6">
-      <h3 className="font-mono text-xs uppercase tracking-widest text-primary mb-3">Key Learnings</h3>
+      <h3 className="font-sans text-sm uppercase tracking-widest text-primary mb-3">Key Learnings</h3>
       <ul className="space-y-2">
         {level.learnings.map((learning, i) => (
           <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
@@ -31,7 +32,7 @@ export const LevelCard = ({ level }: LevelCardProps): JSX.Element => (
       rel="noopener noreferrer"
       className="btn-primary"
     >
-      Open in GitHub Codespaces →
+      Open in GitHub Codespaces <ArrowRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
     </a>
     <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
       <p className="text-xs text-[hsl(var(--text-faint))] font-mono">
@@ -41,9 +42,9 @@ export const LevelCard = ({ level }: LevelCardProps): JSX.Element => (
         href={level.discussionUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-xs font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
+        className="text-xs font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm inline-flex items-center gap-0.5"
       >
-        Discussion →
+        Discussion <ArrowRight size={11} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
       </a>
     </div>
   </div>

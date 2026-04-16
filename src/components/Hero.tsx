@@ -4,9 +4,6 @@ import { COMMUNITY_URL } from "@/data/constants";
 export const Hero = (): JSX.Element => {
   return (
     <section className="relative flex min-h-screen items-center justify-center px-6 pt-20 overflow-hidden">
-      {/* Multi-color animated glow */}
-      <div className="hero-glow absolute inset-0 pointer-events-none" aria-hidden="true" />
-
       {/* Firefly particles */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         {Array.from({ length: 8 }).map((_, i) => (
@@ -24,16 +21,16 @@ export const Hero = (): JSX.Element => {
               <span className="text-xs text-foreground">Community-driven</span>
             </div>
             <h1 className="animate-fade-up-delay-1 text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground/70 to-[hsl(var(--teal))] dark:from-primary dark:via-primary/70 dark:to-[hsl(var(--teal))]">
-                Break things.
+              <span className="text-foreground dark:text-[#ffc034]">
+                Always On.
               </span>
               <br />
               <span className="text-foreground">
-                Learn together.
+                Always Open.
               </span>
             </h1>
             <p className="animate-fade-up-delay-2 mx-auto mt-6 max-w-xl text-lg leading-relaxed text-[hsl(var(--text-secondary))]">
-              Hands-on challenges with real open source tools and broken-on-purpose environments powered by GitHub Codespaces. Practical, reproducible, and built for one purpose: building the contributors and maintainers of tomorrow.
+              A welcoming community for open source enthusiasts to learn, share knowledge, and build together. Take on hands-on challenges, write tutorials, share open source projects and news, and keep growing.
             </p>
             <div className="animate-fade-up-delay-3 mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
               <a href="#challenges" className="btn-primary">
@@ -45,7 +42,7 @@ export const Hero = (): JSX.Element => {
                 rel="noopener noreferrer"
                 className="btn-ghost"
               >
-                Join the community <ArrowRight size={16} aria-hidden="true" />
+                Join the community <ArrowRight size={16} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
               </a>
             </div>
       </div>

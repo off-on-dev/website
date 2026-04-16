@@ -25,13 +25,11 @@ const About = (): JSX.Element => {
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
       </Helmet>
       <Navbar />
-      <main>
+      <main id="main-content">
       <PageHero
         eyebrow="About"
         title="Building the contributors and maintainers of tomorrow"
-        description="Focused on what matters: helping people grow from curious users to confident contributors, and from contributors to sustainable maintainers. Vendor-neutral. Open source. Community-driven."
-        primaryCta={{ label: <span className="inline-flex items-center gap-2">Our mission <ArrowDown size={14} aria-hidden="true" /></span>, href: "#mission" }}
-        secondaryCta={{ label: <span className="inline-flex items-center gap-2">Join the community <ArrowRight size={14} aria-hidden="true" /></span>, href: COMMUNITY_URL, external: true }}
+        description="Vendor-neutral. Open source. Community-driven."
       />
       <AboutSection />
       <BottomCTA />

@@ -4,7 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { Footer } from "@/components/Footer";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME } from "@/data/constants";
 
-const extLink = "text-foreground underline decoration-[hsl(41_100%_60%)] decoration-2 underline-offset-2 hover:decoration-[hsl(0_0%_0%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm transition-colors";
+const extLink = "docs-ext-link underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm";
 
 const CommunityGuide = (): JSX.Element => {
   return (
@@ -24,9 +24,9 @@ const CommunityGuide = (): JSX.Element => {
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
       </Helmet>
       <Navbar />
-      <main className="mx-auto max-w-3xl px-6 pt-28 pb-24">
+      <main id="main-content" className="mx-auto max-w-3xl px-6 pt-28 pb-24">
 
-        <span className="section-label font-mono text-xs font-medium uppercase tracking-widest text-primary">Community Guide</span>
+        <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">Community Guide</span>
         <h1 className="mt-3 text-4xl font-bold text-foreground md:text-5xl">
           Community Guide
         </h1>
@@ -39,7 +39,7 @@ const CommunityGuide = (): JSX.Element => {
           {/* What is OffOn */}
           <section aria-labelledby="what-is-offon">
             <h2 id="what-is-offon" className="text-2xl font-bold text-foreground mb-3">What is {BRAND_NAME} and who is it for?</h2>
-            <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed mb-6">
+            <p className="text-base text-[hsl(var(--text-secondary))] leading-relaxed mb-6">
               A practical, welcoming space for builders working with open standards and cloud-native technologies. {BRAND_NAME} focuses on reproducible, hands-on knowledge: tutorials, Q&amp;A with accepted solutions, and recurring challenges, so members can learn quickly, share real-world implementations, and help each other succeed.
             </p>
 
@@ -80,7 +80,7 @@ const CommunityGuide = (): JSX.Element => {
             <ul className="space-y-2">
               <li>
                 <a href={`${COMMUNITY_URL}/t/getting-started-welcome-to-the-open-ecosystem/36`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Getting started in the {BRAND_NAME} community <ArrowUpRight size={13} className="inline-block -mb-0.5" aria-hidden="true" />
+                  Getting started in the {BRAND_NAME} community <ArrowUpRight size={13} className="inline-block -mb-0.5" aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </li>
             </ul>
@@ -103,7 +103,7 @@ const CommunityGuide = (): JSX.Element => {
                     <li key={item.label} className="flex items-center gap-2.5 text-sm">
                       <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                       <a href={item.href} target="_blank" rel="noopener noreferrer" className={extLink}>
-                        {item.label} <ArrowUpRight size={12} className="inline-block -mb-0.5" aria-hidden="true" />
+                        {item.label} <ArrowUpRight size={12} className="inline-block -mb-0.5" aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                       </a>
                     </li>
                   ))}
@@ -121,7 +121,7 @@ const CommunityGuide = (): JSX.Element => {
                     <li key={item.label} className="flex items-center gap-2.5 text-sm">
                       <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                       <a href={item.href} target="_blank" rel="noopener noreferrer" className={extLink}>
-                        {item.label} <ArrowUpRight size={12} className="inline-block -mb-0.5" aria-hidden="true" />
+                        {item.label} <ArrowUpRight size={12} className="inline-block -mb-0.5" aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                       </a>
                     </li>
                   ))}
@@ -138,7 +138,7 @@ const CommunityGuide = (): JSX.Element => {
                     <li key={item.label} className="flex items-center gap-2.5 text-sm">
                       <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                       <a href={item.href} target="_blank" rel="noopener noreferrer" className={extLink}>
-                        {item.label} <ArrowUpRight size={12} className="inline-block -mb-0.5" aria-hidden="true" />
+                        {item.label} <ArrowUpRight size={12} className="inline-block -mb-0.5" aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                       </a>
                     </li>
                   ))}
@@ -151,10 +151,10 @@ const CommunityGuide = (): JSX.Element => {
           {/* Vendor-agnostic Policy */}
           <section aria-labelledby="vendor-agnostic">
             <h2 id="vendor-agnostic" className="text-2xl font-bold text-foreground mb-3">Vendor-agnostic Policy</h2>
-            <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+            <p className="text-base text-[hsl(var(--text-secondary))] leading-relaxed">
               {BRAND_NAME} is vendor-agnostic. Technical product mentions are welcome when neutral and reproducible. Avoid promotional content. Marketing posts will be removed and repeated violations may lead to moderation actions. See{" "}
               <a href={`${COMMUNITY_URL}/t/posting-guidelines/30`} target="_blank" rel="noopener noreferrer" className={extLink}>
-              Posting Guidelines <ArrowUpRight size={13} className="inline-block -mb-0.5" aria-hidden="true" />
+              Posting Guidelines <ArrowUpRight size={13} className="inline-block -mb-0.5" aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
               </a>.
             </p>
           </section>
@@ -171,7 +171,7 @@ const CommunityGuide = (): JSX.Element => {
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                 DM{" "}
                 <a href={`${COMMUNITY_URL}/groups/moderators`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  @moderators <ArrowUpRight size={13} className="inline-block -mb-0.5" aria-hidden="true" />
+                  @moderators <ArrowUpRight size={13} className="inline-block -mb-0.5" aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>{" "}
                 for sensitive issues
               </li>
@@ -183,7 +183,7 @@ const CommunityGuide = (): JSX.Element => {
         {/* Footer nav */}
         <div className="mt-16 pt-8 border-t border-[hsl(var(--surface-border))]">
           <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">
-            Open the community <ArrowUpRight size={14} aria-hidden="true" />
+            Open the community <ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
           </a>
         </div>
 
