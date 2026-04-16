@@ -52,7 +52,8 @@ const Index = (): JSX.Element => {
         <section className="bg-primary py-16 px-6 md:px-16">
           <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <h2 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background">
-              Got an idea<br />for an adventure?
+              <span className="block">Got an idea</span>
+              <span className="block">for an adventure?</span>
             </h2>
             <div className="flex flex-col gap-4">
               <p className="font-sans text-base leading-relaxed text-background/90">
