@@ -50,10 +50,16 @@ const AdventureDetail = (): JSX.Element => {
         <meta property="og:type" content="article" />
         <meta property="og:url" content={pageUrl} />
         <meta property="og:image" content={`${SITE_URL}/og.png`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={pageTitle} />
+        <meta property="og:site_name" content={BRAND_NAME} />
+        <meta property="og:locale" content="en_GB" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDesc} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
+        <meta name="twitter:image:alt" content={pageTitle} />
       </Helmet>
       <Navbar />
       <main id="main-content" className="mx-auto max-w-4xl px-6 pt-28 pb-24">

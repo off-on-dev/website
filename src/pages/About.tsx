@@ -19,10 +19,16 @@ const About = (): JSX.Element => {
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/about`} />
         <meta property="og:image" content={`${SITE_URL}/og.png`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={`About - ${BRAND_NAME}`} />
+        <meta property="og:site_name" content={BRAND_NAME} />
+        <meta property="og:locale" content="en_GB" />
         <meta name="twitter:title" content={`About - ${BRAND_NAME}`} />
         <meta name="twitter:description" content="Building the contributors and maintainers of tomorrow. Vendor-neutral, open source, community-driven." />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
+        <meta name="twitter:image:alt" content={`About - ${BRAND_NAME}`} />
       </Helmet>
       <Navbar />
       <main id="main-content">

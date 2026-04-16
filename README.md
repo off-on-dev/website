@@ -76,6 +76,41 @@ public/
 
 > **Technology tag filtering** is handled inline on the home page, adventure detail, and challenge detail pages via local `useState`. There is no dedicated `/topics/:tag` route.
 
+## SEO and Metadata
+
+### Web Manifest
+`public/site.webmanifest` defines the web app identity, used by browsers and PWA tools. It includes:
+- App name, short name, and description
+- Icon references (favicon and apple-touch-icon)
+- Theme and background colors
+- Display mode (standalone)
+
+### Schema.org Structured Data
+`index.html` includes a JSON-LD `<script>` block with `@type: "WebSite"` for semantic web indexing. This helps search engines understand the site's purpose and content.
+
+### Open Graph Tags
+All pages include complete OG tags:
+- `og:title`, `og:description`, `og:url`, `og:image`
+- `og:image:width`, `og:image:height`, `og:image:alt` (required for proper image rendering in social previews)
+- `og:site_name` (brand), `og:locale` (en_GB)
+- `og:type` (website or article, depending on page)
+
+All dynamic pages (adventure & challenge details) generate page-specific OG tags via react-helmet-async.
+
+### Twitter Card Tags
+All pages include:
+- `twitter:card` (summary_large_image)
+- `twitter:title`, `twitter:description`, `twitter:image`, `twitter:image:alt`
+
+### Canonical Links
+Each page declares its canonical URL to prevent duplicate indexing. Handled via react-helmet-async Helmet on each page.
+
+### Sitemap and Robots
+- `public/sitemap.xml` lists all static routes with change frequency and priority.
+- `public/robots.txt` points search engines to the sitemap.
+
+---
+
 ## Analytics and Privacy
 
 The site uses Google Analytics 4 with Consent Mode v2. No data is collected until the user explicitly accepts via the consent banner.

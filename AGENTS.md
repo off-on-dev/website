@@ -178,7 +178,7 @@ Always run `npm run lint` and `npm test` before declaring a task done.
 
 ---
 
-## Accessibility (WCAG 2.1 AA, mandatory)
+## Accessibility (WCAG 2.2 AA, mandatory)
 
 Check the following on every component you write or modify.
 
@@ -283,6 +283,14 @@ This is a fully static React site. Apply these practices on every page.
 - Keep bundle size in check. Avoid large dependencies for small tasks.
 - Lazy load page components with `React.lazy` and `Suspense` where practical.
 - Avoid layout shift. Set explicit dimensions on images and media.
+
+### Global head setup (index.html)
+- Add `<link rel="canonical" href="https://offon.dev/" />` for the home page.
+- Add `<link rel="manifest" href="/site.webmanifest" />` to link the web app manifest.
+- Add `<meta name="theme-color">` tags for dark and light mode: `content="#0a0a0a" media="(prefers-color-scheme: dark)"` and `content="#f5f5ff" media="(prefers-color-scheme: light)"`.
+- Add JSON-LD structured data as a `<script type="application/ld+json">` with `@type: "WebSite"`.
+- Always include `og:image:width`, `og:image:height`, and `og:image:alt` for all OG image tags.
+- Add `og:site_name` and `og:locale` (en_GB) to all global OG tags in `index.html`.
 
 ---
 
@@ -512,7 +520,9 @@ These rules exist to prevent specific classes of mistakes. Follow them unconditi
 
 - Add `<title>` and `<meta name="description">` via react-helmet-async
 - Add `og:title`, `og:description`, `og:url`, `og:image` meta tags
-- Add `twitter:card`, `twitter:title`, `twitter:description`, `twitter:image` meta tags
+- Add `og:image:width` (1200) and `og:image:height` (630) for proper image rendering
+- Add `og:image:alt`, `og:site_name`, and `og:locale` (en_GB) meta tags
+- Add `twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`, and `twitter:image:alt` meta tags
 - Add canonical link tag
 - Add the page URL to `public/sitemap.xml` (static routes only)
 - Use correct heading hierarchy: one `h1` per page, `h2` for sections, `h3` for subsections
