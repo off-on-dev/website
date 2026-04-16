@@ -273,6 +273,10 @@ This is a fully static React site. Apply these practices on every page.
 - One `<h1>` per page that clearly describes the page topic.
 - Headings follow a logical order with no skipped levels.
 - Include relevant keywords in headings naturally, not forced.
+- For multi-line hero or section headings, do not use `<br />` inside `h1`/`h2`.
+  Use block-level `<span>` elements for visual line breaks so parsers read predictable text.
+- When splitting heading text across multiple visual lines, add a single clean `aria-label`
+  on the heading and mark decorative line-split spans as `aria-hidden="true"`.
 
 ### Links and navigation
 - Internal links use React Router `<Link>`. Never trigger full page reloads.
@@ -541,6 +545,8 @@ These rules exist to prevent specific classes of mistakes. Follow them unconditi
 - Verify hover states do not change layout properties (padding, border, font-weight, width) — color and opacity only
 - Use semantic HTML: `<main>`, `<nav>`, `<footer>`, `<section>`, `<article>` landmarks where appropriate
 - Heading hierarchy must not skip levels
+- Do not rely on `<br />` to split heading text across lines in `h1`/`h2`.
+  Prefer block spans and provide a clean `aria-label` for assistive tech and SEO parsers.
 - Always test both light and dark mode when adding or modifying any component
 - Every new page must include `id="main-content"` on its `<main>` element (required for the skip navigation link in `App.tsx`)
 - Every `<a target="_blank">` must include `<span className="sr-only"> (opens in new tab)</span>` as its last child
