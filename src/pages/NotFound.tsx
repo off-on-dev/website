@@ -29,9 +29,9 @@ const NotFound = (): JSX.Element => {
     <div className="min-h-screen bg-background">
       <Helmet>
         <title>{`Page Not Found - ${BRAND_NAME}`}</title>
-        <meta name="description" content="The page you are looking for does not exist or has been moved." />
+        <meta name="description" content={`This page could not be found. Use ${BRAND_NAME} links to continue exploring challenges, guides, and community resources.`} />
         <meta property="og:title" content={`Page Not Found - ${BRAND_NAME}`} />
-        <meta property="og:description" content="The page you are looking for does not exist or has been moved." />
+        <meta property="og:description" content={`This page could not be found. Use ${BRAND_NAME} links to continue exploring challenges, guides, and community resources.`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={SITE_URL} />
         <meta property="og:image" content={`${SITE_URL}/og.png`} />
@@ -41,7 +41,7 @@ const NotFound = (): JSX.Element => {
         <meta property="og:site_name" content={BRAND_NAME} />
         <meta property="og:locale" content="en_GB" />
         <meta name="twitter:title" content={`Page Not Found - ${BRAND_NAME}`} />
-        <meta name="twitter:description" content="The page you are looking for does not exist or has been moved." />
+        <meta name="twitter:description" content={`This page could not be found. Use ${BRAND_NAME} links to continue exploring challenges, guides, and community resources.`} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
         <meta name="twitter:image:alt" content={`Page Not Found - ${BRAND_NAME}`} />

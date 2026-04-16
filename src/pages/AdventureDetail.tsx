@@ -24,7 +24,8 @@ const AdventureDetail = (): JSX.Element => {
   }
 
   const pageTitle = `${adventure.title} - ${BRAND_NAME} Adventures`;
-  const pageDesc = adventure.story;
+  const tagsSummary = adventure.tags.slice(0, 3).join(", ");
+  const pageDesc = `Join ${adventure.title} on ${BRAND_NAME} with ${adventure.levels.length} hands-on challenge levels. Topics include ${tagsSummary}.`.slice(0, 160);
   const pageUrl = `${SITE_URL}/adventures/${adventure.id}`;
 
   const relatedLevels = activeTech

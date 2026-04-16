@@ -18,9 +18,9 @@ const Privacy = (): JSX.Element => {
       <Helmet>
         <title>Privacy Policy - {BRAND_NAME}</title>
         <link rel="canonical" href={`${SITE_URL}/privacy`} />
-        <meta name="description" content="Privacy policy for offon.dev. Explains how we collect and use analytics data and your rights under GDPR." />
+        <meta name="description" content={`Read the ${BRAND_NAME} privacy policy to learn what data we collect, how analytics works, and your GDPR rights.`} />
         <meta property="og:title" content={`Privacy Policy - ${BRAND_NAME}`} />
-        <meta property="og:description" content="Privacy policy for offon.dev." />
+        <meta property="og:description" content={`Read the ${BRAND_NAME} privacy policy to learn what data we collect, how analytics works, and your GDPR rights.`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/privacy`} />
         <meta property="og:image" content={`${SITE_URL}/og.png`} />
@@ -33,7 +33,7 @@ const Privacy = (): JSX.Element => {
         <meta name="twitter:image:alt" content={`Privacy Policy - ${BRAND_NAME}`} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`Privacy Policy - ${BRAND_NAME}`} />
-        <meta name="twitter:description" content="Privacy policy for offon.dev. Explains how we collect and use analytics data and your rights under GDPR." />
+        <meta name="twitter:description" content={`Read the ${BRAND_NAME} privacy policy to learn what data we collect, how analytics works, and your GDPR rights.`} />
         <meta name="robots" content="noindex" />
       </Helmet>
       <Navbar />

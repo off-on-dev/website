@@ -28,9 +28,9 @@ const Index = (): JSX.Element => {
       <Helmet>
         <title>{`${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`}</title>
         <link rel="canonical" href={SITE_URL + "/"} />
-        <meta name="description" content="Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, cloud dev environments." />
+        <meta name="description" content="A welcoming open source community. Learn through hands-on challenges to build skills. Share expertise and projects. Ask for help anytime." />
         <meta property="og:title" content={`${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`} />
-        <meta property="og:description" content="Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, cloud dev environments." />
+        <meta property="og:description" content="A welcoming open source community. Learn through hands-on challenges to build skills. Share expertise and projects. Ask for help anytime." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/`} />
         <meta property="og:image" content={`${SITE_URL}/og.png`} />
@@ -40,7 +40,7 @@ const Index = (): JSX.Element => {
         <meta property="og:site_name" content={BRAND_NAME} />
         <meta property="og:locale" content="en_GB" />
         <meta name="twitter:title" content={`${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`} />
-        <meta name="twitter:description" content="Hands-on challenges with broken Kubernetes clusters, misconfigured pipelines, and invisible failures. Real tools, real scenarios, cloud dev environments." />
+        <meta name="twitter:description" content="A welcoming open source community. Learn through hands-on challenges to build skills. Share expertise and projects. Ask for help anytime." />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
         <meta name="twitter:image:alt" content={`${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`} />

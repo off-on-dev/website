@@ -12,9 +12,9 @@ const CommunityGuide = (): JSX.Element => {
       <Helmet>
         <title>{`Community Guide - ${BRAND_NAME}`}</title>
         <link rel="canonical" href={`${SITE_URL}/docs/community-guide`} />
-        <meta name="description" content={`Everything you need to get started, participate, and grow in the ${BRAND_NAME} community.`} />
+        <meta name="description" content="All the info to get started with OffOn: what we stand for, who OffOn is for, and docs to help you participate." />
         <meta property="og:title" content={`Community Guide - ${BRAND_NAME}`} />
-        <meta property="og:description" content={`Everything you need to get started, participate, and grow in the ${BRAND_NAME} community.`} />
+        <meta property="og:description" content="All the info to get started with OffOn: what we stand for, who OffOn is for, and docs to help you participate." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/docs/community-guide`} />
         <meta property="og:image" content={`${SITE_URL}/og.png`} />
@@ -25,7 +25,7 @@ const CommunityGuide = (): JSX.Element => {
         <meta property="og:locale" content="en_GB" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`Community Guide - ${BRAND_NAME}`} />
-        <meta name="twitter:description" content={`Everything you need to get started, participate, and grow in the ${BRAND_NAME} community.`} />
+        <meta name="twitter:description" content="All the info to get started with OffOn: what we stand for, who OffOn is for, and docs to help you participate." />
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
         <meta name="twitter:image:alt" content={`Community Guide - ${BRAND_NAME}`} />
       </Helmet>
