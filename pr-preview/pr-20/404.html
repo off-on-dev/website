@@ -1,79 +1,14 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>OffOn - Vendor-neutral. Open Source. Community Driven.</title>
-    <meta name="author" content="offon.dev" />
-    <link rel="icon" href="/pr-preview/pr-20/favicon.svg" type="image/svg+xml">
-    <link rel="icon" href="/pr-preview/pr-20/favicon.png" type="image/png">
-    <link rel="shortcut icon" href="/pr-preview/pr-20/favicon.ico">
-    <link rel="apple-touch-icon" href="/pr-preview/pr-20/apple-touch-icon.png">
-    <link rel="manifest" href="/pr-preview/pr-20/site.webmanifest" />
-    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#f5f5ff" media="(prefers-color-scheme: light)" />
-
-    <link rel="preload" href="/pr-preview/pr-20/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="/pr-preview/pr-20/fonts/inter-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="/pr-preview/pr-20/fonts/inter-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-    <link rel="preload" href="/pr-preview/pr-20/fonts/inter-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-    <link rel="preload" href="/pr-preview/pr-20/fonts/syne-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-
-    <meta property="og:title" content="OffOn - Vendor-neutral. Open Source. Community Driven." />
-    <meta property="og:description" content="A welcoming open source community. Take hands-on challenges to build real skills. Share your expertise and projects. Learn from others and ask for help." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://offon.dev/" />
-    <meta property="og:image" content="https://offon.dev/og.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="OffOn - Vendor-neutral. Open Source. Community Driven." />
-    <meta property="og:site_name" content="OffOn" />
-    <meta property="og:locale" content="en_GB" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="OffOn - Vendor-neutral. Open Source. Community Driven." />
-    <meta name="twitter:description" content="A welcoming open source community. Take hands-on challenges to build real skills. Share your expertise and projects. Learn from others and ask for help." />
-    <meta name="twitter:image" content="https://offon.dev/og.png" />
-    <meta name="twitter:image:alt" content="OffOn - Vendor-neutral. Open Source. Community Driven." />
-
+    <meta charset="utf-8" />
     <script>
-      (function() {
-        var t = localStorage.getItem("theme");
-        if (t === "light") {
-          document.documentElement.classList.remove("dark");
-          document.documentElement.classList.add("light");
-        }
-      })();
+      var base = '/pr-preview/pr-20';
+      var path = window.location.pathname.replace(base, '') || '/';
+      var search = window.location.search;
+      var hash = window.location.hash;
+      window.location.replace(base + '/?p=' + encodeURIComponent(path + search) + (hash ? '&h=' + encodeURIComponent(hash.slice(1)) : ''));
     </script>
-
-    <!-- Google Analytics: dataLayer and consent defaults only. The gtag.js script
-         is loaded dynamically only after the user explicitly accepts analytics cookies.
-         No requests are made to Google before consent is given. -->
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('consent', 'default', {
-        analytics_storage: 'denied',
-        ad_storage: 'denied',
-        ad_user_data: 'denied',
-        ad_personalization: 'denied',
-        wait_for_update: 500
-      });
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "OffOn",
-      "url": "https://offon.dev",
-      "description": "A welcoming open source community. Take hands-on challenges to build real skills. Share your expertise and projects. Learn from others and ask for help."
-    }
-    </script>
-    <script type="module" crossorigin src="/pr-preview/pr-20/assets/index-aKaqKGMK.js"></script>
-    <link rel="stylesheet" crossorigin href="/pr-preview/pr-20/assets/index-BqHlkZ1r.css">
   </head>
-
-  <body>
-    <div id="root"></div>
-  </body>
+  <body></body>
 </html>

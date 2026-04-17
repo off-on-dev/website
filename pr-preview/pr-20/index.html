@@ -71,7 +71,21 @@
     </script>
     <script type="module" crossorigin src="/pr-preview/pr-20/assets/index-aKaqKGMK.js"></script>
     <link rel="stylesheet" crossorigin href="/pr-preview/pr-20/assets/index-BqHlkZ1r.css">
-  </head>
+  
+  <script>
+    (function() {
+      var base = '/pr-preview/pr-20';
+      var p = window.location.search.match(/[?&]p=([^&]+)/);
+      if (p) {
+        var path = decodeURIComponent(p[1]);
+        var h = window.location.search.match(/[?&]h=([^&]*)/);
+        window.history.replaceState(null, null,
+          base + path + (h && h[1] ? '#' + decodeURIComponent(h[1]) : '')
+        );
+      }
+    })();
+  </script>
+</head>
 
   <body>
     <div id="root"></div>
