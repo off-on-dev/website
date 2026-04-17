@@ -307,13 +307,13 @@ Every page must support keyboard bypass of the navigation bar (WCAG 2.4.1).
 Manages the light/dark theme. Applies `.light` or `.dark` class to the `<html>` element and persists the choice in `localStorage` under the key `theme`.
 
 ```ts
-const { theme, setTheme } = useTheme();
+const { theme, toggle } = useTheme();
 ```
 
 | Return | Type | Description |
 |---|---|---|
 | `theme` | `"light" \| "dark"` | Current active theme |
-| `setTheme(t)` | `(t: "light" \| "dark") => void` | Change and persist the theme |
+| `toggle()` | `() => void` | Toggle between light and dark and persist the choice |
 
 The default is dark. All light mode color overrides live in `src/index.css` as unlayered CSS rules scoped to `.light`. Never place light mode overrides inside `@layer base` — they would be silently overridden by `@layer utilities`.
 

@@ -17,7 +17,7 @@ Guidance for AI coding agents working in this repository.
 ## Project Overview
 
 **offon.dev** is the main website for OffOn, a platform for open source enthusiasts.
-It is fully static with no backend, no SSR, and no database.
+It is fully static with no backend and no database. Pages are prerendered at build time using vite-react-ssg.
 
 Community activity happens on a separate Discourse instance at **community.offon.dev**,
 which is not part of this repository. Do not attempt to replicate or integrate
@@ -30,7 +30,7 @@ Discourse functionality here.
 - **Framework:** React with TypeScript, bundled via Vite. Check `package.json` for current versions.
 - **Styling:** Tailwind CSS
 - **Components:** shadcn/ui (Radix UI primitives), live in `src/components/ui/`
-- **Routing:** React Router (client-side)
+- **Routing:** React Router v6 (client-side with SSG prerendering via vite-react-ssg)
 - **Testing:** Vitest + @testing-library/react
 - **Hosting:** GitHub Pages
 - **PR previews:** pr-preview-action
@@ -60,6 +60,7 @@ src/
   hooks/        # Custom React hooks
   lib/          # Shared utilities
   assets/       # Static assets bundled by Vite
+  Layout.tsx    # App shell: providers, skip nav, scroll-to-top, consent banner, and Outlet
 public/
   fonts/        # Self-hosted fonts (Inter, Syne, JetBrains Mono)
 .github/
@@ -74,8 +75,9 @@ public/
 
 ```sh
 npm run dev          # Start local dev server (http://localhost:8080)
-npm run build        # Production build -> dist/
+npm run build        # Production SSG build (vite-react-ssg) -> dist/
 npm run build:dev    # Dev-mode build
+npm run build:ssg-dev  # SSG build in development mode (unminified, for hydration debugging)
 npm run lint         # ESLint
 npm test             # Run tests once (Vitest)
 npm run test:watch   # Tests in watch mode
@@ -237,7 +239,7 @@ Check the following on every component you write or modify.
 
 ### Skip navigation
 - Every page must have a skip link as the first focusable element so keyboard users can bypass the nav bar.
-- The skip link in `App.tsx` targets `#main-content`. Every page's `<main>` element must carry `id="main-content"`.
+- The skip link in `Layout.tsx` targets `#main-content`. Every page's `<main>` element must carry `id="main-content"`.
 - The skip link is styled with the `.skip-nav` class in `src/index.css`. Never remove this class or its focus rules.
 - When adding a new page, always add `id="main-content"` to its `<main>` element.
 
@@ -356,6 +358,7 @@ if the site is ever prerendered. Never introduce them.
   prerender pass and produce content that the client's first render does not
   match. Guard prerender-sensitive observers with a `window.__PRERENDER_INJECTED`
   check if prerendering is added later.
+- `useScrollAnimation` renders content with `scroll-hidden`/`scroll-visible` CSS classes instead of conditional rendering, ensuring SSR and client initial render always match.
 
 ---
 
@@ -467,7 +470,7 @@ these rules.
 - Push to `main` triggers `deploy.yml` and deploys to GitHub Pages.
 - Open PRs trigger `preview.yml` and create a PR preview deployment.
 - Only static files in `dist/` are deployed. No server config is needed.
-- Never change `vite.config.ts` base path without verifying GitHub Pages routing.
+- The base path is set via the `VITE_BASE_PATH` environment variable (defaults to `/`). PR previews set this automatically in `preview.yml`. Never change this without verifying GitHub Pages routing.
 
 ---
 
@@ -657,7 +660,7 @@ These rules exist to prevent specific classes of mistakes. Follow them unconditi
 - Do not rely on `<br />` to split heading text across lines in `h1`/`h2`.
   Prefer block spans and provide a clean `aria-label` for assistive tech and SEO parsers.
 - Always test both light and dark mode when adding or modifying any component
-- Every new page must include `id="main-content"` on its `<main>` element (required for the skip navigation link in `App.tsx`)
+- Every new page must include `id="main-content"` on its `<main>` element (required for the skip navigation link in `Layout.tsx`)
 - Every `<a target="_blank">` must include `<span className="sr-only"> (opens in new tab)</span>` as its last child
 - Never add `target="_blank"` to a link without the above span
 - Do not use raw Unicode arrow or symbol characters (`→`, `♥`, `✓`, `★`) in visible content — use lucide-react icons with `aria-hidden="true"` instead, or wrap the character in `aria-hidden="true"` and pair with visible text or an sr-only label

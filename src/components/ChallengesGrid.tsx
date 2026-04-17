@@ -44,7 +44,7 @@ const AdventureCard = ({ adventure }: { adventure: Adventure }): JSX.Element => 
 );
 
 export const ChallengesGrid = (): JSX.Element => {
-  const { ref, isVisible } = useScrollAnimation();
+  const { ref, animationClass } = useScrollAnimation();
   const [activeTopic, setActiveTopic] = useState<string | null>(null);
 
   const filteredLevels = activeTopic
@@ -62,8 +62,7 @@ export const ChallengesGrid = (): JSX.Element => {
   return (
     <section id="challenges" ref={ref} className="py-24 px-6">
       <div className="mx-auto max-w-6xl">
-        {isVisible && (
-          <>
+        <div className={animationClass}>
             <div className="animate-fade-up mb-3">
               <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">Adventures</span>
             </div>
@@ -130,8 +129,7 @@ export const ChallengesGrid = (): JSX.Element => {
                 ))}
               </div>
             )}
-          </>
-        )}
+        </div>
       </div>
     </section>
   );

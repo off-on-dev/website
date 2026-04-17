@@ -1,6 +1,6 @@
 # offon.dev
 
-Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for open source enthusiasts. The site is fully static with no backend or SSR. It hosts hands-on open source challenges, community documentation, and links to the OffOn community.
+Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for open source enthusiasts. The site is fully static with no backend. Pages are prerendered at build time using vite-react-ssg. It hosts hands-on open source challenges, community documentation, and links to the OffOn community.
 
 ## Tech Stack
 
@@ -33,7 +33,7 @@ Node.js **22** is required. Version is pinned in `.nvmrc` — run `nvm use` to s
 | Script | Description |
 |---|---|
 | `npm run dev` | Start local dev server at http://localhost:8080 |
-| `npm run build` | Production build to `dist/` |
+| `npm run build` | SSG prerender build to `dist/` (vite-react-ssg) |
 | `npm run build:dev` | Dev-mode build (source maps, no minification) |
 | `npm run preview` | Serve the production build locally |
 | `npm run lint` | Run ESLint across the project |
@@ -53,6 +53,7 @@ src/
   hooks/          # Custom React hooks
   lib/            # Shared utilities
   test/           # Vitest + Testing Library test files
+  Layout.tsx      # App shell with all providers and Outlet
 public/
   fonts/          # Self-hosted Inter, Syne, and JetBrains Mono font files
   sitemap.xml
@@ -137,7 +138,9 @@ Deployment is automated via GitHub Actions:
 - **Push to `main`** triggers [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which builds and deploys to GitHub Pages. Production URL: **https://offon.dev**.
 - **Open a PR** triggers [`.github/workflows/preview.yml`](.github/workflows/preview.yml), which deploys a preview at `/pr-preview/pr-<n>/`.
 
-`dist/index.html` is copied to `dist/404.html` so React Router's client-side routing works on direct URL loads.
+`dist/index.html` is copied to `dist/404.html` as a fallback for unknown routes. Each valid route has its own prerendered `index.html` so GitHub Pages serves a 200 directly.
+
+PR preview builds set the `VITE_BASE_PATH` environment variable to `/pr-preview/pr-<n>/` so all asset paths resolve correctly under the preview sub-path.
 
 ## Further Reading
 

@@ -21,13 +21,12 @@ const items: { icon: ReactNode; title: string; desc: string; cta: string; href: 
 ];
 
 export const ConnectSection = (): JSX.Element => {
-  const { ref, isVisible } = useScrollAnimation();
+  const { ref, animationClass } = useScrollAnimation();
 
   return (
     <section ref={ref} className="py-24 px-6">
       <div className="mx-auto max-w-5xl">
-        {isVisible && (
-          <>
+        <div className={animationClass}>
           <div className="animate-fade-up mb-3">
             <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">
               Connect
@@ -58,8 +57,7 @@ export const ConnectSection = (): JSX.Element => {
               </div>
             ))}
           </div>
-          </>
-        )}
+        </div>
       </div>
     </section>
   );
