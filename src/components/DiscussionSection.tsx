@@ -1,6 +1,7 @@
 import { useState, useEffect, type CSSProperties } from "react";
 import { ArrowRight } from "lucide-react";
 import { COMMUNITY_URL, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
+import { stripHtml } from "@/utils/stripHtml";
 
 type DiscoursePost = {
   username: string;
@@ -25,9 +26,6 @@ function timeAgo(dateStr: string): string {
   return `${days}d ago`;
 }
 
-export function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const avatarPalette: CSSProperties[] = [
   { backgroundColor: "hsl(var(--primary) / 0.2)", color: "hsl(var(--foreground))" },

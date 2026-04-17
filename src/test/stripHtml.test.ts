@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { stripHtml } from "@/components/DiscussionSection";
+import { stripHtml } from "@/utils/stripHtml";
 
 describe("stripHtml", () => {
   it("returns plain text unchanged", () => {
