@@ -3,11 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <script>
-      var base = '/pr-preview/pr-20';
-      var path = window.location.pathname.replace(base, '') || '/';
-      var search = window.location.search;
-      var hash = window.location.hash;
-      window.location.replace(base + '/?p=' + encodeURIComponent(path + search) + (hash ? '&h=' + encodeURIComponent(hash.slice(1)) : ''));
+      (function() {
+        var loc = window.location;
+        var base = loc.pathname.match(/^(\/pr-preview\/pr-\d+)/);
+        base = base ? base[1] : '';
+        var path = loc.pathname.slice(base.length) || '/';
+        loc.replace(
+          loc.origin + base +
+          '/?p=' + encodeURIComponent(path + loc.search) +
+          (loc.hash ? '&h=' + encodeURIComponent(loc.hash.slice(1)) : '')
+        );
+      })();
     </script>
   </head>
   <body></body>
