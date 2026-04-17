@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useState } from "react";
 
 type Theme = "dark" | "light";
 
@@ -11,12 +11,14 @@ const ThemeContext = createContext<{ theme: Theme; toggle: () => void }>({
 export const useTheme = (): { theme: Theme; toggle: () => void } => useContext(ThemeContext);
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }): JSX.Element => {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window !== "undefined") {
-      return (localStorage.getItem("theme") as Theme) || "dark";
+  const [theme, setTheme] = useState<Theme>("dark");
+
+  useLayoutEffect(() => {
+    const stored = localStorage.getItem("theme");
+    if (stored === "light") {
+      setTheme("light");
     }
-    return "dark";
-  });
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;

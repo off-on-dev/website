@@ -321,3 +321,68 @@ describe('CookiePreferencesLink', () => {
     expect(screen.getByRole('region', { name: 'Cookie consent' })).toBeTruthy();
   });
 });
+
+// ---------------------------------------------------------------------------
+// useConsent - initial state determinism
+// ---------------------------------------------------------------------------
+
+describe('useConsent - initial state determinism', () => {
+  it('useState initializer returns null before useEffect fires, even when localStorage has "granted"', () => {
+    ls.setItem(STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
+
+    const renderValues: (string | null)[] = [];
+
+    function CapturingConsumer(): JSX.Element {
+      const { consent } = useConsent();
+      renderValues.push(consent);
+      return <span data-testid="capturing-consent">{consent ?? 'null'}</span>;
+    }
+
+    renderWithProviders(<CapturingConsumer />);
+
+    // The very first synchronous render must use the deterministic null default
+    expect(renderValues[0]).toBeNull();
+    // After useEffect fires, the stored "granted" value is applied
+    expect(screen.getByTestId('capturing-consent').textContent).toBe('granted');
+  });
+
+  it('useState initializer returns null before useEffect fires, even when localStorage has "denied"', () => {
+    ls.setItem(STORAGE_KEY, JSON.stringify({ value: 'denied', timestamp: Date.now() }));
+
+    const renderValues: (string | null)[] = [];
+
+    function CapturingConsumerDenied(): JSX.Element {
+      const { consent } = useConsent();
+      renderValues.push(consent);
+      return <span data-testid="capturing-denied">{consent ?? 'null'}</span>;
+    }
+
+    renderWithProviders(<CapturingConsumerDenied />);
+
+    expect(renderValues[0]).toBeNull();
+    expect(screen.getByTestId('capturing-denied').textContent).toBe('denied');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// useConsent - file content regression
+// ---------------------------------------------------------------------------
+
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+describe('useConsent - file content regression', () => {
+  it('useState initializer does not read localStorage or call readStored', () => {
+    const source = readFileSync(
+      resolve(__dirname, '../hooks/useConsent.tsx'),
+      'utf-8'
+    );
+    expect(source).toContain('useState<ConsentValue | null>(null)');
+    expect(source).not.toMatch(/useState<ConsentValue \| null>\(\s*\(\s*\)/);
+    // The literal string "readStored" must not appear inside the useState call
+    const useStateIdx = source.indexOf('useState<ConsentValue | null>(null)');
+    expect(useStateIdx).toBeGreaterThan(-1);
+    // Guard: no lazy initializer pattern with readStored
+    expect(source).not.toMatch(/useState<ConsentValue \| null>\([^)]*readStored/);
+  });
+});

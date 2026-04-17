@@ -95,17 +95,17 @@ type ConsentProviderProps = {
 };
 
 export function ConsentProvider({ children }: ConsentProviderProps): JSX.Element {
-  const [consent, setConsent] = useState<ConsentValue | null>(() => {
-    const stored = readStored();
-    return stored ? stored.value : null;
-  });
+  const [consent, setConsent] = useState<ConsentValue | null>(null);
 
-  // On mount, restore a previously granted consent: load gtag and update signals.
+  // On mount, restore previously stored consent: update state and reload gtag if needed.
   useEffect(() => {
     const stored = readStored();
-    if (stored?.value === "granted") {
-      loadGtag();
-      updateGtag("granted");
+    if (stored) {
+      setConsent(stored.value);
+      if (stored.value === "granted") {
+        loadGtag();
+        updateGtag("granted");
+      }
     }
   }, []);
 
