@@ -114,6 +114,59 @@ Always run `npm run lint` and `npm test` before declaring a task done.
 
 ---
 
+## Debugging Rules
+
+When diagnosing a bug, especially in the production build, follow these rules
+without exception. They exist to prevent debugging by accumulation.
+
+### Evidence rules
+
+- Never claim a fix worked based on source inspection alone. The only signal
+  that counts is the expected behavior observed in a real browser against the
+  current bundle hash.
+- Before acting on any error message, verify the error came from the current
+  build. Compare the bundle hash in the error stack trace (e.g. `index-XXXX.js`)
+  against the latest build output. If they differ, the browser is serving
+  cached code and the error is stale.
+- Before acting on any diagnostic output, state what evidence supports the
+  conclusion. "Only X was left in the DOM" is not evidence of what the DOM
+  looked like at error time. React's error recovery can tear down the tree
+  before the diagnostic runs.
+- When a grep claims to confirm something, verify the grep pattern is specific
+  enough to exclude false positives. Strings like "hydrateRoot" exist in
+  production React too, so their presence proves nothing about whether the
+  build is minified.
+
+### One-fix-at-a-time rule
+
+- Never stack fixes. One change, rebuild, verify in a real browser, then the
+  next. If you apply two fixes before verifying, you cannot tell which one
+  worked or if either did.
+- Commit after every verified fix. Each commit should have a clear before/after.
+- If the same bug has been "fixed" more than once in a session and still
+  reproduces, stop. The diagnosis is wrong. Go back to first principles.
+
+### Build cache rules
+
+- Always run `rm -rf dist node_modules/.vite` before any rebuild you intend to
+  verify against. Vite's cache can silently produce stale output.
+- After rebuilding, always compare the new bundle hash to the previous one. If
+  the hash is identical, the cache was reused. Clear it and rebuild.
+
+### Getting unminified React errors
+
+- The `--mode development` flag alone does not produce a dev React build with
+  Vite's SWC plugin. Proof: a dev React bundle is roughly 1.4 MB; a production
+  bundle is roughly 330 KB.
+- To force a dev React build, add to vite.config.ts inside defineConfig:
+    define: { 'process.env.NODE_ENV': JSON.stringify('development') },
+    build: { minify: false, sourcemap: true }
+- Verify the dev build actually happened: `ls -lh dist/assets/index-*.js`.
+  Size should be ~1.4 MB, not ~330 KB.
+- Revert this change before merging to main.
+
+---
+
 ## TypeScript
 
 - `noImplicitAny: false` and `strictNullChecks: false` are intentional. Do not change them.
@@ -252,6 +305,57 @@ Check the following on every component you write or modify.
 - If a component or hook has side effects (DOM mutations, localStorage, external scripts),
   mock those side effects in tests and assert they are called correctly.
 - When fixing a bug, add a regression test that would have caught it before writing the fix.
+- When fixing a bug caused by an incorrect import, file path, or configuration
+  value, add a regression test that asserts on the file's contents. Behavior
+  tests can miss silent bugs where the wrong dependency is pulled in. For
+  example, after fixing a component that imported from the wrong theme library,
+  add a test that reads the component file and asserts it imports from the
+  correct path and does not import from the wrong one.
+
+---
+
+## Hydration and Prerender Safety
+
+Whether or not the site is prerendered today, these patterns cause bugs.
+They produce visible flashes in client-only apps and break hydration entirely
+if the site is ever prerendered. Never introduce them.
+
+### Do not read browser-only globals during render
+
+- Never read `window`, `document`, `navigator`, `localStorage`, or
+  `sessionStorage` in a component function body.
+- Never read them in a `useState` lazy initializer. Initializers run on every
+  render, including the first, and the first render must be deterministic
+  without browser APIs.
+- Correct pattern: initialize state with a safe default, then update it in
+  `useEffect` or `useLayoutEffect`.
+
+### Do not use non-deterministic values during render
+
+- Never call `Math.random()`, `Date.now()`, `new Date()`, `crypto.randomUUID()`,
+  or `performance.now()` in a render body.
+- If you need a timestamp in rendered output, capture it at module load or in
+  an effect, not at render.
+- `new Date().getFullYear()` in JSX is a common mistake. Use a module-level
+  constant instead.
+
+### Client-only behavior must be gated
+
+- Anything that depends on `localStorage`, `matchMedia`, or similar must
+  produce the same initial render as a fresh visitor with no stored state.
+- For theme and consent state, this means: always render the default (dark,
+  no-consent) on first render, then update in an effect. To avoid a visible
+  flash, apply the stored value via an inline script in `<head>` before React
+  runs.
+
+### No IntersectionObserver or ResizeObserver at render time
+
+- Always create observers inside `useEffect`, never at the top level of a
+  component or module.
+- Observers are fine by default. The only risk is if they fire during a
+  prerender pass and produce content that the client's first render does not
+  match. Guard prerender-sensitive observers with a `window.__PRERENDER_INJECTED`
+  check if prerendering is added later.
 
 ---
 
@@ -410,6 +514,11 @@ State the result of each check explicitly before finishing a task.
 - A test requires mocking something that was not mocked before
 - The same bug has been fixed more than once in this session
 - A replacement did not change the file (silent no-op)
+- The error in the browser console shows a different bundle hash than the
+  latest build output
+- A "fix" has been applied but the same error reproduces unchanged
+- Debugging requires making a diagnostic script more complex instead of
+  reading what the simpler diagnostic already said
 
 ---
 
