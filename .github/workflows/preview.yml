@@ -63,7 +63,7 @@ jobs:
                 if (p) {
                   var path = decodeURIComponent(p[1]);
                   var h = window.location.search.match(/[?&]h=([^&]*)/);
-                  window.history.replaceState(null, null,
+                  window.location.replace(
                     base + path + (h && h[1] ? '#' + decodeURIComponent(h[1]) : '')
                   );
                 }
