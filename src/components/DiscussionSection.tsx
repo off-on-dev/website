@@ -25,10 +25,8 @@ function timeAgo(dateStr: string): string {
   return `${days}d ago`;
 }
 
-function stripHtml(html: string): string {
-  const div = document.createElement("div");
-  div.innerHTML = html;
-  return div.textContent || div.innerText || "";
+export function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/g, "");
 }
 
 const avatarPalette: CSSProperties[] = [
