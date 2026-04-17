@@ -5,6 +5,8 @@ import { CookiePreferencesLink } from "@/components/CookiePreferencesLink";
 import logoDark from "@/assets/offon-logo-dark-color.svg";
 import logoLight from "@/assets/offon-logo-light-color.svg";
 
+const CURRENT_YEAR = new Date().getFullYear();
+
 export const Footer = (): JSX.Element => {
   const { theme } = useTheme();
 
@@ -58,7 +60,7 @@ export const Footer = (): JSX.Element => {
       {/* Bottom strip */}
       <div className="border-t border-[hsl(var(--surface-border))] py-4">
         <div className="mx-auto max-w-6xl flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-          <span className="text-xs text-[hsl(var(--text-faint))] shrink-0 sm:order-1">© {new Date().getFullYear()} {BRAND_NAME}. All rights reserved.</span>
+          <span className="text-xs text-[hsl(var(--text-faint))] shrink-0 sm:order-1">© {CURRENT_YEAR} {BRAND_NAME}. All rights reserved.</span>
           <span className="text-xs text-[hsl(var(--text-faint))] text-center sm:order-2 sm:flex-1">Vendor-neutral · Open source · Community-driven</span>
           <div className="flex items-center gap-3 shrink-0 sm:order-3">
             <a
