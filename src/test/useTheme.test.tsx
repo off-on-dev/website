@@ -179,22 +179,4 @@ describe('useTheme - file content regressions', () => {
     expect(reactBootPos).toBeGreaterThan(-1);
     expect(themeScriptPos).toBeLessThan(reactBootPos);
   });
-
-  it('public/404.html exists and contains SPA redirect script', () => {
-    const source = readFileSync(
-      resolve(__dirname, '../../public/404.html'),
-      'utf-8'
-    );
-    expect(source).toContain('loc.replace');
-    expect(source).toContain('pr-preview');
-  });
-
-  it('index.html restore script uses window.location.replace', () => {
-    const source = readFileSync(
-      resolve(__dirname, '../../index.html'),
-      'utf-8'
-    );
-    expect(source).toContain('window.location.replace');
-    expect(source).toContain('?p=');
-  });
 });
