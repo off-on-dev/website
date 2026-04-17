@@ -115,3 +115,68 @@ describe('useTheme - localStorage persistence', () => {
     expect(document.documentElement.classList.contains('dark')).toBe(false);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Additional tests for deterministic first render
+// ---------------------------------------------------------------------------
+
+describe('useTheme - initial state determinism', () => {
+  it('useState initializer returns "dark" before useLayoutEffect fires, even when localStorage has "light"', () => {
+    ls.setItem('theme', 'light');
+
+    const renderValues: string[] = [];
+
+    function CapturingConsumer(): JSX.Element {
+      const { theme } = useTheme();
+      renderValues.push(theme);
+      return <span data-testid="capturing-theme">{theme}</span>;
+    }
+
+    renderWithProviders(<CapturingConsumer />);
+
+    // The very first synchronous render must use the deterministic "dark" default
+    expect(renderValues[0]).toBe('dark');
+    // After useLayoutEffect fires, the stored "light" value is applied
+    expect(screen.getByTestId('capturing-theme').textContent).toBe('light');
+  });
+
+  it('after mount effect fires, theme reflects stored "light" value', () => {
+    ls.setItem('theme', 'light');
+    renderWithProviders(<ThemeConsumer />);
+    expect(screen.getByTestId('theme-value').textContent).toBe('light');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// File-content regression tests
+// ---------------------------------------------------------------------------
+
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+describe('useTheme - file content regressions', () => {
+  it('useState initializer does not read localStorage', () => {
+    const source = readFileSync(
+      resolve(__dirname, '../hooks/useTheme.tsx'),
+      'utf-8'
+    );
+    // Locate the useState call and assert it is a plain string literal, not a lazy initializer
+    expect(source).toContain('useState<Theme>("dark")');
+    expect(source).not.toMatch(/useState<Theme>\(\s*\(\s*\)/);
+  });
+
+  it('index.html contains inline theme script before React boots', () => {
+    const source = readFileSync(
+      resolve(__dirname, '../../index.html'),
+      'utf-8'
+    );
+    expect(source).toContain('localStorage.getItem("theme")');
+    expect(source).toContain('classList.add("light")');
+    // The theme script must appear before the module script that boots React
+    const themeScriptPos = source.indexOf('localStorage.getItem("theme")');
+    const reactBootPos = source.indexOf('type="module"');
+    expect(themeScriptPos).toBeGreaterThan(-1);
+    expect(reactBootPos).toBeGreaterThan(-1);
+    expect(themeScriptPos).toBeLessThan(reactBootPos);
+  });
+});

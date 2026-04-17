@@ -36,6 +36,16 @@
     <meta name="twitter:image" content="https://offon.dev/og.png" />
     <meta name="twitter:image:alt" content="OffOn - Vendor-neutral. Open Source. Community Driven." />
 
+    <script>
+      (function() {
+        var t = localStorage.getItem("theme");
+        if (t === "light") {
+          document.documentElement.classList.remove("dark");
+          document.documentElement.classList.add("light");
+        }
+      })();
+    </script>
+
     <!-- Google Analytics: dataLayer and consent defaults only. The gtag.js script
          is loaded dynamically only after the user explicitly accepts analytics cookies.
          No requests are made to Google before consent is given. -->
