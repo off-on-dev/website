@@ -47,19 +47,6 @@
         }
       })();
     </script>
-    <script>
-      (function() {
-        var p = window.location.search.match(/\?p=([^&]+)/);
-        if (p) {
-          var h = window.location.search.match(/[?&]h=([^&]*)/);
-          window.location.replace(
-            decodeURIComponent(p[1]) +
-            (h && h[1] ? '#' + decodeURIComponent(h[1]) : '')
-          );
-        }
-      })();
-    </script>
-
     <!-- Google Analytics: dataLayer and consent defaults only. The gtag.js script
          is loaded dynamically only after the user explicitly accepts analytics cookies.
          No requests are made to Google before consent is given. -->
