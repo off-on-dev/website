@@ -28,52 +28,8 @@ jobs:
       - if: github.event.action != 'closed'
         run: npm run build -- --base=/pr-preview/pr-${{ github.event.number }}/
 
-      - name: Create SPA fallback 404.html for PR preview
-        if: github.event.action != 'closed'
-        run: |
-          cat > dist/404.html << 'EOF'
-          <!doctype html>
-          <html>
-            <head>
-              <meta charset="utf-8" />
-              <script>
-                var base = '/pr-preview/pr-${{ github.event.number }}';
-                var path = window.location.pathname.replace(base, '') || '/';
-                var search = window.location.search;
-                var hash = window.location.hash;
-                window.location.replace(base + '/?p=' + encodeURIComponent(path + search) + (hash ? '&h=' + encodeURIComponent(hash.slice(1)) : ''));
-              </script>
-            </head>
-            <body></body>
-          </html>
-          EOF
-
-      - name: Inject path-restore script into index.html for PR preview
-        if: github.event.action != 'closed'
-        run: |
-          python3 - << 'PYEOF'
-          import re
-          with open('dist/index.html', 'r') as f:
-              content = f.read()
-          restore_script = """
-            <script>
-              (function() {
-                var base = '/pr-preview/pr-${{ github.event.number }}';
-                var p = window.location.search.match(/[?&]p=([^&]+)/);
-                if (p) {
-                  var path = decodeURIComponent(p[1]);
-                  var h = window.location.search.match(/[?&]h=([^&]*)/);
-                  window.location.replace(
-                    base + path + (h && h[1] ? '#' + decodeURIComponent(h[1]) : '')
-                  );
-                }
-              })();
-            </script>
-          """
-          content = content.replace('</head>', restore_script + '</head>', 1)
-          with open('dist/index.html', 'w') as f:
-              f.write(content)
-          PYEOF
+      - if: github.event.action != 'closed'
+        run: cp dist/index.html dist/404.html
 
       - uses: rossjrw/pr-preview-action@v1
         with:
