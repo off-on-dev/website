@@ -1,0 +1,193 @@
+{
+  "_BottomCTA-ycjszFv7.js": {
+    "file": "assets/BottomCTA-ycjszFv7.js",
+    "name": "BottomCTA",
+    "imports": [
+      "index.html",
+      "_arrow-right-BDLCpGYk.js",
+      "_Footer-FSiRzP-k.js"
+    ]
+  },
+  "_DifficultyBadge-BCLxV81J.js": {
+    "file": "assets/DifficultyBadge-BCLxV81J.js",
+    "name": "DifficultyBadge",
+    "imports": [
+      "index.html"
+    ]
+  },
+  "_Footer-FSiRzP-k.js": {
+    "file": "assets/Footer-FSiRzP-k.js",
+    "name": "Footer",
+    "imports": [
+      "index.html"
+    ],
+    "assets": [
+      "assets/offon-logo-dark-color-DJ_i2Uwy.svg",
+      "assets/offon-logo-light-color-BwXv9VAO.svg"
+    ]
+  },
+  "_PageHero-DxxWoDNS.js": {
+    "file": "assets/PageHero-DxxWoDNS.js",
+    "name": "PageHero",
+    "imports": [
+      "index.html"
+    ]
+  },
+  "_arrow-right-BDLCpGYk.js": {
+    "file": "assets/arrow-right-BDLCpGYk.js",
+    "name": "arrow-right",
+    "imports": [
+      "index.html"
+    ]
+  },
+  "_client-DIgM6eTB.js": {
+    "file": "assets/client-DIgM6eTB.js",
+    "name": "client",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html"
+    ]
+  },
+  "_megaphone-BZ_nRw-C.js": {
+    "file": "assets/megaphone-BZ_nRw-C.js",
+    "name": "megaphone",
+    "imports": [
+      "index.html"
+    ]
+  },
+  "index.html": {
+    "file": "assets/app-Dpc0KQY-.js",
+    "name": "app",
+    "src": "index.html",
+    "isEntry": true,
+    "dynamicImports": [
+      "_client-DIgM6eTB.js",
+      "src/pages/Index.tsx",
+      "src/pages/AdventureDetail.tsx",
+      "src/pages/ChallengeDetail.tsx",
+      "src/pages/Sponsors.tsx",
+      "src/pages/About.tsx",
+      "src/pages/CommunityGuide.tsx",
+      "src/pages/NotFound.tsx",
+      "src/pages/Privacy.tsx"
+    ],
+    "css": [
+      "assets/app-B20cbxd3.css"
+    ]
+  },
+  "src/assets/Dynatrace_Logo_color_negative_horizontal.svg": {
+    "file": "assets/Dynatrace_Logo_color_negative_horizontal-C9eIBPKr.svg",
+    "src": "src/assets/Dynatrace_Logo_color_negative_horizontal.svg"
+  },
+  "src/assets/Dynatrace_Logo_color_positive_horizontal.svg": {
+    "file": "assets/Dynatrace_Logo_color_positive_horizontal-jkQyJYqz.svg",
+    "src": "src/assets/Dynatrace_Logo_color_positive_horizontal.svg"
+  },
+  "src/assets/offon-logo-dark-color.svg": {
+    "file": "assets/offon-logo-dark-color-DJ_i2Uwy.svg",
+    "src": "src/assets/offon-logo-dark-color.svg"
+  },
+  "src/assets/offon-logo-light-color.svg": {
+    "file": "assets/offon-logo-light-color-BwXv9VAO.svg",
+    "src": "src/assets/offon-logo-light-color.svg"
+  },
+  "src/pages/About.tsx": {
+    "file": "assets/About-CLav-aX4.js",
+    "name": "About",
+    "src": "src/pages/About.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_Footer-FSiRzP-k.js",
+      "_BottomCTA-ycjszFv7.js",
+      "_megaphone-BZ_nRw-C.js",
+      "_PageHero-DxxWoDNS.js",
+      "_arrow-right-BDLCpGYk.js"
+    ]
+  },
+  "src/pages/AdventureDetail.tsx": {
+    "file": "assets/AdventureDetail-CY0eSmgA.js",
+    "name": "AdventureDetail",
+    "src": "src/pages/AdventureDetail.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_DifficultyBadge-BCLxV81J.js",
+      "_Footer-FSiRzP-k.js",
+      "_arrow-right-BDLCpGYk.js"
+    ]
+  },
+  "src/pages/ChallengeDetail.tsx": {
+    "file": "assets/ChallengeDetail-DqkHLuj4.js",
+    "name": "ChallengeDetail",
+    "src": "src/pages/ChallengeDetail.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_DifficultyBadge-BCLxV81J.js",
+      "_Footer-FSiRzP-k.js",
+      "_arrow-right-BDLCpGYk.js"
+    ]
+  },
+  "src/pages/CommunityGuide.tsx": {
+    "file": "assets/CommunityGuide-ULp6cOjn.js",
+    "name": "CommunityGuide",
+    "src": "src/pages/CommunityGuide.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_Footer-FSiRzP-k.js"
+    ]
+  },
+  "src/pages/Index.tsx": {
+    "file": "assets/Index-BeL_MC_x.js",
+    "name": "Index",
+    "src": "src/pages/Index.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_Footer-FSiRzP-k.js",
+      "_arrow-right-BDLCpGYk.js",
+      "_DifficultyBadge-BCLxV81J.js",
+      "_BottomCTA-ycjszFv7.js",
+      "_megaphone-BZ_nRw-C.js"
+    ]
+  },
+  "src/pages/NotFound.tsx": {
+    "file": "assets/NotFound-u1Jl2NuX.js",
+    "name": "NotFound",
+    "src": "src/pages/NotFound.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_Footer-FSiRzP-k.js"
+    ]
+  },
+  "src/pages/Privacy.tsx": {
+    "file": "assets/Privacy-BPkBeh0K.js",
+    "name": "Privacy",
+    "src": "src/pages/Privacy.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_Footer-FSiRzP-k.js"
+    ]
+  },
+  "src/pages/Sponsors.tsx": {
+    "file": "assets/Sponsors-078mNX0s.js",
+    "name": "Sponsors",
+    "src": "src/pages/Sponsors.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_Footer-FSiRzP-k.js",
+      "_PageHero-DxxWoDNS.js",
+      "_BottomCTA-ycjszFv7.js",
+      "_arrow-right-BDLCpGYk.js"
+    ],
+    "assets": [
+      "assets/Dynatrace_Logo_color_negative_horizontal-C9eIBPKr.svg",
+      "assets/Dynatrace_Logo_color_positive_horizontal-jkQyJYqz.svg"
+    ]
+  }
+}
