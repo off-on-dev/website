@@ -4,10 +4,10 @@
   "\u0000/home/runner/work/website/website/node_modules/prop-types/index.js?commonjs-module": [],
   "\u0000/home/runner/work/website/website/node_modules/react-dom/cjs/react-dom.production.min.js?commonjs-exports": [],
   "\u0000/home/runner/work/website/website/node_modules/react-dom/client.js?commonjs-es-import": [
-    "/assets/client-CBxO-3N4.js"
+    "/assets/client-DXvjsFld.js"
   ],
   "\u0000/home/runner/work/website/website/node_modules/react-dom/client.js?commonjs-exports": [
-    "/assets/client-CBxO-3N4.js"
+    "/assets/client-DXvjsFld.js"
   ],
   "\u0000/home/runner/work/website/website/node_modules/react-dom/index.js?commonjs-es-import": [],
   "\u0000/home/runner/work/website/website/node_modules/react-dom/index.js?commonjs-module": [],
@@ -72,55 +72,55 @@
   "node_modules/lucide-react/dist/esm/createLucideIcon.js": [],
   "node_modules/lucide-react/dist/esm/defaultAttributes.js": [],
   "node_modules/lucide-react/dist/esm/icons/arrow-down.js": [
-    "/assets/Index-B0YlxtzE.js"
+    "/assets/Index-XzKw72xo.js"
   ],
   "node_modules/lucide-react/dist/esm/icons/arrow-left.js": [
-    "/assets/ChallengeDetail-C86_HSr_.js"
+    "/assets/ChallengeDetail-C5vu4fOE.js"
   ],
   "node_modules/lucide-react/dist/esm/icons/arrow-right.js": [
-    "/assets/arrow-right-CHzRX3j1.js"
+    "/assets/arrow-right-Dwau_gk1.js"
   ],
   "node_modules/lucide-react/dist/esm/icons/arrow-up-right.js": [
-    "/assets/Footer-DLiVL2oq.js",
+    "/assets/Footer-CERLhZv3.js",
     "/assets/offon-logo-dark-color-DJ_i2Uwy.svg",
     "/assets/offon-logo-light-color-BwXv9VAO.svg"
   ],
   "node_modules/lucide-react/dist/esm/icons/calendar-days.js": [
-    "/assets/Index-B0YlxtzE.js"
+    "/assets/Index-XzKw72xo.js"
   ],
   "node_modules/lucide-react/dist/esm/icons/circle-help.js": [
-    "/assets/Index-B0YlxtzE.js"
+    "/assets/Index-XzKw72xo.js"
   ],
   "node_modules/lucide-react/dist/esm/icons/git-branch.js": [
-    "/assets/About-TXhSdA3G.js"
+    "/assets/About-BMCk9uXB.js"
   ],
   "node_modules/lucide-react/dist/esm/icons/heart.js": [
-    "/assets/About-TXhSdA3G.js"
+    "/assets/heart-BA5QjKEB.js"
   ],
   "node_modules/lucide-react/dist/esm/icons/layers.js": [
-    "/assets/Index-B0YlxtzE.js"
+    "/assets/Index-XzKw72xo.js"
   ],
   "node_modules/lucide-react/dist/esm/icons/lock-open.js": [
-    "/assets/About-TXhSdA3G.js"
+    "/assets/About-BMCk9uXB.js"
   ],
   "node_modules/lucide-react/dist/esm/icons/map-pin.js": [
-    "/assets/About-TXhSdA3G.js"
+    "/assets/About-BMCk9uXB.js"
   ],
   "node_modules/lucide-react/dist/esm/icons/megaphone.js": [
-    "/assets/megaphone-DJltpLSl.js"
+    "/assets/megaphone-DNQIONoE.js"
   ],
   "node_modules/lucide-react/dist/esm/icons/shield.js": [
-    "/assets/About-TXhSdA3G.js"
+    "/assets/About-BMCk9uXB.js"
   ],
   "node_modules/lucide-react/dist/esm/icons/user-plus.js": [
-    "/assets/Index-B0YlxtzE.js"
+    "/assets/Index-XzKw72xo.js"
   ],
   "node_modules/lucide-react/dist/esm/icons/users.js": [
-    "/assets/About-TXhSdA3G.js"
+    "/assets/About-BMCk9uXB.js"
   ],
   "node_modules/lucide-react/dist/esm/icons/x.js": [],
   "node_modules/lucide-react/dist/esm/icons/zap.js": [
-    "/assets/About-TXhSdA3G.js"
+    "/assets/About-BMCk9uXB.js"
   ],
   "node_modules/lucide-react/dist/esm/shared/src/utils.js": [],
   "node_modules/prop-types/factoryWithThrowingShims.js": [],
@@ -128,7 +128,7 @@
   "node_modules/prop-types/lib/ReactPropTypesSecret.js": [],
   "node_modules/react-dom/cjs/react-dom.production.min.js": [],
   "node_modules/react-dom/client.js": [
-    "/assets/client-CBxO-3N4.js"
+    "/assets/client-DXvjsFld.js"
   ],
   "node_modules/react-dom/index.js": [],
   "node_modules/react-fast-compare/index.js": [],
@@ -151,126 +151,123 @@
   "src/App.tsx": [],
   "src/Layout.tsx": [],
   "src/assets/Dynatrace_Logo_color_negative_horizontal.svg": [
-    "/assets/Sponsors-BE09fONh.js",
+    "/assets/Sponsors-PSzDv8kC.js",
     "/assets/Dynatrace_Logo_color_negative_horizontal-C9eIBPKr.svg",
     "/assets/Dynatrace_Logo_color_positive_horizontal-jkQyJYqz.svg"
   ],
   "src/assets/Dynatrace_Logo_color_positive_horizontal.svg": [
-    "/assets/Sponsors-BE09fONh.js",
+    "/assets/Sponsors-PSzDv8kC.js",
     "/assets/Dynatrace_Logo_color_negative_horizontal-C9eIBPKr.svg",
     "/assets/Dynatrace_Logo_color_positive_horizontal-jkQyJYqz.svg"
   ],
   "src/assets/offon-logo-dark-color.svg": [
-    "/assets/Footer-DLiVL2oq.js",
+    "/assets/Footer-CERLhZv3.js",
     "/assets/offon-logo-dark-color-DJ_i2Uwy.svg",
     "/assets/offon-logo-light-color-BwXv9VAO.svg"
   ],
   "src/assets/offon-logo-light-color.svg": [
-    "/assets/Footer-DLiVL2oq.js",
+    "/assets/Footer-CERLhZv3.js",
     "/assets/offon-logo-dark-color-DJ_i2Uwy.svg",
     "/assets/offon-logo-light-color-BwXv9VAO.svg"
   ],
   "src/components/AboutSection.tsx": [
-    "/assets/About-TXhSdA3G.js"
+    "/assets/About-BMCk9uXB.js"
   ],
   "src/components/BottomCTA.tsx": [
-    "/assets/BottomCTA-BtbH5Hco.js"
+    "/assets/BottomCTA-Biqws-RQ.js"
   ],
   "src/components/ChallengesGrid.tsx": [
-    "/assets/Index-B0YlxtzE.js"
+    "/assets/Index-XzKw72xo.js"
   ],
   "src/components/CommunityVoicesSection.tsx": [
-    "/assets/Index-B0YlxtzE.js"
+    "/assets/Index-XzKw72xo.js"
   ],
   "src/components/ConnectSection.tsx": [
-    "/assets/Index-B0YlxtzE.js"
+    "/assets/Index-XzKw72xo.js"
   ],
   "src/components/ConsentBanner.tsx": [],
   "src/components/DifficultyBadge.tsx": [
-    "/assets/DifficultyBadge-BvEXJodP.js"
+    "/assets/DifficultyBadge-CjWqaOyV.js"
   ],
   "src/components/DiscussionSection.tsx": [
-    "/assets/ChallengeDetail-C86_HSr_.js"
+    "/assets/ChallengeDetail-C5vu4fOE.js"
   ],
   "src/components/Footer.tsx": [
-    "/assets/Footer-DLiVL2oq.js",
+    "/assets/Footer-CERLhZv3.js",
     "/assets/offon-logo-dark-color-DJ_i2Uwy.svg",
     "/assets/offon-logo-light-color-BwXv9VAO.svg"
   ],
   "src/components/Hero.tsx": [
-    "/assets/Index-B0YlxtzE.js"
+    "/assets/Index-XzKw72xo.js"
   ],
   "src/components/LevelCard.tsx": [
-    "/assets/ChallengeDetail-C86_HSr_.js"
+    "/assets/ChallengeDetail-C5vu4fOE.js"
   ],
   "src/components/NavLink.tsx": [
-    "/assets/Footer-DLiVL2oq.js",
+    "/assets/Footer-CERLhZv3.js",
     "/assets/offon-logo-dark-color-DJ_i2Uwy.svg",
     "/assets/offon-logo-light-color-BwXv9VAO.svg"
   ],
   "src/components/Navbar.tsx": [
-    "/assets/Footer-DLiVL2oq.js",
+    "/assets/Footer-CERLhZv3.js",
     "/assets/offon-logo-dark-color-DJ_i2Uwy.svg",
     "/assets/offon-logo-light-color-BwXv9VAO.svg"
   ],
   "src/components/PageHero.tsx": [
-    "/assets/PageHero-cHaWPYlN.js"
+    "/assets/PageHero-DGib3vuw.js"
   ],
   "src/components/VerificationSection.tsx": [
-    "/assets/ChallengeDetail-C86_HSr_.js"
+    "/assets/ChallengeDetail-C5vu4fOE.js"
   ],
   "src/components/ui/badge.tsx": [
-    "/assets/DifficultyBadge-BvEXJodP.js"
+    "/assets/DifficultyBadge-CjWqaOyV.js"
   ],
   "src/components/ui/sonner.tsx": [],
   "src/components/ui/toast.tsx": [],
   "src/components/ui/toaster.tsx": [],
   "src/components/ui/tooltip.tsx": [],
   "src/data/adventures.ts": [
-    "/assets/DifficultyBadge-BvEXJodP.js"
+    "/assets/DifficultyBadge-CjWqaOyV.js"
   ],
   "src/data/constants.ts": [],
   "src/hooks/use-toast.ts": [],
   "src/hooks/useActiveSection.ts": [
-    "/assets/Footer-DLiVL2oq.js",
+    "/assets/Footer-CERLhZv3.js",
     "/assets/offon-logo-dark-color-DJ_i2Uwy.svg",
     "/assets/offon-logo-light-color-BwXv9VAO.svg"
   ],
   "src/hooks/useConsent.tsx": [],
-  "src/hooks/useScrollAnimation.ts": [
-    "/assets/BottomCTA-BtbH5Hco.js"
-  ],
   "src/hooks/useTheme.tsx": [],
   "src/index.css": [],
   "src/lib/utils.ts": [],
   "src/main.tsx": [],
   "src/pages/About.tsx": [
-    "/assets/About-TXhSdA3G.js"
+    "/assets/About-BMCk9uXB.js"
   ],
   "src/pages/AdventureDetail.tsx": [
-    "/assets/AdventureDetail-Gp82muAM.js"
+    "/assets/AdventureDetail-Q3lCBIg6.js"
   ],
   "src/pages/ChallengeDetail.tsx": [
-    "/assets/ChallengeDetail-C86_HSr_.js"
+    "/assets/ChallengeDetail-C5vu4fOE.js"
   ],
   "src/pages/CommunityGuide.tsx": [
-    "/assets/CommunityGuide-5wm-BOdT.js"
+    "/assets/CommunityGuide-DEFQa-T5.js"
   ],
   "src/pages/Index.tsx": [
-    "/assets/Index-B0YlxtzE.js"
+    "/assets/Index-XzKw72xo.js"
   ],
   "src/pages/NotFound.tsx": [
-    "/assets/NotFound-CanfwsWG.js"
+    "/assets/NotFound-DEGvvLXL.js"
   ],
   "src/pages/Privacy.tsx": [
-    "/assets/Privacy-D6sl_oCp.js"
+    "/assets/Privacy-CjsQ27tZ.js"
   ],
   "src/pages/Sponsors.tsx": [
-    "/assets/Sponsors-BE09fONh.js",
+    "/assets/Sponsors-PSzDv8kC.js",
     "/assets/Dynatrace_Logo_color_negative_horizontal-C9eIBPKr.svg",
     "/assets/Dynatrace_Logo_color_positive_horizontal-jkQyJYqz.svg"
   ],
   "src/utils/stripHtml.ts": [
-    "/assets/ChallengeDetail-C86_HSr_.js"
+    "/assets/ChallengeDetail-C5vu4fOE.js"
   ]
 }

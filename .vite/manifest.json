@@ -1,22 +1,22 @@
 {
-  "_BottomCTA-BtbH5Hco.js": {
-    "file": "assets/BottomCTA-BtbH5Hco.js",
+  "_BottomCTA-Biqws-RQ.js": {
+    "file": "assets/BottomCTA-Biqws-RQ.js",
     "name": "BottomCTA",
     "imports": [
       "index.html",
-      "_arrow-right-CHzRX3j1.js",
-      "_Footer-DLiVL2oq.js"
+      "_arrow-right-Dwau_gk1.js",
+      "_Footer-CERLhZv3.js"
     ]
   },
-  "_DifficultyBadge-BvEXJodP.js": {
-    "file": "assets/DifficultyBadge-BvEXJodP.js",
+  "_DifficultyBadge-CjWqaOyV.js": {
+    "file": "assets/DifficultyBadge-CjWqaOyV.js",
     "name": "DifficultyBadge",
     "imports": [
       "index.html"
     ]
   },
-  "_Footer-DLiVL2oq.js": {
-    "file": "assets/Footer-DLiVL2oq.js",
+  "_Footer-CERLhZv3.js": {
+    "file": "assets/Footer-CERLhZv3.js",
     "name": "Footer",
     "imports": [
       "index.html"
@@ -26,42 +26,49 @@
       "assets/offon-logo-light-color-BwXv9VAO.svg"
     ]
   },
-  "_PageHero-cHaWPYlN.js": {
-    "file": "assets/PageHero-cHaWPYlN.js",
+  "_PageHero-DGib3vuw.js": {
+    "file": "assets/PageHero-DGib3vuw.js",
     "name": "PageHero",
     "imports": [
       "index.html"
     ]
   },
-  "_arrow-right-CHzRX3j1.js": {
-    "file": "assets/arrow-right-CHzRX3j1.js",
+  "_arrow-right-Dwau_gk1.js": {
+    "file": "assets/arrow-right-Dwau_gk1.js",
     "name": "arrow-right",
     "imports": [
       "index.html"
     ]
   },
-  "_client-CBxO-3N4.js": {
-    "file": "assets/client-CBxO-3N4.js",
+  "_client-DXvjsFld.js": {
+    "file": "assets/client-DXvjsFld.js",
     "name": "client",
     "isDynamicEntry": true,
     "imports": [
       "index.html"
     ]
   },
-  "_megaphone-DJltpLSl.js": {
-    "file": "assets/megaphone-DJltpLSl.js",
+  "_heart-BA5QjKEB.js": {
+    "file": "assets/heart-BA5QjKEB.js",
+    "name": "heart",
+    "imports": [
+      "index.html"
+    ]
+  },
+  "_megaphone-DNQIONoE.js": {
+    "file": "assets/megaphone-DNQIONoE.js",
     "name": "megaphone",
     "imports": [
       "index.html"
     ]
   },
   "index.html": {
-    "file": "assets/app-kMX9hKlk.js",
+    "file": "assets/app-yNsTkiFQ.js",
     "name": "app",
     "src": "index.html",
     "isEntry": true,
     "dynamicImports": [
-      "_client-CBxO-3N4.js",
+      "_client-DXvjsFld.js",
       "src/pages/Index.tsx",
       "src/pages/AdventureDetail.tsx",
       "src/pages/ChallengeDetail.tsx",
@@ -72,7 +79,7 @@
       "src/pages/Privacy.tsx"
     ],
     "css": [
-      "assets/app-D4NNsYu3.css"
+      "assets/app-D6OnzTOO.css"
     ]
   },
   "src/assets/Dynatrace_Logo_color_negative_horizontal.svg": {
@@ -92,98 +99,100 @@
     "src": "src/assets/offon-logo-light-color.svg"
   },
   "src/pages/About.tsx": {
-    "file": "assets/About-TXhSdA3G.js",
+    "file": "assets/About-BMCk9uXB.js",
     "name": "About",
     "src": "src/pages/About.tsx",
     "isDynamicEntry": true,
     "imports": [
       "index.html",
-      "_Footer-DLiVL2oq.js",
-      "_BottomCTA-BtbH5Hco.js",
-      "_megaphone-DJltpLSl.js",
-      "_PageHero-cHaWPYlN.js",
-      "_arrow-right-CHzRX3j1.js"
+      "_Footer-CERLhZv3.js",
+      "_megaphone-DNQIONoE.js",
+      "_heart-BA5QjKEB.js",
+      "_PageHero-DGib3vuw.js",
+      "_BottomCTA-Biqws-RQ.js",
+      "_arrow-right-Dwau_gk1.js"
     ]
   },
   "src/pages/AdventureDetail.tsx": {
-    "file": "assets/AdventureDetail-Gp82muAM.js",
+    "file": "assets/AdventureDetail-Q3lCBIg6.js",
     "name": "AdventureDetail",
     "src": "src/pages/AdventureDetail.tsx",
     "isDynamicEntry": true,
     "imports": [
       "index.html",
-      "_DifficultyBadge-BvEXJodP.js",
-      "_Footer-DLiVL2oq.js",
-      "_arrow-right-CHzRX3j1.js"
+      "_DifficultyBadge-CjWqaOyV.js",
+      "_Footer-CERLhZv3.js",
+      "_arrow-right-Dwau_gk1.js"
     ]
   },
   "src/pages/ChallengeDetail.tsx": {
-    "file": "assets/ChallengeDetail-C86_HSr_.js",
+    "file": "assets/ChallengeDetail-C5vu4fOE.js",
     "name": "ChallengeDetail",
     "src": "src/pages/ChallengeDetail.tsx",
     "isDynamicEntry": true,
     "imports": [
       "index.html",
-      "_DifficultyBadge-BvEXJodP.js",
-      "_Footer-DLiVL2oq.js",
-      "_arrow-right-CHzRX3j1.js"
+      "_DifficultyBadge-CjWqaOyV.js",
+      "_Footer-CERLhZv3.js",
+      "_arrow-right-Dwau_gk1.js",
+      "_heart-BA5QjKEB.js"
     ]
   },
   "src/pages/CommunityGuide.tsx": {
-    "file": "assets/CommunityGuide-5wm-BOdT.js",
+    "file": "assets/CommunityGuide-DEFQa-T5.js",
     "name": "CommunityGuide",
     "src": "src/pages/CommunityGuide.tsx",
     "isDynamicEntry": true,
     "imports": [
       "index.html",
-      "_Footer-DLiVL2oq.js"
+      "_Footer-CERLhZv3.js"
     ]
   },
   "src/pages/Index.tsx": {
-    "file": "assets/Index-B0YlxtzE.js",
+    "file": "assets/Index-XzKw72xo.js",
     "name": "Index",
     "src": "src/pages/Index.tsx",
     "isDynamicEntry": true,
     "imports": [
       "index.html",
-      "_Footer-DLiVL2oq.js",
-      "_arrow-right-CHzRX3j1.js",
-      "_DifficultyBadge-BvEXJodP.js",
-      "_BottomCTA-BtbH5Hco.js",
-      "_megaphone-DJltpLSl.js"
+      "_Footer-CERLhZv3.js",
+      "_arrow-right-Dwau_gk1.js",
+      "_DifficultyBadge-CjWqaOyV.js",
+      "_megaphone-DNQIONoE.js",
+      "_BottomCTA-Biqws-RQ.js"
     ]
   },
   "src/pages/NotFound.tsx": {
-    "file": "assets/NotFound-CanfwsWG.js",
+    "file": "assets/NotFound-DEGvvLXL.js",
     "name": "NotFound",
     "src": "src/pages/NotFound.tsx",
     "isDynamicEntry": true,
     "imports": [
       "index.html",
-      "_Footer-DLiVL2oq.js"
+      "_Footer-CERLhZv3.js"
     ]
   },
   "src/pages/Privacy.tsx": {
-    "file": "assets/Privacy-D6sl_oCp.js",
+    "file": "assets/Privacy-CjsQ27tZ.js",
     "name": "Privacy",
     "src": "src/pages/Privacy.tsx",
     "isDynamicEntry": true,
     "imports": [
       "index.html",
-      "_Footer-DLiVL2oq.js"
+      "_Footer-CERLhZv3.js"
     ]
   },
   "src/pages/Sponsors.tsx": {
-    "file": "assets/Sponsors-BE09fONh.js",
+    "file": "assets/Sponsors-PSzDv8kC.js",
     "name": "Sponsors",
     "src": "src/pages/Sponsors.tsx",
     "isDynamicEntry": true,
     "imports": [
       "index.html",
-      "_Footer-DLiVL2oq.js",
-      "_PageHero-cHaWPYlN.js",
-      "_BottomCTA-BtbH5Hco.js",
-      "_arrow-right-CHzRX3j1.js"
+      "_Footer-CERLhZv3.js",
+      "_PageHero-DGib3vuw.js",
+      "_BottomCTA-Biqws-RQ.js",
+      "_arrow-right-Dwau_gk1.js"
     ],
     "assets": [
       "assets/Dynatrace_Logo_color_negative_horizontal-C9eIBPKr.svg",
