@@ -32,12 +32,15 @@ Subset coverage (via `unicode-range` in `src/index.css` -- only the needed subse
 
 ### Font preload
 
-Two Inter variants are preloaded in `index.html` to avoid the three-level font discovery delay (HTML parse → CSS parse → font file request):
+Five fonts are preloaded in `index.html` to avoid the three-level font discovery delay (HTML parse → CSS parse → font file request):
 
-- `inter-latin-600-normal.woff2` — used by nav links and subheadings
-- `inter-latin-500-normal.woff2` — used by body medium weight
+- `inter-latin-400-normal.woff2`, used by body text
+- `inter-latin-500-normal.woff2`, used by body medium weight
+- `inter-latin-600-normal.woff2`, used by nav links and subheadings
+- `inter-latin-700-normal.woff2`, used by bold body text
+- `syne-latin-700-normal.woff2`, used by headings
 
-Only Latin subset variants are preloaded. Other subsets (cyrillic, greek, vietnamese, etc.) are served from `public/fonts/` but are not preloaded.
+Only Latin subset variants are preloaded. Other subsets are served from `public/fonts/` but are not preloaded. Check `index.html` for the current preload list and update it whenever above-the-fold typography changes.
 
 ### Tailwind font utilities
 
@@ -163,8 +166,8 @@ All `text-primary` usages are overridden to black (`#000000`) in light mode via 
 | `.btn-primary` | Filled amber, `rounded-md px-5 py-2.5 text-sm font-semibold`, electric glow on hover | Default CTA on page background |
 | `.btn-ghost` | Outlined, `border-foreground/35`, subtle glow on hover | Secondary CTA on page background |
 | `.btn-soft` | Tinted `bg-primary/10 border-primary/30`, no glow | Tertiary / low-emphasis action |
-| `.btn-inverse` | White/background fill with primary border, primary text — inverts on hover to primary bg | Primary CTA inside a `bg-primary` section (e.g. `PageHero`, `BottomCTA`) |
-| `.btn-ghost-inverse` | Transparent with background-colored border and text — inverts on hover to background fill | Secondary CTA inside a `bg-primary` section |
+| `.btn-inverse` | White/background fill with primary border, primary text; inverts on hover to primary bg | Primary CTA inside a `bg-primary` section (e.g. `PageHero`, `BottomCTA`) |
+| `.btn-ghost-inverse` | Transparent with background-colored border and text; inverts on hover to background fill | Secondary CTA inside a `bg-primary` section |
 
 #### Button contrast rule (light mode)
 
@@ -185,12 +188,15 @@ Both use `px-4 py-1.5 text-sm font-medium leading-none inline-flex items-center`
 
 ### Difficulty Badges
 
-| Class | Usage |
-|---|---|
-| `.badge-difficulty` | Base: `rounded-md border px-2.5 py-1 font-mono text-[13px] uppercase tracking-wider` |
-| `.badge-beginner` | Amber (primary) color |
-| `.badge-intermediate` | Green (`--difficulty-builder`) |
-| `.badge-expert` | Lavender (`--difficulty-architect`) |
+Badge colors use CSS tokens defined in `src/index.css`. All three difficulties use black text (`--difficulty-text`) on pastel backgrounds for WCAG AA compliance (minimum 4.5:1 contrast ratio).
+
+| Difficulty | Dark mode bg token | Light mode bg token | Color |
+|---|---|---|---|
+| Beginner | `--difficulty-starter-bg` | `--difficulty-starter-bg` | Pastel amber |
+| Intermediate | `--difficulty-builder-bg` | `--difficulty-builder-bg` | Pastel sage green |
+| Expert | `--difficulty-architect-bg` | `--difficulty-architect-bg` | Pastel lavender |
+
+Tokens are defined in the `:root, .dark` block and overridden in the `.light` unlayered section of `src/index.css`. Never hardcode HSL values in `DifficultyBadge.tsx`. Use `hsl(var(--difficulty-*))` references only.
 
 ### Nav and Footer Links
 
@@ -289,7 +295,7 @@ Every page must support keyboard bypass of the navigation bar (WCAG 2.4.1).
 - Every page's `<main>` element must have `id="main-content"`. Do not omit this on new pages.
 
 ```tsx
-// In App.tsx (already present — do not duplicate)
+// In App.tsx (already present, do not duplicate)
 <a href="#main-content" className="skip-nav">Skip to main content</a>
 
 // On every page
@@ -315,7 +321,7 @@ const { theme, toggle } = useTheme();
 | `theme` | `"light" \| "dark"` | Current active theme |
 | `toggle()` | `() => void` | Toggle between light and dark and persist the choice |
 
-The default is dark. All light mode color overrides live in `src/index.css` as unlayered CSS rules scoped to `.light`. Never place light mode overrides inside `@layer base` — they would be silently overridden by `@layer utilities`.
+The default is dark. All light mode color overrides live in `src/index.css` as unlayered CSS rules scoped to `.light`. Never place light mode overrides inside `@layer base`, as they would be silently overridden by `@layer utilities`.
 
 ---
 
@@ -370,6 +376,28 @@ const { consent, grant, deny, reset } = useConsent();
 | `reset()` | `() => void` | Clears stored choice, re-shows banner, resets gtag to denied |
 
 Consent is stored in `localStorage` under the key `analytics_consent` as `{ value, timestamp }`. It expires after 6 months and the user is re-prompted.
+
+---
+
+### `useIsomorphicLayoutEffect`
+
+A utility constant that resolves to `useLayoutEffect` in the browser and `useEffect` on the server. Used to avoid the React SSR warning "useLayoutEffect does nothing on the server" during SSG prerendering.
+
+```ts
+import { useEffect, useLayoutEffect } from "react";
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+```
+
+Always guard any `localStorage` or browser API access inside the callback:
+
+```ts
+useIsomorphicLayoutEffect(() => {
+  if (typeof window === "undefined") return;
+  // browser-only code here
+}, []);
+```
+
+Currently used in: `src/hooks/useTheme.tsx`.
 
 ---
 
@@ -459,7 +487,7 @@ All icons use **lucide-react** (already a project dependency; no other icon libr
 ### Alignment
 
 When pairing an icon with text inside a link or button, always use `inline-flex items-center gap-1` on the container.
-Never put a raw SVG icon next to text inside a plain `inline` or `block` element — the icon will drop below the baseline.
+Never put a raw SVG icon next to text inside a plain `inline` or `block` element. The icon will drop below the baseline.
 
 ```tsx
 // Correct
@@ -467,7 +495,7 @@ Never put a raw SVG icon next to text inside a plain `inline` or `block` element
   Share something <ArrowRight size={13} aria-hidden="true" />
 </a>
 
-// Incorrect — icon drops below text baseline
+// Incorrect: icon drops below text baseline
 <a className="text-sm ...">
   Share something <ArrowRight size={13} />
 </a>

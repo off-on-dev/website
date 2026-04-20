@@ -35,6 +35,8 @@ export const Navbar = (): JSX.Element => {
             alt="offon.dev"
             width={130}
             height={33}
+            loading="eager"
+            title="offon.dev"
             className="h-8"
           />
         </Link>

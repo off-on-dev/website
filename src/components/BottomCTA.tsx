@@ -1,19 +1,16 @@
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { COMMUNITY_URL, BRAND_NAME } from "@/data/constants";
 
 export const BottomCTA = (): JSX.Element => {
-  const { ref, animationClass } = useScrollAnimation();
-
   return (
-    <section ref={ref} className="bg-primary py-16 px-6 md:px-16">
-      <div className={`${animationClass} mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center`}>
+    <section className="bg-primary py-16 px-6 md:px-16">
+      <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* Left - headline */}
-          <h2 aria-label="Start curious. Break things. Learn together. Glow brighter." className="animate-fade-up text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background">
-            <span className="block" aria-hidden="true">Start curious.</span>
-            <span className="block" aria-hidden="true">Break things.</span>
-            <span className="block" aria-hidden="true">Learn together.</span>
-            <span className="block" aria-hidden="true">Glow brighter.</span>
+          <h2 className="animate-fade-up text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background">
+            <span className="block">Start curious.</span>
+            <span className="block">Break things.</span>
+            <span className="block">Learn together.</span>
+            <span className="block">Glow brighter.</span>
           </h2>
 
           {/* Right - copy + buttons */}

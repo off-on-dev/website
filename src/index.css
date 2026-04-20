@@ -410,6 +410,14 @@ html {
     --difficulty-builder: 39 95% 52%;
     --difficulty-architect: 36 90% 44%;
 
+    --difficulty-starter-bg: 41 60% 75%;
+    --difficulty-starter-border: 41 60% 65% / 0.6;
+    --difficulty-builder-bg: 85 35% 70%;
+    --difficulty-builder-border: 85 35% 60% / 0.6;
+    --difficulty-architect-bg: 245 35% 78%;
+    --difficulty-architect-border: 245 35% 68% / 0.6;
+    --difficulty-text: 0 0% 0%;
+
     --type-simulation: 38 100% 58%;
     --type-interactive: 41 100% 60%;
 
@@ -745,8 +753,6 @@ html {
 .animate-fade-up-delay-1    { animation: fadeUp 0.6s ease-out 0.1s both; }
 .animate-fade-up-delay-2    { animation: fadeUp 0.6s ease-out 0.2s both; }
 .animate-fade-up-delay-3    { animation: fadeUp 0.6s ease-out 0.3s both; }
-.scroll-hidden { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
-.scroll-visible { opacity: 1; transform: translateY(0); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
 .animate-marquee            { animation: marquee 30s linear infinite; }
 
 /* ─── Firefly particles ───────────────────────────────────── */
@@ -939,4 +945,15 @@ html {
 .light .docs-ext-link:hover {
   color: hsl(var(--muted-foreground));
   text-decoration-color: currentColor;
+}
+
+/* ─── Difficulty badge token overrides (light mode) ─────── */
+.light {
+  --difficulty-starter-bg: 41 80% 85%;
+  --difficulty-starter-border: 41 80% 75% / 0.6;
+  --difficulty-builder-bg: 85 40% 82%;
+  --difficulty-builder-border: 85 40% 72% / 0.6;
+  --difficulty-architect-bg: 245 40% 87%;
+  --difficulty-architect-border: 245 40% 77% / 0.6;
+  --difficulty-text: 0 0% 0%;
 }
