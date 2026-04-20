@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ADVENTURES, Adventure } from "@/data/adventures";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Layers } from "lucide-react";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 
@@ -44,7 +43,6 @@ const AdventureCard = ({ adventure }: { adventure: Adventure }): JSX.Element => 
 );
 
 export const ChallengesGrid = (): JSX.Element => {
-  const { ref, animationClass } = useScrollAnimation();
   const [activeTopic, setActiveTopic] = useState<string | null>(null);
 
   const filteredLevels = activeTopic
@@ -60,9 +58,9 @@ export const ChallengesGrid = (): JSX.Element => {
     : [];
 
   return (
-    <section id="challenges" ref={ref} className="py-24 px-6">
+    <section id="challenges" className="py-24 px-6">
       <div className="mx-auto max-w-6xl">
-        <div className={animationClass}>
+        <div>
             <div className="animate-fade-up mb-3">
               <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">Adventures</span>
             </div>

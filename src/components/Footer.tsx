@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
 import { COMMUNITY_URL, BRAND_NAME, LINKEDIN_URL } from "@/data/constants";
-import { CookiePreferencesLink } from "@/components/CookiePreferencesLink";
 import logoDark from "@/assets/offon-logo-dark-color.svg";
 import logoLight from "@/assets/offon-logo-light-color.svg";
 
@@ -19,7 +18,7 @@ export const Footer = (): JSX.Element => {
         {/* Brand */}
         <div>
           <div className="mb-4">
-            <img src={theme === "dark" ? logoDark : logoLight} alt="offon.dev" width={104} height={26} className="h-5" />
+            <img src={theme === "dark" ? logoDark : logoLight} alt="offon.dev" width={104} height={26} loading="lazy" title="offon.dev" className="h-5" />
           </div>
           <p className="flex flex-col font-sans text-sm text-[hsl(var(--text-secondary))] leading-relaxed md:max-w-xs">
             <span>A welcoming community</span>

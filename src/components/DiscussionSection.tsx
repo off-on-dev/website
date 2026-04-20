@@ -1,5 +1,5 @@
 import { useState, useEffect, type CSSProperties } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Heart } from "lucide-react";
 import { COMMUNITY_URL, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
 import { stripHtml } from "@/utils/stripHtml";
 
@@ -120,7 +120,6 @@ export const DiscussionSection = ({ discussionUrls }: DiscussionSectionProps): J
               rel="noopener noreferrer"
               className="block card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
             >
-              <span className="sr-only">(opens in new tab) </span>
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <div
@@ -134,7 +133,7 @@ export const DiscussionSection = ({ discussionUrls }: DiscussionSectionProps): J
                 </div>
                 {post.like_count > 0 && (
                   <span className="text-xs text-muted-foreground">
-                    <span aria-hidden="true">♥</span>
+                    <Heart size={12} aria-hidden="true" />
                     <span className="sr-only">Likes: </span>
                     {post.like_count}
                   </span>
@@ -143,6 +142,7 @@ export const DiscussionSection = ({ discussionUrls }: DiscussionSectionProps): J
               <p className="text-sm leading-relaxed text-muted-foreground line-clamp-3">
                 {stripHtml(post.cooked)}
               </p>
+              <span className="sr-only"> (opens in new tab)</span>
             </a>
           ))}
           <a

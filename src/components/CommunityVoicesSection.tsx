@@ -1,6 +1,5 @@
 import { type ReactNode } from "react";
 import { ArrowRight, Megaphone, CircleHelp } from "lucide-react";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { COMMUNITY_URL } from "@/data/constants";
 
 type Pillar = {
@@ -29,12 +28,10 @@ const pillars: Pillar[] = [
 ];
 
 export const CommunityVoicesSection = (): JSX.Element => {
-  const { ref, animationClass } = useScrollAnimation();
-
   return (
-    <section ref={ref} className="py-24 px-6">
+    <section className="py-24 px-6">
       <div className="mx-auto max-w-5xl">
-        <div className={animationClass}>
+        <div>
           <div className="animate-fade-up mb-3">
             <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">
               Community

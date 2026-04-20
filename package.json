@@ -8,6 +8,7 @@
     "dev": "vite",
     "build": "vite-react-ssg build",
     "build:dev": "vite build --mode development",
+    "build:ssg-dev": "vite-react-ssg build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",

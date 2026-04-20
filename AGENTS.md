@@ -19,9 +19,7 @@ Guidance for AI coding agents working in this repository.
 **offon.dev** is the main website for OffOn, a platform for open source enthusiasts.
 It is fully static with no backend and no database. Pages are prerendered at build time using vite-react-ssg.
 
-Community activity happens on a separate Discourse instance at **community.offon.dev**,
-which is not part of this repository. Do not attempt to replicate or integrate
-Discourse functionality here.
+Community activity happens on a separate Discourse instance. Its display name is **community.offon.dev**, but the real URL is managed via the `COMMUNITY_URL` constant in `src/data/constants.ts`. Do not hardcode it. Do not attempt to replicate or integrate Discourse functionality here.
 
 ---
 
@@ -85,8 +83,6 @@ npm run preview      # Serve the production build locally
 
 npx shadcn@latest add <component>   # Add a shadcn/ui component
 ```
-
-Always run `npm run lint` and `npm test` before declaring a task done.
 
 ---
 
@@ -189,9 +185,9 @@ without exception. They exist to prevent debugging by accumulation.
 
 ### Component CSS patterns
 
-- `hero-badge` class on the hero pill `<div>` in `Hero.tsx` — used for CSS scoping of light mode overrides.
-- `logo-link` class on the Navbar logo `<Link>` — used to exclude the logo from nav link hover styles.
-- `data-difficulty` attribute on `DifficultyBadge` — used for CSS targeting of badge text color.
+- `hero-badge` class on the hero pill `<div>` in `Hero.tsx`. It is used for CSS scoping of light mode overrides.
+- `logo-link` class on the Navbar logo `<Link>`. It is used to exclude the logo from nav link hover styles.
+- `data-difficulty` attribute on `DifficultyBadge`. It is used for CSS targeting of badge text color.
 
 ---
 
@@ -199,7 +195,6 @@ without exception. They exist to prevent debugging by accumulation.
 
 - Static content lives in `src/data/` as typed TypeScript objects/arrays.
 - No `fetch` calls at build time or runtime unless explicitly requested.
-- Do not install new dependencies without checking if shadcn/ui or an existing utility already covers the need.
 
 ---
 
@@ -212,8 +207,8 @@ without exception. They exist to prevent debugging by accumulation.
   `text-foreground`) that shadcn sets up. Never hardcode a color that only works in one mode.
 - Never add a `dark:` override without a corresponding base (light) style.
 - Mobile first. Write base styles for mobile, then add `sm:`, `md:`, `lg:` breakpoints as needed.
-- For font utilities, type scale, component class patterns (buttons, pills, badges, overline labels), and animations, see `styleguide.md` — it is the source of truth. Do not duplicate those details here.
-- All fonts are self-hosted under `public/fonts/`. Never add Google Fonts or external font URLs.
+- For font utilities, type scale, component class patterns (buttons, pills, badges, overline labels), and animations, see `styleguide.md`. It is the source of truth. Do not duplicate those details here.
+- All fonts are self-hosted under `public/fonts/`.
 - Never write custom CSS unless Tailwind genuinely cannot do the job.
   If you must, add it to `src/index.css` with a comment explaining why.
 - When adding light mode overrides for Tailwind utility classes (e.g. `text-primary`,
@@ -227,9 +222,8 @@ without exception. They exist to prevent debugging by accumulation.
 - Light mode uses `.light` class on `<html>`, set by the `useTheme` hook.
 - Yellow `#ffc034` is accent-only in light mode. Never use it as a text color.
 - All light mode color overrides are unlayered rules at the bottom of `src/index.css`, scoped to `.light`.
-- Do NOT put light mode overrides inside `@layer base` — they will be silently overridden by `@layer utilities`.
+- Do NOT put light mode overrides inside `@layer base`. They will be silently overridden by `@layer utilities`.
 - Dark mode uses `:root` and `.dark`. Never modify these when fixing light mode issues.
-- Every time a new static page is added to `src/pages/` and registered in `src/App.tsx`, add its URL to `public/sitemap.xml`.
 
 ---
 
@@ -269,6 +263,10 @@ Check the following on every component you write or modify.
 - Never use a `<div>` or `<span>` as an interactive element. Use the right element instead.
 - One `<h1>` per page. No skipped heading levels.
 - Every page's primary content must live inside a single `<main id="main-content">` element. Do not split the page content across multiple `<main>` elements or leave major sections (e.g. `PageHero`, `BottomCTA`) outside `<main>`.
+- The `<html lang="en">` attribute is set in `index.html`. Never remove or change it.
+
+### Forms
+- Every `<input>`, `<select>`, and `<textarea>` must have an associated `<label>` via `for`/`id` pairing or `aria-label`. Never use placeholder text as a substitute for a label.
 
 ### Icons and special characters
 - Decorative icons paired with visible text: always add `aria-hidden="true"`. Do not omit it.
@@ -313,6 +311,7 @@ Check the following on every component you write or modify.
   example, after fixing a component that imported from the wrong theme library,
   add a test that reads the component file and asserts it imports from the
   correct path and does not import from the wrong one.
+- Prerender tests live in `src/test/prerender.test.ts` and require a production build to exist. Always run `npm run build` before `npm test` if prerender tests are included. These tests assert that each prerendered index.html contains exactly one `<title>` tag with the correct page-specific content.
 
 ---
 
@@ -354,11 +353,8 @@ if the site is ever prerendered. Never introduce them.
 
 - Always create observers inside `useEffect`, never at the top level of a
   component or module.
-- Observers are fine by default. The only risk is if they fire during a
-  prerender pass and produce content that the client's first render does not
-  match. Guard prerender-sensitive observers with a `window.__PRERENDER_INJECTED`
-  check if prerendering is added later.
-- `useScrollAnimation` renders content with `scroll-hidden`/`scroll-visible` CSS classes instead of conditional rendering, ensuring SSR and client initial render always match.
+- Creating observers inside `useEffect` is safe. The risk is only when an observer fires during a prerender pass and changes rendered output, causing a hydration mismatch. Guard any observer that affects rendered content with a `typeof window !== 'undefined'` check.
+- Use `useIsomorphicLayoutEffect` instead of `useLayoutEffect` in any component that renders during SSG. Define it as `const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect` and guard any localStorage or browser API access inside the callback with `if (typeof window === "undefined") return`.
 
 ---
 
@@ -382,26 +378,28 @@ This is a fully static React site. Apply these practices on every page.
 - Include relevant keywords in headings naturally, not forced.
 - For multi-line hero or section headings, do not use `<br />` inside `h1`/`h2`.
   Use block-level `<span>` elements for visual line breaks so parsers read predictable text.
-- When splitting heading text across multiple visual lines, add a single clean `aria-label`
-  on the heading and mark decorative line-split spans as `aria-hidden="true"`.
+- When splitting heading text across multiple visual lines, keep the text directly readable
+  in the heading via normal block `<span>` elements. Do not add a redundant `aria-label`
+  or `aria-hidden` on the line-split spans.
 
 ### Links and navigation
 - Internal links use React Router `<Link>`. Never trigger full page reloads.
 - Use descriptive link text. Never use "click here" or "read more" alone.
-- Canonical URLs must reflect the GitHub Pages base path correctly.
+- Set the canonical URL for each page as `${SITE_URL}${pathname}` using the `SITE_URL` constant from `src/data/constants.ts`. Do not derive canonical URLs from `window.location` or `VITE_BASE_PATH`.
 
 ### Performance
-- Keep bundle size in check. Avoid large dependencies for small tasks.
-- Lazy load page components with `React.lazy` and `Suspense` where practical.
-- Avoid layout shift. Set explicit dimensions on images and media.
+- Before adding any new dependency, run `npm run build` and check the bundle size in the Vite output. If it adds more than 10 KB to the main bundle, evaluate whether a lighter alternative exists.
+- Route-level code splitting is handled automatically by Vite. Do not add `React.lazy` or `Suspense` manually for page components.
+- Avoid layout shift by setting explicit `width` and `height` attributes on every `<img>` element.
+- For all other performance requirements including font preloading, LCP image handling, and Lighthouse baselines, see the Performance Checklist section.
 
 ### Global head setup (index.html)
-- Add `<link rel="canonical" href="https://offon.dev/" />` for the home page.
 - Add `<link rel="manifest" href="/site.webmanifest" />` to link the web app manifest.
 - Add `<meta name="theme-color">` tags for dark and light mode: `content="#0a0a0a" media="(prefers-color-scheme: dark)"` and `content="#f5f5ff" media="(prefers-color-scheme: light)"`.
 - Add JSON-LD structured data as a `<script type="application/ld+json">` with `@type: "WebSite"`.
 - Always include `og:image:width`, `og:image:height`, and `og:image:alt` for all OG image tags.
 - Add `og:site_name` and `og:locale` (en_GB) to all global OG tags in `index.html`.
+- Do not add page-specific meta tags (description, og:*, twitter:*) to index.html. These must live in each page's `<Helmet>` block only. Hardcoded tags in index.html are not replaced by react-helmet-async during SSG and will produce duplicate meta tags in every prerendered page.
 
 ---
 
@@ -463,6 +461,13 @@ these rules.
 - The sitemap lives at `public/sitemap.xml` and is served at `https://offon.dev/sitemap.xml`.
 - `robots.txt` at `public/robots.txt` must include: `Sitemap: https://offon.dev/sitemap.xml`
 
+When adding a new route to `src/App.tsx`, follow these rules by route type:
+
+- Static routes (e.g. `/about`, `/privacy`): add to `public/sitemap.xml` and the routes table in `README.md`
+- Dynamic routes (e.g. `/adventures/:id`): add to the routes table in `README.md` only. Do not add to `sitemap.xml` unless all IDs are statically known at build time.
+- Redirect routes (`<Navigate>`): do not add to `sitemap.xml` or `README.md`.
+- Catch-all routes (`*`): do not add anywhere.
+
 ---
 
 ## Deployment
@@ -488,8 +493,7 @@ State the result of each check explicitly before finishing a task.
    commented out.
 
 3. **Run build:** `npm run build` must complete with no TypeScript errors or
-   bundling failures. Run this for any change that touches types, imports, or
-   component interfaces.
+   bundling failures. Run this for every non-trivial change, not just those that touch types or interfaces.
 
 4. **Re-read every file you changed:** After making changes, re-read the full
    affected section of each modified file to verify the final state is correct.
@@ -541,10 +545,7 @@ State the result of each check explicitly before finishing a task.
 - Always read `styleguide.md` before making any UI, copy, or component changes.
   It is the source of truth for typography, color tokens, spacing, and brand rules.
   Never introduce values that contradict it.
-- Always check `tailwind.config.ts` and `src/index.css` for existing tokens before
-  introducing new values.
-- Always check `src/components/ui/` for existing shadcn components before building
-  something new.
+- Follow all rules in the Styling and Components sections.
 - Flag any accessibility concerns before writing the code, not after.
 - Flag any breaking changes explicitly.
 - Prefer simple, readable solutions over clever ones.
@@ -589,7 +590,7 @@ before every commit:
 | New component | styleguide.md: component entry with props and usage |
 | New hook | styleguide.md: hook entry with return type and behavior |
 | New utility function | styleguide.md: brief entry if it affects patterns |
-| New page or route | README.md: routes table |
+| New page or route | README.md routes table for all non-redirect routes; `public/sitemap.xml` for static routes only. |
 | New constant | README.md: constants section, styleguide.md if visual |
 | New workflow step | README.md: commands section, AGENTS.md if it changes a rule |
 | New brand or copy rule | styleguide.md first, then apply across codebase |
@@ -632,10 +633,10 @@ These rules exist to prevent specific classes of mistakes. Follow them unconditi
 
 ---
 
-## SEO Checklist — required for every new page
+## SEO Checklist: Required for Every New Page
 
-- Add `<title>` and `<meta name="description">` via react-helmet-async
-- Add `og:title`, `og:description`, `og:url`, `og:image` meta tags
+- Add a unique `<title>` and a `<meta name="description">` under 160 characters via react-helmet-async
+- Add `og:title`, `og:description`, `og:url`, `og:type`, and `og:image` meta tags
 - Add `og:image:width` (1200) and `og:image:height` (630) for proper image rendering
 - Add `og:image:alt`, `og:site_name`, and `og:locale` (en_GB) meta tags
 - Add `twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`, and `twitter:image:alt` meta tags
@@ -643,38 +644,47 @@ These rules exist to prevent specific classes of mistakes. Follow them unconditi
 - Add the page URL to `public/sitemap.xml` (static routes only)
 - Use correct heading hierarchy: one `h1` per page, `h2` for sections, `h3` for subsections
 - Dynamic routes are not added to `sitemap.xml` unless IDs are statically known
+- Verify `index.html` includes `<link rel="manifest" href="/site.webmanifest" />`
+- Verify `index.html` includes both `<meta name="theme-color">` tags for dark and light mode
+- Verify `index.html` includes a `<script type="application/ld+json">` block with `@type: WebSite`
+- Do not add page-specific meta tags (`description`, `og:*`, `twitter:*`) to `index.html`. They must live in each page's `<Helmet>` block only.
+- Confirm `<html lang="en">` is present in `index.html` and has not been removed.
 
 ---
 
-## WCAG AA Checklist — required for every new component
+## WCAG AA Checklist: Required for Every New Component
 
 - All text must meet 4.5:1 contrast ratio for normal text, 3:1 for large text (18px+ or 14px+ bold)
-- Never use `hsl(41 100% 60%)` (`#ffc034` yellow) as text color in light mode — it fails contrast
+- Never rely on color alone to convey meaning. Always pair color with text, icon, or pattern.
+- Never use `hsl(41 100% 60%)` (`#ffc034` yellow) as text color in light mode. It fails contrast.
 - Never place `text-primary` or any text on a `bg-primary` background without verifying the contrast combination in light mode
-- All interactive elements must have visible focus-visible styles: `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm`
+- All interactive elements must have visible focus-visible styles. Block elements: `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 rounded-sm`. Inline elements: use `ring-offset-1` instead of `ring-offset-2`.
 - All images must have descriptive `alt` text (empty `alt` only for decorative images)
-- Do not put light mode color overrides inside `@layer base` — use unlayered rules scoped to `.light` at the bottom of `index.css`
-- Verify hover states do not change layout properties (padding, border, font-weight, width) — color and opacity only
+- Verify hover states do not change layout properties (padding, border, font-weight, width). Use color and opacity changes only.
 - Use semantic HTML: `<main>`, `<nav>`, `<footer>`, `<section>`, `<article>` landmarks where appropriate
 - Heading hierarchy must not skip levels
 - Do not rely on `<br />` to split heading text across lines in `h1`/`h2`.
-  Prefer block spans and provide a clean `aria-label` for assistive tech and SEO parsers.
+  Prefer block spans and keep the text directly readable without adding a redundant `aria-label`
+  or `aria-hidden` on the line-split spans.
 - Always test both light and dark mode when adding or modifying any component
 - Every new page must include `id="main-content"` on its `<main>` element (required for the skip navigation link in `Layout.tsx`)
 - Every `<a target="_blank">` must include `<span className="sr-only"> (opens in new tab)</span>` as its last child
 - Never add `target="_blank"` to a link without the above span
-- Do not use raw Unicode arrow or symbol characters (`→`, `♥`, `✓`, `★`) in visible content — use lucide-react icons with `aria-hidden="true"` instead, or wrap the character in `aria-hidden="true"` and pair with visible text or an sr-only label
-- Every decorative icon next to visible text must have `aria-hidden="true"` — never omit it
+- Do not use raw Unicode arrow or symbol characters (`→`, `♥`, `✓`, `★`) in visible content. Use lucide-react icons with `aria-hidden="true"` instead, or wrap the character in `aria-hidden="true"` and pair with visible text or an sr-only label.
+- Every decorative icon next to visible text must have `aria-hidden="true"`. Never omit it.
 - All page content (including `PageHero` and `BottomCTA`) must be inside the single `<main id="main-content">` element
+- Use `aria-live` regions for any content that updates dynamically after page load.
 
 ---
 
-## Performance Checklist — required when adding fonts, images, or new routes
+## Performance Checklist: Required When Adding Fonts, Images, or New Routes
 
 - Preload critical fonts in `index.html` with `<link rel="preload" as="font" type="font/woff2" crossorigin="anonymous">`
-- Only preload fonts used above the fold — currently `inter-latin-600-normal.woff2` and `inter-latin-500-normal.woff2`
-- Do not lazy-load LCP images — remove `loading="lazy"` from any above-the-fold image
-- Add `fetchpriority="high"` to the LCP image
-- New routes are automatically code-split by Vite — no manual action needed
-- Always run Lighthouse against the production build: `npm run build && npx serve dist` — never against the dev server
+- Only preload fonts used above the fold. Check `index.html` for the current preload list and update it whenever above-the-fold typography changes.
+- Do not lazy-load LCP images. Remove `loading="lazy"` from any above-the-fold image.
+- Add `loading="lazy"` to all `<img>` elements that are not visible in the initial viewport.
+- Add `fetchpriority="high"` to the LCP image.
+- Add `width` and `height` attributes to every `<img>` element to prevent layout shift (CLS).
+- New routes are automatically code-split by Vite. No manual action needed.
+- Always run Lighthouse against the production build: `npm run build && npx serve dist`. Never run it against the dev server.
 - Current baseline scores (production): Performance 96, Accessibility 100, Best Practices 100, SEO 100

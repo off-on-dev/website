@@ -46,35 +46,36 @@ const supportWays = [
 
 const Sponsors = (): JSX.Element => {
   const { theme } = useTheme();
+  const pageTitle = `Sponsorship and Independence - ${BRAND_NAME}`;
 
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>{`Sponsors - ${BRAND_NAME}`}</title>
+        <title>{pageTitle}</title>
         <link rel="canonical" href={SITE_URL + "/sponsors"} />
         <meta name="description" content={`See how sponsorship supports ${BRAND_NAME} while the community remains independent, vendor-neutral, and member-driven.`} />
-        <meta property="og:title" content={`Sponsors - ${BRAND_NAME}`} />
+        <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={`See how sponsorship supports ${BRAND_NAME} while the community remains independent, vendor-neutral, and member-driven.`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/sponsors`} />
         <meta property="og:image" content={`${SITE_URL}/og.png`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content={`Sponsors - ${BRAND_NAME}`} />
+        <meta property="og:image:alt" content={pageTitle} />
         <meta property="og:site_name" content={BRAND_NAME} />
         <meta property="og:locale" content="en_GB" />
-        <meta name="twitter:title" content={`Sponsors - ${BRAND_NAME}`} />
+        <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={`See how sponsorship supports ${BRAND_NAME} while the community remains independent, vendor-neutral, and member-driven.`} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
-        <meta name="twitter:image:alt" content={`Sponsors - ${BRAND_NAME}`} />
+        <meta name="twitter:image:alt" content={pageTitle} />
       </Helmet>
       <Navbar />
       <main id="main-content">
       <PageHero
         eyebrow="Sponsors"
         title="Sponsorship and Independence"
-        description="Sponsors provide financial support and participate as community members, but do not control technical direction, content priorities, or governance. This community belongs to its members."
+        description="Sponsors provide financial support and participate as community members, but do not control editorial direction, content priorities, or governance. This community belongs to its members."
         primaryCta={{ label: <span className="inline-flex items-center gap-2">Get in touch <ArrowUpRight size={14} aria-hidden="true" /></span>, href: `${COMMUNITY_URL}/groups/moderators`, external: true }}
         secondaryCta={{ label: <span className="inline-flex items-center gap-2">Join the community <ArrowRight size={14} aria-hidden="true" /></span>, href: COMMUNITY_URL, external: true }}
       />
@@ -137,7 +138,7 @@ const Sponsors = (): JSX.Element => {
           <h2 className="text-2xl font-bold text-primary mb-4">How We Maintain Trust</h2>
           <ul className="space-y-3">
             {[
-              "Sponsors do not control technical direction, content priorities, or community governance.",
+              "Sponsors do not control editorial direction, content priorities, or community governance.",
               "Promotional content is not permitted. Technical product mentions are welcome only when neutral and reproducible.",
               "Our moderation policies and decision-making processes are documented and accessible.",
               "Community input directly shapes how we evolve.",

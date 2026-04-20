@@ -1,0 +1,84 @@
+// This test requires a production build to exist in dist/.
+// Run `npm run build` before running these tests.
+
+import { describe, it, expect } from "vitest";
+import * as fs from "fs";
+import * as path from "path";
+
+const DIST_ROOT = path.resolve(__dirname, "../../dist");
+
+type TitleCheck =
+  | { type: "exact"; value: string }
+  | { type: "contains"; value: string };
+
+type PageSpec = {
+  file: string;
+  check: TitleCheck;
+};
+
+const pages: PageSpec[] = [
+  {
+    file: "index.html",
+    check: { type: "exact", value: "OffOn - Vendor-neutral. Open Source. Community Driven." },
+  },
+  {
+    file: "about/index.html",
+    check: { type: "exact", value: "About OffOn - Building the contributors and maintainers of tomorrow" },
+  },
+  {
+    file: "privacy/index.html",
+    check: { type: "exact", value: "Privacy Policy - OffOn" },
+  },
+  {
+    file: "sponsors/index.html",
+    check: { type: "exact", value: "Sponsorship and Independence - OffOn" },
+  },
+  {
+    file: "docs/community-guide/index.html",
+    check: { type: "exact", value: "Community Guide - OffOn" },
+  },
+  {
+    file: "adventures/echoes-lost-in-orbit/index.html",
+    check: { type: "contains", value: "Echoes Lost in Orbit" },
+  },
+  {
+    file: "adventures/building-cloudhaven/index.html",
+    check: { type: "contains", value: "Building CloudHaven" },
+  },
+  {
+    file: "adventures/the-ai-observatory/index.html",
+    check: { type: "contains", value: "The AI Observatory" },
+  },
+];
+
+function extractTitles(html: string): string[] {
+  return [...html.matchAll(/<title[^>]*>([^<]*)<\/title>/g)].map((m) => m[1]);
+}
+
+describe("prerendered HTML title tags", () => {
+  for (const { file, check } of pages) {
+    it(`dist/${file} has correct <title>`, () => {
+      const fullPath = path.join(DIST_ROOT, file);
+
+      if (!fs.existsSync(fullPath)) {
+        throw new Error(`dist/${file} not found — run npm run build first`);
+      }
+
+      const html = fs.readFileSync(fullPath, "utf-8");
+      const titles = extractTitles(html);
+
+      expect(
+        titles.length,
+        `Expected exactly one <title> tag in dist/${file}, found ${titles.length}`
+      ).toBe(1);
+
+      const title = titles[0];
+
+      if (check.type === "exact") {
+        expect(title).toBe(check.value);
+      } else {
+        expect(title).toContain(check.value);
+      }
+    });
+  }
+});

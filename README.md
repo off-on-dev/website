@@ -4,13 +4,13 @@ Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for op
 
 ## Tech Stack
 
-- **React 18** + **TypeScript** — UI and type safety
-- **Vite** — build tooling and dev server
-- **Tailwind CSS** — utility-first styling
-- **shadcn/ui** — accessible component primitives built on Radix UI
-- **React Router v6** — client-side routing
-- **Vitest** — unit testing
-- **GitHub Pages** — hosting and deployment
+- **React 18** + **TypeScript**: UI and type safety
+- **Vite**: build tooling and dev server
+- **Tailwind CSS**: utility-first styling
+- **shadcn/ui**: accessible component primitives built on Radix UI
+- **React Router v6**: client-side routing
+- **Vitest**: unit testing
+- **GitHub Pages**: hosting and deployment
 
 ## Getting Started
 
@@ -26,7 +26,7 @@ npm install
 npm run dev
 ```
 
-Node.js **22** is required. Version is pinned in `.nvmrc` — run `nvm use` to switch automatically.
+Node.js **22** is required. Version is pinned in `.nvmrc`, run `nvm use` to switch automatically.
 
 ## Scripts
 
@@ -42,12 +42,14 @@ Node.js **22** is required. Version is pinned in `.nvmrc` — run `nvm use` to s
 
 Run `npm run lint` and `npm test` before marking any work done.
 
+All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px) viewports before being considered done. Always test against the production build (`npm run build && npx serve dist`), never the dev server.
+
 ## Project Structure
 
 ```
 src/
   components/     # Reusable UI components (named exports, PascalCase files)
-  components/ui/  # shadcn/ui primitives — do not edit directly
+  components/ui/  # shadcn/ui primitives, do not edit directly
   pages/          # Route-level page components (lazy-loaded via React.lazy)
   data/           # Static content as typed TypeScript objects and arrays
   hooks/          # Custom React hooks
@@ -75,7 +77,7 @@ public/
 | `/privacy` | `Privacy.tsx` | GDPR-compliant privacy policy |
 | `*` | `NotFound.tsx` | 404 fallback |
 
-> **Technology tag filtering** is handled inline on the home page, adventure detail, and challenge detail pages via local `useState`. There is no dedicated `/topics/:tag` route.
+> **Technology tag filtering** is handled inline on the home page, adventure detail, and challenge detail pages via local `useState`. Topics are filtered inline. `/topics/:tag` redirects to `/#challenges`.
 
 ## SEO and Metadata
 
@@ -144,5 +146,5 @@ PR preview builds set the `VITE_BASE_PATH` environment variable to `/pr-preview/
 
 ## Further Reading
 
-- [`styleguide.md`](styleguide.md) — design system: color tokens, typography, component patterns, and light/dark mode rules.
-- [`AGENTS.md`](AGENTS.md) — contributor conventions: code quality rules, commit format, testing requirements, and accessibility standards.
+- [`styleguide.md`](styleguide.md): design system, color tokens, typography, component patterns, and light/dark mode rules.
+- [`AGENTS.md`](AGENTS.md): contributor conventions, code quality rules, commit format, testing requirements, and accessibility standards.

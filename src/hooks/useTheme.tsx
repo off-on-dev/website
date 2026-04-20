@@ -1,4 +1,6 @@
-import { createContext, useContext, useEffect, useLayoutEffect, useState } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useState, startTransition } from "react";
+
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 type Theme = "dark" | "light";
 
@@ -13,10 +15,13 @@ export const useTheme = (): { theme: Theme; toggle: () => void } => useContext(T
 export const ThemeProvider = ({ children }: { children: React.ReactNode }): JSX.Element => {
   const [theme, setTheme] = useState<Theme>("dark");
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
+    if (typeof window === "undefined") return;
     const stored = localStorage.getItem("theme");
     if (stored === "light") {
-      setTheme("light");
+      startTransition(() => {
+        setTheme("light");
+      });
     }
   }, []);
 
