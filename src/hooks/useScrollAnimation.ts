@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
 
-export const useScrollAnimation = (): { ref: RefObject<HTMLDivElement>; isVisible: boolean } => {
+export const useScrollAnimation = (): { ref: RefObject<HTMLDivElement>; isVisible: boolean; animationClass: string } => {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -17,5 +17,9 @@ export const useScrollAnimation = (): { ref: RefObject<HTMLDivElement>; isVisibl
     return () => observer.disconnect();
   }, []);
 
-  return { ref, isVisible };
+  return {
+    ref,
+    isVisible,
+    animationClass: isVisible ? "scroll-visible" : "scroll-hidden",
+  };
 };

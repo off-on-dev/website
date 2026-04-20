@@ -32,12 +32,12 @@ beforeEach(() => {
 // ---------------------------------------------------------------------------
 
 function ScrollTarget(): JSX.Element {
-  const { ref, isVisible } = useScrollAnimation();
+  const { ref, animationClass } = useScrollAnimation();
   return (
     <div
       ref={ref}
       data-testid="target"
-      className={isVisible ? 'animate-in' : ''}
+      className={animationClass}
     />
   );
 }
@@ -64,12 +64,12 @@ describe('useScrollAnimation - IntersectionObserver options', () => {
   });
 });
 
-describe('useScrollAnimation - animate-in class', () => {
-  it('observed element receives animate-in class when intersection fires', () => {
+describe('useScrollAnimation - animationClass', () => {
+  it('element has scroll-hidden before intersection and scroll-visible after', () => {
     render(<ScrollTarget />);
     const target = screen.getByTestId('target');
 
-    expect(target.classList.contains('animate-in')).toBe(false);
+    expect(target.classList.contains('scroll-hidden')).toBe(true);
 
     act(() => {
       capturedCallback(
@@ -78,6 +78,7 @@ describe('useScrollAnimation - animate-in class', () => {
       );
     });
 
-    expect(target.classList.contains('animate-in')).toBe(true);
+    expect(target.classList.contains('scroll-visible')).toBe(true);
+    expect(target.classList.contains('scroll-hidden')).toBe(false);
   });
 });

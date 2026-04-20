@@ -52,13 +52,12 @@ const values: Value[] = [
 ];
 
 export const AboutSection = (): JSX.Element => {
-  const { ref, isVisible } = useScrollAnimation();
+  const { ref, animationClass } = useScrollAnimation();
 
   return (
     <section id="mission" ref={ref} className="py-24 px-6">
       <div className="mx-auto max-w-6xl">
-        {isVisible && (
-          <div className="animate-fade-up">
+        <div className={animationClass}>
             <div className="mb-16">
               <h2 className="font-sans text-sm font-medium uppercase tracking-widest text-primary">Our Mission</h2>
               <div className="mt-4 flex flex-col gap-4 max-w-2xl">
@@ -84,8 +83,7 @@ export const AboutSection = (): JSX.Element => {
                 );
               })}
             </div>
-          </div>
-        )}
+        </div>
       </div>
     </section>
   );

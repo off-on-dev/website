@@ -27,7 +27,7 @@ describe("Sonner toaster imports", () => {
 });
 
 // ---------------------------------------------------------------------------
-// TEST 2 and 3: Behavior — Toaster is correctly wired to the app's
+// TEST 2 and 3: Behavior. Toaster is correctly wired to the app's
 // ThemeProvider. We render Toaster alongside a ThemeConsumer in the same
 // tree and assert the shared context returns the expected theme (dark by
 // default, light after toggle). If Toaster were still importing from

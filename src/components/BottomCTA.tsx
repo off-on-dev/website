@@ -3,12 +3,11 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { COMMUNITY_URL, BRAND_NAME } from "@/data/constants";
 
 export const BottomCTA = (): JSX.Element => {
-  const { ref, isVisible } = useScrollAnimation();
+  const { ref, animationClass } = useScrollAnimation();
 
   return (
     <section ref={ref} className="bg-primary py-16 px-6 md:px-16">
-      {isVisible && (
-        <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div className={`${animationClass} mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center`}>
           {/* Left - headline */}
           <h2 aria-label="Start curious. Break things. Learn together. Glow brighter." className="animate-fade-up text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background">
             <span className="block" aria-hidden="true">Start curious.</span>
@@ -54,8 +53,7 @@ export const BottomCTA = (): JSX.Element => {
               </a>
             </div>
           </div>
-        </div>
-      )}
+      </div>
     </section>
   );
 };
