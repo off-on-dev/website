@@ -621,6 +621,7 @@ State the result of each check explicitly before finishing a task.
 - Do not commit secrets, tokens, or credentials.
 - Do not use em dashes anywhere in the codebase, content, or documentation.
 - Do not change `tailwind.config.ts` theme values without verifying the change does not break existing components.
+- Do not upgrade `react-helmet-async` beyond `1.3.x`. `vite-react-ssg` has a hard peer dependency on `^1.3.0` and calls internal `HelmetDispatcher` APIs that changed in v3. Upgrading causes SSG render failures on every page. Unblock only after `vite-react-ssg` declares support for v3.
 
 ---
 

@@ -54,11 +54,9 @@ export const DiscussionSection = ({ discussionUrl }: DiscussionSectionProps): JS
 
   useEffect(() => {
     const raw: StoredPost[] = topicId ? (discussionData[topicId] ?? []) : [];
-    if (raw.length === 0) {
-      setAges([]);
-      return;
-    }
+    if (raw.length === 0) return;
     const now = Date.now();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Date.now() cannot be called at render time; SSG hydration requires effect-based initialization (see CLAUDE.md)
     setAges(raw.map((p) => timeAgo(p.created_at, now)));
   }, [topicId]);
 

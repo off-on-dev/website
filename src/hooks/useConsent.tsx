@@ -98,7 +98,7 @@ export function ConsentProvider({ children }: ConsentProviderProps): JSX.Element
   useEffect(() => {
     const stored = readStored();
     if (stored) {
-      setConsent(stored.value);
+      setConsent(stored.value); // eslint-disable-line react-hooks/set-state-in-effect -- localStorage cannot be read in a lazy useState initializer; SSG requires a safe default on first render (see CLAUDE.md hydration rules)
       if (stored.value === "granted") {
         loadGtag();
         updateGtag("granted");
