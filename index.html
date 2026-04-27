@@ -20,7 +20,7 @@
 
     <script>
       (function() {
-        var t = localStorage.getItem("theme");
+        const t = localStorage.getItem("theme");
         if (t === "light") {
           document.documentElement.classList.remove("dark");
           document.documentElement.classList.add("light");
@@ -64,3 +64,4 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
+</html>

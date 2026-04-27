@@ -18,7 +18,7 @@ beforeEach(() => {
   disconnectMock.mockReset();
   vi.stubGlobal(
     'IntersectionObserver',
-    vi.fn((cb: IOCallback) => {
+    vi.fn(function(cb: IOCallback) {
       capturedCallback = cb;
       return { observe: observeMock, disconnect: disconnectMock };
     }),
@@ -32,7 +32,7 @@ beforeEach(() => {
 function makeEntry(id: string, isIntersecting: boolean): IntersectionObserverEntry {
   const el = document.createElement('div');
   el.id = id;
-  return { target: el, isIntersecting } as IntersectionObserverEntry;
+  return { target: el, isIntersecting } as unknown as IntersectionObserverEntry;
 }
 
 // ---------------------------------------------------------------------------

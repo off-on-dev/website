@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import { Helmet } from "react-helmet-async";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -11,7 +12,7 @@ const Privacy = (): JSX.Element => {
   const h3 = "text-lg font-heading font-semibold text-foreground mt-6 mb-2";
   const p = "text-sm text-muted-foreground leading-relaxed mb-4";
   const ul = "list-disc list-inside space-y-1 text-sm text-muted-foreground mb-4 ml-2";
-  const a = "underline underline-offset-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm";
+  const a = "underline underline-offset-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
 
   return (
     <div className="min-h-screen bg-background">
@@ -89,9 +90,9 @@ const Privacy = (): JSX.Element => {
           is sent.
         </p>
         <p className={p}>
-          You may withdraw your consent at any time by clicking "Cookie preferences" in the site
-          footer. Withdrawal does not affect the lawfulness of processing carried out before
-          withdrawal.
+          You may withdraw your consent at any time by clicking the cookie preferences button
+          (bottom right of the page). Withdrawal does not affect the lawfulness of processing
+          carried out before withdrawal.
         </p>
 
         <h3 className={h3}>No other data collection</h3>
@@ -166,7 +167,7 @@ const Privacy = (): JSX.Element => {
           </li>
           <li>
             <strong>Right to withdraw consent (Art. 7(3))</strong> - You may withdraw consent at
-            any time using the "Cookie preferences" link in the footer. Withdrawal does not affect
+            any time using the cookie preferences button (bottom right of the page). Withdrawal does not affect
             prior lawful processing.
           </li>
         </ul>

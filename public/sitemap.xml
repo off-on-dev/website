@@ -3,6 +3,18 @@
   <url><loc>https://offon.dev/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
   <url><loc>https://offon.dev/sponsors</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://offon.dev/about</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://offon.dev/docs/community-guide</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://offon.dev/handbook</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://offon.dev/privacy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://offon.dev/adventures/echoes-lost-in-orbit</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://offon.dev/adventures/building-cloudhaven</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://offon.dev/adventures/the-ai-observatory</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://offon.dev/adventures/echoes-lost-in-orbit/levels/beginner</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://offon.dev/adventures/echoes-lost-in-orbit/levels/intermediate</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://offon.dev/adventures/echoes-lost-in-orbit/levels/expert</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://offon.dev/adventures/building-cloudhaven/levels/beginner</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://offon.dev/adventures/building-cloudhaven/levels/intermediate</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://offon.dev/adventures/building-cloudhaven/levels/expert</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://offon.dev/adventures/the-ai-observatory/levels/beginner</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://offon.dev/adventures/the-ai-observatory/levels/intermediate</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://offon.dev/adventures/the-ai-observatory/levels/expert</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>

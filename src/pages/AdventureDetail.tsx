@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type JSX } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { ArrowRight } from "lucide-react";
@@ -17,8 +17,17 @@ const AdventureDetail = (): JSX.Element => {
 
   if (!adventure) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-muted-foreground">Adventure not found.</p>
+      <div className="min-h-screen bg-background">
+        <Helmet>
+          <title>{`Adventure Not Found - ${BRAND_NAME}`}</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+        <Navbar />
+        <main id="main-content" className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
+          <h1 className="text-2xl font-bold text-foreground mb-3">Adventure not found</h1>
+          <p className="text-muted-foreground">The adventure you're looking for doesn't exist.</p>
+        </main>
+        <Footer />
       </div>
     );
   }
@@ -75,7 +84,7 @@ const AdventureDetail = (): JSX.Element => {
 
         {/* Challenges */}
         <div className="mb-16">
-          <h2 className="font-sans text-sm font-medium uppercase tracking-widest text-primary mb-6">
+          <h2 className="text-xl font-semibold text-foreground mb-6">
             Challenges
           </h2>
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -83,7 +92,7 @@ const AdventureDetail = (): JSX.Element => {
               <Link
                 key={level.id}
                 to={`/adventures/${adventure.id}/levels/${level.id}`}
-                className="group card-glow relative rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
+                className="group card-glow relative rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 <div className="mb-3">
                   <DifficultyBadge difficulty={level.difficulty} showDot />
@@ -114,7 +123,7 @@ const AdventureDetail = (): JSX.Element => {
 
         {/* Find challenges by technology */}
         <div>
-          <h2 className="font-sans text-sm font-medium uppercase tracking-widest text-primary mb-4">
+          <h2 className="text-lg font-semibold text-foreground mb-4">
             Find challenges by technology
           </h2>
           <div className="mb-6 flex flex-wrap gap-2">
@@ -130,13 +139,14 @@ const AdventureDetail = (): JSX.Element => {
               </button>
             ))}
           </div>
+          <div aria-live="polite" aria-atomic="true">
           {activeTech && relatedLevels.length > 0 && (
             <div key={activeTech} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {relatedLevels.map(({ level, adventureId, adventureTitle }) => (
                 <Link
                   key={`${adventureId}-${level.id}`}
                   to={`/adventures/${adventureId}/levels/${level.id}`}
-                  className="group card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 animate-fade-up-delay-1"
+                  className="group card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 animate-fade-up-delay-1"
                 >
                   <div className="mb-3">
                     <DifficultyBadge difficulty={level.difficulty} showDot />
@@ -162,6 +172,7 @@ const AdventureDetail = (): JSX.Element => {
               ))}
             </div>
           )}
+          </div>
         </div>
       </main>
       <Footer />

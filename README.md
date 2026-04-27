@@ -35,6 +35,7 @@ Node.js **22** is required. Version is pinned in `.nvmrc`, run `nvm use` to swit
 | `npm run dev` | Start local dev server at http://localhost:8080 |
 | `npm run build` | SSG prerender build to `dist/` (vite-react-ssg) |
 | `npm run build:dev` | Dev-mode build (source maps, no minification) |
+| `npm run build:ssg-dev` | SSG build in development mode (unminified, for hydration debugging) |
 | `npm run preview` | Serve the production build locally |
 | `npm run lint` | Run ESLint across the project |
 | `npm test` | Run the full test suite once |
@@ -72,10 +73,12 @@ public/
 | `/adventures/:id/levels/:levelId` | `ChallengeDetail.tsx` | Individual challenge |
 | `/sponsors` | `Sponsors.tsx` | Sponsorship info |
 | `/about` | `About.tsx` | About the community |
-| `/docs` | redirects to `/docs/community-guide` | |
-| `/docs/community-guide` | `CommunityGuide.tsx` | Community documentation |
+| `/handbook` | `CommunityGuide.tsx` | Community handbook / documentation |
 | `/privacy` | `Privacy.tsx` | GDPR-compliant privacy policy |
-| `*` | `NotFound.tsx` | 404 fallback |
+| `/404` | `NotFound.tsx` | Prerendered 404 page |
+| `/community-guide` | redirects to `/handbook` | Legacy alias |
+| `/topics/:tag` | redirects to `/#challenges` | Tag filter shortlink |
+| `*` | `NotFound.tsx` | Client-side 404 fallback |
 
 > **Technology tag filtering** is handled inline on the home page, adventure detail, and challenge detail pages via local `useState`. Topics are filtered inline. `/topics/:tag` redirects to `/#challenges`.
 
@@ -126,9 +129,8 @@ The site uses Google Analytics 4 with Consent Mode v2. No data is collected unti
 
 - `index.html` loads gtag.js with all consent signals set to `denied` by default (Consent Mode v2).
 - `src/hooks/useConsent.tsx` manages the user's choice, stored in `localStorage` as `analytics_consent` with a 6-month expiry. On grant, it calls `gtag('consent', 'update', { analytics_storage: 'granted' })`.
-- `src/components/ConsentBanner.tsx` renders a fixed bottom bar until the user makes a choice.
-- `src/components/CookiePreferencesLink.tsx` is placed in the Footer and calls `reset()` from `useConsent` to re-show the banner.
-- `src/App.tsx` fires a `page_view` event on every route change, but only when consent is `"granted"`.
+- `src/components/ConsentBanner.tsx` renders a fixed bottom bar until the user makes a choice. Once consent is set, it renders a floating cookie icon button (bottom-right) that calls `reset()` to reopen the banner.
+- `src/Layout.tsx` fires a `page_view` event on every route change (via `ScrollToTop`), but only when consent is `"granted"`.
 - `/privacy` (`src/pages/Privacy.tsx`) is the GDPR Art. 13 privacy policy. Contact: offondev@gmail.com and `${COMMUNITY_URL}/groups/moderators`.
 
 ---
@@ -147,4 +149,4 @@ PR preview builds set the `VITE_BASE_PATH` environment variable to `/pr-preview/
 ## Further Reading
 
 - [`styleguide.md`](styleguide.md): design system, color tokens, typography, component patterns, and light/dark mode rules.
-- [`AGENTS.md`](AGENTS.md): contributor conventions, code quality rules, commit format, testing requirements, and accessibility standards.
+- [`CLAUDE.md`](CLAUDE.md): contributor conventions, code quality rules, commit format, testing requirements, and accessibility standards.

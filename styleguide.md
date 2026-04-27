@@ -206,7 +206,9 @@ Link hover and active states use an underline that is always rendered in the DOM
 |---|---|
 | Default | `underline decoration-transparent underline-offset-2 transition-colors duration-200` |
 | Hover | `hover:decoration-primary/60` |
-| Active / current route | `decoration-primary` |
+| Active / current route | `text-primary underline decoration-primary underline-offset-4` |
+
+The active state uses both a color change (`text-primary`) and a visible underline (`decoration-primary`) so the indicator is not color-only (WCAG 1.4.1). In light mode, `text-primary` is overridden to `hsl(var(--foreground-hover))` via `.light nav a.text-primary` in `src/index.css`.
 
 This pattern is applied to all navigation links in `Navbar.tsx` and all footer column links in `Footer.tsx`.
 
@@ -246,7 +248,7 @@ Light mode: no background texture.
 
 | Class | Keyframe | Duration |
 |---|---|---|
-| `.animate-fade-up` | fadeUp (slide up 14px + fade in) | 0.6s ease-out |
+| `.animate-fade-up` | fadeUp (fade from opacity 0 + slide up 14px) | 0.6s ease-out |
 | `.animate-fade-up-delay-1` | fadeUp | 0.6s, 0.1s delay |
 | `.animate-fade-up-delay-2` | fadeUp | 0.6s, 0.2s delay |
 | `.animate-fade-up-delay-3` | fadeUp | 0.6s, 0.3s delay |
@@ -279,10 +281,12 @@ Sidebar uses the same token namespace (`--sidebar-*`) mirroring the main tokens.
 All interactive elements use the standard focus-visible pattern for keyboard accessibility:
 
 ```
-focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2
+focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
 ```
 
 Adjust `ring-offset-1` for inline elements or `ring-offset-2` for block elements as appropriate.
+
+Always use `ring-ring`, never `ring-primary/xx`. The `--ring` token is theme-aware: dark mode amber (`41 100% 60%`), light mode dark amber (`41 100% 35%`, hex `#B37700`) for WCAG AA contrast in both modes.
 
 ---
 
@@ -290,12 +294,12 @@ Adjust `ring-offset-1` for inline elements or `ring-offset-2` for block elements
 
 Every page must support keyboard bypass of the navigation bar (WCAG 2.4.1).
 
-- The skip link is rendered as the first child of `<BrowserRouter>` in `App.tsx` and always targets `#main-content`.
+- The skip link is rendered as the first child inside `<ConsentProvider>` in `Layout.tsx` and always targets `#main-content`. Routing is handled by vite-react-ssg (no `<BrowserRouter>` in the codebase).
 - It is styled with the `.skip-nav` class defined in `src/index.css`: visually hidden (`top: -100%`) until focused, at which point it appears at `top: 1rem`.
 - Every page's `<main>` element must have `id="main-content"`. Do not omit this on new pages.
 
 ```tsx
-// In App.tsx (already present, do not duplicate)
+// In Layout.tsx (already present, do not duplicate)
 <a href="#main-content" className="skip-nav">Skip to main content</a>
 
 // On every page
@@ -412,23 +416,122 @@ Dual-mode component. Renders differently based on whether the user has made a co
 - **No decision yet (`consent === null`):** renders a full-width fixed bottom bar with Decline / Accept analytics buttons and a link to `/privacy`.
 - **Decision made (`consent !== null`):** renders a single 44×44 px floating cookie icon button fixed at `bottom-right`. Clicking it calls `reset()` to re-show the banner.
 
-The banner uses `paddingBottom: env(safe-area-inset-bottom)` and the floating button uses `bottom: calc(env(safe-area-inset-bottom) + 1rem)` so both respect the iOS home indicator safe area. `index.html` must include `viewport-fit=cover` in the viewport meta tag for this to work.
+The banner uses `paddingBottom: env(safe-area-inset-bottom)` and the floating button uses `bottom: calc(env(safe-area-inset-bottom, 0px) + 5rem)` so both respect the iOS home indicator safe area. `index.html` must include `viewport-fit=cover` in the viewport meta tag for this to work.
 
 Touch target is 44×44 px (`h-11 w-11`) to meet WCAG 2.5.5 (minimum 44×44 px).
 
 No props. Uses `useConsent` context internally.
 
-### `CookiePreferencesLink`
+---
 
-`src/components/CookiePreferencesLink.tsx`
+### `NavLink`
 
-Inline `<button>` that calls `reset()` from `useConsent`, re-showing the `ConsentBanner`. Used in the Footer Policies nav column.
+`src/components/NavLink.tsx`
+
+A thin wrapper around React Router's `NavLink` that normalises the `className` API. React Router v6's `NavLink` passes a function to `className`; this wrapper accepts plain strings for `className`, `activeClassName`, and `pendingClassName` and merges them via `cn`.
+
+```tsx
+<NavLink to="/about" className="base-class" activeClassName="active-class">
+  About
+</NavLink>
+```
 
 | Prop | Type | Description |
 |---|---|---|
-| `className` | `string` | Applied to the button element |
+| `className` | `string?` | Always-applied class |
+| `activeClassName` | `string?` | Applied when the route is active |
+| `pendingClassName` | `string?` | Applied during navigation pending state |
+| All other `NavLinkProps` | | Forwarded to React Router `NavLink` |
 
-Use the same `lnk` class string as other Footer links to maintain visual consistency.
+Uses `forwardRef` to pass through refs.
+
+---
+
+### `PageHero`
+
+`src/components/PageHero.tsx`
+
+Full-width amber (`bg-primary`) hero banner used at the top of inner pages. Renders an optional eyebrow label, an `<h1>` title, a description paragraph, and up to two CTA buttons.
+
+```tsx
+<PageHero
+  eyebrow="About"
+  title="Building the contributors and maintainers of tomorrow"
+  description="Vendor-neutral. Open source. Community-driven."
+  primaryCta={{ label: <>Start <ArrowDown size={14} aria-hidden="true" /></>, href: "#section" }}
+  secondaryCta={{ label: "Learn more", href: "/handbook" }}
+/>
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `eyebrow` | `string?` | Small overline label above the title |
+| `title` | `string` | Page `<h1>` text |
+| `description` | `string` | Supporting paragraph |
+| `primaryCta` | `Cta?` | Primary button (`.btn-inverse`) |
+| `secondaryCta` | `Cta?` | Secondary button (`.btn-ghost-inverse`) |
+
+`Cta` shape: `{ label: ReactNode; href: string; external?: boolean }`. External CTAs get `target="_blank"` with the sr-only new-tab span. Anchors (`#`) and `mailto:` links render as `<a>`; all others render as React Router `<Link>`.
+
+**Important:** Buttons inside `PageHero` must use `.btn-inverse` / `.btn-ghost-inverse`. Never use `.btn-primary` or `.btn-ghost` inside `bg-primary` sections — they produce yellow-on-yellow in light mode.
+
+---
+
+### `LevelCard`
+
+`src/components/LevelCard.tsx`
+
+Renders a single adventure level as a card: difficulty badge, level name, key learnings list, and links to open in GitHub Codespaces and view the discussion.
+
+```tsx
+<LevelCard level={level} headingLevel="h2" />
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `level` | `AdventureLevel` | required | Level data from `src/data/adventures.ts` |
+| `headingLevel` | `"h2" \| "none"` | `"h2"` | Pass `"none"` when the parent page already renders the level name as `<h1>` to avoid duplicate heading in the document outline. When `"none"`, the level name renders as a `<p>`. The "Key Learnings" label always renders as a `<p>` regardless of this prop — it is a decorative sub-label, not a structural heading. |
+
+---
+
+### `AboutSection`
+
+`src/components/AboutSection.tsx`
+
+Renders the About page content: Our Mission, Who It's For, What We Stand For, and How We Build Together sections. The "How We Build Together" section renders a four-column grid of value cards (icon + title + description). Each value card title uses `<h3 className="mt-3 text-lg font-semibold text-foreground">` — these are structural sub-headings under the `<h2>` section heading and must remain `<h3>`, not `<p>`.
+
+No props. Self-contained section component.
+
+---
+
+### `VerificationSection`
+
+`src/components/VerificationSection.tsx`
+
+Static card explaining how to run the in-Codespace verification script. Includes an external link to the challenges repo on GitHub.
+
+No props. Renders a self-contained `<div>` with heading, description, and external link. Used on `ChallengeDetail` pages.
+
+---
+
+### `DiscussionSection`
+
+`src/components/DiscussionSection.tsx`
+
+Displays up to five community posts for an adventure level, fetched at build time from Discourse. Post ages are computed on the client after mount to avoid calling `Date.now()` at render time.
+
+```tsx
+<DiscussionSection discussionUrl={level.discussionUrl} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `discussionUrl` | `string` | Full Discourse topic URL. The topic ID is extracted from this URL and used as the key into `src/data/discussion-data.json`. |
+
+The component extracts the numeric topic ID from the URL with `extractTopicId`, looks up posts in the build-time JSON, and renders them as linked cards. Falls back to an empty state with a "Join the discussion" link when no posts are found.
+
+Uses `aria-live="polite"` so screen readers announce the age values when they update after mount.
+
 ---
 
 ## Patterns
@@ -514,12 +617,56 @@ Never put a raw SVG icon next to text inside a plain `inline` or `block` element
 | External link (navigation) | `ArrowUpRight` | Navbar GitHub button, BottomCTA GitHub button, CommunityGuide links |
 | Navigate forward / CTA | `ArrowRight` | Inline text links (DiscussionSection, VerificationSection, CommunityVoicesSection, ConnectSection, BottomCTA, LevelCard) |
 | Navigate back | `ArrowLeft` | ChallengeDetail breadcrumb |
-| Scroll down / anchor | `ArrowDown` | Hero primary CTA, About PageHero primary CTA |
+| Scroll down / anchor | `ArrowDown` | Hero primary CTA |
 | Community Voices section | `Megaphone` | CommunityVoicesSection card icon |
 | Q&A section | `CircleHelp` | CommunityVoicesSection card icon |
 | Introduce yourself section | `UserPlus` | ConnectSection card icon |
 | Events & meetups section | `CalendarDays` | ConnectSection card icon |
 | Adventure levels badge | `Layers` | ChallengesGrid adventure card |
+
+### Brand/social icon exceptions
+
+Some official brand marks have no equivalent in lucide-react and must use the brand's own SVG. These are the only permitted exceptions to the lucide-react-only rule.
+
+| Brand | Where used | Notes |
+|---|---|---|
+| LinkedIn "in" rounded-rectangle mark | `Footer.tsx` bottom strip | Inline SVG, `aria-hidden="true"` on `<svg>`, `aria-label="LinkedIn (opens in new tab)"` on parent `<a>`, `fill="currentColor"`, `className="w-3.5 h-3.5"` (14 px, matching surrounding icon size) |
+
+When adding a new brand SVG: place it inline, set `aria-hidden="true"` on the `<svg>`, put the accessible label on the parent interactive element, use `fill="currentColor"`, and add a row to this table.
+
+---
+
+## Utilities
+
+### `stripHtml`
+
+`src/utils/stripHtml.ts`
+
+Strips all HTML tags from a string, leaving only the plain text content. Used by `DiscussionSection` to produce accessible `aria-label` strings and plain-text previews from Discourse HTML.
+
+```ts
+stripHtml("<p>Hello <strong>world</strong></p>") // => "Hello world"
+```
+
+| Param | Type | Description |
+|---|---|---|
+| `html` | `string` | Raw HTML string to strip |
+
+Returns the input with all `<tag>` patterns removed. HTML entities (e.g. `&amp;`) are left as-is.
+
+---
+
+## CSS Class Patterns
+
+### `.section-label`
+
+A utility class for decorative overline labels that appear above section headings or page content areas.
+
+Applied as: `font-sans text-sm font-medium uppercase tracking-widest text-primary section-label`
+
+Used on `<span>` elements in: `CommunityVoicesSection`, `ConnectSection`, `ChallengesGrid`, `CommunityGuide`, `NotFound`.
+
+**Light mode override:** `.light .section-label` in the unlayered section of `src/index.css` sets `color: hsl(240 20% 9%)` (near-black) so the label does not render as yellow text in light mode.
 
 ---
 

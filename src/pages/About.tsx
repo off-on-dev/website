@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Helmet } from "react-helmet-async";
 import { Footer } from "@/components/Footer";
@@ -14,9 +15,9 @@ const About = (): JSX.Element => {
       <Helmet>
         <title>{pageTitle}</title>
         <link rel="canonical" href={SITE_URL + "/about"} />
-        <meta name="description" content="Learn about OffOn's mission and values for a vendor-agnostic open source community." />
+        <meta name="description" content={`Learn about ${BRAND_NAME}'s mission and values for a vendor-agnostic open source community.`} />
         <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content="Learn about OffOn's mission and values for a vendor-agnostic open source community." />
+        <meta property="og:description" content={`Learn about ${BRAND_NAME}'s mission and values for a vendor-agnostic open source community.`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/about`} />
         <meta property="og:image" content={`${SITE_URL}/og.png`} />
@@ -26,7 +27,7 @@ const About = (): JSX.Element => {
         <meta property="og:site_name" content={BRAND_NAME} />
         <meta property="og:locale" content="en_GB" />
         <meta name="twitter:title" content={pageTitle} />
-        <meta name="twitter:description" content="Learn about OffOn's mission and values for a vendor-agnostic open source community." />
+        <meta name="twitter:description" content={`Learn about ${BRAND_NAME}'s mission and values for a vendor-agnostic open source community.`} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
         <meta name="twitter:image:alt" content={pageTitle} />

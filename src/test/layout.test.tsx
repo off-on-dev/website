@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import React from "react";
+import { type JSX } from "react";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, act, fireEvent } from "@testing-library/react";
 import { MemoryRouter, Route, Routes, useNavigate } from "react-router-dom";
@@ -66,7 +66,7 @@ afterEach(() => {
 });
 
 // ---------------------------------------------------------------------------
-// Layout — provider tree and Outlet
+// Layout: provider tree and Outlet
 // ---------------------------------------------------------------------------
 
 describe("Layout", () => {
@@ -76,7 +76,7 @@ describe("Layout", () => {
   });
 
   // -------------------------------------------------------------------------
-  // ScrollToTop — scroll behaviour
+  // ScrollToTop: scroll behaviour
   // -------------------------------------------------------------------------
 
   it("ScrollToTop scrolls to top on initial render", () => {
@@ -95,7 +95,7 @@ describe("Layout", () => {
   });
 
   // -------------------------------------------------------------------------
-  // ScrollToTop — gtag page_view
+  // ScrollToTop: gtag page_view
   // -------------------------------------------------------------------------
 
   it("ScrollToTop fires gtag page_view when consent is granted", async () => {
@@ -129,7 +129,7 @@ describe("Layout", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Layout regression — file content
+// Layout regression: file content
 // ---------------------------------------------------------------------------
 
 describe("Layout file-content regression", () => {

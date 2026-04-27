@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { type ReactNode, type JSX } from "react";
 import { ArrowRight, Megaphone, CircleHelp } from "lucide-react";
 import { COMMUNITY_URL } from "@/data/constants";
 
@@ -56,7 +56,7 @@ export const CommunityVoicesSection = (): JSX.Element => {
                   href={p.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
+                  className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
                 >
                   {p.cta} <ArrowRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>

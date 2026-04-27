@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import React from "react";
+import { type JSX } from "react";
 import { describe, it, expect, beforeEach } from "vitest";
 import { render, fireEvent } from "@testing-library/react";
 import { ThemeProvider, useTheme } from "@/hooks/useTheme";

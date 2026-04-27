@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, type JSX } from "react";
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
