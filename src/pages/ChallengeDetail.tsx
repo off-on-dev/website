@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type JSX } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { ArrowLeft } from "lucide-react";
@@ -21,8 +21,17 @@ const ChallengeDetail = (): JSX.Element => {
 
   if (!adventure || !level) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-muted-foreground">Challenge not found.</p>
+      <div className="min-h-screen bg-background">
+        <Helmet>
+          <title>{`Challenge Not Found - ${BRAND_NAME}`}</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+        <Navbar />
+        <main id="main-content" className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
+          <h1 className="text-2xl font-bold text-foreground mb-3">Challenge not found</h1>
+          <p className="text-muted-foreground">The challenge you're looking for doesn't exist.</p>
+        </main>
+        <Footer />
       </div>
     );
   }
@@ -71,7 +80,7 @@ const ChallengeDetail = (): JSX.Element => {
         {/* Breadcrumb */}
         <Link
           to={`/adventures/${adventure.id}`}
-          className="inline-flex items-center gap-1.5 text-sm text-[hsl(var(--text-faint))] hover:text-primary transition-colors mb-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
+          className="inline-flex items-center gap-1.5 text-sm text-[hsl(var(--text-faint))] hover:text-primary transition-colors mb-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
         >
           <ArrowLeft size={14} aria-hidden="true" /> {adventure.title}
         </Link>
@@ -94,7 +103,7 @@ const ChallengeDetail = (): JSX.Element => {
 
         {/* Level card */}
         <div className="mb-10">
-          <LevelCard level={level} />
+          <LevelCard level={level} headingLevel="none" />
         </div>
 
         {/* Verification */}
@@ -104,12 +113,12 @@ const ChallengeDetail = (): JSX.Element => {
 
         {/* Discussion */}
         <div className="mb-16">
-          <DiscussionSection discussionUrls={[level.discussionUrl]} />
+          <DiscussionSection discussionUrl={level.discussionUrl} />
         </div>
 
         {/* Find challenges by technology */}
         <div>
-          <h2 className="font-sans text-sm font-medium uppercase tracking-widest text-primary mb-4">
+          <h2 className="text-lg font-semibold text-foreground mb-4">
             Find challenges by technology
           </h2>
           <div className="mb-6 flex flex-wrap gap-2">
@@ -125,13 +134,14 @@ const ChallengeDetail = (): JSX.Element => {
               </button>
             ))}
           </div>
+          <div aria-live="polite" aria-atomic="true">
           {activeTech && relatedLevels.length > 0 && (
             <div key={activeTech} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {relatedLevels.map(({ level: relLevel, adventureId, adventureTitle }) => (
                 <Link
                   key={`${adventureId}-${relLevel.id}`}
                   to={`/adventures/${adventureId}/levels/${relLevel.id}`}
-                  className="group card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 animate-fade-up-delay-1"
+                  className="group card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 animate-fade-up-delay-1"
                 >
                   <div className="mb-3">
                     <DifficultyBadge difficulty={relLevel.difficulty} showDot />
@@ -157,6 +167,7 @@ const ChallengeDetail = (): JSX.Element => {
               ))}
             </div>
           )}
+          </div>
         </div>
       </main>
       <Footer />

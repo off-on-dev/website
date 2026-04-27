@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { COMMUNITY_URL, BRAND_NAME } from "@/data/constants";
 

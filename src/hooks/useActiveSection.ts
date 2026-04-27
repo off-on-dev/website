@@ -46,9 +46,7 @@ export function useActiveSection(sectionIds: string[]): string | null {
     return () => {
       observer.disconnect();
     };
-  // Re-run only if the list of IDs changes (stable in practice)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sectionIds.join(",")]);
+  }, [sectionIds.join(",")]); // eslint-disable-line react-hooks/exhaustive-deps -- join(",") is a stable serialization; avoids re-runs when the caller passes a new array reference with identical IDs
 
   return activeId;
 }

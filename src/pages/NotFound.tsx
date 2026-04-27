@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import type { JSX } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { ArrowUpRight } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
@@ -7,9 +8,9 @@ import { SITE_URL, BRAND_NAME, COMMUNITY_URL } from "@/data/constants";
 
 const links = [
   {
-    label: "Community Guide",
-    desc: "Get started, learn the rules, and find your way around.",
-    to: "/docs/community-guide",
+    label: "Handbook",
+    desc: "Everything you need to get started, participate, and grow in the community.",
+    to: "/handbook",
   },
   {
     label: "Adventures",
@@ -18,12 +19,13 @@ const links = [
   },
   {
     label: "About",
-    desc: "Learn what OffOn is and who it's for.",
+    desc: `Learn what ${BRAND_NAME} is and who it's for.`,
     to: "/about",
   },
 ];
 
 const NotFound = (): JSX.Element => {
+  const location = useLocation();
 
   return (
     <div className="min-h-screen bg-background">
@@ -33,7 +35,7 @@ const NotFound = (): JSX.Element => {
         <meta property="og:title" content={`Page Not Found - ${BRAND_NAME}`} />
         <meta property="og:description" content={`This page could not be found. Use ${BRAND_NAME} links to continue exploring challenges, guides, and community resources.`} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={SITE_URL} />
+        <meta property="og:url" content={`${SITE_URL}${location.pathname}`} />
         <meta property="og:image" content={`${SITE_URL}/og.png`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -46,7 +48,7 @@ const NotFound = (): JSX.Element => {
         <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
         <meta name="twitter:image:alt" content={`Page Not Found - ${BRAND_NAME}`} />
         <meta name="robots" content="noindex, nofollow" />
-        <link rel="canonical" href={SITE_URL} />
+        <link rel="canonical" href={`${SITE_URL}${location.pathname}`} />
       </Helmet>
       <Navbar />
       <main id="main-content" className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
@@ -65,7 +67,7 @@ const NotFound = (): JSX.Element => {
               <li key={link.label}>
                 <Link
                   to={link.to}
-                  className="card-glow flex flex-col gap-1.5 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5 h-full hover:border-primary/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
+                  className="card-glow flex flex-col gap-1.5 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5 h-full hover:border-primary/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 >
                   <span className="text-sm font-semibold text-foreground">{link.label}</span>
                   <span className="text-sm text-muted-foreground leading-relaxed">{link.desc}</span>

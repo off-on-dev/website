@@ -1,16 +1,7 @@
+import type { JSX } from "react";
 import { Link } from "react-router-dom";
+import { Cookie } from "lucide-react";
 import { useConsent } from "@/hooks/useConsent";
-
-function CookieIcon(): JSX.Element {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/>
-      <path d="M8.5 8.5v.01"/>
-      <path d="M16 15.5v.01"/>
-      <path d="M12 12v.01"/>
-    </svg>
-  );
-}
 
 export function ConsentBanner(): JSX.Element {
   const { consent, grant, deny, reset } = useConsent();
@@ -23,9 +14,9 @@ export function ConsentBanner(): JSX.Element {
         aria-label="Change cookie preferences"
         title="Change cookie preferences"
         style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 5rem)' }}
-        className="fixed right-4 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-muted-foreground shadow-md transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
+        className="fixed right-4 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-muted-foreground shadow-md transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
-        <CookieIcon />
+        <Cookie size={18} aria-hidden="true" />
       </button>
     );
   }
@@ -46,7 +37,7 @@ export function ConsentBanner(): JSX.Element {
             until you explicitly accept. You can change your preference at any time. See our{" "}
             <Link
               to="/privacy"
-              className="underline underline-offset-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 rounded-sm"
+              className="underline underline-offset-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
             >
               Privacy Policy
             </Link>{" "}

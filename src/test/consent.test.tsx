@@ -1,10 +1,9 @@
-import React from 'react';
+import { type JSX } from 'react';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { ConsentProvider, useConsent } from '@/hooks/useConsent';
 import { ConsentBanner } from '@/components/ConsentBanner';
-import { CookiePreferencesLink } from '@/components/CookiePreferencesLink';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -292,32 +291,6 @@ describe('ConsentBanner - floating button', () => {
     ls.setItem(STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
     renderWithProviders(<ConsentBanner />);
     fireEvent.click(screen.getByRole('button', { name: /change cookie preferences/i }));
-    expect(screen.getByRole('region', { name: 'Cookie consent' })).toBeTruthy();
-  });
-});
-
-// ---------------------------------------------------------------------------
-// CookiePreferencesLink
-// ---------------------------------------------------------------------------
-
-describe('CookiePreferencesLink', () => {
-  it('renders a button with the correct accessible label', () => {
-    renderWithProviders(<CookiePreferencesLink className="test-cls" />);
-    expect(screen.getByRole('button', { name: /open cookie preferences/i })).toBeTruthy();
-  });
-
-  it('clicking the button re-shows the banner when consent was previously given', () => {
-    ls.setItem(STORAGE_KEY, JSON.stringify({ value: 'denied', timestamp: Date.now() }));
-    renderWithProviders(
-      <>
-        <ConsentBanner />
-        <CookiePreferencesLink className="" />
-      </>
-    );
-    // Banner is hidden because consent is already set
-    expect(screen.queryByRole('region', { name: 'Cookie consent' })).toBeNull();
-    // Clicking the preferences link resets consent and the banner reappears
-    fireEvent.click(screen.getByRole('button', { name: /open cookie preferences/i }));
     expect(screen.getByRole('region', { name: 'Cookie consent' })).toBeTruthy();
   });
 });

@@ -1,5 +1,5 @@
 import { NavLink as RouterNavLink, NavLinkProps } from "react-router-dom";
-import { forwardRef } from "react";
+import { forwardRef, type ForwardRefExoticComponent, type RefAttributes } from "react";
 import { cn } from "@/lib/utils";
 
 type NavLinkCompatProps = Omit<NavLinkProps, "className"> & {
@@ -8,7 +8,7 @@ type NavLinkCompatProps = Omit<NavLinkProps, "className"> & {
   pendingClassName?: string;
 }
 
-const NavLink = forwardRef<HTMLAnchorElement, NavLinkCompatProps>(
+const NavLink: ForwardRefExoticComponent<NavLinkCompatProps & RefAttributes<HTMLAnchorElement>> = forwardRef<HTMLAnchorElement, NavLinkCompatProps>(
   ({ className, activeClassName, pendingClassName, to, ...props }, ref) => {
     return (
       <RouterNavLink

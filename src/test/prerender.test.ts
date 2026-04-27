@@ -34,8 +34,8 @@ const pages: PageSpec[] = [
     check: { type: "exact", value: "Sponsorship and Independence - OffOn" },
   },
   {
-    file: "docs/community-guide/index.html",
-    check: { type: "exact", value: "Community Guide - OffOn" },
+    file: "handbook/index.html",
+    check: { type: "exact", value: "Handbook - OffOn" },
   },
   {
     file: "adventures/echoes-lost-in-orbit/index.html",
@@ -49,6 +49,45 @@ const pages: PageSpec[] = [
     file: "adventures/the-ai-observatory/index.html",
     check: { type: "contains", value: "The AI Observatory" },
   },
+  // Adventure levels: echoes-lost-in-orbit
+  {
+    file: "adventures/echoes-lost-in-orbit/levels/beginner/index.html",
+    check: { type: "contains", value: "Broken Echoes" },
+  },
+  {
+    file: "adventures/echoes-lost-in-orbit/levels/intermediate/index.html",
+    check: { type: "contains", value: "The Silent Canary" },
+  },
+  {
+    file: "adventures/echoes-lost-in-orbit/levels/expert/index.html",
+    check: { type: "contains", value: "Hyperspace Operations" },
+  },
+  // Adventure levels: building-cloudhaven
+  {
+    file: "adventures/building-cloudhaven/levels/beginner/index.html",
+    check: { type: "contains", value: "The Foundation Stones" },
+  },
+  {
+    file: "adventures/building-cloudhaven/levels/intermediate/index.html",
+    check: { type: "contains", value: "The Modular Metropolis" },
+  },
+  {
+    file: "adventures/building-cloudhaven/levels/expert/index.html",
+    check: { type: "contains", value: "The Guardian Protocols" },
+  },
+  // Adventure levels: the-ai-observatory
+  {
+    file: "adventures/the-ai-observatory/levels/beginner/index.html",
+    check: { type: "contains", value: "Calibrating the Lens" },
+  },
+  {
+    file: "adventures/the-ai-observatory/levels/intermediate/index.html",
+    check: { type: "contains", value: "The Distracted Pilot" },
+  },
+  {
+    file: "adventures/the-ai-observatory/levels/expert/index.html",
+    check: { type: "contains", value: "The Noise Filter" },
+  },
 ];
 
 function extractTitles(html: string): string[] {
@@ -61,7 +100,7 @@ describe("prerendered HTML title tags", () => {
       const fullPath = path.join(DIST_ROOT, file);
 
       if (!fs.existsSync(fullPath)) {
-        throw new Error(`dist/${file} not found — run npm run build first`);
+        throw new Error(`dist/${file} not found. Run npm run build first.`);
       }
 
       const html = fs.readFileSync(fullPath, "utf-8");

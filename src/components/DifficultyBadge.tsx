@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, JSX } from "react";
 import { Badge } from "@/components/ui/badge";
 import type { AdventureLevel } from "@/data/adventures";
 

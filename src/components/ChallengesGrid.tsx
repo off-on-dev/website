@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type JSX } from "react";
 import { Link } from "react-router-dom";
 import { ADVENTURES, Adventure } from "@/data/adventures";
 import { Layers } from "lucide-react";
@@ -10,7 +10,7 @@ const allTags = Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort();
 const AdventureCard = ({ adventure }: { adventure: Adventure }): JSX.Element => (
   <Link
     to={`/adventures/${adventure.id}`}
-    className="group card-glow relative rounded-xl border-2 border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
+    className="group card-glow relative rounded-xl border-2 border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
   >
     <div className="flex items-center justify-between mb-3">
       <span className="font-mono text-xs text-muted-foreground">Adventure</span>
@@ -85,6 +85,7 @@ export const ChallengesGrid = (): JSX.Element => {
 
             {activeTopic ? (
               <>
+                <div aria-live="polite" aria-atomic="true">
                 <p className="animate-fade-up mb-6 font-sans text-sm font-medium uppercase tracking-widest text-primary">
                   Challenges tagged with {activeTopic}
                 </p>
@@ -93,7 +94,7 @@ export const ChallengesGrid = (): JSX.Element => {
                     <Link
                       key={`${adventureId}-${level.id}`}
                       to={`/adventures/${adventureId}/levels/${level.id}`}
-                      className="group card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
+                      className="group card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     >
                       <div className="mb-3">
                         <DifficultyBadge difficulty={level.difficulty} showDot />
@@ -117,6 +118,7 @@ export const ChallengesGrid = (): JSX.Element => {
                       </div>
                     </Link>
                   ))}
+                </div>
                 </div>
               </>
             ) : (

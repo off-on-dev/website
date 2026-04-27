@@ -344,7 +344,7 @@ html {
   padding: 0.5rem 1rem;
   background: hsl(var(--background));
   color: hsl(var(--foreground));
-  border: 2px solid hsl(var(--primary));
+  border: 2px solid hsl(var(--ring));
   border-radius: 0.375rem;
   font-size: 0.875rem;
   font-weight: 600;
@@ -353,6 +353,10 @@ html {
 }
 .skip-nav:focus {
   top: 1rem;
+}
+.skip-nav:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
 }
 
 @layer base {
@@ -459,7 +463,8 @@ html {
 
     --border: 230 20% 85%;
     --input: 230 20% 85%;
-    --ring: 0 0% 0%;
+    --ring: 41 100% 35%;
+    --foreground-hover: 204 22% 9%;
 
     /* Custom text tokens */
     --text-primary: 240 30% 6%;
@@ -520,195 +525,9 @@ html {
     background-size: 44px 44px;
   }
 
-  .light body {
-    background-image: none;
-  }
-
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Syne', sans-serif;
     color: hsl(var(--primary));
-  }
-
-  .light h1,
-  .light h2,
-  .light h3,
-  .light h4,
-  .light h5,
-  .light h6 {
-    color: hsl(0 0% 0%);
-  }
-
-  .light p,
-  .light li,
-  .light td,
-  .light label {
-    color: hsl(240 30% 6%);
-  }
-
-  .light .text-primary {
-    color: hsl(0 0% 0%);
-  }
-
-  .light h2.text-primary,
-  .light h3.text-primary,
-  .light p.text-primary,
-  .light span.text-primary:not(.font-mono) {
-    color: hsl(0 0% 0%);
-  }
-
-  .light a.text-primary,
-  .light a:hover.text-primary {
-    color: hsl(204 22% 9%);
-  }
-
-  .light .btn-ghost:hover {
-    color: hsl(204 22% 9%);
-  }
-
-  .light .btn-primary {
-    box-shadow: none;
-  }
-
-  .light .btn-primary:hover {
-    box-shadow: none;
-  }
-
-  .light .pill-active {
-    color: hsl(204 22% 9%);
-    background-color: hsl(43 100% 50% / 0.15);
-    border-color: hsl(43 100% 50% / 0.5);
-  }
-
-  .light .pill-inactive:hover {
-    color: hsl(204 22% 9%);
-  }
-
-  .light .bg-primary:not(.btn-primary):not(.btn-ghost):not(.btn-inverse) {
-    background-color: hsl(0 0% 0%);
-  }
-
-  .light .bg-primary .text-background,
-  .light .bg-primary .text-background\/90,
-  .light .bg-primary h1,
-  .light .bg-primary h2,
-  .light .bg-primary h3,
-  .light .bg-primary p,
-  .light .bg-primary strong,
-  .light .bg-primary span {
-    color: hsl(41 100% 60%);
-  }
-
-  .light .btn-ghost-inverse {
-    color: hsl(204 22% 9%);
-    border-color: hsl(204 22% 9% / 0.5);
-  }
-
-  .light .btn-ghost-inverse:hover {
-    background-color: hsl(204 22% 9%);
-    border-color: hsl(204 22% 9%);
-    color: hsl(43 100% 50%);
-  }
-
-  .light .bg-primary .btn-inverse {
-    background-color: hsl(41 100% 60%);
-    color: hsl(0 0% 0%);
-    border-color: hsl(41 100% 60%);
-  }
-
-  /* Bug 1 fix: .light .bg-primary span forces yellow on all child spans,
-     overriding the inherited black from the button element. Target spans
-     directly with higher specificity to keep text readable on yellow bg.
-     The :hover counterpart below restores yellow on the black hover bg
-     so spans match BottomCTA (which uses plain text nodes that inherit). */
-  .light .bg-primary .btn-inverse span {
-    color: hsl(0 0% 0%);
-  }
-
-  .light .bg-primary .btn-inverse:hover {
-    background-color: hsl(0 0% 0%);
-    color: hsl(41 100% 60%);
-    border-color: hsl(41 100% 60%);
-  }
-
-  .light .bg-primary .btn-inverse:hover span {
-    color: hsl(41 100% 60%);
-  }
-
-  .light .bg-primary .btn-ghost-inverse {
-    background-color: transparent;
-    color: hsl(41 100% 60%);
-    border-color: hsl(41 100% 60% / 0.6);
-  }
-
-  .light .bg-primary .btn-ghost-inverse:hover {
-    background-color: hsl(41 100% 60%);
-    color: hsl(0 0% 0%);
-    border-color: hsl(41 100% 60%);
-  }
-
-  /* Bug 2 fix: hover turns the button yellow; spans inside still get yellow
-     from the broad .light .bg-primary span rule. Override to black. */
-  .light .bg-primary .btn-ghost-inverse:hover span {
-    color: hsl(0 0% 0%);
-  }
-
-  .light nav a:not(.logo-link) {
-    transition: color 0.15s ease, background-color 0.15s ease;
-  }
-
-  .light nav a:not(.logo-link):hover {
-    color: hsl(0 0% 0%);
-    text-decoration-color: hsl(41 100% 60% / 0.6);
-  }
-
-  .light nav a.text-primary {
-    color: hsl(0 0% 0%);
-    text-decoration-color: hsl(41 100% 60%);
-  }
-
-  .light footer nav a:hover {
-    text-decoration-color: hsl(41 100% 60% / 0.6);
-  }
-
-  .light .hero-badge {
-    background-color: hsl(41 100% 60%);
-    border-color: hsl(41 100% 50% / 0.4);
-  }
-
-  .light .hero-badge span.text-foreground {
-    color: hsl(0 0% 0%);
-  }
-
-  .light .hero-badge span.bg-primary {
-    background-color: hsl(0 0% 0%);
-  }
-
-  .light .btn-soft {
-    color: hsl(0 0% 0%);
-    background-color: hsl(41 100% 60%);
-    border-color: hsl(41 100% 60%);
-  }
-
-  .light span.font-mono.text-primary:not(.badge-levels) {
-    color: hsl(0 0% 0%);
-    background-color: transparent;
-    border-color: transparent;
-  }
-
-  .light .section-label {
-    color: hsl(240 20% 9%);
-    background-color: transparent;
-    border-color: transparent;
-  }
-
-  .light .badge-levels {
-    color: hsl(0 0% 0%);
-    background-color: hsl(41 100% 60%);
-    border-color: hsl(41 100% 60%);
-  }
-
-  .light [data-difficulty] {
-    color: hsl(0 0% 0%) !important;
   }
 
   code, pre {
@@ -727,7 +546,7 @@ html {
 /* ─── Animations ──────────────────────────────────────────── */
 
 @keyframes fadeUp {
-  from { opacity: 1; transform: translateY(14px); }
+  from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
@@ -784,22 +603,22 @@ html {
 @layer components {
   /* Primary filled button */
   .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:brightness-110 hover:scale-[1.02] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:brightness-110 hover:scale-[1.02] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
   /* Ghost/outline button */
   .btn-ghost {
-    @apply inline-flex items-center gap-2 rounded-md border border-foreground/35 bg-transparent px-5 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 hover:bg-primary/10 hover:border-primary/60 hover:text-primary active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md border border-foreground/35 bg-transparent px-5 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 hover:bg-primary/10 hover:border-primary/60 hover:text-primary active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
   /* Soft tinted button */
   .btn-soft {
-    @apply inline-flex items-center justify-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-5 py-2.5 text-sm font-semibold text-primary transition-all duration-200 hover:bg-primary/20 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2;
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-5 py-2.5 text-sm font-semibold text-primary transition-all duration-200 hover:bg-primary/20 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
   /* Inverse button - for use on primary-colored section backgrounds */
   .btn-inverse {
-    @apply inline-flex items-center gap-2 rounded-md bg-background text-primary font-bold text-sm px-5 py-2.5 border-2 border-primary transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md bg-background text-primary font-bold text-sm px-5 py-2.5 border-2 border-primary transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
   .btn-inverse:hover {
     background-color: hsl(var(--primary));
@@ -810,7 +629,7 @@ html {
 
   /* Ghost inverse button - for use on primary-colored section backgrounds */
   .btn-ghost-inverse {
-    @apply inline-flex items-center gap-2 rounded-md bg-transparent text-background font-bold text-sm px-5 py-2.5 border-2 border-background/70 transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background/60 focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md bg-transparent text-background font-bold text-sm px-5 py-2.5 border-2 border-background/70 transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
   .btn-ghost-inverse:hover {
     background-color: hsl(var(--primary-foreground));
@@ -821,11 +640,11 @@ html {
 
   /* Filter pills - smaller, lighter weight than action buttons */
   .pill-active {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-primary/50 bg-primary/10 px-4 py-1.5 text-sm font-medium leading-none text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-primary/50 bg-primary/10 px-4 py-1.5 text-sm font-medium leading-none text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
   .pill-inactive {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-[hsl(var(--surface-border))] bg-transparent px-4 py-1.5 text-sm font-medium leading-none text-[hsl(var(--text-secondary))] hover:border-primary/60 hover:text-primary hover:bg-primary/5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-[hsl(var(--surface-border))] bg-transparent px-4 py-1.5 text-sm font-medium leading-none text-[hsl(var(--text-secondary))] hover:border-primary/60 hover:text-primary hover:bg-primary/5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
 }
@@ -877,6 +696,7 @@ html {
 }
 
 .light .pill-inactive:hover {
+  color: hsl(var(--foreground-hover));
   box-shadow:
     0 0 10px -2px hsl(var(--primary) / 0.4),
     0 0 20px -6px hsl(var(--primary) / 0.2);
@@ -885,11 +705,190 @@ html {
 .light .firefly {
   width: 1.5px;
   height: 1.5px;
-  background-color: hsl(41 100% 45%);
+  background-color: hsl(var(--firefly-color));
   box-shadow:
-    0 0 2px 1px  hsl(41 100% 45% / 1),
-    0 0 6px 2px  hsl(41 100% 45% / 0.9),
-    0 0 14px 4px hsl(41 100% 45% / 0.5);
+    0 0 2px 1px  hsl(var(--firefly-color) / 1),
+    0 0 6px 2px  hsl(var(--firefly-color) / 0.9),
+    0 0 14px 4px hsl(var(--firefly-color) / 0.5);
+}
+
+.light body {
+  background-image: none;
+}
+
+.light h1,
+.light h2,
+.light h3,
+.light h4,
+.light h5,
+.light h6 {
+  color: hsl(var(--primary-foreground));
+}
+
+.light p,
+.light li,
+.light td,
+.light label {
+  color: hsl(240 30% 6%);
+}
+
+.light .text-primary {
+  color: hsl(0 0% 0%);
+}
+
+.light a:hover.text-primary {
+  color: hsl(var(--foreground-hover));
+}
+
+.light .btn-ghost:hover {
+  color: hsl(var(--foreground-hover));
+}
+
+.light .btn-primary {
+  box-shadow: none;
+}
+
+.light .btn-primary:hover {
+  box-shadow: none;
+}
+
+.light .pill-active {
+  color: hsl(var(--foreground-hover));
+  background-color: hsl(43 100% 50% / 0.15);
+  border-color: hsl(43 100% 50% / 0.5);
+}
+
+.light .bg-primary:not(.btn-primary):not(.btn-ghost):not(.btn-inverse) {
+  background-color: hsl(0 0% 0%);
+}
+
+.light .bg-primary .text-background,
+.light .bg-primary .text-background\/90,
+.light .bg-primary h1,
+.light .bg-primary h2,
+.light .bg-primary h3,
+.light .bg-primary p,
+.light .bg-primary strong,
+.light .bg-primary span {
+  color: hsl(41 100% 60%);
+}
+
+.light .btn-ghost-inverse {
+  color: hsl(var(--foreground-hover));
+  border-color: hsl(var(--foreground-hover) / 0.5);
+}
+
+.light .btn-ghost-inverse:hover {
+  background-color: hsl(var(--foreground-hover));
+  border-color: hsl(var(--foreground-hover));
+  color: hsl(var(--primary));
+}
+
+.light .bg-primary .btn-inverse {
+  background-color: hsl(41 100% 60%);
+  color: hsl(0 0% 0%);
+  border-color: hsl(41 100% 60%);
+}
+
+/* Bug 1 fix: .light .bg-primary span forces yellow on all child spans,
+   overriding the inherited black from the button element. Target spans
+   directly with higher specificity to keep text readable on yellow bg.
+   The :hover counterpart below restores yellow on the black hover bg
+   so spans match BottomCTA (which uses plain text nodes that inherit). */
+.light .bg-primary .btn-inverse span {
+  color: hsl(0 0% 0%);
+}
+
+.light .bg-primary .btn-inverse:hover {
+  background-color: hsl(0 0% 0%);
+  color: hsl(41 100% 60%);
+  border-color: hsl(41 100% 60%);
+}
+
+.light .bg-primary .btn-inverse:hover span {
+  color: hsl(41 100% 60%);
+}
+
+.light .bg-primary .btn-ghost-inverse {
+  background-color: transparent;
+  color: hsl(var(--primary));
+  border-color: hsl(var(--primary) / 0.6);
+}
+
+.light .bg-primary .btn-ghost-inverse:hover {
+  background-color: hsl(41 100% 60%);
+  color: hsl(0 0% 0%);
+  border-color: hsl(41 100% 60%);
+}
+
+/* Bug 2 fix: hover turns the button yellow; spans inside still get yellow
+   from the broad .light .bg-primary span rule. Override to black. */
+.light .bg-primary .btn-ghost-inverse:hover span {
+  color: hsl(0 0% 0%);
+}
+
+.light nav a:not(.logo-link) {
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.light nav a:not(.logo-link):hover {
+  color: hsl(var(--foreground-hover));
+  text-decoration-color: hsl(var(--primary) / 0.6);
+}
+
+.light nav a.text-primary {
+  color: hsl(var(--foreground-hover));
+  text-decoration-color: hsl(var(--primary));
+}
+
+.light footer nav a:hover {
+  color: hsl(var(--foreground-hover));
+  text-decoration-color: hsl(var(--primary) / 0.6);
+}
+
+.light footer a:not(nav a):hover {
+  color: hsl(var(--foreground-hover));
+}
+
+.light .hero-badge {
+  background-color: hsl(41 100% 60%);
+  border-color: hsl(41 100% 50% / 0.4);
+}
+
+.light .hero-badge span.text-foreground {
+  color: hsl(0 0% 0%);
+}
+
+.light .hero-badge span.bg-primary {
+  background-color: hsl(0 0% 0%);
+}
+
+.light .btn-soft {
+  color: hsl(0 0% 0%);
+  background-color: hsl(41 100% 60%);
+  border-color: hsl(41 100% 60%);
+}
+
+.light span.font-mono.text-primary:not(.badge-levels) {
+  color: hsl(0 0% 0%);
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.light .section-label {
+  color: hsl(240 20% 9%);
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.light .badge-levels {
+  color: hsl(0 0% 0%);
+  background-color: hsl(41 100% 60%);
+  border-color: hsl(41 100% 60%);
+}
+
+.light [data-difficulty] {
+  color: hsl(0 0% 0%) !important;
 }
 
 /* Headings, overline spans, and CTA links that carry text-primary must not render
@@ -918,8 +917,13 @@ html {
 }
 
 .light a.text-primary {
-  color: hsl(204 22% 9%);
+  color: hsl(var(--foreground-hover));
 }
+
+/* Tailwind group-hover:* utilities are not matched by .light .classname selectors.
+   Explicit unlayered overrides are required for group-hover heading color in light mode. */
+.light .group:hover h2 { color: hsl(var(--foreground-hover)); }
+.light .group:hover h3 { color: hsl(var(--foreground-hover)); }
 
 /* ─── CommunityGuide external link states ──────────────── */
 /* Dark mode (default): yellow underline, foreground text */
@@ -929,10 +933,10 @@ html {
   transition: color 200ms ease, text-decoration-color 200ms ease;
 }
 
-/* Dark mode hover: soft warm yellow */
+/* Dark mode hover: soft warm yellow (primary lightened for hover state) */
 .docs-ext-link:hover {
-  color: #ffe2a3;
-  text-decoration-color: #ffe2a3;
+  color: hsl(var(--primary) / 0.75);
+  text-decoration-color: hsl(var(--primary) / 0.75);
 }
 
 /* Light mode: near-black text; underline tracks text color via currentColor */
@@ -956,4 +960,19 @@ html {
   --difficulty-architect-bg: 245 40% 87%;
   --difficulty-architect-border: 245 40% 77% / 0.6;
   --difficulty-text: 0 0% 0%;
+  /* intentionally darker than --primary for contrast on light bg */
+  --firefly-color: 41 100% 45%;
+}
+
+/* ─── Reduced-motion: non-transform active fallback ──── */
+/* active:scale-[0.97] is suppressed under prefers-reduced-motion,
+   leaving no visible press state. Use brightness instead. */
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary:active,
+  .btn-ghost:active,
+  .btn-soft:active,
+  .btn-inverse:active,
+  .btn-ghost-inverse:active {
+    filter: brightness(0.85);
+  }
 }

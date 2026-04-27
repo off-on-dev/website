@@ -13,3 +13,10 @@ export const SITE_NAME = "offon.dev";
 export const GA_MEASUREMENT_ID = "G-YEYE9DFHWE";
 
 export const LINKEDIN_URL = "https://www.linkedin.com/company/open-ecosystem/";
+
+export const CONSENT_STORAGE_KEY = "analytics_consent";
+export const CONSENT_EXPIRY_MS = 6 * 30 * 24 * 60 * 60 * 1000;
+
+export const THEME_STORAGE_KEY = "theme";
+
+export const CURRENT_YEAR = 2026; // Update manually each year

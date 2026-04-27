@@ -43,7 +43,7 @@ describe('AdventureDetail', () => {
       </HelmetProvider>
       </ConsentProvider>
     );
-    expect(screen.getByText('Adventure not found.')).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 1, name: 'Adventure not found' })).toBeTruthy();
   });
 });
 
@@ -76,7 +76,57 @@ describe('ChallengeDetail', () => {
       </HelmetProvider>
       </ConsentProvider>
     );
-    expect(screen.getByText('Challenge not found.')).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 1, name: 'Challenge not found' })).toBeTruthy();
+  });
+});
+
+describe('AdventureDetail - heading structure', () => {
+  it('renders "Challenges" as a visible h2 heading, not an overline label', () => {
+    render(
+      <ConsentProvider>
+      <HelmetProvider>
+        <MemoryRouter initialEntries={[`/adventures/${adventure.id}`]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <Routes>
+            <Route path="/adventures/:id" element={<AdventureDetail />} />
+          </Routes>
+        </MemoryRouter>
+      </HelmetProvider>
+      </ConsentProvider>
+    );
+    expect(screen.getByRole('heading', { level: 2, name: 'Challenges' })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 2, name: 'Find challenges by technology' })).toBeTruthy();
+  });
+});
+
+describe('ChallengeDetail - heading structure', () => {
+  it('renders "Find challenges by technology" as a visible h2 heading, not an overline label', () => {
+    render(
+      <ConsentProvider>
+      <HelmetProvider>
+        <MemoryRouter initialEntries={[`/adventures/${adventure.id}/levels/${level.id}`]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <Routes>
+            <Route path="/adventures/:id/levels/:levelId" element={<ChallengeDetail />} />
+          </Routes>
+        </MemoryRouter>
+      </HelmetProvider>
+      </ConsentProvider>
+    );
+    expect(screen.getByRole('heading', { level: 2, name: 'Find challenges by technology' })).toBeTruthy();
+  });
+
+  it('does not render "Key Learnings" as any heading level', () => {
+    render(
+      <ConsentProvider>
+      <HelmetProvider>
+        <MemoryRouter initialEntries={[`/adventures/${adventure.id}/levels/${level.id}`]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <Routes>
+            <Route path="/adventures/:id/levels/:levelId" element={<ChallengeDetail />} />
+          </Routes>
+        </MemoryRouter>
+      </HelmetProvider>
+      </ConsentProvider>
+    );
+    expect(screen.queryByRole('heading', { name: 'Key Learnings' })).toBeNull();
   });
 });
 

@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useContext, createContext, ReactNode } from "react";
-import { GA_MEASUREMENT_ID } from "@/data/constants";
+import { useState, useEffect, useCallback, useContext, createContext, ReactNode, type JSX } from "react";
+import { GA_MEASUREMENT_ID, CONSENT_STORAGE_KEY, CONSENT_EXPIRY_MS } from "@/data/constants";
 
 export type ConsentValue = "granted" | "denied";
 
@@ -8,17 +8,14 @@ type StoredConsent = {
   timestamp: number;
 };
 
-// Re-prompt after 6 months (in ms)
-const EXPIRY_MS = 6 * 30 * 24 * 60 * 60 * 1000;
-const STORAGE_KEY = "analytics_consent";
 
 function readStored(): StoredConsent | null {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(CONSENT_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as StoredConsent;
-    if (Date.now() - parsed.timestamp > EXPIRY_MS) {
-      localStorage.removeItem(STORAGE_KEY);
+    if (Date.now() - parsed.timestamp > CONSENT_EXPIRY_MS) {
+      localStorage.removeItem(CONSENT_STORAGE_KEY);
       return null;
     }
     return parsed;
@@ -30,7 +27,7 @@ function readStored(): StoredConsent | null {
 function writeStored(value: ConsentValue): void {
   try {
     const stored: StoredConsent = { value, timestamp: Date.now() };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+    localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(stored));
   } catch { /* storage unavailable */ }
 }
 
@@ -122,10 +119,10 @@ export function ConsentProvider({ children }: ConsentProviderProps): JSX.Element
     revokeGtag();
   }, []);
 
-  // Clears the stored choice and re-shows the banner (for "Cookie preferences" link)
+  // Clears the stored choice and re-shows the banner (used by the cookie preferences button in ConsentBanner)
   const reset = useCallback((): void => {
     try {
-      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(CONSENT_STORAGE_KEY);
     } catch { /* storage unavailable */ }
     setConsent(null);
     revokeGtag();
