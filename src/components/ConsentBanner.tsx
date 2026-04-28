@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { Cookie } from "lucide-react";
 import { useConsent } from "@/hooks/useConsent";
 

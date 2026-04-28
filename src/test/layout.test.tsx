@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 import { type JSX } from "react";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, act, fireEvent } from "@testing-library/react";
-import { MemoryRouter, Route, Routes, useNavigate } from "react-router-dom";
+import { MemoryRouter, Route, Routes, useNavigate } from "react-router";
 import { Layout } from "@/Layout";
 
 // ---------------------------------------------------------------------------
@@ -27,10 +27,7 @@ function NavButton({ to }: { to: string }): JSX.Element {
 
 function renderLayout(initialPath = "/"): ReturnType<typeof render> {
   return render(
-    <MemoryRouter
-      initialEntries={[initialPath]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
+    <MemoryRouter initialEntries={[initialPath]}>
       <Routes>
         <Route element={<Layout />}>
           <Route

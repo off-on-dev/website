@@ -1,11 +1,37 @@
 import type { JSX } from "react";
-import { Helmet } from "react-helmet-async";
+import type { MetaFunction } from "react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SITE_URL, COMMUNITY_URL, BRAND_NAME } from "@/data/constants";
 
 // Last reviewed date - update this whenever the policy content changes
 const LAST_UPDATED = "13 April 2026";
+
+export const meta: MetaFunction = () => {
+  const pageTitle = `Privacy Policy - ${BRAND_NAME}`;
+  const desc = `Read the ${BRAND_NAME} privacy policy to learn what data we collect, how analytics works, and your GDPR rights.`;
+  return [
+    { title: pageTitle },
+    { tagName: "link", rel: "canonical", href: `${SITE_URL}/privacy` },
+    { name: "description", content: desc },
+    { property: "og:title", content: pageTitle },
+    { property: "og:description", content: desc },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: `${SITE_URL}/privacy` },
+    { property: "og:image", content: `${SITE_URL}/og.png` },
+    { property: "og:image:width", content: "1200" },
+    { property: "og:image:height", content: "630" },
+    { property: "og:image:alt", content: pageTitle },
+    { property: "og:site_name", content: BRAND_NAME },
+    { property: "og:locale", content: "en_GB" },
+    { name: "twitter:image", content: `${SITE_URL}/og.png` },
+    { name: "twitter:image:alt", content: pageTitle },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: pageTitle },
+    { name: "twitter:description", content: desc },
+    { name: "robots", content: "noindex" },
+  ];
+};
 
 const Privacy = (): JSX.Element => {
   const h2 = "text-xl font-heading font-semibold text-foreground mt-10 mb-3";
@@ -16,27 +42,6 @@ const Privacy = (): JSX.Element => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Privacy Policy - {BRAND_NAME}</title>
-        <link rel="canonical" href={`${SITE_URL}/privacy`} />
-        <meta name="description" content={`Read the ${BRAND_NAME} privacy policy to learn what data we collect, how analytics works, and your GDPR rights.`} />
-        <meta property="og:title" content={`Privacy Policy - ${BRAND_NAME}`} />
-        <meta property="og:description" content={`Read the ${BRAND_NAME} privacy policy to learn what data we collect, how analytics works, and your GDPR rights.`} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={`${SITE_URL}/privacy`} />
-        <meta property="og:image" content={`${SITE_URL}/og.png`} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content={`Privacy Policy - ${BRAND_NAME}`} />
-        <meta property="og:site_name" content={BRAND_NAME} />
-        <meta property="og:locale" content="en_GB" />
-        <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
-        <meta name="twitter:image:alt" content={`Privacy Policy - ${BRAND_NAME}`} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`Privacy Policy - ${BRAND_NAME}`} />
-        <meta name="twitter:description" content={`Read the ${BRAND_NAME} privacy policy to learn what data we collect, how analytics works, and your GDPR rights.`} />
-        <meta name="robots" content="noindex" />
-      </Helmet>
       <Navbar />
 
       <main id="main-content" className="mx-auto max-w-3xl px-4 py-16 sm:px-6">

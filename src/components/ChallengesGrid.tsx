@@ -1,5 +1,5 @@
 import { useState, type JSX } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { ADVENTURES, Adventure } from "@/data/adventures";
 import { Layers } from "lucide-react";
 import { DifficultyBadge } from "@/components/DifficultyBadge";

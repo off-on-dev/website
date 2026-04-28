@@ -1,6 +1,6 @@
 import type { JSX } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
+import type { MetaFunction } from "react-router";
+import { Link } from "react-router";
 import { ArrowUpRight } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -24,32 +24,35 @@ const links = [
   },
 ];
 
-const NotFound = (): JSX.Element => {
-  const location = useLocation();
+export const meta: MetaFunction = ({ location }) => {
+  const pageTitle = `Page Not Found - ${BRAND_NAME}`;
+  const desc = `This page could not be found. Use ${BRAND_NAME} links to continue exploring challenges, guides, and community resources.`;
+  return [
+    { title: pageTitle },
+    { name: "description", content: desc },
+    { property: "og:title", content: pageTitle },
+    { property: "og:description", content: desc },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: `${SITE_URL}${location.pathname}` },
+    { property: "og:image", content: `${SITE_URL}/og.png` },
+    { property: "og:image:width", content: "1200" },
+    { property: "og:image:height", content: "630" },
+    { property: "og:image:alt", content: pageTitle },
+    { property: "og:site_name", content: BRAND_NAME },
+    { property: "og:locale", content: "en_GB" },
+    { name: "twitter:title", content: pageTitle },
+    { name: "twitter:description", content: desc },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:image", content: `${SITE_URL}/og.png` },
+    { name: "twitter:image:alt", content: pageTitle },
+    { name: "robots", content: "noindex, nofollow" },
+    { tagName: "link", rel: "canonical", href: `${SITE_URL}${location.pathname}` },
+  ];
+};
 
+const NotFound = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>{`Page Not Found - ${BRAND_NAME}`}</title>
-        <meta name="description" content={`This page could not be found. Use ${BRAND_NAME} links to continue exploring challenges, guides, and community resources.`} />
-        <meta property="og:title" content={`Page Not Found - ${BRAND_NAME}`} />
-        <meta property="og:description" content={`This page could not be found. Use ${BRAND_NAME} links to continue exploring challenges, guides, and community resources.`} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={`${SITE_URL}${location.pathname}`} />
-        <meta property="og:image" content={`${SITE_URL}/og.png`} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content={`Page Not Found - ${BRAND_NAME}`} />
-        <meta property="og:site_name" content={BRAND_NAME} />
-        <meta property="og:locale" content="en_GB" />
-        <meta name="twitter:title" content={`Page Not Found - ${BRAND_NAME}`} />
-        <meta name="twitter:description" content={`This page could not be found. Use ${BRAND_NAME} links to continue exploring challenges, guides, and community resources.`} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
-        <meta name="twitter:image:alt" content={`Page Not Found - ${BRAND_NAME}`} />
-        <meta name="robots" content="noindex, nofollow" />
-        <link rel="canonical" href={`${SITE_URL}${location.pathname}`} />
-      </Helmet>
       <Navbar />
       <main id="main-content" className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
         <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary mb-4">404</span>

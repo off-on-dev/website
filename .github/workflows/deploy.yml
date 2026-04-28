@@ -30,13 +30,13 @@ jobs:
 
       - run: npm run build
 
-      - run: cp dist/index.html dist/404.html
+      - run: cp dist/client/index.html dist/client/404.html
 
       - name: Deploy to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: dist
+          folder: dist/client
           force: false
           clean: true
           clean-exclude: |

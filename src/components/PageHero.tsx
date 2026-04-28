@@ -1,5 +1,5 @@
 import { type ReactNode, type JSX } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 type Cta = {
   label: ReactNode;

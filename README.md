@@ -1,6 +1,6 @@
 # offon.dev
 
-Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for open source enthusiasts. The site is fully static with no backend. Pages are prerendered at build time using vite-react-ssg. It hosts hands-on open source challenges, community documentation, and links to the OffOn community.
+Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for open source enthusiasts. The site is fully static with no backend. Pages are prerendered at build time using React Router v7 framework mode with `ssr: false`. It hosts hands-on open source challenges, community documentation, and links to the OffOn community.
 
 ## Tech Stack
 
@@ -8,7 +8,7 @@ Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for op
 - **Vite**: build tooling and dev server
 - **Tailwind CSS**: utility-first styling
 - **shadcn/ui**: accessible component primitives built on Radix UI
-- **React Router v6**: client-side routing
+- **React Router v7**: client-side routing with static prerendering
 - **Vitest**: unit testing
 - **GitHub Pages**: hosting and deployment
 
@@ -33,9 +33,8 @@ Node.js **22** is required. Version is pinned in `.nvmrc`, run `nvm use` to swit
 | Script | Description |
 |---|---|
 | `npm run dev` | Start local dev server at http://localhost:8080 |
-| `npm run build` | SSG prerender build to `dist/` (vite-react-ssg) |
+| `npm run build` | SSG prerender build to `dist/client/` (React Router v7) |
 | `npm run build:dev` | Dev-mode build (source maps, no minification) |
-| `npm run build:ssg-dev` | SSG build in development mode (unminified, for hydration debugging) |
 | `npm run preview` | Serve the production build locally |
 | `npm run lint` | Run ESLint across the project |
 | `npm test` | Run the full test suite once |
@@ -43,7 +42,7 @@ Node.js **22** is required. Version is pinned in `.nvmrc`, run `nvm use` to swit
 
 Run `npm run lint` and `npm test` before marking any work done.
 
-All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px) viewports before being considered done. Always test against the production build (`npm run build && npx serve dist`), never the dev server.
+All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px) viewports before being considered done. Always test against the production build (`npm run build && npx serve dist/client`), never the dev server.
 
 ## Project Structure
 
@@ -51,11 +50,15 @@ All UI changes must be verified at mobile (375px), tablet (768px), and desktop (
 src/
   components/     # Reusable UI components (named exports, PascalCase files)
   components/ui/  # shadcn/ui primitives, do not edit directly
-  pages/          # Route-level page components (lazy-loaded via React.lazy)
+  pages/          # Route-level page components
   data/           # Static content as typed TypeScript objects and arrays
   hooks/          # Custom React hooks
   lib/            # Shared utilities
   test/           # Vitest + Testing Library test files
+  root.tsx        # HTML shell rendered by React Router v7 (replaces index.html)
+  routes.ts       # Route definitions (React Router v7 config-based routing)
+  entry.client.tsx  # Client entry: hydrates the full document via HydratedRouter
+  entry.server.tsx  # Server/prerender entry: renderToString for static HTML generation
   Layout.tsx      # App shell with all providers and Outlet
 public/
   fonts/          # Self-hosted Inter, Syne, and JetBrains Mono font files
@@ -78,7 +81,7 @@ public/
 | `/404` | `NotFound.tsx` | Prerendered 404 page |
 | `/community-guide` | redirects to `/handbook` | Legacy alias |
 | `/topics/:tag` | redirects to `/#challenges` | Tag filter shortlink |
-| `*` | `NotFound.tsx` | Client-side 404 fallback |
+| `*` | `CatchAll.tsx` | Client-side 404 fallback (re-exports `NotFound.tsx`; required because React Router v7 needs unique files per route) |
 
 > **Technology tag filtering** is handled inline on the home page, adventure detail, and challenge detail pages via local `useState`. Topics are filtered inline. `/topics/:tag` redirects to `/#challenges`.
 
@@ -92,7 +95,7 @@ public/
 - Display mode (standalone)
 
 ### Schema.org Structured Data
-`index.html` includes a JSON-LD `<script>` block with `@type: "WebSite"` for semantic web indexing. This helps search engines understand the site's purpose and content.
+`src/root.tsx` includes a JSON-LD `<script>` block with `@type: "WebSite"` for semantic web indexing. This helps search engines understand the site's purpose and content.
 
 ### Open Graph Tags
 All pages include complete OG tags:
@@ -101,7 +104,7 @@ All pages include complete OG tags:
 - `og:site_name` (brand), `og:locale` (en_GB)
 - `og:type` (website or article, depending on page)
 
-All dynamic pages (adventure & challenge details) generate page-specific OG tags via react-helmet-async.
+All dynamic pages (adventure & challenge details) generate page-specific OG tags via React Router v7 `meta()` exports.
 
 ### Twitter Card Tags
 All pages include:
@@ -109,7 +112,7 @@ All pages include:
 - `twitter:title`, `twitter:description`, `twitter:image`, `twitter:image:alt`
 
 ### Canonical Links
-Each page declares its canonical URL to prevent duplicate indexing. Handled via react-helmet-async Helmet on each page.
+Each page declares its canonical URL to prevent duplicate indexing. Handled via React Router v7 `meta()` exports on each route module.
 
 ### Sitemap and Robots
 - `public/sitemap.xml` lists all static routes with change frequency and priority.
@@ -123,11 +126,11 @@ The site uses Google Analytics 4 with Consent Mode v2. No data is collected unti
 
 ### Configuration
 
-`GA_MEASUREMENT_ID` in `src/data/constants.ts` holds the GA4 Measurement ID. The gtag snippet in `index.html` must match this value. If you update the ID, change it in both places.
+`GA_MEASUREMENT_ID` in `src/data/constants.ts` holds the GA4 Measurement ID. The gtag snippet in `src/root.tsx` must match this value. If you update the ID, change it in both places.
 
 ### How it works
 
-- `index.html` loads gtag.js with all consent signals set to `denied` by default (Consent Mode v2).
+- `src/root.tsx` loads gtag.js with all consent signals set to `denied` by default (Consent Mode v2).
 - `src/hooks/useConsent.tsx` manages the user's choice, stored in `localStorage` as `analytics_consent` with a 6-month expiry. On grant, it calls `gtag('consent', 'update', { analytics_storage: 'granted' })`.
 - `src/components/ConsentBanner.tsx` renders a fixed bottom bar until the user makes a choice. Once consent is set, it renders a floating cookie icon button (bottom-right) that calls `reset()` to reopen the banner.
 - `src/Layout.tsx` fires a `page_view` event on every route change (via `ScrollToTop`), but only when consent is `"granted"`.
@@ -142,7 +145,7 @@ Deployment is automated via GitHub Actions:
 - **Push to `main`** triggers [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which builds and deploys to GitHub Pages. Production URL: **https://offon.dev**.
 - **Open a PR** triggers [`.github/workflows/preview.yml`](.github/workflows/preview.yml), which deploys a preview at `/pr-preview/pr-<n>/`.
 
-`dist/index.html` is copied to `dist/404.html` as a fallback for unknown routes. Each valid route has its own prerendered `index.html` so GitHub Pages serves a 200 directly.
+`dist/client/index.html` is copied to `dist/client/404.html` as a fallback for unknown routes. Each valid route has its own prerendered `index.html` so GitHub Pages serves a 200 directly.
 
 PR preview builds set the `VITE_BASE_PATH` environment variable to `/pr-preview/pr-<n>/` so all asset paths resolve correctly under the preview sub-path.
 

@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { useTheme } from "@/hooks/useTheme";
 import { COMMUNITY_URL, BRAND_NAME, LINKEDIN_URL, CURRENT_YEAR } from "@/data/constants";
 import logoDark from "@/assets/offon-logo-dark-color.svg";

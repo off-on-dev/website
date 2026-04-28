@@ -1,35 +1,40 @@
 import type { JSX } from "react";
+import type { MetaFunction } from "react-router";
 import { Navbar } from "@/components/Navbar";
-import { Helmet } from "react-helmet-async";
 import { ArrowUpRight } from "lucide-react";
 import { Footer } from "@/components/Footer";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME } from "@/data/constants";
 
 const extLink = "docs-ext-link inline-flex items-center gap-1 underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
 
+export const meta: MetaFunction = () => {
+  const pageTitle = `Handbook - ${BRAND_NAME}`;
+  const desc = `Everything you need to participate and grow in the ${BRAND_NAME} community: quick start, docs, policies, and how to get involved.`;
+  return [
+    { title: pageTitle },
+    { tagName: "link", rel: "canonical", href: `${SITE_URL}/handbook` },
+    { name: "description", content: desc },
+    { property: "og:title", content: pageTitle },
+    { property: "og:description", content: desc },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: `${SITE_URL}/handbook` },
+    { property: "og:image", content: `${SITE_URL}/og.png` },
+    { property: "og:image:width", content: "1200" },
+    { property: "og:image:height", content: "630" },
+    { property: "og:image:alt", content: pageTitle },
+    { property: "og:site_name", content: BRAND_NAME },
+    { property: "og:locale", content: "en_GB" },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: pageTitle },
+    { name: "twitter:description", content: desc },
+    { name: "twitter:image", content: `${SITE_URL}/og.png` },
+    { name: "twitter:image:alt", content: pageTitle },
+  ];
+};
+
 const CommunityGuide = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>{`Handbook - ${BRAND_NAME}`}</title>
-        <link rel="canonical" href={`${SITE_URL}/handbook`} />
-        <meta name="description" content={`Everything you need to participate and grow in the ${BRAND_NAME} community: quick start, docs, policies, and how to get involved.`} />
-        <meta property="og:title" content={`Handbook - ${BRAND_NAME}`} />
-        <meta property="og:description" content={`Everything you need to participate and grow in the ${BRAND_NAME} community: quick start, docs, policies, and how to get involved.`} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={`${SITE_URL}/handbook`} />
-        <meta property="og:image" content={`${SITE_URL}/og.png`} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content={`Handbook - ${BRAND_NAME}`} />
-        <meta property="og:site_name" content={BRAND_NAME} />
-        <meta property="og:locale" content="en_GB" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`Handbook - ${BRAND_NAME}`} />
-        <meta name="twitter:description" content={`Everything you need to participate and grow in the ${BRAND_NAME} community: quick start, docs, policies, and how to get involved.`} />
-        <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
-        <meta name="twitter:image:alt" content={`Handbook - ${BRAND_NAME}`} />
-      </Helmet>
       <Navbar />
       <main id="main-content" className="mx-auto max-w-3xl px-6 pt-28 pb-24">
 

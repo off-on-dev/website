@@ -1,7 +1,7 @@
 import { type JSX } from 'react';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { ConsentProvider, useConsent } from '@/hooks/useConsent';
 import { ConsentBanner } from '@/components/ConsentBanner';
 
@@ -17,7 +17,7 @@ const ls = window.localStorage;
 
 function renderWithProviders(ui: React.ReactElement): ReturnType<typeof render> {
   return render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ConsentProvider>{ui}</ConsentProvider>
     </MemoryRouter>
   );
