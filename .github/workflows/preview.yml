@@ -12,7 +12,30 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  smoke:
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - run: npx playwright install --with-deps chromium
+
+      - run: npm run test:e2e
+
   preview:
+    needs: smoke
+    # Run on closed (smoke is skipped, preview cleans up) or when smoke passed.
+    # Never run when smoke failed.
+    if: always() && (needs.smoke.result == 'success' || needs.smoke.result == 'skipped')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,17 +48,6 @@ jobs:
       - if: github.event.action != 'closed'
         run: npm ci
 
-      # Standard build (no base path) used for smoke tests
-      - if: github.event.action != 'closed'
-        run: npm run build
-
-      - if: github.event.action != 'closed'
-        run: npx playwright install --with-deps chromium
-
-      - if: github.event.action != 'closed'
-        run: npm run test:e2e
-
-      # Preview build with the correct base path for GitHub Pages deployment
       - if: github.event.action != 'closed'
         run: VITE_BASE_PATH=/pr-preview/pr-${{ github.event.number }}/ npm run build
 
