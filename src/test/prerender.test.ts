@@ -94,6 +94,28 @@ function extractTitles(html: string): string[] {
   return [...html.matchAll(/<title[^>]*>([^<]*)<\/title>/g)].map((m) => m[1]);
 }
 
+describe("prerendered HTML layout shell", () => {
+  // Guards against Layout.tsx losing its default export, which causes RR7 to
+  // silently skip the layout so providers, skip nav, and consent banner never mount.
+  it("dist/client/index.html contains the skip-nav link", () => {
+    const html = fs.readFileSync(path.join(DIST_ROOT, "index.html"), "utf-8");
+    expect(html).toContain("Skip to main content");
+  });
+
+  it("dist/client/index.html contains the consent banner", () => {
+    const html = fs.readFileSync(path.join(DIST_ROOT, "index.html"), "utf-8");
+    expect(html).toContain('aria-label="Cookie consent"');
+  });
+
+  // Guards against entry.server.tsx reverting to renderToString, which emits
+  // <!--$!--> (failed Suspense fallback) markers that break hydrateRoot and
+  // leave all event handlers unattached (buttons and theme toggle stop working).
+  it("dist/client/index.html contains no failed Suspense markers", () => {
+    const html = fs.readFileSync(path.join(DIST_ROOT, "index.html"), "utf-8");
+    expect(html).not.toContain("<!--$!-->");
+  });
+});
+
 describe("prerendered HTML title tags", () => {
   for (const { file, check } of pages) {
     it(`dist/client/${file} has correct <title>`, () => {

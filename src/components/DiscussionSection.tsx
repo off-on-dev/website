@@ -89,7 +89,7 @@ export const DiscussionSection = ({ discussionUrl }: DiscussionSectionProps): JS
               href={post.topicUrl}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`Community post: ${stripHtml(post.cooked).slice(0, 100)}`}
+              aria-label={`Community post by ${post.username}: ${stripHtml(post.cooked).slice(0, 100)} (opens in new tab)`}
               className="block card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               <div className="flex items-center justify-between mb-3">
@@ -115,7 +115,6 @@ export const DiscussionSection = ({ discussionUrl }: DiscussionSectionProps): JS
               <p className="text-sm leading-relaxed text-muted-foreground line-clamp-3">
                 {stripHtml(post.cooked)}
               </p>
-              <span className="sr-only"> (opens in new tab)</span>
             </a>
           ))}
           <a

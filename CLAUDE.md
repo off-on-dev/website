@@ -410,6 +410,19 @@ if the site is ever prerendered. Never introduce them.
 - Creating observers inside `useEffect` is safe. The risk is only when an observer fires during a prerender pass and changes rendered output, causing a hydration mismatch. Guard any observer that affects rendered content with a `typeof window !== 'undefined'` check.
 - Use `useIsomorphicLayoutEffect` instead of `useLayoutEffect` in any component that renders during SSG. Define it as `const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect` and guard any localStorage or browser API access inside the callback with `if (typeof window === "undefined") return`.
 
+### entry.server.tsx must use renderToPipeableStream, not renderToString
+
+- `renderToString` emits `<!--$!-->` (failed Suspense fallback) markers for any Suspense boundary that suspends during prerender, including React Router v7's own internal Suspense for route loading.
+- These markers appear outside `</html>` in the prerendered HTML. When `hydrateRoot(document, ...)` runs, it encounters DOM nodes with no matching React component output, causing hydration to fail silently. All event handlers (button clicks, theme toggle, consent banner) are never attached.
+- `entry.server.tsx` must always use `renderToPipeableStream` with `onAllReady` callback. This waits for all Suspense boundaries to resolve before writing output, producing clean HTML with no `<!--$!-->` markers.
+- Never revert to `renderToString` in `entry.server.tsx`. The prerender test in `src/test/prerender.test.ts` asserts that no `<!--$!-->` markers appear in the built HTML.
+
+### Do not add Suspense wrappers around Outlet in Layout.tsx
+
+- React Router v7 handles its own Suspense internally for lazy route loading. Adding `<Suspense>` around `<Outlet />` in Layout.tsx creates an extra Suspense boundary that React Router does not resolve during prerender.
+- Result: `<!--$!-->` marker outside `</html>`, broken hydration, and non-functional interactivity in the production build.
+- If you need loading states for routes, configure them in the route module itself, not in the layout.
+
 ---
 
 ## SEO
@@ -764,8 +777,8 @@ These rules exist to prevent specific classes of mistakes. Follow them unconditi
 
 ## Performance Checklist: Required When Adding Fonts, Images, or New Routes
 
-- Preload critical fonts in `src/root.tsx` with `<link rel="preload" as="font" type="font/woff2" crossorigin="anonymous">`
-- Only preload fonts used above the fold. Check `src/root.tsx` for the current preload list and update it whenever above-the-fold typography changes.
+- Preload critical fonts via the `links()` export in `src/root.tsx` (not as hardcoded `<link>` tags in the JSX). React Router's `<Links />` component manages these correctly during SSR and hydration, preventing the "preloaded but not used" browser warning that hardcoded preloads cause. Example: `{ rel: "preload", href: \`${import.meta.env.BASE_URL}fonts/inter-latin-400-normal.woff2\`, as: "font", type: "font/woff2", crossOrigin: "anonymous" }`.
+- Only preload fonts used above the fold. Check the `links()` export in `src/root.tsx` for the current preload list and update it whenever above-the-fold typography changes.
 - Do not lazy-load LCP images. Remove `loading="lazy"` from any above-the-fold image.
 - Add `loading="lazy"` to all `<img>` elements that are not visible in the initial viewport.
 - Add `fetchpriority="high"` to the LCP image.
