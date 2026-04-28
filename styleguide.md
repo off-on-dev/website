@@ -294,7 +294,7 @@ Always use `ring-ring`, never `ring-primary/xx`. The `--ring` token is theme-awa
 
 Every page must support keyboard bypass of the navigation bar (WCAG 2.4.1).
 
-- The skip link is rendered as the first child inside `<ConsentProvider>` in `Layout.tsx` and always targets `#main-content`. Routing is handled by vite-react-ssg (no `<BrowserRouter>` in the codebase).
+- The skip link is rendered as the first child inside `<ConsentProvider>` in `Layout.tsx` and always targets `#main-content`. Routing is handled by React Router v7 framework mode (no `<BrowserRouter>` in the codebase).
 - It is styled with the `.skip-nav` class defined in `src/index.css`: visually hidden (`top: -100%`) until focused, at which point it appears at `top: 1rem`.
 - Every page's `<main>` element must have `id="main-content"`. Do not omit this on new pages.
 

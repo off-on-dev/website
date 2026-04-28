@@ -132,7 +132,7 @@ describe("Layout", () => {
 describe("Layout file-content regression", () => {
   const source = readFileSync(resolve(__dirname, "../Layout.tsx"), "utf-8");
 
-  it("does not import HelmetProvider from react-helmet-async", () => {
+  it("does not import HelmetProvider", () => {
     expect(source).not.toContain("HelmetProvider");
   });
 });

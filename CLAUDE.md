@@ -583,7 +583,7 @@ State the result of each check explicitly before finishing a task.
 6. **Check imports:** Every import must resolve. No unused imports. No circular
    dependencies introduced.
 
-7. **Verify at three viewports:** All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px). Always test against the production build (`npm run build && npx serve dist`), never the dev server.
+7. **Verify at three viewports:** All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px). Always test against the production build (`npm run build && npx serve dist/client`), never the dev server.
 
 8. **Check discussion data on every PR:** If the PR adds or modifies adventure levels, verify that every level's Discourse topic ID and URL are present in the `DISCUSSION_TOPICS` map in `vite.config.ts`. Run `npm run build` so `src/data/discussion-data.json` is regenerated with any new topics. A missing entry means the discussion feed will silently show no posts for that level.
 
@@ -771,5 +771,5 @@ These rules exist to prevent specific classes of mistakes. Follow them unconditi
 - Add `fetchpriority="high"` to the LCP image.
 - Add `width` and `height` attributes to every `<img>` element to prevent layout shift (CLS).
 - New routes are automatically code-split by Vite. No manual action needed.
-- Always run Lighthouse against the production build: `npm run build && npx serve dist`. Never run it against the dev server.
+- Always run Lighthouse against the production build: `npm run build && npx serve dist/client`. Never run it against the dev server.
 - Current baseline scores (production): Performance 96, Accessibility 100, Best Practices 100, SEO 100
