@@ -18,7 +18,7 @@ Guidance for AI coding agents working in this repository.
 ## Project Overview
 
 **offon.dev** is the main website for OffOn, a platform for open source enthusiasts.
-It is fully static with no backend and no database. Pages are prerendered at build time using vite-react-ssg.
+It is fully static with no backend and no database. Pages are prerendered at build time using React Router v7 framework mode (`ssr: false`).
 
 Community activity happens on a separate Discourse instance. Its display name is **community.offon.dev**, but the real URL is managed via the `COMMUNITY_URL` constant in `src/data/constants.ts`. Do not hardcode it. Do not attempt to replicate or integrate Discourse functionality here.
 
@@ -29,7 +29,7 @@ Community activity happens on a separate Discourse instance. Its display name is
 - **Framework:** React with TypeScript, bundled via Vite. Check `package.json` for current versions.
 - **Styling:** Tailwind CSS, configured via `tailwind.config.ts` and `src/index.css`.
 - **Components:** shadcn/ui (Radix UI primitives), live in `src/components/ui/`
-- **Routing:** React Router v6 (client-side with SSG prerendering via vite-react-ssg)
+- **Routing:** React Router v7 framework mode (static prerendering with `ssr: false`)
 - **Testing:** Vitest + @testing-library/react
 - **Hosting:** GitHub Pages
 - **PR previews:** pr-preview-action
@@ -76,9 +76,8 @@ public/
 ```sh
 nvm use              # Switch to Node 22 (required)
 npm run dev          # Start local dev server (http://localhost:8080)
-npm run build        # Production SSG build (vite-react-ssg) -> dist/
+npm run build        # Production SSG build (React Router v7) -> dist/client/
 npm run build:dev    # Dev-mode build
-npm run build:ssg-dev  # SSG build in development mode (unminified, for hydration debugging)
 npm run lint         # ESLint
 npm test             # Run tests once (Vitest)
 npm run test:watch   # Tests in watch mode
@@ -246,7 +245,7 @@ All analytics-related constants live in `src/data/constants.ts`:
 
 | Constant | Purpose |
 |---|---|
-| `GA_MEASUREMENT_ID` | GA4 Measurement ID. Must match the gtag snippet in `index.html`. If you update it, change both places. |
+| `GA_MEASUREMENT_ID` | GA4 Measurement ID. Must match the gtag snippet in `src/root.tsx`. If you update it, change both places. |
 | `BRAND_NAME` | Always `"OffOn"`. Never hardcode the string. |
 | `COMMUNITY_URL` | Real URL of the Discourse instance. Never hardcode. |
 | `COMMUNITY_DISPLAY_NAME` | User-facing display name for the community URL. Use for visible text. |
@@ -256,7 +255,7 @@ All analytics-related constants live in `src/data/constants.ts`:
 
 ### How it works
 
-- `index.html` loads gtag.js with all consent signals set to `denied` by default (Consent Mode v2).
+- `src/root.tsx` loads gtag.js with all consent signals set to `denied` by default (Consent Mode v2).
 - `src/hooks/useConsent.tsx` manages consent state. It exports `ConsentProvider` and `useConsent`.
   - Consent is stored in `localStorage` under key `analytics_consent` with a 6-month expiry.
   - States: `null` (not yet decided, show banner), `"granted"`, `"denied"`.
@@ -318,7 +317,7 @@ Check the following on every component you write or modify.
 - Never apply overline/label typography (`text-sm uppercase tracking-widest`) to a heading tag (`<h1>`–`<h6>`). Overline styling signals a decorative caption, not a structural heading, and a sighted user will not recognise it as a heading. If the text is a genuine section heading, give it heading-appropriate typography from `styleguide.md`. If it is purely decorative, use `<span>` or `<p>` instead.
 - Never use a non-heading tag (`<p>`, `<span>`, `<div>`) for text that is visually styled as a heading (e.g. `text-lg font-semibold` or larger, `font-heading`, `font-bold`). Promote it to the correct heading level that fits the page outline.
 - Every page's primary content must live inside a single `<main id="main-content">` element. Do not split the page content across multiple `<main>` elements or leave major sections (e.g. `PageHero`, `BottomCTA`) outside `<main>`.
-- The `<html lang="en">` attribute is set in `index.html`. Never remove or change it.
+- The `<html lang="en">` attribute is set in `src/root.tsx`. Never remove or change it.
 
 ### Forms
 - Every `<input>`, `<select>`, and `<textarea>` must have an associated `<label>` via `for`/`id` pairing or `aria-label`. Never use placeholder text as a substitute for a label.
@@ -411,6 +410,19 @@ if the site is ever prerendered. Never introduce them.
 - Creating observers inside `useEffect` is safe. The risk is only when an observer fires during a prerender pass and changes rendered output, causing a hydration mismatch. Guard any observer that affects rendered content with a `typeof window !== 'undefined'` check.
 - Use `useIsomorphicLayoutEffect` instead of `useLayoutEffect` in any component that renders during SSG. Define it as `const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect` and guard any localStorage or browser API access inside the callback with `if (typeof window === "undefined") return`.
 
+### entry.server.tsx must use renderToPipeableStream, not renderToString
+
+- `renderToString` emits `<!--$!-->` (failed Suspense fallback) markers for any Suspense boundary that suspends during prerender, including React Router v7's own internal Suspense for route loading.
+- These markers appear outside `</html>` in the prerendered HTML. When `hydrateRoot(document, ...)` runs, it encounters DOM nodes with no matching React component output, causing hydration to fail silently. All event handlers (button clicks, theme toggle, consent banner) are never attached.
+- `entry.server.tsx` must always use `renderToPipeableStream` with `onAllReady` callback. This waits for all Suspense boundaries to resolve before writing output, producing clean HTML with no `<!--$!-->` markers.
+- Never revert to `renderToString` in `entry.server.tsx`. The prerender test in `src/test/prerender.test.ts` asserts that no `<!--$!-->` markers appear in the built HTML.
+
+### Do not add Suspense wrappers around Outlet in Layout.tsx
+
+- React Router v7 handles its own Suspense internally for lazy route loading. Adding `<Suspense>` around `<Outlet />` in Layout.tsx creates an extra Suspense boundary that React Router does not resolve during prerender.
+- Result: `<!--$!-->` marker outside `</html>`, broken hydration, and non-functional interactivity in the production build.
+- If you need loading states for routes, configure them in the route module itself, not in the layout.
+
 ---
 
 ## SEO
@@ -444,17 +456,17 @@ This is a fully static React site. Apply these practices on every page.
 
 ### Performance
 - Before adding any new dependency, run `npm run build` and check the bundle size in the Vite output. If it adds more than 10 KB to the main bundle, evaluate whether a lighter alternative exists.
-- Route-level code splitting uses explicit `React.lazy` + `Suspense` in `src/App.tsx`. This is intentional and required by the `vite-react-ssg` SSG architecture — do not remove or replace with static imports.
+- Route-level code splitting is handled automatically by React Router v7's build pipeline. No manual `React.lazy` or `Suspense` wrappers are needed or should be added.
 - Avoid layout shift by setting explicit `width` and `height` attributes on every `<img>` element.
 - For all other performance requirements including font preloading, LCP image handling, and Lighthouse baselines, see the Performance Checklist section.
 
-### Global head setup (index.html)
+### Global head setup (root.tsx)
 - Add `<link rel="manifest" href="/site.webmanifest" />` to link the web app manifest.
 - Add `<meta name="theme-color">` tags for dark and light mode: `content="#0a0a0a" media="(prefers-color-scheme: dark)"` and `content="#f5f5ff" media="(prefers-color-scheme: light)"`.
-- Add JSON-LD structured data as a `<script type="application/ld+json">` with `@type: "WebSite"`. Note: `index.html` is a static file and cannot import TypeScript constants, so the `"OffOn"` brand name is hardcoded in the JSON-LD blocks. Update them manually if the brand name ever changes.
+- Add JSON-LD structured data as a `<script type="application/ld+json">` with `@type: "WebSite"`. Note: the `"OffOn"` brand name is hardcoded as a string literal in the JSON-LD inline script in `src/root.tsx` (it cannot reference TypeScript constants inside `dangerouslySetInnerHTML`). Update it manually if the brand name ever changes.
 - Always include `og:image:width`, `og:image:height`, and `og:image:alt` for all OG image tags.
-- Add `og:site_name` and `og:locale` (en_GB) to all global OG tags in `index.html`.
-- Do not add page-specific meta tags (description, og:*, twitter:*) to index.html. These must live in each page's `<Helmet>` block only. Hardcoded tags in index.html are not replaced by react-helmet-async during SSG and will produce duplicate meta tags in every prerendered page.
+- Add `og:site_name` and `og:locale` (en_GB) to all global OG tags in `src/root.tsx`.
+- Do not add page-specific meta tags (description, og:*, twitter:*) to `src/root.tsx`. These must live in each route module's `meta()` export only. Tags in `root.tsx` are rendered on every page and will produce duplicate meta tags.
 
 ---
 
@@ -514,23 +526,23 @@ these rules.
 ## Site Maintenance
 
 ### Sitemap
-- Every time a new static page is added to `src/pages/` and registered as a route in `src/App.tsx`, its URL must also be added to `public/sitemap.xml`.
+- Every time a new static page is added to `src/pages/` and registered as a route in `src/routes.ts`, its URL must also be added to `public/sitemap.xml`.
 - Dynamic routes with **statically known IDs** (e.g. adventure and challenge detail pages) must also be added to `public/sitemap.xml`. All adventure and level routes are statically known at build time.
 - Dynamic routes whose IDs are not known at build time must not be added to the sitemap.
 - The sitemap lives at `public/sitemap.xml` and is served at `https://offon.dev/sitemap.xml`.
 - `robots.txt` at `public/robots.txt` must include: `Sitemap: https://offon.dev/sitemap.xml`
 
 ### SSG prerendered routes
-- The list of routes that vite-react-ssg prerenders is in `ssgOptions.includedRoutes` inside `vite.config.ts`.
-- When adding a new static route, add it to **all three** of: `src/App.tsx`, `public/sitemap.xml`, and `ssgOptions.includedRoutes` in `vite.config.ts`.
-- Dynamic routes with statically known IDs (e.g. adventure and challenge detail pages) must also be listed in `ssgOptions.includedRoutes` individually and in `public/sitemap.xml`.
-- Routes not listed in `ssgOptions.includedRoutes` will not have a prerendered `index.html` and will fall back to the client-side 404 flow on GitHub Pages.
+- The list of routes that React Router v7 prerenders is in the `prerender` array inside `react-router.config.ts`.
+- When adding a new static route, add it to **all three** of: `src/routes.ts`, `public/sitemap.xml`, and the `prerender` array in `react-router.config.ts`.
+- Dynamic routes with statically known IDs (e.g. adventure and challenge detail pages) must also be listed in the `prerender` array individually and in `public/sitemap.xml`.
+- Routes not listed in the `prerender` array will not have a prerendered `index.html` and will fall back to the client-side 404 flow on GitHub Pages.
 
-When adding a new route to `src/App.tsx`, follow these rules by route type:
+When adding a new route to `src/routes.ts`, follow these rules by route type:
 
-- Static routes (e.g. `/about`, `/privacy`): add to `public/sitemap.xml`, the routes table in `README.md`, and `ssgOptions.includedRoutes` in `vite.config.ts`.
-- Dynamic routes with statically known IDs (e.g. `/adventures/:id` when IDs are fixed): add individual URLs to `public/sitemap.xml`, `ssgOptions.includedRoutes` in `vite.config.ts`, and the routes table in `README.md`. Also add the topic ID and URL to `DISCUSSION_TOPICS` in `vite.config.ts` if the level has a discussion thread.
-- Redirect routes (`<Navigate>`): do not add to `sitemap.xml` or `README.md`.
+- Static routes (e.g. `/about`, `/privacy`): add to `public/sitemap.xml`, the routes table in `README.md`, and the `prerender` array in `react-router.config.ts`.
+- Dynamic routes with statically known IDs (e.g. `/adventures/:id` when IDs are fixed): add individual URLs to `public/sitemap.xml`, the `prerender` array in `react-router.config.ts`, and the routes table in `README.md`. Also add the topic ID and URL to `DISCUSSION_TOPICS` in `vite.config.ts` if the level has a discussion thread.
+- Redirect routes (clientLoader returning redirect()): do not add to `sitemap.xml` or `README.md`.
 - Catch-all routes (`*`): do not add anywhere.
 
 ### When adding a new adventure
@@ -540,9 +552,9 @@ Adventures are defined in `src/data/adventures.ts`. The Discourse API does not e
 Complete checklist for every new adventure:
 
 1. Add the adventure object to the `ADVENTURES` array in `src/data/adventures.ts`. Required fields: `id`, `title`, `month`, `story`, `tags`, and `levels`. Each level needs `id`, `name`, `difficulty`, `learnings`, `codespacesUrl`, and `discussionUrl`.
-2. Add the adventure detail route and all level routes to `src/App.tsx`.
+2. Add the adventure detail route and all level routes to `src/routes.ts`.
 3. Add the adventure landing page URL and every level URL to `public/sitemap.xml`.
-4. Add the adventure landing page URL and every level URL to `ssgOptions.includedRoutes` in `vite.config.ts`.
+4. Add the adventure landing page URL and every level URL to the `prerender` array in `react-router.config.ts`.
 5. Add each level's Discourse topic ID and full topic URL to the `DISCUSSION_TOPICS` map in `vite.config.ts`. The key is the numeric topic ID extracted from the discussion URL (e.g. `"117"` from `.../t/.../117/...`).
 6. Run `npm run build` to fetch fresh discussion data for the new topic IDs and verify that `src/data/discussion-data.json` was updated.
 7. Update the routes table in `README.md`.
@@ -584,7 +596,7 @@ State the result of each check explicitly before finishing a task.
 6. **Check imports:** Every import must resolve. No unused imports. No circular
    dependencies introduced.
 
-7. **Verify at three viewports:** All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px). Always test against the production build (`npm run build && npx serve dist`), never the dev server.
+7. **Verify at three viewports:** All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px). Always test against the production build (`npm run build && npx serve dist/client`), never the dev server.
 
 8. **Check discussion data on every PR:** If the PR adds or modifies adventure levels, verify that every level's Discourse topic ID and URL are present in the `DISCUSSION_TOPICS` map in `vite.config.ts`. Run `npm run build` so `src/data/discussion-data.json` is regenerated with any new topics. A missing entry means the discussion feed will silently show no posts for that level.
 
@@ -674,7 +686,7 @@ before every commit:
 | New component | styleguide.md: component entry with props and usage |
 | New hook | styleguide.md: hook entry with return type and behavior |
 | New utility function | styleguide.md: brief entry if it affects patterns |
-| New page or route | README.md routes table for all non-redirect routes; `public/sitemap.xml` and `ssgOptions.includedRoutes` in `vite.config.ts` for static routes only. |
+| New page or route | README.md routes table for all non-redirect routes; `public/sitemap.xml` and `prerender` array in `react-router.config.ts` for static routes only. |
 | New constant | README.md: constants section, styleguide.md if visual |
 | New workflow step | README.md: commands section, CLAUDE.md if it changes a rule |
 | New brand or copy rule | styleguide.md first, then apply across codebase |
@@ -719,21 +731,21 @@ These rules exist to prevent specific classes of mistakes. Follow them unconditi
 
 ## SEO Checklist: Required for Every New Page
 
-- Add a unique `<title>` and a `<meta name="description">` under 160 characters via react-helmet-async
+- Add a unique `<title>` and a `<meta name="description">` under 160 characters via the route module's `meta()` export
 - Add `og:title`, `og:description`, `og:url`, `og:type`, and `og:image` meta tags
 - Add `og:image:width` (1200) and `og:image:height` (630) for proper image rendering
 - Add `og:image:alt`, `og:site_name`, and `og:locale` (en_GB) meta tags
 - Add `twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`, and `twitter:image:alt` meta tags
 - Add canonical link tag
 - Add the page URL to `public/sitemap.xml` (static routes only)
-- Add the page URL to `ssgOptions.includedRoutes` in `vite.config.ts` (static routes only)
+- Add the page URL to the `prerender` array in `react-router.config.ts` (static routes only)
 - Use correct heading hierarchy: one `h1` per page, `h2` for sections, `h3` for subsections
 - Dynamic routes are not added to `sitemap.xml` unless IDs are statically known
-- Verify `index.html` includes `<link rel="manifest" href="/site.webmanifest" />`
-- Verify `index.html` includes both `<meta name="theme-color">` tags for dark and light mode
-- Verify `index.html` includes a `<script type="application/ld+json">` block with `@type: WebSite`
-- Do not add page-specific meta tags (`description`, `og:*`, `twitter:*`) to `index.html`. They must live in each page's `<Helmet>` block only.
-- Confirm `<html lang="en">` is present in `index.html` and has not been removed.
+- Verify `src/root.tsx` includes `<link rel="manifest" href="/site.webmanifest" />`
+- Verify `src/root.tsx` includes both `<meta name="theme-color">` tags for dark and light mode
+- Verify `src/root.tsx` includes a `<script type="application/ld+json">` block with `@type: WebSite`
+- Do not add page-specific meta tags (`description`, `og:*`, `twitter:*`) to `src/root.tsx`. They must live in each route module's `meta()` export only.
+- Confirm `<html lang="en">` is present in `src/root.tsx` and has not been removed.
 
 ---
 
@@ -765,12 +777,12 @@ These rules exist to prevent specific classes of mistakes. Follow them unconditi
 
 ## Performance Checklist: Required When Adding Fonts, Images, or New Routes
 
-- Preload critical fonts in `index.html` with `<link rel="preload" as="font" type="font/woff2" crossorigin="anonymous">`
-- Only preload fonts used above the fold. Check `index.html` for the current preload list and update it whenever above-the-fold typography changes.
+- Preload critical fonts via the `links()` export in `src/root.tsx` (not as hardcoded `<link>` tags in the JSX). React Router's `<Links />` component manages these correctly during SSR and hydration, preventing the "preloaded but not used" browser warning that hardcoded preloads cause. Example: `{ rel: "preload", href: \`${import.meta.env.BASE_URL}fonts/inter-latin-400-normal.woff2\`, as: "font", type: "font/woff2", crossOrigin: "anonymous" }`.
+- Only preload fonts used above the fold. Check the `links()` export in `src/root.tsx` for the current preload list and update it whenever above-the-fold typography changes.
 - Do not lazy-load LCP images. Remove `loading="lazy"` from any above-the-fold image.
 - Add `loading="lazy"` to all `<img>` elements that are not visible in the initial viewport.
 - Add `fetchpriority="high"` to the LCP image.
 - Add `width` and `height` attributes to every `<img>` element to prevent layout shift (CLS).
 - New routes are automatically code-split by Vite. No manual action needed.
-- Always run Lighthouse against the production build: `npm run build && npx serve dist`. Never run it against the dev server.
+- Always run Lighthouse against the production build: `npm run build && npx serve dist/client`. Never run it against the dev server.
 - Current baseline scores (production): Performance 96, Accessibility 100, Best Practices 100, SEO 100

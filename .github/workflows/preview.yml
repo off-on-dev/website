@@ -29,9 +29,12 @@ jobs:
         run: VITE_BASE_PATH=/pr-preview/pr-${{ github.event.number }}/ npm run build
 
       - if: github.event.action != 'closed'
-        run: cp dist/index.html dist/404.html
-
+        run: |
+          PREVIEW_DIR="dist/client/pr-preview/pr-${{ github.event.number }}"
+          cp -r dist/client/assets "${PREVIEW_DIR}/"
+          cp -r dist/client/fonts "${PREVIEW_DIR}/"
+          cp "${PREVIEW_DIR}/index.html" "${PREVIEW_DIR}/404.html"
 
       - uses: rossjrw/pr-preview-action@v1
         with:
-          source-dir: dist/
+          source-dir: dist/client/pr-preview/pr-${{ github.event.number }}/

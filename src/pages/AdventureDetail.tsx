@@ -1,6 +1,6 @@
 import { useState, type JSX } from "react";
-import { useParams, Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
+import { useParams, Link } from "react-router";
+import type { MetaFunction } from "react-router";
 import { ArrowRight } from "lucide-react";
 import { ADVENTURES } from "@/data/adventures";
 import { Navbar } from "@/components/Navbar";
@@ -10,6 +10,40 @@ import { SITE_URL, BRAND_NAME } from "@/data/constants";
 
 const ALL_TAGS = Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort();
 
+export const meta: MetaFunction = ({ params }) => {
+  const adventure = ADVENTURES.find((a) => a.id === params.id);
+  if (!adventure) {
+    return [
+      { title: `Adventure Not Found - ${BRAND_NAME}` },
+      { name: "robots", content: "noindex, nofollow" },
+    ];
+  }
+  const pageTitle = `${adventure.title} - ${BRAND_NAME} Adventures`;
+  const tagsSummary = adventure.tags.slice(0, 3).join(", ");
+  const pageDesc = `Join ${adventure.title} on ${BRAND_NAME} with ${adventure.levels.length} hands-on challenge levels. Topics include ${tagsSummary}.`.slice(0, 160);
+  const pageUrl = `${SITE_URL}/adventures/${adventure.id}`;
+  return [
+    { title: pageTitle },
+    { tagName: "link", rel: "canonical", href: pageUrl },
+    { name: "description", content: pageDesc },
+    { property: "og:title", content: pageTitle },
+    { property: "og:description", content: pageDesc },
+    { property: "og:type", content: "article" },
+    { property: "og:url", content: pageUrl },
+    { property: "og:image", content: `${SITE_URL}/og.png` },
+    { property: "og:image:width", content: "1200" },
+    { property: "og:image:height", content: "630" },
+    { property: "og:image:alt", content: pageTitle },
+    { property: "og:site_name", content: BRAND_NAME },
+    { property: "og:locale", content: "en_GB" },
+    { name: "twitter:title", content: pageTitle },
+    { name: "twitter:description", content: pageDesc },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:image", content: `${SITE_URL}/og.png` },
+    { name: "twitter:image:alt", content: pageTitle },
+  ];
+};
+
 const AdventureDetail = (): JSX.Element => {
   const { id } = useParams<{ id: string }>();
   const adventure = ADVENTURES.find((a) => a.id === id);
@@ -18,10 +52,6 @@ const AdventureDetail = (): JSX.Element => {
   if (!adventure) {
     return (
       <div className="min-h-screen bg-background">
-        <Helmet>
-          <title>{`Adventure Not Found - ${BRAND_NAME}`}</title>
-          <meta name="robots" content="noindex, nofollow" />
-        </Helmet>
         <Navbar />
         <main id="main-content" className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
           <h1 className="text-2xl font-bold text-foreground mb-3">Adventure not found</h1>
@@ -31,11 +61,6 @@ const AdventureDetail = (): JSX.Element => {
       </div>
     );
   }
-
-  const pageTitle = `${adventure.title} - ${BRAND_NAME} Adventures`;
-  const tagsSummary = adventure.tags.slice(0, 3).join(", ");
-  const pageDesc = `Join ${adventure.title} on ${BRAND_NAME} with ${adventure.levels.length} hands-on challenge levels. Topics include ${tagsSummary}.`.slice(0, 160);
-  const pageUrl = `${SITE_URL}/adventures/${adventure.id}`;
 
   const relatedLevels = activeTech
     ? ADVENTURES
@@ -51,26 +76,6 @@ const AdventureDetail = (): JSX.Element => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>{pageTitle}</title>
-        <link rel="canonical" href={pageUrl} />
-        <meta name="description" content={pageDesc} />
-        <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content={pageDesc} />
-        <meta property="og:type" content="article" />
-        <meta property="og:url" content={pageUrl} />
-        <meta property="og:image" content={`${SITE_URL}/og.png`} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content={pageTitle} />
-        <meta property="og:site_name" content={BRAND_NAME} />
-        <meta property="og:locale" content="en_GB" />
-        <meta name="twitter:title" content={pageTitle} />
-        <meta name="twitter:description" content={pageDesc} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
-        <meta name="twitter:image:alt" content={pageTitle} />
-      </Helmet>
       <Navbar />
       <main id="main-content" className="mx-auto max-w-4xl px-6 md:px-16 pt-28 pb-24">
         {/* Header */}

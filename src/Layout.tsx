@@ -1,8 +1,8 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Suspense, useEffect, type JSX } from "react";
+import { useEffect, type JSX } from "react";
 import { ThemeProvider } from "@/hooks/useTheme";
 import { ConsentBanner } from "@/components/ConsentBanner";
 import { ConsentProvider, useConsent } from "@/hooks/useConsent";
@@ -33,11 +33,11 @@ export function Layout(): JSX.Element {
           </a>
           <ScrollToTop />
           <ConsentBanner />
-          <Suspense fallback={null}>
-            <Outlet />
-          </Suspense>
+          <Outlet />
         </ConsentProvider>
       </TooltipProvider>
     </ThemeProvider>
   );
 }
+
+export default Layout;

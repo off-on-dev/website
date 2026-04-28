@@ -1,11 +1,11 @@
-// This test requires a production build to exist in dist/.
+// This test requires a production build to exist in dist/client/.
 // Run `npm run build` before running these tests.
 
 import { describe, it, expect } from "vitest";
 import * as fs from "fs";
 import * as path from "path";
 
-const DIST_ROOT = path.resolve(__dirname, "../../dist");
+const DIST_ROOT = path.resolve(__dirname, "../../dist/client");
 
 type TitleCheck =
   | { type: "exact"; value: string }
@@ -94,13 +94,35 @@ function extractTitles(html: string): string[] {
   return [...html.matchAll(/<title[^>]*>([^<]*)<\/title>/g)].map((m) => m[1]);
 }
 
+describe("prerendered HTML layout shell", () => {
+  // Guards against Layout.tsx losing its default export, which causes RR7 to
+  // silently skip the layout so providers, skip nav, and consent banner never mount.
+  it("dist/client/index.html contains the skip-nav link", () => {
+    const html = fs.readFileSync(path.join(DIST_ROOT, "index.html"), "utf-8");
+    expect(html).toContain("Skip to main content");
+  });
+
+  it("dist/client/index.html contains the consent banner", () => {
+    const html = fs.readFileSync(path.join(DIST_ROOT, "index.html"), "utf-8");
+    expect(html).toContain('aria-label="Cookie consent"');
+  });
+
+  // Guards against entry.server.tsx reverting to renderToString, which emits
+  // <!--$!--> (failed Suspense fallback) markers that break hydrateRoot and
+  // leave all event handlers unattached (buttons and theme toggle stop working).
+  it("dist/client/index.html contains no failed Suspense markers", () => {
+    const html = fs.readFileSync(path.join(DIST_ROOT, "index.html"), "utf-8");
+    expect(html).not.toContain("<!--$!-->");
+  });
+});
+
 describe("prerendered HTML title tags", () => {
   for (const { file, check } of pages) {
-    it(`dist/${file} has correct <title>`, () => {
+    it(`dist/client/${file} has correct <title>`, () => {
       const fullPath = path.join(DIST_ROOT, file);
 
       if (!fs.existsSync(fullPath)) {
-        throw new Error(`dist/${file} not found. Run npm run build first.`);
+        throw new Error(`dist/client/${file} not found. Run npm run build first.`);
       }
 
       const html = fs.readFileSync(fullPath, "utf-8");
@@ -108,7 +130,7 @@ describe("prerendered HTML title tags", () => {
 
       expect(
         titles.length,
-        `Expected exactly one <title> tag in dist/${file}, found ${titles.length}`
+        `Expected exactly one <title> tag in dist/client/${file}, found ${titles.length}`
       ).toBe(1);
 
       const title = titles[0];

@@ -1,8 +1,7 @@
 import { type JSX } from 'react';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
+import { MemoryRouter } from 'react-router';
 import { ConsentProvider } from '@/hooks/useConsent';
 import { ThemeProvider, useTheme } from '@/hooks/useTheme';
 
@@ -14,11 +13,9 @@ const ls = window.localStorage;
 
 function renderWithProviders(ui: React.ReactElement): ReturnType<typeof render> {
   return render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ConsentProvider>
-        <HelmetProvider>
-          <ThemeProvider>{ui}</ThemeProvider>
-        </HelmetProvider>
+        <ThemeProvider>{ui}</ThemeProvider>
       </ConsentProvider>
     </MemoryRouter>
   );
@@ -165,18 +162,18 @@ describe('useTheme - file content regressions', () => {
     expect(source).not.toMatch(/useState<Theme>\(\s*\(\s*\)/);
   });
 
-  it('index.html contains inline theme script before React boots', () => {
+  it('root.tsx contains inline theme script before <Scripts />', () => {
     const source = readFileSync(
-      resolve(__dirname, '../../index.html'),
+      resolve(__dirname, '../root.tsx'),
       'utf-8'
     );
     expect(source).toContain('localStorage.getItem("theme")');
     expect(source).toContain('classList.add("light")');
-    // The theme script must appear before the module script that boots React
+    // The theme script must appear before <Scripts /> which boots React
     const themeScriptPos = source.indexOf('localStorage.getItem("theme")');
-    const reactBootPos = source.indexOf('type="module"');
+    const scriptsPos = source.indexOf('<Scripts');
     expect(themeScriptPos).toBeGreaterThan(-1);
-    expect(reactBootPos).toBeGreaterThan(-1);
-    expect(themeScriptPos).toBeLessThan(reactBootPos);
+    expect(scriptsPos).toBeGreaterThan(-1);
+    expect(themeScriptPos).toBeLessThan(scriptsPos);
   });
 });

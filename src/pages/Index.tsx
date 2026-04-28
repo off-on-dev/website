@@ -1,6 +1,6 @@
 import { useEffect, type JSX } from "react";
-import { Helmet } from "react-helmet-async";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
+import type { MetaFunction } from "react-router";
 import { ArrowUpRight } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
@@ -11,9 +11,33 @@ import { BottomCTA } from "@/components/BottomCTA";
 import { Footer } from "@/components/Footer";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 
+export const meta: MetaFunction = () => {
+  const pageTitle = `${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`;
+  const desc = "A welcoming open source community. Learn through hands-on challenges to build skills. Share expertise and projects. Ask for help anytime.";
+  return [
+    { title: pageTitle },
+    { tagName: "link", rel: "canonical", href: `${SITE_URL}/` },
+    { name: "description", content: desc },
+    { property: "og:title", content: pageTitle },
+    { property: "og:description", content: desc },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: `${SITE_URL}/` },
+    { property: "og:image", content: `${SITE_URL}/og.png` },
+    { property: "og:image:width", content: "1200" },
+    { property: "og:image:height", content: "630" },
+    { property: "og:image:alt", content: pageTitle },
+    { property: "og:site_name", content: BRAND_NAME },
+    { property: "og:locale", content: "en_GB" },
+    { name: "twitter:title", content: pageTitle },
+    { name: "twitter:description", content: desc },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:image", content: `${SITE_URL}/og.png` },
+    { name: "twitter:image:alt", content: pageTitle },
+  ];
+};
+
 const Index = (): JSX.Element => {
   const { hash } = useLocation();
-  const pageTitle = `${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`;
 
   useEffect(() => {
     if (hash) {
@@ -26,26 +50,6 @@ const Index = (): JSX.Element => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>{pageTitle}</title>
-        <link rel="canonical" href={SITE_URL + "/"} />
-        <meta name="description" content="A welcoming open source community. Learn through hands-on challenges to build skills. Share expertise and projects. Ask for help anytime." />
-        <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content="A welcoming open source community. Learn through hands-on challenges to build skills. Share expertise and projects. Ask for help anytime." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={`${SITE_URL}/`} />
-        <meta property="og:image" content={`${SITE_URL}/og.png`} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content={pageTitle} />
-        <meta property="og:site_name" content={BRAND_NAME} />
-        <meta property="og:locale" content="en_GB" />
-        <meta name="twitter:title" content={pageTitle} />
-        <meta name="twitter:description" content="A welcoming open source community. Learn through hands-on challenges to build skills. Share expertise and projects. Ask for help anytime." />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
-        <meta name="twitter:image:alt" content={pageTitle} />
-      </Helmet>
       <Navbar />
       <main id="main-content">
         <Hero />

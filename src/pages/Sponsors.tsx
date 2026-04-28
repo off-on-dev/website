@@ -1,7 +1,7 @@
 import type { JSX } from "react";
+import type { MetaFunction } from "react-router";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
-import { Helmet } from "react-helmet-async";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
@@ -45,32 +45,36 @@ const supportWays = [
   },
 ];
 
+export const meta: MetaFunction = () => {
+  const pageTitle = `Sponsorship and Independence - ${BRAND_NAME}`;
+  const desc = `See how sponsorship supports ${BRAND_NAME} while the community remains independent, vendor-neutral, and member-driven.`;
+  return [
+    { title: pageTitle },
+    { tagName: "link", rel: "canonical", href: `${SITE_URL}/sponsors` },
+    { name: "description", content: desc },
+    { property: "og:title", content: pageTitle },
+    { property: "og:description", content: desc },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: `${SITE_URL}/sponsors` },
+    { property: "og:image", content: `${SITE_URL}/og.png` },
+    { property: "og:image:width", content: "1200" },
+    { property: "og:image:height", content: "630" },
+    { property: "og:image:alt", content: pageTitle },
+    { property: "og:site_name", content: BRAND_NAME },
+    { property: "og:locale", content: "en_GB" },
+    { name: "twitter:title", content: pageTitle },
+    { name: "twitter:description", content: desc },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:image", content: `${SITE_URL}/og.png` },
+    { name: "twitter:image:alt", content: pageTitle },
+  ];
+};
+
 const Sponsors = (): JSX.Element => {
   const { theme } = useTheme();
-  const pageTitle = `Sponsorship and Independence - ${BRAND_NAME}`;
 
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>{pageTitle}</title>
-        <link rel="canonical" href={SITE_URL + "/sponsors"} />
-        <meta name="description" content={`See how sponsorship supports ${BRAND_NAME} while the community remains independent, vendor-neutral, and member-driven.`} />
-        <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content={`See how sponsorship supports ${BRAND_NAME} while the community remains independent, vendor-neutral, and member-driven.`} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={`${SITE_URL}/sponsors`} />
-        <meta property="og:image" content={`${SITE_URL}/og.png`} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content={pageTitle} />
-        <meta property="og:site_name" content={BRAND_NAME} />
-        <meta property="og:locale" content="en_GB" />
-        <meta name="twitter:title" content={pageTitle} />
-        <meta name="twitter:description" content={`See how sponsorship supports ${BRAND_NAME} while the community remains independent, vendor-neutral, and member-driven.`} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
-        <meta name="twitter:image:alt" content={pageTitle} />
-      </Helmet>
       <Navbar />
       <main id="main-content">
       <PageHero

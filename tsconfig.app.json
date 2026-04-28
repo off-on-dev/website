@@ -30,6 +30,7 @@
     "useDefineForClassFields": true
   },
   "include": [
-    "src"
+    "src",
+    ".react-router/types/**/*"
   ]
 }

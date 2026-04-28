@@ -1,5 +1,5 @@
 import { defineConfig, type Plugin } from "vite";
-import react from "@vitejs/plugin-react-swc";
+import { reactRouter } from "@react-router/dev/vite";
 import path from "path";
 import { writeFileSync } from "node:fs";
 
@@ -90,34 +90,10 @@ export default defineConfig(() => ({
       overlay: false,
     },
   },
-  plugins: [react(), discourseDataPlugin()],
+  plugins: [reactRouter(), discourseDataPlugin()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
-    dedupe: ["react-helmet-async"],
-  },
-  ssgOptions: {
-    dirStyle: "nested",
-    includedRoutes: () => [
-      "/",
-      "/404",
-      "/sponsors",
-      "/about",
-      "/handbook",
-      "/privacy",
-      "/adventures/echoes-lost-in-orbit",
-      "/adventures/building-cloudhaven",
-      "/adventures/the-ai-observatory",
-      "/adventures/echoes-lost-in-orbit/levels/beginner",
-      "/adventures/echoes-lost-in-orbit/levels/intermediate",
-      "/adventures/echoes-lost-in-orbit/levels/expert",
-      "/adventures/building-cloudhaven/levels/beginner",
-      "/adventures/building-cloudhaven/levels/intermediate",
-      "/adventures/building-cloudhaven/levels/expert",
-      "/adventures/the-ai-observatory/levels/beginner",
-      "/adventures/the-ai-observatory/levels/intermediate",
-      "/adventures/the-ai-observatory/levels/expert",
-    ],
   },
 }));

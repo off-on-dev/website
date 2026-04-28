@@ -1,5 +1,5 @@
 import { useState, type JSX } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router";
 import { ArrowUpRight, Sun, Moon, Menu, X } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useTheme } from "@/hooks/useTheme";

@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { Cookie } from "lucide-react";
 import { useConsent } from "@/hooks/useConsent";
 
@@ -14,7 +14,7 @@ export function ConsentBanner(): JSX.Element {
         aria-label="Change cookie preferences"
         title="Change cookie preferences"
         style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 5rem)' }}
-        className="fixed right-4 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-muted-foreground shadow-md transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        className="fixed right-4 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-muted-foreground shadow-md transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
         <Cookie size={18} aria-hidden="true" />
       </button>
