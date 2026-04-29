@@ -30,7 +30,7 @@ Community activity happens on a separate Discourse instance. Its display name is
 - **Styling:** Tailwind CSS, configured via `tailwind.config.ts` and `src/index.css`.
 - **Components:** shadcn/ui (Radix UI primitives), live in `src/components/ui/`
 - **Routing:** React Router v7 framework mode (static prerendering with `ssr: false`)
-- **Testing:** Vitest + @testing-library/react
+- **Testing:** Vitest + @testing-library/react (unit/component); Playwright (smoke tests in `e2e/`)
 - **Hosting:** GitHub Pages
 - **PR previews:** pr-preview-action
 - **Node.js:** 22 is required. Version is pinned in `.nvmrc`. Run `nvm use` to switch automatically.
@@ -61,12 +61,14 @@ src/
   utils/        # Additional utility functions (e.g. stripHtml)
   assets/       # Static assets bundled by Vite
   Layout.tsx    # App shell: providers, skip nav, scroll-to-top, consent banner, and Outlet
+e2e/
+  smoke.spec.ts # Playwright smoke tests (requires npm run build first)
 public/
   fonts/        # Self-hosted fonts (Inter, Syne, JetBrains Mono)
 .github/
   workflows/
     deploy.yml  # Production deploy to GitHub Pages (push to main)
-    preview.yml # PR preview deploy
+    preview.yml # PR preview deploy (runs smoke tests before deploying)
 ```
 
 ---
@@ -81,6 +83,7 @@ npm run build:dev    # Dev-mode build
 npm run lint         # ESLint
 npm test             # Run tests once (Vitest)
 npm run test:watch   # Tests in watch mode
+npm run test:e2e     # Playwright smoke tests (requires npm run build first)
 npm run preview      # Serve the production build locally
 
 npx shadcn@latest add <component>   # Add a shadcn/ui component
@@ -366,6 +369,7 @@ Check the following on every component you write or modify.
   add a test that reads the component file and asserts it imports from the
   correct path and does not import from the wrong one.
 - Prerender tests live in `src/test/prerender.test.ts` and require a production build to exist. Always run `npm run build` before `npm test` if prerender tests are included. These tests assert that each prerendered index.html contains exactly one `<title>` tag with the correct page-specific content.
+- Playwright smoke tests live in `e2e/smoke.spec.ts` and also require a production build. Run `npm run build` then `npm run test:e2e`. These tests verify each prerendered route loads in a real browser without JS errors, that `main#main-content` is present, that hydration completed (theme toggle, consent banner, client-side navigation all work), and that the skip nav is the first Tab stop. When adding a new prerendered route, add it to the `ROUTES` array in `e2e/smoke.spec.ts`. Do not add Playwright tests for logic that Vitest already covers.
 
 ---
 

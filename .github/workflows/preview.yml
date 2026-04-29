@@ -12,7 +12,30 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  smoke:
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - run: npx playwright install --with-deps chromium
+
+      - run: npm run test:e2e
+
   preview:
+    needs: smoke
+    # Run on closed (smoke is skipped, preview cleans up) or when smoke passed.
+    # Never run when smoke failed.
+    if: always() && (needs.smoke.result == 'success' || needs.smoke.result == 'skipped')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

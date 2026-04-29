@@ -9,7 +9,8 @@ Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for op
 - **Tailwind CSS**: utility-first styling
 - **shadcn/ui**: accessible component primitives built on Radix UI
 - **React Router v7**: client-side routing with static prerendering
-- **Vitest**: unit testing
+- **Vitest**: unit and component testing
+- **Playwright**: browser smoke tests (`e2e/`)
 - **GitHub Pages**: hosting and deployment
 
 ## Getting Started
@@ -37,8 +38,9 @@ Node.js **22** is required. Version is pinned in `.nvmrc`, run `nvm use` to swit
 | `npm run build:dev` | Dev-mode build (source maps, no minification) |
 | `npm run preview` | Serve the production build locally |
 | `npm run lint` | Run ESLint across the project |
-| `npm test` | Run the full test suite once |
+| `npm test` | Run the full test suite once (Vitest) |
 | `npm run test:watch` | Run tests in watch mode |
+| `npm run test:e2e` | Playwright smoke tests (requires `npm run build` first) |
 
 Run `npm run lint` and `npm test` before marking any work done.
 
@@ -54,12 +56,14 @@ src/
   data/           # Static content as typed TypeScript objects and arrays
   hooks/          # Custom React hooks
   lib/            # Shared utilities
-  test/           # Vitest + Testing Library test files
+  test/           # Vitest + Testing Library unit and component tests
   root.tsx        # HTML shell rendered by React Router v7 (replaces index.html)
   routes.ts       # Route definitions (React Router v7 config-based routing)
   entry.client.tsx  # Client entry: hydrates the full document via HydratedRouter
   entry.server.tsx  # Server/prerender entry: renderToString for static HTML generation
   Layout.tsx      # App shell with all providers and Outlet
+e2e/
+  smoke.spec.ts   # Playwright smoke tests (requires npm run build first)
 public/
   fonts/          # Self-hosted Inter, Syne, and JetBrains Mono font files
   sitemap.xml
