@@ -32,7 +32,7 @@ Subset coverage (via `unicode-range` in `src/index.css` -- only the needed subse
 
 ### Font preload
 
-Five fonts are preloaded in `index.html` to avoid the three-level font discovery delay (HTML parse → CSS parse → font file request):
+Five fonts are preloaded via the `links()` export in `src/root.tsx` to avoid the three-level font discovery delay (HTML parse → CSS parse → font file request):
 
 - `inter-latin-400-normal.woff2`, used by body text
 - `inter-latin-500-normal.woff2`, used by body medium weight
@@ -40,7 +40,7 @@ Five fonts are preloaded in `index.html` to avoid the three-level font discovery
 - `inter-latin-700-normal.woff2`, used by bold body text
 - `syne-latin-700-normal.woff2`, used by headings
 
-Only Latin subset variants are preloaded. Other subsets are served from `public/fonts/` but are not preloaded. Check `index.html` for the current preload list and update it whenever above-the-fold typography changes.
+Only Latin subset variants are preloaded. Other subsets are served from `public/fonts/` but are not preloaded. Check the `links()` export in `src/root.tsx` for the current preload list and update it whenever above-the-fold typography changes.
 
 ### Tailwind font utilities
 
@@ -62,6 +62,23 @@ Only Latin subset variants are preloaded. Other subsets are served from `public/
 | Overline label | `font-sans text-sm font-medium uppercase tracking-widest` | Inter |
 | Badge / tag | `font-mono text-xs uppercase tracking-wider` | JetBrains Mono |
 
+### Copy casing
+
+**UI labels (buttons, CTAs, headings, card titles, nav links) use title case (Chicago style).** Body copy and descriptions use sentence case.
+
+Title case rule: capitalise every word except articles (a, an, the), prepositions under five letters (by, in, on, of, to, for, at), and coordinating conjunctions (and, but, or, nor) — unless they open the label.
+
+| Context | Case | Example |
+|---|---|---|
+| Button / CTA label | Title case | `"Join the Community"`, `"Start a Challenge"` |
+| Section heading (h2/h3) | Title case | `"Find Challenges by Technology"`, `"Share and Learn Together"` |
+| Card / value title | Title case | `"Learn by Doing"`, `"Open Source First"` |
+| Footer / nav link text | Title case | `"Propose an Adventure Idea"` |
+| Body paragraph / description | Sentence case | `"A vendor-neutral space for open source practitioners."` |
+| Overline label (CSS uppercase) | Write in lowercase, CSS transforms it | Source: `"adventures"` → renders as `"ADVENTURES"` |
+
+See CLAUDE.md → Content and Copy → Capitalisation for the full rule and examples.
+
 ---
 
 ## Colors
@@ -69,6 +86,8 @@ Only Latin subset variants are preloaded. Other subsets are served from `public/
 All color tokens are CSS custom properties defined in `src/index.css` and exposed as Tailwind utilities via `tailwind.config.ts`. Always use the Tailwind class that references the token; never hardcode hex values.
 
 ### Dark Mode (default, `:root, .dark`)
+
+> **Heading color in dark mode:** `h1`–`h6` receive `color: hsl(var(--primary))` (amber) via a `@layer base` rule in `src/index.css`. This is intentional: headings stand out from body text in the dark theme. Light mode overrides this to `hsl(var(--foreground))` via `.light h1–h6` in the unlayered section.
 
 | Token | HSL | Approx hex | Usage |
 |---|---|---|---|
@@ -122,38 +141,47 @@ All color tokens are CSS custom properties defined in `src/index.css` and expose
 | `--teal` | `38 100% 58%` | Secondary warm accent |
 | `--purple` | `32 100% 52%` | Tertiary warm accent |
 
-#### Difficulty badges (dark)
+#### Difficulty badges
 
-| Token | HSL | Color |
-|---|---|---|
-| `--difficulty-starter` | `41 100% 60%` | Amber/yellow |
-| `--difficulty-builder` | `85 48% 56%` | Green |
-| `--difficulty-architect` | `245 45% 79%` | Lavender/purple |
+Used for avatar tints in `DiscussionSection` (at `/0.2` opacity) and as semantic color anchors for the difficulty visual language. The `-bg` and `-border` tokens (used by `DifficultyBadge`) share the same hue families.
+
+| Token | Dark HSL | Light HSL | Color |
+|---|---|---|---|
+| `--difficulty-starter` | `41 100% 60%` | `41 100% 80%` | Amber/yellow |
+| `--difficulty-builder` | `85 48% 56%` | `85 48% 75%` | Green |
+| `--difficulty-architect` | `245 45% 79%` | `245 45% 85%` | Lavender/purple |
 
 ---
 
 ### Light Mode (`.light`)
 
-| Token | Value | Hex | Notes |
+The light mode uses a barely-cool background palette. The slight cool/warm contrast between the background and amber accents is intentional — it mirrors how dark mode works (near-black vs warm amber), just inverted and far more subtle. `bg-primary` sections (PageHero, BottomCTA) stay amber in light mode — they do not flip to black.
+
+| Token | Value | Approx hex | Notes |
 |---|---|---|---|
-| Background | `hsl(230 100% 99%)` | `#FAFBFF` | |
-| Surface/card | `hsl(230 100% 98%)` | `#F5F7FF` | |
-| Surface hover | `hsl(225 100% 97%)` | `#F0F4FF` | |
-| Primary accent | `hsl(41 100% 60%)` | `#ffc034` | Fill only, never text |
-| Primary foreground | `hsl(0 0% 0%)` | `#000000` | Text on yellow |
-| Foreground/body | `hsl(240 30% 6%)` | `#0A0B14` | |
-| Headings | `hsl(0 0% 0%)` | `#000000` | |
-| Muted text | `hsl(0 0% 29%)` | `#4A4A4A` | |
-| Border | `hsl(230 20% 85%)` | | |
-| Badge: Beginner | `#ffe2a3` | | Black text |
-| Badge: Intermediate | `hsl(41 100% 76%)` | | Black text |
-| Badge: Expert | `hsl(41 100% 68%)` | | Black text |
+| Background | `hsl(220 12% 98%)` | `#F8F9FB` | Barely-cool off-white |
+| Surface/card | `hsl(220 10% 96%)` | `#F4F5F7` | Slightly deeper card |
+| Surface hover | `hsl(220 8% 93%)` | `#ECEEF1` | Hover state |
+| Primary accent | `hsl(41 100% 60%)` | `#ffc034` | Fill/border only, never text |
+| Primary foreground | `hsl(0 0% 0%)` | `#000000` | Text on amber fills |
+| Foreground/body | `hsl(240 25% 8%)` | `#0D0D17` | Deep navy (`--foreground`) |
+| Foreground hover | `hsl(240 25% 5%)` | | Slightly deeper than foreground, used for link/nav hover (`--foreground-hover`) |
+| Headings | `hsl(240 25% 8%)` | `#0D0D17` | Overrides dark mode primary-colored headings (via `.light h1–h6`) |
+| Muted text | `hsl(35 8% 38%)` | `#655E55` | Warm gray (intentional warm/cool contrast) |
+| Border | `hsl(220 12% 87%)` | `#D8DBE2` | Cool border |
+| Badge: Beginner | `hsl(41 80% 85%)` | | Black text |
+| Badge: Intermediate | `hsl(85 40% 82%)` | | Black text |
+| Badge: Expert | `hsl(245 40% 87%)` | | Black text |
 
 #### `.light` override strategy
 
 Yellow (`hsl(41 100% 60%)`) is the global `--primary` color and is safe as a fill or border. It must **never** be used as a text color in light mode because it fails contrast requirements.
 
-All `text-primary` usages are overridden to black (`#000000`) in light mode via unlayered CSS rules at the bottom of `src/index.css`, scoped to `.light`. These rules must **not** be placed inside `@layer base`. Rules inside `@layer base` are always overridden by `@layer utilities` regardless of specificity, so the override would be silently ignored. Keeping the overrides unlayered gives them the specificity needed to win against utility classes.
+All `text-primary` usages are overridden to `hsl(var(--foreground))` (deep warm navy) in light mode via unlayered CSS rules at the bottom of `src/index.css`, scoped to `.light`. These rules must **not** be placed inside `@layer base`. Rules inside `@layer base` are always overridden by `@layer utilities` regardless of specificity, so the override would be silently ignored. Keeping the overrides unlayered gives them the specificity needed to win against utility classes.
+
+#### `bg-primary` sections in light mode
+
+In light mode, `bg-primary` sections (PageHero, BottomCTA) stay amber. Do **not** add a `background-color: black` override. Body text inside those sections uses `text-background/90` which resolves to the cream background color and must be overridden to dark navy in `.light .bg-primary .text-background\/90`.
 
 ---
 
@@ -173,7 +201,7 @@ All `text-primary` usages are overridden to black (`#000000`) in light mode via 
 
 Never place any button directly on a `bg-primary` background using `.btn-primary` or `.btn-ghost`. Those classes are designed for page-background contexts and will produce yellow text on yellow background in light mode.
 
-For buttons inside `bg-primary` sections (e.g. `PageHero`, `BottomCTA`), always use `.btn-inverse` or `.btn-ghost-inverse`. The `.light .bg-primary .btn-inverse` and `.light .bg-primary .btn-ghost-inverse` rules in `src/index.css` (unlayered section) enforce correct contrast: black text on yellow fill at rest, yellow text on black fill on hover.
+For buttons inside `bg-primary` sections (e.g. `PageHero`, `BottomCTA`), always use `.btn-inverse` or `.btn-ghost-inverse`. Since the section stays amber in light mode, the unlayered overrides in `src/index.css` set `.btn-inverse` to black background with amber text (reversal), and `.btn-ghost-inverse` to transparent with a dark border and dark text.
 
 Never add a `bg-primary` section button without adding or verifying the corresponding `.light .bg-primary .btn-*` override in the unlayered section of `src/index.css`.
 
@@ -182,9 +210,9 @@ Never add a `bg-primary` section button without adding or verifying the correspo
 | Class | Style |
 |---|---|
 | `.pill-active` | `rounded-full bg-primary/10 border-primary/50 text-primary` |
-| `.pill-inactive` | `rounded-full bg-transparent border-surface-border text-text-secondary` |
+| `.pill-inactive` | `rounded-full bg-transparent border-surface-border text-text-secondary`; hover: `border-primary/60 text-primary bg-primary/5` with electric glow |
 
-Both use `px-4 py-1.5 text-sm font-medium leading-none inline-flex items-center` and include `focus-visible` ring styles.
+Both use `px-4 py-1.5 text-sm font-medium leading-none inline-flex items-center gap-1.5` and include `focus-visible` ring styles (`ring-ring`).
 
 ### Difficulty Badges
 
@@ -204,8 +232,8 @@ Link hover and active states use an underline that is always rendered in the DOM
 
 | State | Classes |
 |---|---|
-| Default | `underline decoration-transparent underline-offset-2 transition-colors duration-200` |
-| Hover | `hover:decoration-primary/60` |
+| Default | `underline decoration-transparent decoration-[3px] underline-offset-4 transition-colors` |
+| Hover | `hover:text-primary` |
 | Active / current route | `text-primary underline decoration-primary underline-offset-4` |
 
 The active state uses both a color change (`text-primary`) and a visible underline (`decoration-primary`) so the indicator is not color-only (WCAG 1.4.1). In light mode, `text-primary` is overridden to `hsl(var(--foreground-hover))` via `.light nav a.text-primary` in `src/index.css`.
@@ -256,7 +284,7 @@ Light mode: no background texture.
 
 ### Firefly particles
 
-`.firefly` - 3×3 px dot with `box-shadow` glow in `--primary` color, animated with `fireflyFloat` (8 particles, varying `animation-duration` 6.5–11 s and `animation-delay`).
+`.firefly` - 2×2 px dot with `box-shadow` glow in `--primary` color, animated with `fireflyFloat` (8 particles, varying `animation-duration` 6.5–11 s and `animation-delay`). In light mode, `.light .firefly` reduces to 1.5×1.5 px and uses `--firefly-color` (`41 100% 45%`, slightly darker amber) for contrast against the light background.
 
 ---
 
@@ -494,6 +522,31 @@ Renders a single adventure level as a card: difficulty badge, level name, key le
 
 ---
 
+### `FilteredLevelCard`
+
+`src/components/FilteredLevelCard.tsx`
+
+Navigation card used in tag-filtered level grids. The entire card is a `<Link>` to the challenge detail page. Renders a difficulty badge, level name, first three learnings, and a footer row with "Challenge" label and the parent adventure title.
+
+```tsx
+<FilteredLevelCard
+  level={level}
+  adventureId={adventureId}
+  adventureTitle={adventureTitle}
+/>
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `level` | `AdventureLevel` | required | Level data from `src/data/adventures.ts` |
+| `adventureId` | `string` | required | Used to build the link href: `/adventures/:id/levels/:levelId` |
+| `adventureTitle` | `string` | required | Shown in the card footer as a tag label |
+| `className` | `string?` | — | Merged onto the root `<Link>` via `cn()`. Pass `"animate-fade-up-delay-1"` when the card is in a staggered grid. |
+
+Distinct from `LevelCard`: `FilteredLevelCard` is a router link used in listing/filter contexts; `LevelCard` is a static card used on detail pages and includes the GitHub Codespaces CTA.
+
+---
+
 ### `AboutSection`
 
 `src/components/AboutSection.tsx`
@@ -534,33 +587,65 @@ Uses `aria-live="polite"` so screen readers announce the age values when they up
 
 ---
 
+### `TechFilterSection`
+
+`src/components/TechFilterSection.tsx`
+
+Self-contained technology filter used on `AdventureDetail` and `ChallengeDetail` pages. Renders a row of filter pills (one per unique tag across all adventures) and a grid of matching challenge cards when a tag is selected.
+
+```tsx
+<TechFilterSection />
+```
+
+No props. Owns its own `activeTech` state internally. `ALL_TAGS` is imported from `src/data/adventures.ts` (computed once at module load; shared with `ChallengesGrid`). The results grid only renders when a tag is active and at least one matching level exists. Wraps results in `aria-live="polite"` so screen readers announce updates.
+
+The challenge cards in the results grid are rendered via `FilteredLevelCard` with `className="animate-fade-up-delay-1"` (see `FilteredLevelCard` in the Components section).
+
+---
+
+### `ChallengesGrid`
+
+`src/components/ChallengesGrid.tsx`
+
+Renders the full adventure listing with a technology tag filter. Used on the home page (`Index.tsx`) and the dedicated adventures listing page (`Adventures.tsx`).
+
+```tsx
+<ChallengesGrid />
+```
+
+No props. Owns its own `activeTopic` state internally.
+
+**Two display modes:**
+
+- **No tag selected (default):** renders one `AdventureCard` per adventure. Each card links to `/adventures/:id` and carries `aria-label={adventure.title}`.
+- **Tag selected:** replaces adventure cards with a grid of `FilteredLevelCard` instances (one per matching level across all adventures). Each card links to `/adventures/:id/levels/:levelId`. Wrapped in `aria-live="polite"` so screen readers announce updates.
+
+The filter chips use `role="group"` with `aria-label="Filter challenges by technology"`. Clicking an active chip deselects it and returns to the adventure card view. The `aria-live` region is only mounted when a tag is active.
+
+**Important:** the Technology Filter Pattern in the Patterns section documents the shared state logic. `AdventureDetail` and `ChallengeDetail` use `TechFilterSection` for the same filter — do not add a second instance of `ChallengesGrid` on those pages.
+
+---
+
 ## Patterns
 
 ### Inline Challenge Card
 
-Used in `ChallengesGrid`, `AdventureDetail`, and `ChallengeDetail` when filtering challenges by technology tag.
+Use `FilteredLevelCard` (see Components section). Do not inline the card markup. The component handles all classes, accessibility attributes, and structure.
 
-Cards use `flex flex-col` so `mt-auto` works on the bottom row. Standard classes:
-
-```
-card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6
-transition-all duration-200 hover:-translate-y-[3px] flex flex-col
-focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2
-```
-
-Bottom row layout:
-
-```
-mt-auto pt-4 flex flex-wrap gap-1.5 items-center justify-between
+```tsx
+<FilteredLevelCard
+  level={level}
+  adventureId={adventureId}
+  adventureTitle={adventureTitle}
+  className="animate-fade-up-delay-1"  {/* optional — omit when no stagger needed */}
+/>
 ```
 
-Inside the bottom row:
-- Left: `<span className="font-mono text-xs text-muted-foreground">Challenge</span>`
-- Right: `<span className="rounded-sm border border-[hsl(var(--surface-border))] px-2 py-0.5 text-xs text-[hsl(var(--text-faint))]">{adventureTitle}</span>`
+Used in `ChallengesGrid` and `TechFilterSection` (and wherever a tag-filtered level result grid is needed). Each card is a `<Link>` to `/adventures/:id/levels/:levelId`.
 
 ### Technology Filter Pattern
 
-Used on the home page (`ChallengesGrid`), `AdventureDetail`, and `ChallengeDetail` to filter challenge cards by technology tag.
+Used on the home page (`ChallengesGrid`) and on adventure/challenge detail pages via the `TechFilterSection` component. `AdventureDetail` and `ChallengeDetail` must use `<TechFilterSection />` — do not inline this pattern in those pages again.
 
 ```ts
 const [activeTech, setActiveTech] = useState<string | null>(null);
@@ -571,6 +656,37 @@ const [activeTech, setActiveTech] = useState<string | null>(null);
 - Clicking an already-active chip deselects it: `setActiveTech(activeTech === tag ? null : tag)`.
 - No URL change and no page navigation occur on selection.
 - The filtered results grid only renders when `activeTech` is non-null and results exist.
+
+---
+
+## Utilities
+
+### `buildPageMeta`
+
+`src/lib/meta.ts`
+
+Generates the standard meta tag array for a page's `meta()` export. Covers `title`, canonical link, `description`, all `og:*` tags, and all `twitter:*` tags with the site's standard OG image.
+
+```ts
+import { buildPageMeta } from "@/lib/meta";
+
+export const meta: MetaFunction = () =>
+  buildPageMeta({
+    title: "Page Title - OffOn",
+    description: "Under 160 characters.",
+    url: `${SITE_URL}/path`,
+  });
+```
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `title` | `string` | required | Page title and `og:title` / `twitter:title` |
+| `description` | `string` | required | Meta description and `og:description` / `twitter:description` |
+| `url` | `string` | required | Canonical URL and `og:url` |
+| `ogType` | `string?` | `"website"` | `og:type` value. Use `"article"` for adventure and challenge pages. |
+| `extra` | `MetaDescriptor[]?` | `[]` | Additional tags appended after the standard set (e.g. `{ name: "robots", content: "noindex" }` for `Privacy`). |
+
+Every page's `meta()` must use this function. Do not inline the og/twitter tag block manually.
 
 ---
 
@@ -664,9 +780,50 @@ A utility class for decorative overline labels that appear above section heading
 
 Applied as: `font-sans text-sm font-medium uppercase tracking-widest text-primary section-label`
 
-Used on `<span>` elements in: `CommunityVoicesSection`, `ConnectSection`, `ChallengesGrid`, `CommunityGuide`, `NotFound`.
+Used on `<span>` elements in: `CommunityVoicesSection`, `ConnectSection`, `ChallengesGrid`, `NotFound`.
 
 **Light mode override:** `.light .section-label` in the unlayered section of `src/index.css` sets `color: hsl(240 20% 9%)` (near-black) so the label does not render as yellow text in light mode.
+
+---
+
+### `.docs-ext-link`
+
+A styled external link class for inline prose links in `CommunityGuide.tsx`. Combines an underline treatment (decoration-2 underline-offset-2) with focus-visible ring and transitions.
+
+**Dark mode:** foreground text, `--primary`-colored underline. Hover softens both to `primary / 0.75`.
+**Light mode:** foreground text with `currentColor` underline. Hover shifts text and underline to `--muted-foreground`.
+
+```ts
+const extLink = "docs-ext-link inline-flex items-center gap-1 underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
+```
+
+---
+
+### `.badge-levels`
+
+Inline pill used in `ChallengesGrid.tsx` adventure cards to show the number of levels. Styled as a mono-font uppercase tag with amber fill in light mode.
+
+```tsx
+<span className="badge-levels inline-flex items-center gap-1.5 rounded-sm border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-xs uppercase tracking-wider text-primary">
+  <Layers size={11} aria-hidden="true" /> {n} levels
+</span>
+```
+
+Light mode override: `.light .badge-levels` sets black text on amber background so it remains legible. Excluded from the broad `.light span.text-primary:not(.badge-levels)` reset — it intentionally keeps its amber styling.
+
+---
+
+### `.bg-primary` focus ring override
+
+Any element with `bg-primary` (PageHero, BottomCTA) overrides `--ring` to black (`0 0% 0%`) so that focus rings remain visible against the amber background in both modes. This is defined as an unlayered rule in `src/index.css`:
+
+```css
+.bg-primary {
+  --ring: 0 0% 0%;
+}
+```
+
+Never place a `bg-primary` section without verifying that focusable children inherit this black ring value.
 
 ---
 
@@ -674,11 +831,11 @@ Used on `<span>` elements in: `CommunityVoicesSection`, `ConnectSection`, `Chall
 
 ### Lighthouse scores (production build)
 
-Measured against the production build at https://offon.dev.
+Measured against the production build locally (`npm run build && npm run preview`). Minimum acceptable score: 90 for all categories.
 
 | Category | Score |
 |---|---|
-| Performance | 96 |
+| Performance | 90 |
 | Accessibility | 100 |
 | Best Practices | 100 |
 | SEO | 100 |

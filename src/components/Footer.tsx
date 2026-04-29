@@ -19,10 +19,8 @@ export const Footer = (): JSX.Element => {
           <div className="mb-4">
             <img src={theme === "dark" ? logoDark : logoLight} alt="offon.dev" width={104} height={26} loading="lazy" title="offon.dev" className="h-5" />
           </div>
-          <p className="flex flex-col font-sans text-sm text-[hsl(var(--text-secondary))] leading-relaxed md:max-w-xs">
-            <span>A welcoming community</span>
-            <span>for open source enthusiasts to</span>
-            <span>learn, share knowledge, and build together.</span>
+          <p className="font-sans text-sm text-[hsl(var(--text-secondary))] leading-relaxed md:max-w-xs">
+            A vendor-neutral space for open source practitioners to learn through challenges, share what they know, and grow together.
           </p>
         </div>
 
@@ -32,11 +30,11 @@ export const Footer = (): JSX.Element => {
             <nav aria-label="Explore">
               <p className="text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">Explore</p>
               <div className="flex flex-col">
-                <Link to="/#challenges" className={lnk}>Adventures</Link>
+                <Link to="/adventures" className={lnk}>Adventures</Link>
                 <Link to="/handbook" className={lnk}>Handbook</Link>
                 <Link to="/about" className={lnk}>About</Link>
                 <Link to="/sponsors" className={lnk}>Sponsors</Link>
-                <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" target="_blank" rel="noopener noreferrer" className={lnk}>Propose an adventure idea<span className="sr-only"> (opens in new tab)</span></a>
+                <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" target="_blank" rel="noopener noreferrer" className={lnk}>Propose an Adventure Idea<span className="sr-only"> (opens in new tab)</span></a>
               </div>
             </nav>
             {/* Community */}
@@ -45,7 +43,6 @@ export const Footer = (): JSX.Element => {
               <div className="flex flex-col">
                 <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className={lnk}>Hub<span className="sr-only"> (opens in new tab)</span></a>
                 <a href={`${COMMUNITY_URL}/c/community-voices/38`} target="_blank" rel="noopener noreferrer" className={lnk}>Community Voices<span className="sr-only"> (opens in new tab)</span></a>
-                <a href={`${COMMUNITY_URL}/c/challenges/11`} target="_blank" rel="noopener noreferrer" className={lnk}>Challenges<span className="sr-only"> (opens in new tab)</span></a>
                 <a href={`${COMMUNITY_URL}/c/general/q-a/10`} target="_blank" rel="noopener noreferrer" className={lnk}>Q&A<span className="sr-only"> (opens in new tab)</span></a>
                 <a href={`${COMMUNITY_URL}/t/code-of-conduct/31/1`} target="_blank" rel="noopener noreferrer" className={lnk}>Code of Conduct<span className="sr-only"> (opens in new tab)</span></a>
                 <a href={`${COMMUNITY_URL}/t/posting-guidelines/30`} target="_blank" rel="noopener noreferrer" className={lnk}>Posting Guidelines<span className="sr-only"> (opens in new tab)</span></a>

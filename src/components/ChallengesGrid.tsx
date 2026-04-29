@@ -1,15 +1,15 @@
 import { useState, type JSX } from "react";
 import { Link } from "react-router";
-import { ADVENTURES, Adventure } from "@/data/adventures";
+import { ADVENTURES, ALL_TAGS, Adventure } from "@/data/adventures";
 import { Layers } from "lucide-react";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
-
-const allTags = Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort();
+import { FilteredLevelCard } from "@/components/FilteredLevelCard";
 
 /** Card for a full adventure (all 3 levels) */
 const AdventureCard = ({ adventure }: { adventure: Adventure }): JSX.Element => (
   <Link
     to={`/adventures/${adventure.id}`}
+    aria-label={adventure.title}
     className="group card-glow relative rounded-xl border-2 border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
   >
     <div className="flex items-center justify-between mb-3">
@@ -58,19 +58,19 @@ export const ChallengesGrid = (): JSX.Element => {
     : [];
 
   return (
-    <section id="challenges" className="py-24 px-6">
+    <section id="challenges" className="py-24 px-6 md:px-16">
       <div className="mx-auto max-w-6xl">
         <div>
             <div className="animate-fade-up mb-3">
               <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">Adventures</span>
             </div>
             <h2 className="animate-fade-up-delay-1 mb-6 text-3xl font-bold text-primary md:text-4xl">
-              Choose your adventure
+              Choose Your Adventure
             </h2>
 
             {/* Topic filter chips */}
-            <div className="animate-fade-up-delay-1 mb-8 flex flex-wrap items-center gap-2">
-              {allTags.map((tag) => (
+            <div role="group" aria-label="Filter challenges by technology" className="animate-fade-up-delay-1 mb-8 flex flex-wrap items-center gap-2">
+              {ALL_TAGS.map((tag) => (
                 <button
                   key={tag}
                   type="button"
@@ -91,32 +91,12 @@ export const ChallengesGrid = (): JSX.Element => {
                 </p>
                 <div key={activeTopic} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
                   {filteredLevels.map(({ level, adventureId, adventureTitle }) => (
-                    <Link
+                    <FilteredLevelCard
                       key={`${adventureId}-${level.id}`}
-                      to={`/adventures/${adventureId}/levels/${level.id}`}
-                      className="group card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    >
-                      <div className="mb-3">
-                        <DifficultyBadge difficulty={level.difficulty} showDot />
-                      </div>
-                      <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
-                        {level.name}
-                      </h3>
-                      <ul className="mt-3 space-y-1.5">
-                        {level.learnings.slice(0, 3).map((learning, i) => (
-                          <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                            {learning}
-                          </li>
-                        ))}
-                      </ul>
-                      <div className="mt-auto pt-4 flex flex-wrap gap-1.5 items-center justify-between">
-                        <span className="font-mono text-xs text-muted-foreground">Challenge</span>
-                        <span className="rounded-sm border border-[hsl(var(--surface-border))] px-2 py-0.5 text-xs text-[hsl(var(--text-faint))]">
-                          {adventureTitle}
-                        </span>
-                      </div>
-                    </Link>
+                      level={level}
+                      adventureId={adventureId}
+                      adventureTitle={adventureTitle}
+                    />
                   ))}
                 </div>
                 </div>

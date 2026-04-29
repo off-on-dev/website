@@ -3,50 +3,35 @@ import type { MetaFunction } from "react-router";
 import { Navbar } from "@/components/Navbar";
 import { ArrowUpRight } from "lucide-react";
 import { Footer } from "@/components/Footer";
+import { PageHero } from "@/components/PageHero";
+import { BottomCTA } from "@/components/BottomCTA";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME } from "@/data/constants";
+import { buildPageMeta } from "@/lib/meta";
 
 const extLink = "docs-ext-link inline-flex items-center gap-1 underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
 
-export const meta: MetaFunction = () => {
-  const pageTitle = `Handbook - ${BRAND_NAME}`;
-  const desc = `Everything you need to participate and grow in the ${BRAND_NAME} community: quick start, docs, policies, and how to get involved.`;
-  return [
-    { title: pageTitle },
-    { tagName: "link", rel: "canonical", href: `${SITE_URL}/handbook` },
-    { name: "description", content: desc },
-    { property: "og:title", content: pageTitle },
-    { property: "og:description", content: desc },
-    { property: "og:type", content: "website" },
-    { property: "og:url", content: `${SITE_URL}/handbook` },
-    { property: "og:image", content: `${SITE_URL}/og.png` },
-    { property: "og:image:width", content: "1200" },
-    { property: "og:image:height", content: "630" },
-    { property: "og:image:alt", content: pageTitle },
-    { property: "og:site_name", content: BRAND_NAME },
-    { property: "og:locale", content: "en_GB" },
-    { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:title", content: pageTitle },
-    { name: "twitter:description", content: desc },
-    { name: "twitter:image", content: `${SITE_URL}/og.png` },
-    { name: "twitter:image:alt", content: pageTitle },
-  ];
-};
+export const meta: MetaFunction = () =>
+  buildPageMeta({
+    title: `Handbook - ${BRAND_NAME}`,
+    description: `Everything you need to participate in the ${BRAND_NAME} community. Getting started, posting guidelines, vendor-agnostic policy, and community challenges.`,
+    url: `${SITE_URL}/handbook`,
+  });
 
 const CommunityGuide = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main id="main-content" className="mx-auto max-w-3xl px-6 pt-28 pb-24">
+      <main id="main-content">
+      <PageHero
+        eyebrow="Handbook"
+        title="Everything You Need to Participate"
+        description={`Everything you need to get started, participate, and grow in the ${BRAND_NAME} community.`}
+        primaryCta={{ label: <span className="inline-flex items-center gap-2">Meet the Community <ArrowUpRight size={14} aria-hidden="true" /></span>, href: COMMUNITY_URL, external: true }}
+      />
 
-        <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">Handbook</span>
-        <h1 className="mt-3 text-4xl font-bold text-foreground md:text-5xl">
-          Handbook
-        </h1>
-        <p className="mt-5 text-lg text-[hsl(var(--text-secondary))] leading-relaxed">
-          Everything you need to get started, participate, and grow in the {BRAND_NAME} community.
-        </p>
-
-        <div className="mt-12 space-y-12">
+      <div className="px-6 md:px-16 py-16">
+      <div className="mx-auto max-w-6xl">
+        <div className="max-w-3xl space-y-12">
 
           {/* Quick Start */}
           <section aria-labelledby="quick-start">
@@ -90,7 +75,7 @@ const CommunityGuide = (): JSX.Element => {
                   {[
                     { label: "Code of Conduct", href: `${COMMUNITY_URL}/t/code-of-conduct/31` },
                     { label: "FAQ and Guidelines", href: `${COMMUNITY_URL}/t/faq-guidelines/4` },
-                    { label: "Privacy Policy", href: `${COMMUNITY_URL}/t/privacy-policy/22` },
+                    { label: "Community Privacy Policy", href: `${COMMUNITY_URL}/t/privacy-policy/22` },
                   ].map((item) => (
                     <li key={item.label} className="flex items-center gap-2.5 text-sm">
                       <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
@@ -106,8 +91,8 @@ const CommunityGuide = (): JSX.Element => {
                 <h3 className="text-base font-semibold text-foreground mb-2">Challenges</h3>
                 <ul className="space-y-1.5">
                   {[
-                    { label: "Browse adventures", href: `${COMMUNITY_URL}/c/challenges/11` },
-                    { label: "Propose an adventure idea", href: "https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" },
+                    { label: "Browse Adventures", href: `${COMMUNITY_URL}/c/challenges/11` },
+                    { label: "Propose an Adventure Idea", href: "https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" },
                   ].map((item) => (
                     <li key={item.label} className="flex items-center gap-2.5 text-sm">
                       <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
@@ -124,7 +109,7 @@ const CommunityGuide = (): JSX.Element => {
 
           {/* Vendor-agnostic Policy */}
           <section aria-labelledby="vendor-agnostic">
-            <h2 id="vendor-agnostic" className="text-2xl font-bold text-foreground mb-3">Vendor-agnostic Policy</h2>
+            <h2 id="vendor-agnostic" className="text-2xl font-bold text-foreground mb-3">Vendor-Agnostic Policy</h2>
             <p className="text-base text-[hsl(var(--text-secondary))] leading-relaxed">
               {BRAND_NAME} is vendor-agnostic. Technical product mentions are welcome when neutral and reproducible. Avoid promotional content. Marketing posts will be removed and repeated violations may lead to moderation actions. See{" "}
               <a href={`${COMMUNITY_URL}/t/posting-guidelines/30`} target="_blank" rel="noopener noreferrer" className={extLink}>
@@ -154,13 +139,9 @@ const CommunityGuide = (): JSX.Element => {
 
         </div>
 
-        {/* Footer nav */}
-        <div className="mt-16 pt-8 border-t border-[hsl(var(--surface-border))]">
-          <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">
-            Open the community <ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-          </a>
-        </div>
-
+      </div>
+      </div>
+      <BottomCTA />
       </main>
       <Footer />
     </div>

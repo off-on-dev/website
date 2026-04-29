@@ -1,21 +1,20 @@
 import type { JSX } from "react";
 import type { MetaFunction } from "react-router";
 import { Link } from "react-router";
-import { ArrowUpRight } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { SITE_URL, BRAND_NAME, COMMUNITY_URL } from "@/data/constants";
+import { SITE_URL, BRAND_NAME } from "@/data/constants";
 
 const links = [
   {
     label: "Handbook",
-    desc: "Everything you need to get started, participate, and grow in the community.",
+    desc: "Your guide to getting started, posting, and growing in the community.",
     to: "/handbook",
   },
   {
     label: "Adventures",
     desc: "Browse hands-on challenges with real-world scenarios.",
-    to: "/#challenges",
+    to: "/adventures",
   },
   {
     label: "About",
@@ -54,40 +53,43 @@ const NotFound = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main id="main-content" className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
-        <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary mb-4">404</span>
-        <h1 className="text-4xl font-bold text-foreground mb-3">Page not found</h1>
-        <p className="text-muted-foreground mb-2 max-w-sm leading-relaxed">
-          This is not the page you were looking for.
-        </p>
-        <p className="text-muted-foreground mb-10 max-w-sm leading-relaxed">
-          Please check the links below for more information.
-        </p>
+      <main id="main-content" className="flex min-h-[80vh] items-center px-6 md:px-16 py-20">
+        <div className="mx-auto max-w-6xl w-full">
 
-        <nav aria-label="Helpful links">
-          <ul className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10 text-left max-w-2xl w-full">
-            {links.map((link) => (
-              <li key={link.label}>
-                <Link
-                  to={link.to}
-                  className="card-glow flex flex-col gap-1.5 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5 h-full hover:border-primary/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                >
-                  <span className="text-sm font-semibold text-foreground">{link.label}</span>
-                  <span className="text-sm text-muted-foreground leading-relaxed">{link.desc}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+          {/* Top row: mascot + 404 content */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-12">
+            <div className="flex justify-center md:justify-start">
+              <img src={`${import.meta.env.BASE_URL}offon_mascot_3_transparent.webp`} alt="" aria-hidden="true" width={280} height={280} loading="lazy" className="w-48 md:w-64 lg:w-72 opacity-90" />
+            </div>
+            <div>
+              <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary mb-4 block">404</span>
+              <h1 className="text-4xl font-bold text-foreground mb-3">Page Not Found</h1>
+              <p className="text-muted-foreground mb-2 leading-relaxed">
+                This is not the page you were looking for.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Try one of these instead.
+              </p>
+            </div>
+          </div>
 
-        <a
-          href={COMMUNITY_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-primary"
-        >
-          Open the community <ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-        </a>
+          {/* Cards + CTA — full width */}
+          <nav aria-label="Helpful links">
+            <ul className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
+              {links.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    to={link.to}
+                    className="flex flex-col gap-2 rounded-xl bg-primary p-7 h-full hover:bg-primary/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  >
+                    <span className="text-base font-semibold text-primary-foreground">{link.label}</span>
+                    <span className="text-sm text-background/90 leading-relaxed">{link.desc}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </main>
       <Footer />
     </div>

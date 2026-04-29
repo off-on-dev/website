@@ -4,6 +4,6 @@ export function clientLoader() {
   return redirect("/handbook");
 }
 
-export default function DocsCommunityGuideRedirect() {
+export default function HandbookRedirect() {
   return null;
 }

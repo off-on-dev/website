@@ -1,10 +1,17 @@
-import type { JSX } from "react";
+import { useState, useEffect, type JSX } from "react";
 import { Link } from "react-router";
 import { Cookie } from "lucide-react";
 import { useConsent } from "@/hooks/useConsent";
 
-export function ConsentBanner(): JSX.Element {
+export function ConsentBanner(): JSX.Element | null {
   const { consent, grant, deny, reset } = useConsent();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true); // eslint-disable-line react-hooks/set-state-in-effect -- mount guard; SSG requires a safe default (null) on first render so the banner is absent from prerendered HTML and cannot become the LCP element
+  }, []);
+
+  if (!mounted) return null;
 
   if (consent !== null) {
     return (

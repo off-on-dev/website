@@ -51,6 +51,7 @@ export const Navbar = (): JSX.Element => {
           >
             Home
           </NavLink>
+          <NavLink to="/about" className={linkCls} activeClassName={activeCls}>About</NavLink>
           <Link
             to="/#challenges"
             className={cn(linkCls, challengesActive && activeCls)}
@@ -67,7 +68,6 @@ export const Navbar = (): JSX.Element => {
             Community<span className="sr-only"> (opens in new tab)</span>
           </a>
           <NavLink to="/handbook" className={linkCls} activeClassName={activeCls}>Handbook</NavLink>
-          <NavLink to="/about" className={linkCls} activeClassName={activeCls}>About</NavLink>
           <NavLink to="/sponsors" className={linkCls} activeClassName={activeCls}>Sponsors</NavLink>
           <button
             onClick={toggle}
@@ -134,6 +134,7 @@ export const Navbar = (): JSX.Element => {
           >
             Home
           </NavLink>
+          <NavLink to="/about" className={linkCls} activeClassName={activeCls} onClick={() => setMenuOpen(false)}>About</NavLink>
           <Link
             to="/#challenges"
             className={cn(linkCls, challengesActive && activeCls)}
@@ -152,7 +153,6 @@ export const Navbar = (): JSX.Element => {
             Community<span className="sr-only"> (opens in new tab)</span>
           </a>
           <NavLink to="/handbook" className={linkCls} activeClassName={activeCls} onClick={() => setMenuOpen(false)}>Handbook</NavLink>
-          <NavLink to="/about" className={linkCls} activeClassName={activeCls} onClick={() => setMenuOpen(false)}>About</NavLink>
           <NavLink to="/sponsors" className={linkCls} activeClassName={activeCls} onClick={() => setMenuOpen(false)}>Sponsors</NavLink>
           <a
             href="https://github.com/dynatrace-oss/open-ecosystem-challenges"

@@ -10,31 +10,14 @@ import { ConnectSection } from "@/components/ConnectSection";
 import { BottomCTA } from "@/components/BottomCTA";
 import { Footer } from "@/components/Footer";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
+import { buildPageMeta } from "@/lib/meta";
 
-export const meta: MetaFunction = () => {
-  const pageTitle = `${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`;
-  const desc = "A welcoming open source community. Learn through hands-on challenges to build skills. Share expertise and projects. Ask for help anytime.";
-  return [
-    { title: pageTitle },
-    { tagName: "link", rel: "canonical", href: `${SITE_URL}/` },
-    { name: "description", content: desc },
-    { property: "og:title", content: pageTitle },
-    { property: "og:description", content: desc },
-    { property: "og:type", content: "website" },
-    { property: "og:url", content: `${SITE_URL}/` },
-    { property: "og:image", content: `${SITE_URL}/og.png` },
-    { property: "og:image:width", content: "1200" },
-    { property: "og:image:height", content: "630" },
-    { property: "og:image:alt", content: pageTitle },
-    { property: "og:site_name", content: BRAND_NAME },
-    { property: "og:locale", content: "en_GB" },
-    { name: "twitter:title", content: pageTitle },
-    { name: "twitter:description", content: desc },
-    { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:image", content: `${SITE_URL}/og.png` },
-    { name: "twitter:image:alt", content: pageTitle },
-  ];
-};
+export const meta: MetaFunction = () =>
+  buildPageMeta({
+    title: `${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`,
+    description: "A vendor-neutral community for open source enthusiasts. Learn through hands-on challenges, share what you know, and connect with people who love open source.",
+    url: `${SITE_URL}/`,
+  });
 
 const Index = (): JSX.Element => {
   const { hash } = useLocation();
@@ -56,13 +39,13 @@ const Index = (): JSX.Element => {
         <ChallengesGrid />
         <section className="bg-primary py-16 px-6 md:px-16">
           <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <h2 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background">
-              <span className="block">Got an idea</span>
-              <span className="block">for an adventure?</span>
+            <h2 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground">
+              <span className="block">Got an Idea</span>
+              <span className="block">for an Adventure?</span>
             </h2>
             <div className="flex flex-col gap-4">
               <p className="font-sans text-base leading-relaxed text-background/90">
-                Shape what the community learns next. Got a scenario worth exploring? Submit a concept and help it become the next adventure.
+                Shape what the community learns next. Submit a scenario and help it become the next adventure.
               </p>
               <div className="flex gap-3 flex-wrap mt-2">
                 <a
@@ -71,7 +54,7 @@ const Index = (): JSX.Element => {
                   rel="noopener noreferrer"
                   className="btn-inverse"
                 >
-                  Propose an adventure idea <ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  Propose an Adventure Idea <ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </div>
             </div>

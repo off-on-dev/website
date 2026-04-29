@@ -119,3 +119,7 @@ export const ADVENTURES: Adventure[] = [
     ]
   },
 ];
+
+export const ALL_TAGS: string[] = Array.from(
+  new Set(ADVENTURES.flatMap((a) => a.tags))
+).sort();

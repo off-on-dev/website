@@ -5,24 +5,24 @@ import { COMMUNITY_URL } from "@/data/constants";
 const items: { icon: ReactNode; title: string; desc: string; cta: string; href: string }[] = [
   {
     icon: <UserPlus size={28} aria-hidden="true" />,
-    title: "Introduce yourself",
+    title: "Introduce Yourself",
     desc: "New here? Tell us about yourself. Share your role, what you're building or learning, and one thing you want to get out of the community.",
-    cta: "Say hello",
+    cta: "Say Hello",
     href: `${COMMUNITY_URL}/c/general/introductions/18`,
   },
   {
     icon: <CalendarDays size={28} aria-hidden="true" />,
-    title: "Events & meetups",
+    title: "Events & Meetups",
     desc: "Find upcoming events, add local meetups to the community calendar, and connect with members in your city. Some of the best connections happen face to face.",
-    cta: "See upcoming events",
+    cta: "See Upcoming Events",
     href: `${COMMUNITY_URL}/c/events-and-talks/12`,
   },
 ];
 
 export const ConnectSection = (): JSX.Element => {
   return (
-    <section className="py-24 px-6">
-      <div className="mx-auto max-w-5xl">
+    <section className="py-24 px-6 md:px-16">
+      <div className="mx-auto max-w-6xl">
         <div>
           <div className="animate-fade-up mb-3">
             <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">
@@ -30,10 +30,10 @@ export const ConnectSection = (): JSX.Element => {
             </span>
           </div>
           <h2 className="animate-fade-up-delay-1 mb-3 text-3xl font-bold text-primary md:text-4xl">
-            Stronger together
+            Connect and Grow
           </h2>
           <p className="animate-fade-up-delay-1 mb-12 max-w-xl text-[hsl(var(--text-secondary))] leading-relaxed">
-            Open source thrives when passionate people find each other. Start by introducing yourself to the community, find events near you, and meet the builders and maintainers who share your drive.            </p>
+            Open source thrives when passionate people find each other. Start by introducing yourself to the community, find events near you, and meet the builders and maintainers who share your passion for open source.            </p>
           <div className="animate-fade-up-delay-2 grid gap-6 md:grid-cols-2">
             {items.map((item) => (
               <div

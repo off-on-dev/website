@@ -27,11 +27,11 @@ export default function Root(): JSX.Element {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <meta name="author" content="offon.dev" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="icon" href="/favicon.png" type="image/png" />
-        <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.svg`} type="image/svg+xml" />
+        <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.png`} type="image/png" />
+        <link rel="shortcut icon" href={`${import.meta.env.BASE_URL}favicon.ico`} />
+        <link rel="apple-touch-icon" href={`${import.meta.env.BASE_URL}apple-touch-icon.png`} />
+        <link rel="manifest" href={`${import.meta.env.BASE_URL}site.webmanifest`} />
         <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
         <meta name="theme-color" content="#f5f5ff" media="(prefers-color-scheme: light)" />
         {/* Theme must be set before React boots to prevent flash of wrong theme */}

@@ -7,6 +7,7 @@ import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME } from "@/data/constants";
 import { useTheme } from "@/hooks/useTheme";
+import { buildPageMeta } from "@/lib/meta";
 import dtLogoDark from "@/assets/Dynatrace_Logo_color_negative_horizontal.svg";
 import dtLogoLight from "@/assets/Dynatrace_Logo_color_positive_horizontal.svg";
 
@@ -33,42 +34,24 @@ const supportWays = [
   },
   {
     title: "Software Licenses",
-    description: "Offer software licenses for open source contributors.",
+    description: "Give community members access to tools and platforms for hands-on learning and challenges.",
   },
   {
     title: "Distribution",
-    description: "Act as a distribution partner to help reach more developers.",
+    description: "Help spread the word through developer newsletters, event partnerships, or social channels.",
   },
   {
     title: "Adventures and Challenges",
-    description: "Sponsor specific adventures or challenges.",
+    description: "Sponsor an adventure or challenge and help bring new open source learning content to the community.",
   },
 ];
 
-export const meta: MetaFunction = () => {
-  const pageTitle = `Sponsorship and Independence - ${BRAND_NAME}`;
-  const desc = `See how sponsorship supports ${BRAND_NAME} while the community remains independent, vendor-neutral, and member-driven.`;
-  return [
-    { title: pageTitle },
-    { tagName: "link", rel: "canonical", href: `${SITE_URL}/sponsors` },
-    { name: "description", content: desc },
-    { property: "og:title", content: pageTitle },
-    { property: "og:description", content: desc },
-    { property: "og:type", content: "website" },
-    { property: "og:url", content: `${SITE_URL}/sponsors` },
-    { property: "og:image", content: `${SITE_URL}/og.png` },
-    { property: "og:image:width", content: "1200" },
-    { property: "og:image:height", content: "630" },
-    { property: "og:image:alt", content: pageTitle },
-    { property: "og:site_name", content: BRAND_NAME },
-    { property: "og:locale", content: "en_GB" },
-    { name: "twitter:title", content: pageTitle },
-    { name: "twitter:description", content: desc },
-    { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:image", content: `${SITE_URL}/og.png` },
-    { name: "twitter:image:alt", content: pageTitle },
-  ];
-};
+export const meta: MetaFunction = () =>
+  buildPageMeta({
+    title: `Sponsorship and Independence - ${BRAND_NAME}`,
+    description: `Find out who supports ${BRAND_NAME}, what sponsorship involves, and how we keep the community vendor-neutral and editorially independent.`,
+    url: `${SITE_URL}/sponsors`,
+  });
 
 const Sponsors = (): JSX.Element => {
   const { theme } = useTheme();
@@ -81,15 +64,16 @@ const Sponsors = (): JSX.Element => {
         eyebrow="Sponsors"
         title="Sponsorship and Independence"
         description="Sponsors provide financial support and participate as community members, but do not control editorial direction, content priorities, or governance. This community belongs to its members."
-        primaryCta={{ label: <span className="inline-flex items-center gap-2">Get in touch <ArrowUpRight size={14} aria-hidden="true" /></span>, href: `${COMMUNITY_URL}/groups/moderators`, external: true }}
-        secondaryCta={{ label: <span className="inline-flex items-center gap-2">Join the community <ArrowRight size={14} aria-hidden="true" /></span>, href: COMMUNITY_URL, external: true }}
+        primaryCta={{ label: <span className="inline-flex items-center gap-2">Get in Touch <ArrowUpRight size={14} aria-hidden="true" /></span>, href: `${COMMUNITY_URL}/groups/moderators`, external: true }}
+        secondaryCta={{ label: <span className="inline-flex items-center gap-2">Get Involved <ArrowRight size={14} aria-hidden="true" /></span>, href: COMMUNITY_URL, external: true }}
       />
 
-      <div className="mx-auto max-w-4xl px-6 py-16">
+      <div className="px-6 md:px-16 py-16">
+      <div className="mx-auto max-w-6xl">
         {/* Founding Sponsor */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-primary mb-8">Founding Sponsor</h2>
-          <div className="flex flex-col sm:flex-row items-start gap-8">
+          <h2 className="text-2xl font-bold text-foreground mb-6">Founding Sponsor</h2>
+          <div className="grid sm:grid-cols-2 gap-8 items-center">
             <p className="text-muted-foreground leading-relaxed">
               Dynatrace is the founding sponsor of {BRAND_NAME}. There is Dynatrace-related content in one dedicated category which you can choose to join, but the rest of the content is vendor-neutral and community-driven.
             </p>
@@ -103,14 +87,12 @@ const Sponsors = (): JSX.Element => {
                   href={s.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="card-glow shrink-0 flex items-center justify-center rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-8 py-6 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  className="flex items-center justify-start sm:justify-center opacity-80 hover:opacity-100 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
                 >
                   {logoSrc ? (
-                    <img src={logoSrc} alt={s.name} width={240} height={43} className="h-10 w-auto" loading="lazy" />
+                    <img src={logoSrc} alt={s.name} width={200} height={36} className="h-10 w-auto max-w-full" loading="lazy" />
                   ) : (
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-lg font-bold text-primary">
-                      {s.name[0]}
-                    </div>
+                    <span className="text-base font-semibold text-foreground">{s.name}</span>
                   )}
                   <span className="sr-only"> (opens in new tab)</span>
                 </a>
@@ -121,7 +103,7 @@ const Sponsors = (): JSX.Element => {
 
         {/* Ways to support */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-primary mb-4">Ways to Support {BRAND_NAME}</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-4">Ways to Support {BRAND_NAME}</h2>
           <p className="text-muted-foreground leading-relaxed mb-8 max-w-2xl">
             There are multiple ways organisations can get involved with the {BRAND_NAME} community, beyond financial sponsorship.
           </p>
@@ -140,7 +122,7 @@ const Sponsors = (): JSX.Element => {
 
         {/* Independence note */}
         <section className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8">
-          <h2 className="text-2xl font-bold text-primary mb-4">How We Maintain Trust</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-4">How We Maintain Trust</h2>
           <ul className="space-y-3">
             {[
               "Sponsors do not control editorial direction, content priorities, or community governance.",
@@ -155,6 +137,7 @@ const Sponsors = (): JSX.Element => {
             ))}
           </ul>
         </section>
+      </div>
       </div>
 
       <BottomCTA />

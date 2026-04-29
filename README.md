@@ -76,6 +76,7 @@ public/
 | Path | Page | Purpose |
 |---|---|---|
 | `/` | `Index.tsx` | Home page |
+| `/adventures` | `Adventures.tsx` | All adventures listing |
 | `/adventures/:id` | `AdventureDetail.tsx` | Adventure landing |
 | `/adventures/:id/levels/:levelId` | `ChallengeDetail.tsx` | Individual challenge |
 | `/sponsors` | `Sponsors.tsx` | Sponsorship info |
@@ -84,6 +85,8 @@ public/
 | `/privacy` | `Privacy.tsx` | GDPR-compliant privacy policy |
 | `/404` | `NotFound.tsx` | Prerendered 404 page |
 | `/community-guide` | redirects to `/handbook` | Legacy alias |
+| `/docs` | redirects to `/handbook` | Legacy alias |
+| `/docs/community-guide` | redirects to `/handbook` | Legacy alias |
 | `/topics/:tag` | redirects to `/#challenges` | Tag filter shortlink |
 | `*` | `CatchAll.tsx` | Client-side 404 fallback (re-exports `NotFound.tsx`; required because React Router v7 needs unique files per route) |
 

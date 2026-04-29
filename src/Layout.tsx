@@ -1,5 +1,4 @@
 import { Outlet, useLocation } from "react-router";
-import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useEffect, type JSX } from "react";
@@ -25,7 +24,6 @@ export function Layout(): JSX.Element {
   return (
     <ThemeProvider>
       <TooltipProvider>
-        <Toaster />
         <Sonner />
         <ConsentProvider>
           <a href="#main-content" className="skip-nav">
