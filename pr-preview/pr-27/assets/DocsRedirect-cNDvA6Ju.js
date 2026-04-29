@@ -1,1 +1,0 @@
-import{E as e,j as t}from"./chunk-EVOBXE3Y-B8vZBa5Z.js";function n(){return e(`/handbook`)}var r=t(function(){return null});export{n as clientLoader,r as default};
