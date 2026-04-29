@@ -522,6 +522,31 @@ Renders a single adventure level as a card: difficulty badge, level name, key le
 
 ---
 
+### `FilteredLevelCard`
+
+`src/components/FilteredLevelCard.tsx`
+
+Navigation card used in tag-filtered level grids. The entire card is a `<Link>` to the challenge detail page. Renders a difficulty badge, level name, first three learnings, and a footer row with "Challenge" label and the parent adventure title.
+
+```tsx
+<FilteredLevelCard
+  level={level}
+  adventureId={adventureId}
+  adventureTitle={adventureTitle}
+/>
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `level` | `AdventureLevel` | required | Level data from `src/data/adventures.ts` |
+| `adventureId` | `string` | required | Used to build the link href: `/adventures/:id/levels/:levelId` |
+| `adventureTitle` | `string` | required | Shown in the card footer as a tag label |
+| `className` | `string?` | — | Merged onto the root `<Link>` via `cn()`. Pass `"animate-fade-up-delay-1"` when the card is in a staggered grid. |
+
+Distinct from `LevelCard`: `FilteredLevelCard` is a router link used in listing/filter contexts; `LevelCard` is a static card used on detail pages and includes the GitHub Codespaces CTA.
+
+---
+
 ### `AboutSection`
 
 `src/components/AboutSection.tsx`
@@ -572,9 +597,9 @@ Self-contained technology filter used on `AdventureDetail` and `ChallengeDetail`
 <TechFilterSection />
 ```
 
-No props. Owns its own `activeTech` state internally. `ALL_TAGS` is derived once at module load from `ADVENTURES`. The results grid only renders when a tag is active and at least one matching level exists. Wraps results in `aria-live="polite"` so screen readers announce updates.
+No props. Owns its own `activeTech` state internally. `ALL_TAGS` is imported from `src/data/adventures.ts` (computed once at module load; shared with `ChallengesGrid`). The results grid only renders when a tag is active and at least one matching level exists. Wraps results in `aria-live="polite"` so screen readers announce updates.
 
-The challenge cards in the results grid use the same Inline Challenge Card layout as `ChallengesGrid` (see Patterns section).
+The challenge cards in the results grid are rendered via `FilteredLevelCard` with `className="animate-fade-up-delay-1"` (see `FilteredLevelCard` in the Components section).
 
 ---
 
@@ -593,7 +618,7 @@ No props. Owns its own `activeTopic` state internally.
 **Two display modes:**
 
 - **No tag selected (default):** renders one `AdventureCard` per adventure. Each card links to `/adventures/:id` and carries `aria-label={adventure.title}`.
-- **Tag selected:** replaces adventure cards with a grid of level cards (one per matching level across all adventures). Each level card links to `/adventures/:id/levels/:levelId` and carries `aria-label={level.name}`. Wrapped in `aria-live="polite"` so screen readers announce updates.
+- **Tag selected:** replaces adventure cards with a grid of `FilteredLevelCard` instances (one per matching level across all adventures). Each card links to `/adventures/:id/levels/:levelId` and carries `aria-label={level.name}`. Wrapped in `aria-live="polite"` so screen readers announce updates.
 
 The filter chips use `role="group"` with `aria-label="Filter challenges by technology"`. Clicking an active chip deselects it and returns to the adventure card view. The `aria-live` region is only mounted when a tag is active.
 
@@ -605,25 +630,18 @@ The filter chips use `role="group"` with `aria-label="Filter challenges by techn
 
 ### Inline Challenge Card
 
-Used in `ChallengesGrid`, `AdventureDetail`, and `ChallengeDetail` when filtering challenges by technology tag.
+Use `FilteredLevelCard` (see Components section). Do not inline the card markup. The component handles all classes, accessibility attributes, and structure.
 
-Cards use `flex flex-col` so `mt-auto` works on the bottom row. Standard classes:
-
-```
-card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6
-transition-all duration-200 hover:-translate-y-[3px] flex flex-col
-focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-```
-
-Bottom row layout:
-
-```
-mt-auto pt-4 flex flex-wrap gap-1.5 items-center justify-between
+```tsx
+<FilteredLevelCard
+  level={level}
+  adventureId={adventureId}
+  adventureTitle={adventureTitle}
+  className="animate-fade-up-delay-1"  {/* optional — omit when no stagger needed */}
+/>
 ```
 
-Inside the bottom row:
-- Left: `<span className="font-mono text-xs text-muted-foreground">Challenge</span>`
-- Right: `<span className="rounded-sm border border-[hsl(var(--surface-border))] px-2 py-0.5 text-xs text-[hsl(var(--text-faint))]">{adventureTitle}</span>`
+Used in `ChallengesGrid` and `TechFilterSection` (and wherever a tag-filtered level result grid is needed). Each card is a `<Link>` to `/adventures/:id/levels/:levelId`.
 
 ### Technology Filter Pattern
 

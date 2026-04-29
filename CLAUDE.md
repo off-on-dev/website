@@ -28,12 +28,43 @@ Community activity happens on a separate Discourse instance. Its display name is
 
 - **Framework:** React with TypeScript, bundled via Vite. Check `package.json` for current versions.
 - **Styling:** Tailwind CSS, configured via `tailwind.config.ts` and `src/index.css`.
-- **Components:** shadcn/ui (Radix UI primitives), live in `src/components/ui/`
+- **Components:** Minimal shadcn/ui surface. `src/components/ui/` contains only `badge.tsx`, `sonner.tsx`, and `tooltip.tsx`. Most Radix UI packages were intentionally removed. Do not add new shadcn components unless they are immediately needed.
 - **Routing:** React Router v7 framework mode (static prerendering with `ssr: false`)
 - **Testing:** Vitest + @testing-library/react (unit/component); Playwright (smoke tests in `e2e/`)
 - **Hosting:** GitHub Pages
 - **PR previews:** pr-preview-action
 - **Node.js:** 22 is required. Version is pinned in `.nvmrc`. Run `nvm use` to switch automatically.
+
+---
+
+## Conventions
+
+### Naming
+
+| Thing | Convention | Example |
+|---|---|---|
+| Component files and exports | PascalCase | `FilteredLevelCard.tsx`, `export const FilteredLevelCard` |
+| Hook files and exports | camelCase, `use` prefix | `useTheme.tsx`, `export function useTheme` |
+| Module-level constants from static data | SCREAMING_SNAKE_CASE | `ADVENTURES`, `ALL_TAGS` |
+| Route segments | kebab-case | `community-guide`, `adventure-detail` |
+
+### What lives where
+
+- Logic derived from `ADVENTURES` belongs in `src/data/adventures.ts`, exported, and imported everywhere. Do not re-derive it in component files.
+- Reusable card or list markup belongs in `src/components/`, not duplicated inline. Extract before the second copy appears.
+- Redirect routes that share a destination share a single file in `src/pages/redirects/`. The filename describes the destination, not the source (e.g. `HandbookRedirect.tsx`).
+
+### Buttons
+
+Use raw `<button>` elements with the CSS utilities in `src/index.css`: `.btn-primary`, `.btn-ghost`, `.btn-inverse`, `.btn-ghost-inverse`. There is no `Button` component. See `styleguide.md` for which class to use on which background color.
+
+### Toasts
+
+Use Sonner: `import { toast } from "@/components/ui/sonner"`. The Radix-based toast stack was removed and must not be reinstalled.
+
+### shadcn/ui surface
+
+`src/components/ui/` contains three files: `badge.tsx`, `sonner.tsx`, `tooltip.tsx`. Adding a new shadcn component requires an immediate use case in the same PR. Unused shadcn components are treated as dead code and removed.
 
 ---
 
@@ -183,10 +214,12 @@ without exception. They exist to prevent debugging by accumulation.
 ## Components
 
 - Always check `src/components/ui/` before building a new primitive.
-- To add a missing shadcn component: `npx shadcn@latest add <component>`.
+- To add a missing shadcn component: `npx shadcn@latest add <component>`. Only do this when the component is needed immediately -- do not add speculatively. Components added but never used will be removed in the next cleanup pass.
 - Never modify files inside `src/components/ui/` directly. Extend or wrap them in `src/components/`.
 - Page-level components go in `src/pages/`. Reusable components go in `src/components/`.
 - Extract sub-components into `src/components/` rather than nesting them inline.
+- **Buttons:** use raw `<button>` elements with the CSS utility classes defined in `src/index.css` (`.btn-primary`, `.btn-ghost`, `.btn-inverse`, `.btn-ghost-inverse`). There is no `Button` component wrapper and no `@radix-ui/react-slot` dependency.
+- **Toasts:** use Sonner via `import { toast } from "@/components/ui/sonner"`. The Radix-based toast stack (`react-toast`, `use-toast`) was removed. Do not reinstall it.
 
 ### Component CSS patterns
 
@@ -658,6 +691,10 @@ State the result of each check explicitly before finishing a task.
 - Do not commit secrets, tokens, or credentials.
 - Do not use em dashes anywhere in the codebase, content, or documentation.
 - Do not change `tailwind.config.ts` theme values without verifying the change does not break existing components.
+- Do not reinstall `@radix-ui/*` packages that were removed. If a Radix primitive is genuinely needed, check whether raw HTML with Tailwind solves the problem first.
+- Do not add shadcn components speculatively. The component must be used in the same PR it is added; otherwise it will be removed in the next cleanup.
+- Do not re-derive data from `ADVENTURES` inside component files. Any computed value that belongs to the data layer (e.g. a deduplicated tag list) should be exported from `src/data/adventures.ts` and imported. `ALL_TAGS` is the established pattern.
+- Do not duplicate card or list markup across components. If the same JSX structure appears in two places, extract a shared component. `FilteredLevelCard` is the established pattern.
 
 ---
 
