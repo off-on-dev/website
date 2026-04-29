@@ -40,7 +40,7 @@ const ChallengeDetail = (): JSX.Element => {
       <div className="min-h-screen bg-background">
         <Navbar />
         <main id="main-content" className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
-          <img src={`${import.meta.env.BASE_URL}offon_mascot_3_transparent.png`} alt="" aria-hidden="true" width={120} height={120} loading="lazy" className="mb-6 w-24 opacity-80" />
+          <img src={`${import.meta.env.BASE_URL}offon_mascot_3_transparent.webp`} alt="" aria-hidden="true" width={120} height={120} loading="lazy" className="mb-6 w-24 opacity-80" />
           <h1 className="text-2xl font-bold text-foreground mb-3">Challenge not found</h1>
           <p className="text-muted-foreground">The challenge you're looking for doesn't exist.</p>
         </main>

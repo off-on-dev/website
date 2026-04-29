@@ -6,7 +6,7 @@ export const BottomCTA = (): JSX.Element => {
   return (
     <section className="bg-primary py-16 px-6 md:px-16 relative overflow-hidden">
       <img
-        src={`${import.meta.env.BASE_URL}offon_mascot_2_transparent.png`}
+        src={`${import.meta.env.BASE_URL}offon_mascot_2_transparent.webp`}
         alt=""
         aria-hidden="true"
         width={180}

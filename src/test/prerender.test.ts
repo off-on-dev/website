@@ -106,9 +106,10 @@ describe("prerendered HTML layout shell", () => {
     expect(html).toContain("Skip to main content");
   });
 
-  it("dist/client/index.html contains the consent banner", () => {
+  it("dist/client/index.html does not contain the consent banner (mount guard keeps it out of prerendered HTML)", () => {
     const html = fs.readFileSync(path.join(DIST_ROOT, "index.html"), "utf-8");
-    expect(html).toContain('aria-label="Cookie consent"');
+    expect(html).not.toContain('aria-label="Cookie consent"');
+    expect(html).not.toContain("Accept analytics");
   });
 
   // Guards against entry.server.tsx reverting to renderToString, which emits

@@ -411,8 +411,8 @@ html {
     --purple: 32 100% 52%;
 
     --difficulty-starter: 41 100% 60%;
-    --difficulty-builder: 39 95% 52%;
-    --difficulty-architect: 36 90% 44%;
+    --difficulty-builder: 85 48% 56%;
+    --difficulty-architect: 245 45% 79%;
 
     --difficulty-starter-bg: 41 60% 75%;
     --difficulty-starter-border: 41 60% 65% / 0.6;
@@ -421,9 +421,6 @@ html {
     --difficulty-architect-bg: 245 35% 78%;
     --difficulty-architect-border: 245 35% 68% / 0.6;
     --difficulty-text: 0 0% 0%;
-
-    --type-simulation: 38 100% 58%;
-    --type-interactive: 41 100% 60%;
 
     --sidebar-background: 240 9% 9%;
     --sidebar-foreground: 47 54% 98%;
@@ -487,12 +484,8 @@ html {
 
     /* Difficulty badges */
     --difficulty-starter: 41 100% 80%;
-    --difficulty-builder: 41 100% 70%;
-    --difficulty-architect: 41 100% 60%;
-
-    /* Type badges */
-    --type-simulation: 240 25% 8%;
-    --type-interactive: 240 25% 8%;
+    --difficulty-builder: 85 48% 75%;
+    --difficulty-architect: 245 45% 85%;
 
     /* Sidebar */
     --sidebar-background: 220 12% 98%;
@@ -504,8 +497,6 @@ html {
     --sidebar-border: 220 12% 87%;
     --sidebar-ring: 41 100% 35%;
 
-    /* text-primary used as text color overrides */
-    --primary-text-override: 240 25% 8%;
   }
 }
 
@@ -534,13 +525,6 @@ html {
     font-family: 'JetBrains Mono', monospace;
   }
 
-  /* Ghost word - outline/stroke text, visible but clearly decorative */
-  .ghost-word {
-    -webkit-text-stroke: 1.5px hsl(var(--primary-foreground));
-    color: transparent;
-    letter-spacing: -0.025em;
-    font-weight: 800;
-  }
 }
 
 /* ─── Animations ──────────────────────────────────────────── */
@@ -553,11 +537,6 @@ html {
 @keyframes marquee {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
-}
-
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.3; }
 }
 
 @keyframes fireflyFloat {

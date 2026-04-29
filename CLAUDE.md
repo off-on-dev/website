@@ -810,4 +810,3 @@ These rules exist to prevent specific classes of mistakes. Follow them unconditi
 - Add `width` and `height` attributes to every `<img>` element to prevent layout shift (CLS).
 - New routes are automatically code-split by Vite. No manual action needed.
 - Always run Lighthouse against the production build: `npm run build && npx serve dist/client`. Never run it against the dev server.
-- Current baseline scores (production): Performance 96, Accessibility 100, Best Practices 100, SEO 100

@@ -59,7 +59,7 @@ const NotFound = (): JSX.Element => {
           {/* Top row: mascot + 404 content */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-12">
             <div className="flex justify-center md:justify-start">
-              <img src={`${import.meta.env.BASE_URL}offon_mascot_3_transparent.png`} alt="" aria-hidden="true" width={280} height={280} loading="lazy" className="w-48 md:w-64 lg:w-72 opacity-90" />
+              <img src={`${import.meta.env.BASE_URL}offon_mascot_3_transparent.webp`} alt="" aria-hidden="true" width={280} height={280} loading="lazy" className="w-48 md:w-64 lg:w-72 opacity-90" />
             </div>
             <div>
               <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary mb-4 block">404</span>

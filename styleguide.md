@@ -32,7 +32,7 @@ Subset coverage (via `unicode-range` in `src/index.css` -- only the needed subse
 
 ### Font preload
 
-Five fonts are preloaded in `index.html` to avoid the three-level font discovery delay (HTML parse → CSS parse → font file request):
+Five fonts are preloaded via the `links()` export in `src/root.tsx` to avoid the three-level font discovery delay (HTML parse → CSS parse → font file request):
 
 - `inter-latin-400-normal.woff2`, used by body text
 - `inter-latin-500-normal.woff2`, used by body medium weight
@@ -40,7 +40,7 @@ Five fonts are preloaded in `index.html` to avoid the three-level font discovery
 - `inter-latin-700-normal.woff2`, used by bold body text
 - `syne-latin-700-normal.woff2`, used by headings
 
-Only Latin subset variants are preloaded. Other subsets are served from `public/fonts/` but are not preloaded. Check `index.html` for the current preload list and update it whenever above-the-fold typography changes.
+Only Latin subset variants are preloaded. Other subsets are served from `public/fonts/` but are not preloaded. Check the `links()` export in `src/root.tsx` for the current preload list and update it whenever above-the-fold typography changes.
 
 ### Tailwind font utilities
 
@@ -86,6 +86,8 @@ See CLAUDE.md → Content and Copy → Capitalisation for the full rule and exam
 All color tokens are CSS custom properties defined in `src/index.css` and exposed as Tailwind utilities via `tailwind.config.ts`. Always use the Tailwind class that references the token; never hardcode hex values.
 
 ### Dark Mode (default, `:root, .dark`)
+
+> **Heading color in dark mode:** `h1`–`h6` receive `color: hsl(var(--primary))` (amber) via a `@layer base` rule in `src/index.css`. This is intentional: headings stand out from body text in the dark theme. Light mode overrides this to `hsl(var(--foreground))` via `.light h1–h6` in the unlayered section.
 
 | Token | HSL | Approx hex | Usage |
 |---|---|---|---|
@@ -139,13 +141,15 @@ All color tokens are CSS custom properties defined in `src/index.css` and expose
 | `--teal` | `38 100% 58%` | Secondary warm accent |
 | `--purple` | `32 100% 52%` | Tertiary warm accent |
 
-#### Difficulty badges (dark)
+#### Difficulty badges
 
-| Token | HSL | Color |
-|---|---|---|
-| `--difficulty-starter` | `41 100% 60%` | Amber/yellow |
-| `--difficulty-builder` | `85 48% 56%` | Green |
-| `--difficulty-architect` | `245 45% 79%` | Lavender/purple |
+Used for avatar tints in `DiscussionSection` (at `/0.2` opacity) and as semantic color anchors for the difficulty visual language. The `-bg` and `-border` tokens (used by `DifficultyBadge`) share the same hue families.
+
+| Token | Dark HSL | Light HSL | Color |
+|---|---|---|---|
+| `--difficulty-starter` | `41 100% 60%` | `41 100% 80%` | Amber/yellow |
+| `--difficulty-builder` | `85 48% 56%` | `85 48% 75%` | Green |
+| `--difficulty-architect` | `245 45% 79%` | `245 45% 85%` | Lavender/purple |
 
 ---
 
@@ -160,8 +164,9 @@ The light mode uses a barely-cool background palette. The slight cool/warm contr
 | Surface hover | `hsl(220 8% 93%)` | `#ECEEF1` | Hover state |
 | Primary accent | `hsl(41 100% 60%)` | `#ffc034` | Fill/border only, never text |
 | Primary foreground | `hsl(0 0% 0%)` | `#000000` | Text on amber fills |
-| Foreground/body | `hsl(240 25% 8%)` | `#0D0D17` | Deep navy |
-| Headings | `hsl(240 25% 8%)` | `#0D0D17` | Same as foreground (via `--foreground` token) |
+| Foreground/body | `hsl(240 25% 8%)` | `#0D0D17` | Deep navy (`--foreground`) |
+| Foreground hover | `hsl(240 25% 5%)` | | Slightly deeper than foreground, used for link/nav hover (`--foreground-hover`) |
+| Headings | `hsl(240 25% 8%)` | `#0D0D17` | Overrides dark mode primary-colored headings (via `.light h1–h6`) |
 | Muted text | `hsl(35 8% 38%)` | `#655E55` | Warm gray (intentional warm/cool contrast) |
 | Border | `hsl(220 12% 87%)` | `#D8DBE2` | Cool border |
 | Badge: Beginner | `hsl(41 80% 85%)` | | Black text |
@@ -205,9 +210,9 @@ Never add a `bg-primary` section button without adding or verifying the correspo
 | Class | Style |
 |---|---|
 | `.pill-active` | `rounded-full bg-primary/10 border-primary/50 text-primary` |
-| `.pill-inactive` | `rounded-full bg-transparent border-surface-border text-text-secondary` |
+| `.pill-inactive` | `rounded-full bg-transparent border-surface-border text-text-secondary`; hover: `border-primary/60 text-primary bg-primary/5` with electric glow |
 
-Both use `px-4 py-1.5 text-sm font-medium leading-none inline-flex items-center` and include `focus-visible` ring styles.
+Both use `px-4 py-1.5 text-sm font-medium leading-none inline-flex items-center gap-1.5` and include `focus-visible` ring styles (`ring-ring`).
 
 ### Difficulty Badges
 
@@ -227,8 +232,8 @@ Link hover and active states use an underline that is always rendered in the DOM
 
 | State | Classes |
 |---|---|
-| Default | `underline decoration-transparent underline-offset-2 transition-colors duration-200` |
-| Hover | `hover:decoration-primary/60` |
+| Default | `underline decoration-transparent decoration-[3px] underline-offset-4 transition-colors` |
+| Hover | `hover:text-primary` |
 | Active / current route | `text-primary underline decoration-primary underline-offset-4` |
 
 The active state uses both a color change (`text-primary`) and a visible underline (`decoration-primary`) so the indicator is not color-only (WCAG 1.4.1). In light mode, `text-primary` is overridden to `hsl(var(--foreground-hover))` via `.light nav a.text-primary` in `src/index.css`.
@@ -279,7 +284,7 @@ Light mode: no background texture.
 
 ### Firefly particles
 
-`.firefly` - 3×3 px dot with `box-shadow` glow in `--primary` color, animated with `fireflyFloat` (8 particles, varying `animation-duration` 6.5–11 s and `animation-delay`).
+`.firefly` - 2×2 px dot with `box-shadow` glow in `--primary` color, animated with `fireflyFloat` (8 particles, varying `animation-duration` 6.5–11 s and `animation-delay`). In light mode, `.light .firefly` reduces to 1.5×1.5 px and uses `--firefly-color` (`41 100% 45%`, slightly darker amber) for contrast against the light background.
 
 ---
 
@@ -607,7 +612,7 @@ Cards use `flex flex-col` so `mt-auto` works on the bottom row. Standard classes
 ```
 card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6
 transition-all duration-200 hover:-translate-y-[3px] flex flex-col
-focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2
+focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
 ```
 
 Bottom row layout:
@@ -757,9 +762,50 @@ A utility class for decorative overline labels that appear above section heading
 
 Applied as: `font-sans text-sm font-medium uppercase tracking-widest text-primary section-label`
 
-Used on `<span>` elements in: `CommunityVoicesSection`, `ConnectSection`, `ChallengesGrid`, `CommunityGuide`, `NotFound`.
+Used on `<span>` elements in: `CommunityVoicesSection`, `ConnectSection`, `ChallengesGrid`, `NotFound`.
 
 **Light mode override:** `.light .section-label` in the unlayered section of `src/index.css` sets `color: hsl(240 20% 9%)` (near-black) so the label does not render as yellow text in light mode.
+
+---
+
+### `.docs-ext-link`
+
+A styled external link class for inline prose links in `CommunityGuide.tsx`. Combines an underline treatment (decoration-2 underline-offset-2) with focus-visible ring and transitions.
+
+**Dark mode:** foreground text, `--primary`-colored underline. Hover softens both to `primary / 0.75`.
+**Light mode:** foreground text with `currentColor` underline. Hover shifts text and underline to `--muted-foreground`.
+
+```ts
+const extLink = "docs-ext-link inline-flex items-center gap-1 underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
+```
+
+---
+
+### `.badge-levels`
+
+Inline pill used in `ChallengesGrid.tsx` adventure cards to show the number of levels. Styled as a mono-font uppercase tag with amber fill in light mode.
+
+```tsx
+<span className="badge-levels inline-flex items-center gap-1.5 rounded-sm border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-xs uppercase tracking-wider text-primary">
+  <Layers size={11} aria-hidden="true" /> {n} levels
+</span>
+```
+
+Light mode override: `.light .badge-levels` sets black text on amber background so it remains legible. Excluded from the broad `.light span.text-primary:not(.badge-levels)` reset — it intentionally keeps its amber styling.
+
+---
+
+### `.bg-primary` focus ring override
+
+Any element with `bg-primary` (PageHero, BottomCTA) overrides `--ring` to black (`0 0% 0%`) so that focus rings remain visible against the amber background in both modes. This is defined as an unlayered rule in `src/index.css`:
+
+```css
+.bg-primary {
+  --ring: 0 0% 0%;
+}
+```
+
+Never place a `bg-primary` section without verifying that focusable children inherit this black ring value.
 
 ---
 
@@ -767,11 +813,11 @@ Used on `<span>` elements in: `CommunityVoicesSection`, `ConnectSection`, `Chall
 
 ### Lighthouse scores (production build)
 
-Measured against the production build at https://offon.dev.
+Measured against the production build locally (`npm run build && npm run preview`). Minimum acceptable score: 90 for all categories.
 
 | Category | Score |
 |---|---|
-| Performance | 96 |
+| Performance | 90 |
 | Accessibility | 100 |
 | Best Practices | 100 |
 | SEO | 100 |

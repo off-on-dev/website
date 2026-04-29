@@ -47,12 +47,13 @@ export const PageHero = ({ eyebrow, title, description, primaryCta, secondaryCta
     <section className="bg-primary pt-32 pb-20 px-6 md:px-16 overflow-hidden min-h-[560px] flex flex-col justify-center">
       <div className="mx-auto max-w-6xl relative w-full">
         <img
-          src={`${import.meta.env.BASE_URL}offon_mascot_1_transparent.png`}
+          src={`${import.meta.env.BASE_URL}offon_mascot_1_transparent.webp`}
           alt=""
           aria-hidden="true"
           width={200}
           height={200}
           loading="eager"
+          fetchPriority="high"
           className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 hidden lg:block w-56 xl:w-72 scale-x-[-1] drop-shadow-[0_0_28px_rgba(255,255,255,0.55)]"
         />
         <div className="max-w-2xl">

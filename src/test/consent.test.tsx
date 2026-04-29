@@ -244,6 +244,40 @@ describe('useConsent - provider guard', () => {
 });
 
 // ---------------------------------------------------------------------------
+// ConsentBanner - mount guard (SSR / prerender safety)
+// ---------------------------------------------------------------------------
+
+import { renderToString } from 'react-dom/server';
+
+describe('ConsentBanner - mount guard', () => {
+  it('renders nothing when server-rendered (prerendered HTML contains no banner markup)', () => {
+    // useEffect does not run during renderToString, so mounted stays false.
+    // The banner must return null, keeping it out of the prerendered HTML so it
+    // cannot become the LCP element.
+    const html = renderToString(
+      <MemoryRouter>
+        <ConsentProvider>
+          <ConsentBanner />
+        </ConsentProvider>
+      </MemoryRouter>
+    );
+    expect(html).not.toContain('Cookie consent');
+    expect(html).not.toContain('Accept analytics');
+    expect(html).not.toContain('Decline');
+  });
+
+  it('component file uses a mounted state guard before rendering any consent UI', () => {
+    const source = readFileSync(
+      resolve(__dirname, '../components/ConsentBanner.tsx'),
+      'utf-8'
+    );
+    expect(source).toContain('useState(false)');
+    expect(source).toContain('setMounted(true)');
+    expect(source).toContain('if (!mounted) return null');
+  });
+});
+
+// ---------------------------------------------------------------------------
 // ConsentBanner - banner state (consent === null)
 // ---------------------------------------------------------------------------
 

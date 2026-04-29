@@ -16,7 +16,7 @@ export const Hero = (): JSX.Element => {
       </div>
 
       <div className="relative z-10 mx-auto max-w-3xl text-center">
-            <div className="hero-badge animate-fade-up mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-[hsl(var(--surface))] px-4 py-1.5">
+            <div className="hero-badge mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-[hsl(var(--surface))] px-4 py-1.5">
               <Zap size={12} aria-hidden="true" className="text-foreground" />
               <span className="text-xs text-foreground">Vendor-neutral</span>
               <Zap size={12} aria-hidden="true" className="text-foreground" />
@@ -32,7 +32,7 @@ export const Hero = (): JSX.Element => {
                 Always Open.
               </span>
             </h1>
-            <p className="font-sans animate-fade-up-delay-2 mx-auto mt-6 max-w-xl text-lg leading-relaxed text-[hsl(var(--text-secondary))]">
+            <p className="font-sans mx-auto mt-6 max-w-xl text-lg leading-relaxed text-[hsl(var(--text-secondary))]">
               A welcoming community for open source enthusiasts. Learn through hands-on challenges, share your knowledge, and grow alongside people who love open source as much as you do.
             </p>
             <div className="animate-fade-up-delay-3 mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">

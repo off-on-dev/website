@@ -2,8 +2,6 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { PageHero } from "@/components/PageHero";
-import type { JSX } from "react";
-
 type HeroProps = Parameters<typeof PageHero>[0];
 
 const renderHero = (props: HeroProps): ReturnType<typeof render> =>
