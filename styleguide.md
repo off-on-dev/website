@@ -556,6 +556,29 @@ The challenge cards in the results grid use the same Inline Challenge Card layou
 
 ---
 
+### `ChallengesGrid`
+
+`src/components/ChallengesGrid.tsx`
+
+Renders the full adventure listing with a technology tag filter. Used on the home page (`Index.tsx`) and the dedicated adventures listing page (`Adventures.tsx`).
+
+```tsx
+<ChallengesGrid />
+```
+
+No props. Owns its own `activeTopic` state internally.
+
+**Two display modes:**
+
+- **No tag selected (default):** renders one `AdventureCard` per adventure. Each card links to `/adventures/:id` and carries `aria-label={adventure.title}`.
+- **Tag selected:** replaces adventure cards with a grid of level cards (one per matching level across all adventures). Each level card links to `/adventures/:id/levels/:levelId` and carries `aria-label={level.name}`. Wrapped in `aria-live="polite"` so screen readers announce updates.
+
+The filter chips use `role="group"` with `aria-label="Filter challenges by technology"`. Clicking an active chip deselects it and returns to the adventure card view. The `aria-live` region is only mounted when a tag is active.
+
+**Important:** the Technology Filter Pattern in the Patterns section documents the shared state logic. `AdventureDetail` and `ChallengeDetail` use `TechFilterSection` for the same filter — do not add a second instance of `ChallengesGrid` on those pages.
+
+---
+
 ## Patterns
 
 ### Inline Challenge Card
