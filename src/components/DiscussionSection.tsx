@@ -1,37 +1,8 @@
-import { useState, useEffect, type CSSProperties, type JSX } from "react";
+import { type CSSProperties, type JSX } from "react";
 import { ArrowRight, Heart } from "lucide-react";
 import { COMMUNITY_URL, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
 import { stripHtml } from "@/utils/stripHtml";
-import rawDiscussionData from "@/data/discussion-data.json";
-
-// Generated at build time by the discourse-data Vite plugin in vite.config.ts.
-// Run `npm run build` to refresh this data from the Discourse API.
-type StoredPost = {
-  username: string;
-  cooked: string;
-  created_at: string;
-  like_count?: number;
-  topicUrl: string;
-};
-
-type PostWithAge = StoredPost & { age: string };
-
-const discussionData = rawDiscussionData as Record<string, StoredPost[]>;
-
-function extractTopicId(url: string): string | null {
-  const match = url.match(/\/t\/[^/]+\/(\d+)/);
-  return match ? match[1] : null;
-}
-
-function timeAgo(dateStr: string, now: number): string {
-  const diff = now - new Date(dateStr).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 60) return `${mins}m ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
-  const days = Math.floor(hrs / 24);
-  return `${days}d ago`;
-}
+import { useDiscussionPosts } from "@/hooks/useDiscussionPosts";
 
 const avatarPalette: CSSProperties[] = [
   { backgroundColor: "hsl(var(--primary) / 0.2)", color: "hsl(var(--foreground))" },
@@ -46,24 +17,21 @@ type DiscussionSectionProps = {
 };
 
 export const DiscussionSection = ({ discussionUrl }: DiscussionSectionProps): JSX.Element => {
-  const topicId = extractTopicId(discussionUrl);
-  const rawPosts: StoredPost[] = topicId ? (discussionData[topicId] ?? []) : [];
+  const posts = useDiscussionPosts(discussionUrl);
 
-  // ages are computed on the client after mount to avoid calling Date.now() at render time
-  const [ages, setAges] = useState<string[]>([]);
-
-  useEffect(() => {
-    const raw: StoredPost[] = topicId ? (discussionData[topicId] ?? []) : [];
-    if (raw.length === 0) return;
-    const now = Date.now();
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- Date.now() cannot be called at render time; SSG hydration requires effect-based initialization (see CLAUDE.md)
-    setAges(raw.map((p) => timeAgo(p.created_at, now)));
-  }, [topicId]);
-
-  const posts: PostWithAge[] = rawPosts.map((p, i) => ({ ...p, age: ages[i] ?? "" }));
+  const joinLink = (
+    <a
+      href={discussionUrl || COMMUNITY_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+    >
+      Join the discussion on {COMMUNITY_DISPLAY_NAME} <ArrowRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+    </a>
+  );
 
   return (
-    <div aria-live="polite" aria-atomic="true" className="space-y-4">
+    <div aria-live="polite" className="space-y-4">
       <h2 className="text-lg font-semibold text-foreground mb-4">Discussion</h2>
       {posts.length === 0 ? (
         <>
@@ -72,14 +40,7 @@ export const DiscussionSection = ({ discussionUrl }: DiscussionSectionProps): JS
               No community posts yet. Be the first to share!
             </p>
           </div>
-          <a
-            href={discussionUrl || COMMUNITY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
-          >
-            Join the discussion on {COMMUNITY_DISPLAY_NAME} <ArrowRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-          </a>
+          {joinLink}
         </>
       ) : (
         <>
@@ -117,14 +78,7 @@ export const DiscussionSection = ({ discussionUrl }: DiscussionSectionProps): JS
               </p>
             </a>
           ))}
-          <a
-            href={discussionUrl || COMMUNITY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
-          >
-            Join the discussion on {COMMUNITY_DISPLAY_NAME} <ArrowRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-          </a>
+          {joinLink}
         </>
       )}
     </div>

@@ -4,7 +4,7 @@ Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for op
 
 ## Tech Stack
 
-- **React 18** + **TypeScript**: UI and type safety
+- **React 19** + **TypeScript**: UI and type safety
 - **Vite**: build tooling and dev server
 - **Tailwind CSS**: utility-first styling
 - **shadcn/ui**: accessible component primitives built on Radix UI

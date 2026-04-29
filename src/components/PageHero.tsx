@@ -48,8 +48,7 @@ export const PageHero = ({ eyebrow, title, description, primaryCta, secondaryCta
       <div className="mx-auto max-w-6xl relative w-full">
         <img
           src={`${import.meta.env.BASE_URL}offon_mascot_1_transparent.webp`}
-          alt=""
-          aria-hidden="true"
+          alt="The OffOn firefly mascot waving hello"
           width={200}
           height={200}
           loading="eager"

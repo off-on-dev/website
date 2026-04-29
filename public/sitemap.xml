@@ -5,8 +5,7 @@
   <url><loc>https://offon.dev/sponsors</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://offon.dev/about</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://offon.dev/handbook</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://offon.dev/privacy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://offon.dev/adventures/echoes-lost-in-orbit</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://offon.dev/adventures/echoes-lost-in-orbit</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://offon.dev/adventures/building-cloudhaven</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://offon.dev/adventures/the-ai-observatory</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://offon.dev/adventures/echoes-lost-in-orbit/levels/beginner</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>

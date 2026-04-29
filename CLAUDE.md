@@ -26,9 +26,9 @@ Community activity happens on a separate Discourse instance. Its display name is
 
 ## Stack
 
-- **Framework:** React with TypeScript, bundled via Vite. Check `package.json` for current versions.
-- **Styling:** Tailwind CSS, configured via `tailwind.config.ts` and `src/index.css`.
-- **Components:** Minimal shadcn/ui surface. `src/components/ui/` contains only `badge.tsx`, `sonner.tsx`, and `tooltip.tsx`. Most Radix UI packages were intentionally removed. Do not add new shadcn components unless they are immediately needed.
+- **Framework:** React 19 with TypeScript, bundled via Vite. Check `package.json` for current versions.
+- **Styling:** Tailwind CSS 4, configured CSS-first via `src/index.css` (`@theme` block). There is no `tailwind.config.ts` — it was deleted as part of the Tailwind 4 migration.
+- **Components:** Minimal shadcn/ui surface. `src/components/ui/` contains only `badge.tsx`, `sonner.tsx`, and `tooltip.tsx`. Most Radix UI packages were intentionally removed.
 - **Routing:** React Router v7 framework mode (static prerendering with `ssr: false`)
 - **Testing:** Vitest + @testing-library/react (unit/component); Playwright (smoke tests in `e2e/`)
 - **Hosting:** GitHub Pages
@@ -53,18 +53,6 @@ Community activity happens on a separate Discourse instance. Its display name is
 - Logic derived from `ADVENTURES` belongs in `src/data/adventures.ts`, exported, and imported everywhere. Do not re-derive it in component files.
 - Reusable card or list markup belongs in `src/components/`, not duplicated inline. Extract before the second copy appears.
 - Redirect routes that share a destination share a single file in `src/pages/redirects/`. The filename describes the destination, not the source (e.g. `HandbookRedirect.tsx`).
-
-### Buttons
-
-Use raw `<button>` elements with the CSS utilities in `src/index.css`: `.btn-primary`, `.btn-ghost`, `.btn-inverse`, `.btn-ghost-inverse`. There is no `Button` component. See `styleguide.md` for which class to use on which background color.
-
-### Toasts
-
-Use Sonner: `import { toast } from "@/components/ui/sonner"`. The Radix-based toast stack was removed and must not be reinstalled.
-
-### shadcn/ui surface
-
-`src/components/ui/` contains three files: `badge.tsx`, `sonner.tsx`, `tooltip.tsx`. Adding a new shadcn component requires an immediate use case in the same PR. Unused shadcn components are treated as dead code and removed.
 
 ---
 
@@ -114,6 +102,7 @@ npm run build:dev    # Dev-mode build
 npm run lint         # ESLint
 npm test             # Run tests once (Vitest)
 npm run test:watch   # Tests in watch mode
+npm run test:coverage  # Run tests with v8 coverage (uses @vitest/coverage-v8)
 npm run test:e2e     # Playwright smoke tests (requires npm run build first)
 npm run preview      # Copy 404 fallback and serve the production build locally
 
@@ -144,7 +133,6 @@ npx shadcn@latest add <component>   # Add a shadcn/ui component
 - Always verify no TypeScript errors after making changes.
 - Prefer extending existing components over rewriting them.
 - If a change could break something, flag it explicitly before proceeding.
-- Never force-push to `main`.
 
 ---
 
@@ -214,11 +202,12 @@ without exception. They exist to prevent debugging by accumulation.
 ## Components
 
 - Always check `src/components/ui/` before building a new primitive.
-- To add a missing shadcn component: `npx shadcn@latest add <component>`. Only do this when the component is needed immediately -- do not add speculatively. Components added but never used will be removed in the next cleanup pass.
+- `src/components/ui/` contains three files: `badge.tsx`, `sonner.tsx`, `tooltip.tsx`. Adding a new shadcn component requires an immediate use case in the same PR. Unused components are removed. To add one: `npx shadcn@latest add <component>`.
 - Never modify files inside `src/components/ui/` directly. Extend or wrap them in `src/components/`.
 - Page-level components go in `src/pages/`. Reusable components go in `src/components/`.
 - Extract sub-components into `src/components/` rather than nesting them inline.
-- **Buttons:** use raw `<button>` elements with the CSS utility classes defined in `src/index.css` (`.btn-primary`, `.btn-ghost`, `.btn-inverse`, `.btn-ghost-inverse`). There is no `Button` component wrapper and no `@radix-ui/react-slot` dependency.
+- Do not duplicate card or list markup across components. If the same JSX structure appears in two places, extract a shared component. `FilteredLevelCard` is the established pattern.
+- **Buttons:** use raw `<button>` elements with the CSS utility classes defined in `src/index.css` (`.btn-primary`, `.btn-ghost`, `.btn-inverse`, `.btn-ghost-inverse`). There is no `Button` component wrapper and no `@radix-ui/react-slot` dependency. See `styleguide.md` for which class to use on which background color.
 - **Toasts:** use Sonner via `import { toast } from "@/components/ui/sonner"`. The Radix-based toast stack (`react-toast`, `use-toast`) was removed. Do not reinstall it.
 
 ### Component CSS patterns
@@ -243,7 +232,7 @@ without exception. They exist to prevent debugging by accumulation.
 ## Styling
 
 - Use Tailwind utility classes directly on JSX elements.
-- Always check `tailwind.config.ts` and `src/index.css` before introducing any new color, font, spacing, or border radius value. Never hardcode these.
+- Always check the `@theme` block in `src/index.css` before introducing any new color, font, spacing, or border radius value. Never hardcode these. There is no `tailwind.config.ts` — all theme values live in the `@theme` block in `src/index.css`.
 - Both light and dark mode must work. Use the CSS variable pairs (`bg-background`,
   `text-foreground`) that shadcn sets up. Never hardcode a color that only works in one mode.
 - Never add a `dark:` override without a corresponding base (light) style.
@@ -252,19 +241,12 @@ without exception. They exist to prevent debugging by accumulation.
 - All fonts are self-hosted under `public/fonts/`.
 - Never write custom CSS unless Tailwind genuinely cannot do the job.
   If you must, add it to `src/index.css` with a comment explaining why.
-- When adding light mode overrides for Tailwind utility classes (e.g. `text-primary`,
-  `bg-primary`), do NOT put them inside `@layer base`. Rules in `@layer base` are always
-  overridden by `@layer utilities` regardless of specificity. Instead, add unlayered rules
-  to the "Light mode overrides" section at the bottom of `src/index.css`, scoped to the
-  `.light` selector.
+- Light mode overrides: do NOT put them inside `@layer base` — rules there are always overridden by `@layer utilities`. Add unlayered rules to the "Light mode overrides" section at the bottom of `src/index.css`, scoped to `.light`.
 
 ### Design system rules
 
 - Light mode uses `.light` class on `<html>`, set by the `useTheme` hook.
-
 - Yellow `#ffc034` is accent-only in light mode. Never use it as a text color.
-- All light mode color overrides are unlayered rules at the bottom of `src/index.css`, scoped to `.light`.
-- Do NOT put light mode overrides inside `@layer base`. They will be silently overridden by `@layer utilities`.
 - Dark mode uses `:root` and `.dark`. Never modify these when fixing light mode issues.
 - Tailwind `group-hover:*` and `group-focus:*` utilities are not matched by `.light .classname` selectors. Always add explicit `.light .group:hover` rules in the unlayered light mode overrides section of `src/index.css`.
 - Avatar palette colors must not be used directly as text colors in light mode — they fail contrast on near-white surfaces. Use `hsl(var(--foreground))` as the text color for avatar initials in all modes.
@@ -370,7 +352,11 @@ Check the following on every component you write or modify.
 - Use `aria-live` regions for dynamic content updates.
 
 ### Images and media
-- Every `<img>` must have an `alt` attribute. Decorative images use `alt=""`.
+- Every `<img>` must have an `alt` attribute. No exceptions.
+- Meaningful images: `alt` must describe the content or purpose (e.g. `alt="offon.dev"` for a logo, `alt={sponsor.name}` for a sponsor logo).
+- Decorative images (no informational value at all): use `alt=""` AND `aria-hidden="true"` together.
+- Brand mascots and illustrations: use a brief descriptive `alt` (e.g. `alt="The OffOn firefly mascot waving hello"`). Do not use `aria-hidden="true"` when alt text is present — it overrides the alt and hides the image from AT entirely.
+- Never omit the `alt` attribute entirely.
 - Icons that convey meaning need an `aria-label` or accompanying visible text.
 
 ---
@@ -405,6 +391,8 @@ Check the following on every component you write or modify.
 - Playwright smoke tests live in `e2e/smoke.spec.ts` and also require a production build. Run `npm run build` then `npm run test:e2e`. These tests verify each prerendered route loads in a real browser without JS errors, that `main#main-content` is present, that hydration completed (theme toggle, consent banner, client-side navigation all work), and that the skip nav is the first Tab stop. When adding a new prerendered route, add it to the `ROUTES` array in `e2e/smoke.spec.ts`. Do not add Playwright tests for logic that Vitest already covers.
 - SEO tests live in `src/test/seo.test.ts` and require a production build. They assert that every prerendered route has a `<meta name="description">` within 160 chars, all `og:*` tags (`og:title`, `og:description`, `og:type`, `og:url`, `og:image`, `og:image:width`, `og:image:height`, `og:image:alt`, `og:site_name`, `og:locale`), all `twitter:*` tags (`twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`, `twitter:image:alt`), and a correct `<link rel="canonical">`. When adding a new prerendered route, add it to the `ROUTES` array in `src/test/seo.test.ts`.
 - When a page renders multiple navigation landmarks (e.g. `Navbar`, `Footer`, and an in-page nav), use `within` from `@testing-library/react` to scope queries to the correct landmark before asserting link destinations. This prevents false positives when the same link text appears in more than one `<nav>`. Example: `const nav = screen.getByRole("navigation", { name: "Helpful links" }); within(nav).getByRole("link", { name: /Adventures/ })`.
+- **Testing hooks with dynamic imports:** Vitest's dynamic-import mock runner (`vi.mock("@/data/...")`) has a multi-second first-call initialization cost per test run. Never use `vi.mock` for a dynamic import that is called inside a hook and then test that hook directly — the first async tests will time out. The pattern that works: export a `DiscussionDataLoader`-style type and a default loader from the hook; accept it as an optional second argument; tests inject `vi.fn().mockResolvedValue(data)` via that argument. `vi.spyOn` on a same-module export does NOT intercept internal calls in ES module context and is not a valid alternative. See `src/hooks/useDiscussionPosts.ts` for the reference implementation.
+- **Coverage:** run `npm run test:coverage` for v8 coverage reports. The `coverage/` directory is gitignored. `@vitest/coverage-v8` is installed as a dev dependency.
 
 ---
 
@@ -689,12 +677,9 @@ State the result of each check explicitly before finishing a task.
 - Do not change `vite.config.ts` base path without verifying GitHub Pages routing.
 - Do not install new dependencies without checking if shadcn/ui or an existing utility covers the need.
 - Do not commit secrets, tokens, or credentials.
-- Do not use em dashes anywhere in the codebase, content, or documentation.
-- Do not change `tailwind.config.ts` theme values without verifying the change does not break existing components.
+- Do not change the `@theme` block in `src/index.css` without verifying the change does not break existing components.
 - Do not reinstall `@radix-ui/*` packages that were removed. If a Radix primitive is genuinely needed, check whether raw HTML with Tailwind solves the problem first.
-- Do not add shadcn components speculatively. The component must be used in the same PR it is added; otherwise it will be removed in the next cleanup.
 - Do not re-derive data from `ADVENTURES` inside component files. Any computed value that belongs to the data layer (e.g. a deduplicated tag list) should be exported from `src/data/adventures.ts` and imported. `ALL_TAGS` is the established pattern.
-- Do not duplicate card or list markup across components. If the same JSX structure appears in two places, extract a shared component. `FilteredLevelCard` is the established pattern.
 
 ---
 
@@ -769,11 +754,6 @@ These rules exist to prevent specific classes of mistakes. Follow them unconditi
   be a React context provider, not a plain hook. Verify this at design time before
   writing any code.
 
-### File edits
-- After any multi-step or multi-replace file edit, re-read the full affected section
-  to verify the final state is correct. Never assume sequential replacements composed
-  correctly without checking.
-
 ### File extensions
 - Any file that renders or returns JSX must use the `.tsx` extension. Files that are
   pure TypeScript logic with no JSX use `.ts`. Catch this before writing, not after lint.
@@ -793,47 +773,35 @@ These rules exist to prevent specific classes of mistakes. Follow them unconditi
 
 ## SEO Checklist: Required for Every New Page
 
-- Add a unique `<title>` and a `<meta name="description">` under 160 characters via the route module's `meta()` export
-- Add `og:title`, `og:description`, `og:url`, `og:type`, and `og:image` meta tags
-- Add `og:image:width` (1200) and `og:image:height` (630) for proper image rendering
-- Add `og:image:alt`, `og:site_name`, and `og:locale` (en_GB) meta tags
-- Add `twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`, and `twitter:image:alt` meta tags
-- Add canonical link tag
-- Add the page URL to `public/sitemap.xml` (static routes only)
-- Add the page URL to the `prerender` array in `react-router.config.ts` (static routes only)
-- Use correct heading hierarchy: one `h1` per page, `h2` for sections, `h3` for subsections
-- Dynamic routes are not added to `sitemap.xml` unless IDs are statically known
-- Verify `src/root.tsx` includes `<link rel="manifest" href="/site.webmanifest" />`
-- Verify `src/root.tsx` includes both `<meta name="theme-color">` tags for dark and light mode
-- Verify `src/root.tsx` includes a `<script type="application/ld+json">` block with `@type: WebSite`
-- Do not add page-specific meta tags (`description`, `og:*`, `twitter:*`) to `src/root.tsx`. They must live in each route module's `meta()` export only.
-- Confirm `<html lang="en">` is present in `src/root.tsx` and has not been removed.
+Add via the route module's `meta()` export — never in `src/root.tsx`:
+- `<title>` (unique) and `<meta name="description">` (under 160 chars)
+- `og:title`, `og:description`, `og:url`, `og:type`, `og:image`, `og:image:width` (1200), `og:image:height` (630), `og:image:alt`, `og:site_name`, `og:locale` (en_GB)
+- `twitter:card` (`summary_large_image`), `twitter:title`, `twitter:description`, `twitter:image`, `twitter:image:alt`
+- `<link rel="canonical">` set to `${SITE_URL}${pathname}`
+- Correct heading hierarchy: one `h1`, `h2` for sections, `h3` for subsections
+
+Static routes only — add to both:
+- `public/sitemap.xml`
+- `prerender` array in `react-router.config.ts`
+
+One-time `src/root.tsx` check (not per page): manifest link, both theme-color tags, JSON-LD block, `lang="en"` on `<html>`. See SEO > Global head setup for the full requirements.
 
 ---
 
 ## WCAG AA Checklist: Required for Every New Component
 
-- All text must meet 4.5:1 contrast ratio for normal text, 3:1 for large text (18px+ or 14px+ bold)
-- Never rely on color alone to convey meaning. Always pair color with text, icon, or pattern.
-- Never use `hsl(41 100% 60%)` (`#ffc034` yellow) as text color in light mode. It fails contrast.
-- Never place `text-primary` or any text on a `bg-primary` background without verifying the contrast combination in light mode
-- All interactive elements must have visible focus-visible styles. Block elements: `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm`. Inline elements: use `ring-offset-1` instead of `ring-offset-2`.
-- All images must have descriptive `alt` text (empty `alt` only for decorative images)
-- Verify hover states do not change layout properties (padding, border, font-weight, width). Use color and opacity changes only.
-- Use semantic HTML: `<main>`, `<nav>`, `<footer>`, `<section>`, `<article>` landmarks where appropriate
-- Heading hierarchy must not skip levels
-- Do not rely on `<br />` to split heading text across lines in `h1`/`h2`.
-  Prefer block spans and keep the text directly readable without adding a redundant `aria-label`
-  or `aria-hidden` on the line-split spans.
-- Always test both light and dark mode when adding or modifying any component
-- Every new page must include `id="main-content"` on its `<main>` element (required for the skip navigation link in `Layout.tsx`)
-- Every `<a target="_blank">` must include `<span className="sr-only"> (opens in new tab)</span>` as its last child
-- Never add `target="_blank"` to a link without the above span
-- Do not use raw Unicode arrow or symbol characters (`→`, `♥`, `✓`, `★`) in visible content. Use lucide-react icons with `aria-hidden="true"` instead, or wrap the character in `aria-hidden="true"` and pair with visible text or an sr-only label.
-- Decorative Unicode separators (e.g. `·`) that appear between words of visible text must be wrapped in `<span aria-hidden="true">·</span>` so screen readers do not announce them.
-- Every decorative icon next to visible text must have `aria-hidden="true"`. Never omit it.
-- All page content (including `PageHero` and `BottomCTA`) must be inside the single `<main id="main-content">` element
-- Use `aria-live` regions for any content that updates dynamically after page load.
+- Text contrast: 4.5:1 for normal, 3:1 for large (18px+). Test both light and dark modes. (See Accessibility > Color contrast.)
+- Never use `hsl(41 100% 60%)` (`#ffc034` yellow) as text in light mode — fails contrast.
+- Never place text on `bg-primary` without verifying light mode contrast.
+- Focus rings: `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm`. Inline elements: `ring-offset-1`. (See Accessibility > Keyboard navigation.)
+- Every `<img>` needs `alt`. Meaningful/brand images: describe content. Purely decorative: `alt=""` + `aria-hidden="true"` together. Never use `aria-hidden="true"` when alt text is present. (See Accessibility > Images and media.)
+- Hover states must not change layout properties (padding, border, font-weight, width). Use color and opacity only.
+- Semantic landmarks: `<main>`, `<nav>`, `<footer>`, `<section>`, `<article>`. Every page: `<main id="main-content">`. (See Accessibility > Semantic HTML.)
+- One `<h1>` per page, no skipped levels. No `<br />` in headings — use block `<span>` elements.
+- Every `<a target="_blank">` needs `<span className="sr-only"> (opens in new tab)</span>`. (See Accessibility > External links.)
+- Decorative icons: `aria-hidden="true"`. No raw Unicode symbols (`→`, `♥`, `✓`, `★`) for meaning. Decorative separators (e.g. `·`): `<span aria-hidden="true">·</span>`. (See Accessibility > Icons and special characters.)
+- All page content (including `PageHero` and `BottomCTA`) inside `<main id="main-content">`.
+- Dynamic content updates: use `aria-live` regions. (See Accessibility > ARIA.)
 
 ---
 

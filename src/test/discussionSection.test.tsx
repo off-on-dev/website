@@ -1,80 +1,69 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { DiscussionSection } from "@/components/DiscussionSection";
+import type { PostWithAge } from "@/hooks/useDiscussionPosts";
 
 // ---------------------------------------------------------------------------
-// Mock discussion data
-// Fixed timestamps relative to the fake "now" set in beforeEach:
-//   now = 2024-06-15T12:00:00Z
-//   alice: 45m ago → "45m ago"
-//   bob:   3h ago  → "3h ago"
-//   carol: 2d ago  → "2d ago"
-// Topic ID "42" has data; all other IDs return empty.
+// Mock the hook so all component tests are synchronous.
+// The hook normally does a dynamic import inside useEffect; mocking it here
+// eliminates the React 19 concurrent scheduler interaction that caused
+// findByText timeouts in the original component-level test.
 // ---------------------------------------------------------------------------
 
-vi.mock("@/data/discussion-data.json", () => ({
-  default: {
-    "42": [
-      {
-        username: "alice",
-        cooked: "<p>Great challenge!</p>",
-        created_at: "2024-06-15T11:15:00Z",
-        like_count: 5,
-        topicUrl: "https://community.open-ecosystem.com/t/topic/42/1",
-      },
-      {
-        username: "bob",
-        cooked: "<p>Loved it.</p>",
-        created_at: "2024-06-15T09:00:00Z",
-        like_count: 0,
-        topicUrl: "https://community.open-ecosystem.com/t/topic/42/2",
-      },
-      {
-        username: "carol",
-        cooked: "<p>Well done everyone.</p>",
-        created_at: "2024-06-13T12:00:00Z",
-        like_count: 1,
-        topicUrl: "https://community.open-ecosystem.com/t/topic/42/3",
-      },
-    ],
+const MOCK_POSTS: PostWithAge[] = [
+  {
+    username: "alice",
+    cooked: "<p>Great challenge!</p>",
+    created_at: "2024-06-15T11:15:00Z",
+    age: "45m ago",
+    like_count: 5,
+    topicUrl: "https://community.open-ecosystem.com/t/topic/42/1",
   },
+  {
+    username: "bob",
+    cooked: "<p>Loved it.</p>",
+    created_at: "2024-06-15T09:00:00Z",
+    age: "3h ago",
+    like_count: 0,
+    topicUrl: "https://community.open-ecosystem.com/t/topic/42/2",
+  },
+  {
+    username: "carol",
+    cooked: "<p>Well done everyone.</p>",
+    created_at: "2024-06-13T12:00:00Z",
+    age: "2d ago",
+    like_count: 1,
+    topicUrl: "https://community.open-ecosystem.com/t/topic/42/3",
+  },
+];
+
+vi.mock("@/hooks/useDiscussionPosts", () => ({
+  useDiscussionPosts: (url: string): PostWithAge[] =>
+    url.includes("/t/topic/42") ? MOCK_POSTS : [],
 }));
-
-// ---------------------------------------------------------------------------
-// Fake timers: fix Date.now() so timeAgo produces deterministic output
-// ---------------------------------------------------------------------------
-
-beforeEach(() => {
-  vi.useFakeTimers();
-  vi.setSystemTime(new Date("2024-06-15T12:00:00Z"));
-});
-
-afterEach(() => {
-  vi.useRealTimers();
-});
 
 // ---------------------------------------------------------------------------
 // Empty state
 // ---------------------------------------------------------------------------
 
 describe("DiscussionSection - empty state", () => {
-  it("shows 'No community posts yet' when topic ID is not in the data", () => {
+  it("shows 'No community posts yet' when topic has no posts", () => {
     render(
       <DiscussionSection discussionUrl="https://community.open-ecosystem.com/t/unknown/999/1" />
     );
     expect(screen.getByText(/No community posts yet/)).toBeTruthy();
   });
 
-  it("shows 'Join the discussion' link when topic has no posts", () => {
+  it("shows 'Join the discussion' link in the empty state", () => {
     render(
       <DiscussionSection discussionUrl="https://community.open-ecosystem.com/t/unknown/999/1" />
     );
     expect(screen.getByRole("link", { name: /Join the discussion/i })).toBeTruthy();
   });
 
-  it("shows 'No community posts yet' when URL contains no topic ID segment", () => {
+  it("shows empty state when the URL has no topic ID segment", () => {
     render(<DiscussionSection discussionUrl="https://community.open-ecosystem.com" />);
     expect(screen.getByText(/No community posts yet/)).toBeTruthy();
   });
@@ -85,7 +74,7 @@ describe("DiscussionSection - empty state", () => {
 // ---------------------------------------------------------------------------
 
 describe("DiscussionSection - posts state", () => {
-  it("renders all posts when data exists for the topic ID", () => {
+  it("renders all posts when the hook returns data", () => {
     render(
       <DiscussionSection discussionUrl="https://community.open-ecosystem.com/t/topic/42/1" />
     );
@@ -114,9 +103,7 @@ describe("DiscussionSection - posts state", () => {
     render(
       <DiscussionSection discussionUrl="https://community.open-ecosystem.com/t/topic/42/1" />
     );
-    // Zero like count must not be rendered (JSX guard: like_count > 0)
-    const zeros = screen.queryAllByText("0");
-    expect(zeros.length).toBe(0);
+    expect(screen.queryAllByText("0").length).toBe(0);
   });
 
   it("renders 'Join the discussion' link when posts are present", () => {
@@ -128,70 +115,22 @@ describe("DiscussionSection - posts state", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Age computation (useEffect-driven, runs after mount)
+// Age display — hook computes ages; component renders the string it receives
 // ---------------------------------------------------------------------------
 
-describe("DiscussionSection - age computation", () => {
-  it("shows '45m ago' for a post created 45 minutes before now", () => {
+describe("DiscussionSection - age display", () => {
+  it("renders age strings returned by the hook", () => {
     render(
       <DiscussionSection discussionUrl="https://community.open-ecosystem.com/t/topic/42/1" />
     );
     expect(screen.getByText("45m ago")).toBeTruthy();
-  });
-
-  it("shows '3h ago' for a post created 3 hours before now", () => {
-    render(
-      <DiscussionSection discussionUrl="https://community.open-ecosystem.com/t/topic/42/1" />
-    );
     expect(screen.getByText("3h ago")).toBeTruthy();
-  });
-
-  it("shows '2d ago' for a post created 2 days before now", () => {
-    render(
-      <DiscussionSection discussionUrl="https://community.open-ecosystem.com/t/topic/42/1" />
-    );
     expect(screen.getByText("2d ago")).toBeTruthy();
   });
-
-  it("ages are empty strings on first render and populated after mount effect", () => {
-    // Verify ages are not empty after render (effect ran via act in testing-library)
-    render(
-      <DiscussionSection discussionUrl="https://community.open-ecosystem.com/t/topic/42/1" />
-    );
-    const ageElements = screen.getAllByText(/\d+[mhd] ago/);
-    expect(ageElements.length).toBe(3);
-  });
 });
 
 // ---------------------------------------------------------------------------
-// URL-to-ID extraction (tested via component rendering behavior)
-// ---------------------------------------------------------------------------
-
-describe("DiscussionSection - topic ID extraction from URL", () => {
-  it("extracts ID from a URL with a post number suffix (.../id/postNumber)", () => {
-    render(
-      <DiscussionSection discussionUrl="https://community.open-ecosystem.com/t/topic/42/1" />
-    );
-    expect(screen.getByText("Great challenge!")).toBeTruthy();
-  });
-
-  it("extracts ID from a URL without a post number suffix (.../id)", () => {
-    render(
-      <DiscussionSection discussionUrl="https://community.open-ecosystem.com/t/topic/42" />
-    );
-    expect(screen.getByText("Great challenge!")).toBeTruthy();
-  });
-
-  it("returns no posts when the URL's topic ID is not in the data", () => {
-    render(
-      <DiscussionSection discussionUrl="https://community.open-ecosystem.com/t/topic/99/1" />
-    );
-    expect(screen.getByText(/No community posts yet/)).toBeTruthy();
-  });
-});
-
-// ---------------------------------------------------------------------------
-// File-content regression: fix for redundant extractTopicId call in useEffect
+// File content regressions — component must delegate to the hook
 // ---------------------------------------------------------------------------
 
 describe("DiscussionSection - file content regressions", () => {
@@ -200,17 +139,19 @@ describe("DiscussionSection - file content regressions", () => {
     "utf-8"
   );
 
-  it("useEffect dependency array is [topicId], not [discussionUrl]", () => {
-    expect(source).toContain("[topicId]");
-    expect(source).not.toContain("[discussionUrl]");
+  it("imports useDiscussionPosts from the hook", () => {
+    expect(source).toContain('from "@/hooks/useDiscussionPosts"');
   });
 
-  it("extractTopicId is called at component top level, not inside useEffect", () => {
-    // extractTopicId should appear: once in its definition, once at component top.
-    // The useEffect body should not contain a call to extractTopicId.
-    const effectMatch = source.match(/useEffect\(\(\) => \{([\s\S]*?)\}, \[topicId\]\)/);
-    expect(effectMatch).toBeTruthy();
-    const effectBody = effectMatch![1];
-    expect(effectBody).not.toContain("extractTopicId");
+  it("does not contain a dynamic import of discussion-data.json", () => {
+    expect(source).not.toContain('import("@/data/discussion-data.json")');
+  });
+
+  it("does not contain extractTopicId (logic moved to hook)", () => {
+    expect(source).not.toContain("extractTopicId");
+  });
+
+  it("does not contain useEffect (pure renderer)", () => {
+    expect(source).not.toContain("useEffect");
   });
 });

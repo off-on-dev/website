@@ -36,7 +36,7 @@ const AdventureDetail = (): JSX.Element => {
       <div className="min-h-screen bg-background">
         <Navbar />
         <main id="main-content" className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
-          <img src={`${import.meta.env.BASE_URL}offon_mascot_3_transparent.webp`} alt="" aria-hidden="true" width={120} height={120} loading="lazy" className="mb-6 w-24 opacity-80" />
+          <img src={`${import.meta.env.BASE_URL}offon_mascot_3_transparent.webp`} alt="The OffOn firefly mascot looking puzzled" width={120} height={120} loading="lazy" className="mb-6 w-24 opacity-80" />
           <h1 className="text-2xl font-bold text-foreground mb-3">Adventure not found</h1>
           <p className="text-muted-foreground">The adventure you're looking for doesn't exist.</p>
         </main>
@@ -69,7 +69,7 @@ const AdventureDetail = (): JSX.Element => {
               <Link
                 key={level.id}
                 to={`/adventures/${adventure.id}/levels/${level.id}`}
-                className="group card-glow relative rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                className="group card-glow relative rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 <div className="mb-3">
                   <DifficultyBadge difficulty={level.difficulty} showDot />
