@@ -4,7 +4,7 @@ import { COMMUNITY_URL } from "@/data/constants";
 
 export const Hero = (): JSX.Element => {
   const fireflies = useMemo(
-    () => Array.from({ length: 8 }, (_, i) => <span key={i} className="firefly" />),
+    () => Array.from({ length: 12 }, (_, i) => <span key={i} className="firefly" />),
     [],
   );
 

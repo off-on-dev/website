@@ -77,22 +77,22 @@ const Sponsors = (): JSX.Element => {
             <p className="text-muted-foreground leading-relaxed">
               Dynatrace is the founding sponsor of {BRAND_NAME}. There is Dynatrace-related content in one dedicated category which you can choose to join, but the rest of the content is vendor-neutral and community-driven.
             </p>
-            {currentSponsors.map((s) => {
-              const logoSrc = s.logoDark && s.logoLight
-                ? (theme === "dark" ? s.logoDark : s.logoLight)
+            {currentSponsors.map((sponsor) => {
+              const logoSrc = sponsor.logoDark && sponsor.logoLight
+                ? (theme === "dark" ? sponsor.logoDark : sponsor.logoLight)
                 : null;
               return (
                 <a
-                  key={s.name}
-                  href={s.url}
+                  key={sponsor.name}
+                  href={sponsor.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-start sm:justify-center opacity-80 hover:opacity-100 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
                 >
                   {logoSrc ? (
-                    <img src={logoSrc} alt={s.name} width={200} height={36} className="h-10 w-auto max-w-full" loading="lazy" />
+                    <img src={logoSrc} alt={sponsor.name} width={200} height={36} className="h-10 w-auto max-w-full" loading="lazy" />
                   ) : (
-                    <span className="text-base font-semibold text-foreground">{s.name}</span>
+                    <span className="text-base font-semibold text-foreground">{sponsor.name}</span>
                   )}
                   <span className="sr-only"> (opens in new tab)</span>
                 </a>

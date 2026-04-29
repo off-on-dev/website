@@ -83,7 +83,7 @@ See CLAUDE.md → Content and Copy → Capitalisation for the full rule and exam
 
 ## Colors
 
-All color tokens are CSS custom properties defined in `src/index.css` and exposed as Tailwind utilities via `tailwind.config.ts`. Always use the Tailwind class that references the token; never hardcode hex values.
+All color tokens are CSS custom properties defined in `src/index.css` (in `:root`/`.light`) and registered as Tailwind utilities via the `@theme` block in `src/index.css`. There is no `tailwind.config.ts`. Always use the Tailwind class that references the token; never hardcode hex values.
 
 ### Dark Mode (default, `:root, .dark`)
 
@@ -433,6 +433,27 @@ Currently used in: `src/hooks/useTheme.tsx`.
 
 ---
 
+### `useDiscussionPosts`
+
+`src/hooks/useDiscussionPosts.ts`
+
+Loads Discourse posts for a single adventure level from `src/data/discussion-data.json` (written at build time). Returns them as `PostWithAge[]` — raw post fields plus a computed `age` string. Returns `[]` until the data loads or if the URL contains no recognisable topic ID.
+
+```ts
+const posts = useDiscussionPosts(discussionUrl);
+// or, in tests:
+const posts = useDiscussionPosts(discussionUrl, mockLoader);
+```
+
+| Argument | Type | Description |
+|---|---|---|
+| `discussionUrl` | `string` | Full Discourse topic URL. Topic ID is extracted from the path. |
+| `loader` | `DiscussionDataLoader` (optional) | Async function that returns the raw JSON data. Defaults to a dynamic `import()` of the JSON file (omitted from the ChallengeDetail bundle). Pass a `vi.fn().mockResolvedValue(data)` in tests — see the Testing section of `CLAUDE.md` for the injectable-loader pattern. |
+
+**Why the injectable loader?** Vitest's dynamic-import mock runner has a multi-second first-call cost per test run. Injecting a mock loader bypasses it entirely. `vi.spyOn` on the module export does NOT work for same-module calls in ES module context.
+
+---
+
 ## Components
 
 ### `ConsentBanner`
@@ -581,7 +602,7 @@ Displays up to five community posts for an adventure level, fetched at build tim
 |---|---|---|
 | `discussionUrl` | `string` | Full Discourse topic URL. The topic ID is extracted from this URL and used as the key into `src/data/discussion-data.json`. |
 
-The component extracts the numeric topic ID from the URL with `extractTopicId`, looks up posts in the build-time JSON, and renders them as linked cards. Falls back to an empty state with a "Join the discussion" link when no posts are found.
+The component is a pure renderer. All data-loading and ID-extraction logic lives in `useDiscussionPosts` (see Hooks section). Falls back to an empty state with a "Join the discussion" link when no posts are found.
 
 Uses `aria-live="polite"` so screen readers announce the age values when they update after mount.
 

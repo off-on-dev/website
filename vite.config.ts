@@ -1,5 +1,6 @@
 import { defineConfig, type Plugin } from "vite";
 import { reactRouter } from "@react-router/dev/vite";
+import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import { writeFileSync } from "node:fs";
 
@@ -90,7 +91,7 @@ export default defineConfig(() => ({
       overlay: false,
     },
   },
-  plugins: [reactRouter(), discourseDataPlugin()],
+  plugins: [tailwindcss(), reactRouter(), discourseDataPlugin()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

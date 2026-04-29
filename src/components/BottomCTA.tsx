@@ -7,8 +7,7 @@ export const BottomCTA = (): JSX.Element => {
     <section className="bg-primary py-16 px-6 md:px-16 relative overflow-hidden">
       <img
         src={`${import.meta.env.BASE_URL}offon_mascot_2_transparent.webp`}
-        alt=""
-        aria-hidden="true"
+        alt="The OffOn firefly mascot pointing the way"
         width={180}
         height={180}
         loading="lazy"

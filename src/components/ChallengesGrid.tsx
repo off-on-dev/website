@@ -9,8 +9,7 @@ import { FilteredLevelCard } from "@/components/FilteredLevelCard";
 const AdventureCard = ({ adventure }: { adventure: Adventure }): JSX.Element => (
   <Link
     to={`/adventures/${adventure.id}`}
-    aria-label={adventure.title}
-    className="group card-glow relative rounded-xl border-2 border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+    className="group card-glow relative rounded-xl border-2 border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
   >
     <div className="flex items-center justify-between mb-3">
       <span className="font-mono text-xs text-muted-foreground">Adventure</span>
@@ -47,12 +46,12 @@ export const ChallengesGrid = (): JSX.Element => {
 
   const filteredLevels = activeTopic
     ? ADVENTURES
-        .filter((a) => a.tags.includes(activeTopic))
-        .flatMap((a) =>
-          a.levels.map((level) => ({
+        .filter((adventure) => adventure.tags.includes(activeTopic))
+        .flatMap((adventure) =>
+          adventure.levels.map((level) => ({
             level,
-            adventureId: a.id,
-            adventureTitle: a.title,
+            adventureId: adventure.id,
+            adventureTitle: adventure.title,
           }))
         )
     : [];
