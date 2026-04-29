@@ -7,6 +7,7 @@ export default {
   basename: process.env.VITE_BASE_PATH ?? "/",
   prerender: [
     "/",
+    "/adventures",
     "/404",
     "/sponsors",
     "/about",

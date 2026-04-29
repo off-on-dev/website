@@ -370,6 +370,7 @@ Check the following on every component you write or modify.
   correct path and does not import from the wrong one.
 - Prerender tests live in `src/test/prerender.test.ts` and require a production build to exist. Always run `npm run build` before `npm test` if prerender tests are included. These tests assert that each prerendered index.html contains exactly one `<title>` tag with the correct page-specific content.
 - Playwright smoke tests live in `e2e/smoke.spec.ts` and also require a production build. Run `npm run build` then `npm run test:e2e`. These tests verify each prerendered route loads in a real browser without JS errors, that `main#main-content` is present, that hydration completed (theme toggle, consent banner, client-side navigation all work), and that the skip nav is the first Tab stop. When adding a new prerendered route, add it to the `ROUTES` array in `e2e/smoke.spec.ts`. Do not add Playwright tests for logic that Vitest already covers.
+- SEO tests live in `src/test/seo.test.ts` and require a production build. They assert that every prerendered route has a `<meta name="description">` within 160 chars, all `og:*` tags (`og:title`, `og:description`, `og:type`, `og:url`, `og:image`, `og:image:width`, `og:image:height`, `og:image:alt`, `og:site_name`, `og:locale`), all `twitter:*` tags (`twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`, `twitter:image:alt`), and a correct `<link rel="canonical">`. When adding a new prerendered route, add it to the `ROUTES` array in `src/test/seo.test.ts`.
 
 ---
 

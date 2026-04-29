@@ -436,24 +436,24 @@ html {
   }
 
   .light {
-    /* Core */
-    --background: 230 100% 99%;
-    --foreground: 240 30% 6%;
+    /* Core - barely-cool palette; slight cool/warm contrast against amber accents */
+    --background: 220 12% 98%;
+    --foreground: 240 25% 8%;
 
-    --card: 230 100% 98%;
-    --card-foreground: 240 30% 6%;
+    --card: 220 10% 96%;
+    --card-foreground: 240 25% 8%;
 
-    --popover: 230 100% 98%;
-    --popover-foreground: 240 30% 6%;
+    --popover: 220 10% 96%;
+    --popover-foreground: 240 25% 8%;
 
     --primary: 41 100% 60%;
     --primary-foreground: 0 0% 0%;
 
-    --secondary: 225 100% 97%;
-    --secondary-foreground: 240 30% 6%;
+    --secondary: 220 8% 93%;
+    --secondary-foreground: 240 25% 8%;
 
-    --muted: 225 100% 97%;
-    --muted-foreground: 0 0% 29%;
+    --muted: 220 8% 93%;
+    --muted-foreground: 35 8% 38%;
 
     --accent: 41 100% 60%;
     --accent-foreground: 0 0% 0%;
@@ -461,29 +461,29 @@ html {
     --destructive: 0 84% 40%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 230 20% 85%;
-    --input: 230 20% 85%;
+    --border: 220 12% 87%;
+    --input: 220 12% 87%;
     --ring: 41 100% 35%;
-    --foreground-hover: 204 22% 9%;
+    --foreground-hover: 240 25% 5%;
 
     /* Custom text tokens */
-    --text-primary: 240 30% 6%;
-    --text-secondary: 240 20% 9%;
-    --text-tertiary: 0 0% 29%;
-    --text-muted: 0 0% 29%;
-    --text-faint: 0 0% 29%;
+    --text-primary: 240 25% 8%;
+    --text-secondary: 240 20% 18%;
+    --text-tertiary: 35 8% 38%;
+    --text-muted: 35 8% 38%;
+    --text-faint: 35 8% 40%;
 
     /* Custom surface tokens */
-    --surface: 230 100% 98%;
-    --surface-border: 230 20% 85%;
-    --surface-hover: 225 100% 97%;
-    --accent-subtle: 41 100% 94%;
+    --surface: 220 10% 96%;
+    --surface-border: 220 12% 87%;
+    --surface-hover: 220 8% 93%;
+    --accent-subtle: 41 100% 92%;
 
     /* Color aliases */
     --electric: 41 100% 60%;
     --emerald: 41 100% 60%;
-    --teal: 0 0% 0%;
-    --purple: 0 0% 0%;
+    --teal: 240 25% 8%;
+    --purple: 240 25% 8%;
 
     /* Difficulty badges */
     --difficulty-starter: 41 100% 80%;
@@ -491,21 +491,21 @@ html {
     --difficulty-architect: 41 100% 60%;
 
     /* Type badges */
-    --type-simulation: 0 0% 0%;
-    --type-interactive: 0 0% 0%;
+    --type-simulation: 240 25% 8%;
+    --type-interactive: 240 25% 8%;
 
     /* Sidebar */
-    --sidebar-background: 230 100% 99%;
-    --sidebar-foreground: 0 0% 0%;
+    --sidebar-background: 220 12% 98%;
+    --sidebar-foreground: 240 25% 8%;
     --sidebar-primary: 41 100% 60%;
     --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 225 100% 97%;
-    --sidebar-accent-foreground: 0 0% 0%;
-    --sidebar-border: 0 0% 83%;
-    --sidebar-ring: 0 0% 0%;
+    --sidebar-accent: 220 8% 93%;
+    --sidebar-accent-foreground: 240 25% 8%;
+    --sidebar-border: 220 12% 87%;
+    --sidebar-ring: 41 100% 35%;
 
     /* text-primary used as text color overrides */
-    --primary-text-override: 0 0% 0%;
+    --primary-text-override: 240 25% 8%;
   }
 }
 
@@ -732,18 +732,18 @@ html {
 .light h4,
 .light h5,
 .light h6 {
-  color: hsl(var(--primary-foreground));
+  color: hsl(var(--foreground));
 }
 
 .light p,
 .light li,
 .light td,
 .light label {
-  color: hsl(240 30% 6%);
+  color: hsl(var(--foreground));
 }
 
 .light .text-primary {
-  color: hsl(0 0% 0%);
+  color: hsl(var(--foreground));
 }
 
 .light a:hover.text-primary {
@@ -768,18 +768,16 @@ html {
   border-color: hsl(43 100% 50% / 0.5);
 }
 
-.light .bg-primary:not(.btn-primary):not(.btn-ghost):not(.btn-inverse) {
-  background-color: hsl(0 0% 0%);
+/* bg-primary sections stay amber in light mode — body copy uses text-background/90
+   which resolves to near-white cream and needs darkening for contrast on amber */
+.light .bg-primary .text-background\/90 {
+  color: hsl(240 25% 8% / 0.8);
 }
 
-.light .bg-primary .text-background\/90,
 .light .bg-primary h1,
 .light .bg-primary h2,
-.light .bg-primary h3,
-.light .bg-primary p,
-.light .bg-primary strong,
-.light .bg-primary span {
-  color: hsl(41 100% 60%);
+.light .bg-primary h3 {
+  color: hsl(var(--foreground));
 }
 
 .light .btn-ghost-inverse {
@@ -793,47 +791,49 @@ html {
   color: hsl(var(--primary));
 }
 
-.light .bg-primary .btn-inverse {
-  background-color: hsl(41 100% 60%);
-  color: hsl(0 0% 0%);
-  border-color: hsl(41 100% 60%);
+/* Dark mode: btn-inverse border is amber, which blends into the amber bg-primary section,
+   making the button appear smaller than btn-ghost-inverse whose dark border is visible.
+   Use primary-foreground (near-black) to match the hover border and make the outline visible. */
+.bg-primary .btn-inverse {
+  border-color: hsl(var(--primary-foreground));
 }
 
-/* Bug 1 fix: .light .bg-primary span forces yellow on all child spans,
-   overriding the inherited black from the button element. Target spans
-   directly with higher specificity to keep text readable on yellow bg.
-   The :hover counterpart below restores yellow on the black hover bg
-   so spans match BottomCTA (which uses plain text nodes that inherit). */
+/* btn-inverse on amber bg: black fill with amber text so it pops off the section */
+.light .bg-primary .btn-inverse {
+  background-color: hsl(0 0% 0%);
+  color: hsl(41 100% 60%);
+  border-color: hsl(0 0% 0%);
+}
+
 .light .bg-primary .btn-inverse span {
-  color: hsl(0 0% 0%);
+  color: hsl(41 100% 60%);
 }
 
 .light .bg-primary .btn-inverse:hover {
-  background-color: hsl(0 0% 0%);
-  color: hsl(41 100% 60%);
-  border-color: hsl(41 100% 60%);
+  background-color: transparent;
+  color: hsl(0 0% 0%);
+  border-color: hsl(0 0% 0%);
 }
 
 .light .bg-primary .btn-inverse:hover span {
-  color: hsl(41 100% 60%);
+  color: hsl(0 0% 0%);
 }
 
+/* btn-ghost-inverse on amber bg: dark border and text to contrast against amber */
 .light .bg-primary .btn-ghost-inverse {
   background-color: transparent;
-  color: hsl(var(--primary));
-  border-color: hsl(var(--primary) / 0.6);
+  color: hsl(0 0% 0%);
+  border-color: hsl(0 0% 0% / 0.5);
 }
 
 .light .bg-primary .btn-ghost-inverse:hover {
-  background-color: hsl(41 100% 60%);
-  color: hsl(0 0% 0%);
-  border-color: hsl(41 100% 60%);
+  background-color: hsl(0 0% 0%);
+  color: hsl(41 100% 60%);
+  border-color: hsl(0 0% 0%);
 }
 
-/* Bug 2 fix: hover turns the button yellow; spans inside still get yellow
-   from the broad .light .bg-primary span rule. Override to black. */
 .light .bg-primary .btn-ghost-inverse:hover span {
-  color: hsl(0 0% 0%);
+  color: hsl(41 100% 60%);
 }
 
 .light nav a:not(.logo-link) {
@@ -907,22 +907,22 @@ html {
    match inside .light. */
 .light h2.text-primary,
 .light h3.text-primary {
-  color: hsl(0 0% 0%);
+  color: hsl(var(--foreground));
 }
 
 .light p.text-primary {
-  color: hsl(0 0% 0%);
+  color: hsl(var(--foreground));
 }
 
 /* Excludes .badge-levels which intentionally keeps amber styling in light mode */
 .light span.text-primary:not(.badge-levels) {
-  color: hsl(0 0% 0%);
+  color: hsl(var(--foreground));
 }
 
-/* Sponsor avatar fallback: div with bg-primary/10 and text-primary gives ~1.8:1
-   contrast in light mode (yellow on near-white). Force near-black text. */
+/* Sponsor avatar fallback: div with bg-primary/10 and text-primary gives poor
+   contrast in light mode (yellow on cream). Use foreground token instead. */
 .light div.text-primary {
-  color: hsl(0 0% 0%);
+  color: hsl(var(--foreground));
 }
 
 .light a.text-primary {
@@ -971,6 +971,14 @@ html {
   --difficulty-text: 0 0% 0%;
   /* intentionally darker than --primary for contrast on light bg */
   --firefly-color: 41 100% 45%;
+}
+
+/* ─── Focus ring contrast on bg-primary sections ────────── */
+/* Both modes: bg-primary section background is amber (--primary); the default --ring
+   is also amber, so the outer ring edge would be 1:1. Override to black (12.7:1
+   against amber) so focused children stay visible in both light and dark mode. */
+.bg-primary {
+  --ring: 0 0% 0%;
 }
 
 /* ─── Reduced-motion: non-transform active fallback ──── */

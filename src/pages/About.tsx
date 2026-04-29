@@ -11,7 +11,7 @@ import { buildPageMeta } from "@/lib/meta";
 export const meta: MetaFunction = () =>
   buildPageMeta({
     title: `About ${BRAND_NAME} - Building the contributors and maintainers of tomorrow`,
-    description: `Learn about ${BRAND_NAME}'s mission and values for a vendor-agnostic open source community.`,
+    description: `${BRAND_NAME} is the home for open source enthusiasts. Learn about our mission, who we're for, and the values that make this community different.`,
     url: `${SITE_URL}/about`,
   });
 
@@ -22,8 +22,8 @@ const About = (): JSX.Element => {
       <main id="main-content">
       <PageHero
         eyebrow="About"
-        title="Building the contributors and maintainers of tomorrow"
-        description="Vendor-neutral. Open source. Community-driven."
+        title="The Home for Open Source Enthusiasts"
+        description="Our mission, who we're for, and the values that shape everything we build."
       />
       <AboutSection />
       <BottomCTA />

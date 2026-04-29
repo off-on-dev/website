@@ -24,7 +24,7 @@ export const meta: MetaFunction = ({ params }) => {
   const learningsSummary = level.learnings.slice(0, 2).join("; ");
   return buildPageMeta({
     title: `${level.name} - ${adventure.title} - ${BRAND_NAME}`,
-    description: `Build skills with ${level.name}, a ${level.difficulty.toLowerCase()} challenge in ${adventure.title}. Learn ${learningsSummary} in a hands-on scenario on ${BRAND_NAME}.`.slice(0, 160),
+    description: `${level.name}: get hands-on with ${learningsSummary}. A ${level.difficulty.toLowerCase()} challenge from ${adventure.title} on ${BRAND_NAME}.`.slice(0, 160),
     url: `${SITE_URL}/adventures/${adventure.id}/levels/${level.id}`,
     ogType: "article",
   });
@@ -40,6 +40,7 @@ const ChallengeDetail = (): JSX.Element => {
       <div className="min-h-screen bg-background">
         <Navbar />
         <main id="main-content" className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
+          <img src={`${import.meta.env.BASE_URL}offon_mascot_3_transparent.png`} alt="" aria-hidden="true" width={120} height={120} loading="lazy" className="mb-6 w-24 opacity-80" />
           <h1 className="text-2xl font-bold text-foreground mb-3">Challenge not found</h1>
           <p className="text-muted-foreground">The challenge you're looking for doesn't exist.</p>
         </main>
@@ -51,7 +52,8 @@ const ChallengeDetail = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main id="main-content" className="mx-auto max-w-4xl px-6 md:px-16 pt-28 pb-24">
+      <main id="main-content" className="px-6 md:px-16 pt-28 pb-24">
+      <div className="mx-auto max-w-6xl">
         {/* Breadcrumb */}
         <Link
           to={`/adventures/${adventure.id}`}
@@ -92,6 +94,7 @@ const ChallengeDetail = (): JSX.Element => {
         </div>
 
         <TechFilterSection />
+      </div>
       </main>
       <Footer />
     </div>

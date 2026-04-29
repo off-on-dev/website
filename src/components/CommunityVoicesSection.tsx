@@ -15,22 +15,22 @@ const pillars: Pillar[] = [
     icon: <Megaphone size={28} aria-hidden="true" />,
     title: "Community Voices",
     desc: "Share tutorials, showcase projects, post open source news, and write about what you have learned. The home for community-created content.",
-    cta: "Share something",
+    cta: "Share Something",
     href: `${COMMUNITY_URL}/c/community-voices/38`,
   },
   {
     icon: <CircleHelp size={28} aria-hidden="true" />,
     title: "Q&A",
     desc: "Stuck on a technical problem or not sure where to start with open source? Post a question and get answers from the community. No question is too basic.",
-    cta: "Ask a question",
+    cta: "Ask a Question",
     href: `${COMMUNITY_URL}/c/general/q-a/10`,
   },
 ];
 
 export const CommunityVoicesSection = (): JSX.Element => {
   return (
-    <section className="py-24 px-6">
-      <div className="mx-auto max-w-5xl">
+    <section className="py-24 px-6 md:px-16">
+      <div className="mx-auto max-w-6xl">
         <div>
           <div className="animate-fade-up mb-3">
             <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">
@@ -38,10 +38,10 @@ export const CommunityVoicesSection = (): JSX.Element => {
             </span>
           </div>
           <h2 className="animate-fade-up-delay-1 mb-3 text-3xl font-bold text-primary md:text-4xl">
-            Share and learn together
+            Share and Learn Together
           </h2>
           <p className="animate-fade-up-delay-1 mb-12 max-w-xl text-[hsl(var(--text-secondary))] leading-relaxed">
-            Post what you've built, write about what you've learned, or ask the community for help. Every contribution counts.
+            Post what you've built, write about what you've learned, or ask the community for help. Open source runs on shared knowledge as much as shared code.
           </p>
           <div className="animate-fade-up-delay-2 grid gap-6 md:grid-cols-2">
             {pillars.map((p) => (

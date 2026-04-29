@@ -76,6 +76,7 @@ public/
 | Path | Page | Purpose |
 |---|---|---|
 | `/` | `Index.tsx` | Home page |
+| `/adventures` | `Adventures.tsx` | All adventures listing |
 | `/adventures/:id` | `AdventureDetail.tsx` | Adventure landing |
 | `/adventures/:id/levels/:levelId` | `ChallengeDetail.tsx` | Individual challenge |
 | `/sponsors` | `Sponsors.tsx` | Sponsorship info |

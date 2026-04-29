@@ -21,7 +21,7 @@ export const meta: MetaFunction = ({ params }) => {
   const tagsSummary = adventure.tags.slice(0, 3).join(", ");
   return buildPageMeta({
     title: `${adventure.title} - ${BRAND_NAME} Adventures`,
-    description: `Join ${adventure.title} on ${BRAND_NAME} with ${adventure.levels.length} hands-on challenge levels. Topics include ${tagsSummary}.`.slice(0, 160),
+    description: `Tackle ${adventure.title} on ${BRAND_NAME}, a hands-on open source adventure. Work with ${tagsSummary} in a real-world scenario, directly in your browser.`.slice(0, 160),
     url: `${SITE_URL}/adventures/${adventure.id}`,
     ogType: "article",
   });
@@ -36,6 +36,7 @@ const AdventureDetail = (): JSX.Element => {
       <div className="min-h-screen bg-background">
         <Navbar />
         <main id="main-content" className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
+          <img src={`${import.meta.env.BASE_URL}offon_mascot_3_transparent.png`} alt="" aria-hidden="true" width={120} height={120} loading="lazy" className="mb-6 w-24 opacity-80" />
           <h1 className="text-2xl font-bold text-foreground mb-3">Adventure not found</h1>
           <p className="text-muted-foreground">The adventure you're looking for doesn't exist.</p>
         </main>
@@ -47,7 +48,8 @@ const AdventureDetail = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main id="main-content" className="mx-auto max-w-4xl px-6 md:px-16 pt-28 pb-24">
+      <main id="main-content" className="px-6 md:px-16 pt-28 pb-24">
+      <div className="mx-auto max-w-6xl">
         {/* Header */}
         <div className="mb-10">
           <span className="inline-block mb-4 rounded-sm border border-[hsl(var(--surface-border))] px-2 py-0.5 font-mono text-xs text-[hsl(var(--text-faint))] uppercase tracking-wider">
@@ -67,6 +69,7 @@ const AdventureDetail = (): JSX.Element => {
               <Link
                 key={level.id}
                 to={`/adventures/${adventure.id}/levels/${level.id}`}
+                aria-label={level.name}
                 className="group card-glow relative rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 <div className="mb-3">
@@ -97,6 +100,7 @@ const AdventureDetail = (): JSX.Element => {
         </div>
 
         <TechFilterSection />
+      </div>
       </main>
       <Footer />
     </div>

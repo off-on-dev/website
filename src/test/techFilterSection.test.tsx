@@ -17,7 +17,7 @@ describe("TechFilterSection", () => {
   describe("initial state", () => {
     it("renders the section heading", () => {
       renderSection();
-      expect(screen.getByRole("heading", { level: 2, name: "Find challenges by technology" })).toBeTruthy();
+      expect(screen.getByRole("heading", { level: 2, name: "Find Challenges by Technology" })).toBeTruthy();
     });
 
     it("renders a filter button for every unique tag", () => {

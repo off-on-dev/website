@@ -15,7 +15,7 @@ import { buildPageMeta } from "@/lib/meta";
 export const meta: MetaFunction = () =>
   buildPageMeta({
     title: `${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`,
-    description: "A welcoming open source community. Learn through hands-on challenges to build skills. Share expertise and projects. Ask for help anytime.",
+    description: "A vendor-neutral community for open source enthusiasts. Learn through hands-on challenges, share what you know, and connect with people who love open source.",
     url: `${SITE_URL}/`,
   });
 
@@ -39,13 +39,13 @@ const Index = (): JSX.Element => {
         <ChallengesGrid />
         <section className="bg-primary py-16 px-6 md:px-16">
           <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <h2 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background">
-              <span className="block">Got an idea</span>
-              <span className="block">for an adventure?</span>
+            <h2 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground">
+              <span className="block">Got an Idea</span>
+              <span className="block">for an Adventure?</span>
             </h2>
             <div className="flex flex-col gap-4">
               <p className="font-sans text-base leading-relaxed text-background/90">
-                Shape what the community learns next. Got a scenario worth exploring? Submit a concept and help it become the next adventure.
+                Shape what the community learns next. Submit a scenario and help it become the next adventure.
               </p>
               <div className="flex gap-3 flex-wrap mt-2">
                 <a
@@ -54,7 +54,7 @@ const Index = (): JSX.Element => {
                   rel="noopener noreferrer"
                   className="btn-inverse"
                 >
-                  Propose an adventure idea <ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  Propose an Adventure Idea <ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </div>
             </div>

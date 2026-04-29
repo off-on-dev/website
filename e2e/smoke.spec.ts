@@ -12,6 +12,7 @@ const ROUTES: RouteSpec[] = [
   { path: "/handbook", title: /Handbook/ },
   { path: "/privacy", title: /Privacy Policy/ },
   { path: "/404", title: /Page Not Found/ },
+  { path: "/adventures", title: /Adventures - Hands-on open source challenges/ },
   { path: "/adventures/echoes-lost-in-orbit", title: /Echoes Lost in Orbit/ },
   { path: "/adventures/building-cloudhaven", title: /Building CloudHaven/ },
   { path: "/adventures/the-ai-observatory", title: /The AI Observatory/ },

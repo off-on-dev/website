@@ -10,6 +10,7 @@ const allTags = Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort();
 const AdventureCard = ({ adventure }: { adventure: Adventure }): JSX.Element => (
   <Link
     to={`/adventures/${adventure.id}`}
+    aria-label={adventure.title}
     className="group card-glow relative rounded-xl border-2 border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
   >
     <div className="flex items-center justify-between mb-3">
@@ -58,18 +59,18 @@ export const ChallengesGrid = (): JSX.Element => {
     : [];
 
   return (
-    <section id="challenges" className="py-24 px-6">
+    <section id="challenges" className="py-24 px-6 md:px-16">
       <div className="mx-auto max-w-6xl">
         <div>
             <div className="animate-fade-up mb-3">
               <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">Adventures</span>
             </div>
             <h2 className="animate-fade-up-delay-1 mb-6 text-3xl font-bold text-primary md:text-4xl">
-              Choose your adventure
+              Choose Your Adventure
             </h2>
 
             {/* Topic filter chips */}
-            <div className="animate-fade-up-delay-1 mb-8 flex flex-wrap items-center gap-2">
+            <div role="group" aria-label="Filter challenges by technology" className="animate-fade-up-delay-1 mb-8 flex flex-wrap items-center gap-2">
               {allTags.map((tag) => (
                 <button
                   key={tag}
@@ -94,6 +95,7 @@ export const ChallengesGrid = (): JSX.Element => {
                     <Link
                       key={`${adventureId}-${level.id}`}
                       to={`/adventures/${adventureId}/levels/${level.id}`}
+                      aria-label={level.name}
                       className="group card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 transition-all duration-200 hover:-translate-y-[3px] flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     >
                       <div className="mb-3">

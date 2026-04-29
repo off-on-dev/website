@@ -83,7 +83,7 @@ describe('AdventureDetail - heading structure', () => {
       </ConsentProvider>
     );
     expect(screen.getByRole('heading', { level: 2, name: 'Challenges' })).toBeTruthy();
-    expect(screen.getByRole('heading', { level: 2, name: 'Find challenges by technology' })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 2, name: 'Find Challenges by Technology' })).toBeTruthy();
   });
 });
 
@@ -98,7 +98,7 @@ describe('ChallengeDetail - heading structure', () => {
         </MemoryRouter>
       </ConsentProvider>
     );
-    expect(screen.getByRole('heading', { level: 2, name: 'Find challenges by technology' })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 2, name: 'Find Challenges by Technology' })).toBeTruthy();
   });
 
   it('does not render "Key Learnings" as any heading level', () => {

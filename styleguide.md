@@ -134,26 +134,32 @@ All color tokens are CSS custom properties defined in `src/index.css` and expose
 
 ### Light Mode (`.light`)
 
-| Token | Value | Hex | Notes |
+The light mode uses a barely-cool background palette. The slight cool/warm contrast between the background and amber accents is intentional — it mirrors how dark mode works (near-black vs warm amber), just inverted and far more subtle. `bg-primary` sections (PageHero, BottomCTA) stay amber in light mode — they do not flip to black.
+
+| Token | Value | Approx hex | Notes |
 |---|---|---|---|
-| Background | `hsl(230 100% 99%)` | `#FAFBFF` | |
-| Surface/card | `hsl(230 100% 98%)` | `#F5F7FF` | |
-| Surface hover | `hsl(225 100% 97%)` | `#F0F4FF` | |
-| Primary accent | `hsl(41 100% 60%)` | `#ffc034` | Fill only, never text |
-| Primary foreground | `hsl(0 0% 0%)` | `#000000` | Text on yellow |
-| Foreground/body | `hsl(240 30% 6%)` | `#0A0B14` | |
-| Headings | `hsl(0 0% 0%)` | `#000000` | |
-| Muted text | `hsl(0 0% 29%)` | `#4A4A4A` | |
-| Border | `hsl(230 20% 85%)` | | |
-| Badge: Beginner | `#ffe2a3` | | Black text |
-| Badge: Intermediate | `hsl(41 100% 76%)` | | Black text |
-| Badge: Expert | `hsl(41 100% 68%)` | | Black text |
+| Background | `hsl(220 12% 98%)` | `#F8F9FB` | Barely-cool off-white |
+| Surface/card | `hsl(220 10% 96%)` | `#F4F5F7` | Slightly deeper card |
+| Surface hover | `hsl(220 8% 93%)` | `#ECEEF1` | Hover state |
+| Primary accent | `hsl(41 100% 60%)` | `#ffc034` | Fill/border only, never text |
+| Primary foreground | `hsl(0 0% 0%)` | `#000000` | Text on amber fills |
+| Foreground/body | `hsl(240 25% 8%)` | `#0D0D17` | Deep navy |
+| Headings | `hsl(240 25% 8%)` | `#0D0D17` | Same as foreground (via `--foreground` token) |
+| Muted text | `hsl(35 8% 38%)` | `#655E55` | Warm gray (intentional warm/cool contrast) |
+| Border | `hsl(220 12% 87%)` | `#D8DBE2` | Cool border |
+| Badge: Beginner | `hsl(41 80% 85%)` | | Black text |
+| Badge: Intermediate | `hsl(85 40% 82%)` | | Black text |
+| Badge: Expert | `hsl(245 40% 87%)` | | Black text |
 
 #### `.light` override strategy
 
 Yellow (`hsl(41 100% 60%)`) is the global `--primary` color and is safe as a fill or border. It must **never** be used as a text color in light mode because it fails contrast requirements.
 
-All `text-primary` usages are overridden to black (`#000000`) in light mode via unlayered CSS rules at the bottom of `src/index.css`, scoped to `.light`. These rules must **not** be placed inside `@layer base`. Rules inside `@layer base` are always overridden by `@layer utilities` regardless of specificity, so the override would be silently ignored. Keeping the overrides unlayered gives them the specificity needed to win against utility classes.
+All `text-primary` usages are overridden to `hsl(var(--foreground))` (deep warm navy) in light mode via unlayered CSS rules at the bottom of `src/index.css`, scoped to `.light`. These rules must **not** be placed inside `@layer base`. Rules inside `@layer base` are always overridden by `@layer utilities` regardless of specificity, so the override would be silently ignored. Keeping the overrides unlayered gives them the specificity needed to win against utility classes.
+
+#### `bg-primary` sections in light mode
+
+In light mode, `bg-primary` sections (PageHero, BottomCTA) stay amber. Do **not** add a `background-color: black` override. Body text inside those sections uses `text-background/90` which resolves to the cream background color and must be overridden to dark navy in `.light .bg-primary .text-background\/90`.
 
 ---
 
@@ -173,7 +179,7 @@ All `text-primary` usages are overridden to black (`#000000`) in light mode via 
 
 Never place any button directly on a `bg-primary` background using `.btn-primary` or `.btn-ghost`. Those classes are designed for page-background contexts and will produce yellow text on yellow background in light mode.
 
-For buttons inside `bg-primary` sections (e.g. `PageHero`, `BottomCTA`), always use `.btn-inverse` or `.btn-ghost-inverse`. The `.light .bg-primary .btn-inverse` and `.light .bg-primary .btn-ghost-inverse` rules in `src/index.css` (unlayered section) enforce correct contrast: black text on yellow fill at rest, yellow text on black fill on hover.
+For buttons inside `bg-primary` sections (e.g. `PageHero`, `BottomCTA`), always use `.btn-inverse` or `.btn-ghost-inverse`. Since the section stays amber in light mode, the unlayered overrides in `src/index.css` set `.btn-inverse` to black background with amber text (reversal), and `.btn-ghost-inverse` to transparent with a dark border and dark text.
 
 Never add a `bg-primary` section button without adding or verifying the corresponding `.light .bg-primary .btn-*` override in the unlayered section of `src/index.css`.
 
