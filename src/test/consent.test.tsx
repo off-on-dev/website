@@ -236,9 +236,14 @@ describe('useConsent - mount restoration', () => {
 describe('useConsent - provider guard', () => {
   it('throws when used outside ConsentProvider', () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    // React 18 dispatches an 'error' event on window for uncaught render
+    // errors. jsdom prints those to stderr unless the event is cancelled.
+    const suppressWindowError = (e: ErrorEvent) => e.preventDefault();
+    window.addEventListener('error', suppressWindowError);
     expect(() => render(<ConsentStatus />)).toThrow(
       'useConsent must be used within ConsentProvider'
     );
+    window.removeEventListener('error', suppressWindowError);
     consoleSpy.mockRestore();
   });
 });

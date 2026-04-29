@@ -618,7 +618,7 @@ No props. Owns its own `activeTopic` state internally.
 **Two display modes:**
 
 - **No tag selected (default):** renders one `AdventureCard` per adventure. Each card links to `/adventures/:id` and carries `aria-label={adventure.title}`.
-- **Tag selected:** replaces adventure cards with a grid of `FilteredLevelCard` instances (one per matching level across all adventures). Each card links to `/adventures/:id/levels/:levelId` and carries `aria-label={level.name}`. Wrapped in `aria-live="polite"` so screen readers announce updates.
+- **Tag selected:** replaces adventure cards with a grid of `FilteredLevelCard` instances (one per matching level across all adventures). Each card links to `/adventures/:id/levels/:levelId`. Wrapped in `aria-live="polite"` so screen readers announce updates.
 
 The filter chips use `role="group"` with `aria-label="Filter challenges by technology"`. Clicking an active chip deselects it and returns to the adventure card view. The `aria-live` region is only mounted when a tag is active.
 
