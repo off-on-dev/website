@@ -494,6 +494,25 @@ these rules.
 - Avoid passive voice where an active one works.
 - Keep sentences short and scannable.
 
+### Capitalisation
+
+All UI labels use **title case (Chicago style)**. Body copy uses **sentence case**.
+
+**Title case applies to:**
+- Button and CTA labels: `"Join the Community"`, `"Start a Challenge"`, `"Get in Touch"`
+- Section headings (h2/h3): `"Choose Your Adventure"`, `"Find Challenges by Technology"`
+- Card and value titles: `"Learn by Doing"`, `"Open Source First"`, `"Events & Meetups"`
+- Navigation labels and footer links: `"Propose an Adventure Idea"`
+- Pill and badge text
+
+**Title case rule:** capitalise every word except articles (a, an, the), prepositions shorter than five letters (by, in, on, of, to, for, at, up), and coordinating conjunctions (and, but, or, nor) — unless they open or close the label.
+- Correct: `"Join the Community"`, `"Share and Learn Together"`, `"Find Challenges by Technology"`
+- Incorrect: `"Join The Community"`, `"Share And Learn Together"`, `"Find challenges by technology"`
+
+**Sentence case applies to:** body paragraphs, meta descriptions, `<p>` elements, hero sub-headings, and card descriptions. Capitalise the first word and proper nouns only.
+
+**Exception:** decorative overline labels (spans with `section-label` / `uppercase tracking-widest`) use CSS `text-transform: uppercase`, so write their source text in plain lowercase — `"adventures"` not `"Adventures"` or `"ADVENTURES"`.
+
 ### Formatting
 - Never use em dashes anywhere, including comments and documentation.
   Use commas, periods, or restructure the sentence instead.

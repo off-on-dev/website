@@ -62,6 +62,23 @@ Only Latin subset variants are preloaded. Other subsets are served from `public/
 | Overline label | `font-sans text-sm font-medium uppercase tracking-widest` | Inter |
 | Badge / tag | `font-mono text-xs uppercase tracking-wider` | JetBrains Mono |
 
+### Copy casing
+
+**UI labels (buttons, CTAs, headings, card titles, nav links) use title case (Chicago style).** Body copy and descriptions use sentence case.
+
+Title case rule: capitalise every word except articles (a, an, the), prepositions under five letters (by, in, on, of, to, for, at), and coordinating conjunctions (and, but, or, nor) — unless they open the label.
+
+| Context | Case | Example |
+|---|---|---|
+| Button / CTA label | Title case | `"Join the Community"`, `"Start a Challenge"` |
+| Section heading (h2/h3) | Title case | `"Find Challenges by Technology"`, `"Share and Learn Together"` |
+| Card / value title | Title case | `"Learn by Doing"`, `"Open Source First"` |
+| Footer / nav link text | Title case | `"Propose an Adventure Idea"` |
+| Body paragraph / description | Sentence case | `"A vendor-neutral space for open source practitioners."` |
+| Overline label (CSS uppercase) | Write in lowercase, CSS transforms it | Source: `"adventures"` → renders as `"ADVENTURES"` |
+
+See CLAUDE.md → Content and Copy → Capitalisation for the full rule and examples.
+
 ---
 
 ## Colors
