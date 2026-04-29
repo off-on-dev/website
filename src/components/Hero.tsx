@@ -35,7 +35,7 @@ export const Hero = (): JSX.Element => {
             <p className="font-sans mx-auto mt-6 max-w-xl text-lg leading-relaxed text-[hsl(var(--text-secondary))]">
               A welcoming community for open source enthusiasts. Learn through hands-on challenges, share your knowledge, and grow alongside people who love open source as much as you do.
             </p>
-            <div className="animate-fade-up-delay-3 mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
               <a href="#challenges" className="btn-primary">
                 Start a Challenge <ArrowDown size={16} aria-hidden="true" />
               </a>
