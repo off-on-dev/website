@@ -7,7 +7,7 @@ export const BottomCTA = (): JSX.Element => {
     <section className="bg-primary py-16 px-6 md:px-16">
       <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* Left - headline */}
-          <h2 className="animate-fade-up text-4xl md:text-5xl font-bold leading-tight tracking-tight text-background">
+          <h2 className="animate-fade-up text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground">
             <span className="block">Start curious.</span>
             <span className="block">Break things.</span>
             <span className="block">Learn together.</span>
@@ -21,7 +21,7 @@ export const BottomCTA = (): JSX.Element => {
             </p>
             <p className="font-sans text-base leading-relaxed text-background/90">
               That's {BRAND_NAME}.{" "}
-              <strong className="font-medium text-background">
+              <strong className="font-medium text-primary-foreground">
                 You bring your questions, your fixes, your ideas.
               </strong>{" "}
               We bring the challenges, the tooling, and the engineers who care about the same problems you do.
@@ -29,7 +29,7 @@ export const BottomCTA = (): JSX.Element => {
             <p className="font-sans text-base leading-relaxed text-background/90">
               Every spark starts with one person. Together, we illuminate the whole open source ecosystem.
             </p>
-            <p className="font-sans text-base font-medium text-background">
+            <p className="font-sans text-base font-medium text-background/90">
               Always on. Always open. Always learning.
             </p>
             <div className="flex gap-3 flex-wrap mt-2">

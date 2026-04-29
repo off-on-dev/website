@@ -534,6 +534,22 @@ Uses `aria-live="polite"` so screen readers announce the age values when they up
 
 ---
 
+### `TechFilterSection`
+
+`src/components/TechFilterSection.tsx`
+
+Self-contained technology filter used on `AdventureDetail` and `ChallengeDetail` pages. Renders a row of filter pills (one per unique tag across all adventures) and a grid of matching challenge cards when a tag is selected.
+
+```tsx
+<TechFilterSection />
+```
+
+No props. Owns its own `activeTech` state internally. `ALL_TAGS` is derived once at module load from `ADVENTURES`. The results grid only renders when a tag is active and at least one matching level exists. Wraps results in `aria-live="polite"` so screen readers announce updates.
+
+The challenge cards in the results grid use the same Inline Challenge Card layout as `ChallengesGrid` (see Patterns section).
+
+---
+
 ## Patterns
 
 ### Inline Challenge Card
@@ -560,7 +576,7 @@ Inside the bottom row:
 
 ### Technology Filter Pattern
 
-Used on the home page (`ChallengesGrid`), `AdventureDetail`, and `ChallengeDetail` to filter challenge cards by technology tag.
+Used on the home page (`ChallengesGrid`) and on adventure/challenge detail pages via the `TechFilterSection` component. `AdventureDetail` and `ChallengeDetail` must use `<TechFilterSection />` — do not inline this pattern in those pages again.
 
 ```ts
 const [activeTech, setActiveTech] = useState<string | null>(null);
@@ -571,6 +587,37 @@ const [activeTech, setActiveTech] = useState<string | null>(null);
 - Clicking an already-active chip deselects it: `setActiveTech(activeTech === tag ? null : tag)`.
 - No URL change and no page navigation occur on selection.
 - The filtered results grid only renders when `activeTech` is non-null and results exist.
+
+---
+
+## Utilities
+
+### `buildPageMeta`
+
+`src/lib/meta.ts`
+
+Generates the standard meta tag array for a page's `meta()` export. Covers `title`, canonical link, `description`, all `og:*` tags, and all `twitter:*` tags with the site's standard OG image.
+
+```ts
+import { buildPageMeta } from "@/lib/meta";
+
+export const meta: MetaFunction = () =>
+  buildPageMeta({
+    title: "Page Title - OffOn",
+    description: "Under 160 characters.",
+    url: `${SITE_URL}/path`,
+  });
+```
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `title` | `string` | required | Page title and `og:title` / `twitter:title` |
+| `description` | `string` | required | Meta description and `og:description` / `twitter:description` |
+| `url` | `string` | required | Canonical URL and `og:url` |
+| `ogType` | `string?` | `"website"` | `og:type` value. Use `"article"` for adventure and challenge pages. |
+| `extra` | `MetaDescriptor[]?` | `[]` | Additional tags appended after the standard set (e.g. `{ name: "robots", content: "noindex" }` for `Privacy`). |
+
+Every page's `meta()` must use this function. Do not inline the og/twitter tag block manually.
 
 ---
 

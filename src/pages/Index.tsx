@@ -10,31 +10,14 @@ import { ConnectSection } from "@/components/ConnectSection";
 import { BottomCTA } from "@/components/BottomCTA";
 import { Footer } from "@/components/Footer";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
+import { buildPageMeta } from "@/lib/meta";
 
-export const meta: MetaFunction = () => {
-  const pageTitle = `${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`;
-  const desc = "A welcoming open source community. Learn through hands-on challenges to build skills. Share expertise and projects. Ask for help anytime.";
-  return [
-    { title: pageTitle },
-    { tagName: "link", rel: "canonical", href: `${SITE_URL}/` },
-    { name: "description", content: desc },
-    { property: "og:title", content: pageTitle },
-    { property: "og:description", content: desc },
-    { property: "og:type", content: "website" },
-    { property: "og:url", content: `${SITE_URL}/` },
-    { property: "og:image", content: `${SITE_URL}/og.png` },
-    { property: "og:image:width", content: "1200" },
-    { property: "og:image:height", content: "630" },
-    { property: "og:image:alt", content: pageTitle },
-    { property: "og:site_name", content: BRAND_NAME },
-    { property: "og:locale", content: "en_GB" },
-    { name: "twitter:title", content: pageTitle },
-    { name: "twitter:description", content: desc },
-    { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:image", content: `${SITE_URL}/og.png` },
-    { name: "twitter:image:alt", content: pageTitle },
-  ];
-};
+export const meta: MetaFunction = () =>
+  buildPageMeta({
+    title: `${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`,
+    description: "A welcoming open source community. Learn through hands-on challenges to build skills. Share expertise and projects. Ask for help anytime.",
+    url: `${SITE_URL}/`,
+  });
 
 const Index = (): JSX.Element => {
   const { hash } = useLocation();

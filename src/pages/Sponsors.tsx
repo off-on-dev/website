@@ -7,6 +7,7 @@ import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME } from "@/data/constants";
 import { useTheme } from "@/hooks/useTheme";
+import { buildPageMeta } from "@/lib/meta";
 import dtLogoDark from "@/assets/Dynatrace_Logo_color_negative_horizontal.svg";
 import dtLogoLight from "@/assets/Dynatrace_Logo_color_positive_horizontal.svg";
 
@@ -45,30 +46,12 @@ const supportWays = [
   },
 ];
 
-export const meta: MetaFunction = () => {
-  const pageTitle = `Sponsorship and Independence - ${BRAND_NAME}`;
-  const desc = `See how sponsorship supports ${BRAND_NAME} while the community remains independent, vendor-neutral, and member-driven.`;
-  return [
-    { title: pageTitle },
-    { tagName: "link", rel: "canonical", href: `${SITE_URL}/sponsors` },
-    { name: "description", content: desc },
-    { property: "og:title", content: pageTitle },
-    { property: "og:description", content: desc },
-    { property: "og:type", content: "website" },
-    { property: "og:url", content: `${SITE_URL}/sponsors` },
-    { property: "og:image", content: `${SITE_URL}/og.png` },
-    { property: "og:image:width", content: "1200" },
-    { property: "og:image:height", content: "630" },
-    { property: "og:image:alt", content: pageTitle },
-    { property: "og:site_name", content: BRAND_NAME },
-    { property: "og:locale", content: "en_GB" },
-    { name: "twitter:title", content: pageTitle },
-    { name: "twitter:description", content: desc },
-    { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:image", content: `${SITE_URL}/og.png` },
-    { name: "twitter:image:alt", content: pageTitle },
-  ];
-};
+export const meta: MetaFunction = () =>
+  buildPageMeta({
+    title: `Sponsorship and Independence - ${BRAND_NAME}`,
+    description: `See how sponsorship supports ${BRAND_NAME} while the community remains independent, vendor-neutral, and member-driven.`,
+    url: `${SITE_URL}/sponsors`,
+  });
 
 const Sponsors = (): JSX.Element => {
   const { theme } = useTheme();

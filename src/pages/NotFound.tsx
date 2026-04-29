@@ -73,7 +73,7 @@ const NotFound = (): JSX.Element => {
                   className="card-glow flex flex-col gap-1.5 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5 h-full hover:border-primary/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 >
                   <span className="text-sm font-semibold text-foreground">{link.label}</span>
-                  <span className="text-sm text-muted-foreground leading-relaxed">{link.desc}</span>
+                  <span className="text-sm text-foreground leading-relaxed">{link.desc}</span>
                 </Link>
               </li>
             ))}

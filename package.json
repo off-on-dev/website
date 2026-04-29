@@ -9,7 +9,7 @@
     "build": "react-router build",
     "build:dev": "react-router build --mode development",
     "lint": "eslint .",
-    "preview": "npx serve dist/client",
+    "preview": "cp dist/client/404/index.html dist/client/404.html && npx serve dist/client",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test"
@@ -55,6 +55,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.2",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.59.1",
     "@react-router/dev": "^7.14.2",

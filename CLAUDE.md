@@ -84,7 +84,7 @@ npm run lint         # ESLint
 npm test             # Run tests once (Vitest)
 npm run test:watch   # Tests in watch mode
 npm run test:e2e     # Playwright smoke tests (requires npm run build first)
-npm run preview      # Serve the production build locally
+npm run preview      # Copy 404 fallback and serve the production build locally
 
 npx shadcn@latest add <component>   # Add a shadcn/ui component
 ```

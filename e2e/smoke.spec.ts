@@ -1,6 +1,7 @@
 // Requires a production build in dist/client/. Run `npm run build` before `npm run test:e2e`.
 
 import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 
 type RouteSpec = { path: string; title: RegExp };
 
@@ -36,6 +37,30 @@ test.describe("every prerendered route", () => {
       expect(jsErrors, `unexpected JS errors on ${path}`).toHaveLength(0);
       await expect(page.locator("main#main-content")).toBeAttached();
       await expect(page).toHaveTitle(title);
+
+      // Disable animations so axe measures elements at their final visible state,
+      // not at opacity 0 mid-animation which produces false contrast failures.
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      const a11y = await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "best-practice"])
+        .analyze();
+      expect(a11y.violations, `axe violations on ${path}`).toEqual([]);
+    });
+  }
+});
+
+test.describe("every prerendered route (light mode)", () => {
+  for (const { path } of ROUTES) {
+    test(path, async ({ page }) => {
+      await page.addInitScript(() => localStorage.setItem("theme", "light"));
+      await page.goto(path);
+
+      await expect(page.locator("html")).toHaveClass(/light/);
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      const a11y = await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "best-practice"])
+        .analyze();
+      expect(a11y.violations, `axe violations on ${path} (light mode)`).toEqual([]);
     });
   }
 });

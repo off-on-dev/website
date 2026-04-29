@@ -4,33 +4,16 @@ import { Navbar } from "@/components/Navbar";
 import { ArrowUpRight } from "lucide-react";
 import { Footer } from "@/components/Footer";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME } from "@/data/constants";
+import { buildPageMeta } from "@/lib/meta";
 
 const extLink = "docs-ext-link inline-flex items-center gap-1 underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
 
-export const meta: MetaFunction = () => {
-  const pageTitle = `Handbook - ${BRAND_NAME}`;
-  const desc = `Everything you need to participate and grow in the ${BRAND_NAME} community: quick start, docs, policies, and how to get involved.`;
-  return [
-    { title: pageTitle },
-    { tagName: "link", rel: "canonical", href: `${SITE_URL}/handbook` },
-    { name: "description", content: desc },
-    { property: "og:title", content: pageTitle },
-    { property: "og:description", content: desc },
-    { property: "og:type", content: "website" },
-    { property: "og:url", content: `${SITE_URL}/handbook` },
-    { property: "og:image", content: `${SITE_URL}/og.png` },
-    { property: "og:image:width", content: "1200" },
-    { property: "og:image:height", content: "630" },
-    { property: "og:image:alt", content: pageTitle },
-    { property: "og:site_name", content: BRAND_NAME },
-    { property: "og:locale", content: "en_GB" },
-    { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:title", content: pageTitle },
-    { name: "twitter:description", content: desc },
-    { name: "twitter:image", content: `${SITE_URL}/og.png` },
-    { name: "twitter:image:alt", content: pageTitle },
-  ];
-};
+export const meta: MetaFunction = () =>
+  buildPageMeta({
+    title: `Handbook - ${BRAND_NAME}`,
+    description: `Everything you need to participate and grow in the ${BRAND_NAME} community: quick start, docs, policies, and how to get involved.`,
+    url: `${SITE_URL}/handbook`,
+  });
 
 const CommunityGuide = (): JSX.Element => {
   return (

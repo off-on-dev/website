@@ -574,6 +574,16 @@ html {
 .animate-fade-up-delay-3    { animation: fadeUp 0.6s ease-out 0.3s both; }
 .animate-marquee            { animation: marquee 30s linear infinite; }
 
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-fade-up-delay-1,
+  .animate-fade-up-delay-2,
+  .animate-fade-up-delay-3,
+  .animate-marquee {
+    animation: none;
+  }
+}
+
 /* ─── Firefly particles ───────────────────────────────────── */
 
 .firefly {
@@ -762,7 +772,6 @@ html {
   background-color: hsl(0 0% 0%);
 }
 
-.light .bg-primary .text-background,
 .light .bg-primary .text-background\/90,
 .light .bg-primary h1,
 .light .bg-primary h2,
