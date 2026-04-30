@@ -568,6 +568,49 @@ Distinct from `LevelCard`: `FilteredLevelCard` is a router link used in listing/
 
 ---
 
+### `ChallengeHighlights`
+
+`src/components/ChallengeHighlights.tsx`
+
+A slim 3-column feature strip placed directly after `ChallengesGrid`, separated by a top border. Answers "why are these challenges worth doing" without a full card section. Each item is an icon + bold title + one-line description, no card borders.
+
+| Item | Icon |
+|---|---|
+| Real Environments | `Wrench` |
+| Earn Credly Badges | `Award` |
+| Vendor-neutral | `Shield` |
+
+No props. Used only in `Index.tsx`.
+
+---
+
+### `CommunitySection`
+
+`src/components/CommunitySection.tsx`
+
+Merged replacement for the former `CommunityVoicesSection` and `ConnectSection`. Renders a 4-card 2-column grid covering all community participation paths: share, ask, introduce, and attend. Section label: "community", h2: "Get Involved".
+
+| Card | Icon | Destination |
+|---|---|---|
+| Community Voices | `Megaphone` | `COMMUNITY_URL/c/community-voices/38` |
+| Q&A | `CircleHelp` | `COMMUNITY_URL/c/general/q-a/10` |
+| Introduce Yourself | `UserPlus` | `COMMUNITY_URL/c/general/introductions/18` |
+| Events & Meetups | `CalendarDays` | `COMMUNITY_URL/c/events-and-talks/12` |
+
+No props. Used only in `Index.tsx`.
+
+---
+
+### `SponsorStrip`
+
+`src/components/SponsorStrip.tsx`
+
+A slim horizontal strip (separated by a top border, `py-12`) with sponsor copy on the left and a "Become a Sponsor" `<Link>` to `/sponsors` on the right. Not a full section — no section label or heading. Sits between `CommunitySection` and `BottomCTA`.
+
+No props.
+
+---
+
 ### `AboutSection`
 
 `src/components/AboutSection.tsx`
@@ -752,14 +795,17 @@ Never put a raw SVG icon next to text inside a plain `inline` or `block` element
 | Icon | Lucide name | Where used |
 |---|---|---|
 | External link (navigation) | `ArrowUpRight` | Navbar GitHub button, BottomCTA GitHub button, CommunityGuide links |
-| Navigate forward / CTA | `ArrowRight` | Inline text links (DiscussionSection, VerificationSection, CommunityVoicesSection, ConnectSection, BottomCTA, LevelCard) |
+| Navigate forward / CTA | `ArrowRight` | Inline text links (DiscussionSection, VerificationSection, CommunitySection, SponsorStrip, BottomCTA, LevelCard) |
 | Navigate back | `ArrowLeft` | ChallengeDetail breadcrumb |
 | Scroll down / anchor | `ArrowDown` | Hero primary CTA |
-| Community Voices section | `Megaphone` | CommunityVoicesSection card icon |
-| Q&A section | `CircleHelp` | CommunityVoicesSection card icon |
-| Introduce yourself section | `UserPlus` | ConnectSection card icon |
-| Events & meetups section | `CalendarDays` | ConnectSection card icon |
+| Community Voices card | `Megaphone` | CommunitySection card icon |
+| Q&A card | `CircleHelp` | CommunitySection card icon |
+| Introduce yourself card | `UserPlus` | CommunitySection card icon |
+| Events & meetups card | `CalendarDays` | CommunitySection card icon |
 | Adventure levels badge | `Layers` | ChallengesGrid adventure card |
+| Real Environments highlight | `Wrench` | ChallengeHighlights |
+| Build Real Skills highlight | `TrendingUp` | ChallengeHighlights |
+| Vendor-neutral highlight | `Shield` | ChallengeHighlights |
 
 ### Brand/social icon exceptions
 
@@ -801,7 +847,7 @@ A utility class for decorative overline labels that appear above section heading
 
 Applied as: `font-sans text-sm font-medium uppercase tracking-widest text-primary section-label`
 
-Used on `<span>` elements in: `CommunityVoicesSection`, `ConnectSection`, `ChallengesGrid`, `NotFound`.
+Used on `<span>` elements in: `CommunitySection`, `ChallengesGrid`, `NotFound`.
 
 **Light mode override:** `.light .section-label` in the unlayered section of `src/index.css` sets `color: hsl(240 20% 9%)` (near-black) so the label does not render as yellow text in light mode.
 

@@ -25,7 +25,7 @@ const CommunityGuide = (): JSX.Element => {
       <PageHero
         eyebrow="Handbook"
         title="Everything You Need to Participate"
-        description={`Everything you need to get started, participate, and grow in the ${BRAND_NAME} community.`}
+        description={`Community guidelines, policies, and resources to help get you started and grow in the ${BRAND_NAME} community.`}
         primaryCta={{ label: <span className="inline-flex items-center gap-2">Meet the Community <ArrowUpRight size={14} aria-hidden="true" /></span>, href: COMMUNITY_URL, external: true }}
       />
 

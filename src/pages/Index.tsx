@@ -1,12 +1,12 @@
-import { useEffect, type JSX } from "react";
-import { useLocation } from "react-router";
+import { type JSX } from "react";
 import type { MetaFunction } from "react-router";
 import { ArrowUpRight } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { ChallengesGrid } from "@/components/ChallengesGrid";
-import { CommunityVoicesSection } from "@/components/CommunityVoicesSection";
-import { ConnectSection } from "@/components/ConnectSection";
+import { ChallengeHighlights } from "@/components/ChallengeHighlights";
+import { CommunitySection } from "@/components/CommunitySection";
+import { SponsorStrip } from "@/components/SponsorStrip";
 import { BottomCTA } from "@/components/BottomCTA";
 import { Footer } from "@/components/Footer";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
@@ -20,23 +20,13 @@ export const meta: MetaFunction = () =>
   });
 
 const Index = (): JSX.Element => {
-  const { hash } = useLocation();
-
-  useEffect(() => {
-    if (hash) {
-      const el = document.querySelector(hash);
-      if (el) {
-        setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 100);
-      }
-    }
-  }, [hash]);
-
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <main id="main-content">
         <Hero />
         <ChallengesGrid />
+        <ChallengeHighlights />
         <section className="bg-primary py-16 px-6 md:px-16">
           <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <h2 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground">
@@ -60,8 +50,8 @@ const Index = (): JSX.Element => {
             </div>
           </div>
         </section>
-        <CommunityVoicesSection />
-        <ConnectSection />
+        <CommunitySection />
+        <SponsorStrip />
         <BottomCTA />
       </main>
       <Footer />
