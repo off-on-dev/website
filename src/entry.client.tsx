@@ -34,10 +34,15 @@ startTransition(() => {
     isStaleServe()
       ? {
           // HydratedRouter requires __reactRouterContext to be present; it cannot
-          // be cleared. Instead, suppress the recoverable hydration error (#418)
+          // be cleared. Instead, suppress the recoverable hydration error (#418/#425)
           // that React raises when the prerendered route state doesn't match the
           // current URL. React auto-recovers to a client render of the correct page.
-          onRecoverableError: () => {},
+          // Only suppress known hydration errors; log everything else.
+          onRecoverableError: (error: unknown) => {
+            const msg = error instanceof Error ? error.message : String(error);
+            if (msg.includes("418") || msg.includes("425")) return;
+            console.error(error);
+          },
         }
       : undefined,
   );

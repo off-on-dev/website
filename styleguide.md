@@ -576,9 +576,9 @@ A slim 3-column feature strip placed directly after `ChallengesGrid`, separated 
 
 | Item | Icon |
 |---|---|
-| Real Environments | `Wrench` |
-| Earn Credly Badges | `Award` |
-| Vendor-neutral | `Shield` |
+| Learn by Doing | `BookOpen` |
+| Build Real Skills | `TrendingUp` |
+| Open Source | `Shield` |
 
 No props. Used only in `Index.tsx`.
 
@@ -803,7 +803,7 @@ Never put a raw SVG icon next to text inside a plain `inline` or `block` element
 | Introduce yourself card | `UserPlus` | CommunitySection card icon |
 | Events & meetups card | `CalendarDays` | CommunitySection card icon |
 | Adventure levels badge | `Layers` | ChallengesGrid adventure card |
-| Real Environments highlight | `Wrench` | ChallengeHighlights |
+| Learn by Doing highlight | `BookOpen` | ChallengeHighlights |
 | Build Real Skills highlight | `TrendingUp` | ChallengeHighlights |
 | Vendor-neutral highlight | `Shield` | ChallengeHighlights |
 
