@@ -16,7 +16,7 @@ The domain `offon.dev` is always lowercase (it is a URL, not a brand mention).
 
 | Role | Family | Key weights | Format |
 |---|---|---|---|
-| Headings / display (`font-heading`) | Syne | 700 primary (400–800 available) | WOFF2 only (`public/fonts/syne-*.woff2`) |
+| Headings / display (`font-heading`) | Syne | 600, 700 | WOFF2 only (`public/fonts/syne-*.woff2`) |
 | Body & UI (`font-sans`) | Inter | 400, 500, 600 primary (700 available) | WOFF2 only (`public/fonts/inter-*.woff2`) |
 | Code / mono (`font-mono`, `code`, `pre`) | JetBrains Mono | 400 primary (500, 600 available) | WOFF2 only (`public/fonts/jetbrains-mono-*.woff2`) |
 
@@ -32,15 +32,17 @@ Subset coverage (via `unicode-range` in `src/index.css` -- only the needed subse
 
 ### Font preload
 
-Five fonts are preloaded via the `links()` export in `src/root.tsx` to avoid the three-level font discovery delay (HTML parse → CSS parse → font file request):
+Fonts are preloaded to avoid the three-level font discovery delay (HTML parse → CSS parse → font file request). Preloads are split across global and per-route `links()` exports:
 
-- `inter-latin-400-normal.woff2`, used by body text
-- `inter-latin-500-normal.woff2`, used by body medium weight
-- `inter-latin-600-normal.woff2`, used by nav links and subheadings
-- `inter-latin-700-normal.woff2`, used by bold body text
-- `syne-latin-700-normal.woff2`, used by headings
+**Global (`src/root.tsx`) — preloaded on every page:**
+- `inter-latin-400-normal.woff2` — body text (Navbar, paragraphs)
+- `inter-latin-500-normal.woff2` — medium-weight body text (Navbar links)
 
-Only Latin subset variants are preloaded. Other subsets are served from `public/fonts/` but are not preloaded. Check the `links()` export in `src/root.tsx` for the current preload list and update it whenever above-the-fold typography changes.
+**Per-route — preloaded only on pages that need them above the fold:**
+- `syne-latin-700-normal.woff2` — hero h1 (`src/pages/Index.tsx`)
+- `inter-latin-700-normal.woff2` — challenge/adventure h1 (`src/pages/ChallengeDetail.tsx`, `src/pages/AdventureDetail.tsx`)
+
+Inter 600 (`font-semibold`) is used below the fold only and is not preloaded. Only Latin subset variants are preloaded. Other subsets are served from `public/fonts/` but are not preloaded. Check the relevant `links()` exports and update them whenever above-the-fold typography changes.
 
 ### Tailwind font utilities
 
