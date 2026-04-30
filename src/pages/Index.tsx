@@ -15,6 +15,8 @@ import { buildPageMeta } from "@/lib/meta";
 export const links: LinksFunction = () => [
   // Syne 700 is the LCP font for the Hero h1 on the home page.
   { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/syne-latin-700-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+  // Prefetch the Adventures page so the prerendered HTML (and its referenced JS chunk) loads in the background.
+  { rel: "prefetch", href: `${import.meta.env.BASE_URL}adventures` },
 ];
 
 export const meta: MetaFunction = () =>
