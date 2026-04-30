@@ -1,8 +1,9 @@
 import { type JSX } from "react";
 import { useParams, Link } from "react-router";
-import type { MetaFunction } from "react-router";
+import type { LinksFunction, MetaFunction } from "react-router";
 import { ArrowLeft } from "lucide-react";
 import { ADVENTURES } from "@/data/adventures";
+import { NotFoundPage } from "@/components/NotFoundPage";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { LevelCard } from "@/components/LevelCard";
@@ -11,6 +12,11 @@ import { DiscussionSection } from "@/components/DiscussionSection";
 import { TechFilterSection } from "@/components/TechFilterSection";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
+
+export const links: LinksFunction = () => [
+  // Inter 700 is the LCP font for the challenge title h1 on this page.
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-700-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+];
 
 export const meta: MetaFunction = ({ params }) => {
   const adventure = ADVENTURES.find((a) => a.id === params.id);
@@ -36,17 +42,7 @@ const ChallengeDetail = (): JSX.Element => {
   const level = adventure?.levels.find((level) => level.id === levelId);
 
   if (!adventure || !level) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <main id="main-content" className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
-          <img src={`${import.meta.env.BASE_URL}offon_mascot_3_transparent.webp`} alt="The OffOn firefly mascot looking puzzled" width={120} height={120} loading="lazy" className="mb-6 w-24 opacity-80" />
-          <h1 className="text-2xl font-bold text-foreground mb-3">Challenge not found</h1>
-          <p className="text-muted-foreground">The challenge you're looking for doesn't exist.</p>
-        </main>
-        <Footer />
-      </div>
-    );
+    return <NotFoundPage title="Challenge not found" message="The challenge you're looking for doesn't exist." />;
   }
 
   return (
@@ -55,12 +51,14 @@ const ChallengeDetail = (): JSX.Element => {
       <main id="main-content" className="px-6 md:px-16 pt-28 pb-24">
       <div className="mx-auto max-w-6xl">
         {/* Breadcrumb */}
-        <Link
-          to={`/adventures/${adventure.id}`}
-          className="inline-flex items-center gap-1.5 text-sm text-[hsl(var(--text-faint))] hover:text-primary transition-colors mb-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
-        >
-          <ArrowLeft size={14} aria-hidden="true" /> {adventure.title}
-        </Link>
+        <nav aria-label="Breadcrumb">
+          <Link
+            to={`/adventures/${adventure.id}`}
+            className="inline-flex items-center gap-1.5 text-sm text-[hsl(var(--text-faint))] hover:text-primary transition-colors mb-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+          >
+            <ArrowLeft size={14} aria-hidden="true" /> {adventure.title}
+          </Link>
+        </nav>
 
         {/* Header */}
         <div className="mb-10">

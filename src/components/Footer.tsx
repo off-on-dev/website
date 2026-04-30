@@ -17,7 +17,7 @@ export const Footer = (): JSX.Element => {
         {/* Brand */}
         <div>
           <div className="mb-4">
-            <img src={theme === "dark" ? logoDark : logoLight} alt="offon.dev" width={104} height={26} loading="lazy" title="offon.dev" className="h-5" />
+            <img src={theme === "dark" ? logoDark : logoLight} alt="offon.dev" width={104} height={26} loading="lazy" className="h-5" />
           </div>
           <p className="font-sans text-sm text-[hsl(var(--text-secondary))] leading-relaxed md:max-w-xs">
             A vendor-neutral space for open source practitioners to learn through challenges, share what they know, and grow together.

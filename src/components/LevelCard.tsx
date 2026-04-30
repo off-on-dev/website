@@ -25,8 +25,8 @@ export const LevelCard = ({ level, headingLevel = "h2" }: LevelCardProps): JSX.E
     <div className="mb-6">
       <p className="font-sans text-sm uppercase tracking-widest text-primary mb-3">Key Learnings</p>
       <ul className="space-y-2">
-        {level.learnings.map((learning, i) => (
-          <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+        {level.learnings.map((learning) => (
+          <li key={learning} className="flex items-start gap-2 text-sm text-muted-foreground">
             <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
             {learning}
           </li>

@@ -200,7 +200,7 @@
   src: url('../fonts/inter-latin-500-normal.woff2') format('woff2');
   font-weight: 500;
   font-style: normal;
-  font-display: swap;
+  font-display: optional;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
@@ -305,7 +305,7 @@
   src: url('../fonts/syne-latin-700-normal.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
-  font-display: swap;
+  font-display: optional;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
@@ -326,7 +326,6 @@
 }
 
 @import "tailwindcss";
-@import "tw-animate-css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -369,18 +368,6 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 
-  --animate-accordion-down: accordion-down 0.2s ease-out;
-  --animate-accordion-up: accordion-up 0.2s ease-out;
-}
-
-@keyframes accordion-down {
-  from { height: 0; }
-  to { height: var(--radix-accordion-content-height); }
-}
-
-@keyframes accordion-up {
-  from { height: var(--radix-accordion-content-height); }
-  to { height: 0; }
 }
 
 /* WCAG 2.4.11 Focus Not Obscured: prevent fixed navbar and consent banner from fully hiding focused elements */
@@ -664,6 +651,11 @@ html {
 .firefly:nth-child(10) { top: 6%;  right: 20%;  animation-duration: 7s;   animation-delay: 3.5s; }
 .firefly:nth-child(11) { top: 46%; left: 6%;   animation-duration: 8s;   animation-delay: 1.6s; }
 .firefly:nth-child(12) { top: 68%; right: 14%;  animation-duration: 5.5s; animation-delay: 2.3s; }
+
+/* On mobile hide fireflies 7–12; display:none also stops their animations */
+@media (max-width: 639px) {
+  .firefly:nth-child(n+7) { display: none; }
+}
 
 /* ─── Component classes ──────────────────────────────────── */
 

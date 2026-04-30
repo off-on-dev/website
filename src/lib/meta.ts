@@ -16,14 +16,18 @@ export const buildPageMeta = ({
   url,
   ogType = "website",
   extra = [],
-}: PageMetaOptions): MetaDescriptor[] => [
+}: PageMetaOptions): MetaDescriptor[] => {
+  // GitHub Pages 301-redirects /path to /path/ for directory-based routes.
+  // Normalize all canonical URLs to end with / to match the served URL.
+  const canonicalUrl = url.endsWith("/") ? url : `${url}/`;
+  return [
   { title },
-  { tagName: "link", rel: "canonical", href: url },
+  { tagName: "link", rel: "canonical", href: canonicalUrl },
   { name: "description", content: description },
   { property: "og:title", content: title },
   { property: "og:description", content: description },
   { property: "og:type", content: ogType },
-  { property: "og:url", content: url },
+  { property: "og:url", content: canonicalUrl },
   { property: "og:image", content: `${SITE_URL}/og.png` },
   { property: "og:image:width", content: "1200" },
   { property: "og:image:height", content: "630" },
@@ -36,4 +40,5 @@ export const buildPageMeta = ({
   { name: "twitter:image", content: `${SITE_URL}/og.png` },
   { name: "twitter:image:alt", content: title },
   ...extra,
-];
+  ];
+};

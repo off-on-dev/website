@@ -1,25 +1,10 @@
 import { useState, type JSX } from "react";
-import { ADVENTURES, ALL_TAGS } from "@/data/adventures";
+import { ALL_TAGS, getLevelsByTag } from "@/data/adventures";
 import { FilteredLevelCard } from "@/components/FilteredLevelCard";
-
-type RelatedLevel = {
-  level: (typeof ADVENTURES)[number]["levels"][number];
-  adventureId: string;
-  adventureTitle: string;
-};
-
-const getRelatedLevels = (tech: string): RelatedLevel[] =>
-  ADVENTURES.filter((adventure) => adventure.tags.includes(tech)).flatMap((adventure) =>
-    adventure.levels.map((level) => ({
-      level,
-      adventureId: adventure.id,
-      adventureTitle: adventure.title,
-    }))
-  );
 
 export const TechFilterSection = (): JSX.Element => {
   const [activeTech, setActiveTech] = useState<string | null>(null);
-  const relatedLevels = activeTech ? getRelatedLevels(activeTech) : [];
+  const relatedLevels = activeTech ? getLevelsByTag(activeTech) : [];
 
   return (
     <div>

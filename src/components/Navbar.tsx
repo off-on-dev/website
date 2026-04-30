@@ -14,6 +14,38 @@ const OBSERVED_SECTIONS = ["challenges"];
 const linkCls = "text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent rounded px-1.5 py-0.5 -mx-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 const activeCls = "text-primary underline decoration-primary underline-offset-4";
 
+type NavThemeToggleProps = { theme: "dark" | "light"; onToggle: () => void; className?: string };
+
+const NavThemeToggle = ({ theme, onToggle, className }: NavThemeToggleProps): JSX.Element => (
+  <button
+    onClick={onToggle}
+    className={cn(
+      "flex h-8 w-8 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      className
+    )}
+    aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+  >
+    {theme === "dark" ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
+  </button>
+);
+
+type NavGitHubLinkProps = { onClick?: () => void; className?: string };
+
+const NavGitHubLink = ({ onClick, className }: NavGitHubLinkProps): JSX.Element => (
+  <a
+    href="https://github.com/dynatrace-oss/open-ecosystem-challenges"
+    target="_blank"
+    rel="noopener noreferrer"
+    className={cn(
+      "rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-4 py-2 text-sm font-medium text-foreground/70 hover:text-primary hover:border-primary/30 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 inline-flex items-center gap-1",
+      className
+    )}
+    onClick={onClick}
+  >
+    GitHub<span className="sr-only"> (opens in new tab)</span> <ArrowUpRight size={14} aria-hidden="true" />
+  </a>
+);
+
 type NavLinksProps = {
   homeActive: boolean;
   challengesActive: boolean;
@@ -77,7 +109,6 @@ export const Navbar = (): JSX.Element => {
             width={130}
             height={33}
             loading="eager"
-            title="offon.dev"
             className="h-8"
           />
         </Link>
@@ -85,32 +116,13 @@ export const Navbar = (): JSX.Element => {
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-8">
           <NavLinks homeActive={homeActive} challengesActive={challengesActive} />
-          <button
-            onClick={toggle}
-            className="flex h-8 w-8 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground hover:border-primary/30 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-          >
-            {theme === "dark" ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
-          </button>
-          <a
-            href="https://github.com/dynatrace-oss/open-ecosystem-challenges"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-4 py-2 text-sm font-medium text-foreground/70 hover:text-primary hover:border-primary/30 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 inline-flex items-center gap-1"
-          >
-            GitHub<span className="sr-only"> (opens in new tab)</span> <ArrowUpRight size={14} aria-hidden="true" />
-          </a>
+          <NavThemeToggle theme={theme} onToggle={toggle} className="hover:border-primary/30" />
+          <NavGitHubLink />
         </div>
 
         {/* Mobile: theme toggle + hamburger */}
         <div className="flex md:hidden items-center gap-3">
-          <button
-            onClick={toggle}
-            className="flex h-8 w-8 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-          >
-            {theme === "dark" ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
-          </button>
+          <NavThemeToggle theme={theme} onToggle={toggle} />
           <button
             onClick={() => setMenuOpen((o) => !o)}
             className="flex h-8 w-8 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -130,15 +142,7 @@ export const Navbar = (): JSX.Element => {
           className="md:hidden border-t border-[hsl(var(--surface-border))] bg-background px-6 py-4 flex flex-col gap-4"
         >
           <NavLinks homeActive={homeActive} challengesActive={challengesActive} onNavigate={closeMenu} />
-          <a
-            href="https://github.com/dynatrace-oss/open-ecosystem-challenges"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-4 py-2 text-sm font-medium text-foreground/70 hover:text-primary hover:border-primary/30 transition-all text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 inline-flex items-center justify-center gap-1"
-            onClick={closeMenu}
-          >
-            GitHub<span className="sr-only"> (opens in new tab)</span> <ArrowUpRight size={14} aria-hidden="true" />
-          </a>
+          <NavGitHubLink onClick={closeMenu} className="justify-center" />
         </div>
       )}
     </nav>

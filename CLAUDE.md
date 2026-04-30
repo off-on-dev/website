@@ -209,6 +209,7 @@ without exception. They exist to prevent debugging by accumulation.
 - Do not duplicate card or list markup across components. If the same JSX structure appears in two places, extract a shared component. `FilteredLevelCard` is the established pattern.
 - **Buttons:** use raw `<button>` elements with the CSS utility classes defined in `src/index.css` (`.btn-primary`, `.btn-ghost`, `.btn-inverse`, `.btn-ghost-inverse`). There is no `Button` component wrapper and no `@radix-ui/react-slot` dependency. See `styleguide.md` for which class to use on which background color.
 - **Toasts:** use Sonner via `import { toast } from "@/components/ui/sonner"`. The Radix-based toast stack (`react-toast`, `use-toast`) was removed. Do not reinstall it.
+- **Sonner (`<Toaster>`) and TooltipProvider are intentionally not mounted in `Layout.tsx`** until a call site exists. Do not add them back to `Layout.tsx` speculatively. Mount `<Toaster>` in the nearest layout that actually triggers a toast, and wrap only the subtree that uses `<Tooltip>` with `<TooltipProvider>` at that point.
 
 ### Component CSS patterns
 

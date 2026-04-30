@@ -4,11 +4,10 @@ import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import "./index.css";
 
 export const links: LinksFunction = () => [
+  // Only preload fonts used above the fold on every page (Navbar uses Inter 400 + 500).
+  // Page-specific heading fonts are preloaded in each route module's links() export.
   { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
-  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-700-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
-  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-600-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
   { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-500-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
-  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/syne-latin-700-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
 ];
 
 // Inline script strings extracted to constants so tests can assert ordering in this file.
