@@ -46,7 +46,7 @@ export const DiscussionSection = ({ discussionUrl }: DiscussionSectionProps): JS
         <>
           {posts.map((post, i) => (
             <a
-              key={i}
+              key={`${post.username}-${post.created_at}`}
               href={post.topicUrl}
               target="_blank"
               rel="noopener noreferrer"

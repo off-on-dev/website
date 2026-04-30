@@ -169,8 +169,9 @@ for (const route of ROUTES) {
     it("canonical URL is present and correct", () => {
       const html = readHtml(route);
       const canonical = canonicalHref(html);
+      const expectedCanonical = route.endsWith("/") ? `${SITE_URL}${route}` : `${SITE_URL}${route}/`;
       expect(canonical, 'missing <link rel="canonical">').not.toBeNull();
-      expect(canonical, `canonical must be "${SITE_URL}${route}"`).toBe(`${SITE_URL}${route}`);
+      expect(canonical, `canonical must be "${expectedCanonical}"`).toBe(expectedCanonical);
     });
   });
 }

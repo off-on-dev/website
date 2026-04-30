@@ -5,7 +5,7 @@ import { BRAND_NAME, SITE_URL } from "@/data/constants";
 const BASE = {
   title: "Test Page - OffOn",
   description: "A short test description under 160 characters.",
-  url: "https://offon.dev/test",
+  url: "https://offon.dev/test/",
 };
 
 describe("buildPageMeta", () => {
@@ -81,6 +81,17 @@ describe("buildPageMeta", () => {
     it("uses url for og:url", () => {
       const result = buildPageMeta(BASE);
       expect(result).toContainEqual({ property: "og:url", content: BASE.url });
+    });
+
+    it("appends trailing slash to url that lacks one", () => {
+      const result = buildPageMeta({ ...BASE, url: "https://offon.dev/no-slash" });
+      expect(result).toContainEqual({ tagName: "link", rel: "canonical", href: "https://offon.dev/no-slash/" });
+      expect(result).toContainEqual({ property: "og:url", content: "https://offon.dev/no-slash/" });
+    });
+
+    it("does not double-slash a url that already ends with /", () => {
+      const result = buildPageMeta({ ...BASE, url: "https://offon.dev/already/" });
+      expect(result).toContainEqual({ tagName: "link", rel: "canonical", href: "https://offon.dev/already/" });
     });
   });
 

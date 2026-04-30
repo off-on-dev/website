@@ -1,6 +1,7 @@
 import type { JSX } from "react";
 import { BRAND_NAME } from "@/data/constants";
 import { Zap, GitBranch, Megaphone, Users, Heart, Unlock, MapPin, Shield, LucideIcon } from "lucide-react";
+import { BulletList } from "@/components/BulletList";
 
 type Value = {
   icon: LucideIcon;
@@ -71,38 +72,24 @@ export const AboutSection = (): JSX.Element => {
           <div className="mb-16">
             <h2 className="text-2xl font-bold text-foreground">Who It's For</h2>
             <div className="mt-4 max-w-3xl">
-              <ul className="flex flex-col gap-2">
-                {[
-                  "Curious learners and developers looking for a practical, guided path into open source",
-                  "Engineers, SREs, and practitioners who want to deepen their skills through real-world challenges",
-                  "Contributors and maintainers who want to share knowledge and help grow the next generation",
-                  "Advocates and community builders who want to share their work and grow the open source ecosystem",
-                  "Organisations and sponsors who want to support open source learning and connect with the community",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))]">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
+              <BulletList items={[
+                "Curious learners and developers looking for a practical, guided path into open source",
+                "Engineers, SREs, and practitioners who want to deepen their skills through real-world challenges",
+                "Contributors and maintainers who want to share knowledge and help grow the next generation",
+                "Advocates and community builders who want to share their work and grow the open source ecosystem",
+                "Organisations and sponsors who want to support open source learning and connect with the community",
+              ]} />
             </div>
           </div>
 
           <div className="mb-16">
             <h2 className="text-2xl font-bold text-foreground">What We Stand For</h2>
             <div className="mt-4 max-w-3xl">
-              <ul className="flex flex-col gap-2">
-                {[
-                  "Open, vendor-agnostic practices: every challenge, tool, and content is built around open source",
-                  "Reproducible, action-oriented content: real-world scenarios, hands-on challenges, and practical knowledge you can apply and build on",
-                  "Respectful, inclusive collaboration: constructive feedback, zero tolerance for harassment, and a space where all contributions are visible and valued",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))]">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
+              <BulletList items={[
+                "Open, vendor-agnostic practices: every challenge, tool, and content is built around open source",
+                "Reproducible, action-oriented content: real-world scenarios, hands-on challenges, and practical knowledge you can apply and build on",
+                "Respectful, inclusive collaboration: constructive feedback, zero tolerance for harassment, and a space where all contributions are visible and valued",
+              ]} />
             </div>
           </div>
 

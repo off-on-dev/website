@@ -123,3 +123,18 @@ export const ADVENTURES: Adventure[] = [
 export const ALL_TAGS: string[] = Array.from(
   new Set(ADVENTURES.flatMap((a) => a.tags))
 ).sort();
+
+export type RelatedLevel = {
+  level: AdventureLevel;
+  adventureId: string;
+  adventureTitle: string;
+};
+
+export const getLevelsByTag = (tag: string): RelatedLevel[] =>
+  ADVENTURES.filter((adventure) => adventure.tags.includes(tag)).flatMap((adventure) =>
+    adventure.levels.map((level) => ({
+      level,
+      adventureId: adventure.id,
+      adventureTitle: adventure.title,
+    }))
+  );

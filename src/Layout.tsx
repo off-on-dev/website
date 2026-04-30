@@ -7,11 +7,13 @@ import { ConsentBanner } from "@/components/ConsentBanner";
 import { ConsentProvider, useConsent } from "@/hooks/useConsent";
 
 const ScrollToTop = (): null => {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
   const { consent } = useConsent();
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    if (!hash) {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]);
   useEffect(() => {
     if (consent === "granted" && typeof window.gtag === "function") {
       window.gtag("event", "page_view", { page_path: pathname });

@@ -1,14 +1,20 @@
 import type { JSX } from "react";
-import type { MetaFunction } from "react-router";
+import type { LinksFunction, MetaFunction } from "react-router";
 import { Navbar } from "@/components/Navbar";
 import { ArrowUpRight } from "lucide-react";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
+import { LinkSection } from "@/components/LinkSection";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 
 const extLink = "docs-ext-link inline-flex items-center gap-1 underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
+
+export const links: LinksFunction = () => [
+  // Inter 700 is the LCP font for the PageHero h1 on this page.
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-700-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+];
 
 export const meta: MetaFunction = () =>
   buildPageMeta({
@@ -49,61 +55,30 @@ const CommunityGuide = (): JSX.Element => {
           <section aria-labelledby="docs">
             <h2 id="docs" className="text-2xl font-bold text-foreground mb-5">Docs</h2>
             <div className="space-y-6">
-
-              <div>
-                <h3 className="text-base font-semibold text-foreground mb-2">Participation</h3>
-                <ul className="space-y-1.5">
-                  {[
-                    { label: "Categories", href: `${COMMUNITY_URL}/categories` },
-                    { label: "Posting Guidelines", href: `${COMMUNITY_URL}/t/posting-guidelines/30` },
-                    { label: "Stay in the Loop", href: `${COMMUNITY_URL}/t/stay-in-the-loop/33` },
-                    { label: "Questions & Feedback", href: `${COMMUNITY_URL}/t/questions-feedback/34` },
-                  ].map((item) => (
-                    <li key={item.label} className="flex items-center gap-2.5 text-sm">
-                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                      <a href={item.href} target="_blank" rel="noopener noreferrer" className={extLink}>
-                        {item.label} <ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="text-base font-semibold text-foreground mb-2">Policies</h3>
-                <ul className="space-y-1.5">
-                  {[
-                    { label: "Code of Conduct", href: `${COMMUNITY_URL}/t/code-of-conduct/31` },
-                    { label: "FAQ and Guidelines", href: `${COMMUNITY_URL}/t/faq-guidelines/4` },
-                    { label: "Community Privacy Policy", href: `${COMMUNITY_URL}/t/privacy-policy/22` },
-                  ].map((item) => (
-                    <li key={item.label} className="flex items-center gap-2.5 text-sm">
-                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                      <a href={item.href} target="_blank" rel="noopener noreferrer" className={extLink}>
-                        {item.label} <ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="text-base font-semibold text-foreground mb-2">Challenges</h3>
-                <ul className="space-y-1.5">
-                  {[
-                    { label: "Browse Adventures", href: `${COMMUNITY_URL}/c/challenges/11` },
-                    { label: "Propose an Adventure Idea", href: "https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" },
-                  ].map((item) => (
-                    <li key={item.label} className="flex items-center gap-2.5 text-sm">
-                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                      <a href={item.href} target="_blank" rel="noopener noreferrer" className={extLink}>
-                        {item.label} <ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
+              <LinkSection
+                heading="Participation"
+                links={[
+                  { label: "Categories", href: `${COMMUNITY_URL}/categories` },
+                  { label: "Posting Guidelines", href: `${COMMUNITY_URL}/t/posting-guidelines/30` },
+                  { label: "Stay in the Loop", href: `${COMMUNITY_URL}/t/stay-in-the-loop/33` },
+                  { label: "Questions & Feedback", href: `${COMMUNITY_URL}/t/questions-feedback/34` },
+                ]}
+              />
+              <LinkSection
+                heading="Policies"
+                links={[
+                  { label: "Code of Conduct", href: `${COMMUNITY_URL}/t/code-of-conduct/31` },
+                  { label: "FAQ and Guidelines", href: `${COMMUNITY_URL}/t/faq-guidelines/4` },
+                  { label: "Community Privacy Policy", href: `${COMMUNITY_URL}/t/privacy-policy/22` },
+                ]}
+              />
+              <LinkSection
+                heading="Challenges"
+                links={[
+                  { label: "Browse Adventures", href: `${COMMUNITY_URL}/c/challenges/11` },
+                  { label: "Propose an Adventure Idea", href: "https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" },
+                ]}
+              />
             </div>
           </section>
 

@@ -31,8 +31,8 @@ export const FilteredLevelCard = ({
       {level.name}
     </h3>
     <ul className="mt-3 space-y-1.5">
-      {level.learnings.slice(0, 3).map((learning, i) => (
-        <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+      {level.learnings.slice(0, 3).map((learning) => (
+        <li key={learning} className="flex items-start gap-2 text-sm text-muted-foreground">
           <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
           {learning}
         </li>

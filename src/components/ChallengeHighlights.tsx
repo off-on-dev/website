@@ -27,7 +27,7 @@ const highlights: Highlight[] = [
 
 export const ChallengeHighlights = (): JSX.Element => {
   return (
-    <section className="bg-card py-12 px-6 md:px-16 border-t border-[hsl(var(--surface-border))]">
+    <section aria-label="Challenge highlights" className="bg-card py-16 px-6 md:px-16 border-y border-[hsl(var(--surface-border))]">
       <div className="mx-auto max-w-6xl grid gap-8 sm:grid-cols-3">
         {highlights.map((h) => (
           <div key={h.title} className="flex gap-4">

@@ -1,14 +1,20 @@
 import { type JSX } from "react";
 import { useParams, Link } from "react-router";
-import type { MetaFunction } from "react-router";
+import type { LinksFunction, MetaFunction } from "react-router";
 import { ArrowRight } from "lucide-react";
 import { ADVENTURES } from "@/data/adventures";
+import { NotFoundPage } from "@/components/NotFoundPage";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { TechFilterSection } from "@/components/TechFilterSection";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
+
+export const links: LinksFunction = () => [
+  // Inter 700 is the LCP font for the adventure title h1 on this page.
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-700-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+];
 
 export const meta: MetaFunction = ({ params }) => {
   const adventure = ADVENTURES.find((a) => a.id === params.id);
@@ -32,17 +38,7 @@ const AdventureDetail = (): JSX.Element => {
   const adventure = ADVENTURES.find((adventure) => adventure.id === id);
 
   if (!adventure) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <main id="main-content" className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
-          <img src={`${import.meta.env.BASE_URL}offon_mascot_3_transparent.webp`} alt="The OffOn firefly mascot looking puzzled" width={120} height={120} loading="lazy" className="mb-6 w-24 opacity-80" />
-          <h1 className="text-2xl font-bold text-foreground mb-3">Adventure not found</h1>
-          <p className="text-muted-foreground">The adventure you're looking for doesn't exist.</p>
-        </main>
-        <Footer />
-      </div>
-    );
+    return <NotFoundPage title="Adventure not found" message="The adventure you're looking for doesn't exist." />;
   }
 
   return (
@@ -78,8 +74,8 @@ const AdventureDetail = (): JSX.Element => {
                   {level.name}
                 </h3>
                 <ul className="space-y-1.5 flex-1">
-                  {level.learnings.slice(0, 3).map((learning, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                  {level.learnings.slice(0, 3).map((learning) => (
+                    <li key={learning} className="flex items-start gap-2 text-sm text-muted-foreground">
                       <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                       <span className="line-clamp-1">{learning}</span>
                     </li>

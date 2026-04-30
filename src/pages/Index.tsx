@@ -1,5 +1,5 @@
 import { type JSX } from "react";
-import type { MetaFunction } from "react-router";
+import type { LinksFunction, MetaFunction } from "react-router";
 import { ArrowUpRight } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
@@ -12,11 +12,16 @@ import { Footer } from "@/components/Footer";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 
+export const links: LinksFunction = () => [
+  // Syne 700 is the LCP font for the Hero h1 on the home page.
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/syne-latin-700-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+];
+
 export const meta: MetaFunction = () =>
   buildPageMeta({
     title: `${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`,
     description: "A vendor-neutral community for open source enthusiasts. Learn through hands-on challenges, share what you know, and connect with people who love open source.",
-    url: `${SITE_URL}/`,
+    url: SITE_URL,
   });
 
 const Index = (): JSX.Element => {

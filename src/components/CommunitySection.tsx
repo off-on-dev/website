@@ -50,7 +50,7 @@ export const CommunitySection = (): JSX.Element => {
             community
           </span>
         </div>
-        <h2 className="animate-fade-up-delay-1 mb-3 text-3xl font-bold text-primary md:text-4xl">
+        <h2 className="animate-fade-up-delay-1 mb-6 text-3xl font-bold text-primary md:text-4xl">
           Get Involved
         </h2>
         <p className="animate-fade-up-delay-1 mb-12 max-w-xl text-[hsl(var(--text-secondary))] leading-relaxed">

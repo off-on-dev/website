@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import type { MetaFunction } from "react-router";
+import type { LinksFunction, MetaFunction } from "react-router";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -44,6 +44,11 @@ const supportWays = [
     title: "Adventures and Challenges",
     description: "Sponsor an adventure or challenge and help bring new open source learning content to the community.",
   },
+];
+
+export const links: LinksFunction = () => [
+  // Inter 700 is the LCP font for the PageHero h1 on this page.
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-700-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
 ];
 
 export const meta: MetaFunction = () =>
