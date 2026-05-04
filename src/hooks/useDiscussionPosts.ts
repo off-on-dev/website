@@ -38,6 +38,13 @@ const defaultLoader: DiscussionDataLoader = () =>
     (m) => m.default as Record<string, StoredPost[]>
   );
 
+/**
+ * Loads discussion posts for an adventure level from pre-built static data.
+ * Post ages are computed client-side after mount to avoid calling Date.now() during render.
+ * @param discussionUrl - Full Discourse topic URL; the numeric topic ID is extracted automatically.
+ * @param loader - Optional loader for testing; defaults to dynamically importing discussion-data.json.
+ * @returns Array of posts with computed relative age strings (e.g. "2h ago"), or empty array while loading.
+ */
 export function useDiscussionPosts(
   discussionUrl: string,
   loader: DiscussionDataLoader = defaultLoader,

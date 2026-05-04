@@ -45,18 +45,18 @@ export const CommunitySection = (): JSX.Element => {
   return (
     <section className="py-24 px-6 md:px-16">
       <div className="mx-auto max-w-6xl">
-        <div className="animate-fade-up mb-3">
+        <div className="mb-3">
           <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">
             community
           </span>
         </div>
-        <h2 className="animate-fade-up-delay-1 mb-6 text-3xl font-bold text-primary md:text-4xl">
+        <h2 className="mb-6 text-3xl font-bold text-primary md:text-4xl">
           Get Involved
         </h2>
-        <p className="animate-fade-up-delay-1 mb-12 max-w-xl text-[hsl(var(--text-secondary))] leading-relaxed">
+        <p className="mb-12 max-w-xl text-[hsl(var(--text-secondary))] leading-relaxed">
           The community is where open source comes alive. Share what you know, ask for help, meet the people behind the projects, and find events near you.
         </p>
-        <div className="animate-fade-up-delay-2 grid gap-6 sm:grid-cols-2">
+        <div className="grid gap-6 sm:grid-cols-2">
           {cards.map((card) => (
             <div
               key={card.title}

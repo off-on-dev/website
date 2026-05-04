@@ -40,11 +40,12 @@ Node.js **22** is required. Version is pinned in `.nvmrc`, run `nvm use` to swit
 | `npm run lint` | Run ESLint across the project |
 | `npm test` | Run the full test suite once (Vitest) |
 | `npm run test:watch` | Run tests in watch mode |
+| `npm run test:coverage` | Run tests with v8 coverage report |
 | `npm run test:e2e` | Playwright smoke tests (requires `npm run build` first) |
 
 Run `npm run lint` and `npm test` before marking any work done.
 
-All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px) viewports before being considered done. Always test against the production build (`npm run build && npx serve dist/client`), never the dev server.
+All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px) viewports before being considered done. Always test against the production build (`npm run build && npm run preview`), never the dev server.
 
 ## Project Structure
 
@@ -60,7 +61,7 @@ src/
   root.tsx        # HTML shell rendered by React Router v7 (replaces index.html)
   routes.ts       # Route definitions (React Router v7 config-based routing)
   entry.client.tsx  # Client entry: hydrates the full document via HydratedRouter
-  entry.server.tsx  # Server/prerender entry: renderToString for static HTML generation
+  entry.server.tsx  # Server/prerender entry: renderToPipeableStream for static HTML generation
   Layout.tsx      # App shell with all providers and Outlet
 e2e/
   smoke.spec.ts   # Playwright smoke tests (requires npm run build first)
@@ -102,7 +103,7 @@ public/
 - Display mode (standalone)
 
 ### Schema.org Structured Data
-`src/root.tsx` includes a JSON-LD `<script>` block with `@type: "WebSite"` for semantic web indexing. This helps search engines understand the site's purpose and content.
+`src/root.tsx` includes two JSON-LD `<script>` blocks: one with `@type: "WebSite"` and one with `@type: "Organization"`. These help search engines understand the site's identity and content.
 
 ### Open Graph Tags
 All pages include complete OG tags:
@@ -152,7 +153,7 @@ Deployment is automated via GitHub Actions:
 - **Push to `main`** triggers [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which builds and deploys to GitHub Pages. Production URL: **https://offon.dev**.
 - **Open a PR** triggers [`.github/workflows/preview.yml`](.github/workflows/preview.yml), which deploys a preview at `/pr-preview/pr-<n>/`.
 
-`dist/client/index.html` is copied to `dist/client/404.html` as a fallback for unknown routes. Each valid route has its own prerendered `index.html` so GitHub Pages serves a 200 directly.
+`dist/client/404/index.html` (the prerendered 404 page) is copied to `dist/client/404.html` as a fallback for unknown routes. Each valid route has its own prerendered `index.html` so GitHub Pages serves a 200 directly.
 
 PR preview builds set the `VITE_BASE_PATH` environment variable to `/pr-preview/pr-<n>/` so all asset paths resolve correctly under the preview sub-path.
 

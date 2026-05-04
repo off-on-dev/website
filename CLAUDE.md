@@ -178,7 +178,7 @@ without exception. They exist to prevent debugging by accumulation.
 ### Getting unminified React errors
 
 - The `--mode development` flag alone does not produce a dev React build with
-  Vite's SWC plugin. Proof: a dev React bundle is roughly 1.4 MB; a production
+  Vite's React plugin. Proof: a dev React bundle is roughly 1.4 MB; a production
   bundle is roughly 330 KB.
 - To force a dev React build, add to vite.config.ts inside defineConfig:
     define: { 'process.env.NODE_ENV': JSON.stringify('development') },
@@ -207,7 +207,7 @@ without exception. They exist to prevent debugging by accumulation.
 - Page-level components go in `src/pages/`. Reusable components go in `src/components/`.
 - Extract sub-components into `src/components/` rather than nesting them inline.
 - Do not duplicate card or list markup across components. If the same JSX structure appears in two places, extract a shared component. `FilteredLevelCard` is the established pattern.
-- **Buttons:** use raw `<button>` elements with the CSS utility classes defined in `src/index.css` (`.btn-primary`, `.btn-ghost`, `.btn-inverse`, `.btn-ghost-inverse`). There is no `Button` component wrapper and no `@radix-ui/react-slot` dependency. See `styleguide.md` for which class to use on which background color.
+- **Buttons:** use raw `<button>` elements with the CSS utility classes defined in `src/index.css` (`.btn-primary`, `.btn-ghost`, `.btn-soft`, `.btn-inverse`, `.btn-ghost-inverse`). There is no `Button` component wrapper and no `@radix-ui/react-slot` dependency. See `styleguide.md` for which class to use on which background color.
 - **Toasts:** use Sonner via `import { toast } from "@/components/ui/sonner"`. The Radix-based toast stack (`react-toast`, `use-toast`) was removed. Do not reinstall it.
 - **Sonner (`<Toaster>`) and TooltipProvider are intentionally not mounted in `Layout.tsx`** until a call site exists. Do not add them back to `Layout.tsx` speculatively. Mount `<Toaster>` in the nearest layout that actually triggers a toast, and wrap only the subtree that uses `<Tooltip>` with `<TooltipProvider>` at that point.
 
@@ -464,8 +464,7 @@ This is a fully static React site. Apply these practices on every page.
   `og:type`, and `og:image` where an image is available.
 - Add Twitter meta tags: always include `twitter:card` (use `summary_large_image` for pages with images),
   `twitter:title`, `twitter:description`, and `twitter:image`.
-- Use React Helmet or equivalent to manage head tags per page. Do not rely on
-  `index.html` alone.
+- Use React Router v7's `meta()` export on each route module to manage head tags per page. Use the `buildPageMeta` helper from `src/lib/meta.ts` — it generates the full standard set (title, canonical, description, og:*, twitter:*) from three required fields. Do not rely on `index.html` alone.
 
 ### Heading hierarchy
 - One `<h1>` per page that clearly describes the page topic.
@@ -491,7 +490,7 @@ This is a fully static React site. Apply these practices on every page.
 ### Global head setup (root.tsx)
 - Add `<link rel="manifest" href="/site.webmanifest" />` to link the web app manifest.
 - Add `<meta name="theme-color">` tags for dark and light mode: `content="#0a0a0a" media="(prefers-color-scheme: dark)"` and `content="#f5f5ff" media="(prefers-color-scheme: light)"`.
-- Add JSON-LD structured data as a `<script type="application/ld+json">` with `@type: "WebSite"`. Note: the `"OffOn"` brand name is hardcoded as a string literal in the JSON-LD inline script in `src/root.tsx` (it cannot reference TypeScript constants inside `dangerouslySetInnerHTML`). Update it manually if the brand name ever changes.
+- Add JSON-LD structured data as two `<script type="application/ld+json">` blocks: one with `@type: "WebSite"` and one with `@type: "Organization"`. Both are already present in `src/root.tsx`. Note: the `"OffOn"` brand name is hardcoded as a string literal in both JSON-LD inline scripts (they cannot reference TypeScript constants inside `dangerouslySetInnerHTML`). Update them manually if the brand name ever changes.
 - Always include `og:image:width`, `og:image:height`, and `og:image:alt` for all OG image tags.
 - Add `og:site_name` and `og:locale` (en_GB) to all global OG tags in `src/root.tsx`.
 - Do not add page-specific meta tags (description, og:*, twitter:*) to `src/root.tsx`. These must live in each route module's `meta()` export only. Tags in `root.tsx` are rendered on every page and will produce duplicate meta tags.
@@ -612,7 +611,7 @@ Complete checklist for every new adventure:
 
 - Push to `main` triggers `deploy.yml` and deploys to GitHub Pages.
 - Open PRs trigger `preview.yml` and create a PR preview deployment.
-- Only static files in `dist/` are deployed. No server config is needed.
+- Only static files in `dist/client/` are deployed. No server config is needed.
 - The base path is set via the `VITE_BASE_PATH` environment variable (defaults to `/`). PR previews set this automatically in `preview.yml`. Never change this without verifying GitHub Pages routing.
 
 ---
@@ -643,7 +642,7 @@ State the result of each check explicitly before finishing a task.
 6. **Check imports:** Every import must resolve. No unused imports. No circular
    dependencies introduced.
 
-7. **Verify at three viewports:** All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px). Always test against the production build (`npm run build && npx serve dist/client`), never the dev server.
+7. **Verify at three viewports:** All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px). Always test against the production build (`npm run build && npm run preview`), never the dev server.
 
 8. **Check discussion data on every PR:** If the PR adds or modifies adventure levels, verify that every level's Discourse topic ID and URL are present in the `DISCUSSION_TOPICS` map in `vite.config.ts`. Run `npm run build` so `src/data/discussion-data.json` is regenerated with any new topics. A missing entry means the discussion feed will silently show no posts for that level.
 
@@ -815,4 +814,4 @@ One-time `src/root.tsx` check (not per page): manifest link, both theme-color ta
 - Add `fetchpriority="high"` to the LCP image.
 - Add `width` and `height` attributes to every `<img>` element to prevent layout shift (CLS).
 - New routes are automatically code-split by Vite. No manual action needed.
-- Always run Lighthouse against the production build: `npm run build && npx serve dist/client`. Never run it against the dev server.
+- Always run Lighthouse against the production build: `npm run build && npm run preview`. Never run it against the dev server.

@@ -10,6 +10,12 @@ type PageMetaOptions = {
   extra?: MetaDescriptor[];
 };
 
+/**
+ * Generates standard title, canonical, Open Graph, and Twitter meta tags for a page.
+ * Canonical URLs are normalized to end with `/` to match GitHub Pages' 301 redirects for directory routes.
+ * @param options - Page meta options; `url` should be built from the `SITE_URL` constant.
+ * @returns Array of MetaDescriptor objects for use in a route's `meta()` export.
+ */
 export const buildPageMeta = ({
   title,
   description,

@@ -12,15 +12,15 @@ export const ChallengesGrid = (): JSX.Element => {
     <section id="challenges" className="py-24 px-6 md:px-16">
       <div className="mx-auto max-w-6xl">
         <div>
-            <div className="animate-fade-up mb-3">
+            <div className="mb-3">
               <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">Adventures</span>
             </div>
-            <h2 className="animate-fade-up-delay-1 mb-6 text-3xl font-bold text-primary md:text-4xl">
+            <h2 className="mb-6 text-3xl font-bold text-primary md:text-4xl">
               Choose Your Adventure
             </h2>
 
             {/* Topic filter chips */}
-            <div role="group" aria-label="Filter challenges by technology" className="animate-fade-up-delay-1 mb-8 flex flex-wrap items-center gap-2">
+            <div role="group" aria-label="Filter challenges by technology" className="mb-8 flex flex-wrap items-center gap-2">
               {ALL_TAGS.map((tag) => (
                 <button
                   key={tag}
@@ -54,7 +54,7 @@ export const ChallengesGrid = (): JSX.Element => {
               </>
             ) : (
               /* Adventure cards */
-              <div className="animate-fade-up-delay-2 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
                 {ADVENTURES.map((adventure) => (
                   <AdventureCard key={adventure.id} adventure={adventure} />
                 ))}

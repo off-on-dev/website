@@ -613,12 +613,23 @@ html {
 .animate-fade-up-delay-3    { animation: fadeUp 0.6s ease-out 0.3s both; }
 .animate-marquee            { animation: marquee 30s linear infinite; }
 
+@keyframes mascotFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+.animate-mascot-float { animation: mascotFloat 3s ease-in-out infinite; }
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up,
   .animate-fade-up-delay-1,
   .animate-fade-up-delay-2,
   .animate-fade-up-delay-3,
-  .animate-marquee {
+  .animate-marquee,
+  .animate-mascot-float {
+    animation: none;
+  }
+  .btn-primary {
     animation: none;
   }
 }
@@ -710,8 +721,20 @@ html {
 
 /* ─── Electric glow effects ──────────────────────────────── */
 
-/* Button primary: electric glow on hover */
-.btn-primary:hover {
+@keyframes ctaGlow {
+  0%, 100% { box-shadow: none; }
+  50%       { box-shadow: 0 0 18px 4px hsl(var(--primary) / 0.35); }
+}
+
+/* Button primary: idle pulse glow to draw the eye */
+.btn-primary {
+  animation: ctaGlow 3s ease-in-out infinite;
+}
+
+/* Button primary: electric glow on hover/focus — stops the idle pulse */
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  animation: none;
   box-shadow:
     0 0 28px -2px hsl(var(--primary) / 0.8),
     0 0 60px -8px hsl(var(--primary) / 0.4),

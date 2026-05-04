@@ -15,7 +15,7 @@ export const BottomCTA = (): JSX.Element => {
       />
       <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* Left - headline */}
-          <div className="animate-fade-up">
+          <div>
             <h2 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground">
               <span className="block">Start Curious.</span>
               <span className="block">Break Things.</span>
@@ -25,7 +25,7 @@ export const BottomCTA = (): JSX.Element => {
           </div>
 
           {/* Right - copy + buttons */}
-          <div className="animate-fade-up-delay-1 flex flex-col gap-4">
+          <div className="flex flex-col gap-4">
             <p className="font-sans text-base leading-relaxed text-background/90">
               Some species of fireflies synchronize their flashing. Thousands of individuals, each emitting their own signal, collectively producing something far more powerful than any single light source could alone.
             </p>
