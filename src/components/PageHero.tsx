@@ -46,15 +46,17 @@ export const PageHero = ({ eyebrow, title, description, primaryCta, secondaryCta
   return (
     <section className="bg-primary pt-32 pb-20 px-6 md:px-16 overflow-hidden min-h-[560px] flex flex-col justify-center">
       <div className="mx-auto max-w-6xl relative w-full">
-        <img
-          src={`${import.meta.env.BASE_URL}offon_mascot_1_transparent.webp`}
-          alt="The OffOn firefly mascot waving hello"
-          width={200}
-          height={200}
-          loading="eager"
-          fetchPriority="high"
-          className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 hidden lg:block w-56 xl:w-72 scale-x-[-1] drop-shadow-[0_0_28px_rgba(255,255,255,0.55)]"
-        />
+        <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 hidden lg:block scale-x-[-1]">
+          <img
+            src={`${import.meta.env.BASE_URL}offon_mascot_1_transparent.webp`}
+            alt="The OffOn firefly mascot waving hello"
+            width={200}
+            height={200}
+            loading="eager"
+            fetchPriority="high"
+            className="animate-mascot-float w-56 xl:w-72 drop-shadow-[0_0_28px_rgba(255,255,255,0.55)]"
+          />
+        </div>
         <div className="max-w-2xl">
           {eyebrow && (
             <span className="font-sans text-sm font-medium uppercase tracking-widest text-background/90 block mb-4">

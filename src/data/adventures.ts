@@ -1,5 +1,6 @@
 import { COMMUNITY_URL } from "@/data/constants";
 
+/** A single challenge level within an adventure. Difficulty affects visual presentation and prerequisite expectations. */
 export type AdventureLevel = {
   id: string;
   name: string;
@@ -9,6 +10,7 @@ export type AdventureLevel = {
   discussionUrl: string;
 }
 
+/** An adventure with multiple difficulty levels, grouped by theme and monthly release. */
 export type Adventure = {
   id: string;
   title: string;
@@ -120,16 +122,19 @@ export const ADVENTURES: Adventure[] = [
   },
 ];
 
+/** All unique technology tags across all adventures, sorted alphabetically. Shared with filter components; do not re-derive in component files. */
 export const ALL_TAGS: string[] = Array.from(
   new Set(ADVENTURES.flatMap((a) => a.tags))
 ).sort();
 
+/** A level with its parent adventure context, returned when filtering by tag. */
 export type RelatedLevel = {
   level: AdventureLevel;
   adventureId: string;
   adventureTitle: string;
 };
 
+/** Returns all levels across all adventures that include the given technology tag. */
 export const getLevelsByTag = (tag: string): RelatedLevel[] =>
   ADVENTURES.filter((adventure) => adventure.tags.includes(tag)).flatMap((adventure) =>
     adventure.levels.map((level) => ({

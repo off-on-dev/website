@@ -637,7 +637,7 @@ No props. Renders a self-contained `<div>` with heading, description, and extern
 
 `src/components/DiscussionSection.tsx`
 
-Displays up to five community posts for an adventure level, fetched at build time from Discourse. Post ages are computed on the client after mount to avoid calling `Date.now()` at render time.
+Displays up to three community posts for an adventure level, fetched at build time from Discourse. Post ages are computed on the client after mount to avoid calling `Date.now()` at render time.
 
 ```tsx
 <DiscussionSection discussionUrl={level.discussionUrl} />
@@ -900,11 +900,11 @@ Never place a `bg-primary` section without verifying that focusable children inh
 
 ### Lighthouse scores (production build)
 
-Measured against the production build locally (`npm run build && npm run preview`). Minimum acceptable score: 90 for all categories.
+Measured against the production build locally (`npm run build && npm run preview`). Minimum acceptable score: 95 for performance and 100 for the rest of the categories.
 
 | Category | Score |
 |---|---|
-| Performance | 90 |
+| Performance | 95 |
 | Accessibility | 100 |
 | Best Practices | 100 |
 | SEO | 100 |

@@ -10,6 +10,7 @@ const ThemeContext = createContext<{ theme: Theme; toggle: () => void }>({
   toggle: () => {},
 });
 
+/** Returns the current theme and a toggle function. Reads from and persists to localStorage. Must be used inside ThemeProvider. */
 // eslint-disable-next-line react-refresh/only-export-components -- intentional: context hook + provider in one file
 export const useTheme = (): { theme: Theme; toggle: () => void } => useContext(ThemeContext);
 
