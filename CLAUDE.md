@@ -597,7 +597,7 @@ Adventures are defined in `src/data/adventures.ts`. The Discourse API does not e
 
 Complete checklist for every new adventure:
 
-1. Add the adventure object to the `ADVENTURES` array in `src/data/adventures.ts`. Required fields: `id`, `title`, `month`, `story`, `tags`, and `levels`. Each level needs `id`, `name`, `difficulty`, `learnings`, `codespacesUrl`, and `discussionUrl`.
+1. Add the adventure object to the `ADVENTURES` array in `src/data/adventures.ts`. Required fields: `id`, `title`, `month`, `story`, `tags`, and `levels`. Each level needs `id`, `name`, `difficulty`, `learnings`, `codespacesUrl`, and `discussionUrl`. For `codespacesUrl`, use the `CODESPACES_BASE` constant with a `devcontainer_path` parameter pointing to the level's specific devcontainer config, e.g. `` `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F04-blind-by-design_01-beginner%2Fdevcontainer.json&quickstart=1` ``. Never use `quickstart=1` alone — that launches the generic default devcontainer.
 2. Add the adventure detail route and all level routes to `src/routes.ts`.
 3. Add the adventure landing page URL and every level URL to `public/sitemap.xml`.
 4. Add the adventure landing page URL and every level URL to the `prerender` array in `react-router.config.ts`.

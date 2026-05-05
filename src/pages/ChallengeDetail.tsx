@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router";
 import type { LinksFunction, MetaFunction } from "react-router";
 import { ArrowLeft } from "lucide-react";
 import { ADVENTURES } from "@/data/adventures";
+import { ContributorBadge } from "@/components/ContributorBadge";
 import { NotFoundPage } from "@/components/NotFoundPage";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -74,6 +75,11 @@ const ChallengeDetail = (): JSX.Element => {
               </span>
             ))}
           </div>
+          {adventure.contributor && (
+            <div className="mt-3">
+              <ContributorBadge name={adventure.contributor.name} url={adventure.contributor.url} />
+            </div>
+          )}
         </div>
 
         {/* Level card */}

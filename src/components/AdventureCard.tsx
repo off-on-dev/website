@@ -3,13 +3,14 @@ import { Link } from "react-router";
 import { Layers } from "lucide-react";
 import type { Adventure } from "@/data/adventures";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
+import { ContributorBadge } from "@/components/ContributorBadge";
 
 type AdventureCardProps = { adventure: Adventure };
 
 export const AdventureCard = ({ adventure }: AdventureCardProps): JSX.Element => (
   <Link
     to={`/adventures/${adventure.id}`}
-    className="group card-glow relative rounded-xl border-2 border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+    className="group card-glow relative rounded-xl border-2 border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
   >
     <div className="flex items-center justify-between mb-3">
       <span className="font-mono text-xs text-muted-foreground">Adventure</span>
@@ -37,5 +38,11 @@ export const AdventureCard = ({ adventure }: AdventureCardProps): JSX.Element =>
         </span>
       ))}
     </div>
+
+    {adventure.contributor && (
+      <div className="mt-auto pt-4">
+        <ContributorBadge name={adventure.contributor.name} />
+      </div>
+    )}
   </Link>
 );

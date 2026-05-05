@@ -18,7 +18,10 @@ export type Adventure = {
   story: string;
   tags: string[];
   levels: AdventureLevel[];
+  contributor?: { name: string; url?: string; about?: string };
 }
+
+const CODESPACES_BASE = "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges";
 
 export const ADVENTURES: Adventure[] = [
   {
@@ -27,13 +30,14 @@ export const ADVENTURES: Adventure[] = [
     month: "DEC 2025",
     story: "Restore interstellar communications by fixing broken GitOps setups, progressive delivery systems, and observability pipelines across three galactic missions.",
     tags: ["Argo CD", "Argo Rollouts", "OpenTelemetry", "Jaeger", "PromQL"],
+    contributor: { name: "Katharina Sick", url: "https://ksick.dev/", about: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe." },
     levels: [
       {
         id: "beginner",
         name: "Broken Echoes",
         difficulty: "Beginner",
         learnings: ["Debug GitOps flows with Argo CD", "ApplicationSet templating & pitfalls", "Environment isolation & namespaces", "Sync policies: automated, prune & self-heal"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
+        codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F01-echoes-lost-in-orbit_beginner%2Fdevcontainer.json&quickstart=1`,
         discussionUrl: `${COMMUNITY_URL}/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40`
       },
       {
@@ -41,7 +45,7 @@ export const ADVENTURES: Adventure[] = [
         name: "The Silent Canary",
         difficulty: "Intermediate",
         learnings: ["Progressive delivery with Argo Rollouts", "Canary deployments & automated analysis", "Write PromQL queries for health validation", "Kube-state-metrics for deployment decisions"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
+        codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F01-echoes-lost-in-orbit_intermediate%2Fdevcontainer.json&quickstart=1`,
         discussionUrl: `${COMMUNITY_URL}/t/adventure-01-echoes-lost-in-orbit-intermediate-the-silent-canary/310/8`
       },
       {
@@ -49,7 +53,7 @@ export const ADVENTURES: Adventure[] = [
         name: "Hyperspace Operations & Transport",
         difficulty: "Expert",
         learnings: ["Configure OpenTelemetry Collector pipelines", "Spanmetrics connector (traces to metrics)", "Detect idle canaries with traffic validation", "Distributed tracing with Jaeger"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
+        codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F01-echoes-lost-in-orbit_expert%2Fdevcontainer.json&quickstart=1`,
         discussionUrl: `${COMMUNITY_URL}/t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351/4`
       }
     ]
@@ -60,13 +64,14 @@ export const ADVENTURES: Adventure[] = [
     month: "JAN 2026",
     story: "Join the Infrastructure Guild and modernize CloudHaven's infrastructure from manual provisioning to a self-service platform using Infrastructure as Code.",
     tags: ["OpenTofu", "Terraform", "GitHub Actions", "Trivy", "TDD"],
+    contributor: { name: "Katharina Sick", url: "https://ksick.dev/", about: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe." },
     levels: [
       {
         id: "beginner",
         name: "The Foundation Stones",
         difficulty: "Beginner",
         learnings: ["Infrastructure as Code with OpenTofu", "Remote state management with GCS backend", "Dynamic & conditional resources"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
+        codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F02-building-cloudhaven_01-beginner%2Fdevcontainer.json&quickstart=1`,
         discussionUrl: `${COMMUNITY_URL}/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656`
       },
       {
@@ -74,7 +79,7 @@ export const ADVENTURES: Adventure[] = [
         name: "The Modular Metropolis",
         difficulty: "Intermediate",
         learnings: ["OpenTofu module testing with tofu test", "Test-Driven Development (TDD) workflow", "Input validation with regex"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
+        codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F02-building-cloudhaven_02-intermediate%2Fdevcontainer.json&quickstart=1`,
         discussionUrl: `${COMMUNITY_URL}/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10`
       },
       {
@@ -82,7 +87,7 @@ export const ADVENTURES: Adventure[] = [
         name: "The Guardian Protocols",
         difficulty: "Expert",
         learnings: ["GitHub Actions for drift detection and plan/apply", "Integration tests with service containers", "Security scanning with Trivy"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
+        codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F02-building-cloudhaven_03-expert%2Fdevcontainer.json&quickstart=1`,
         discussionUrl: `${COMMUNITY_URL}/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8`
       }
     ]
@@ -93,13 +98,14 @@ export const ADVENTURES: Adventure[] = [
     month: "FEB 2026",
     story: "Investigate a mysterious bandwidth anomaly at a remote research station by instrumenting its AI system with OpenTelemetry.",
     tags: ["OpenTelemetry", "OpenLLMetry", "Jaeger", "Prometheus", "Python"],
+    contributor: { name: "Katharina Sick", url: "https://ksick.dev/", about: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe." },
     levels: [
       {
         id: "beginner",
         name: "Calibrating the Lens",
         difficulty: "Beginner",
         learnings: ["Instrument Python AI apps with OpenLLMetry", "Analyze traces in Jaeger"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
+        codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F03-the-ai-observatory_01-beginner%2Fdevcontainer.json&quickstart=1`,
         discussionUrl: `${COMMUNITY_URL}/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8`
       },
       {
@@ -107,7 +113,7 @@ export const ADVENTURES: Adventure[] = [
         name: "The Distracted Pilot",
         difficulty: "Intermediate",
         learnings: ["Instrument RAG pipelines with OpenLLMetry", "Create custom OpenTelemetry metrics in Python", "Write PromQL queries & recording rules in Prometheus"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
+        codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F03-the-ai-observatory_02-intermediate%2Fdevcontainer.json&quickstart=1`,
         discussionUrl: `${COMMUNITY_URL}/t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936/2`
       },
       {
@@ -115,10 +121,37 @@ export const ADVENTURES: Adventure[] = [
         name: "The Noise Filter",
         difficulty: "Expert",
         learnings: ["OpenTelemetry GenAI semantic conventions", "Tail sampling in the OTel Collector"],
-        codespacesUrl: "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?quickstart=1",
+        codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F03-the-ai-observatory_03-expert%2Fdevcontainer.json&quickstart=1`,
         discussionUrl: `${COMMUNITY_URL}/t/reduce-telemetry-noise-adventure-03-expert-is-live/999/1`
       }
     ]
+  },
+  {
+    id: "blind-by-design",
+    title: "Blind by Design",
+    month: "MAY 2026",
+    story: "Three levels of OpenFeature with flagd as the provider, in a Java + Spring Boot service. Wire the SDK against a flagd sidecar (Beginner), layer evaluation context to target by cohort (Intermediate), then instrument flag evaluations with OpenTelemetry and roll back a misbehaving fractional rollout (Expert). All without redeploying.",
+    tags: ["OpenFeature", "flagd", "Spring Boot", "Java", "OpenTelemetry", "Grafana"],
+    contributor: {
+      name: "Simon Schrottner",
+      url: "https://schrottner.at/",
+      about: "CNCF Ambassador and maintainer of OpenFeature and JUnit Pioneer. Helps teams release faster and with more confidence through open standards, feature flagging, and the communities that make both possible. A familiar face at KubeCon EU, Devoxx, ContainerDays, and meetups across Europe.",
+    },
+    levels: [
+      {
+        id: "beginner",
+        name: "Stand up the Lab",
+        difficulty: "Beginner",
+        learnings: [
+          "How an OpenFeature client and provider work together: the SDK is provider-agnostic and the flagd provider plugs in via dependency only",
+          "What remote provider means in practice: the SDK calls a separate flag service (flagd) over gRPC, not parsing flags.json itself",
+          "What flags.json looks like for flagd (state, variants, defaultVariant)",
+          "Why hot-reload of the flag file matters operationally: configuration without redeploy",
+        ],
+        codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F04-blind-by-design_01-beginner%2Fdevcontainer.json&quickstart=1`,
+        discussionUrl: `${COMMUNITY_URL}/t/wire-openfeature-flagd-into-a-spring-boot-service-with-zero-setup-adventure-04-beginner/1419`,
+      },
+    ],
   },
 ];
 
@@ -126,6 +159,27 @@ export const ADVENTURES: Adventure[] = [
 export const ALL_TAGS: string[] = Array.from(
   new Set(ADVENTURES.flatMap((a) => a.tags))
 ).sort();
+
+export type AdventureContributor = {
+  name: string;
+  url?: string;
+  about?: string;
+  adventures: { id: string; title: string }[];
+};
+
+/** Community members who contributed an adventure, grouped by person. Derived from ADVENTURES; do not re-derive in components. */
+export const ADVENTURE_CONTRIBUTORS: AdventureContributor[] = Object.values(
+  ADVENTURES
+    .filter((a): a is Adventure & { contributor: NonNullable<Adventure["contributor"]> } => a.contributor !== undefined)
+    .reduce<Record<string, AdventureContributor>>((acc, a) => {
+      const key = a.contributor.name;
+      if (!acc[key]) {
+        acc[key] = { name: a.contributor.name, url: a.contributor.url, about: a.contributor.about, adventures: [] };
+      }
+      acc[key].adventures.push({ id: a.id, title: a.title });
+      return acc;
+    }, {})
+);
 
 /** A level with its parent adventure context, returned when filtering by tag. */
 export type RelatedLevel = {

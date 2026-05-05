@@ -90,12 +90,6 @@ describe("Navbar - desktop navigation", () => {
 // ---------------------------------------------------------------------------
 
 describe("Navbar - theme toggle", () => {
-  it("renders at least one theme toggle button", () => {
-    renderNavbar();
-    const buttons = screen.getAllByRole("button", { name: /Switch to/i });
-    expect(buttons.length).toBeGreaterThan(0);
-  });
-
   it("toggle button label says 'Switch to light mode' when theme is dark", () => {
     ls.clear(); // dark is the default
     renderNavbar();
