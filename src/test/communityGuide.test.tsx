@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import CommunityGuide from "@/pages/CommunityGuide";
-import { COMMUNITY_URL } from "@/data/constants";
+import { COMMUNITY_URL, CONTACT_EMAIL } from "@/data/constants";
 
 function renderCommunityGuide(): ReturnType<typeof render> {
   return render(
@@ -47,11 +47,11 @@ describe("CommunityGuide - contact section", () => {
     expect(srSpan!.textContent).toBe(" (opens in new tab)");
   });
 
-  it("renders a mailto link to offondev@gmail.com in the contact section", () => {
+  it("renders a mailto link to the contact email in the contact section", () => {
     renderCommunityGuide();
-    const emailLinks = screen.getAllByRole("link", { name: /offondev@gmail\.com/i });
+    const emailLinks = screen.getAllByRole("link", { name: new RegExp(CONTACT_EMAIL.replace(".", "\\."), "i") });
     const emailLink = emailLinks.find(
-      (a) => a.getAttribute("href") === "mailto:offondev@gmail.com"
+      (a) => a.getAttribute("href") === `mailto:${CONTACT_EMAIL}`
     );
     expect(emailLink).toBeTruthy();
   });

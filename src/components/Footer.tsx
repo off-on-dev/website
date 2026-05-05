@@ -1,7 +1,7 @@
 import type { JSX } from "react";
 import { Link } from "react-router";
 import { useTheme } from "@/hooks/useTheme";
-import { COMMUNITY_URL, BRAND_NAME, LINKEDIN_URL, CURRENT_YEAR } from "@/data/constants";
+import { COMMUNITY_URL, BRAND_NAME, LINKEDIN_URL, CURRENT_YEAR, CONTACT_EMAIL } from "@/data/constants";
 import logoDark from "@/assets/offon-logo-dark-color.svg";
 import logoLight from "@/assets/offon-logo-light-color.svg";
 
@@ -48,6 +48,7 @@ export const Footer = (): JSX.Element => {
                 <a href={`${COMMUNITY_URL}/t/code-of-conduct/31/1`} target="_blank" rel="noopener noreferrer" className={linkCls}>Code of Conduct<span className="sr-only"> (opens in new tab)</span></a>
                 <a href={`${COMMUNITY_URL}/t/posting-guidelines/30`} target="_blank" rel="noopener noreferrer" className={linkCls}>Posting Guidelines<span className="sr-only"> (opens in new tab)</span></a>
                 <Link to="/privacy" className={linkCls}>Privacy Policy</Link>
+                <a href={`mailto:${CONTACT_EMAIL}`} className={linkCls}>Get in Touch</a>
               </div>
             </nav>
           </div>

@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import Privacy from "@/pages/Privacy";
-import { COMMUNITY_URL } from "@/data/constants";
+import { COMMUNITY_URL, CONTACT_EMAIL } from "@/data/constants";
 
 function renderPrivacy(): ReturnType<typeof render> {
   return render(
@@ -77,13 +77,13 @@ describe("Privacy - contact links", () => {
     expect(srSpan!.textContent).toBe(" (opens in new tab)");
   });
 
-  it("renders mailto links to offondev@gmail.com", () => {
+  it("renders mailto links to the contact email", () => {
     renderPrivacy();
-    const emailLinks = screen.getAllByRole("link", { name: /offondev@gmail\.com/i });
+    const emailLinks = screen.getAllByRole("link", { name: new RegExp(CONTACT_EMAIL.replace(".", "\\."), "i") });
     // The email appears in sections 1, 7, and 9
     expect(emailLinks.length).toBeGreaterThan(0);
     emailLinks.forEach((a) => {
-      expect(a.getAttribute("href")).toBe("mailto:offondev@gmail.com");
+      expect(a.getAttribute("href")).toBe(`mailto:${CONTACT_EMAIL}`);
     });
   });
 

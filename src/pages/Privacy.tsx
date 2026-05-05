@@ -2,7 +2,7 @@ import type { JSX } from "react";
 import type { LinksFunction, MetaFunction } from "react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { SITE_URL, COMMUNITY_URL, BRAND_NAME } from "@/data/constants";
+import { SITE_URL, COMMUNITY_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 
 // Last reviewed date - update this whenever the policy content changes
@@ -50,7 +50,7 @@ const Privacy = (): JSX.Element => {
           at any time:
         </p>
         <ul className={list}>
-          <li>Email: <a href="mailto:offondev@gmail.com" className={link}>offondev@gmail.com</a></li>
+          <li>Email: <a href={`mailto:${CONTACT_EMAIL}`} className={link}>{CONTACT_EMAIL}</a></li>
           <li>
             Community moderators:{" "}
             <a href={`${COMMUNITY_URL}/login`} target="_blank" rel="noopener noreferrer" className={link}>
@@ -132,7 +132,7 @@ const Privacy = (): JSX.Element => {
         <h2 className={heading2}>5. Your rights under GDPR</h2>
         <p className={paragraph}>
           As a data subject under GDPR, you have the following rights. To exercise any of them,
-          contact us at <a href="mailto:offondev@gmail.com" className={link}>offondev@gmail.com</a>.
+          contact us at <a href={`mailto:${CONTACT_EMAIL}`} className={link}>{CONTACT_EMAIL}</a>.
           We will respond within 30 days.
         </p>
         <ul className={list}>
@@ -199,7 +199,7 @@ const Privacy = (): JSX.Element => {
         <h2 className={heading2}>9. Contact</h2>
         <p className={paragraph}>
           For any questions or requests relating to this policy or your personal data, contact us
-          at <a href="mailto:offondev@gmail.com" className={link}>offondev@gmail.com</a> or by{" "}
+          at <a href={`mailto:${CONTACT_EMAIL}`} className={link}>{CONTACT_EMAIL}</a> or by{" "}
           <a href={`${COMMUNITY_URL}/login`} target="_blank" rel="noopener noreferrer" className={link}>
             logging in<span className="sr-only"> (opens in new tab)</span>
           </a>

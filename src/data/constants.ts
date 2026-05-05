@@ -20,3 +20,5 @@ export const CONSENT_EXPIRY_MS = 6 * 30 * 24 * 60 * 60 * 1000;
 export const THEME_STORAGE_KEY = "theme";
 
 export const CURRENT_YEAR = 2026; // Update manually each year
+
+export const CONTACT_EMAIL = "offondev@gmail.com";

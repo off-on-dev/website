@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
 import { LinkSection } from "@/components/LinkSection";
-import { COMMUNITY_URL, SITE_URL, BRAND_NAME } from "@/data/constants";
+import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 
 const extLink = "docs-ext-link inline-flex items-center gap-1 underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
@@ -112,8 +112,8 @@ const CommunityGuide = (): JSX.Element => {
               <li className="flex items-start gap-2.5">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                 Email{" "}
-                <a href="mailto:offondev@gmail.com" className={extLink}>
-                  offondev@gmail.com
+                <a href={`mailto:${CONTACT_EMAIL}`} className={extLink}>
+                  {CONTACT_EMAIL}
                 </a>
               </li>
             </ul>
