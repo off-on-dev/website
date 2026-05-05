@@ -136,6 +136,28 @@ describe("Footer - bottom strip", () => {
     expect(linkedInLink.getAttribute("target")).toBe("_blank");
   });
 
+  it("renders the Bluesky link with an aria-label that mentions 'opens in new tab'", () => {
+    renderFooter();
+    const link = screen.getByRole("link", { name: /Bluesky.*opens in new tab/i });
+    expect(link).toBeTruthy();
+    expect(link.getAttribute("target")).toBe("_blank");
+    expect(link.getAttribute("rel")).toBe("noopener noreferrer");
+  });
+
+  it("Bluesky link href matches BLUESKY_URL constant", () => {
+    renderFooter();
+    const link = screen.getByRole("link", { name: /Bluesky.*opens in new tab/i });
+    expect(link.getAttribute("href")).toBe("https://bsky.app/profile/offon.bsky.social");
+  });
+
+  it("renders the X / Twitter link as a placeholder (href='#', no target='_blank')", () => {
+    renderFooter();
+    const link = screen.getByRole("link", { name: "X / Twitter" });
+    expect(link).toBeTruthy();
+    expect(link.getAttribute("href")).toBe("#");
+    expect(link.getAttribute("target")).toBeNull();
+  });
+
   it("renders copyright text with the brand name", () => {
     renderFooter();
     expect(screen.getByText(/© \d{4} OffOn\. All rights reserved\./)).toBeTruthy();

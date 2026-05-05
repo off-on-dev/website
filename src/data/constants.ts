@@ -13,6 +13,10 @@ export const SITE_NAME = "offon.dev";
 export const GA_MEASUREMENT_ID = "G-YEYE9DFHWE";
 
 export const LINKEDIN_URL = "https://www.linkedin.com/company/open-ecosystem/";
+// TODO: confirm Bluesky handle is correct before launch
+export const BLUESKY_URL = "https://bsky.app/profile/offon.bsky.social";
+// TODO: add X/Twitter URL once the handle is confirmed
+export const X_URL = "#";
 
 export const CONSENT_STORAGE_KEY = "analytics_consent";
 export const CONSENT_EXPIRY_MS = 6 * 30 * 24 * 60 * 60 * 1000;
