@@ -103,11 +103,18 @@ const CommunityGuide = (): JSX.Element => {
               </li>
               <li className="flex items-start gap-2.5">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                DM{" "}
-                <a href={`${COMMUNITY_URL}/groups/moderators`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  @moderators <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-                </a>{" "}
-                for sensitive issues
+                For sensitive issues,{" "}
+                <a href={`${COMMUNITY_URL}/login`} target="_blank" rel="noopener noreferrer" className={extLink}>
+                  log in <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                </a>
+                {" "}to the community and DM @moderators
+              </li>
+              <li className="flex items-start gap-2.5">
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                Email{" "}
+                <a href="mailto:offondev@gmail.com" className={extLink}>
+                  offondev@gmail.com
+                </a>
               </li>
             </ul>
           </section>

@@ -35,6 +35,7 @@ export const Footer = (): JSX.Element => {
                 <Link to="/about" className={lnk}>About</Link>
                 <Link to="/sponsors" className={lnk}>Sponsors</Link>
                 <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" target="_blank" rel="noopener noreferrer" className={lnk}>Propose an Adventure Idea<span className="sr-only"> (opens in new tab)</span></a>
+                <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges" target="_blank" rel="noopener noreferrer" className={lnk}>Challenges on GitHub<span className="sr-only"> (opens in new tab)</span></a>
               </div>
             </nav>
             {/* Community */}

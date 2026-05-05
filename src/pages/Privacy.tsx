@@ -53,9 +53,10 @@ const Privacy = (): JSX.Element => {
           <li>Email: <a href="mailto:offondev@gmail.com" className={link}>offondev@gmail.com</a></li>
           <li>
             Community moderators:{" "}
-            <a href={`${COMMUNITY_URL}/groups/moderators`} target="_blank" rel="noopener noreferrer" className={link}>
-              @moderators<span className="sr-only"> (opens in new tab)</span>
+            <a href={`${COMMUNITY_URL}/login`} target="_blank" rel="noopener noreferrer" className={link}>
+              log in<span className="sr-only"> (opens in new tab)</span>
             </a>
+            {" "}to the community and DM @moderators
           </li>
         </ul>
         <p className={paragraph}>
@@ -198,12 +199,11 @@ const Privacy = (): JSX.Element => {
         <h2 className={heading2}>9. Contact</h2>
         <p className={paragraph}>
           For any questions or requests relating to this policy or your personal data, contact us
-          at <a href="mailto:offondev@gmail.com" className={link}>offondev@gmail.com</a> or via
-          the{" "}
-          <a href={`${COMMUNITY_URL}/groups/moderators`} target="_blank" rel="noopener noreferrer" className={link}>
-            @moderators on the forum<span className="sr-only"> (opens in new tab)</span>
+          at <a href="mailto:offondev@gmail.com" className={link}>offondev@gmail.com</a> or by{" "}
+          <a href={`${COMMUNITY_URL}/login`} target="_blank" rel="noopener noreferrer" className={link}>
+            logging in<span className="sr-only"> (opens in new tab)</span>
           </a>
-          .
+          {" "}to the community and DMing @moderators.
         </p>
         </div>
         </div>

@@ -356,7 +356,7 @@ Check the following on every component you write or modify.
 - Every `<img>` must have an `alt` attribute. No exceptions.
 - Meaningful images: `alt` must describe the content or purpose (e.g. `alt="offon.dev"` for a logo, `alt={sponsor.name}` for a sponsor logo).
 - Decorative images (no informational value at all): use `alt=""` AND `aria-hidden="true"` together.
-- Brand mascots and illustrations: use a brief descriptive `alt` (e.g. `alt="The OffOn firefly mascot waving hello"`). Do not use `aria-hidden="true"` when alt text is present — it overrides the alt and hides the image from AT entirely.
+- Illustrations and brand images: use a brief descriptive `alt`. Do not use `aria-hidden="true"` when alt text is present — it overrides the alt and hides the image from AT entirely.
 - Never omit the `alt` attribute entirely.
 - Icons that convey meaning need an `aria-label` or accompanying visible text.
 

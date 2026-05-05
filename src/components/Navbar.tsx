@@ -1,6 +1,6 @@
 import { useState, type JSX } from "react";
 import { Link, useLocation } from "react-router";
-import { ArrowUpRight, Sun, Moon, Menu, X } from "lucide-react";
+import { Sun, Moon, Menu, X } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useTheme } from "@/hooks/useTheme";
 import { useActiveSection } from "@/hooks/useActiveSection";
@@ -27,23 +27,6 @@ const NavThemeToggle = ({ theme, onToggle, className }: NavThemeToggleProps): JS
   >
     {theme === "dark" ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
   </button>
-);
-
-type NavGitHubLinkProps = { onClick?: () => void; className?: string };
-
-const NavGitHubLink = ({ onClick, className }: NavGitHubLinkProps): JSX.Element => (
-  <a
-    href="https://github.com/dynatrace-oss/open-ecosystem-challenges"
-    target="_blank"
-    rel="noopener noreferrer"
-    className={cn(
-      "rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-4 py-2 text-sm font-medium text-foreground/70 hover:text-primary hover:border-primary/30 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 inline-flex items-center gap-1",
-      className
-    )}
-    onClick={onClick}
-  >
-    GitHub<span className="sr-only"> (opens in new tab)</span> <ArrowUpRight size={14} aria-hidden="true" />
-  </a>
 );
 
 type NavLinksProps = {
@@ -117,7 +100,6 @@ export const Navbar = (): JSX.Element => {
         <div className="hidden md:flex items-center gap-8">
           <NavLinks homeActive={homeActive} challengesActive={challengesActive} />
           <NavThemeToggle theme={theme} onToggle={toggle} className="hover:border-primary/30" />
-          <NavGitHubLink />
         </div>
 
         {/* Mobile: theme toggle + hamburger */}
@@ -142,7 +124,6 @@ export const Navbar = (): JSX.Element => {
           className="md:hidden border-t border-[hsl(var(--surface-border))] bg-background px-6 py-4 flex flex-col gap-4"
         >
           <NavLinks homeActive={homeActive} challengesActive={challengesActive} onNavigate={closeMenu} />
-          <NavGitHubLink onClick={closeMenu} className="justify-center" />
         </div>
       )}
     </nav>
