@@ -61,21 +61,15 @@ const NotFound = (): JSX.Element => {
       <main id="main-content" className="flex min-h-[80vh] items-center px-6 md:px-16 py-20">
         <div className="mx-auto max-w-6xl w-full">
 
-          {/* Top row: mascot + 404 content */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-12">
-            <div className="flex justify-center md:justify-start">
-              <img src={`${import.meta.env.BASE_URL}offon_mascot_3_transparent.webp`} alt="The OffOn firefly mascot looking puzzled" width={280} height={280} loading="lazy" className="w-48 md:w-64 lg:w-72 opacity-90" />
-            </div>
-            <div>
-              <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary mb-4 block">404</span>
-              <h1 className="text-4xl font-bold text-foreground mb-3">Page Not Found</h1>
-              <p className="text-muted-foreground mb-2 leading-relaxed">
-                This is not the page you were looking for.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Your search continues. We suggest starting here.
-              </p>
-            </div>
+          <div className="mb-12">
+            <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary mb-4 block">404</span>
+            <h1 className="text-4xl font-bold text-foreground mb-3">Page Not Found</h1>
+            <p className="text-muted-foreground mb-2 leading-relaxed">
+              This is not the page you were looking for.
+            </p>
+            <p className="text-muted-foreground leading-relaxed">
+              Your search continues. We suggest starting here.
+            </p>
           </div>
 
           {/* Cards + CTA — full width */}

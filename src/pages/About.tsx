@@ -1,11 +1,12 @@
 import type { JSX } from "react";
 import type { LinksFunction, MetaFunction } from "react-router";
+import { Mail } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { AboutSection } from "@/components/AboutSection";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
-import { SITE_URL, BRAND_NAME } from "@/data/constants";
+import { SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 
 export const links: LinksFunction = () => [
@@ -29,6 +30,7 @@ const About = (): JSX.Element => {
         eyebrow="About"
         title="The Home for Open Source Enthusiasts"
         description="Our mission, who we're for, and the values that shape everything we build."
+        primaryCta={{ label: <span className="inline-flex items-center gap-2"><Mail size={14} aria-hidden="true" /> Contact Us</span>, href: `mailto:${CONTACT_EMAIL}` }}
       />
       <AboutSection />
       <BottomCTA />

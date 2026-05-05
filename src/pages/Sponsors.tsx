@@ -1,11 +1,13 @@
 import type { JSX } from "react";
 import type { LinksFunction, MetaFunction } from "react-router";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight, ExternalLink, Mail } from "lucide-react";
+import { Link } from "react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
-import { COMMUNITY_URL, SITE_URL, BRAND_NAME } from "@/data/constants";
+import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
+import { ADVENTURE_CONTRIBUTORS } from "@/data/adventures";
 import { useTheme } from "@/hooks/useTheme";
 import { buildPageMeta } from "@/lib/meta";
 import dtLogoDark from "@/assets/Dynatrace_Logo_color_negative_horizontal.svg";
@@ -69,8 +71,8 @@ const Sponsors = (): JSX.Element => {
         eyebrow="Sponsors"
         title="Sponsorship and Independence"
         description="Sponsors provide financial support and participate as community members, but do not control editorial direction, content priorities, or governance. This community belongs to its members."
-        primaryCta={{ label: <span className="inline-flex items-center gap-2">Get in Touch <ArrowUpRight size={14} aria-hidden="true" /></span>, href: `${COMMUNITY_URL}/groups/moderators`, external: true }}
-        secondaryCta={{ label: <span className="inline-flex items-center gap-2">Get Involved <ArrowRight size={14} aria-hidden="true" /></span>, href: COMMUNITY_URL, external: true }}
+        primaryCta={{ label: <span className="inline-flex items-center gap-2"><Mail size={14} aria-hidden="true" /> Contact Us</span>, href: `mailto:${CONTACT_EMAIL}` }}
+        secondaryCta={{ label: <span className="inline-flex items-center gap-2">Join the Community <ArrowRight size={14} aria-hidden="true" /></span>, href: COMMUNITY_URL, external: true }}
       />
 
       <div className="px-6 md:px-16 py-16">
@@ -124,6 +126,56 @@ const Sponsors = (): JSX.Element => {
             ))}
           </div>
         </section>
+
+        {/* Challenge Builders */}
+        {ADVENTURE_CONTRIBUTORS.length > 0 && (
+          <section className="mb-16">
+            <h2 className="text-2xl font-bold text-foreground mb-4">Challenge Builders</h2>
+            <p className="text-muted-foreground leading-relaxed mb-8 max-w-2xl">
+              Adventures don't build themselves. A heartfelt thank you to everyone who has put in the time and care to create them.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {ADVENTURE_CONTRIBUTORS.map((contributor) => (
+                <div
+                  key={contributor.name}
+                  className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6"
+                >
+                  {contributor.url ? (
+                    <a
+                      href={contributor.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="contributor-name-link inline-flex items-center gap-1.5 text-base font-semibold text-foreground hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+                    >
+                      {contributor.name}
+                      <ExternalLink size={13} aria-hidden="true" />
+                      <span className="sr-only"> (opens in new tab)</span>
+                    </a>
+                  ) : (
+                    <span className="text-base font-semibold text-foreground">{contributor.name}</span>
+                  )}
+                  {contributor.about && (
+                    <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{contributor.about}</p>
+                  )}
+                  <p className="mt-6 mb-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">adventures created</p>
+                  <ul className="space-y-3">
+                    {contributor.adventures.map(({ id, title }) => (
+                      <li key={id} className="flex items-center gap-2 text-xs">
+                        <span className="h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                        <Link
+                          to={`/adventures/${id}`}
+                          className="adventure-link text-[hsl(var(--text-faint))] hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm"
+                        >
+                          {title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Independence note */}
         <section className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8">

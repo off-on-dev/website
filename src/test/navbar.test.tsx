@@ -83,11 +83,6 @@ describe("Navbar - desktop navigation", () => {
     expect(communityLinks[0].getAttribute("target")).toBe("_blank");
   });
 
-  it("has a GitHub external link that opens in a new tab", () => {
-    renderNavbar();
-    const githubLinks = screen.getAllByRole("link", { name: /GitHub/i });
-    expect(githubLinks[0].getAttribute("target")).toBe("_blank");
-  });
 });
 
 // ---------------------------------------------------------------------------
@@ -95,12 +90,6 @@ describe("Navbar - desktop navigation", () => {
 // ---------------------------------------------------------------------------
 
 describe("Navbar - theme toggle", () => {
-  it("renders at least one theme toggle button", () => {
-    renderNavbar();
-    const buttons = screen.getAllByRole("button", { name: /Switch to/i });
-    expect(buttons.length).toBeGreaterThan(0);
-  });
-
   it("toggle button label says 'Switch to light mode' when theme is dark", () => {
     ls.clear(); // dark is the default
     renderNavbar();

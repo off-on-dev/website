@@ -5,14 +5,6 @@ import { COMMUNITY_URL, BRAND_NAME } from "@/data/constants";
 export const BottomCTA = (): JSX.Element => {
   return (
     <section className="bg-primary py-16 px-6 md:px-16 relative overflow-hidden">
-      <img
-        src={`${import.meta.env.BASE_URL}offon_mascot_2_transparent.webp`}
-        alt="The OffOn firefly mascot pointing the way"
-        width={180}
-        height={180}
-        loading="lazy"
-        className="pointer-events-none hidden xl:block absolute top-0 right-0 w-44 translate-x-4 -translate-y-3 drop-shadow-[0_0_28px_rgba(255,255,255,0.55)]"
-      />
       <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* Left - headline */}
           <div>

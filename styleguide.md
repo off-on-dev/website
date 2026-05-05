@@ -816,6 +816,8 @@ Some official brand marks have no equivalent in lucide-react and must use the br
 | Brand | Where used | Notes |
 |---|---|---|
 | LinkedIn "in" rounded-rectangle mark | `Footer.tsx` bottom strip | Inline SVG, `aria-hidden="true"` on `<svg>`, `aria-label="LinkedIn (opens in new tab)"` on parent `<a>`, `fill="currentColor"`, `className="w-3.5 h-3.5"` (14 px, matching surrounding icon size) |
+| Bluesky butterfly mark | `Footer.tsx` bottom strip | Inline SVG, `aria-hidden="true"` on `<svg>`, `aria-label="Bluesky (opens in new tab)"` on parent `<a>`, `fill="currentColor"`, `className="w-3.5 h-3.5"`. URL from `BLUESKY_URL` constant. TODO: confirm handle before launch. |
+| X (Twitter) mark | `Footer.tsx` bottom strip | Inline SVG, `aria-hidden="true"` on `<svg>`, `aria-label="X / Twitter"` on parent `<a>`, `fill="currentColor"`, `className="w-3.5 h-3.5"`. URL from `X_URL` constant. TODO: add `target="_blank"` and update `aria-label` with "(opens in new tab)" once a real URL replaces the `#` placeholder. |
 
 When adding a new brand SVG: place it inline, set `aria-hidden="true"` on the `<svg>`, put the accessible label on the parent interactive element, use `fill="currentColor"`, and add a row to this table.
 

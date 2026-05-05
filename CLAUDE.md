@@ -216,6 +216,10 @@ without exception. They exist to prevent debugging by accumulation.
 - `hero-badge` class on the hero pill `<div>` in `Hero.tsx`. It is used for CSS scoping of light mode overrides.
 - `logo-link` class on the Navbar logo `<Link>`. It is used to exclude the logo from nav link hover styles.
 - `data-difficulty` attribute on `DifficultyBadge`. It is used for CSS targeting of badge text color.
+- `contributor-pill` class on `ContributorBadge`. Scopes light mode overrides: transparent background with slate border instead of the near-invisible `bg-primary/5`.
+- `contributor-pill-glow` class on `ContributorBadge` (applied via `glow` prop). Static amber box-shadow glow, sized for a small pill. Used only on `ChallengeDetail` -- not in `AdventureCard`.
+- `contributor-name-link` class on the contributor name `<a>` in `Sponsors.tsx`. Scopes light mode hover override: `hover:text-primary` (amber) fails contrast outside `<nav>`/`<footer>` where structural rules don't apply.
+- `adventure-link` class on the adventure list links in `Sponsors.tsx`. Scopes light mode overrides: readable `muted-foreground` base and `foreground-hover` on hover, replacing the inaccessible amber `hover:text-primary`.
 
 ---
 
@@ -356,7 +360,7 @@ Check the following on every component you write or modify.
 - Every `<img>` must have an `alt` attribute. No exceptions.
 - Meaningful images: `alt` must describe the content or purpose (e.g. `alt="offon.dev"` for a logo, `alt={sponsor.name}` for a sponsor logo).
 - Decorative images (no informational value at all): use `alt=""` AND `aria-hidden="true"` together.
-- Brand mascots and illustrations: use a brief descriptive `alt` (e.g. `alt="The OffOn firefly mascot waving hello"`). Do not use `aria-hidden="true"` when alt text is present — it overrides the alt and hides the image from AT entirely.
+- Illustrations and brand images: use a brief descriptive `alt`. Do not use `aria-hidden="true"` when alt text is present — it overrides the alt and hides the image from AT entirely.
 - Never omit the `alt` attribute entirely.
 - Icons that convey meaning need an `aria-label` or accompanying visible text.
 
@@ -597,7 +601,7 @@ Adventures are defined in `src/data/adventures.ts`. The Discourse API does not e
 
 Complete checklist for every new adventure:
 
-1. Add the adventure object to the `ADVENTURES` array in `src/data/adventures.ts`. Required fields: `id`, `title`, `month`, `story`, `tags`, and `levels`. Each level needs `id`, `name`, `difficulty`, `learnings`, `codespacesUrl`, and `discussionUrl`.
+1. Add the adventure object to the `ADVENTURES` array in `src/data/adventures.ts`. Required fields: `id`, `title`, `month`, `story`, `tags`, and `levels`. Each level needs `id`, `name`, `difficulty`, `learnings`, `codespacesUrl`, and `discussionUrl`. For `codespacesUrl`, use the `CODESPACES_BASE` constant with a `devcontainer_path` parameter pointing to the level's specific devcontainer config, e.g. `` `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F04-blind-by-design_01-beginner%2Fdevcontainer.json&quickstart=1` ``. Never use `quickstart=1` alone — that launches the generic default devcontainer.
 2. Add the adventure detail route and all level routes to `src/routes.ts`.
 3. Add the adventure landing page URL and every level URL to `public/sitemap.xml`.
 4. Add the adventure landing page URL and every level URL to the `prerender` array in `react-router.config.ts`.

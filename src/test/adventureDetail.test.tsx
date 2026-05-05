@@ -177,3 +177,72 @@ describe('ChallengeDetail - technology filter', () => {
     expect(chip.getAttribute('aria-pressed')).toBe('false');
   });
 });
+
+// ---------------------------------------------------------------------------
+// AdventureLevelLink: learnings overflow and link hrefs
+// ---------------------------------------------------------------------------
+
+describe('AdventureLevelLink', () => {
+  // adventure[0] levels all have 4 learnings — shows first 3 + "+1 more"
+  it('shows only the first 3 learnings as bullet points when a level has more than 3', () => {
+    render(
+      <ConsentProvider>
+        <MemoryRouter initialEntries={[`/adventures/${adventure.id}`]}>
+          <Routes>
+            <Route path="/adventures/:id" element={<AdventureDetail />} />
+          </Routes>
+        </MemoryRouter>
+      </ConsentProvider>
+    );
+    // Each level card renders level.learnings.slice(0, 3). adventure[0].levels[0] has 4 learnings.
+    // The first 3 learnings of levels[0] are present; the 4th should not appear as a bullet.
+    const fourthLearning = adventure.levels[0].learnings[3];
+    expect(screen.queryByText(fourthLearning)).toBeNull();
+  });
+
+  it("renders '+1 more' overflow text when a level has 4 learnings", () => {
+    render(
+      <ConsentProvider>
+        <MemoryRouter initialEntries={[`/adventures/${adventure.id}`]}>
+          <Routes>
+            <Route path="/adventures/:id" element={<AdventureDetail />} />
+          </Routes>
+        </MemoryRouter>
+      </ConsentProvider>
+    );
+    const overflowItems = screen.getAllByText('+1 more');
+    // All 3 levels of adventure[0] have 4 learnings, so 3 overflow items
+    expect(overflowItems.length).toBe(adventure.levels.length);
+  });
+
+  it("does not render '+N more' text when all levels have 3 or fewer learnings", () => {
+    const threeLearnAdventure = ADVENTURES[1]; // building-cloudhaven: all levels have 3 learnings
+    render(
+      <ConsentProvider>
+        <MemoryRouter initialEntries={[`/adventures/${threeLearnAdventure.id}`]}>
+          <Routes>
+            <Route path="/adventures/:id" element={<AdventureDetail />} />
+          </Routes>
+        </MemoryRouter>
+      </ConsentProvider>
+    );
+    expect(screen.queryByText(/\+\d+ more/)).toBeNull();
+  });
+
+  it('each level card links to the correct adventure level URL', () => {
+    render(
+      <ConsentProvider>
+        <MemoryRouter initialEntries={[`/adventures/${adventure.id}`]}>
+          <Routes>
+            <Route path="/adventures/:id" element={<AdventureDetail />} />
+          </Routes>
+        </MemoryRouter>
+      </ConsentProvider>
+    );
+    const startLinks = screen.getAllByText(/^Start challenge/);
+    adventure.levels.forEach((lvl, i) => {
+      const card = startLinks[i].closest('a');
+      expect(card?.getAttribute('href')).toBe(`/adventures/${adventure.id}/levels/${lvl.id}`);
+    });
+  });
+});
