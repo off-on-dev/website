@@ -216,6 +216,10 @@ without exception. They exist to prevent debugging by accumulation.
 - `hero-badge` class on the hero pill `<div>` in `Hero.tsx`. It is used for CSS scoping of light mode overrides.
 - `logo-link` class on the Navbar logo `<Link>`. It is used to exclude the logo from nav link hover styles.
 - `data-difficulty` attribute on `DifficultyBadge`. It is used for CSS targeting of badge text color.
+- `contributor-pill` class on `ContributorBadge`. Scopes light mode overrides: transparent background with slate border instead of the near-invisible `bg-primary/5`.
+- `contributor-pill-glow` class on `ContributorBadge` (applied via `glow` prop). Static amber box-shadow glow, sized for a small pill. Used only on `ChallengeDetail` -- not in `AdventureCard`.
+- `contributor-name-link` class on the contributor name `<a>` in `Sponsors.tsx`. Scopes light mode hover override: `hover:text-primary` (amber) fails contrast outside `<nav>`/`<footer>` where structural rules don't apply.
+- `adventure-link` class on the adventure list links in `Sponsors.tsx`. Scopes light mode overrides: readable `muted-foreground` base and `foreground-hover` on hover, replacing the inaccessible amber `hover:text-primary`.
 
 ---
 

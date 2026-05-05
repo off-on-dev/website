@@ -77,7 +77,7 @@ const ChallengeDetail = (): JSX.Element => {
           </div>
           {adventure.contributor && (
             <div className="mt-3">
-              <ContributorBadge name={adventure.contributor.name} url={adventure.contributor.url} />
+              <ContributorBadge name={adventure.contributor.name} url={adventure.contributor.url} glow />
             </div>
           )}
         </div>

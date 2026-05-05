@@ -71,8 +71,8 @@ const Sponsors = (): JSX.Element => {
         eyebrow="Sponsors"
         title="Sponsorship and Independence"
         description="Sponsors provide financial support and participate as community members, but do not control editorial direction, content priorities, or governance. This community belongs to its members."
-        primaryCta={{ label: <span className="inline-flex items-center gap-2"><Mail size={14} aria-hidden="true" /> Get in Touch</span>, href: `mailto:${CONTACT_EMAIL}` }}
-        secondaryCta={{ label: <span className="inline-flex items-center gap-2">Get Involved <ArrowRight size={14} aria-hidden="true" /></span>, href: COMMUNITY_URL, external: true }}
+        primaryCta={{ label: <span className="inline-flex items-center gap-2"><Mail size={14} aria-hidden="true" /> Contact Us</span>, href: `mailto:${CONTACT_EMAIL}` }}
+        secondaryCta={{ label: <span className="inline-flex items-center gap-2">Join the Community <ArrowRight size={14} aria-hidden="true" /></span>, href: COMMUNITY_URL, external: true }}
       />
 
       <div className="px-6 md:px-16 py-16">
@@ -145,7 +145,7 @@ const Sponsors = (): JSX.Element => {
                       href={contributor.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-base font-semibold text-foreground hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+                      className="contributor-name-link inline-flex items-center gap-1.5 text-base font-semibold text-foreground hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
                     >
                       {contributor.name}
                       <ExternalLink size={13} aria-hidden="true" />
@@ -164,7 +164,7 @@ const Sponsors = (): JSX.Element => {
                         <span className="h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                         <Link
                           to={`/adventures/${id}`}
-                          className="text-[hsl(var(--text-faint))] hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm"
+                          className="adventure-link text-[hsl(var(--text-faint))] hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm"
                         >
                           {title}
                         </Link>

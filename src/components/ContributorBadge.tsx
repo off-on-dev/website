@@ -4,12 +4,15 @@ import { Hammer } from "lucide-react";
 type ContributorBadgeProps = {
   name: string;
   url?: string;
+  glow?: boolean;
 };
 
-const pillClass =
-  "inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-2.5 py-0.5 text-xs text-primary";
+const basePillClass =
+  "contributor-pill inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-2.5 py-0.5 text-xs text-primary";
 
-export const ContributorBadge = ({ name, url }: ContributorBadgeProps): JSX.Element => {
+export const ContributorBadge = ({ name, url, glow = false }: ContributorBadgeProps): JSX.Element => {
+  const pillClass = glow ? `${basePillClass} contributor-pill-glow` : basePillClass;
+
   const content = (
     <>
       <Hammer size={11} aria-hidden="true" />
