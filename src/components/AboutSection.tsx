@@ -95,13 +95,13 @@ export const AboutSection = (): JSX.Element => {
 
           <h2 className="text-2xl font-bold text-foreground">How We Build Together</h2>
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {values.map((v) => {
-              const Icon = v.icon;
+            {values.map((value) => {
+              const Icon = value.icon;
               return (
-                <div key={v.title} className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6">
+                <div key={value.title} className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6">
                   <Icon className="h-6 w-6 text-primary" aria-hidden="true" />
-                  <h3 className="mt-3 text-lg font-semibold text-foreground">{v.title}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{v.desc}</p>
+                  <h3 className="mt-3 text-lg font-semibold text-foreground">{value.title}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{value.desc}</p>
                 </div>
               );
             })}

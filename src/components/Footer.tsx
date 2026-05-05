@@ -8,7 +8,7 @@ import logoLight from "@/assets/offon-logo-light-color.svg";
 export const Footer = (): JSX.Element => {
   const { theme } = useTheme();
 
-  const lnk = "flex items-center min-h-[48px] font-sans text-sm text-[hsl(var(--text-secondary))] hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
+  const linkCls = "flex items-center min-h-[48px] font-sans text-sm text-[hsl(var(--text-secondary))] hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
 
   return (
     <footer className="bg-background border-t border-[hsl(var(--surface-border))] px-6 sm:px-8 md:px-16 lg:px-20">
@@ -30,24 +30,24 @@ export const Footer = (): JSX.Element => {
             <nav aria-label="Explore">
               <p className="text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">Explore</p>
               <div className="flex flex-col">
-                <Link to="/adventures" className={lnk}>Adventures</Link>
-                <Link to="/handbook" className={lnk}>Handbook</Link>
-                <Link to="/about" className={lnk}>About</Link>
-                <Link to="/sponsors" className={lnk}>Sponsors</Link>
-                <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" target="_blank" rel="noopener noreferrer" className={lnk}>Propose an Adventure Idea<span className="sr-only"> (opens in new tab)</span></a>
-                <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges" target="_blank" rel="noopener noreferrer" className={lnk}>Challenges on GitHub<span className="sr-only"> (opens in new tab)</span></a>
+                <Link to="/adventures" className={linkCls}>Adventures</Link>
+                <Link to="/handbook" className={linkCls}>Handbook</Link>
+                <Link to="/about" className={linkCls}>About</Link>
+                <Link to="/sponsors" className={linkCls}>Sponsors</Link>
+                <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" target="_blank" rel="noopener noreferrer" className={linkCls}>Propose an Adventure Idea<span className="sr-only"> (opens in new tab)</span></a>
+                <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges" target="_blank" rel="noopener noreferrer" className={linkCls}>Challenges on GitHub<span className="sr-only"> (opens in new tab)</span></a>
               </div>
             </nav>
             {/* Community */}
             <nav aria-label="Community">
               <p className="text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">Community</p>
               <div className="flex flex-col">
-                <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className={lnk}>Hub<span className="sr-only"> (opens in new tab)</span></a>
-                <a href={`${COMMUNITY_URL}/c/community-voices/38`} target="_blank" rel="noopener noreferrer" className={lnk}>Community Voices<span className="sr-only"> (opens in new tab)</span></a>
-                <a href={`${COMMUNITY_URL}/c/general/q-a/10`} target="_blank" rel="noopener noreferrer" className={lnk}>Q&A<span className="sr-only"> (opens in new tab)</span></a>
-                <a href={`${COMMUNITY_URL}/t/code-of-conduct/31/1`} target="_blank" rel="noopener noreferrer" className={lnk}>Code of Conduct<span className="sr-only"> (opens in new tab)</span></a>
-                <a href={`${COMMUNITY_URL}/t/posting-guidelines/30`} target="_blank" rel="noopener noreferrer" className={lnk}>Posting Guidelines<span className="sr-only"> (opens in new tab)</span></a>
-                <Link to="/privacy" className={lnk}>Privacy Policy</Link>
+                <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className={linkCls}>Hub<span className="sr-only"> (opens in new tab)</span></a>
+                <a href={`${COMMUNITY_URL}/c/community-voices/38`} target="_blank" rel="noopener noreferrer" className={linkCls}>Community Voices<span className="sr-only"> (opens in new tab)</span></a>
+                <a href={`${COMMUNITY_URL}/c/general/q-a/10`} target="_blank" rel="noopener noreferrer" className={linkCls}>Q&A<span className="sr-only"> (opens in new tab)</span></a>
+                <a href={`${COMMUNITY_URL}/t/code-of-conduct/31/1`} target="_blank" rel="noopener noreferrer" className={linkCls}>Code of Conduct<span className="sr-only"> (opens in new tab)</span></a>
+                <a href={`${COMMUNITY_URL}/t/posting-guidelines/30`} target="_blank" rel="noopener noreferrer" className={linkCls}>Posting Guidelines<span className="sr-only"> (opens in new tab)</span></a>
+                <Link to="/privacy" className={linkCls}>Privacy Policy</Link>
               </div>
             </nav>
           </div>

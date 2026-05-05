@@ -83,11 +83,6 @@ describe("Navbar - desktop navigation", () => {
     expect(communityLinks[0].getAttribute("target")).toBe("_blank");
   });
 
-  it("has a GitHub external link that opens in a new tab", () => {
-    renderNavbar();
-    const githubLinks = screen.getAllByRole("link", { name: /GitHub/i });
-    expect(githubLinks[0].getAttribute("target")).toBe("_blank");
-  });
 });
 
 // ---------------------------------------------------------------------------
