@@ -1048,3 +1048,20 @@ html {
     filter: brightness(0.85);
   }
 }
+
+/* ─── Reduced-motion: disable all transitions and animations ──── */
+/* Honors prefers-reduced-motion: reduce for users who request it via OS
+   settings, and prevents axe-core from sampling in-flight transition colors
+   (e.g. .btn-ghost text mid theme-switch) which produced false contrast
+   failures. 0.01ms keeps transitionend events firing for any code that
+   depends on them. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
