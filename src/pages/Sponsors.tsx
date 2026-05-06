@@ -82,7 +82,7 @@ const Sponsors = (): JSX.Element => {
           <h2 className="text-2xl font-bold text-foreground mb-6">Founding Sponsor</h2>
           <div className="grid sm:grid-cols-2 gap-8 items-center">
             <p className="text-muted-foreground leading-relaxed">
-              Dynatrace is the founding sponsor of {BRAND_NAME}. There is Dynatrace-related content in one dedicated category which you can choose to join, but the rest of the content is vendor-neutral and community-driven.
+              Dynatrace is the founding sponsor of {BRAND_NAME}. They believe in open source and want to give contributors more ways to learn, build, and grow.
             </p>
             {currentSponsors.map((sponsor) => {
               const logoSrc = sponsor.logoDark && sponsor.logoLight
