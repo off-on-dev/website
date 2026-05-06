@@ -23,6 +23,12 @@ export type Adventure = {
 
 const CODESPACES_BASE = "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges";
 
+export const KATHARINA_SICK: NonNullable<Adventure["contributor"]> = {
+  name: "Katharina Sick",
+  url: "https://ksick.dev/",
+  about: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
+};
+
 export const ADVENTURES: Adventure[] = [
   {
     id: "echoes-lost-in-orbit",
@@ -30,7 +36,7 @@ export const ADVENTURES: Adventure[] = [
     month: "DEC 2025",
     story: "Restore interstellar communications by fixing broken GitOps setups, progressive delivery systems, and observability pipelines across three galactic missions.",
     tags: ["Argo CD", "Argo Rollouts", "OpenTelemetry", "Jaeger", "PromQL"],
-    contributor: { name: "Katharina Sick", url: "https://ksick.dev/", about: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe." },
+    contributor: KATHARINA_SICK,
     levels: [
       {
         id: "beginner",
@@ -64,7 +70,7 @@ export const ADVENTURES: Adventure[] = [
     month: "JAN 2026",
     story: "Join the Infrastructure Guild and modernize CloudHaven's infrastructure from manual provisioning to a self-service platform using Infrastructure as Code.",
     tags: ["OpenTofu", "Terraform", "GitHub Actions", "Trivy", "TDD"],
-    contributor: { name: "Katharina Sick", url: "https://ksick.dev/", about: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe." },
+    contributor: KATHARINA_SICK,
     levels: [
       {
         id: "beginner",
@@ -98,7 +104,7 @@ export const ADVENTURES: Adventure[] = [
     month: "FEB 2026",
     story: "Investigate a mysterious bandwidth anomaly at a remote research station by instrumenting its AI system with OpenTelemetry.",
     tags: ["OpenTelemetry", "OpenLLMetry", "Jaeger", "Prometheus", "Python"],
-    contributor: { name: "Katharina Sick", url: "https://ksick.dev/", about: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe." },
+    contributor: KATHARINA_SICK,
     levels: [
       {
         id: "beginner",
