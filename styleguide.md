@@ -623,6 +623,61 @@ No props. Self-contained section component.
 
 ---
 
+### `BoardSection`
+
+`src/components/BoardSection.tsx`
+
+Renders the Board section on the About page (mounted between `AboutSection` and `BottomCTA`). Reads `BOARD_MEMBERS` from `src/data/team.ts` and renders a responsive card grid (`sm:grid-cols-2 lg:grid-cols-3`). Each card shows an 80px circular avatar, the member name rendered via `PersonNameLink`, and a short bio. Card markup mirrors the pattern in `ChallengeBuildersSection.tsx`. Members are listed alphabetically by first name; placeholder seats sit at the end with `// TODO` comments next to them in `team.ts`.
+
+Avatars are 320px square WebP files in `src/assets/team/`, imported in `team.ts` and assigned to `BoardMember.image`. They render at 80×80 with `width`/`height` attributes set and `loading="lazy"` (the section is below the fold). Members without an `image` (placeholder seats) get a neutral circle with the lucide `User` icon as a visual filler — the icon is `aria-hidden="true"` because the name beneath it carries the meaning. To swap a placeholder for a real member, drop a 320px square WebP into `src/assets/team/`, import it in `team.ts`, and set the `image` field.
+
+`KATHARINA_SICK` is exported from `src/data/adventures.ts` and reused in `team.ts` so her bio has a single source of truth.
+
+No props. Self-contained section component.
+
+---
+
+### `ChallengeBuildersSection`
+
+`src/components/ChallengeBuildersSection.tsx`
+
+Renders the Challenge Builders section, used on both the About page (mounted between `BoardSection` and `BrandStory`) and the Adventures page (mounted between `ChallengesGrid` and `BottomCTA`). Reads `ADVENTURE_CONTRIBUTORS` from `src/data/adventures.ts` and renders a card grid (`sm:grid-cols-2`) thanking everyone who has contributed an adventure. Each card shows the contributor name rendered via `PersonNameLink`, a short bio, and a list of their adventures linked via React Router `<Link>` to each detail page. Returns `null` if `ADVENTURE_CONTRIBUTORS` is empty.
+
+No props. Self-contained section component.
+
+---
+
+### `PersonNameLink`
+
+`src/components/PersonNameLink.tsx`
+
+Renders a person's name with consistent styling, used for board members and adventure contributors. When `url` is provided, renders an external `<a>` with the lucide `ExternalLink` icon and a `sr-only` "(opens in new tab)" announcement; when omitted, renders a plain `<span>` with the same font weight. Shared by `BoardSection` and `ChallengeBuildersSection` so the className string and external-link affordances stay in sync.
+
+```tsx
+<PersonNameLink name="Jane Doe" url="https://example.com" />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `name` | `string` | Person's display name. |
+| `url` | `string` (optional) | When set, renders the name as an external link with new-tab affordance. |
+
+---
+
+### `BrandStory`
+
+`src/components/BrandStory.tsx`
+
+Renders the "The Story Behind the Firefly" section on the About page (mounted between `ChallengeBuildersSection` and `BottomCTA`). Three short paragraphs that explain the origin of the name and the firefly mascot, and credit Katharina for the logo. Uses `text-[hsl(var(--text-secondary))] leading-relaxed` body text within `max-w-3xl` to match the prose blocks in `AboutSection`.
+
+The section intentionally hands off the synchronized-firefly metaphor to `BottomCTA`, which carries the mechanic ("Some species of fireflies synchronize their flashing..."). Do not duplicate that explanation here, otherwise the two sections will read as repetitive when stacked.
+
+Section uses `pb-16` only (no top padding), since `ChallengeBuildersSection` above it already has `pb-16`. The `id="story"` anchor is reserved for future in-page navigation.
+
+No props. Self-contained section component.
+
+---
+
 ### `VerificationSection`
 
 `src/components/VerificationSection.tsx`

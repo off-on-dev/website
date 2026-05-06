@@ -4,6 +4,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { ChallengesGrid } from "@/components/ChallengesGrid";
+import { ChallengeBuildersSection } from "@/components/ChallengeBuildersSection";
 import { BottomCTA } from "@/components/BottomCTA";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
@@ -30,6 +31,7 @@ const Adventures = (): JSX.Element => (
         description="Real-world scenarios using tools like OpenTelemetry, Argo CD, OpenTofu, GitHub Actions, and more. Everything runs in your browser, no local setup required."
       />
       <ChallengesGrid />
+      <ChallengeBuildersSection />
       <BottomCTA />
     </main>
     <Footer />

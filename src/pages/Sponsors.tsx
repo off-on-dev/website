@@ -1,13 +1,11 @@
 import type { JSX } from "react";
 import type { LinksFunction, MetaFunction } from "react-router";
-import { ArrowRight, ExternalLink, Mail } from "lucide-react";
-import { Link } from "react-router";
+import { ArrowRight, Mail } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
-import { ADVENTURE_CONTRIBUTORS } from "@/data/adventures";
 import { useTheme } from "@/hooks/useTheme";
 import { buildPageMeta } from "@/lib/meta";
 import dtLogoDark from "@/assets/Dynatrace_Logo_color_negative_horizontal.svg";
@@ -108,6 +106,45 @@ const Sponsors = (): JSX.Element => {
           </div>
         </section>
 
+        {/* Sponsorship Guidelines */}
+        <section className="mb-16">
+          <h2 className="text-2xl font-bold text-foreground mb-4">Sponsorship Guidelines</h2>
+          <p className="text-muted-foreground leading-relaxed mb-8 max-w-2xl">
+            Sponsorship at {BRAND_NAME} is a partnership built on trust, transparency, and shared values in open source. Our moderation policies and decision-making processes are documented and accessible. Community input directly shapes how we evolve.
+          </p>
+          <ul className="space-y-3 max-w-2xl">
+            {[
+              "We feature your logo and link on this page.",
+              "We share social media posts thanking you for your support.",
+              "We feature your contributions in our weekly community digest.",
+              "We ask sponsors to respect our community guidelines and code of conduct.",
+              "We keep promotional content to a minimum. Technical product mentions are welcome only when vendor-neutral and reproducible.",
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-3 text-sm text-muted-foreground leading-relaxed">
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* What Sponsorship Doesn't Include */}
+        <section className="mb-16">
+          <h2 className="text-2xl font-bold text-foreground mb-4">What Sponsorship Doesn't Include</h2>
+          <ul className="space-y-3 max-w-2xl">
+            {[
+              "Editorial control over challenges, content, or community direction.",
+              "Voting power in governance decisions.",
+              "Control over moderation or community policies.",
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-3 text-sm text-muted-foreground leading-relaxed">
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </section>
+
         {/* Ways to support */}
         <section className="mb-16">
           <h2 className="text-2xl font-bold text-foreground mb-4">Ways to Support {BRAND_NAME}</h2>
@@ -127,73 +164,6 @@ const Sponsors = (): JSX.Element => {
           </div>
         </section>
 
-        {/* Challenge Builders */}
-        {ADVENTURE_CONTRIBUTORS.length > 0 && (
-          <section className="mb-16">
-            <h2 className="text-2xl font-bold text-foreground mb-4">Challenge Builders</h2>
-            <p className="text-muted-foreground leading-relaxed mb-8 max-w-2xl">
-              Adventures don't build themselves. A heartfelt thank you to everyone who has put in the time and care to create them.
-            </p>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {ADVENTURE_CONTRIBUTORS.map((contributor) => (
-                <div
-                  key={contributor.name}
-                  className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6"
-                >
-                  {contributor.url ? (
-                    <a
-                      href={contributor.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="contributor-name-link inline-flex items-center gap-1.5 text-base font-semibold text-foreground hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
-                    >
-                      {contributor.name}
-                      <ExternalLink size={13} aria-hidden="true" />
-                      <span className="sr-only"> (opens in new tab)</span>
-                    </a>
-                  ) : (
-                    <span className="text-base font-semibold text-foreground">{contributor.name}</span>
-                  )}
-                  {contributor.about && (
-                    <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{contributor.about}</p>
-                  )}
-                  <p className="mt-6 mb-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">adventures created</p>
-                  <ul className="space-y-3">
-                    {contributor.adventures.map(({ id, title }) => (
-                      <li key={id} className="flex items-center gap-2 text-xs">
-                        <span className="h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                        <Link
-                          to={`/adventures/${id}`}
-                          className="adventure-link text-[hsl(var(--text-faint))] hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm"
-                        >
-                          {title}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Independence note */}
-        <section className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8">
-          <h2 className="text-2xl font-bold text-foreground mb-4">How We Maintain Trust</h2>
-          <ul className="space-y-3">
-            {[
-              "Sponsors do not control editorial direction, content priorities, or community governance.",
-              "Promotional content is not permitted. Technical product mentions are welcome only when neutral and reproducible.",
-              "Our moderation policies and decision-making processes are documented and accessible.",
-              "Community input directly shapes how we evolve.",
-            ].map((item) => (
-              <li key={item} className="flex items-start gap-3 text-sm text-muted-foreground leading-relaxed">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                {item}
-              </li>
-            ))}
-          </ul>
-        </section>
       </div>
       </div>
 

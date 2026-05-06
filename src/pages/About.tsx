@@ -4,6 +4,9 @@ import { Mail } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { AboutSection } from "@/components/AboutSection";
+import { BoardSection } from "@/components/BoardSection";
+import { ChallengeBuildersSection } from "@/components/ChallengeBuildersSection";
+import { BrandStory } from "@/components/BrandStory";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
 import { SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
@@ -33,6 +36,9 @@ const About = (): JSX.Element => {
         primaryCta={{ label: <span className="inline-flex items-center gap-2"><Mail size={14} aria-hidden="true" /> Contact Us</span>, href: `mailto:${CONTACT_EMAIL}` }}
       />
       <AboutSection />
+      <BoardSection />
+      <ChallengeBuildersSection />
+      <BrandStory />
       <BottomCTA />
       </main>
       <Footer />

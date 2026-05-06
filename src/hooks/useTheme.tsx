@@ -29,6 +29,11 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }): JSX.
 
   useEffect(() => {
     const root = document.documentElement;
+    // Skip when the inline themeScript in root.tsx has already applied the
+    // correct class. Mutating here triggers a brief no-class state that
+    // cascades dark→light styles through every transition-all element,
+    // producing in-flight contrast values that fail axe in light mode.
+    if (root.classList.contains(theme)) return;
     root.classList.remove("light", "dark");
     root.classList.add(theme);
   }, [theme]);
