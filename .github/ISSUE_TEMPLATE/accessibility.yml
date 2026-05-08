@@ -1,0 +1,104 @@
+name: Accessibility issue
+description: Report a barrier on offon.dev that affects users with disabilities or assistive technology.
+title: "[a11y]: "
+labels: ["accessibility"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report an accessibility barrier. The more detail you can share, the faster we can reproduce and fix it.
+
+        Before filing, please check the [open accessibility issues](https://github.com/off-on-dev/website/issues?q=is%3Aissue+label%3Aaccessibility) to see if it is already tracked.
+
+  - type: input
+    id: page
+    attributes:
+      label: Page URL
+      description: Where did you encounter the issue?
+      placeholder: https://offon.dev/adventures
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How does this affect your ability to use the site?
+      options:
+        - "Critical: blocks me from completing a core task"
+        - "High: significant difficulty, but a workaround exists"
+        - "Medium: annoying or inconsistent, but does not block the task"
+        - "Low: minor issue with minimal impact"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: Describe the barrier in your own words.
+      placeholder: I tabbed to the navigation menu and could not exit it without using a mouse.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+      placeholder: I expected to be able to tab past the menu items to the page content.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: A short numbered list works well.
+      placeholder: |
+        1. Open https://offon.dev on Firefox
+        2. Press Tab repeatedly
+        3. ...
+    validations:
+      required: true
+
+  - type: input
+    id: assistive-tech
+    attributes:
+      label: Assistive technology and version
+      description: For example, NVDA 2024.4, VoiceOver on macOS 15, JAWS 2024, Windows Magnifier, Dragon NaturallySpeaking. Leave blank if not applicable.
+      placeholder: VoiceOver on macOS 15.1
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      placeholder: Firefox 132 on Windows 11
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Color mode
+      description: Was the page in light or dark mode when you saw the issue?
+      options:
+        - Dark
+        - Light
+        - Both
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshots, screen recordings, or anything else
+      description: Optional. Drag-and-drop into this field. If you used a screen reader, a recording with audio is especially helpful.
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I have searched the existing issues and this is not a duplicate.
+          required: true

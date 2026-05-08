@@ -157,7 +157,12 @@ Deployment is automated via GitHub Actions:
 
 PR preview builds set the `VITE_BASE_PATH` environment variable to `/pr-preview/pr-<n>/` so all asset paths resolve correctly under the preview sub-path.
 
+## Accessibility
+
+OffOn targets WCAG 2.2 Level AA across every page, in both light and dark mode. Automated axe-core scans run on every pull request preview via [`e2e/smoke.spec.ts`](e2e/smoke.spec.ts). The full statement, supported environments, known limitations, and how to report a barrier are in [`ACCESSIBILITY.md`](ACCESSIBILITY.md). Contributor rules are in the Accessibility section of [`CLAUDE.md`](CLAUDE.md#accessibility-wcag-22-aa-mandatory).
+
 ## Further Reading
 
+- [`ACCESSIBILITY.md`](ACCESSIBILITY.md): public accessibility statement, supported environments, and how to report a barrier.
 - [`styleguide.md`](styleguide.md): design system, color tokens, typography, component patterns, and light/dark mode rules.
 - [`CLAUDE.md`](CLAUDE.md): contributor conventions, code quality rules, commit format, testing requirements, and accessibility standards.
