@@ -642,11 +642,30 @@ No props.
 
 ---
 
+### `BulletList`
+
+`src/components/BulletList.tsx`
+
+Renders a vertical list with small amber dot bullets, used for the prose lists on `AboutSection` (Who It's For, What We Stand For). Items can be plain strings or `{ lead, desc }` objects. When an item is an object, the `lead` string is rendered as a bold, foreground-colored phrase followed by the `desc` body, which is the pattern used for "What We Stand For" bullets that begin with a short headline (e.g. "Open and vendor-agnostic by default."). Plain string items render as-is.
+
+```tsx
+<BulletList items={[
+  "A simple bullet",
+  { lead: "Bold lead.", desc: "Followed by descriptive body text." },
+]} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `items` | `(string \| { lead: string; desc: string })[]` | One entry per bullet. |
+
+---
+
 ### `AboutSection`
 
 `src/components/AboutSection.tsx`
 
-Renders the About page content: Our Mission, Who It's For, What We Stand For, and How We Build Together sections. The "How We Build Together" section renders a four-column grid of value cards (icon + title + description). Each value card title uses `<h3 className="mt-3 text-lg font-semibold text-foreground">` — these are structural sub-headings under the `<h2>` section heading and must remain `<h3>`, not `<p>`.
+Renders the About page content: Our Mission, Our Vision, Who It's For, and What We Stand For. Section is wrapped with the "our foundation" eyebrow at the top (using the standard `section-label` overline pattern) and carries `id="approach"`. Each of the four h2s also has its own id (`mission`, `vision`, `audience`, `values`) for deep-linking. The opening Mission paragraph is rendered as a `text-lg text-foreground` lead so the page has a clear thesis statement; subsequent paragraphs use `text-[hsl(var(--text-secondary))]`. Mission and Vision render as flowing paragraphs; Who It's For and What We Stand For use `BulletList` (the latter with `{ lead, desc }` items so each bullet leads with a bold headline phrase).
 
 No props. Self-contained section component.
 
@@ -656,7 +675,7 @@ No props. Self-contained section component.
 
 `src/components/BoardSection.tsx`
 
-Renders the Board section on the About page (mounted between `AboutSection` and `BottomCTA`). Reads `BOARD_MEMBERS` from `src/data/team.ts` and renders a responsive card grid (`sm:grid-cols-2 lg:grid-cols-3`). Each card shows an 80px circular avatar, the member name rendered via `PersonNameLink`, and a short bio. Card markup mirrors the pattern in `ChallengeBuildersSection.tsx`. Members are listed alphabetically by first name; placeholder seats sit at the end with `// TODO` comments next to them in `team.ts`.
+Renders the Board section on the About page (mounted after `BrandStory`, with `ChallengeBuildersSection` immediately following it). Carries the "the people" eyebrow above its h2 — that overline label visually groups Board and the subsequent `ChallengeBuildersSection` (which has no eyebrow of its own). Reads `BOARD_MEMBERS` from `src/data/team.ts` and renders a responsive card grid (`sm:grid-cols-2 lg:grid-cols-3`). Each card shows an 80px circular avatar, the member name rendered via `PersonNameLink`, and a short bio. Card markup mirrors the pattern in `ChallengeBuildersSection.tsx`. Members are listed alphabetically by first name; placeholder seats sit at the end with `// TODO` comments next to them in `team.ts`.
 
 Avatars are 320px square WebP files in `src/assets/team/`, imported in `team.ts` and assigned to `BoardMember.image`. They render at 80×80 with `width`/`height` attributes set and `loading="lazy"` (the section is below the fold). Members without an `image` (placeholder seats) get a neutral circle with the lucide `User` icon as a visual filler — the icon is `aria-hidden="true"` because the name beneath it carries the meaning. To swap a placeholder for a real member, drop a 320px square WebP into `src/assets/team/`, import it in `team.ts`, and set the `image` field.
 
@@ -670,7 +689,7 @@ No props. Self-contained section component.
 
 `src/components/ChallengeBuildersSection.tsx`
 
-Renders the Challenge Builders section, used on both the About page (mounted between `BoardSection` and `BrandStory`) and the Adventures page (mounted between `ChallengesGrid` and `BottomCTA`). Reads `ADVENTURE_CONTRIBUTORS` from `src/data/adventures.ts` and renders a card grid (`sm:grid-cols-2`) thanking everyone who has contributed an adventure. Each card shows the contributor name rendered via `PersonNameLink`, a short bio, and a list of their adventures linked via React Router `<Link>` to each detail page. Returns `null` if `ADVENTURE_CONTRIBUTORS` is empty.
+Renders the Challenge Builders section, used on both the About page (mounted directly after `BoardSection`, sharing the "the people" eyebrow group) and the Adventures page (mounted between `ChallengesGrid` and `BottomCTA`). Has no eyebrow of its own; on the About page, the visual grouping is provided by the eyebrow on the preceding `BoardSection`. Reads `ADVENTURE_CONTRIBUTORS` from `src/data/adventures.ts` and renders a card grid (`sm:grid-cols-2`) thanking everyone who has contributed an adventure. Each card shows the contributor name rendered via `PersonNameLink`, a short bio, and a list of their adventures linked via React Router `<Link>` to each detail page. Returns `null` if `ADVENTURE_CONTRIBUTORS` is empty.
 
 No props. Self-contained section component.
 
@@ -697,11 +716,11 @@ Renders a person's name with consistent styling, used for board members and adve
 
 `src/components/BrandStory.tsx`
 
-Renders the "The Story Behind the Firefly" section on the About page (mounted between `ChallengeBuildersSection` and `BottomCTA`). Three short paragraphs that explain the origin of the name and the firefly mascot, and credit Katharina for the logo. Uses `text-[hsl(var(--text-secondary))] leading-relaxed` body text within `max-w-3xl` to match the prose blocks in `AboutSection`.
+Renders the "The Story Behind the Firefly" section on the About page (mounted between `AboutSection` and `BoardSection`). Carries the "our story" eyebrow above its h2. Three short paragraphs that explain the origin of the name and the firefly mascot, and credit Katharina for the logo. Uses `text-[hsl(var(--text-secondary))] leading-relaxed` body text within `max-w-3xl` to match the prose blocks in `AboutSection`.
 
 The section intentionally hands off the synchronized-firefly metaphor to `BottomCTA`, which carries the mechanic ("Some species of fireflies synchronize their flashing..."). Do not duplicate that explanation here, otherwise the two sections will read as repetitive when stacked.
 
-Section uses `pb-16` only (no top padding), since `ChallengeBuildersSection` above it already has `pb-16`. The `id="story"` anchor is reserved for future in-page navigation.
+Section uses `pb-16` only (no top padding), since `AboutSection` above it already terminates with its own `py-16`. The `id="story"` anchor is reserved for future in-page navigation.
 
 No props. Self-contained section component.
 

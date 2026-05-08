@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import Privacy from "@/pages/Privacy";
-import { COMMUNITY_URL, CONTACT_EMAIL } from "@/data/constants";
+import { CONTACT_EMAIL } from "@/data/constants";
 
 function renderPrivacy(): ReturnType<typeof render> {
   return render(
@@ -29,52 +29,20 @@ describe("Privacy - page structure", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Contact links (sections 1 and 9 both link to COMMUNITY_URL/login)
+// Contact links (sections 1 and 9 both link to the board section on /about)
 // ---------------------------------------------------------------------------
 
 describe("Privacy - contact links", () => {
-  it("renders a 'log in' link (section 1) pointing to COMMUNITY_URL/login", () => {
+  it("renders a 'reach out to the board' link (section 1) pointing to /about#board", () => {
     renderPrivacy();
-    // Section 1 uses "log in" as the link text
-    const link = screen.getByRole("link", { name: /^log in/i });
-    expect(link.getAttribute("href")).toBe(`${COMMUNITY_URL}/login`);
+    const link = screen.getByRole("link", { name: /^reach out to the board/i });
+    expect(link.getAttribute("href")).toBe("/about#board");
   });
 
-  it("'log in' link opens in a new tab with rel='noopener noreferrer'", () => {
+  it("renders a 'reaching out to the board' link (section 9) pointing to /about#board", () => {
     renderPrivacy();
-    const link = screen.getByRole("link", { name: /^log in/i });
-    expect(link.getAttribute("target")).toBe("_blank");
-    expect(link.getAttribute("rel")).toBe("noopener noreferrer");
-  });
-
-  it("'log in' link has an sr-only '(opens in new tab)' span", () => {
-    renderPrivacy();
-    const link = screen.getByRole("link", { name: /^log in/i });
-    const srSpan = link.querySelector(".sr-only");
-    expect(srSpan).toBeTruthy();
-    expect(srSpan!.textContent).toBe(" (opens in new tab)");
-  });
-
-  it("renders a 'logging in' link (section 9) pointing to COMMUNITY_URL/login", () => {
-    renderPrivacy();
-    // Section 9 uses "logging in" as the link text
-    const link = screen.getByRole("link", { name: /^logging in/i });
-    expect(link.getAttribute("href")).toBe(`${COMMUNITY_URL}/login`);
-  });
-
-  it("'logging in' link opens in a new tab with rel='noopener noreferrer'", () => {
-    renderPrivacy();
-    const link = screen.getByRole("link", { name: /^logging in/i });
-    expect(link.getAttribute("target")).toBe("_blank");
-    expect(link.getAttribute("rel")).toBe("noopener noreferrer");
-  });
-
-  it("'logging in' link has an sr-only '(opens in new tab)' span", () => {
-    renderPrivacy();
-    const link = screen.getByRole("link", { name: /^logging in/i });
-    const srSpan = link.querySelector(".sr-only");
-    expect(srSpan).toBeTruthy();
-    expect(srSpan!.textContent).toBe(" (opens in new tab)");
+    const link = screen.getByRole("link", { name: /^reaching out to the board/i });
+    expect(link.getAttribute("href")).toBe("/about#board");
   });
 
   it("renders mailto links to the contact email", () => {
@@ -94,5 +62,14 @@ describe("Privacy - contact links", () => {
       a.getAttribute("href")?.includes("/groups/moderators")
     );
     expect(moderatorGroupLink).toBeUndefined();
+  });
+
+  it("does not link to the community login page", () => {
+    renderPrivacy();
+    const allLinks = screen.getAllByRole("link");
+    const loginLink = allLinks.find((a) =>
+      a.getAttribute("href")?.includes("/login")
+    );
+    expect(loginLink).toBeUndefined();
   });
 });

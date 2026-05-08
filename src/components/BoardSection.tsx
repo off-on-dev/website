@@ -10,6 +10,11 @@ export const BoardSection = (): JSX.Element => {
   return (
     <section id="board" className="px-6 md:px-16 pb-16">
       <div className="mx-auto max-w-6xl">
+        <div className="mb-3">
+          <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">
+            the people
+          </span>
+        </div>
         <h2 className="text-2xl font-bold text-foreground">Board</h2>
         <p className="mt-4 max-w-3xl text-muted-foreground leading-relaxed">
           The board guides the long-term direction of {BRAND_NAME}, stewarding its values, governance, and community priorities.
