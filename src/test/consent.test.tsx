@@ -113,12 +113,29 @@ describe('useConsent - grant', () => {
     expect(script?.src).toContain('googletagmanager.com');
   });
 
-  it('calls gtag consent update with "granted"', () => {
+  it('calls gtag consent update with the full payload after gtag.js loads', () => {
+    // The consent update is deferred to script.onload so it reaches gtag.js
+    // after the initial queue (js, config) has been processed. jsdom does not
+    // fetch external scripts, so fire the load handler manually.
     renderWithProviders(<ConsentStatus />);
     fireEvent.click(screen.getByText('grant'));
-    // loadGtag() restores window.gtag to the dataLayer shim before updateGtag runs,
-    // so the original vi.fn() spy is replaced. Check dataLayer for the queued command.
-    expect(window.dataLayer).toContainEqual(['consent', 'update', { analytics_storage: 'granted' }]);
+    const script = document.getElementById('gtag-script') as HTMLScriptElement;
+    expect(script).not.toBeNull();
+    // Before load fires, no consent update has been queued.
+    expect(window.dataLayer).not.toContainEqual(
+      expect.arrayContaining(['consent', 'update'])
+    );
+    script.onload?.(new Event('load'));
+    expect(window.dataLayer).toContainEqual([
+      'consent',
+      'update',
+      {
+        analytics_storage: 'granted',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+      },
+    ]);
   });
 
   it('does not inject a second script tag if grant is called twice', () => {
@@ -229,12 +246,22 @@ describe('useConsent - reset', () => {
 // ---------------------------------------------------------------------------
 
 describe('useConsent - mount restoration', () => {
-  it('calls gtag consent update on mount when prior consent was granted', () => {
+  it('calls gtag consent update on mount when prior consent was granted (after load)', () => {
     ls.setItem(STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
     renderWithProviders(<ConsentStatus />);
-    // loadGtag() replaces window.gtag with the dataLayer shim during mount restoration.
-    // Verify the consent update was queued in dataLayer.
-    expect(window.dataLayer).toContainEqual(['consent', 'update', { analytics_storage: 'granted' }]);
+    const script = document.getElementById('gtag-script') as HTMLScriptElement;
+    expect(script).not.toBeNull();
+    script.onload?.(new Event('load'));
+    expect(window.dataLayer).toContainEqual([
+      'consent',
+      'update',
+      {
+        analytics_storage: 'granted',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+      },
+    ]);
   });
 
   it('does not call gtag on mount when prior consent was denied', () => {

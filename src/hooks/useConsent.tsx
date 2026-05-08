@@ -57,12 +57,38 @@ function loadGtag(): void {
   window.gtag("js", new Date());
   window.gtag("config", GA_MEASUREMENT_ID, { send_page_view: false });
 
-  if (document.getElementById("gtag-script")) return;
+  // The consent update must reach gtag.js after it has loaded. Pushing it into
+  // dataLayer before the script processes its initial queue can cause the
+  // consent state to be ignored. Defer to script.onload (or fire immediately if
+  // the script is already loaded from a prior grant in this session).
+  function fireConsentUpdate(): void {
+    if (typeof window.gtag !== "function") return;
+    window.gtag("consent", "update", {
+      analytics_storage: "granted",
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+    });
+  }
+
+  const existing = document.getElementById("gtag-script") as HTMLScriptElement | null;
+  if (existing) {
+    if (existing.dataset.loaded === "true") {
+      fireConsentUpdate();
+    } else {
+      existing.addEventListener("load", fireConsentUpdate, { once: true });
+    }
+    return;
+  }
 
   const script = document.createElement("script");
   script.id = "gtag-script";
   script.async = true;
   script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+  script.onload = (): void => {
+    script.dataset.loaded = "true";
+    fireConsentUpdate();
+  };
   document.head.appendChild(script);
 }
 
@@ -101,7 +127,6 @@ export function ConsentProvider({ children }: ConsentProviderProps): JSX.Element
       setConsent(stored.value); // eslint-disable-line react-hooks/set-state-in-effect -- localStorage cannot be read in a lazy useState initializer; SSG requires a safe default on first render (see CLAUDE.md hydration rules)
       if (stored.value === "granted") {
         loadGtag();
-        updateGtag("granted");
       }
     }
   }, []);
@@ -110,7 +135,6 @@ export function ConsentProvider({ children }: ConsentProviderProps): JSX.Element
     writeStored("granted");
     setConsent("granted");
     loadGtag();
-    updateGtag("granted");
   }, []);
 
   const deny = useCallback((): void => {

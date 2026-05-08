@@ -13,7 +13,7 @@ export const links: LinksFunction = () => [
 // Inline script strings extracted to constants so tests can assert ordering in this file.
 const themeScript = `(function(){var t=localStorage.getItem("theme");if(t==="light"){document.documentElement.classList.remove("dark");document.documentElement.classList.add("light");}})();`;
 
-const gtagScript = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',wait_for_update:500});`;
+const gtagScript = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});`;
 
 // Description is kept in sync with the Index page meta description (src/pages/Index.tsx).
 // JSON-LD inline scripts cannot reference TS constants (they live inside dangerouslySetInnerHTML),
