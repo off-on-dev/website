@@ -29,12 +29,20 @@ function ConsentControls(): JSX.Element {
 }
 
 function Harness({ children }: { children: React.ReactNode }): JSX.Element {
+  const preventAnchorNavigation = (event: React.MouseEvent<HTMLDivElement>): void => {
+    const target = event.target as Element | null;
+    const anchor = target?.closest("a");
+    if (anchor) {
+      event.preventDefault();
+    }
+  };
+
   return (
     <MemoryRouter>
       <ConsentProvider>
         <ClickTracker />
         <ConsentControls />
-        {children}
+        <div onClickCapture={preventAnchorNavigation}>{children}</div>
       </ConsentProvider>
     </MemoryRouter>
   );
