@@ -78,14 +78,27 @@ const Privacy = (): JSX.Element => {
         </ul>
         <p className={paragraph}>
           <strong>Legal basis:</strong> Consent (Article 6(1)(a) GDPR). We use Google Analytics
-          Consent Mode v2, which means no analytics data is collected until you explicitly accept
-          cookies. If you decline or have not yet responded to the cookie banner, no analytics data
-          is sent.
+          Consent Mode v2 in gated-load mode, which means no data of any kind is sent to Google
+          until you click Accept on the cookie banner. The Google Analytics script itself is
+          not loaded until that point.
+        </p>
+        <p className={paragraph}>
+          <strong>If you accept:</strong> Google Analytics sets two cookies on
+          {" "}<code>.offon.dev</code>: <code>_ga</code> and <code>_ga_&lt;id&gt;</code>. They
+          have a 180-day lifetime. They contain a randomly generated client identifier used to
+          aggregate page views and click events into anonymous session and user counts.
+        </p>
+        <p className={paragraph}>
+          <strong>If you decline or do not respond:</strong> No data is sent to Google. No
+          cookies are set. The Google Analytics script is never loaded.
         </p>
         <p className={paragraph}>
           You may withdraw your consent at any time by clicking the cookie preferences button
           (bottom right of the page). Withdrawal does not affect the lawfulness of processing
-          carried out before withdrawal.
+          carried out before withdrawal. On withdrawal, Google Analytics stops sending hits for
+          the remainder of the session, the <code>_ga</code> and <code>_ga_&lt;id&gt;</code>
+          {" "}cookies are cleared, and your stored decision is removed so the banner reappears
+          on your next visit.
         </p>
 
         <h3 className={heading3}>No other data collection</h3>

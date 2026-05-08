@@ -5,22 +5,29 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, act, fireEvent } from "@testing-library/react";
 import { MemoryRouter, Route, Routes, useNavigate } from "react-router";
 import { Layout } from "@/Layout";
+import { __resetGtagInjectionForTests } from "@/hooks/useConsent";
+import { CONSENT_STORAGE_KEY } from "@/data/constants";
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-const STORAGE_KEY = "analytics_consent";
 const ls = window.localStorage;
 
-// Rendered inside the index route so we can trigger client-side navigation
-// without going through createMemoryRouter's fetch layer (avoids AbortSignal
-// incompatibility in jsdom).
 function NavButton({ to }: { to: string }): JSX.Element {
   const navigate = useNavigate();
   return (
     <button data-testid="nav-btn" onClick={() => navigate(to)}>
       go
+    </button>
+  );
+}
+
+function NavButton2({ to }: { to: string }): JSX.Element {
+  const navigate = useNavigate();
+  return (
+    <button data-testid="nav-btn-hash" onClick={() => navigate(to)}>
+      go-hash
     </button>
   );
 }
@@ -57,30 +64,27 @@ function renderLayout(initialPath = "/"): ReturnType<typeof render> {
   );
 }
 
-function NavButton2({ to }: { to: string }): JSX.Element {
-  const navigate = useNavigate();
-  return (
-    <button data-testid="nav-btn-hash" onClick={() => navigate(to)}>
-      go-hash
-    </button>
-  );
-}
-
 // ---------------------------------------------------------------------------
 // Setup / teardown
 // ---------------------------------------------------------------------------
 
 beforeEach(() => {
   ls.clear();
+  document.getElementById("gtag-script")?.remove();
+  __resetGtagInjectionForTests();
   vi.spyOn(window, "scrollTo").mockImplementation(() => {});
   window.gtag = vi.fn();
   window.dataLayer = [];
-  document.getElementById("gtag-script")?.remove();
 });
 
 afterEach(() => {
   vi.restoreAllMocks();
 });
+
+function pageViewCalls(): unknown[][] {
+  const calls = (window.gtag as ReturnType<typeof vi.fn>).mock.calls;
+  return calls.filter((c) => c[0] === "event" && c[1] === "page_view");
+}
 
 // ---------------------------------------------------------------------------
 // Layout: provider tree and Outlet
@@ -113,9 +117,7 @@ describe("Layout", () => {
 
   it("ScrollToTop scrolls the hash target into view, not to the top", async () => {
     const scrollIntoView = vi.fn();
-    // jsdom does not implement Element.scrollIntoView; install one for this test.
     Element.prototype.scrollIntoView = scrollIntoView;
-    // Run RAF callbacks synchronously so we can assert without flushing animation frames.
     vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
       cb(0);
       return 0;
@@ -126,49 +128,43 @@ describe("Layout", () => {
       fireEvent.click(getByTestId("nav-btn-hash"));
     });
     expect(scrollIntoView).toHaveBeenCalledWith({ block: "start" });
-    // Hash navigation must not trigger the scrollTo(0, 0) reset.
     expect(window.scrollTo).toHaveBeenCalledTimes(callsBefore);
   });
 
   // -------------------------------------------------------------------------
-  // ScrollToTop: gtag page_view
+  // PageViewTracker: gtag page_view
   // -------------------------------------------------------------------------
 
-  it("ScrollToTop fires gtag page_view when consent is granted", async () => {
-    ls.setItem(STORAGE_KEY, JSON.stringify({ value: "granted", timestamp: Date.now() }));
+  it("does not fire page_view when consent is null", async () => {
     const { getByTestId } = renderLayout("/");
     await act(async () => {
       fireEvent.click(getByTestId("nav-btn"));
     });
-    // loadGtag() replaces window.gtag with the dataLayer push shim on mount,
-    // so page_view calls land in window.dataLayer rather than the original spy.
-    const dl = window.dataLayer as unknown[][];
-    const pageViewCall = dl.find(
-      (entry) => entry[0] === "event" && entry[1] === "page_view" && (entry[2] as { page_path?: string })?.page_path === "/about",
-    );
-    expect(pageViewCall).toBeDefined();
-    expect(pageViewCall?.[2]).toMatchObject({
+    expect(pageViewCalls().length).toBe(0);
+  });
+
+  it("does not fire page_view when consent is denied", async () => {
+    ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: "denied", timestamp: Date.now() }));
+    const { getByTestId } = renderLayout("/");
+    await act(async () => {
+      fireEvent.click(getByTestId("nav-btn"));
+    });
+    expect(pageViewCalls().length).toBe(0);
+  });
+
+  it("fires page_view when consent is granted, with the new pathname on route change", async () => {
+    ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: "granted", timestamp: Date.now() }));
+    const { getByTestId } = renderLayout("/");
+    await act(async () => {
+      fireEvent.click(getByTestId("nav-btn"));
+    });
+    const calls = pageViewCalls();
+    expect(calls.length).toBeGreaterThan(0);
+    expect(calls[calls.length - 1][2]).toMatchObject({
       page_path: "/about",
       page_location: window.location.href,
       page_title: document.title,
     });
-  });
-
-  it("ScrollToTop does not fire gtag when consent is null", async () => {
-    const { getByTestId } = renderLayout("/");
-    await act(async () => {
-      fireEvent.click(getByTestId("nav-btn"));
-    });
-    expect(window.gtag).not.toHaveBeenCalledWith("event", "page_view", expect.anything());
-  });
-
-  it("ScrollToTop does not fire gtag when consent is denied", async () => {
-    ls.setItem(STORAGE_KEY, JSON.stringify({ value: "denied", timestamp: Date.now() }));
-    const { getByTestId } = renderLayout("/");
-    await act(async () => {
-      fireEvent.click(getByTestId("nav-btn"));
-    });
-    expect(window.gtag).not.toHaveBeenCalledWith("event", "page_view", expect.anything());
   });
 });
 
@@ -181,5 +177,13 @@ describe("Layout file-content regression", () => {
 
   it("does not import HelmetProvider", () => {
     expect(source).not.toContain("HelmetProvider");
+  });
+
+  it("PageViewTracker gates on consent === \"granted\"", () => {
+    const trackerStart = source.indexOf("const PageViewTracker");
+    const trackerEnd = source.indexOf("};", trackerStart);
+    const trackerBody = source.slice(trackerStart, trackerEnd);
+    expect(trackerBody).toContain("useConsent");
+    expect(trackerBody).toMatch(/consent\s*!==\s*["']granted["']/);
   });
 });

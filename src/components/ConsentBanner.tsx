@@ -40,8 +40,8 @@ export function ConsentBanner(): JSX.Element | null {
         <div className="flex-1 space-y-1">
           <p className="text-sm font-medium text-foreground">This site uses analytics cookies</p>
           <p className="text-sm text-muted-foreground">
-            We use Google Analytics to understand how visitors use offon.dev. No data is collected
-            until you explicitly accept. You can change your preference at any time. See our{" "}
+            We use Google Analytics to understand how visitors use offon.dev. No data is sent to
+            Google until you accept. You can change your preference at any time. See our{" "}
             <Link
               to="/privacy"
               className="underline underline-offset-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"

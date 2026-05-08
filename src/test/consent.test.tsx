@@ -2,18 +2,18 @@ import { type JSX } from 'react';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { ConsentProvider, useConsent } from '@/hooks/useConsent';
+import {
+  ConsentProvider,
+  useConsent,
+  __resetGtagInjectionForTests,
+} from '@/hooks/useConsent';
 import { ConsentBanner } from '@/components/ConsentBanner';
-import { GA_MEASUREMENT_ID } from '@/data/constants';
+import { CONSENT_STORAGE_KEY, CONSENT_EXPIRY_MS, GA_MEASUREMENT_ID } from '@/data/constants';
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-const STORAGE_KEY = 'analytics_consent';
-const SIX_MONTHS_MS = 6 * 30 * 24 * 60 * 60 * 1000;
-
-// jsdom 29 + vitest: bare `localStorage` global is not available; use window.localStorage
 const ls = window.localStorage;
 
 function renderWithProviders(ui: React.ReactElement): ReturnType<typeof render> {
@@ -24,7 +24,6 @@ function renderWithProviders(ui: React.ReactElement): ReturnType<typeof render> 
   );
 }
 
-// Small consumer component for testing hook state directly
 function ConsentStatus(): JSX.Element {
   const { consent, grant, deny, reset } = useConsent();
   return (
@@ -37,15 +36,41 @@ function ConsentStatus(): JSX.Element {
   );
 }
 
+function dataLayerEntries(): unknown[][] {
+  return (window.dataLayer ?? []) as unknown[][];
+}
+
+function entryStartsWith(...prefix: unknown[]): (entry: unknown[]) => boolean {
+  return (entry) => prefix.every((value, index) => entry[index] === value);
+}
+
 // ---------------------------------------------------------------------------
 // Setup / teardown
 // ---------------------------------------------------------------------------
 
 beforeEach(() => {
   ls.clear();
-  window.gtag = vi.fn();
-  window.dataLayer = [];
   document.getElementById('gtag-script')?.remove();
+  __resetGtagInjectionForTests();
+  // Mirror the inline bootstrap in root.tsx so unit tests start in the same
+  // state as a fresh page load: dataLayer with the consent default and
+  // window.gtag as the dataLayer push shim.
+  window.dataLayer = [];
+  window.gtag = ((...args: unknown[]) => {
+    (window.dataLayer as unknown[]).push(args);
+  }) as typeof window.gtag;
+  window.gtag('consent', 'default', {
+    analytics_storage: 'denied',
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+  });
+  // Clear any cookies left over from a prior test.
+  document.cookie.split(';').forEach((entry) => {
+    const name = entry.split('=')[0]?.trim();
+    if (!name) return;
+    document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+  });
 });
 
 afterEach(() => {
@@ -53,7 +78,29 @@ afterEach(() => {
 });
 
 // ---------------------------------------------------------------------------
-// useConsent - initial state
+// Pre-Accept guarantee: zero gtag activity beyond the bootstrap
+// ---------------------------------------------------------------------------
+
+describe('useConsent - before Accept', () => {
+  it('does not append a gtag script tag while consent is undecided', () => {
+    renderWithProviders(<ConsentStatus />);
+    expect(document.getElementById('gtag-script')).toBeNull();
+    expect(document.querySelectorAll('script[src*="googletagmanager"]').length).toBe(0);
+  });
+
+  it('does not push anything beyond the bootstrap consent default to dataLayer', () => {
+    renderWithProviders(<ConsentStatus />);
+    const entries = dataLayerEntries();
+    // Exactly one entry: the consent default. Anything else means the hook or
+    // a sibling effect is pushing before consent.
+    expect(entries.length).toBe(1);
+    expect(entries[0][0]).toBe('consent');
+    expect(entries[0][1]).toBe('default');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Initial state from localStorage
 // ---------------------------------------------------------------------------
 
 describe('useConsent - initial state', () => {
@@ -63,201 +110,242 @@ describe('useConsent - initial state', () => {
   });
 
   it('returns stored "granted" on mount', () => {
-    ls.setItem(STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
+    ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
     renderWithProviders(<ConsentStatus />);
     expect(screen.getByTestId('consent-value').textContent).toBe('granted');
   });
 
   it('returns stored "denied" on mount', () => {
-    ls.setItem(STORAGE_KEY, JSON.stringify({ value: 'denied', timestamp: Date.now() }));
+    ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: 'denied', timestamp: Date.now() }));
     renderWithProviders(<ConsentStatus />);
     expect(screen.getByTestId('consent-value').textContent).toBe('denied');
   });
 
-  it('returns null when stored consent has expired (180+ days)', () => {
+  it('returns null when stored consent has expired', () => {
     ls.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ value: 'granted', timestamp: Date.now() - SIX_MONTHS_MS - 1 })
+      CONSENT_STORAGE_KEY,
+      JSON.stringify({ value: 'granted', timestamp: Date.now() - CONSENT_EXPIRY_MS - 1 })
     );
     renderWithProviders(<ConsentStatus />);
     expect(screen.getByTestId('consent-value').textContent).toBe('null');
-    expect(ls.getItem(STORAGE_KEY)).toBeNull();
+    expect(ls.getItem(CONSENT_STORAGE_KEY)).toBeNull();
   });
 
   it('returns null when stored JSON is malformed', () => {
-    ls.setItem(STORAGE_KEY, 'not-valid-json');
+    ls.setItem(CONSENT_STORAGE_KEY, 'not-valid-json');
     renderWithProviders(<ConsentStatus />);
     expect(screen.getByTestId('consent-value').textContent).toBe('null');
   });
 });
 
 // ---------------------------------------------------------------------------
-// useConsent - grant transition
+// Grant transition
 // ---------------------------------------------------------------------------
 
 describe('useConsent - grant', () => {
-  it('sets consent to "granted" and persists to localStorage', () => {
+  it('appends the gtag script tag exactly once on Accept', () => {
     renderWithProviders(<ConsentStatus />);
     fireEvent.click(screen.getByText('grant'));
-    expect(screen.getByTestId('consent-value').textContent).toBe('granted');
-    const stored = JSON.parse(ls.getItem(STORAGE_KEY)!);
-    expect(stored.value).toBe('granted');
-    expect(typeof stored.timestamp).toBe('number');
+    const tags = document.querySelectorAll('script#gtag-script');
+    expect(tags.length).toBe(1);
+    const tag = tags[0] as HTMLScriptElement;
+    expect(tag.src).toBe(`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`);
+    expect(tag.async).toBe(true);
   });
 
-  it('injects the gtag script into <head>', () => {
+  it('queues consent update, js, and config in dataLayer in that order before appending the script', () => {
     renderWithProviders(<ConsentStatus />);
     fireEvent.click(screen.getByText('grant'));
-    const script = document.getElementById('gtag-script') as HTMLScriptElement | null;
-    expect(script).not.toBeNull();
-    expect(script?.src).toContain('googletagmanager.com');
+    const entries = dataLayerEntries();
+    const updateIdx = entries.findIndex(entryStartsWith('consent', 'update'));
+    const jsIdx = entries.findIndex(entryStartsWith('js'));
+    const configIdx = entries.findIndex(entryStartsWith('config'));
+    expect(updateIdx).toBeGreaterThan(-1);
+    expect(jsIdx).toBeGreaterThan(updateIdx);
+    expect(configIdx).toBeGreaterThan(jsIdx);
+    expect(entries[updateIdx][2]).toEqual({ analytics_storage: 'granted' });
   });
 
-  it('calls gtag consent update with "granted"', () => {
+  it('passes cookie_flags, cookie_expires (180 days), and send_page_view:false in the config call', () => {
     renderWithProviders(<ConsentStatus />);
     fireEvent.click(screen.getByText('grant'));
-    // loadGtag() restores window.gtag to the dataLayer shim before updateGtag runs,
-    // so the original vi.fn() spy is replaced. Check dataLayer for the queued command.
-    expect(window.dataLayer).toContainEqual(['consent', 'update', { analytics_storage: 'granted' }]);
-  });
-
-  it('does not inject a second script tag if grant is called twice', () => {
-    renderWithProviders(<ConsentStatus />);
-    fireEvent.click(screen.getByText('grant'));
-    fireEvent.click(screen.getByText('grant'));
-    expect(document.querySelectorAll('#gtag-script').length).toBe(1);
-  });
-
-  it('queues js + config into dataLayer synchronously on grant, before any later event', () => {
-    // Regression: js + config used to be pushed inside script.onload, which
-    // races with effects (e.g. ScrollToTop's page_view) that can fire between
-    // appendChild and onload, causing those events to be processed by gtag.js
-    // without a known measurement ID. Both must sit in dataLayer the moment
-    // grant returns.
-    renderWithProviders(<ConsentStatus />);
-    fireEvent.click(screen.getByText('grant'));
-
-    const dl = window.dataLayer as unknown[][];
-    const jsIdx = dl.findIndex((e) => e[0] === 'js');
-    const configIdx = dl.findIndex((e) => e[0] === 'config');
-
-    expect(jsIdx).toBeGreaterThanOrEqual(0);
-    expect(configIdx).toBeGreaterThanOrEqual(0);
-    expect(dl[configIdx][1]).toBe(GA_MEASUREMENT_ID);
-    expect(dl[configIdx][2]).toMatchObject({ send_page_view: false });
-  });
-});
-
-// ---------------------------------------------------------------------------
-// useConsent - deny transition
-// ---------------------------------------------------------------------------
-
-describe('useConsent - deny', () => {
-  it('sets consent to "denied" and persists to localStorage', () => {
-    renderWithProviders(<ConsentStatus />);
-    fireEvent.click(screen.getByText('deny'));
-    expect(screen.getByTestId('consent-value').textContent).toBe('denied');
-    const stored = JSON.parse(ls.getItem(STORAGE_KEY)!);
-    expect(stored.value).toBe('denied');
-  });
-
-  it('removes injected gtag script if previously granted', () => {
-    renderWithProviders(<ConsentStatus />);
-    fireEvent.click(screen.getByText('grant'));
-    expect(document.getElementById('gtag-script')).not.toBeNull();
-    fireEvent.click(screen.getByText('deny'));
-    expect(document.getElementById('gtag-script')).toBeNull();
-  });
-
-  it('calls gtag consent update with "denied" before replacing window.gtag', () => {
-    // revokeGtag() calls updateGtag("denied") first, then replaces window.gtag.
-    // Capture the spy reference before deny so we can assert on it afterward.
-    const gtagSpy = window.gtag as ReturnType<typeof vi.fn>;
-    renderWithProviders(<ConsentStatus />);
-    fireEvent.click(screen.getByText('deny'));
-    expect(gtagSpy).toHaveBeenCalledWith('consent', 'update', {
-      analytics_storage: 'denied',
+    const config = dataLayerEntries().find(entryStartsWith('config'));
+    expect(config).toBeDefined();
+    expect(config?.[1]).toBe(GA_MEASUREMENT_ID);
+    expect(config?.[2]).toMatchObject({
+      cookie_flags: 'SameSite=Lax;Secure',
+      cookie_expires: 15552000,
+      send_page_view: false,
     });
   });
 
-  it('replaces window.gtag with a no-op so subsequent calls do not throw', () => {
+  it('does not set cookie_domain or linker (cross-domain is GA-admin-configured)', () => {
     renderWithProviders(<ConsentStatus />);
     fireEvent.click(screen.getByText('grant'));
-    fireEvent.click(screen.getByText('deny'));
-    expect(() => window.gtag('event', 'page_view')).not.toThrow();
+    const config = dataLayerEntries().find(entryStartsWith('config'));
+    const settings = config?.[2] as Record<string, unknown>;
+    expect(settings).not.toHaveProperty('cookie_domain');
+    expect(settings).not.toHaveProperty('linker');
   });
 
-  it('deny → grant cycle: gtag script is re-injected after revoking', () => {
-    // Regression: revokeGtag() no-ops window.gtag; loadGtag() must restore it
-    // so that the consent update and config commands reach gtag.js.
+  it('persists "granted" to localStorage with a fresh timestamp', () => {
     renderWithProviders(<ConsentStatus />);
     fireEvent.click(screen.getByText('grant'));
-    fireEvent.click(screen.getByText('deny'));
-    // Script removed after deny
-    expect(document.getElementById('gtag-script')).toBeNull();
-    // Grant again - script must be re-injected
-    fireEvent.click(screen.getByText('grant'));
-    expect(document.getElementById('gtag-script')).not.toBeNull();
-    // Consent state must be "granted"
-    expect(screen.getByTestId('consent-value').textContent).toBe('granted');
+    const stored = JSON.parse(ls.getItem(CONSENT_STORAGE_KEY)!);
+    expect(stored.value).toBe('granted');
+    expect(typeof stored.timestamp).toBe('number');
   });
 });
 
 // ---------------------------------------------------------------------------
-// useConsent - reset transition
+// Deny transition
+// ---------------------------------------------------------------------------
+
+describe('useConsent - deny', () => {
+  it('pushes a denied consent update and persists "denied" to localStorage', () => {
+    renderWithProviders(<ConsentStatus />);
+    fireEvent.click(screen.getByText('deny'));
+    const update = dataLayerEntries().findLast(entryStartsWith('consent', 'update'));
+    expect(update?.[2]).toEqual({ analytics_storage: 'denied' });
+    expect(JSON.parse(ls.getItem(CONSENT_STORAGE_KEY)!).value).toBe('denied');
+  });
+
+  it('does not remove the gtag script tag on deny after a prior grant', () => {
+    renderWithProviders(<ConsentStatus />);
+    fireEvent.click(screen.getByText('grant'));
+    expect(document.getElementById('gtag-script')).not.toBeNull();
+    fireEvent.click(screen.getByText('deny'));
+    expect(document.getElementById('gtag-script')).not.toBeNull();
+  });
+
+  it('does not wipe dataLayer or replace window.gtag on deny', () => {
+    renderWithProviders(<ConsentStatus />);
+    fireEvent.click(screen.getByText('grant'));
+    const beforeLength = dataLayerEntries().length;
+    const gtagBefore = window.gtag;
+    fireEvent.click(screen.getByText('deny'));
+    expect(dataLayerEntries().length).toBeGreaterThanOrEqual(beforeLength);
+    expect(window.gtag).toBe(gtagBefore);
+  });
+
+  it('clears _ga and _ga_<id> cookies on deny', () => {
+    document.cookie = '_ga=GA1.2.123.456; path=/';
+    document.cookie = `_ga_${GA_MEASUREMENT_ID.replace(/^G-/, '')}=GS1.1.session; path=/`;
+    renderWithProviders(<ConsentStatus />);
+    fireEvent.click(screen.getByText('deny'));
+    expect(document.cookie).not.toMatch(/(?:^|;\s*)_ga=/);
+    expect(document.cookie).not.toMatch(/(?:^|;\s*)_ga_/);
+  });
+
+  it('does not touch non-GA cookies on deny', () => {
+    document.cookie = '_ga=GA1.2.123.456; path=/';
+    document.cookie = 'theme=dark; path=/';
+    renderWithProviders(<ConsentStatus />);
+    fireEvent.click(screen.getByText('deny'));
+    expect(document.cookie).toMatch(/(?:^|;\s*)theme=dark/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Reset transition
 // ---------------------------------------------------------------------------
 
 describe('useConsent - reset', () => {
-  it('sets consent back to null and removes the localStorage entry', () => {
+  it('clears localStorage, sets state to null, pushes a denied consent update, and clears _ga* cookies', () => {
+    document.cookie = '_ga=GA1.2.123.456; path=/';
     renderWithProviders(<ConsentStatus />);
     fireEvent.click(screen.getByText('grant'));
     fireEvent.click(screen.getByText('reset'));
     expect(screen.getByTestId('consent-value').textContent).toBe('null');
-    expect(ls.getItem(STORAGE_KEY)).toBeNull();
+    expect(ls.getItem(CONSENT_STORAGE_KEY)).toBeNull();
+    const update = dataLayerEntries().findLast(entryStartsWith('consent', 'update'));
+    expect(update?.[2]).toEqual({ analytics_storage: 'denied' });
+    expect(document.cookie).not.toMatch(/(?:^|;\s*)_ga=/);
   });
 
-  it('removes the gtag script on reset', () => {
+  it('does not remove the gtag script tag on reset', () => {
     renderWithProviders(<ConsentStatus />);
     fireEvent.click(screen.getByText('grant'));
     fireEvent.click(screen.getByText('reset'));
+    expect(document.getElementById('gtag-script')).not.toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Deny -> Grant -> Deny -> Grant cycles append the script exactly once total
+// ---------------------------------------------------------------------------
+
+describe('useConsent - cycles', () => {
+  it('only ever appends one gtag script tag across multiple deny/grant cycles', () => {
+    renderWithProviders(<ConsentStatus />);
+    fireEvent.click(screen.getByText('deny'));
+    fireEvent.click(screen.getByText('grant'));
+    fireEvent.click(screen.getByText('deny'));
+    fireEvent.click(screen.getByText('grant'));
+    expect(document.querySelectorAll('script#gtag-script').length).toBe(1);
+  });
+
+  it('a re-grant within the same session pushes only the consent update, not js or config', () => {
+    renderWithProviders(<ConsentStatus />);
+    fireEvent.click(screen.getByText('grant'));
+    const lengthAfterFirstGrant = dataLayerEntries().length;
+    fireEvent.click(screen.getByText('deny'));
+    fireEvent.click(screen.getByText('grant'));
+    const entriesAfterSecondGrant = dataLayerEntries();
+    // After deny + grant, only two entries are expected: a denied update,
+    // then a granted update. js and config are not re-pushed.
+    const tail = entriesAfterSecondGrant.slice(lengthAfterFirstGrant);
+    expect(tail.length).toBe(2);
+    expect(tail[0][0]).toBe('consent');
+    expect(tail[0][1]).toBe('update');
+    expect(tail[0][2]).toEqual({ analytics_storage: 'denied' });
+    expect(tail[1][0]).toBe('consent');
+    expect(tail[1][1]).toBe('update');
+    expect(tail[1][2]).toEqual({ analytics_storage: 'granted' });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Mount restoration: stored "granted" auto-injects the script
+// ---------------------------------------------------------------------------
+
+describe('useConsent - mount restoration', () => {
+  it('with stored granted, appends the gtag script on mount without user interaction', () => {
+    ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
+    renderWithProviders(<ConsentStatus />);
+    expect(document.getElementById('gtag-script')).not.toBeNull();
+    const update = dataLayerEntries().findLast(entryStartsWith('consent', 'update'));
+    expect(update?.[2]).toEqual({ analytics_storage: 'granted' });
+  });
+
+  it('with stored denied, does not append the script on mount', () => {
+    ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: 'denied', timestamp: Date.now() }));
+    renderWithProviders(<ConsentStatus />);
+    expect(document.getElementById('gtag-script')).toBeNull();
+  });
+
+  it('with expired stored value, does not append the script on mount', () => {
+    ls.setItem(
+      CONSENT_STORAGE_KEY,
+      JSON.stringify({ value: 'granted', timestamp: Date.now() - CONSENT_EXPIRY_MS - 1 })
+    );
+    renderWithProviders(<ConsentStatus />);
+    expect(document.getElementById('gtag-script')).toBeNull();
+  });
+
+  it('with no stored value, does not append the script on mount', () => {
+    renderWithProviders(<ConsentStatus />);
     expect(document.getElementById('gtag-script')).toBeNull();
   });
 });
 
 // ---------------------------------------------------------------------------
-// useConsent - mount restores prior consent
-// ---------------------------------------------------------------------------
-
-describe('useConsent - mount restoration', () => {
-  it('calls gtag consent update on mount when prior consent was granted', () => {
-    ls.setItem(STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
-    renderWithProviders(<ConsentStatus />);
-    // loadGtag() replaces window.gtag with the dataLayer shim during mount restoration.
-    // Verify the consent update was queued in dataLayer.
-    expect(window.dataLayer).toContainEqual(['consent', 'update', { analytics_storage: 'granted' }]);
-  });
-
-  it('does not call gtag on mount when prior consent was denied', () => {
-    ls.setItem(STORAGE_KEY, JSON.stringify({ value: 'denied', timestamp: Date.now() }));
-    renderWithProviders(<ConsentStatus />);
-    expect(window.gtag).not.toHaveBeenCalled();
-  });
-
-  it('does not call gtag on mount when no prior consent exists', () => {
-    renderWithProviders(<ConsentStatus />);
-    expect(window.gtag).not.toHaveBeenCalled();
-  });
-});
-
-// ---------------------------------------------------------------------------
-// useConsent - missing provider guard
+// Provider guard
 // ---------------------------------------------------------------------------
 
 describe('useConsent - provider guard', () => {
   it('throws when used outside ConsentProvider', () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    // React 18 dispatches an 'error' event on window for uncaught render
-    // errors. jsdom prints those to stderr unless the event is cancelled.
     const suppressWindowError = (e: ErrorEvent) => e.preventDefault();
     window.addEventListener('error', suppressWindowError);
     expect(() => render(<ConsentStatus />)).toThrow(
@@ -275,10 +363,7 @@ describe('useConsent - provider guard', () => {
 import { renderToString } from 'react-dom/server';
 
 describe('ConsentBanner - mount guard', () => {
-  it('renders nothing when server-rendered (prerendered HTML contains no banner markup)', () => {
-    // useEffect does not run during renderToString, so mounted stays false.
-    // The banner must return null, keeping it out of the prerendered HTML so it
-    // cannot become the LCP element.
+  it('renders nothing when server-rendered', () => {
     const html = renderToString(
       <MemoryRouter>
         <ConsentProvider>
@@ -292,10 +377,7 @@ describe('ConsentBanner - mount guard', () => {
   });
 
   it('component file uses a mounted state guard before rendering any consent UI', () => {
-    const source = readFileSync(
-      resolve(__dirname, '../components/ConsentBanner.tsx'),
-      'utf-8'
-    );
+    const source = readFileSync(resolve(__dirname, '../components/ConsentBanner.tsx'), 'utf-8');
     expect(source).toContain('useState(false)');
     expect(source).toContain('setMounted(true)');
     expect(source).toContain('if (!mounted) return null');
@@ -303,7 +385,7 @@ describe('ConsentBanner - mount guard', () => {
 });
 
 // ---------------------------------------------------------------------------
-// ConsentBanner - banner state (consent === null)
+// ConsentBanner - undecided state
 // ---------------------------------------------------------------------------
 
 describe('ConsentBanner - undecided state', () => {
@@ -317,6 +399,12 @@ describe('ConsentBanner - undecided state', () => {
   it('shows a link to the privacy policy', () => {
     renderWithProviders(<ConsentBanner />);
     expect(screen.getByRole('link', { name: /privacy policy/i })).toBeTruthy();
+  });
+
+  it('states that no data is sent to Google before consent', () => {
+    renderWithProviders(<ConsentBanner />);
+    const region = screen.getByRole('region', { name: 'Cookie consent' });
+    expect(region.textContent?.toLowerCase()).toContain('no data is sent to google until you accept');
   });
 
   it('hides the banner and shows the floating cookie button after accepting', () => {
@@ -335,19 +423,19 @@ describe('ConsentBanner - undecided state', () => {
 });
 
 // ---------------------------------------------------------------------------
-// ConsentBanner - floating button state (consent !== null)
+// ConsentBanner - floating button state
 // ---------------------------------------------------------------------------
 
 describe('ConsentBanner - floating button', () => {
   it('shows floating button (not banner) when consent was previously stored', () => {
-    ls.setItem(STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
+    ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
     renderWithProviders(<ConsentBanner />);
     expect(screen.getByRole('button', { name: /change cookie preferences/i })).toBeTruthy();
     expect(screen.queryByRole('region', { name: 'Cookie consent' })).toBeNull();
   });
 
   it('clicking the floating button re-shows the banner', () => {
-    ls.setItem(STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
+    ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
     renderWithProviders(<ConsentBanner />);
     fireEvent.click(screen.getByRole('button', { name: /change cookie preferences/i }));
     expect(screen.getByRole('region', { name: 'Cookie consent' })).toBeTruthy();
@@ -355,13 +443,12 @@ describe('ConsentBanner - floating button', () => {
 });
 
 // ---------------------------------------------------------------------------
-// useConsent - initial state determinism
+// useConsent - initial state determinism (hydration safety)
 // ---------------------------------------------------------------------------
 
 describe('useConsent - initial state determinism', () => {
   it('useState initializer returns null before useEffect fires, even when localStorage has "granted"', () => {
-    ls.setItem(STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
-
+    ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
     const renderValues: (string | null)[] = [];
 
     function CapturingConsumer(): JSX.Element {
@@ -372,27 +459,8 @@ describe('useConsent - initial state determinism', () => {
 
     renderWithProviders(<CapturingConsumer />);
 
-    // The very first synchronous render must use the deterministic null default
     expect(renderValues[0]).toBeNull();
-    // After useEffect fires, the stored "granted" value is applied
     expect(screen.getByTestId('capturing-consent').textContent).toBe('granted');
-  });
-
-  it('useState initializer returns null before useEffect fires, even when localStorage has "denied"', () => {
-    ls.setItem(STORAGE_KEY, JSON.stringify({ value: 'denied', timestamp: Date.now() }));
-
-    const renderValues: (string | null)[] = [];
-
-    function CapturingConsumerDenied(): JSX.Element {
-      const { consent } = useConsent();
-      renderValues.push(consent);
-      return <span data-testid="capturing-denied">{consent ?? 'null'}</span>;
-    }
-
-    renderWithProviders(<CapturingConsumerDenied />);
-
-    expect(renderValues[0]).toBeNull();
-    expect(screen.getByTestId('capturing-denied').textContent).toBe('denied');
   });
 });
 
@@ -404,17 +472,29 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 describe('useConsent - file content regression', () => {
+  const source = readFileSync(resolve(__dirname, '../hooks/useConsent.tsx'), 'utf-8');
+
   it('useState initializer does not read localStorage or call readStored', () => {
-    const source = readFileSync(
-      resolve(__dirname, '../hooks/useConsent.tsx'),
-      'utf-8'
-    );
     expect(source).toContain('useState<ConsentValue | null>(null)');
     expect(source).not.toMatch(/useState<ConsentValue \| null>\(\s*\(\s*\)/);
-    // The literal string "readStored" must not appear inside the useState call
-    const useStateIdx = source.indexOf('useState<ConsentValue | null>(null)');
-    expect(useStateIdx).toBeGreaterThan(-1);
-    // Guard: no lazy initializer pattern with readStored
-    expect(source).not.toMatch(/useState<ConsentValue \| null>\([^)]*readStored/);
+  });
+
+  it('uses a module-scoped boolean (not a DOM query) to track injection', () => {
+    expect(source).toContain('let gtagScriptInjected');
+    // The injector and reset function are the only legitimate places that
+    // change the boolean; both should set or read it directly.
+    expect(source).toMatch(/gtagScriptInjected\s*=\s*true/);
+  });
+
+  it('does not set cookie_domain, linker, or wait_for_update', () => {
+    expect(source).not.toContain('cookie_domain');
+    expect(source).not.toContain('linker');
+    expect(source).not.toContain('wait_for_update');
+    expect(source).not.toContain('ANALYTICS_LINKER_DOMAINS');
+    expect(source).not.toContain('GA_COOKIE_DOMAIN');
+  });
+
+  it('does not put consent update inside script.onload', () => {
+    expect(source).not.toMatch(/onload\s*=\s*[^;]*consent/);
   });
 });

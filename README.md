@@ -130,18 +130,25 @@ Each page declares its canonical URL to prevent duplicate indexing. Handled via 
 
 ## Analytics and Privacy
 
-The site uses Google Analytics 4 with Consent Mode v2. No data is collected until the user explicitly accepts via the consent banner.
+The site uses Google Analytics 4 with Consent Mode v2 in **gated-load mode**. No data is sent to Google until the user clicks Accept on the cookie banner. The `gtag.js` script itself is not loaded until that point. Cross-domain measurement between `offon.dev` and `community.offon.dev` is configured in the GA4 admin UI, not in this codebase. See the Analytics and Consent section of `CLAUDE.md` for the full design.
 
 ### Configuration
 
-`GA_MEASUREMENT_ID` in `src/data/constants.ts` holds the GA4 Measurement ID. The gtag snippet in `src/root.tsx` must match this value. If you update the ID, change it in both places.
+The following constants in `src/data/constants.ts` drive the analytics setup:
+
+| Constant | Purpose |
+|---|---|
+| `GA_MEASUREMENT_ID` | GA4 Measurement ID. Used by `useConsent.tsx` only, when it injects `gtag.js` on Accept. |
+| `CONSENT_STORAGE_KEY` | `localStorage` key for the consent decision. |
+| `CONSENT_EXPIRY_MS` | Stored consent expiry (180 days). |
 
 ### How it works
 
-- `src/root.tsx` loads gtag.js with all consent signals set to `denied` by default (Consent Mode v2).
-- `src/hooks/useConsent.tsx` manages the user's choice, stored in `localStorage` as `analytics_consent` with a 6-month expiry. On grant, it calls `gtag('consent', 'update', { analytics_storage: 'granted' })`.
+- `src/root.tsx` ships a minimal inline `<head>` bootstrap that bootstraps `dataLayer`, defines `window.gtag` as the push shim, and sets all four GDPR consent signals to denied. It does not load gtag.js, does not push `js` or `config`, and does not read `localStorage`.
+- `src/hooks/useConsent.tsx` owns the React-side state and the `gtag.js` injector. On Accept (or on mount when localStorage records a granted decision), the injector pushes `consent update granted` + `js` + `config` into `dataLayer` synchronously before appending the `<script src="...gtag/js?id=...">` tag. A module-scoped boolean ensures the script is appended at most once per session.
 - `src/components/ConsentBanner.tsx` renders a fixed bottom bar until the user makes a choice. Once consent is set, it renders a floating cookie icon button (bottom-right) that calls `reset()` to reopen the banner.
-- `src/Layout.tsx` fires a `page_view` event on every route change (via `ScrollToTop`), but only when consent is `"granted"`.
+- `src/Layout.tsx` fires `page_view` on every route change and `click_event` for every `<a>`/`<button>` click via `useClickTracking`. Both gate on `consent === "granted"` so events do not accumulate in `dataLayer` while gtag.js is not loaded.
+- On Decline or Reset, the hook clears any `_ga*` cookies that gtag.js may have set during a prior granted session. The script tag is not removed.
 - `/privacy` (`src/pages/Privacy.tsx`) is the GDPR Art. 13 privacy policy. Contact: offondev@gmail.com and `${COMMUNITY_URL}/groups/moderators`.
 
 ---

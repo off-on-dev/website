@@ -26,17 +26,22 @@ const ScrollToTop = (): null => {
   return null;
 };
 
+// Fires gtag page_view on every SPA route change, but only when consent is
+// granted. Pushing page_view events to dataLayer while gtag.js is not loaded
+// would queue them; the moment the user later clicks Accept, gtag.js drains
+// the queue and retroactively sends pageviews for every route the visitor
+// browsed while consent was undecided or denied. Gating prevents that.
 const PageViewTracker = (): null => {
   const { pathname } = useLocation();
   const { consent } = useConsent();
   useEffect(() => {
-    if (consent === "granted" && typeof window.gtag === "function") {
-      window.gtag("event", "page_view", {
-        page_path: pathname,
-        page_location: window.location.href,
-        page_title: document.title,
-      });
-    }
+    if (consent !== "granted") return;
+    if (typeof window.gtag !== "function") return;
+    window.gtag("event", "page_view", {
+      page_path: pathname,
+      page_location: window.location.href,
+      page_title: document.title,
+    });
   }, [pathname, consent]);
   return null;
 };

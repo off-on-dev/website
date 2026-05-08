@@ -260,7 +260,9 @@ without exception. They exist to prevent debugging by accumulation.
 
 ## Analytics and Consent
 
-The site uses Google Analytics 4 with Consent Mode v2. No data is collected until the user explicitly accepts.
+The site uses Google Analytics 4 with **Consent Mode v2 in gated-load mode**. No data of any kind is sent to Google until the user clicks Accept on the cookie banner; the `gtag.js` script itself is not loaded until that point. Cross-domain measurement between `offon.dev` and `community.offon.dev` is configured in the GA4 admin UI, not in this codebase.
+
+After Accept, only `analytics_storage` flips to `granted`. The three ad signals (`ad_storage`, `ad_user_data`, `ad_personalization`) stay denied for the lifetime of the site since OffOn does not run Google Ads.
 
 ### Constants
 
@@ -268,7 +270,9 @@ All analytics-related constants live in `src/data/constants.ts`:
 
 | Constant | Purpose |
 |---|---|
-| `GA_MEASUREMENT_ID` | GA4 Measurement ID. Used by `loadGtag()` in `src/hooks/useConsent.tsx` to build the gtag.js script URL and the `config` call. The inline `<head>` snippet in `src/root.tsx` only sets Consent Mode v2 defaults and does not reference the ID. |
+| `GA_MEASUREMENT_ID` | GA4 Measurement ID. Used by `useConsent.tsx` only, when it injects `gtag.js` on Accept. The inline bootstrap in `src/root.tsx` does not reference it. |
+| `CONSENT_STORAGE_KEY` | `localStorage` key for the consent decision (`analytics_consent`). |
+| `CONSENT_EXPIRY_MS` | Stored consent expiry (180 days). Re-prompt the user on the next visit after this. |
 | `BRAND_NAME` | Always `"OffOn"`. Never hardcode the string. |
 | `COMMUNITY_URL` | Real URL of the Discourse instance. Never hardcode. |
 | `COMMUNITY_DISPLAY_NAME` | User-facing display name for the community URL. Use for visible text. |
@@ -278,26 +282,38 @@ All analytics-related constants live in `src/data/constants.ts`:
 
 ### How it works
 
-- `src/root.tsx` loads gtag.js with all consent signals set to `denied` by default (Consent Mode v2).
-- `src/hooks/useConsent.tsx` manages consent state. It exports `ConsentProvider` and `useConsent`.
-  - Consent is stored in `localStorage` under key `analytics_consent` with a 6-month expiry.
-  - States: `null` (not yet decided, show banner), `"granted"`, `"denied"`.
-  - On grant: calls `loadGtag()` and `gtag('consent', 'update', { analytics_storage: 'granted' })`.
-  - On deny or reset: removes the gtag script, clears `dataLayer`, and replaces `window.gtag` with a no-op.
-  - `reset()` clears storage and re-shows the banner (called by the floating cookie button in `ConsentBanner`).
-- `useConsent` throws if called outside `ConsentProvider`. The provider is mounted in `Layout.tsx`.
+- `src/root.tsx` contains a minimal inline `<head>` bootstrap that does only three things: bootstrap `window.dataLayer`, define `window.gtag` as the `dataLayer.push` shim, and call `gtag('consent', 'default', {...})` with all four signals denied. **No `wait_for_update`. No localStorage read. No `gtag('js', ...)`. No `gtag('config', ...)`. No `<script src="...googletagmanager...">` tag.**
+- `src/hooks/useConsent.tsx` owns the React-side state and the `gtag.js` injector. The injector is shared by both the Accept click path and the mount-restore path, gated by a module-scoped `gtagScriptInjected` boolean so the script tag is appended at most once per session. On Accept, the injector pushes `consent update`, `js`, and `config` into `dataLayer` synchronously **before** appending the script tag, so when `gtag.js` loads it drains the queue in the correct order. The `config` call passes only `cookie_flags: 'SameSite=Lax;Secure'`, `cookie_expires: 15552000` (180 days), and `send_page_view: false`. No `cookie_domain` or `linker`.
+- On Decline, the hook pushes `consent update analytics_storage: denied` and clears any `_ga*` cookies. The script tag is **not** removed; `dataLayer` is **not** wiped; `window.gtag` is **not** replaced. `gtag.js` itself stops sending hits when consent is denied.
+- On Reset (floating cookie button): same as Decline plus state goes back to `null` and `localStorage` is cleared so the banner reappears.
 - `src/components/ConsentBanner.tsx` renders a fixed bottom bar until the user makes a choice. Once consent is set, it renders a floating cookie icon button (bottom-right) that calls `reset()` to reopen the banner.
+- `src/Layout.tsx` mounts `PageViewTracker` and `ClickTracker`. **Both gate on `consent === "granted"`.** Pushing events to `dataLayer` while `gtag.js` is not loaded would queue them, and a later Accept would drain the queue and retroactively send pageviews and click events for routes/clicks the user made while consent was undecided or denied. Gating prevents that.
 - `src/hooks/useTheme.tsx` manages the light/dark toggle. Theme is stored in `localStorage` under key `theme`. `ThemeProvider` is mounted in `Layout.tsx`.
 
 ### Consent state machine: enumerate all transitions before touching this code
 
-| From | To | Trigger | Systems updated |
-|---|---|---|---|
-| `null` | `"granted"` | User clicks Accept | localStorage, React state, gtag loaded |
-| `null` | `"denied"` | User clicks Decline | localStorage, React state, gtag revoked |
-| `"granted"` | `null` | User clicks Cookie Preferences | localStorage cleared, React state, gtag revoked |
-| `"denied"` | `null` | User clicks Cookie Preferences | localStorage cleared, React state |
-| `null` | `"granted"` or `"denied"` | Page reload with stored value | React state restored, gtag reloaded if granted |
+| From | To | Trigger | localStorage | React state | gtag.js | dataLayer / cookies |
+|---|---|---|---|---|---|---|
+| `null` | `"granted"` | User clicks Accept | write `granted` | `setConsent("granted")` | injected if not already | push `consent update granted` + `js` + `config` |
+| `null` | `"denied"` | User clicks Decline | write `denied` | `setConsent("denied")` | not injected | push `consent update denied`, clear `_ga*` cookies (no-op if none) |
+| `"granted"` | `"denied"` | Decline after grant | write `denied` | `setConsent("denied")` | unchanged (still loaded) | push `consent update denied`, clear `_ga*` cookies |
+| `"denied"` | `"granted"` | Accept after decline | write `granted` | `setConsent("granted")` | injected if not already | push `consent update granted` (+ `js` + `config` only if first injection) |
+| `"granted"` | `null` | User clicks Cookie Preferences | clear | `setConsent(null)` | unchanged | push `consent update denied`, clear `_ga*` cookies |
+| `"denied"` | `null` | User clicks Cookie Preferences | clear | `setConsent(null)` | unchanged | push `consent update denied` |
+| `null` | `"granted"` | Page load with stored `granted` | (read) | `setConsent("granted")` | injected by mount effect | push `consent update granted` + `js` + `config` |
+| `null` | `"denied"` | Page load with stored `denied` | (read) | `setConsent("denied")` | not injected | nothing |
+
+### Do not
+
+- Do not load `gtag.js` outside the consent injector. The `<script src="...googletagmanager...">` tag belongs in `useConsent.tsx`'s injector, not in `root.tsx`.
+- Do not put `gtag('js')` or `gtag('config')` in `root.tsx`. Both belong in the injector, queued after the consent update.
+- Do not reintroduce `wait_for_update`. There are no buffered pings to wait for under gated load.
+- Do not reintroduce GPC/DNT detection.
+- Do not reintroduce `ANALYTICS_LINKER_DOMAINS` or `cookie_domain`. Cross-domain measurement is configured in the GA4 admin UI.
+- Do not put the consent update inside `script.onload`. It must be queued before `appendChild` so the dataLayer drains in the correct order.
+- Do not remove the script tag, wipe `dataLayer`, or replace `window.gtag` on deny. `gtag.js` self-gates when `analytics_storage` flips to denied; doing more orphans its internal references.
+- Do not push `page_view` or `click_event` when consent is not granted. The retroactive-replay-on-Accept bug is the reason both trackers gate.
+- Do not skip clearing `_ga*` cookies on deny or reset. Users reasonably expect "decline" to remove existing analytics cookies, and the privacy policy promises this.
 
 ---
 

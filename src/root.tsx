@@ -13,7 +13,14 @@ export const links: LinksFunction = () => [
 // Inline script strings extracted to constants so tests can assert ordering in this file.
 const themeScript = `(function(){var t=localStorage.getItem("theme");if(t==="light"){document.documentElement.classList.remove("dark");document.documentElement.classList.add("light");}})();`;
 
-const gtagScript = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',wait_for_update:500});`;
+// Gated-load Consent Mode v2. The inline bootstrap does the bare minimum and
+// nothing more: bootstrap dataLayer, define window.gtag as the push shim, and
+// declare every signal denied by default. No localStorage read, no
+// wait_for_update, no js, no config, no <script src="...gtagtm/...">. gtag.js
+// itself is appended to <head> from useConsent.tsx the moment the user clicks
+// Accept (or on mount when localStorage already records a granted decision).
+// This guarantees zero requests to any Google domain before consent.
+const gtagBootstrap = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});`;
 
 // Description is kept in sync with the Index page meta description (src/pages/Index.tsx).
 // JSON-LD inline scripts cannot reference TS constants (they live inside dangerouslySetInnerHTML),
@@ -41,8 +48,8 @@ export default function Root(): JSX.Element {
         <meta name="theme-color" content="#f5f5ff" media="(prefers-color-scheme: light)" />
         {/* Theme must be set before React boots to prevent flash of wrong theme */}
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-        {/* GA4 consent defaults: all signals denied until user explicitly accepts */}
-        <script dangerouslySetInnerHTML={{ __html: gtagScript }} />
+        {/* Consent Mode v2 default-denied bootstrap. gtag.js is loaded later, only on Accept. */}
+        <script dangerouslySetInnerHTML={{ __html: gtagBootstrap }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: webSiteJsonLd }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: orgJsonLd }} />
         <Meta />

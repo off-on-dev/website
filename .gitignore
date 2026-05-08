@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# React Router v7 generated types
+.react-router/
+
 # Playwright
 test-results/
 playwright-report/
