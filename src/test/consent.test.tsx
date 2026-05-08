@@ -4,6 +4,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { ConsentProvider, useConsent } from '@/hooks/useConsent';
 import { ConsentBanner } from '@/components/ConsentBanner';
+import { GA_MEASUREMENT_ID } from '@/data/constants';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -125,6 +126,25 @@ describe('useConsent - grant', () => {
     fireEvent.click(screen.getByText('grant'));
     fireEvent.click(screen.getByText('grant'));
     expect(document.querySelectorAll('#gtag-script').length).toBe(1);
+  });
+
+  it('queues js + config into dataLayer synchronously on grant, before any later event', () => {
+    // Regression: js + config used to be pushed inside script.onload, which
+    // races with effects (e.g. ScrollToTop's page_view) that can fire between
+    // appendChild and onload, causing those events to be processed by gtag.js
+    // without a known measurement ID. Both must sit in dataLayer the moment
+    // grant returns.
+    renderWithProviders(<ConsentStatus />);
+    fireEvent.click(screen.getByText('grant'));
+
+    const dl = window.dataLayer as unknown[][];
+    const jsIdx = dl.findIndex((e) => e[0] === 'js');
+    const configIdx = dl.findIndex((e) => e[0] === 'config');
+
+    expect(jsIdx).toBeGreaterThanOrEqual(0);
+    expect(configIdx).toBeGreaterThanOrEqual(0);
+    expect(dl[configIdx][1]).toBe(GA_MEASUREMENT_ID);
+    expect(dl[configIdx][2]).toMatchObject({ send_page_view: false });
   });
 });
 

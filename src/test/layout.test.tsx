@@ -104,7 +104,15 @@ describe("Layout", () => {
     // loadGtag() replaces window.gtag with the dataLayer push shim on mount,
     // so page_view calls land in window.dataLayer rather than the original spy.
     const dl = window.dataLayer as unknown[][];
-    expect(dl).toContainEqual(["event", "page_view", { page_path: "/about" }]);
+    const pageViewCall = dl.find(
+      (entry) => entry[0] === "event" && entry[1] === "page_view" && (entry[2] as { page_path?: string })?.page_path === "/about",
+    );
+    expect(pageViewCall).toBeDefined();
+    expect(pageViewCall?.[2]).toMatchObject({
+      page_path: "/about",
+      page_location: window.location.href,
+      page_title: document.title,
+    });
   });
 
   it("ScrollToTop does not fire gtag when consent is null", async () => {

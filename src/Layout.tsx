@@ -3,6 +3,7 @@ import { useEffect, type JSX } from "react";
 import { ThemeProvider } from "@/hooks/useTheme";
 import { ConsentBanner } from "@/components/ConsentBanner";
 import { ConsentProvider, useConsent } from "@/hooks/useConsent";
+import { useClickTracking } from "@/hooks/useClickTracking";
 
 const ScrollToTop = (): null => {
   const { pathname, hash } = useLocation();
@@ -14,9 +15,18 @@ const ScrollToTop = (): null => {
   }, [pathname, hash]);
   useEffect(() => {
     if (consent === "granted" && typeof window.gtag === "function") {
-      window.gtag("event", "page_view", { page_path: pathname });
+      window.gtag("event", "page_view", {
+        page_path: pathname,
+        page_location: window.location.href,
+        page_title: document.title,
+      });
     }
   }, [pathname, consent]);
+  return null;
+};
+
+const ClickTracker = (): null => {
+  useClickTracking();
   return null;
 };
 
@@ -28,6 +38,7 @@ export function Layout(): JSX.Element {
           Skip to main content
         </a>
         <ScrollToTop />
+        <ClickTracker />
         <ConsentBanner />
         <Outlet />
       </ConsentProvider>

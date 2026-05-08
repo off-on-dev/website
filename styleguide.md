@@ -413,6 +413,35 @@ Consent is stored in `localStorage` under the key `analytics_consent` as `{ valu
 
 ---
 
+### `useClickTracking`
+
+`src/hooks/useClickTracking.ts`
+
+Attaches a delegated document-level `click` listener that fires a GA4 `click_event` whenever the click resolves to an `<a>` or `<button>` ancestor. The listener is only attached when consent is `"granted"` and is removed automatically the moment consent flips to `"denied"` or `null`.
+
+```ts
+useClickTracking();
+```
+
+Returns nothing. Reads consent via `useConsent`, so the call site must be inside `ConsentProvider`. Currently mounted via the `ClickTracker` sibling in `Layout.tsx`.
+
+| Event property | Source | Fallback |
+|---|---|---|
+| `click_text` | `tracked.textContent?.trim()`, sliced to 100 chars | `"unknown"` |
+| `click_url` | `<a>`: `href`. `<button>`: `data-url` attribute. | `"no-url"` |
+| `click_element` | `tracked.tagName.toLowerCase()` (`"a"` or `"button"`) | none |
+| `click_page` | `window.location.pathname` | none |
+
+`tracked` is the closest `<a>` or `<button>` ancestor of `event.target`, so a click on an icon or text inside a link still attributes to the link itself. Clicks on plain elements (`<div>`, `<span>`) do not fire the event.
+
+The custom property is named `click_page` (not `page_location`) because GA4 reserves `page_location` for the full page URL set on the `page_view` event. Sending a relative pathname into a reserved parameter would clash with GA4's URL grouping.
+
+`click_text` is truncated to 100 chars at the source. GA4 silently truncates string parameter values at 100 chars, so doing it ourselves keeps the limit visible in the code rather than being discovered through missing-tail data in reports.
+
+The skip-nav link (`<a href="#main-content">` in `Layout.tsx`) is excluded from tracking because it fires on every keyboard `Tab + Enter` and reflects assistive-tech navigation, not user intent. Other in-page hash links (e.g. `#section-2`) are still tracked normally.
+
+---
+
 ### `useIsomorphicLayoutEffect`
 
 A utility constant that resolves to `useLayoutEffect` in the browser and `useEffect` on the server. Used to avoid the React SSR warning "useLayoutEffect does nothing on the server" during SSG prerendering.
