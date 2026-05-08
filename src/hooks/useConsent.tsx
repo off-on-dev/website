@@ -8,6 +8,12 @@ type StoredConsent = {
   timestamp: number;
 };
 
+// Module-scoped guard so the gtag.js script tag is appended at most once per
+// session. Both the Accept click and the mount-restore-from-localStorage path
+// route through the same injector and consult this flag, so a deny -> grant ->
+// deny -> grant cycle never appends a second script tag and a tab that already
+// loaded gtag.js does not load it again on a re-grant.
+let gtagScriptInjected = false;
 
 function readStored(): StoredConsent | null {
   try {
@@ -31,76 +37,65 @@ function writeStored(value: ConsentValue): void {
   } catch { /* storage unavailable */ }
 }
 
-function updateGtag(value: ConsentValue): void {
-  if (typeof window.gtag !== "function") return;
-  window.gtag("consent", "update", { analytics_storage: value });
+// Clears any GA4 cookies that gtag.js set during a prior granted session.
+// Without this, declining only stops new hits but leaves _ga and _ga_<id>
+// on disk, which is not what users reasonably expect "decline" to do.
+// gtag.js writes these as host-only cookies (no Domain attribute on the
+// cookie) when its domain setting is left at the gtag.js default, so we
+// clear with no domain attribute to match.
+function clearGaCookies(): void {
+  const expired = "expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  document.cookie.split(";").forEach((entry) => {
+    const name = entry.split("=")[0]?.trim();
+    if (!name || !name.startsWith("_ga")) return;
+    document.cookie = `${name}=; path=/; ${expired}`;
+  });
 }
 
-// Dynamically injects gtag.js and initialises the config. Safe to call multiple
-// times - the script tag is only added once (guarded by id).
-// Also restores the dataLayer push shim in case revokeGtag() replaced window.gtag
-// with a no-op (deny → grant cycle).
-function loadGtag(): void {
-  // Restore the dataLayer shim before queuing any commands. If revokeGtag()
-  // replaced window.gtag with a no-op, this ensures consent updates and config
-  // commands are properly queued for gtag.js to process on load.
-  window.dataLayer = window.dataLayer || [];
-  const dl = window.dataLayer as unknown[];
-  window.gtag = (...args: unknown[]): void => { dl.push(args); };
-
-  // Queue js + config synchronously so they sit before any subsequent event in
-  // dataLayer. gtag.js processes the queue in order on load; pushing these in
-  // script.onload would race with effects (e.g. ScrollToTop's page_view) that
-  // can fire between appendChild and onload, causing those events to be
-  // processed without a known measurement ID. Repeated config calls are
-  // documented as safe and re-apply settings each time.
+// Shared injector for both the Accept click and the mount-restore path. The
+// queue order matters: the inline bootstrap in root.tsx has already pushed
+// `consent default (denied)` into dataLayer. We push consent update + js +
+// config synchronously before appending the script tag, so when gtag.js
+// loads and drains the queue it processes:
+//   1. consent default (denied)   - from the bootstrap
+//   2. consent update (granted)   - from us
+//   3. js                          - from us
+//   4. config                      - from us
+// After that drain, gtag.js replaces dataLayer.push with a live processor and
+// any subsequent commands (page_view, click_event, deny, re-grant) are
+// handled in real time. Putting the consent update inside script.onload
+// would race with React effects that fire page_view between appendChild and
+// onload, sending events while the consent state is still seen as denied.
+function injectGtag(): void {
+  if (typeof window.gtag !== "function") return;
+  window.gtag("consent", "update", { analytics_storage: "granted" });
+  // js, config, and the script tag belong to the first-injection path only.
+  // On a re-grant within the same session (deny -> grant), gtag.js is still
+  // running from the original load and has already processed js + config; we
+  // only need to flip the consent state.
+  if (gtagScriptInjected) return;
   window.gtag("js", new Date());
-  window.gtag("config", GA_MEASUREMENT_ID, { send_page_view: false });
-
-  // The consent update must reach gtag.js after it has loaded. Pushing it into
-  // dataLayer before the script processes its initial queue can cause the
-  // consent state to be ignored. Defer to script.onload (or fire immediately if
-  // the script is already loaded from a prior grant in this session).
-  function fireConsentUpdate(): void {
-    if (typeof window.gtag !== "function") return;
-    window.gtag("consent", "update", {
-      analytics_storage: "granted",
-      ad_storage: "denied",
-      ad_user_data: "denied",
-      ad_personalization: "denied",
-    });
-  }
-
-  const existing = document.getElementById("gtag-script") as HTMLScriptElement | null;
-  if (existing) {
-    if (existing.dataset.loaded === "true") {
-      fireConsentUpdate();
-    } else {
-      existing.addEventListener("load", fireConsentUpdate, { once: true });
-    }
-    return;
-  }
-
+  window.gtag("config", GA_MEASUREMENT_ID, {
+    cookie_flags: "SameSite=Lax;Secure",
+    cookie_expires: 15552000,
+    send_page_view: false,
+  });
   const script = document.createElement("script");
   script.id = "gtag-script";
   script.async = true;
   script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-  script.onload = (): void => {
-    script.dataset.loaded = "true";
-    fireConsentUpdate();
-  };
   document.head.appendChild(script);
+  gtagScriptInjected = true;
 }
 
-// Removes the injected gtag script, revokes consent signals, and no-ops gtag
-// for the remainder of the session. Called when the user denies or resets consent.
-function revokeGtag(): void {
-  updateGtag("denied");
-  const el = document.getElementById("gtag-script");
-  if (el) el.remove();
-  // Prevent any queued or future events being sent for this session
-  window.dataLayer = [];
-  window.gtag = (..._args: unknown[]): void => { /* consent revoked */ };
+// Pushes a denied consent update. Intentionally does not remove the script
+// tag, wipe dataLayer, or replace window.gtag with a no-op. gtag.js stops
+// sending hits the moment analytics_storage flips to denied; doing more
+// orphans gtag.js's internal references and silently breaks subsequent
+// measurement on a re-grant within the same session.
+function revokeAnalyticsConsent(): void {
+  if (typeof window.gtag !== "function") return;
+  window.gtag("consent", "update", { analytics_storage: "denied" });
 }
 
 type ConsentContextValue = {
@@ -120,36 +115,43 @@ type ConsentProviderProps = {
 export function ConsentProvider({ children }: ConsentProviderProps): JSX.Element {
   const [consent, setConsent] = useState<ConsentValue | null>(null);
 
-  // On mount, restore previously stored consent: update state and reload gtag if needed.
+  // Restore stored choice into React state on mount. If the prior decision was
+  // granted, also run the injector so gtag.js loads on a hard reload without
+  // requiring a second click. Both paths share the same module-scoped guard
+  // so the script tag is appended at most once per session.
   useEffect(() => {
     const stored = readStored();
-    if (stored) {
-      setConsent(stored.value); // eslint-disable-line react-hooks/set-state-in-effect -- localStorage cannot be read in a lazy useState initializer; SSG requires a safe default on first render (see CLAUDE.md hydration rules)
-      if (stored.value === "granted") {
-        loadGtag();
-      }
+    if (!stored) return;
+    setConsent(stored.value); // eslint-disable-line react-hooks/set-state-in-effect -- localStorage cannot be read in a lazy useState initializer; SSG requires a safe default on first render (see CLAUDE.md hydration rules)
+    if (stored.value === "granted") {
+      injectGtag();
     }
   }, []);
 
   const grant = useCallback((): void => {
     writeStored("granted");
     setConsent("granted");
-    loadGtag();
+    injectGtag();
   }, []);
 
   const deny = useCallback((): void => {
     writeStored("denied");
     setConsent("denied");
-    revokeGtag();
+    revokeAnalyticsConsent();
+    clearGaCookies();
   }, []);
 
-  // Clears the stored choice and re-shows the banner (used by the cookie preferences button in ConsentBanner)
+  // Clears the stored choice and re-shows the banner. Called by the cookie
+  // preferences floating button. Mirrors deny in terms of gtag state and
+  // cookie cleanup, but moves React state back to null instead of "denied"
+  // so the banner reappears.
   const reset = useCallback((): void => {
     try {
       localStorage.removeItem(CONSENT_STORAGE_KEY);
     } catch { /* storage unavailable */ }
     setConsent(null);
-    revokeGtag();
+    revokeAnalyticsConsent();
+    clearGaCookies();
   }, []);
 
   return (
@@ -164,4 +166,12 @@ export function useConsent(): ConsentContextValue {
   const ctx = useContext(ConsentContext);
   if (!ctx) throw new Error("useConsent must be used within ConsentProvider");
   return ctx;
+}
+
+// Test-only: lets the consent test reset the module-scoped injection guard
+// between cases. Production code never needs this; the boolean is intentionally
+// session-scoped.
+// eslint-disable-next-line react-refresh/only-export-components -- intentional: test helper colocated with hook
+export function __resetGtagInjectionForTests(): void {
+  gtagScriptInjected = false;
 }

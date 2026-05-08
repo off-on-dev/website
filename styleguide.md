@@ -404,7 +404,7 @@ const challengesActive = location.pathname === "/" && activeSection === "challen
 
 `src/hooks/useConsent.tsx`
 
-Manages analytics consent state for GDPR Consent Mode v2.
+Owns the React-side state for GDPR Consent Mode v2 (gated-load mode) and the `gtag.js` injector. The inline `<head>` bootstrap in `src/root.tsx` only sets the consent default to denied; `gtag.js` is loaded by this hook the moment the user clicks Accept (or on mount when `localStorage` records a granted decision).
 
 ```ts
 const { consent, grant, deny, reset } = useConsent();
@@ -413,11 +413,13 @@ const { consent, grant, deny, reset } = useConsent();
 | Return | Type | Description |
 |---|---|---|
 | `consent` | `"granted" \| "denied" \| null` | `null` = not yet decided (show banner) |
-| `grant()` | `() => void` | Accept analytics, updates gtag and localStorage |
-| `deny()` | `() => void` | Decline analytics, updates localStorage |
-| `reset()` | `() => void` | Clears stored choice, re-shows banner, resets gtag to denied |
+| `grant()` | `() => void` | Injects gtag.js (once per session), pushes `analytics_storage: granted`, writes localStorage |
+| `deny()` | `() => void` | Pushes `analytics_storage: denied`, clears `_ga*` cookies, writes localStorage |
+| `reset()` | `() => void` | Clears stored choice, re-shows banner, pushes `analytics_storage: denied`, clears `_ga*` cookies |
 
-Consent is stored in `localStorage` under the key `analytics_consent` as `{ value, timestamp }`. It expires after 6 months and the user is re-prompted.
+Consent is stored in `localStorage` under the key `analytics_consent` as `{ value, timestamp }`. It expires after 180 days and the user is re-prompted. The `ad_storage`, `ad_user_data`, and `ad_personalization` signals stay denied for the lifetime of the site since OffOn does not run Google Ads. Only `analytics_storage` is in scope.
+
+The injector is shared between the Accept click and the mount-restore-from-localStorage path, gated by a module-scoped `gtagScriptInjected` boolean. Within a single session, a deny → grant → deny → grant cycle only ever appends one `<script>` tag; subsequent grants push only the consent update. The injector queues `consent update` + `js` + `config` synchronously before `appendChild` so when `gtag.js` loads it drains the queue in the correct order.
 
 ---
 
@@ -425,13 +427,13 @@ Consent is stored in `localStorage` under the key `analytics_consent` as `{ valu
 
 `src/hooks/useClickTracking.ts`
 
-Attaches a delegated document-level `click` listener that fires a GA4 `click_event` whenever the click resolves to an `<a>` or `<button>` ancestor. The listener is only attached when consent is `"granted"` and is removed automatically the moment consent flips to `"denied"` or `null`.
+Attaches a delegated document-level `click` listener that fires a GA4 `click_event` whenever the click resolves to an `<a>` or `<button>` ancestor. The listener is gated on `consent === "granted"` and is removed automatically the moment consent flips away from granted.
 
 ```ts
 useClickTracking();
 ```
 
-Returns nothing. Reads consent via `useConsent`, so the call site must be inside `ConsentProvider`. Currently mounted via the `ClickTracker` sibling in `Layout.tsx`.
+Returns nothing. Reads consent via `useConsent`, so the call site must be inside `ConsentProvider`. Currently mounted via the `ClickTracker` sibling in `Layout.tsx`. Gating exists because pushing events to `dataLayer` while gtag.js is not loaded would queue them, and a later Accept would drain the queue and retroactively send clicks for actions the user took while consent was undecided or denied.
 
 | Event property | Source | Fallback |
 |---|---|---|

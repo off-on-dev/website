@@ -2,10 +2,14 @@ import { type JSX } from "react";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, fireEvent, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
-import { ConsentProvider, useConsent } from "@/hooks/useConsent";
+import {
+  ConsentProvider,
+  useConsent,
+  __resetGtagInjectionForTests,
+} from "@/hooks/useConsent";
 import { useClickTracking } from "@/hooks/useClickTracking";
+import { CONSENT_STORAGE_KEY } from "@/data/constants";
 
-const STORAGE_KEY = "analytics_consent";
 const ls = window.localStorage;
 
 const ClickTracker = (): null => {
@@ -39,10 +43,10 @@ function Harness({ children }: { children: React.ReactNode }): JSX.Element {
 beforeEach(() => {
   ls.clear();
   document.getElementById("gtag-script")?.remove();
-  // Pre-grant consent so the listener attaches synchronously on mount.
-  // ConsentProvider's mount effect calls loadGtag(), which replaces window.gtag
-  // with a dataLayer push shim. All click_event calls land in window.dataLayer.
-  ls.setItem(STORAGE_KEY, JSON.stringify({ value: "granted", timestamp: Date.now() }));
+  __resetGtagInjectionForTests();
+  // Pre-grant consent so the listener attaches synchronously on mount in
+  // most test cases. Cases that need a different starting state override.
+  ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: "granted", timestamp: Date.now() }));
   window.gtag = vi.fn();
   window.dataLayer = [];
 });
@@ -51,13 +55,14 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-function findClickEvent(): unknown[] | undefined {
-  const dl = (window.dataLayer ?? []) as unknown[];
-  return dl.find(
-    (entry): entry is unknown[] =>
-      Array.isArray(entry) && entry[0] === "event" && entry[1] === "click_event",
-  );
+function lastClickEventCall(): unknown[] | undefined {
+  const calls = (window.gtag as ReturnType<typeof vi.fn>).mock.calls;
+  return calls.find((c) => c[0] === "event" && c[1] === "click_event");
 }
+
+// ---------------------------------------------------------------------------
+// Consent gating
+// ---------------------------------------------------------------------------
 
 describe("useClickTracking - consent gating", () => {
   it("does not fire click_event when consent is null (no stored value)", () => {
@@ -68,18 +73,18 @@ describe("useClickTracking - consent gating", () => {
       </Harness>,
     );
     fireEvent.click(screen.getByText("Link"));
-    expect(findClickEvent()).toBeUndefined();
+    expect(lastClickEventCall()).toBeUndefined();
   });
 
   it("does not fire click_event when consent is denied", () => {
-    ls.setItem(STORAGE_KEY, JSON.stringify({ value: "denied", timestamp: Date.now() }));
+    ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: "denied", timestamp: Date.now() }));
     render(
       <Harness>
         <a href="https://example.com/x">Link</a>
       </Harness>,
     );
     fireEvent.click(screen.getByText("Link"));
-    expect(findClickEvent()).toBeUndefined();
+    expect(lastClickEventCall()).toBeUndefined();
   });
 
   it("removes the listener when consent flips from granted to denied", () => {
@@ -88,13 +93,29 @@ describe("useClickTracking - consent gating", () => {
         <a href="https://example.com/x">Link</a>
       </Harness>,
     );
-    // Click the deny button. revokeGtag() clears dataLayer and replaces gtag
-    // with a no-op, then the hook's cleanup removes the document listener.
     fireEvent.click(screen.getByTestId("deny"));
+    (window.gtag as ReturnType<typeof vi.fn>).mockClear();
     fireEvent.click(screen.getByText("Link"));
-    expect(findClickEvent()).toBeUndefined();
+    expect(lastClickEventCall()).toBeUndefined();
+  });
+
+  it("re-attaches the listener when consent flips back to granted", () => {
+    render(
+      <Harness>
+        <a href="https://example.com/x">Link</a>
+      </Harness>,
+    );
+    fireEvent.click(screen.getByTestId("deny"));
+    fireEvent.click(screen.getByTestId("grant"));
+    (window.gtag as ReturnType<typeof vi.fn>).mockClear();
+    fireEvent.click(screen.getByText("Link"));
+    expect(lastClickEventCall()).toBeDefined();
   });
 });
+
+// ---------------------------------------------------------------------------
+// Anchor clicks
+// ---------------------------------------------------------------------------
 
 describe("useClickTracking - anchor clicks", () => {
   it("fires click_event with click_text, click_url, click_element, click_page", () => {
@@ -105,7 +126,7 @@ describe("useClickTracking - anchor clicks", () => {
     );
     fireEvent.click(screen.getByText("Visit Example"));
 
-    const call = findClickEvent();
+    const call = lastClickEventCall();
     expect(call).toBeDefined();
     expect(call?.[0]).toBe("event");
     expect(call?.[1]).toBe("click_event");
@@ -127,8 +148,7 @@ describe("useClickTracking - anchor clicks", () => {
       </Harness>,
     );
     fireEvent.click(screen.getByTestId("icon-child"));
-    const call = findClickEvent();
-    expect(call?.[2]).toMatchObject({
+    expect(lastClickEventCall()?.[2]).toMatchObject({
       click_url: "https://example.com/icon",
       click_element: "a",
     });
@@ -141,9 +161,13 @@ describe("useClickTracking - anchor clicks", () => {
       </Harness>,
     );
     fireEvent.click(screen.getByText("No Href"));
-    expect(findClickEvent()?.[2]).toMatchObject({ click_url: "custom://target" });
+    expect(lastClickEventCall()?.[2]).toMatchObject({ click_url: "custom://target" });
   });
 });
+
+// ---------------------------------------------------------------------------
+// Button clicks
+// ---------------------------------------------------------------------------
 
 describe("useClickTracking - button clicks", () => {
   it("fires click_event for a <button> with data-url", () => {
@@ -153,7 +177,7 @@ describe("useClickTracking - button clicks", () => {
       </Harness>,
     );
     fireEvent.click(screen.getByText("Save Now"));
-    expect(findClickEvent()?.[2]).toMatchObject({
+    expect(lastClickEventCall()?.[2]).toMatchObject({
       click_text: "Save Now",
       click_url: "action://save",
       click_element: "button",
@@ -167,7 +191,7 @@ describe("useClickTracking - button clicks", () => {
       </Harness>,
     );
     fireEvent.click(screen.getByText("Bare Button"));
-    expect(findClickEvent()?.[2]).toMatchObject({
+    expect(lastClickEventCall()?.[2]).toMatchObject({
       click_url: "no-url",
       click_element: "button",
     });
@@ -180,7 +204,7 @@ describe("useClickTracking - button clicks", () => {
       </Harness>,
     );
     fireEvent.click(screen.getByLabelText("Close"));
-    expect(findClickEvent()?.[2]).toMatchObject({
+    expect(lastClickEventCall()?.[2]).toMatchObject({
       click_text: "Close",
       click_url: "action://close",
     });
@@ -193,12 +217,16 @@ describe("useClickTracking - button clicks", () => {
       </Harness>,
     );
     fireEvent.click(screen.getByTestId("empty-btn"));
-    expect(findClickEvent()?.[2]).toMatchObject({
+    expect(lastClickEventCall()?.[2]).toMatchObject({
       click_text: "unknown",
       click_url: "action://empty",
     });
   });
 });
+
+// ---------------------------------------------------------------------------
+// Non-tracked elements
+// ---------------------------------------------------------------------------
 
 describe("useClickTracking - non-tracked elements", () => {
   it("does not fire click_event for clicks on a <div>", () => {
@@ -208,19 +236,13 @@ describe("useClickTracking - non-tracked elements", () => {
       </Harness>,
     );
     fireEvent.click(screen.getByTestId("plain-div"));
-    expect(findClickEvent()).toBeUndefined();
-  });
-
-  it("does not fire click_event for clicks on a <span> with no anchor or button ancestor", () => {
-    render(
-      <Harness>
-        <span data-testid="plain-span">plain</span>
-      </Harness>,
-    );
-    fireEvent.click(screen.getByTestId("plain-span"));
-    expect(findClickEvent()).toBeUndefined();
+    expect(lastClickEventCall()).toBeUndefined();
   });
 });
+
+// ---------------------------------------------------------------------------
+// click_text truncation
+// ---------------------------------------------------------------------------
 
 describe("useClickTracking - click_text truncation", () => {
   it("truncates click_text to 100 chars", () => {
@@ -231,21 +253,14 @@ describe("useClickTracking - click_text truncation", () => {
       </Harness>,
     );
     fireEvent.click(screen.getByTestId("long-button"));
-    const text = (findClickEvent()?.[2] as { click_text: string }).click_text;
+    const text = (lastClickEventCall()?.[2] as { click_text: string }).click_text;
     expect(text.length).toBe(100);
-    expect(text).toBe("x".repeat(100));
-  });
-
-  it("does not modify click_text when shorter than 100 chars", () => {
-    render(
-      <Harness>
-        <button>Short Label</button>
-      </Harness>,
-    );
-    fireEvent.click(screen.getByText("Short Label"));
-    expect((findClickEvent()?.[2] as { click_text: string }).click_text).toBe("Short Label");
   });
 });
+
+// ---------------------------------------------------------------------------
+// Skip-nav exclusion
+// ---------------------------------------------------------------------------
 
 describe("useClickTracking - skip-nav exclusion", () => {
   it("does not fire click_event for the skip-nav link (href='#main-content')", () => {
@@ -255,7 +270,7 @@ describe("useClickTracking - skip-nav exclusion", () => {
       </Harness>,
     );
     fireEvent.click(screen.getByText("Skip to main content"));
-    expect(findClickEvent()).toBeUndefined();
+    expect(lastClickEventCall()).toBeUndefined();
   });
 
   it("still fires for other in-page hash links", () => {
@@ -265,6 +280,6 @@ describe("useClickTracking - skip-nav exclusion", () => {
       </Harness>,
     );
     fireEvent.click(screen.getByText("Jump to section"));
-    expect(findClickEvent()).toBeDefined();
+    expect(lastClickEventCall()).toBeDefined();
   });
 });

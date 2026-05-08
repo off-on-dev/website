@@ -19,7 +19,7 @@ export const BLUESKY_URL = "https://bsky.app/profile/offon.bsky.social";
 export const X_URL = "#";
 
 export const CONSENT_STORAGE_KEY = "analytics_consent";
-export const CONSENT_EXPIRY_MS = 6 * 30 * 24 * 60 * 60 * 1000;
+export const CONSENT_EXPIRY_MS = 1000 * 60 * 60 * 24 * 180;
 
 export const THEME_STORAGE_KEY = "theme";
 

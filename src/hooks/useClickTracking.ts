@@ -13,8 +13,11 @@ const SKIP_NAV_HREF = "#main-content";
 
 // Attaches a delegated document-level click listener that fires a GA4
 // `click_event` for clicks that resolve to an <a> or <button> ancestor.
-// Listener is only attached when analytics consent is "granted" and removed
-// the moment consent flips to "denied" or null.
+// Gated on consent === "granted" because gtag.js is not loaded until the
+// user accepts. Pushing events to dataLayer before then would queue them
+// and let gtag.js drain the queue retroactively on a later Accept,
+// silently sending click events for clicks that happened while consent
+// was undecided or denied.
 export function useClickTracking(): void {
   const { consent } = useConsent();
 
