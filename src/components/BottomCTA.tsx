@@ -25,7 +25,7 @@ export const BottomCTA = (): JSX.Element => {
               We bring the challenges, the tooling, and the practitioners who care about the same problems you do.
             </p>
             <p className="font-sans text-base leading-relaxed text-background/90">
-              Nyx, our firefly, reminds us what happens here: one spark shared openly can help someone else move forward.
+              Every spark starts with one person. Together, alongside Nyx, our firefly, we illuminate the whole open source ecosystem.
             </p>
             <p className="font-sans text-base font-medium text-background/90">
               That's {BRAND_NAME}. Always On. Always Open. Always Learning.
