@@ -1,5 +1,6 @@
 import type { JSX } from "react";
 import { SectionLabel } from "@/components/SectionLabel";
+import { BRAND_NAME } from "@/data/constants";
 
 export const BrandStory = (): JSX.Element => {
   return (
@@ -9,13 +10,13 @@ export const BrandStory = (): JSX.Element => {
         <h2 id="story-heading" className="text-2xl font-bold text-foreground">The Story Behind the Firefly</h2>
         <div className="mt-4 flex flex-col gap-4 max-w-3xl">
           <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
-            When we rebranded, we wanted the name and the mascot to say something true about this community. David put name ideas on the table, like OnOffOn.dev. In a team meeting, Katharina suggested offon.dev, and the whole team was in.
+            When we rebranded, we wanted the name and the mascot to feel true to this community. We talked through a lot of ideas and kept coming back to the same question: what mascot could reflect a space built on curiosity, contribution, and learning by doing?
           </p>
           <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
-            The mascot took longer. We tried AI and a few other approaches as a team. Sinduri became Kathi's sounding board as they talked through which creature fit a community like ours. In one of those conversations, Kathi heard "firefly", and she created the perfect logo.
+            At one point, someone said firefly, and it clicked. That is how Nyx came to life.
           </p>
           <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
-            The firefly is more than a mascot. Each of you is remarkable on your own. Together, we glow brighter.
+            Nyx is more than a mascot. The firefly reflects what {BRAND_NAME} is about: people showing up for each other, sharing what they know, and building something brighter together. Each person brings their own spark, but together, we glow brighter.
           </p>
         </div>
       </div>

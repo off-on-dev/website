@@ -19,20 +19,16 @@ export const BottomCTA = (): JSX.Element => {
           {/* Right - copy + buttons */}
           <div className="flex flex-col gap-4">
             <p className="font-sans text-base leading-relaxed text-background/90">
-              Some species of fireflies synchronize their flashing. Thousands of individuals, each emitting their own signal, collectively producing something far more powerful than any single light source could alone.
-            </p>
-            <p className="font-sans text-base leading-relaxed text-background/90">
-              That's {BRAND_NAME}.{" "}
               <strong className="font-medium text-primary-foreground">
                 You bring your questions, your fixes, your ideas.
               </strong>{" "}
               We bring the challenges, the tooling, and the practitioners who care about the same problems you do.
             </p>
             <p className="font-sans text-base leading-relaxed text-background/90">
-              Every spark starts with one person. Together, we illuminate the whole open source ecosystem.
+              Every spark starts with one person. Together, alongside Nyx, our firefly, we illuminate the whole open source ecosystem.
             </p>
             <p className="font-sans text-base font-medium text-background/90">
-              Always On. Always Open. Always Learning.
+              That's {BRAND_NAME}. Always On. Always Open. Always Learning.
             </p>
             <div className="flex gap-3 flex-wrap mt-2">
               <a

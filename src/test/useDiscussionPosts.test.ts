@@ -70,8 +70,11 @@ const URL_NO_ID = "https://community.open-ecosystem.com";
 
 describe("useDiscussionPosts - initial state", () => {
   it("returns an empty array before data loads", () => {
+    const pendingLoader = vi.fn<DiscussionDataLoader>(
+      () => new Promise<Record<string, typeof MOCK_DATA["42"]>>(() => {})
+    );
     const { result } = renderHook(() =>
-      useDiscussionPosts(URL_42, mockLoader)
+      useDiscussionPosts(URL_42, pendingLoader)
     );
     expect(result.current).toEqual([]);
   });
