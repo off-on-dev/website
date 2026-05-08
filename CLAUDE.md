@@ -268,7 +268,7 @@ All analytics-related constants live in `src/data/constants.ts`:
 
 | Constant | Purpose |
 |---|---|
-| `GA_MEASUREMENT_ID` | GA4 Measurement ID. Must match the gtag snippet in `src/root.tsx`. If you update it, change both places. |
+| `GA_MEASUREMENT_ID` | GA4 Measurement ID. Used by `loadGtag()` in `src/hooks/useConsent.tsx` to build the gtag.js script URL and the `config` call. The inline `<head>` snippet in `src/root.tsx` only sets Consent Mode v2 defaults and does not reference the ID. |
 | `BRAND_NAME` | Always `"OffOn"`. Never hardcode the string. |
 | `COMMUNITY_URL` | Real URL of the Discourse instance. Never hardcode. |
 | `COMMUNITY_DISPLAY_NAME` | User-facing display name for the community URL. Use for visible text. |

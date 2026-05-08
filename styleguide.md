@@ -328,6 +328,14 @@ Every page must support keyboard bypass of the navigation bar (WCAG 2.4.1).
 - It is styled with the `.skip-nav` class defined in `src/index.css`: visually hidden (`top: -100%`) until focused, at which point it appears at `top: 1rem`.
 - Every page's `<main>` element must have `id="main-content"`. Do not omit this on new pages.
 
+### Route effect components in `Layout.tsx`
+
+`Layout.tsx` mounts three sibling components that each handle a single route-level side effect:
+
+- **`<ScrollToTop />`** — on every route change, scrolls to the top of the page. When the URL has a hash, it instead scrolls the matching element into view via `requestAnimationFrame` so the target is mounted before the scroll runs. Required because React Router does not handle hash-anchor scrolling on client-side navigation.
+- **`<PageViewTracker />`** — fires GA4 `page_view` on every navigation when consent is `"granted"`. Reads pathname, full URL, and `document.title`. Was previously combined with `<ScrollToTop />`; split so each component has a single responsibility.
+- **`<ClickTracker />`** — wraps `useClickTracking` so the document-level click listener attaches when the consent context changes.
+
 ```tsx
 // In Layout.tsx (already present, do not duplicate)
 <a href="#main-content" className="skip-nav">Skip to main content</a>
@@ -410,6 +418,35 @@ const { consent, grant, deny, reset } = useConsent();
 | `reset()` | `() => void` | Clears stored choice, re-shows banner, resets gtag to denied |
 
 Consent is stored in `localStorage` under the key `analytics_consent` as `{ value, timestamp }`. It expires after 6 months and the user is re-prompted.
+
+---
+
+### `useClickTracking`
+
+`src/hooks/useClickTracking.ts`
+
+Attaches a delegated document-level `click` listener that fires a GA4 `click_event` whenever the click resolves to an `<a>` or `<button>` ancestor. The listener is only attached when consent is `"granted"` and is removed automatically the moment consent flips to `"denied"` or `null`.
+
+```ts
+useClickTracking();
+```
+
+Returns nothing. Reads consent via `useConsent`, so the call site must be inside `ConsentProvider`. Currently mounted via the `ClickTracker` sibling in `Layout.tsx`.
+
+| Event property | Source | Fallback |
+|---|---|---|
+| `click_text` | `tracked.textContent?.trim()`, sliced to 100 chars | `"unknown"` |
+| `click_url` | `<a>`: `href`. `<button>`: `data-url` attribute. | `"no-url"` |
+| `click_element` | `tracked.tagName.toLowerCase()` (`"a"` or `"button"`) | none |
+| `click_page` | `window.location.pathname` | none |
+
+`tracked` is the closest `<a>` or `<button>` ancestor of `event.target`, so a click on an icon or text inside a link still attributes to the link itself. Clicks on plain elements (`<div>`, `<span>`) do not fire the event.
+
+The custom property is named `click_page` (not `page_location`) because GA4 reserves `page_location` for the full page URL set on the `page_view` event. Sending a relative pathname into a reserved parameter would clash with GA4's URL grouping.
+
+`click_text` is truncated to 100 chars at the source. GA4 silently truncates string parameter values at 100 chars, so doing it ourselves keeps the limit visible in the code rather than being discovered through missing-tail data in reports.
+
+The skip-nav link (`<a href="#main-content">` in `Layout.tsx`) is excluded from tracking because it fires on every keyboard `Tab + Enter` and reflects assistive-tech navigation, not user intent. Other in-page hash links (e.g. `#section-2`) are still tracked normally.
 
 ---
 
@@ -613,11 +650,54 @@ No props.
 
 ---
 
+### `SectionLabel`
+
+`src/components/SectionLabel.tsx`
+
+Uppercased eyebrow label rendered above section h2s. Wraps a `<span className="section-label ...">` in a `<div className="mb-3">`. Source text stays lowercase because the `section-label` CSS class applies `text-transform: uppercase`. Used in `AboutSection`, `BoardSection`, `BrandStory`, `CommunitySection`, `ChallengesGrid`, and `NotFound`. Replaces the previously duplicated div+span pattern.
+
+```tsx
+<SectionLabel>our foundation</SectionLabel>
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `children` | `ReactNode` | Label text (write lowercase). |
+
+---
+
+### `BulletList`
+
+`src/components/BulletList.tsx`
+
+Renders a vertical list with one of three marker styles (`dot`, `check`, `x`) and two spacing densities (`tight`, `loose`). Items can be plain strings or `{ lead, desc }` objects. When an item is an object, the `lead` string is rendered as a bold, foreground-colored phrase followed by the `desc` body. Plain string items render as-is.
+
+`marker="dot"` (default) renders a small amber dot. `marker="check"` and `marker="x"` render lucide `Check`/`X` icons in `text-foreground` (light-mode contrast safe — `text-primary` amber would fail WCAG 1.4.11). `spacing="tight"` (default) is the dense AboutSection layout; `spacing="loose"` matches the airier list rhythm used on `Sponsors`.
+
+```tsx
+<BulletList
+  marker="check"
+  spacing="loose"
+  items={[
+    "A simple bullet",
+    { lead: "Bold lead.", desc: "Followed by descriptive body text." },
+  ]}
+/>
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `items` | `(string \| { lead: string; desc: string })[]` | One entry per bullet. |
+| `marker` | `"dot" \| "check" \| "x"` (default `"dot"`) | Bullet marker style. |
+| `spacing` | `"tight" \| "loose"` (default `"tight"`) | List density. |
+
+---
+
 ### `AboutSection`
 
 `src/components/AboutSection.tsx`
 
-Renders the About page content: Our Mission, Who It's For, What We Stand For, and How We Build Together sections. The "How We Build Together" section renders a four-column grid of value cards (icon + title + description). Each value card title uses `<h3 className="mt-3 text-lg font-semibold text-foreground">` — these are structural sub-headings under the `<h2>` section heading and must remain `<h3>`, not `<p>`.
+Renders the About page content: Our Mission, Our Vision, Who It's For, and What We Stand For. Section is wrapped with the "our foundation" eyebrow at the top (using the standard `section-label` overline pattern) and carries `id="approach"`. Each of the four h2s also has its own id (`mission`, `vision`, `audience`, `values`) for deep-linking. The opening Mission paragraph is rendered as a `text-lg text-foreground` lead so the page has a clear thesis statement; subsequent paragraphs use `text-[hsl(var(--text-secondary))]`. Mission and Vision render as flowing paragraphs; Who It's For and What We Stand For use `BulletList` (the latter with `{ lead, desc }` items so each bullet leads with a bold headline phrase).
 
 No props. Self-contained section component.
 
@@ -627,7 +707,7 @@ No props. Self-contained section component.
 
 `src/components/BoardSection.tsx`
 
-Renders the Board section on the About page (mounted between `AboutSection` and `BottomCTA`). Reads `BOARD_MEMBERS` from `src/data/team.ts` and renders a responsive card grid (`sm:grid-cols-2 lg:grid-cols-3`). Each card shows an 80px circular avatar, the member name rendered via `PersonNameLink`, and a short bio. Card markup mirrors the pattern in `ChallengeBuildersSection.tsx`. Members are listed alphabetically by first name; placeholder seats sit at the end with `// TODO` comments next to them in `team.ts`.
+Renders the Board section on the About page (mounted after `BrandStory`, with `ChallengeBuildersSection` immediately following it). Carries the "the people" eyebrow above its h2 — that overline label visually groups Board and the subsequent `ChallengeBuildersSection` (which has no eyebrow of its own). Reads `BOARD_MEMBERS` from `src/data/team.ts` and renders a responsive card grid (`sm:grid-cols-2 lg:grid-cols-3`). Each card shows an 80px circular avatar, the member name rendered via `PersonNameLink`, and a short bio. Card markup mirrors the pattern in `ChallengeBuildersSection.tsx`. Members are listed alphabetically by first name; placeholder seats sit at the end with `// TODO` comments next to them in `team.ts`.
 
 Avatars are 320px square WebP files in `src/assets/team/`, imported in `team.ts` and assigned to `BoardMember.image`. They render at 80×80 with `width`/`height` attributes set and `loading="lazy"` (the section is below the fold). Members without an `image` (placeholder seats) get a neutral circle with the lucide `User` icon as a visual filler — the icon is `aria-hidden="true"` because the name beneath it carries the meaning. To swap a placeholder for a real member, drop a 320px square WebP into `src/assets/team/`, import it in `team.ts`, and set the `image` field.
 
@@ -641,7 +721,7 @@ No props. Self-contained section component.
 
 `src/components/ChallengeBuildersSection.tsx`
 
-Renders the Challenge Builders section, used on both the About page (mounted between `BoardSection` and `BrandStory`) and the Adventures page (mounted between `ChallengesGrid` and `BottomCTA`). Reads `ADVENTURE_CONTRIBUTORS` from `src/data/adventures.ts` and renders a card grid (`sm:grid-cols-2`) thanking everyone who has contributed an adventure. Each card shows the contributor name rendered via `PersonNameLink`, a short bio, and a list of their adventures linked via React Router `<Link>` to each detail page. Returns `null` if `ADVENTURE_CONTRIBUTORS` is empty.
+Renders the Challenge Builders section, used on both the About page (mounted directly after `BoardSection`, sharing the "the people" eyebrow group) and the Adventures page (mounted between `ChallengesGrid` and `BottomCTA`). Has no eyebrow of its own; on the About page, the visual grouping is provided by the eyebrow on the preceding `BoardSection`. Reads `ADVENTURE_CONTRIBUTORS` from `src/data/adventures.ts` and renders a card grid (`sm:grid-cols-2`) thanking everyone who has contributed an adventure. Each card shows the contributor name rendered via `PersonNameLink`, a short bio, and a list of their adventures linked via React Router `<Link>` to each detail page. Returns `null` if `ADVENTURE_CONTRIBUTORS` is empty.
 
 No props. Self-contained section component.
 
@@ -668,11 +748,11 @@ Renders a person's name with consistent styling, used for board members and adve
 
 `src/components/BrandStory.tsx`
 
-Renders the "The Story Behind the Firefly" section on the About page (mounted between `ChallengeBuildersSection` and `BottomCTA`). Three short paragraphs that explain the origin of the name and the firefly mascot, and credit Katharina for the logo. Uses `text-[hsl(var(--text-secondary))] leading-relaxed` body text within `max-w-3xl` to match the prose blocks in `AboutSection`.
+Renders the "The Story Behind the Firefly" section on the About page (mounted between `AboutSection` and `BoardSection`). Carries the "our story" eyebrow above its h2. Three short paragraphs that explain the origin of the name and the firefly mascot, and credit Katharina for the logo. Uses `text-[hsl(var(--text-secondary))] leading-relaxed` body text within `max-w-3xl` to match the prose blocks in `AboutSection`.
 
 The section intentionally hands off the synchronized-firefly metaphor to `BottomCTA`, which carries the mechanic ("Some species of fireflies synchronize their flashing..."). Do not duplicate that explanation here, otherwise the two sections will read as repetitive when stacked.
 
-Section uses `pb-16` only (no top padding), since `ChallengeBuildersSection` above it already has `pb-16`. The `id="story"` anchor is reserved for future in-page navigation.
+Section uses `pb-16` only (no top padding), since `AboutSection` above it already terminates with its own `py-16`. The `id="story"` anchor is reserved for future in-page navigation.
 
 No props. Self-contained section component.
 

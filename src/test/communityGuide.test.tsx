@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import CommunityGuide from "@/pages/CommunityGuide";
-import { COMMUNITY_URL, CONTACT_EMAIL } from "@/data/constants";
+import { CONTACT_EMAIL } from "@/data/constants";
 
 function renderCommunityGuide(): ReturnType<typeof render> {
   return render(
@@ -17,34 +17,10 @@ function renderCommunityGuide(): ReturnType<typeof render> {
 // ---------------------------------------------------------------------------
 
 describe("CommunityGuide - contact section", () => {
-  it("renders a 'log in' link pointing to COMMUNITY_URL/login", () => {
+  it("renders a 'reach out to the board' link pointing to /about#board", () => {
     renderCommunityGuide();
-    const loginLinks = screen.getAllByRole("link", { name: /log in/i });
-    const loginLink = loginLinks.find(
-      (a) => a.getAttribute("href") === `${COMMUNITY_URL}/login`
-    );
-    expect(loginLink).toBeTruthy();
-  });
-
-  it("'log in' link opens in a new tab with rel='noopener noreferrer'", () => {
-    renderCommunityGuide();
-    const loginLinks = screen.getAllByRole("link", { name: /log in/i });
-    const loginLink = loginLinks.find(
-      (a) => a.getAttribute("href") === `${COMMUNITY_URL}/login`
-    );
-    expect(loginLink?.getAttribute("target")).toBe("_blank");
-    expect(loginLink?.getAttribute("rel")).toBe("noopener noreferrer");
-  });
-
-  it("'log in' link has an sr-only '(opens in new tab)' span", () => {
-    renderCommunityGuide();
-    const loginLinks = screen.getAllByRole("link", { name: /log in/i });
-    const loginLink = loginLinks.find(
-      (a) => a.getAttribute("href") === `${COMMUNITY_URL}/login`
-    );
-    const srSpan = loginLink?.querySelector(".sr-only");
-    expect(srSpan).toBeTruthy();
-    expect(srSpan!.textContent).toBe(" (opens in new tab)");
+    const boardLink = screen.getByRole("link", { name: /reach out to the board/i });
+    expect(boardLink.getAttribute("href")).toBe("/about#board");
   });
 
   it("renders a mailto link to the contact email in the contact section", () => {
@@ -63,5 +39,14 @@ describe("CommunityGuide - contact section", () => {
       a.getAttribute("href")?.includes("/groups/moderators")
     );
     expect(moderatorGroupLink).toBeUndefined();
+  });
+
+  it("does not link to the community login page", () => {
+    renderCommunityGuide();
+    const allLinks = screen.getAllByRole("link");
+    const loginLink = allLinks.find((a) =>
+      a.getAttribute("href")?.includes("/login")
+    );
+    expect(loginLink).toBeUndefined();
   });
 });

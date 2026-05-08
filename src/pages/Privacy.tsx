@@ -1,8 +1,9 @@
 import type { JSX } from "react";
 import type { LinksFunction, MetaFunction } from "react-router";
+import { Link } from "react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { SITE_URL, COMMUNITY_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
+import { SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 
 // Last reviewed date - update this whenever the policy content changes
@@ -52,11 +53,7 @@ const Privacy = (): JSX.Element => {
         <ul className={list}>
           <li>Email: <a href={`mailto:${CONTACT_EMAIL}`} className={link}>{CONTACT_EMAIL}</a></li>
           <li>
-            Community moderators:{" "}
-            <a href={`${COMMUNITY_URL}/login`} target="_blank" rel="noopener noreferrer" className={link}>
-              log in<span className="sr-only"> (opens in new tab)</span>
-            </a>
-            {" "}to the community and DM @moderators
+            Board: <Link to="/about#board" className={link}>reach out to the board</Link>
           </li>
         </ul>
         <p className={paragraph}>
@@ -200,10 +197,7 @@ const Privacy = (): JSX.Element => {
         <p className={paragraph}>
           For any questions or requests relating to this policy or your personal data, contact us
           at <a href={`mailto:${CONTACT_EMAIL}`} className={link}>{CONTACT_EMAIL}</a> or by{" "}
-          <a href={`${COMMUNITY_URL}/login`} target="_blank" rel="noopener noreferrer" className={link}>
-            logging in<span className="sr-only"> (opens in new tab)</span>
-          </a>
-          {" "}to the community and DMing @moderators.
+          <Link to="/about#board" className={link}>reaching out to the board</Link>.
         </p>
         </div>
         </div>

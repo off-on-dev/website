@@ -1,5 +1,6 @@
 import type { JSX } from "react";
 import type { LinksFunction, MetaFunction } from "react-router";
+import { Link } from "react-router";
 import { Navbar } from "@/components/Navbar";
 import { ArrowUpRight } from "lucide-react";
 import { Footer } from "@/components/Footer";
@@ -37,7 +38,7 @@ const CommunityGuide = (): JSX.Element => {
 
       <div className="px-6 md:px-16 py-16">
       <div className="mx-auto max-w-6xl">
-        <div className="max-w-3xl space-y-12">
+        <div className="max-w-3xl space-y-8">
 
           {/* Quick Start */}
           <section aria-labelledby="quick-start">
@@ -103,18 +104,11 @@ const CommunityGuide = (): JSX.Element => {
               </li>
               <li className="flex items-start gap-2.5">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                For sensitive issues,{" "}
-                <a href={`${COMMUNITY_URL}/login`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  log in <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-                </a>
-                {" "}to the community and DM @moderators
+                For sensitive issues, <Link to="/about#board" className={extLink}>reach out to the board</Link>
               </li>
               <li className="flex items-start gap-2.5">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                Email{" "}
-                <a href={`mailto:${CONTACT_EMAIL}`} className={extLink}>
-                  {CONTACT_EMAIL}
-                </a>
+                Email <a href={`mailto:${CONTACT_EMAIL}`} className={extLink}>{CONTACT_EMAIL}</a>
               </li>
             </ul>
           </section>

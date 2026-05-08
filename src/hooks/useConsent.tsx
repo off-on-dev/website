@@ -48,21 +48,21 @@ function loadGtag(): void {
   const dl = window.dataLayer as unknown[];
   window.gtag = (...args: unknown[]): void => { dl.push(args); };
 
-  if (document.getElementById("gtag-script")) {
-    // Already loaded - fire config directly (gtag.js is listening to dataLayer)
-    window.gtag("js", new Date());
-    window.gtag("config", GA_MEASUREMENT_ID, { send_page_view: false });
-    return;
-  }
+  // Queue js + config synchronously so they sit before any subsequent event in
+  // dataLayer. gtag.js processes the queue in order on load; pushing these in
+  // script.onload would race with effects (e.g. ScrollToTop's page_view) that
+  // can fire between appendChild and onload, causing those events to be
+  // processed without a known measurement ID. Repeated config calls are
+  // documented as safe and re-apply settings each time.
+  window.gtag("js", new Date());
+  window.gtag("config", GA_MEASUREMENT_ID, { send_page_view: false });
+
+  if (document.getElementById("gtag-script")) return;
+
   const script = document.createElement("script");
   script.id = "gtag-script";
   script.async = true;
   script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-  script.onload = (): void => {
-    // gtag.js has now loaded and replaced window.gtag with its own implementation
-    window.gtag("js", new Date());
-    window.gtag("config", GA_MEASUREMENT_ID, { send_page_view: false });
-  };
   document.head.appendChild(script);
 }
 

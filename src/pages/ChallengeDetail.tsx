@@ -34,6 +34,20 @@ export const meta: MetaFunction = ({ params }) => {
     description: `${level.name}: get hands-on with ${learningsSummary}. A ${level.difficulty.toLowerCase()} challenge from ${adventure.title} on ${BRAND_NAME}.`.slice(0, 160),
     url: `${SITE_URL}/adventures/${adventure.id}/levels/${level.id}`,
     ogType: "article",
+    extra: [
+      {
+        "script:ld+json": {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+            { "@type": "ListItem", position: 2, name: "Adventures", item: `${SITE_URL}/adventures/` },
+            { "@type": "ListItem", position: 3, name: adventure.title, item: `${SITE_URL}/adventures/${adventure.id}/` },
+            { "@type": "ListItem", position: 4, name: level.name, item: `${SITE_URL}/adventures/${adventure.id}/levels/${level.id}/` },
+          ],
+        },
+      },
+    ],
   });
 };
 

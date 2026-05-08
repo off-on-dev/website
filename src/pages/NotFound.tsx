@@ -3,6 +3,7 @@ import type { MetaFunction } from "react-router";
 import { Link } from "react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { SectionLabel } from "@/components/SectionLabel";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 
 const links = [
@@ -62,7 +63,7 @@ const NotFound = (): JSX.Element => {
         <div className="mx-auto max-w-6xl w-full">
 
           <div className="mb-12">
-            <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary mb-4 block">404</span>
+            <SectionLabel>404</SectionLabel>
             <h1 className="text-4xl font-bold text-foreground mb-3">Page Not Found</h1>
             <p className="text-muted-foreground mb-2 leading-relaxed">
               This is not the page you were looking for.
