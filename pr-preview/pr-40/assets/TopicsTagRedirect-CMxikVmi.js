@@ -1,0 +1,1 @@
+import{E as e,j as t}from"./chunk-EVOBXE3Y-D0uVeswM.js";function n(){return e(`/#challenges`)}var r=t(function(){return null});export{n as clientLoader,r as default};
