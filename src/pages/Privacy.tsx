@@ -53,10 +53,7 @@ const Privacy = (): JSX.Element => {
         <ul className={list}>
           <li>Email: <a href={`mailto:${CONTACT_EMAIL}`} className={link}>{CONTACT_EMAIL}</a></li>
           <li>
-            Board:{" "}
-            <Link to="/about#board" className={link}>
-              reach out to the board
-            </Link>
+            Board: <Link to="/about#board" className={link}>reach out to the board</Link>
           </li>
         </ul>
         <p className={paragraph}>
@@ -200,9 +197,7 @@ const Privacy = (): JSX.Element => {
         <p className={paragraph}>
           For any questions or requests relating to this policy or your personal data, contact us
           at <a href={`mailto:${CONTACT_EMAIL}`} className={link}>{CONTACT_EMAIL}</a> or by{" "}
-          <Link to="/about#board" className={link}>
-            reaching out to the board
-          </Link>.
+          <Link to="/about#board" className={link}>reaching out to the board</Link>.
         </p>
         </div>
         </div>

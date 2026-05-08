@@ -328,6 +328,14 @@ Every page must support keyboard bypass of the navigation bar (WCAG 2.4.1).
 - It is styled with the `.skip-nav` class defined in `src/index.css`: visually hidden (`top: -100%`) until focused, at which point it appears at `top: 1rem`.
 - Every page's `<main>` element must have `id="main-content"`. Do not omit this on new pages.
 
+### Route effect components in `Layout.tsx`
+
+`Layout.tsx` mounts three sibling components that each handle a single route-level side effect:
+
+- **`<ScrollToTop />`** — on every route change, scrolls to the top of the page. When the URL has a hash, it instead scrolls the matching element into view via `requestAnimationFrame` so the target is mounted before the scroll runs. Required because React Router does not handle hash-anchor scrolling on client-side navigation.
+- **`<PageViewTracker />`** — fires GA4 `page_view` on every navigation when consent is `"granted"`. Reads pathname, full URL, and `document.title`. Was previously combined with `<ScrollToTop />`; split so each component has a single responsibility.
+- **`<ClickTracker />`** — wraps `useClickTracking` so the document-level click listener attaches when the consent context changes.
+
 ```tsx
 // In Layout.tsx (already present, do not duplicate)
 <a href="#main-content" className="skip-nav">Skip to main content</a>
@@ -642,22 +650,46 @@ No props.
 
 ---
 
+### `SectionLabel`
+
+`src/components/SectionLabel.tsx`
+
+Uppercased eyebrow label rendered above section h2s. Wraps a `<span className="section-label ...">` in a `<div className="mb-3">`. Source text stays lowercase because the `section-label` CSS class applies `text-transform: uppercase`. Used in `AboutSection`, `BoardSection`, `BrandStory`, `CommunitySection`, `ChallengesGrid`, and `NotFound`. Replaces the previously duplicated div+span pattern.
+
+```tsx
+<SectionLabel>our foundation</SectionLabel>
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `children` | `ReactNode` | Label text (write lowercase). |
+
+---
+
 ### `BulletList`
 
 `src/components/BulletList.tsx`
 
-Renders a vertical list with small amber dot bullets, used for the prose lists on `AboutSection` (Who It's For, What We Stand For). Items can be plain strings or `{ lead, desc }` objects. When an item is an object, the `lead` string is rendered as a bold, foreground-colored phrase followed by the `desc` body, which is the pattern used for "What We Stand For" bullets that begin with a short headline (e.g. "Open and vendor-agnostic by default."). Plain string items render as-is.
+Renders a vertical list with one of three marker styles (`dot`, `check`, `x`) and two spacing densities (`tight`, `loose`). Items can be plain strings or `{ lead, desc }` objects. When an item is an object, the `lead` string is rendered as a bold, foreground-colored phrase followed by the `desc` body. Plain string items render as-is.
+
+`marker="dot"` (default) renders a small amber dot. `marker="check"` and `marker="x"` render lucide `Check`/`X` icons in `text-foreground` (light-mode contrast safe — `text-primary` amber would fail WCAG 1.4.11). `spacing="tight"` (default) is the dense AboutSection layout; `spacing="loose"` matches the airier list rhythm used on `Sponsors`.
 
 ```tsx
-<BulletList items={[
-  "A simple bullet",
-  { lead: "Bold lead.", desc: "Followed by descriptive body text." },
-]} />
+<BulletList
+  marker="check"
+  spacing="loose"
+  items={[
+    "A simple bullet",
+    { lead: "Bold lead.", desc: "Followed by descriptive body text." },
+  ]}
+/>
 ```
 
 | Prop | Type | Description |
 |---|---|---|
 | `items` | `(string \| { lead: string; desc: string })[]` | One entry per bullet. |
+| `marker` | `"dot" \| "check" \| "x"` (default `"dot"`) | Bullet marker style. |
+| `spacing` | `"tight" \| "loose"` (default `"tight"`) | List density. |
 
 ---
 

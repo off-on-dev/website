@@ -1,58 +1,15 @@
 import type { JSX } from "react";
 import type { LinksFunction, MetaFunction } from "react-router";
-import { ArrowRight, Check, Mail, X } from "lucide-react";
+import { ArrowRight, Mail } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
+import { BulletList } from "@/components/BulletList";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
+import { SPONSORS, SUPPORT_WAYS } from "@/data/sponsors";
 import { useTheme } from "@/hooks/useTheme";
 import { buildPageMeta } from "@/lib/meta";
-import dtLogoDark from "@/assets/Dynatrace_Logo_color_negative_horizontal.svg";
-import dtLogoLight from "@/assets/Dynatrace_Logo_color_positive_horizontal.svg";
-
-type Sponsor = {
-  name: string;
-  url: string;
-  logoDark?: string;
-  logoLight?: string;
-};
-
-const currentSponsors: Sponsor[] = [
-  {
-    name: "Dynatrace",
-    url: "https://dynatrace.com",
-    logoDark: dtLogoDark,
-    logoLight: dtLogoLight,
-  },
-];
-
-const supportWays = [
-  {
-    title: "Swag",
-    description: "Provide swag for community members and event attendees.",
-  },
-  {
-    title: "Software Licenses",
-    description: "Give community members access to tools and platforms for hands-on learning and challenges.",
-  },
-  {
-    title: "Distribution",
-    description: "Help spread the word through developer newsletters, event partnerships, or social channels.",
-  },
-  {
-    title: "Adventures and Challenges",
-    description: "Sponsor an adventure or challenge and help bring new open source learning content to the community.",
-  },
-  {
-    title: "Engineering and Advocacy Time",
-    description: "Contribute the time of your engineers, developer advocates, or technical writers to mentor contributors, review content, or co-author challenges.",
-  },
-  {
-    title: "Infrastructure and Tooling",
-    description: "Offer hosting, CI resources, or developer tooling that supports the community's work.",
-  },
-];
 
 export const links: LinksFunction = () => [
   // Inter 700 is the LCP font for the PageHero h1 on this page.
@@ -84,11 +41,11 @@ const Sponsors = (): JSX.Element => {
       <div className="px-6 md:px-16 py-16">
         <div className="mx-auto max-w-6xl">
           {/* Founding Sponsor */}
-          <section>
+          <section aria-labelledby="founding-sponsor">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-              <h2 className="text-2xl font-bold text-foreground">Founding Sponsor</h2>
+              <h2 id="founding-sponsor" className="text-2xl font-bold text-foreground">Founding Sponsor</h2>
               <div>
-                {currentSponsors.map((sponsor) => {
+                {SPONSORS.map((sponsor) => {
                   const logoSrc = sponsor.logoDark && sponsor.logoLight
                     ? (theme === "dark" ? sponsor.logoDark : sponsor.logoLight)
                     : null;
@@ -125,33 +82,31 @@ const Sponsors = (): JSX.Element => {
             </div>
 
             <h3 className="text-lg font-semibold text-foreground mb-3">What Dynatrace Provides</h3>
-            <ul className="space-y-3 max-w-2xl mb-8">
-              {[
-                "Funding to keep the platform running and accessible",
-                "Engineering and developer advocacy time from individuals who take part as community members",
-                "Infrastructure, tooling, and operational support where useful",
-                "Visibility through Dynatrace's own channels, when it helps the community rather than the company",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-3 text-sm text-muted-foreground leading-relaxed">
-                  <Check size={14} aria-hidden="true" className="mt-0.5 shrink-0 text-primary" />
-                  {item}
-                </li>
-              ))}
-            </ul>
+            <div className="max-w-2xl mb-8">
+              <BulletList
+                marker="check"
+                spacing="loose"
+                items={[
+                  "Funding to keep the platform running and accessible",
+                  "Engineering and developer advocacy time from individuals who take part as community members",
+                  "Infrastructure, tooling, and operational support where useful",
+                  "Visibility through Dynatrace's own channels, when it helps the community rather than the company",
+                ]}
+              />
+            </div>
 
             <h3 className="text-lg font-semibold text-foreground mb-3">What Dynatrace Does Not Do</h3>
-            <ul className="space-y-3 max-w-2xl mb-8">
-              {[
-                `Use ${BRAND_NAME} as a sales, marketing, or lead generation channel`,
-                `Promote Dynatrace products, launches, or campaigns through ${BRAND_NAME}`,
-                "Gate content, learning paths, or contributor opportunities behind any commercial relationship",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-3 text-sm text-muted-foreground leading-relaxed">
-                  <X size={14} aria-hidden="true" className="mt-0.5 shrink-0 text-primary" />
-                  {item}
-                </li>
-              ))}
-            </ul>
+            <div className="max-w-2xl mb-8">
+              <BulletList
+                marker="x"
+                spacing="loose"
+                items={[
+                  `Use ${BRAND_NAME} as a sales, marketing, or lead generation channel`,
+                  `Promote Dynatrace products, launches, or campaigns through ${BRAND_NAME}`,
+                  "Gate content, learning paths, or contributor opportunities behind any commercial relationship",
+                ]}
+              />
+            </div>
 
             <p className="text-muted-foreground leading-relaxed max-w-2xl">
               {BRAND_NAME} is not a Dynatrace property dressed up as a community. It is a vendor-neutral space that Dynatrace helps fund because the work matters.
@@ -163,57 +118,53 @@ const Sponsors = (): JSX.Element => {
       {/* How Sponsorship Works */}
       <div className="bg-card border-y border-[hsl(var(--surface-border))] px-6 md:px-16 py-16">
         <div className="mx-auto max-w-6xl">
-          <section>
-            <h2 className="text-2xl font-bold text-foreground mb-4">How Sponsorship Works</h2>
+          <section aria-labelledby="how-sponsorship-works">
+            <h2 id="how-sponsorship-works" className="text-2xl font-bold text-foreground mb-4">How Sponsorship Works</h2>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-2xl">
               Sponsorship at {BRAND_NAME} is a partnership. The boundaries are clear, our policies are public, and community input shapes how we evolve.
             </p>
 
             <h3 className="text-lg font-semibold text-foreground mb-3">What Sponsors Receive</h3>
-            <ul className="space-y-3 max-w-2xl mb-8">
-              {[
-                "Your logo and link featured on this page",
-                "Quarterly social posts thanking you for your support",
-                "Recognition of your contributions in our weekly community digest",
-                "The opportunity to support specific initiatives, such as challenges, events, or learning paths",
-                `A direct line to the ${BRAND_NAME} team for coordination and collaboration`,
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-3 text-sm text-muted-foreground leading-relaxed">
-                  <Check size={14} aria-hidden="true" className="mt-0.5 shrink-0 text-primary" />
-                  {item}
-                </li>
-              ))}
-            </ul>
+            <div className="max-w-2xl mb-8">
+              <BulletList
+                marker="check"
+                spacing="loose"
+                items={[
+                  "Your logo and link featured on this page",
+                  "Quarterly social posts thanking you for your support",
+                  "Recognition of your contributions in our weekly community digest",
+                  "The opportunity to support specific initiatives, such as challenges, events, or learning paths",
+                  `A direct line to the ${BRAND_NAME} team for coordination and collaboration`,
+                ]}
+              />
+            </div>
 
             <h3 className="text-lg font-semibold text-foreground mb-3">What We Ask in Return</h3>
-            <ul className="space-y-3 max-w-2xl mb-8">
-              {[
-                "Respect for our community guidelines and code of conduct",
-                "Restraint on promotional content. Technical mentions are welcome only when vendor-neutral and reproducible",
-                "Engagement as a community member, not as a marketing presence",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-3 text-sm text-muted-foreground leading-relaxed">
-                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                  {item}
-                </li>
-              ))}
-            </ul>
+            <div className="max-w-2xl mb-8">
+              <BulletList
+                spacing="loose"
+                items={[
+                  "Respect for our community guidelines and code of conduct",
+                  "Restraint on promotional content. Technical mentions are welcome only when vendor-neutral and reproducible",
+                  "Engagement as a community member, not as a marketing presence",
+                ]}
+              />
+            </div>
 
             <h3 className="text-lg font-semibold text-foreground mb-3">What Sponsorship Does Not Include</h3>
-            <ul className="space-y-3 max-w-2xl mb-8">
-              {[
-                "Editorial control over challenges, content, or community direction",
-                "Voting power in governance decisions",
-                "Influence over moderation or community policies",
-                "Access to community member data for marketing or sales purposes",
-                "Exclusivity over topics, technologies, or audience segments",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-3 text-sm text-muted-foreground leading-relaxed">
-                  <X size={14} aria-hidden="true" className="mt-0.5 shrink-0 text-primary" />
-                  {item}
-                </li>
-              ))}
-            </ul>
+            <div className="max-w-2xl mb-8">
+              <BulletList
+                marker="x"
+                spacing="loose"
+                items={[
+                  "Editorial control over challenges, content, or community direction",
+                  "Voting power in governance decisions",
+                  "Influence over moderation or community policies",
+                  "Access to community member data for marketing or sales purposes",
+                  "Exclusivity over topics, technologies, or audience segments",
+                ]}
+              />
+            </div>
 
             <p className="text-muted-foreground leading-relaxed max-w-2xl">
               Sponsors enable the work; they do not direct it.
@@ -225,13 +176,13 @@ const Sponsors = (): JSX.Element => {
       {/* Becoming a Sponsor */}
       <div className="px-6 md:px-16 py-16">
         <div className="mx-auto max-w-6xl">
-          <section>
-            <h2 className="text-2xl font-bold text-foreground mb-4">Becoming a Sponsor</h2>
+          <section aria-labelledby="becoming-a-sponsor">
+            <h2 id="becoming-a-sponsor" className="text-2xl font-bold text-foreground mb-4">Becoming a Sponsor</h2>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-2xl">
               {BRAND_NAME} welcomes additional sponsors who share this model. If your organisation wants to support open source contributors and maintainers without attaching commercial expectations, we would like to hear from you.
             </p>
             <div className="grid gap-4 sm:grid-cols-2 mb-8">
-              {supportWays.map((way) => (
+              {SUPPORT_WAYS.map((way) => (
                 <div
                   key={way.title}
                   className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6"

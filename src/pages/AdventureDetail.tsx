@@ -30,6 +30,19 @@ export const meta: MetaFunction = ({ params }) => {
     description: `Tackle ${adventure.title} on ${BRAND_NAME}, a hands-on open source adventure. Work with ${tagsSummary} in a real-world scenario, directly in your browser.`.slice(0, 160),
     url: `${SITE_URL}/adventures/${adventure.id}`,
     ogType: "article",
+    extra: [
+      {
+        "script:ld+json": {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+            { "@type": "ListItem", position: 2, name: "Adventures", item: `${SITE_URL}/adventures/` },
+            { "@type": "ListItem", position: 3, name: adventure.title, item: `${SITE_URL}/adventures/${adventure.id}/` },
+          ],
+        },
+      },
+    ],
   });
 };
 

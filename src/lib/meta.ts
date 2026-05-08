@@ -1,6 +1,5 @@
+import type { MetaDescriptor } from "react-router";
 import { BRAND_NAME, SITE_URL } from "@/data/constants";
-
-type MetaDescriptor = Record<string, string>;
 
 type PageMetaOptions = {
   title: string;

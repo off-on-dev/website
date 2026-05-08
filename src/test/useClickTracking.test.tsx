@@ -173,7 +173,7 @@ describe("useClickTracking - button clicks", () => {
     });
   });
 
-  it("uses 'unknown' when the tracked element has no text", () => {
+  it("falls back to aria-label when the tracked element has no text", () => {
     render(
       <Harness>
         <button aria-label="Close" data-url="action://close" />
@@ -181,8 +181,21 @@ describe("useClickTracking - button clicks", () => {
     );
     fireEvent.click(screen.getByLabelText("Close"));
     expect(findClickEvent()?.[2]).toMatchObject({
-      click_text: "unknown",
+      click_text: "Close",
       click_url: "action://close",
+    });
+  });
+
+  it("uses 'unknown' when the tracked element has neither text nor aria-label", () => {
+    render(
+      <Harness>
+        <button data-testid="empty-btn" data-url="action://empty" />
+      </Harness>,
+    );
+    fireEvent.click(screen.getByTestId("empty-btn"));
+    expect(findClickEvent()?.[2]).toMatchObject({
+      click_text: "unknown",
+      click_url: "action://empty",
     });
   });
 });

@@ -1,6 +1,7 @@
 import { type ReactNode, type JSX } from "react";
 import { ArrowRight, Megaphone, CircleHelp, UserPlus, CalendarDays } from "lucide-react";
 import { COMMUNITY_URL } from "@/data/constants";
+import { SectionLabel } from "@/components/SectionLabel";
 
 type Card = {
   icon: ReactNode;
@@ -45,11 +46,7 @@ export const CommunitySection = (): JSX.Element => {
   return (
     <section className="py-24 px-6 md:px-16">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-3">
-          <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">
-            community
-          </span>
-        </div>
+        <SectionLabel>community</SectionLabel>
         <h2 className="mb-6 text-3xl font-bold text-primary md:text-4xl">
           Get Involved
         </h2>

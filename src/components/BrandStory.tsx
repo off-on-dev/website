@@ -1,15 +1,12 @@
 import type { JSX } from "react";
+import { SectionLabel } from "@/components/SectionLabel";
 
 export const BrandStory = (): JSX.Element => {
   return (
-    <section id="story" className="px-6 md:px-16 pb-16">
+    <section id="story" aria-labelledby="story-heading" className="px-6 md:px-16 pb-16">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-3">
-          <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">
-            our story
-          </span>
-        </div>
-        <h2 className="text-2xl font-bold text-foreground">The Story Behind the Firefly</h2>
+        <SectionLabel>our story</SectionLabel>
+        <h2 id="story-heading" className="text-2xl font-bold text-foreground">The Story Behind the Firefly</h2>
         <div className="mt-4 flex flex-col gap-4 max-w-3xl">
           <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
             When we rebranded, we wanted the name and the mascot to say something true about this community. David put name ideas on the table, like OnOffOn.dev. In a team meeting, Katharina suggested offon.dev, and the whole team was in.

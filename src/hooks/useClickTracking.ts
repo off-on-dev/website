@@ -20,7 +20,6 @@ export function useClickTracking(): void {
 
   useEffect(() => {
     if (consent !== "granted") return;
-    if (typeof window === "undefined") return;
 
     const handleClick = (event: MouseEvent): void => {
       if (typeof window.gtag !== "function") return;
@@ -41,7 +40,10 @@ export function useClickTracking(): void {
         return;
       }
 
-      const rawText = tracked.textContent?.trim() || "unknown";
+      // Prefer aria-label so icon-only buttons report something meaningful
+      // instead of "unknown" (textContent is empty when the icon is aria-hidden).
+      const rawText =
+        (tracked.getAttribute("aria-label") || tracked.textContent || "").trim() || "unknown";
       const clickText = rawText.slice(0, MAX_CLICK_TEXT_LENGTH);
       const href = tracked instanceof HTMLAnchorElement ? tracked.href : "";
       const clickUrl = href || tracked.getAttribute("data-url") || "no-url";

@@ -15,9 +15,15 @@ const themeScript = `(function(){var t=localStorage.getItem("theme");if(t==="lig
 
 const gtagScript = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',wait_for_update:500});`;
 
-const webSiteJsonLd = `{"@context":"https://schema.org","@type":"WebSite","name":"OffOn","url":"https://offon.dev","description":"A welcoming open source community. Take hands-on challenges to build real skills. Share your expertise and projects. Learn from others and ask for help."}`;
+// Description is kept in sync with the Index page meta description (src/pages/Index.tsx).
+// JSON-LD inline scripts cannot reference TS constants (they live inside dangerouslySetInnerHTML),
+// so the string is duplicated. Update both together.
+const webSiteJsonLd = `{"@context":"https://schema.org","@type":"WebSite","name":"OffOn","url":"https://offon.dev","description":"A vendor-neutral community for open source enthusiasts. Learn through hands-on challenges, share what you know, and connect with people who love open source."}`;
 
-const orgJsonLd = `{"@context":"https://schema.org","@type":"Organization","name":"OffOn","url":"https://offon.dev","logo":"https://offon.dev/favicon.png"}`;
+// sameAs links populate Google's Knowledge Panel. Mirror LINKEDIN_URL,
+// the Discourse community URL, and the open-ecosystem-challenges GitHub org
+// from src/data/constants.ts.
+const orgJsonLd = `{"@context":"https://schema.org","@type":"Organization","name":"OffOn","url":"https://offon.dev","logo":"https://offon.dev/favicon.png","sameAs":["https://www.linkedin.com/company/open-ecosystem/","https://community.open-ecosystem.com","https://github.com/dynatrace-oss/open-ecosystem-challenges"]}`;
 
 export default function Root(): JSX.Element {
   return (

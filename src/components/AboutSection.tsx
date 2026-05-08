@@ -1,16 +1,13 @@
 import type { JSX } from "react";
 import { BRAND_NAME } from "@/data/constants";
 import { BulletList } from "@/components/BulletList";
+import { SectionLabel } from "@/components/SectionLabel";
 
 export const AboutSection = (): JSX.Element => {
   return (
-    <section id="approach" className="py-16 px-6 md:px-16">
+    <section id="approach" aria-label="Our foundation" className="py-16 px-6 md:px-16">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-3">
-          <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">
-            our foundation
-          </span>
-        </div>
+        <SectionLabel>our foundation</SectionLabel>
 
         <div className="mb-8">
           <h2 id="mission" className="text-2xl font-bold text-foreground">Our Mission</h2>

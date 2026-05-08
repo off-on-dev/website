@@ -35,14 +35,34 @@ function renderLayout(initialPath = "/"): ReturnType<typeof render> {
             element={
               <>
                 <NavButton to="/about" />
+                <NavButton2 to="/about#target" />
                 <div>home</div>
               </>
             }
           />
-          <Route path="about" element={<div>about</div>} />
+          <Route
+            path="about"
+            element={
+              <div>
+                about
+                <div id="target" data-testid="hash-target">
+                  hash target
+                </div>
+              </div>
+            }
+          />
         </Route>
       </Routes>
     </MemoryRouter>
+  );
+}
+
+function NavButton2({ to }: { to: string }): JSX.Element {
+  const navigate = useNavigate();
+  return (
+    <button data-testid="nav-btn-hash" onClick={() => navigate(to)}>
+      go-hash
+    </button>
   );
 }
 
@@ -89,6 +109,25 @@ describe("Layout", () => {
     });
     expect(window.scrollTo).toHaveBeenCalledTimes(callsBefore + 1);
     expect(window.scrollTo).toHaveBeenLastCalledWith(0, 0);
+  });
+
+  it("ScrollToTop scrolls the hash target into view, not to the top", async () => {
+    const scrollIntoView = vi.fn();
+    // jsdom does not implement Element.scrollIntoView; install one for this test.
+    Element.prototype.scrollIntoView = scrollIntoView;
+    // Run RAF callbacks synchronously so we can assert without flushing animation frames.
+    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
+      cb(0);
+      return 0;
+    });
+    const { getByTestId } = renderLayout("/");
+    const callsBefore = (window.scrollTo as ReturnType<typeof vi.fn>).mock.calls.length;
+    await act(async () => {
+      fireEvent.click(getByTestId("nav-btn-hash"));
+    });
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: "start" });
+    // Hash navigation must not trigger the scrollTo(0, 0) reset.
+    expect(window.scrollTo).toHaveBeenCalledTimes(callsBefore);
   });
 
   // -------------------------------------------------------------------------

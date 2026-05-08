@@ -2,6 +2,7 @@ import { useState, type JSX } from "react";
 import { ADVENTURES, ALL_TAGS, getLevelsByTag } from "@/data/adventures";
 import { FilteredLevelCard } from "@/components/FilteredLevelCard";
 import { AdventureCard } from "@/components/AdventureCard";
+import { SectionLabel } from "@/components/SectionLabel";
 
 export const ChallengesGrid = (): JSX.Element => {
   const [activeTopic, setActiveTopic] = useState<string | null>(null);
@@ -12,9 +13,7 @@ export const ChallengesGrid = (): JSX.Element => {
     <section id="challenges" className="py-24 px-6 md:px-16">
       <div className="mx-auto max-w-6xl">
         <div>
-            <div className="mb-3">
-              <span className="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">Adventures</span>
-            </div>
+            <SectionLabel>Adventures</SectionLabel>
             <h2 className="mb-6 text-3xl font-bold text-primary md:text-4xl">
               Choose Your Adventure
             </h2>
