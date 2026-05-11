@@ -104,7 +104,7 @@ const CommunityGuide = (): JSX.Element => {
               <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
                 <h3 className="font-semibold text-foreground">Propose an Adventure Idea</h3>
                 <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
-                  Adventure ideas come from the community. If you have a broken scenario, a real-world failure, or a skill gap worth exploring, put it forward.
+                  Bring your expertise and experience. Help build adventures for others to learn from open source tech with a broken scenario, a real-world failure, or a skill gap. Shape the next adventure.
                 </p>
                 <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" target="_blank" rel="noopener noreferrer" className={extLink}>
                   Submit an idea <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
