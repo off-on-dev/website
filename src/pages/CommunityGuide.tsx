@@ -6,7 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
-import { LinkSection } from "@/components/LinkSection";
+import { SectionLabel } from "@/components/SectionLabel";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 
@@ -20,7 +20,7 @@ export const links: LinksFunction = () => [
 export const meta: MetaFunction = () =>
   buildPageMeta({
     title: `Handbook - ${BRAND_NAME}`,
-    description: `Everything you need to participate in the ${BRAND_NAME} community. Getting started, posting guidelines, vendor-agnostic policy, and community challenges.`,
+    description: `Everything you need to participate in the ${BRAND_NAME} community. Get involved, take on challenges, and find community policies and resources.`,
     url: `${SITE_URL}/handbook`,
   });
 
@@ -40,57 +40,104 @@ const CommunityGuide = (): JSX.Element => {
       <div className="mx-auto max-w-6xl">
         <div className="max-w-3xl space-y-8">
 
-          {/* Quick Start */}
-          <section aria-labelledby="quick-start">
-            <h2 id="quick-start" className="text-2xl font-bold text-foreground mb-3">Quick Start</h2>
-            <ul className="space-y-2">
-              <li>
-                <a href={`${COMMUNITY_URL}/t/getting-started-welcome-to-the-open-ecosystem/36`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Getting started in the {BRAND_NAME} community <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+          {/* Get Involved */}
+          <section aria-labelledby="get-involved">
+            <SectionLabel>start here</SectionLabel>
+            <h2 id="get-involved" className="text-2xl font-bold text-foreground mb-6">Get Involved</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                <h3 className="font-semibold text-foreground">Join the Community</h3>
+                <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
+                  Create your account to access challenges, Q&amp;A, community discussions, and everything else.
+                </p>
+                <a href={`${COMMUNITY_URL}/signup`} target="_blank" rel="noopener noreferrer" className={extLink}>
+                  Create an account <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
-              </li>
-            </ul>
+              </div>
+
+              <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                <h3 className="font-semibold text-foreground">Introduce Yourself</h3>
+                <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
+                  Say hello and tell the community who you are and what you're working on. It's the first step.
+                </p>
+                <a href={`${COMMUNITY_URL}/c/general/introductions/18`} target="_blank" rel="noopener noreferrer" className={extLink}>
+                  Say hello <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                </a>
+              </div>
+
+              <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                <h3 className="font-semibold text-foreground">Q&amp;A</h3>
+                <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
+                  Stuck on a technical problem? Post a clear question and get answers from the community. No question is too basic.
+                </p>
+                <a href={`${COMMUNITY_URL}/c/public-categories/q-a/10`} target="_blank" rel="noopener noreferrer" className={extLink}>
+                  Ask a question <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                </a>
+              </div>
+
+              <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                <h3 className="font-semibold text-foreground">Community Voices</h3>
+                <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
+                  Share a tutorial, showcase a project, or write about what you've learned. Every contribution makes the community stronger.
+                </p>
+                <a href={`${COMMUNITY_URL}/c/community-voices/38`} target="_blank" rel="noopener noreferrer" className={extLink}>
+                  Share something <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                </a>
+              </div>
+            </div>
           </section>
 
-          {/* Docs */}
-          <section aria-labelledby="docs">
-            <h2 id="docs" className="text-2xl font-bold text-foreground mb-5">Docs</h2>
-            <div className="space-y-6">
-              <LinkSection
-                heading="Participation"
-                links={[
-                  { label: "Categories", href: `${COMMUNITY_URL}/categories` },
-                  { label: "Posting Guidelines", href: `${COMMUNITY_URL}/t/posting-guidelines/30` },
-                  { label: "Stay in the Loop", href: `${COMMUNITY_URL}/t/stay-in-the-loop/33` },
-                  { label: "Questions & Feedback", href: `${COMMUNITY_URL}/t/questions-feedback/34` },
-                ]}
-              />
-              <LinkSection
-                heading="Policies"
-                links={[
-                  { label: "Code of Conduct", href: `${COMMUNITY_URL}/t/code-of-conduct/31` },
-                  { label: "FAQ and Guidelines", href: `${COMMUNITY_URL}/t/faq-guidelines/4` },
-                  { label: "Community Privacy Policy", href: `${COMMUNITY_URL}/t/privacy-policy/22` },
-                ]}
-              />
-              <LinkSection
-                heading="Challenges"
-                links={[
-                  { label: "Browse Adventures", href: `${COMMUNITY_URL}/c/challenges/11` },
-                  { label: "Propose an Adventure Idea", href: "https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" },
-                ]}
-              />
+          {/* Take on a Challenge */}
+          <section aria-labelledby="challenges">
+            <h2 id="challenges" className="text-2xl font-bold text-foreground mb-5">Take on a Challenge</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                <h3 className="font-semibold text-foreground">Open Challenges</h3>
+                <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
+                  Hands-on scenarios with broken environments, misconfigured pipelines, and real-world failures to debug and fix. Post your solution and see how others approached it.
+                </p>
+                <a href={`${COMMUNITY_URL}/c/challenges/11`} target="_blank" rel="noopener noreferrer" className={extLink}>
+                  See open challenges <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                </a>
+              </div>
+
+              <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                <h3 className="font-semibold text-foreground">Propose an Adventure Idea</h3>
+                <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
+                  Adventure ideas come from the community. If you have a broken scenario, a real-world failure, or a skill gap worth exploring, put it forward.
+                </p>
+                <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" target="_blank" rel="noopener noreferrer" className={extLink}>
+                  Submit an idea <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                </a>
+              </div>
             </div>
+          </section>
+
+          {/* Policies */}
+          <section aria-labelledby="policies">
+            <h2 id="policies" className="text-2xl font-bold text-foreground mb-4">Policies</h2>
+            <ul className="space-y-1.5">
+              {[
+                { label: "Trust Levels", href: `${COMMUNITY_URL}/t/trust-level-guide/1475` },
+                { label: "Questions & Feedback", href: `${COMMUNITY_URL}/t/questions-feedback/34` },
+                { label: "Code of Conduct", href: `${COMMUNITY_URL}/t/code-of-conduct/31` },
+                { label: "Privacy Policy", href: `${COMMUNITY_URL}/t/privacy-policy/22` },
+              ].map((item) => (
+                <li key={item.label} className="flex items-center gap-2.5 text-sm">
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                  <a href={item.href} target="_blank" rel="noopener noreferrer" className={extLink}>
+                    {item.label} <ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
           </section>
 
           {/* Vendor-agnostic Policy */}
           <section aria-labelledby="vendor-agnostic">
             <h2 id="vendor-agnostic" className="text-2xl font-bold text-foreground mb-3">Vendor-Agnostic Policy</h2>
             <p className="text-base text-[hsl(var(--text-secondary))] leading-relaxed">
-              {BRAND_NAME} is vendor-agnostic. Technical product mentions are welcome when neutral and reproducible. Avoid promotional content. Marketing posts will be removed and repeated violations may lead to moderation actions. See{" "}
-              <a href={`${COMMUNITY_URL}/t/posting-guidelines/30`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                Posting Guidelines <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-              </a>.
+              {BRAND_NAME} is vendor-agnostic. Technical product mentions are welcome when neutral and reproducible. Avoid promotional content. Marketing posts will be removed and repeated violations may lead to moderation actions.
             </p>
           </section>
 
