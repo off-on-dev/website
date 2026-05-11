@@ -278,7 +278,10 @@ All analytics-related constants live in `src/data/constants.ts`:
 | `COMMUNITY_DISPLAY_NAME` | User-facing display name for the community URL. Use for visible text. |
 | `SITE_URL` | `"https://offon.dev"`. Use for canonical URLs and OG tags. |
 | `SITE_NAME` | `"offon.dev"`. |
+| `CONTACT_EMAIL` | Contact email address. Used in `CommunityGuide.tsx`. Never hardcode. |
 | `LINKEDIN_URL` | LinkedIn company page URL. |
+| `BLUESKY_URL` | Bluesky profile URL (`https://bsky.app/profile/off-on-dev.bsky.social`). Used in `Footer.tsx`. |
+| `X_URL` | X (Twitter) profile URL (`https://x.com/OffonDev`). Used in `Footer.tsx`. |
 
 ### How it works
 

@@ -25,7 +25,7 @@ describe('AdventureDetail', () => {
       </ConsentProvider>
     );
     expect(screen.getByText(adventure.title)).toBeTruthy();
-    expect(screen.getAllByText(/^Start challenge/).length).toBe(adventure.levels.length);
+    expect(screen.getAllByText(/^Start Challenge/).length).toBe(adventure.levels.length);
   });
 
   it('shows not found for unknown adventure id', () => {
@@ -239,7 +239,7 @@ describe('AdventureLevelLink', () => {
         </MemoryRouter>
       </ConsentProvider>
     );
-    const startLinks = screen.getAllByText(/^Start challenge/);
+    const startLinks = screen.getAllByText(/^Start Challenge/);
     adventure.levels.forEach((lvl, i) => {
       const card = startLinks[i].closest('a');
       expect(card?.getAttribute('href')).toBe(`/adventures/${adventure.id}/levels/${lvl.id}`);

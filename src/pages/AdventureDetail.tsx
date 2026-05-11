@@ -73,7 +73,7 @@ const AdventureLevelLink = ({ level, adventureId }: AdventureLevelLinkProps): JS
       )}
     </ul>
     <span className="mt-5 inline-flex items-center gap-1 text-xs font-medium text-primary group-hover:underline">
-      Start challenge <ArrowRight size={12} aria-hidden="true" />
+      Start Challenge <ArrowRight size={12} aria-hidden="true" />
     </span>
   </Link>
 );

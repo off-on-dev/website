@@ -147,15 +147,16 @@ describe("Footer - bottom strip", () => {
   it("Bluesky link href matches BLUESKY_URL constant", () => {
     renderFooter();
     const link = screen.getByRole("link", { name: /Bluesky.*opens in new tab/i });
-    expect(link.getAttribute("href")).toBe("https://bsky.app/profile/offon.bsky.social");
+    expect(link.getAttribute("href")).toBe("https://bsky.app/profile/off-on-dev.bsky.social");
   });
 
-  it("renders the X / Twitter link as a placeholder (href='#', no target='_blank')", () => {
+  it("renders the X / Twitter link as an external link that opens in a new tab", () => {
     renderFooter();
-    const link = screen.getByRole("link", { name: "X / Twitter" });
+    const link = screen.getByRole("link", { name: /X \/ Twitter.*opens in new tab/i });
     expect(link).toBeTruthy();
-    expect(link.getAttribute("href")).toBe("#");
-    expect(link.getAttribute("target")).toBeNull();
+    expect(link.getAttribute("href")).toBe("https://x.com/OffonDev");
+    expect(link.getAttribute("target")).toBe("_blank");
+    expect(link.getAttribute("rel")).toBe("noopener noreferrer");
   });
 
   it("renders copyright text with the brand name", () => {

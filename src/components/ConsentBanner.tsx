@@ -38,7 +38,7 @@ export function ConsentBanner(): JSX.Element | null {
     >
       <div className="mx-auto flex max-w-screen-xl flex-col gap-4 px-4 py-5 sm:flex-row sm:items-start sm:gap-8 sm:px-6">
         <div className="flex-1 space-y-1">
-          <p className="text-sm font-medium text-foreground">This site uses analytics cookies</p>
+          <p className="text-sm text-foreground">This site uses analytics cookies</p>
           <p className="text-sm text-muted-foreground">
             We use Google Analytics to understand how visitors use offon.dev. No data is sent to
             Google until you accept. You can change your preference at any time. See our{" "}
@@ -66,7 +66,7 @@ export function ConsentBanner(): JSX.Element | null {
             aria-label="Accept analytics cookies"
             className="btn-primary"
           >
-            Accept analytics
+            Accept Analytics
           </button>
         </div>
       </div>

@@ -656,7 +656,7 @@ No props.
 
 `src/components/SectionLabel.tsx`
 
-Uppercased eyebrow label rendered above section h2s. Wraps a `<span className="section-label ...">` in a `<div className="mb-3">`. Source text stays lowercase because the `section-label` CSS class applies `text-transform: uppercase`. Used in `AboutSection`, `BoardSection`, `BrandStory`, `CommunitySection`, `ChallengesGrid`, and `NotFound`. Replaces the previously duplicated div+span pattern.
+Uppercased eyebrow label rendered above section h2s. Wraps a `<span className="section-label ...">` in a `<div className="mb-3">`. Source text stays lowercase because the `section-label` CSS class applies `text-transform: uppercase`. Used in `AboutSection`, `BoardSection`, `BrandStory`, `CommunitySection`, `ChallengesGrid`, `CommunityGuide`, and `NotFound`. Replaces the previously duplicated div+span pattern.
 
 ```tsx
 <SectionLabel>our foundation</SectionLabel>
@@ -750,9 +750,7 @@ Renders a person's name with consistent styling, used for board members and adve
 
 `src/components/BrandStory.tsx`
 
-Renders the "The Story Behind the Firefly" section on the About page (mounted between `AboutSection` and `BoardSection`). Carries the "our story" eyebrow above its h2. Three short paragraphs that explain the origin of the name and the firefly mascot, and credit Katharina for the logo. Uses `text-[hsl(var(--text-secondary))] leading-relaxed` body text within `max-w-3xl` to match the prose blocks in `AboutSection`.
-
-The section intentionally hands off the synchronized-firefly metaphor to `BottomCTA`, which carries the mechanic ("Some species of fireflies synchronize their flashing..."). Do not duplicate that explanation here, otherwise the two sections will read as repetitive when stacked.
+Renders the "The Story Behind the Firefly" section on the About page (mounted between `AboutSection` and `BoardSection`). Carries the "our story" eyebrow above its h2. Three short paragraphs covering: the rebrand process and the question the team kept returning to; how the firefly mascot (Nyx) came to life; and what Nyx represents for the community. Uses `text-[hsl(var(--text-secondary))] leading-relaxed` body text within `max-w-3xl` to match the prose blocks in `AboutSection`.
 
 Section uses `pb-16` only (no top padding), since `AboutSection` above it already terminates with its own `py-16`. The `id="story"` anchor is reserved for future in-page navigation.
 
@@ -953,8 +951,8 @@ Some official brand marks have no equivalent in lucide-react and must use the br
 | Brand | Where used | Notes |
 |---|---|---|
 | LinkedIn "in" rounded-rectangle mark | `Footer.tsx` bottom strip | Inline SVG, `aria-hidden="true"` on `<svg>`, `aria-label="LinkedIn (opens in new tab)"` on parent `<a>`, `fill="currentColor"`, `className="w-3.5 h-3.5"` (14 px, matching surrounding icon size) |
-| Bluesky butterfly mark | `Footer.tsx` bottom strip | Inline SVG, `aria-hidden="true"` on `<svg>`, `aria-label="Bluesky (opens in new tab)"` on parent `<a>`, `fill="currentColor"`, `className="w-3.5 h-3.5"`. URL from `BLUESKY_URL` constant. TODO: confirm handle before launch. |
-| X (Twitter) mark | `Footer.tsx` bottom strip | Inline SVG, `aria-hidden="true"` on `<svg>`, `aria-label="X / Twitter"` on parent `<a>`, `fill="currentColor"`, `className="w-3.5 h-3.5"`. URL from `X_URL` constant. TODO: add `target="_blank"` and update `aria-label` with "(opens in new tab)" once a real URL replaces the `#` placeholder. |
+| Bluesky butterfly mark | `Footer.tsx` bottom strip | Inline SVG, `aria-hidden="true"` on `<svg>`, `aria-label="Bluesky (opens in new tab)"` on parent `<a>`, `fill="currentColor"`, `className="w-3.5 h-3.5"`. URL from `BLUESKY_URL` constant. |
+| X (Twitter) mark | `Footer.tsx` bottom strip | Inline SVG, `aria-hidden="true"` on `<svg>`, `aria-label="X / Twitter (opens in new tab)"` on parent `<a>`, `target="_blank"`, `rel="noopener noreferrer"`, `fill="currentColor"`, `className="w-3.5 h-3.5"`. URL from `X_URL` constant. |
 
 When adding a new brand SVG: place it inline, set `aria-hidden="true"` on the `<svg>`, put the accessible label on the parent interactive element, use `fill="currentColor"`, and add a row to this table.
 

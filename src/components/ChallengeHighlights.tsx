@@ -20,7 +20,7 @@ const highlights: Highlight[] = [
   },
   {
     icon: <Shield size={22} aria-hidden="true" />,
-    title: "Open Source",
+    title: "Open Source First",
     desc: "Everything runs on open source tools. Vendor-neutral and free from proprietary lock-in. Open, transparent, and reproducible by anyone.",
   },
 ];
