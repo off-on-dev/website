@@ -92,12 +92,12 @@ const CommunityGuide = (): JSX.Element => {
             <h2 id="challenges" className="text-2xl font-bold text-foreground mb-5">Take on a Challenge</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
-                <h3 className="font-semibold text-foreground">Open Challenges</h3>
+                <h3 className="font-semibold text-foreground">Learn by Doing</h3>
                 <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
                   Hands-on scenarios with broken environments, misconfigured pipelines, and real-world failures to debug and fix. Post your solution and see how others approached it.
                 </p>
                 <a href={`${COMMUNITY_URL}/c/challenges/11`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  See open challenges <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  Start a challenge <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </div>
 

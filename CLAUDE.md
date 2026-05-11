@@ -279,6 +279,8 @@ All analytics-related constants live in `src/data/constants.ts`:
 | `SITE_URL` | `"https://offon.dev"`. Use for canonical URLs and OG tags. |
 | `SITE_NAME` | `"offon.dev"`. |
 | `LINKEDIN_URL` | LinkedIn company page URL. |
+| `BLUESKY_URL` | Bluesky profile URL (`https://bsky.app/profile/off-on-dev.bsky.social`). Used in `Footer.tsx`. |
+| `X_URL` | X (Twitter) profile URL (`https://x.com/OffonDev`). Used in `Footer.tsx`. |
 
 ### How it works
 
