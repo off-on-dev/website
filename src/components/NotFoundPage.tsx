@@ -18,7 +18,7 @@ export const NotFoundPage = ({ title, message }: NotFoundPageProps): JSX.Element
         to="/"
         className="text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
       >
-        Go to homepage
+        Go to Homepage
       </Link>
     </main>
     <Footer />

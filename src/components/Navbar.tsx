@@ -46,7 +46,6 @@ const NavLinks = ({ homeActive, challengesActive, onNavigate }: NavLinksProps): 
     >
       Home
     </NavLink>
-    <NavLink to="/about" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>About</NavLink>
     <Link
       to="/#challenges"
       className={cn(linkCls, challengesActive && activeCls)}
@@ -55,6 +54,7 @@ const NavLinks = ({ homeActive, challengesActive, onNavigate }: NavLinksProps): 
     >
       Challenges
     </Link>
+    <NavLink to="/about" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>About</NavLink>
     <a
       href={COMMUNITY_URL}
       target="_blank"
