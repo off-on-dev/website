@@ -15,7 +15,7 @@ import type { PostWithAge } from "@/hooks/useDiscussionPosts";
 const MOCK_POSTS: PostWithAge[] = [
   {
     username: "alice",
-    cooked: "<p>Great challenge!</p>",
+    cooked: "Great challenge!",
     created_at: "2024-06-15T11:15:00Z",
     age: "45m ago",
     like_count: 5,
@@ -23,7 +23,7 @@ const MOCK_POSTS: PostWithAge[] = [
   },
   {
     username: "bob",
-    cooked: "<p>Loved it.</p>",
+    cooked: "Loved it.",
     created_at: "2024-06-15T09:00:00Z",
     age: "3h ago",
     like_count: 0,
@@ -31,7 +31,7 @@ const MOCK_POSTS: PostWithAge[] = [
   },
   {
     username: "carol",
-    cooked: "<p>Well done everyone.</p>",
+    cooked: "Well done everyone.",
     created_at: "2024-06-13T12:00:00Z",
     age: "2d ago",
     like_count: 1,
@@ -83,7 +83,7 @@ describe("DiscussionSection - posts state", () => {
     expect(screen.getByText("Well done everyone.")).toBeTruthy();
   });
 
-  it("strips HTML tags from post content", () => {
+  it("renders plain text post content (HTML stripped at build time)", () => {
     render(
       <DiscussionSection discussionUrl="https://community.open-ecosystem.com/t/topic/42/1" />
     );
