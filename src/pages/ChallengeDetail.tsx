@@ -12,9 +12,9 @@ import { VerificationSection } from "@/components/VerificationSection";
 import { DiscussionSection } from "@/components/DiscussionSection";
 import { TechFilterSection } from "@/components/TechFilterSection";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
-import { buildPageMeta, interBoldPreload } from "@/lib/meta";
+import { buildPageMeta, syneBoldPreload } from "@/lib/meta";
 
-export const links: LinksFunction = () => interBoldPreload;
+export const links: LinksFunction = () => syneBoldPreload;
 
 export const meta: MetaFunction = ({ params }) => {
   const adventure = ADVENTURES.find((a) => a.id === params.id);
