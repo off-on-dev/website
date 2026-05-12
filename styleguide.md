@@ -39,8 +39,8 @@ Fonts are preloaded to avoid the three-level font discovery delay (HTML parse �
 - `inter-latin-500-normal.woff2` — medium-weight body text (Navbar links)
 
 **Per-route — preloaded only on pages that need them above the fold:**
-- `syne-latin-700-normal.woff2` — hero h1 (`src/pages/Index.tsx`)
-- `inter-latin-700-normal.woff2` — challenge/adventure h1 (`src/pages/ChallengeDetail.tsx`, `src/pages/AdventureDetail.tsx`)
+- `syne-latin-700-normal.woff2` — hero/page h1 that inherits Syne from `@layer base` (`src/pages/Index.tsx`, `src/pages/Privacy.tsx`, `src/pages/ChallengeDetail.tsx`, `src/pages/AdventureDetail.tsx`)
+- `inter-latin-700-normal.woff2` — PageHero CTA buttons (`.btn-inverse`, `.btn-ghost-inverse` use `font-bold` on non-heading elements) (`src/pages/Adventures.tsx`, `src/pages/About.tsx`, `src/pages/Sponsors.tsx`, `src/pages/CommunityGuide.tsx`)
 
 Inter 600 (`font-semibold`) is used below the fold only and is not preloaded. Only Latin subset variants are preloaded. Other subsets are served from `public/fonts/` but are not preloaded. Check the relevant `links()` exports and update them whenever above-the-fold typography changes.
 
@@ -478,7 +478,7 @@ Currently used in: `src/hooks/useTheme.tsx`.
 
 `src/hooks/useDiscussionPosts.ts`
 
-Loads Discourse posts for a single adventure level from `src/data/discussion-data.json` (written at build time). Returns them as `PostWithAge[]` — raw post fields plus a computed `age` string. Returns `[]` until the data loads or if the URL contains no recognisable topic ID.
+Loads Discourse posts for a single adventure level from `src/data/discussion-data.json` (written at build time). Returns them as `PostWithAge[]` — post fields plus a computed `age` string. The `cooked` field is pre-stripped plain text; HTML is removed by the build plugin before the JSON is written. Returns `[]` until the data loads or if the URL contains no recognisable topic ID.
 
 ```ts
 const posts = useDiscussionPosts(discussionUrl);
@@ -772,7 +772,7 @@ No props. Renders a self-contained `<div>` with heading, description, and extern
 
 `src/components/DiscussionSection.tsx`
 
-Displays up to three community posts for an adventure level, fetched at build time from Discourse. Post ages are computed on the client after mount to avoid calling `Date.now()` at render time.
+Displays up to three community posts for an adventure level, fetched at build time from Discourse. Post content (`cooked`) is plain text — HTML is stripped by the Vite build plugin before the JSON is written, so no runtime processing is needed. Post ages are computed on the client after mount to avoid calling `Date.now()` at render time.
 
 ```tsx
 <DiscussionSection discussionUrl={level.discussionUrl} />
@@ -959,24 +959,6 @@ When adding a new brand SVG: place it inline, set `aria-hidden="true"` on the `<
 ---
 
 ## Utilities
-
-### `stripHtml`
-
-`src/utils/stripHtml.ts`
-
-Strips all HTML tags from a string, leaving only the plain text content. Used by `DiscussionSection` to produce accessible `aria-label` strings and plain-text previews from Discourse HTML.
-
-```ts
-stripHtml("<p>Hello <strong>world</strong></p>") // => "Hello world"
-```
-
-| Param | Type | Description |
-|---|---|---|
-| `html` | `string` | Raw HTML string to strip |
-
-Returns the input with all `<tag>` patterns removed. HTML entities (e.g. `&amp;`) are left as-is.
-
----
 
 ## CSS Class Patterns
 

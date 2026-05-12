@@ -9,12 +9,9 @@ import { BulletList } from "@/components/BulletList";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
 import { SPONSORS, SUPPORT_WAYS } from "@/data/sponsors";
 import { useTheme } from "@/hooks/useTheme";
-import { buildPageMeta } from "@/lib/meta";
+import { buildPageMeta, interBoldPreload } from "@/lib/meta";
 
-export const links: LinksFunction = () => [
-  // Inter 700 is the LCP font for the PageHero h1 on this page.
-  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-700-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
-];
+export const links: LinksFunction = () => interBoldPreload;
 
 export const meta: MetaFunction = () =>
   buildPageMeta({

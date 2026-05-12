@@ -576,6 +576,12 @@ html {
   .btn-primary {
     animation: none;
   }
+  /* Firefly particles run a continuous 9-keyframe animation with positional
+     transforms. Vestibular disorder and motion-sensitive users are affected
+     by persistent movement even from decorative elements. */
+  .firefly {
+    animation: none;
+  }
 }
 
 /* ─── Firefly particles ───────────────────────────────────── */

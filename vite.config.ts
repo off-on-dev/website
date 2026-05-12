@@ -36,6 +36,59 @@ type DiscourseTopicResponse = {
 
 type StoredPost = RawPost & { topicUrl: string };
 
+// Minimum number of characters of real user text a post must contain after
+// removing embeds, images, URLs, and image metadata. Posts below this threshold
+// are skipped — they are typically screenshot-only or GitHub-embed-only replies
+// with no accompanying text.
+const MIN_POST_TEXT_LENGTH = 20;
+
+/**
+ * Extracts user-written plain text from a Discourse "cooked" HTML post.
+ * Removes onebox embeds (GitHub repos, URL previews), emoji and lightbox
+ * images, https URLs, screenshot filenames, and image dimension/file-size
+ * strings. The result is stored in discussion-data.json so the component
+ * can render post.cooked directly without any runtime processing.
+ */
+function extractPostText(html: string): string {
+  return html
+    // Remove entire onebox embed blocks (GitHub repos, URL previews)
+    .replace(/<aside\b[^>]*>[\s\S]*?<\/aside>/gi, "")
+    // Remove inline GitHub repo links — class="inline-onebox". These are
+    // auto-linked repo references whose anchor text is always of the form
+    // "GitHub - owner/repo: Hands-on, recurring prompts…". The GitHub-name
+    // regex below would strip the owner/repo portion but leave the description
+    // suffix (": Hands-on, recurring prompts…"). Removing the whole element
+    // at the HTML level is cleaner.
+    .replace(/<a\b[^>]*class="[^"]*\binline-onebox\b[^"]*"[^>]*>[\s\S]*?<\/a>/gi, "")
+    // Remove lightbox meta divs — these contain only decorative SVG icons,
+    // a <span class="filename"> (e.g. "image", "Screenshot 2025-11-23…"),
+    // and a <span class="informations"> (e.g. "1920×749 139 KB"). Removing
+    // at the HTML level avoids leaving "image" as a leftover word after
+    // tag-stripping. The meta div is non-nested so the non-greedy match is safe.
+    .replace(/<div\b[^>]*class="[^"]*\bmeta\b[^"]*"[^>]*>[\s\S]*?<\/div>/gi, "")
+    // Remove SVG elements (any remaining decorative icons)
+    .replace(/<svg\b[^>]*>[\s\S]*?<\/svg>/gi, "")
+    // Remove all img tags (emoji, lightbox images)
+    .replace(/<img\b[^>]*\/?>/gi, "")
+    // Strip all remaining HTML tags
+    .replace(/<[^>]*>/g, "")
+    // Decode the most common HTML entities so stored text is clean
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    // Remove https:// and http:// URLs
+    .replace(/https?:\/\/\S+/gi, "")
+    // Normalize whitespace
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** Returns true when a post has enough real user text to be worth showing. */
+function hasSubstantialText(html: string): boolean {
+  return extractPostText(html).length >= MIN_POST_TEXT_LENGTH;
+}
+
 // Fetches community discussion posts at build time and writes them to
 // src/data/discussion-data.json so DiscussionSection can import them
 // statically without any runtime network requests.
@@ -56,13 +109,24 @@ function discourseDataPlugin(): Plugin {
             if (res.ok) {
               const data = (await res.json()) as DiscourseTopicResponse;
               const posts = data.post_stream?.posts ?? [];
-              result[id] = posts.slice(1, 4).map((p) => ({
-                username: p.username,
-                cooked: p.cooked,
-                created_at: p.created_at,
-                like_count: p.like_count,
-                topicUrl,
-              }));
+              // Skip index 0 (the original challenge post), filter out replies
+              // that contain only images or GitHub embeds with no real user text,
+              // then take up to 3. Filtering across all replies rather than
+              // slicing first means we surface the best posts from the thread
+              // rather than being limited to whichever three happened to come first.
+              result[id] = posts
+                .slice(1)
+                .filter((p) => hasSubstantialText(p.cooked))
+                .slice(0, 3)
+                .map((p) => ({
+                  username: p.username,
+                  // extractPostText removes onebox embeds, images, URLs, and
+                  // image metadata before returning clean user-written prose.
+                  cooked: extractPostText(p.cooked),
+                  created_at: p.created_at,
+                  like_count: p.like_count,
+                  topicUrl,
+                }));
             } else {
               result[id] = [];
             }

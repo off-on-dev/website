@@ -10,12 +10,9 @@ import { SponsorStrip } from "@/components/SponsorStrip";
 import { BottomCTA } from "@/components/BottomCTA";
 import { Footer } from "@/components/Footer";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
-import { buildPageMeta } from "@/lib/meta";
+import { buildPageMeta, syneBoldPreload } from "@/lib/meta";
 
-export const links: LinksFunction = () => [
-  // Syne 700 is the LCP font for the Hero h1 on the home page.
-  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/syne-latin-700-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
-];
+export const links: LinksFunction = () => syneBoldPreload;
 
 export const meta: MetaFunction = () =>
   buildPageMeta({

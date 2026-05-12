@@ -12,12 +12,9 @@ import { VerificationSection } from "@/components/VerificationSection";
 import { DiscussionSection } from "@/components/DiscussionSection";
 import { TechFilterSection } from "@/components/TechFilterSection";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
-import { buildPageMeta } from "@/lib/meta";
+import { buildPageMeta, syneBoldPreload } from "@/lib/meta";
 
-export const links: LinksFunction = () => [
-  // Inter 700 is the LCP font for the challenge title h1 on this page.
-  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-700-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
-];
+export const links: LinksFunction = () => syneBoldPreload;
 
 export const meta: MetaFunction = ({ params }) => {
   const adventure = ADVENTURES.find((a) => a.id === params.id);

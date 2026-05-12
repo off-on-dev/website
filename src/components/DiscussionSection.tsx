@@ -1,7 +1,6 @@
 import { type CSSProperties, type JSX } from "react";
 import { ArrowRight, Heart } from "lucide-react";
 import { COMMUNITY_URL, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
-import { stripHtml } from "@/utils/stripHtml";
 import { useDiscussionPosts } from "@/hooks/useDiscussionPosts";
 
 const avatarPalette: CSSProperties[] = [
@@ -50,7 +49,7 @@ export const DiscussionSection = ({ discussionUrl }: DiscussionSectionProps): JS
               href={post.topicUrl}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`Community post by ${post.username}: ${stripHtml(post.cooked).slice(0, 100)} (opens in new tab)`}
+              aria-label={`Community post by ${post.username}: ${post.cooked.slice(0, 100)} (opens in new tab)`}
               className="block card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               <div className="flex items-center justify-between mb-3">
@@ -74,7 +73,7 @@ export const DiscussionSection = ({ discussionUrl }: DiscussionSectionProps): JS
                 )}
               </div>
               <p className="text-sm leading-relaxed text-muted-foreground line-clamp-3">
-                {stripHtml(post.cooked)}
+                {post.cooked}
               </p>
             </a>
           ))}

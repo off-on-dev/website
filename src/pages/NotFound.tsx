@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SectionLabel } from "@/components/SectionLabel";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
+import { buildPageMeta } from "@/lib/meta";
 
 const links = [
   {
@@ -25,34 +26,16 @@ const links = [
 ];
 
 export const meta: MetaFunction = () => {
-  const pageTitle = `Page Not Found - ${BRAND_NAME}`;
-  const desc = `This page could not be found. Use ${BRAND_NAME} links to continue exploring challenges, guides, and community resources.`;
   // Fixed to /404/ regardless of the actual browser URL. GitHub Pages serves
   // this prerendered file for any unknown route, so the canonical must match
   // what was baked into the HTML at build time to prevent a hydration mismatch
   // (React error #418). noindex/nofollow is set so the canonical is moot for SEO.
-  const canonicalUrl = `${SITE_URL}/404/`;
-  return [
-    { title: pageTitle },
-    { name: "description", content: desc },
-    { property: "og:title", content: pageTitle },
-    { property: "og:description", content: desc },
-    { property: "og:type", content: "website" },
-    { property: "og:url", content: canonicalUrl },
-    { property: "og:image", content: `${SITE_URL}/og.png` },
-    { property: "og:image:width", content: "1200" },
-    { property: "og:image:height", content: "630" },
-    { property: "og:image:alt", content: pageTitle },
-    { property: "og:site_name", content: BRAND_NAME },
-    { property: "og:locale", content: "en_GB" },
-    { name: "twitter:title", content: pageTitle },
-    { name: "twitter:description", content: desc },
-    { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:image", content: `${SITE_URL}/og.png` },
-    { name: "twitter:image:alt", content: pageTitle },
-    { name: "robots", content: "noindex, nofollow" },
-    { tagName: "link", rel: "canonical", href: canonicalUrl },
-  ];
+  return buildPageMeta({
+    title: `Page Not Found - ${BRAND_NAME}`,
+    description: `This page could not be found. Use ${BRAND_NAME} links to continue exploring challenges, guides, and community resources.`,
+    url: `${SITE_URL}/404/`,
+    extra: [{ name: "robots", content: "noindex, nofollow" }],
+  });
 };
 
 const NotFound = (): JSX.Element => {
