@@ -42,7 +42,6 @@ If you find a barrier that is not listed here, please report it using the link b
 
 - **axe-core via Playwright** on every pull request, configured in [`e2e/smoke.spec.ts`](e2e/smoke.spec.ts). Runs in both dark and light mode against the production build. The PR preview workflow blocks on these scans.
 - **Vitest** assertions on landmark roles, labels, and focus behavior for components and hooks ([`src/test/`](src/test/)).
-- **ESLint** with React and JSX accessibility rules.
 
 ### Manual
 
