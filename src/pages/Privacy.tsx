@@ -4,15 +4,12 @@ import { Link } from "react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
-import { buildPageMeta } from "@/lib/meta";
+import { buildPageMeta, syneBoldPreload } from "@/lib/meta";
 
 // Last reviewed date - update this whenever the policy content changes
 const LAST_UPDATED = "13 April 2026";
 
-export const links: LinksFunction = () => [
-  // Syne 700 is the LCP font for the h1 and section headings on this page.
-  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/syne-latin-700-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
-];
+export const links: LinksFunction = () => syneBoldPreload;
 
 export const meta: MetaFunction = () =>
   buildPageMeta({

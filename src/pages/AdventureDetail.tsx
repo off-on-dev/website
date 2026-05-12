@@ -9,12 +9,9 @@ import { Footer } from "@/components/Footer";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { TechFilterSection } from "@/components/TechFilterSection";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
-import { buildPageMeta } from "@/lib/meta";
+import { buildPageMeta, interBoldPreload } from "@/lib/meta";
 
-export const links: LinksFunction = () => [
-  // Inter 700 is the LCP font for the adventure title h1 on this page.
-  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-700-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
-];
+export const links: LinksFunction = () => interBoldPreload;
 
 export const meta: MetaFunction = ({ params }) => {
   const adventure = ADVENTURES.find((a) => a.id === params.id);

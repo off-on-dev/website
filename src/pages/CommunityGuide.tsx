@@ -8,14 +8,11 @@ import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
 import { SectionLabel } from "@/components/SectionLabel";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
-import { buildPageMeta } from "@/lib/meta";
+import { buildPageMeta, interBoldPreload } from "@/lib/meta";
 
 const extLink = "docs-ext-link inline-flex items-center gap-1 underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
 
-export const links: LinksFunction = () => [
-  // Inter 700 is the LCP font for the PageHero h1 on this page.
-  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-700-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
-];
+export const links: LinksFunction = () => interBoldPreload;
 
 export const meta: MetaFunction = () =>
   buildPageMeta({
