@@ -35,7 +35,6 @@ export const Footer = (): JSX.Element => {
                 <Link to="/about" className={linkCls}>About</Link>
                 <Link to="/sponsors" className={linkCls}>Sponsors</Link>
                 <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" target="_blank" rel="noopener noreferrer" className={linkCls}>Propose an Adventure Idea<span className="sr-only"> (opens in new tab)</span></a>
-                <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges" target="_blank" rel="noopener noreferrer" className={linkCls}>Challenges on GitHub<span className="sr-only"> (opens in new tab)</span></a>
               </div>
             </nav>
             {/* Community */}
@@ -43,10 +42,7 @@ export const Footer = (): JSX.Element => {
               <p className="text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">Community</p>
               <div className="flex flex-col">
                 <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className={linkCls}>Hub<span className="sr-only"> (opens in new tab)</span></a>
-                <a href={`${COMMUNITY_URL}/c/community-voices/38`} target="_blank" rel="noopener noreferrer" className={linkCls}>Community Voices<span className="sr-only"> (opens in new tab)</span></a>
-                <a href={`${COMMUNITY_URL}/c/general/q-a/10`} target="_blank" rel="noopener noreferrer" className={linkCls}>Q&A<span className="sr-only"> (opens in new tab)</span></a>
                 <a href={`${COMMUNITY_URL}/t/code-of-conduct/31/1`} target="_blank" rel="noopener noreferrer" className={linkCls}>Code of Conduct<span className="sr-only"> (opens in new tab)</span></a>
-                <a href={`${COMMUNITY_URL}/t/posting-guidelines/30`} target="_blank" rel="noopener noreferrer" className={linkCls}>Posting Guidelines<span className="sr-only"> (opens in new tab)</span></a>
                 <Link to="/privacy" className={linkCls}>Privacy Policy</Link>
                 <Link to="/accessibility" className={linkCls}>Accessibility</Link>
                 <a href={`mailto:${CONTACT_EMAIL}`} className={linkCls}>Contact</a>

@@ -68,29 +68,6 @@ describe("Footer - Explore nav", () => {
     expect(srSpan!.textContent).toBe(" (opens in new tab)");
   });
 
-  it("has a 'Challenges on GitHub' external link that opens in a new tab", () => {
-    renderFooter();
-    const nav = screen.getByRole("navigation", { name: "Explore" });
-    const link = within(nav).getByRole("link", { name: /Challenges on GitHub/ });
-    expect(link.getAttribute("target")).toBe("_blank");
-    expect(link.getAttribute("rel")).toBe("noopener noreferrer");
-  });
-
-  it("'Challenges on GitHub' link has an sr-only '(opens in new tab)' span", () => {
-    renderFooter();
-    const nav = screen.getByRole("navigation", { name: "Explore" });
-    const link = within(nav).getByRole("link", { name: /Challenges on GitHub/ });
-    const srSpan = link.querySelector(".sr-only");
-    expect(srSpan).toBeTruthy();
-    expect(srSpan!.textContent).toBe(" (opens in new tab)");
-  });
-
-  it("'Challenges on GitHub' link points to the open-ecosystem-challenges repo", () => {
-    renderFooter();
-    const nav = screen.getByRole("navigation", { name: "Explore" });
-    const link = within(nav).getByRole("link", { name: /Challenges on GitHub/ });
-    expect(link.getAttribute("href")).toBe("https://github.com/dynatrace-oss/open-ecosystem-challenges");
-  });
 });
 
 // ---------------------------------------------------------------------------
@@ -116,11 +93,16 @@ describe("Footer - Community nav", () => {
     expect(within(nav).getByRole("link", { name: "Privacy Policy" }).getAttribute("href")).toBe("/privacy");
   });
 
-  it("has Code of Conduct and Posting Guidelines external links", () => {
+  it("has a Code of Conduct external link that opens in a new tab", () => {
     renderFooter();
     const nav = screen.getByRole("navigation", { name: "Community" });
     expect(within(nav).getByRole("link", { name: /Code of Conduct/ }).getAttribute("target")).toBe("_blank");
-    expect(within(nav).getByRole("link", { name: /Posting Guidelines/ }).getAttribute("target")).toBe("_blank");
+  });
+
+  it("has an Accessibility link pointing to /accessibility", () => {
+    renderFooter();
+    const nav = screen.getByRole("navigation", { name: "Community" });
+    expect(within(nav).getByRole("link", { name: "Accessibility" }).getAttribute("href")).toBe("/accessibility");
   });
 });
 
