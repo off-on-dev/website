@@ -32,7 +32,7 @@ export const ChallengeBuildersSection = (): JSX.Element | null => {
                     <span className="h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                     <Link
                       to={`/adventures/${id}`}
-                      className="adventure-link text-[hsl(var(--text-faint))] hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm"
+                      className="docs-ext-link underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm"
                     >
                       {title}
                     </Link>

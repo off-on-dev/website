@@ -1004,10 +1004,14 @@ Used on `<span>` elements in: `CommunitySection`, `ChallengesGrid`, `NotFound`.
 
 ### `.docs-ext-link`
 
-A styled external link class for inline prose links in `CommunityGuide.tsx`. Combines an underline treatment (decoration-2 underline-offset-2) with focus-visible ring and transitions.
+The standard class for all inline prose links across the site. Handles both modes correctly without any additional Tailwind utilities for color or hover state.
 
-**Dark mode:** foreground text, `--primary`-colored underline. Hover softens both to `primary / 0.75`.
-**Light mode:** foreground text with `currentColor` underline. Hover shifts text and underline to `--muted-foreground`.
+**Dark mode:** foreground text with amber (`--primary`) underline. Hover shifts text and underline to full `hsl(var(--primary))` (`#ffc034`).
+**Light mode:** near-black foreground text with `currentColor` underline. Hover shifts text and underline to `--muted-foreground` (~5.5:1 contrast on card surfaces — passes WCAG AA).
+
+Used in: `CommunityGuide`, `ChallengeContextSection`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`.
+
+Do not use `hover:text-primary` or `hover:underline` on inline content links — use `docs-ext-link` instead.
 
 ```ts
 const extLink = "docs-ext-link inline-flex items-center gap-1 underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";

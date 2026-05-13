@@ -963,10 +963,10 @@ html {
   transition: color 200ms ease, text-decoration-color 200ms ease;
 }
 
-/* Dark mode hover: soft warm yellow (primary lightened for hover state) */
+/* Dark mode hover: full primary amber (#ffc034) */
 .docs-ext-link:hover {
-  color: hsl(var(--primary) / 0.75);
-  text-decoration-color: hsl(var(--primary) / 0.75);
+  color: hsl(var(--primary));
+  text-decoration-color: hsl(var(--primary));
 }
 
 /* Light mode: near-black text; underline tracks text color via currentColor */
@@ -992,19 +992,6 @@ html {
   --difficulty-text: 0 0% 0%;
   /* intentionally darker than --primary for contrast on light bg */
   --firefly-color: 41 100% 45%;
-}
-
-/* ─── Sponsors page link hover overrides (light mode) ───── */
-/* hover:text-primary (amber) fails contrast on light card backgrounds.
-   These links are outside <nav> and <footer> so no structural rule catches them. */
-.light .contributor-name-link:hover {
-  color: hsl(var(--foreground-hover));
-}
-.light .adventure-link {
-  color: hsl(var(--muted-foreground));
-}
-.light .adventure-link:hover {
-  color: hsl(var(--foreground-hover));
 }
 
 /* ─── ContributorBadge pill (light mode) ────────────────── */

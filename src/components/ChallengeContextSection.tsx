@@ -84,7 +84,7 @@ export const ChallengeContextSection = ({
                     href={codespacesUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-medium text-primary underline underline-offset-2 decoration-1 hover:decoration-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+                    className="docs-ext-link font-medium underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
                   >
                     Open in GitHub Codespaces<span className="sr-only"> (opens in new tab)</span>
                   </a>
@@ -111,7 +111,7 @@ export const ChallengeContextSection = ({
                     href={discussionUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-medium text-primary underline underline-offset-2 decoration-1 hover:decoration-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+                    className="docs-ext-link font-medium underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
                   >
                     challenge thread<span className="sr-only"> (opens in new tab)</span>
                   </a>
@@ -127,7 +127,7 @@ export const ChallengeContextSection = ({
                 href={verificationUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary underline underline-offset-2 decoration-1 hover:decoration-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+                className="docs-ext-link underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
               >
                 Read the Verification Guide<span className="sr-only"> (opens in new tab)</span>
               </a>
@@ -165,7 +165,7 @@ export const ChallengeContextSection = ({
                         href={item.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-medium text-foreground hover:text-primary underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+                        className="docs-ext-link font-medium underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
                       >
                         {item.name}<span className="sr-only"> (opens in new tab)</span>
                       </a>
