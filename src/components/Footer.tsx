@@ -48,6 +48,7 @@ export const Footer = (): JSX.Element => {
                 <a href={`${COMMUNITY_URL}/t/code-of-conduct/31/1`} target="_blank" rel="noopener noreferrer" className={linkCls}>Code of Conduct<span className="sr-only"> (opens in new tab)</span></a>
                 <a href={`${COMMUNITY_URL}/t/posting-guidelines/30`} target="_blank" rel="noopener noreferrer" className={linkCls}>Posting Guidelines<span className="sr-only"> (opens in new tab)</span></a>
                 <Link to="/privacy" className={linkCls}>Privacy Policy</Link>
+                <Link to="/accessibility" className={linkCls}>Accessibility</Link>
                 <a href={`mailto:${CONTACT_EMAIL}`} className={linkCls}>Contact</a>
               </div>
             </nav>

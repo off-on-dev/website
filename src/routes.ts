@@ -11,6 +11,7 @@ export default [
     route("handbook", "pages/CommunityGuide.tsx"),
     route("404", "pages/NotFound.tsx"),
     route("privacy", "pages/Privacy.tsx"),
+    route("accessibility", "pages/Accessibility.tsx"),
     route("docs", "pages/redirects/HandbookRedirect.tsx", { id: "docs-redirect" }),
     route("docs/community-guide", "pages/redirects/HandbookRedirect.tsx", { id: "docs-community-guide-redirect" }),
     route("community-guide", "pages/redirects/HandbookRedirect.tsx", { id: "community-guide-redirect" }),

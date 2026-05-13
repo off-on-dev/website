@@ -11,6 +11,7 @@ const ROUTES: RouteSpec[] = [
   { path: "/sponsors", title: /Sponsorship and Independence/ },
   { path: "/handbook", title: /Handbook/ },
   { path: "/privacy", title: /Privacy Policy/ },
+  { path: "/accessibility", title: /Accessibility Statement/ },
   { path: "/404", title: /Page Not Found/ },
   { path: "/adventures", title: /Adventures - Hands-on open source challenges/ },
   { path: "/adventures/echoes-lost-in-orbit", title: /Echoes Lost in Orbit/ },

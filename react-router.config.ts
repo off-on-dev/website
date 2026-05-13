@@ -13,6 +13,7 @@ export default {
     "/about",
     "/handbook",
     "/privacy",
+    "/accessibility",
     "/adventures/echoes-lost-in-orbit",
     "/adventures/building-cloudhaven",
     "/adventures/the-ai-observatory",
