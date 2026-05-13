@@ -758,13 +758,41 @@ No props. Self-contained section component.
 
 ---
 
-### `VerificationSection`
+### `ChallengeContextSection`
 
-`src/components/VerificationSection.tsx`
+`src/components/ChallengeContextSection.tsx`
 
-Static card explaining how to run the in-Codespace verification script. Includes an external link to the challenges repo on GitHub.
+Renders all contextual content for a challenge level between the `LevelCard` and `DiscussionSection`. Sections are displayed only when the corresponding prop is provided. Returns `null` if every prop is empty.
 
-No props. Renders a self-contained `<div>` with heading, description, and external link. Used on `ChallengeDetail` pages.
+```tsx
+<ChallengeContextSection
+  intro={level.intro}
+  backstory={level.backstory}
+  architecture={level.architecture}
+  architectureDiagram={level.architectureDiagram}
+  howToPlay={level.howToPlay}
+  toolbox={level.toolbox}
+  objective={level.objective}
+  codespacesUrl={level.codespacesUrl}
+  verificationUrl="https://..."
+  discussionUrl={level.discussionUrl}
+/>
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `intro` | `string[]` (optional) | Technical premise paragraphs. Rendered under a "challenge" label. |
+| `backstory` | `string[]` (optional) | Narrative scene-setting paragraphs. Rendered in italic under a "backstory" label. |
+| `architecture` | `string[]` (optional) | System overview paragraphs. Rendered under an "architecture" label. When `architectureDiagram` is also set, these paragraphs become the `alt` text and are not rendered visually. |
+| `architectureDiagram` | `string` (optional) | URL of an architecture diagram image (import SVG/PNG/WebP from `src/assets/diagrams/`). Renders an `<img>` with `loading="lazy"`. The `architecture` text is used as `alt`. |
+| `objective` | `string[]` (optional) | Bullet list of completion criteria. |
+| `toolbox` | `{ name: string; description?: string; url?: string }[]` (optional) | List of tools. `name` renders as a link if `url` is set, otherwise bold. `description` appended as plain text. |
+| `howToPlay` | `string[]` (optional) | Numbered steps. Step 1 is auto-generated from `codespacesUrl` when provided; final step links to the discussion thread. |
+| `codespacesUrl` | `string` (optional) | Codespaces deep link. Auto-generates step 1 of How to Play. |
+| `verificationUrl` | `string` (optional) | Link to verification guide. Rendered as a footer note below How to Play. |
+| `discussionUrl` | `string` (optional) | Discussion thread URL. Auto-generates the final How to Play step. |
+
+**Rendering order:** Challenge (intro), Backstory, Architecture, How to Play, then Objective and Toolbox side-by-side.
 
 ---
 
@@ -932,7 +960,7 @@ Never put a raw SVG icon next to text inside a plain `inline` or `block` element
 | Icon | Lucide name | Where used |
 |---|---|---|
 | External link (navigation) | `ArrowUpRight` | Navbar GitHub button, BottomCTA GitHub button, CommunityGuide links |
-| Navigate forward / CTA | `ArrowRight` | Inline text links (DiscussionSection, VerificationSection, CommunitySection, SponsorStrip, BottomCTA, LevelCard) |
+| Navigate forward / CTA | `ArrowRight` | Inline text links (DiscussionSection, CommunitySection, SponsorStrip, BottomCTA, LevelCard) |
 | Navigate back | `ArrowLeft` | ChallengeDetail breadcrumb |
 | Scroll down / anchor | `ArrowDown` | Hero primary CTA |
 | Community Voices card | `Megaphone` | CommunitySection card icon |
