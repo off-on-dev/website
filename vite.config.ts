@@ -21,6 +21,7 @@ const DISCUSSION_TOPICS: Record<string, string> = {
   "936": `${COMMUNITY_BASE}/t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936/2`,
   "999": `${COMMUNITY_BASE}/t/reduce-telemetry-noise-adventure-03-expert-is-live/999/1`,
   "1419": `${COMMUNITY_BASE}/t/wire-openfeature-flagd-into-a-spring-boot-service-with-zero-setup-adventure-04-beginner/1419`,
+  "1485": `${COMMUNITY_BASE}/t/outcome-by-cohort-adventure-04-intermediate/1485`,
 };
 
 type RawPost = {

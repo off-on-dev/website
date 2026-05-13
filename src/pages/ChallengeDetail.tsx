@@ -8,7 +8,7 @@ import { NotFoundPage } from "@/components/NotFoundPage";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { LevelCard } from "@/components/LevelCard";
-import { VerificationSection } from "@/components/VerificationSection";
+import { ChallengeContextSection } from "@/components/ChallengeContextSection";
 import { DiscussionSection } from "@/components/DiscussionSection";
 import { TechFilterSection } from "@/components/TechFilterSection";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
@@ -98,10 +98,23 @@ const ChallengeDetail = (): JSX.Element => {
           <LevelCard level={level} headingLevel="none" />
         </div>
 
-        {/* Verification */}
-        <div className="mb-10">
-          <VerificationSection />
-        </div>
+        {/* Context: objective, toolbox, how to play */}
+        {(level.howToPlay?.length || level.objective?.length || level.toolbox?.length) ? (
+          <div className="mb-10">
+            <ChallengeContextSection
+              intro={level.intro}
+              backstory={level.backstory}
+              architecture={level.architecture}
+              architectureDiagram={level.architectureDiagram}
+              howToPlay={level.howToPlay}
+              toolbox={level.toolbox}
+              objective={level.objective}
+              codespacesUrl={level.codespacesUrl}
+              verificationUrl="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/verification.md"
+              discussionUrl={level.discussionUrl}
+            />
+          </div>
+        ) : null}
 
         {/* Discussion */}
         <div className="mb-16">

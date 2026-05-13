@@ -16,7 +16,7 @@ export const PersonNameLink = ({ name, url }: PersonNameLinkProps): JSX.Element 
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="contributor-name-link inline-flex items-center gap-1.5 text-base font-semibold text-foreground hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+      className="docs-ext-link inline-flex items-center gap-1.5 text-base font-semibold underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
     >
       {name}
       <ExternalLink size={13} aria-hidden="true" />

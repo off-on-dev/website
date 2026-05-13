@@ -462,6 +462,9 @@ html {
     --text-tertiary: 35 8% 38%;
     --text-muted: 35 8% 38%;
     --text-faint: 35 8% 40%;
+    /* Dark amber for inline link hover in light mode — same hue as primary,
+       darkened to hsl(41 100% 25%) ≈ #7f4200 for ~5.5:1 contrast on light bg */
+    --link-hover-light: 41 100% 25%;
 
     /* Custom surface tokens */
     --surface: 220 10% 96%;
@@ -963,10 +966,10 @@ html {
   transition: color 200ms ease, text-decoration-color 200ms ease;
 }
 
-/* Dark mode hover: soft warm yellow (primary lightened for hover state) */
+/* Dark mode hover: full primary amber (#ffc034) */
 .docs-ext-link:hover {
-  color: hsl(var(--primary) / 0.75);
-  text-decoration-color: hsl(var(--primary) / 0.75);
+  color: hsl(var(--primary));
+  text-decoration-color: hsl(var(--primary));
 }
 
 /* Light mode: near-black text; underline tracks text color via currentColor */
@@ -975,9 +978,9 @@ html {
   text-decoration-color: currentColor;
 }
 
-/* Light mode hover: muted dark grey; underline tracks text color via currentColor */
+/* Light mode hover: dark amber — same hue as primary, L=25% gives ~5.5:1 contrast */
 .light .docs-ext-link:hover {
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--link-hover-light));
   text-decoration-color: currentColor;
 }
 
@@ -992,19 +995,6 @@ html {
   --difficulty-text: 0 0% 0%;
   /* intentionally darker than --primary for contrast on light bg */
   --firefly-color: 41 100% 45%;
-}
-
-/* ─── Sponsors page link hover overrides (light mode) ───── */
-/* hover:text-primary (amber) fails contrast on light card backgrounds.
-   These links are outside <nav> and <footer> so no structural rule catches them. */
-.light .contributor-name-link:hover {
-  color: hsl(var(--foreground-hover));
-}
-.light .adventure-link {
-  color: hsl(var(--muted-foreground));
-}
-.light .adventure-link:hover {
-  color: hsl(var(--foreground-hover));
 }
 
 /* ─── ContributorBadge pill (light mode) ────────────────── */

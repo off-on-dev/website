@@ -50,7 +50,7 @@ export const LevelCard = ({ level, headingLevel = "h2" }: LevelCardProps): JSX.E
         href={level.discussionUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-xs font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm inline-flex items-center gap-0.5"
+        className="docs-ext-link text-xs font-medium underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm inline-flex items-center gap-0.5"
       >
         Discussion <ArrowRight size={11} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
       </a>

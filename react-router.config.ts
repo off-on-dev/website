@@ -13,6 +13,7 @@ export default {
     "/about",
     "/handbook",
     "/privacy",
+    "/accessibility",
     "/adventures/echoes-lost-in-orbit",
     "/adventures/building-cloudhaven",
     "/adventures/the-ai-observatory",
@@ -27,5 +28,6 @@ export default {
     "/adventures/the-ai-observatory/levels/expert",
     "/adventures/blind-by-design",
     "/adventures/blind-by-design/levels/beginner",
+    "/adventures/blind-by-design/levels/intermediate",
   ],
 } satisfies Config;
