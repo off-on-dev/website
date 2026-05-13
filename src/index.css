@@ -462,6 +462,9 @@ html {
     --text-tertiary: 35 8% 38%;
     --text-muted: 35 8% 38%;
     --text-faint: 35 8% 40%;
+    /* Dark amber for inline link hover in light mode — same hue as primary,
+       darkened to hsl(41 100% 25%) ≈ #7f4200 for ~5.5:1 contrast on light bg */
+    --link-hover-light: 41 100% 25%;
 
     /* Custom surface tokens */
     --surface: 220 10% 96%;
@@ -975,9 +978,9 @@ html {
   text-decoration-color: currentColor;
 }
 
-/* Light mode hover: muted dark grey; underline tracks text color via currentColor */
+/* Light mode hover: dark amber — same hue as primary, L=25% gives ~5.5:1 contrast */
 .light .docs-ext-link:hover {
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--link-hover-light));
   text-decoration-color: currentColor;
 }
 

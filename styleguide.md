@@ -1007,7 +1007,7 @@ Used on `<span>` elements in: `CommunitySection`, `ChallengesGrid`, `NotFound`.
 The standard class for all inline prose links across the site. Handles both modes correctly without any additional Tailwind utilities for color or hover state.
 
 **Dark mode:** foreground text with amber (`--primary`) underline. Hover shifts text and underline to full `hsl(var(--primary))` (`#ffc034`).
-**Light mode:** near-black foreground text with `currentColor` underline. Hover shifts text and underline to `--muted-foreground` (~5.5:1 contrast on card surfaces — passes WCAG AA).
+**Light mode:** near-black foreground text with `currentColor` underline. Hover shifts text and underline to `--link-hover-light` (`hsl(41 100% 25%)` ≈ `#7f4200`) — dark amber, same hue as primary, ~5.5:1 contrast on light backgrounds. Passes WCAG AA.
 
 Used in: `CommunityGuide`, `ChallengeContextSection`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`.
 
