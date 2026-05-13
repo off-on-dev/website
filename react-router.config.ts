@@ -28,5 +28,6 @@ export default {
     "/adventures/the-ai-observatory/levels/expert",
     "/adventures/blind-by-design",
     "/adventures/blind-by-design/levels/beginner",
+    "/adventures/blind-by-design/levels/intermediate",
   ],
 } satisfies Config;

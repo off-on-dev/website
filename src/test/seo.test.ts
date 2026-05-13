@@ -28,6 +28,9 @@ const ROUTES = [
   "/adventures/the-ai-observatory/levels/beginner",
   "/adventures/the-ai-observatory/levels/intermediate",
   "/adventures/the-ai-observatory/levels/expert",
+  "/adventures/blind-by-design",
+  "/adventures/blind-by-design/levels/beginner",
+  "/adventures/blind-by-design/levels/intermediate",
 ];
 
 function routeToFile(route: string): string {

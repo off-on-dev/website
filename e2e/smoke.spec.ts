@@ -26,6 +26,9 @@ const ROUTES: RouteSpec[] = [
   { path: "/adventures/the-ai-observatory/levels/beginner", title: /Calibrating the Lens/ },
   { path: "/adventures/the-ai-observatory/levels/intermediate", title: /The Distracted Pilot/ },
   { path: "/adventures/the-ai-observatory/levels/expert", title: /The Noise Filter/ },
+  { path: "/adventures/blind-by-design", title: /Blind by Design/ },
+  { path: "/adventures/blind-by-design/levels/beginner", title: /Stand up the Lab/ },
+  { path: "/adventures/blind-by-design/levels/intermediate", title: /Outcome by Cohort/ },
 ];
 
 test.describe("every prerendered route", () => {
