@@ -57,6 +57,7 @@ export const DiscussionSection = ({ discussionUrl }: DiscussionSectionProps): JS
                   <div
                     className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold"
                     style={avatarPalette[i % avatarPalette.length]}
+                    aria-hidden="true"
                   >
                     {post.username.slice(0, 2).toUpperCase()}
                   </div>

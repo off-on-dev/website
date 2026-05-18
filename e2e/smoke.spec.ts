@@ -52,7 +52,7 @@ test.describe("every prerendered route", () => {
       // sync) to settle so axe sees stable computed styles.
       await page.waitForLoadState("networkidle");
       const a11y = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "best-practice"])
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"])
         .analyze();
       expect(a11y.violations, `axe violations on ${path}`).toEqual([]);
     });
@@ -73,7 +73,7 @@ test.describe("every prerendered route (light mode)", () => {
       // colors from the initial dark-class server render.
       await page.waitForLoadState("networkidle");
       const a11y = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "best-practice"])
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"])
         .analyze();
       expect(a11y.violations, `axe violations on ${path} (light mode)`).toEqual([]);
     });

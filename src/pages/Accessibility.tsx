@@ -1,12 +1,10 @@
 import type { JSX } from "react";
-import type { LinksFunction, MetaFunction } from "react-router";
+import type { MetaFunction } from "react-router";
 import { Link } from "react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
-import { buildPageMeta, syneBoldPreload } from "@/lib/meta";
-
-export const links: LinksFunction = () => syneBoldPreload;
+import { buildPageMeta } from "@/lib/meta";
 
 export const meta: MetaFunction = () =>
   buildPageMeta({
@@ -189,8 +187,8 @@ const Accessibility = (): JSX.Element => {
               <table className="w-full text-sm text-muted-foreground border-collapse">
                 <thead>
                   <tr className="border-b border-[hsl(var(--surface-border))]">
-                    <th className="text-left font-semibold text-foreground py-2 pr-6 w-28">Severity</th>
-                    <th className="text-left font-semibold text-foreground py-2">Definition</th>
+                    <th scope="col" className="text-left font-semibold text-foreground py-2 pr-6 w-28">Severity</th>
+                    <th scope="col" className="text-left font-semibold text-foreground py-2">Definition</th>
                   </tr>
                 </thead>
                 <tbody>

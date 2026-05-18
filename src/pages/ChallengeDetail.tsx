@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { useParams, Link } from "react-router";
-import type { LinksFunction, MetaFunction } from "react-router";
+import type { MetaFunction } from "react-router";
 import { ArrowLeft } from "lucide-react";
 import { ADVENTURES } from "@/data/adventures";
 import { ContributorBadge } from "@/components/ContributorBadge";
@@ -12,9 +12,7 @@ import { ChallengeContextSection } from "@/components/ChallengeContextSection";
 import { DiscussionSection } from "@/components/DiscussionSection";
 import { TechFilterSection } from "@/components/TechFilterSection";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
-import { buildPageMeta, syneBoldPreload } from "@/lib/meta";
-
-export const links: LinksFunction = () => syneBoldPreload;
+import { buildPageMeta } from "@/lib/meta";
 
 export const meta: MetaFunction = ({ params }) => {
   const adventure = ADVENTURES.find((a) => a.id === params.id);
@@ -63,13 +61,17 @@ const ChallengeDetail = (): JSX.Element => {
       <main id="main-content" className="px-6 md:px-16 pt-28 pb-24">
       <div className="mx-auto max-w-6xl">
         {/* Breadcrumb */}
-        <nav aria-label="Breadcrumb">
-          <Link
-            to={`/adventures/${adventure.id}`}
-            className="inline-flex items-center gap-1.5 text-sm text-[hsl(var(--text-faint))] hover:text-primary transition-colors mb-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
-          >
-            <ArrowLeft size={14} aria-hidden="true" /> {adventure.title}
-          </Link>
+        <nav aria-label="Breadcrumb" className="mb-10">
+          <ol className="list-none p-0 m-0">
+            <li>
+              <Link
+                to={`/adventures/${adventure.id}`}
+                className="inline-flex items-center gap-1.5 text-sm text-[hsl(var(--text-faint))] hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+              >
+                <ArrowLeft size={14} aria-hidden="true" /> {adventure.title}
+              </Link>
+            </li>
+          </ol>
         </nav>
 
         {/* Header */}

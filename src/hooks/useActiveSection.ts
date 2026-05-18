@@ -14,6 +14,7 @@ export function useActiveSection(sectionIds: string[]): string | null {
     if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
       return;
     }
+    if (sectionIds.length === 0) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
