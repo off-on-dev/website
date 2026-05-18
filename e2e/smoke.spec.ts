@@ -6,7 +6,7 @@ import AxeBuilder from "@axe-core/playwright";
 type RouteSpec = { path: string; title: RegExp };
 
 const ROUTES: RouteSpec[] = [
-  { path: "/", title: /OffOn - Vendor-neutral/ },
+  { path: "/", title: /OffOn - Vendor-Neutral/ },
   { path: "/about", title: /Building the contributors/ },
   { path: "/sponsors", title: /Sponsorship and Independence/ },
   { path: "/handbook", title: /Handbook/ },
@@ -124,7 +124,7 @@ test.describe("hydration and interactivity", () => {
 
   test("client-side navigation updates URL and title without a full reload", async ({ page }) => {
     await page.goto("/");
-    await expect(page).toHaveTitle(/OffOn - Vendor-neutral/);
+    await expect(page).toHaveTitle(/OffOn - Vendor-Neutral/);
 
     await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "About" }).click();
 

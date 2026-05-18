@@ -24,3 +24,16 @@ export const THEME_STORAGE_KEY = "theme";
 export const CURRENT_YEAR = 2026; // Update manually each year
 
 export const CONTACT_EMAIL = "offondev@gmail.com";
+
+export const BRAND_SLOGAN_PARTS = ["Vendor-Neutral", "Open Source", "Community-Driven"] as const;
+export const BRAND_SLOGAN = BRAND_SLOGAN_PARTS.join(". ");
+
+export const BRAND_SECONDARY_LINE_WORD = "always";
+export const BRAND_SECONDARY_LINE_PARTS = [
+	`${BRAND_SECONDARY_LINE_WORD} On.`,
+	`${BRAND_SECONDARY_LINE_WORD} Open.`,
+	`${BRAND_SECONDARY_LINE_WORD} Learning.`,
+] as const;
+export const BRAND_SECONDARY_LINE = `${BRAND_SECONDARY_LINE_PARTS[0]} ${BRAND_SECONDARY_LINE_PARTS[1]} ${BRAND_SECONDARY_LINE_PARTS[2]}`;
+
+export const BRAND_SHORT_DESCRIPTION = "A vendor-neutral community for open source enthusiasts. Learn through hands-on challenges, share what you know, and connect with people who love open source.";

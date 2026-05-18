@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { COMMUNITY_URL, BRAND_NAME } from "@/data/constants";
+import { BRAND_NAME, BRAND_SECONDARY_LINE, COMMUNITY_URL } from "@/data/constants";
 
 export const BottomCTA = (): JSX.Element => {
   return (
@@ -28,7 +28,7 @@ export const BottomCTA = (): JSX.Element => {
               Every spark starts with one person. Like Nyx, our firefly, together we brighten the whole open source ecosystem.
             </p>
             <p className="font-sans text-base font-medium text-background/90">
-              That's {BRAND_NAME}. Always On. Always Open. Always Learning.
+              That's {BRAND_NAME}. {BRAND_SECONDARY_LINE}
             </p>
             <div className="flex gap-3 flex-wrap mt-2">
               <a
