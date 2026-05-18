@@ -32,17 +32,17 @@ Subset coverage (via `unicode-range` in `src/index.css` -- only the needed subse
 
 ### Font preload
 
-Fonts are preloaded to avoid the three-level font discovery delay (HTML parse → CSS parse → font file request). Preloads are split across global and per-route `links()` exports:
+Fonts are preloaded to avoid the three-level font discovery delay (HTML parse → CSS parse → font file request). All preloads live in `src/root.tsx` and fire on every page load:
 
 **Global (`src/root.tsx`) — preloaded on every page:**
 - `inter-latin-400-normal.woff2` — body text (Navbar, paragraphs)
 - `inter-latin-500-normal.woff2` — medium-weight body text (Navbar links)
+- `syne-latin-700-normal.woff2` — all h1–h6 elements (the `@layer base` rule in `src/index.css` applies `font-family: 'Syne'` to every heading globally)
 
 **Per-route — preloaded only on pages that need them above the fold:**
-- `syne-latin-700-normal.woff2` — hero/page h1 that inherits Syne from `@layer base` (`src/pages/Index.tsx`, `src/pages/Privacy.tsx`, `src/pages/ChallengeDetail.tsx`, `src/pages/AdventureDetail.tsx`)
-- `inter-latin-700-normal.woff2` — PageHero CTA buttons (`.btn-inverse`, `.btn-ghost-inverse` use `font-bold` on non-heading elements) (`src/pages/Adventures.tsx`, `src/pages/About.tsx`, `src/pages/Sponsors.tsx`, `src/pages/CommunityGuide.tsx`)
+- `inter-latin-700-normal.woff2` via `interBoldPreload` — PageHero CTA buttons (`.btn-inverse`, `.btn-ghost-inverse` use `font-bold` on non-heading elements) (`src/pages/Adventures.tsx`, `src/pages/About.tsx`, `src/pages/Sponsors.tsx`, `src/pages/CommunityGuide.tsx`)
 
-Inter 600 (`font-semibold`) is used below the fold only and is not preloaded. Only Latin subset variants are preloaded. Other subsets are served from `public/fonts/` but are not preloaded. Check the relevant `links()` exports and update them whenever above-the-fold typography changes.
+Inter 600 (`font-semibold`) is used below the fold only and is not preloaded. Only Latin subset variants are preloaded. Other subsets are served from `public/fonts/` but are not preloaded. Update `src/root.tsx` whenever above-the-fold typography changes.
 
 ### Tailwind font utilities
 

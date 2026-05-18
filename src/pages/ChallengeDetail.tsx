@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { useParams, Link } from "react-router";
-import type { LinksFunction, MetaFunction } from "react-router";
+import type { MetaFunction } from "react-router";
 import { ArrowLeft } from "lucide-react";
 import { ADVENTURES } from "@/data/adventures";
 import { ContributorBadge } from "@/components/ContributorBadge";
@@ -12,9 +12,7 @@ import { ChallengeContextSection } from "@/components/ChallengeContextSection";
 import { DiscussionSection } from "@/components/DiscussionSection";
 import { TechFilterSection } from "@/components/TechFilterSection";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
-import { buildPageMeta, syneBoldPreload } from "@/lib/meta";
-
-export const links: LinksFunction = () => syneBoldPreload;
+import { buildPageMeta } from "@/lib/meta";
 
 export const meta: MetaFunction = ({ params }) => {
   const adventure = ADVENTURES.find((a) => a.id === params.id);
