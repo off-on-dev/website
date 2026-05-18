@@ -1,7 +1,8 @@
 import type { JSX } from "react";
 import { Link } from "react-router";
+import { Zap } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
-import { COMMUNITY_URL, BRAND_NAME, LINKEDIN_URL, BLUESKY_URL, X_URL, CURRENT_YEAR, CONTACT_EMAIL } from "@/data/constants";
+import { BRAND_NAME, BRAND_SLOGAN_PARTS, COMMUNITY_URL, CONTACT_EMAIL, CURRENT_YEAR, LINKEDIN_URL, BLUESKY_URL, X_URL } from "@/data/constants";
 import logoDark from "@/assets/offon-logo-dark-color.svg";
 import logoLight from "@/assets/offon-logo-light-color.svg";
 
@@ -55,7 +56,14 @@ export const Footer = (): JSX.Element => {
       <div className="border-t border-[hsl(var(--surface-border))] py-4">
         <div className="mx-auto max-w-6xl flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
           <span className="text-xs text-[hsl(var(--text-faint))] shrink-0 sm:order-1">© {CURRENT_YEAR} {BRAND_NAME}. All rights reserved.</span>
-          <span className="text-xs text-[hsl(var(--text-faint))] text-center sm:order-2 sm:flex-1">Vendor-neutral <span aria-hidden="true">·</span> Open source <span aria-hidden="true">·</span> Community-driven</span>
+          <span className="inline-flex items-center justify-center gap-1.5 text-xs text-[hsl(var(--text-faint))] sm:order-2 sm:flex-1">
+              <Zap size={10} aria-hidden="true" />
+              <span>{BRAND_SLOGAN_PARTS[0]}</span>
+              <Zap size={10} aria-hidden="true" />
+              <span>{BRAND_SLOGAN_PARTS[1]}</span>
+              <Zap size={10} aria-hidden="true" />
+              <span>{BRAND_SLOGAN_PARTS[2]}</span>
+            </span>
           <div className="flex items-center gap-3 shrink-0 sm:order-3">
             <a
               href={LINKEDIN_URL}

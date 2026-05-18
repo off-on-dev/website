@@ -19,7 +19,7 @@ type PageSpec = {
 const pages: PageSpec[] = [
   {
     file: "index.html",
-    check: { type: "exact", value: "OffOn - Vendor-neutral. Open Source. Community Driven." },
+    check: { type: "exact", value: "OffOn - Vendor-Neutral. Open Source. Community-Driven" },
   },
   {
     file: "about/index.html",

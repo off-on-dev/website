@@ -4,9 +4,19 @@
 
 The brand is always written **OffOn** (camelCase). Never "offon", "Offon", or "OFFON".
 
-In code, use the `BRAND_NAME` constant from `src/data/constants.ts` instead of hardcoding the string.
-
 The domain `offon.dev` is always lowercase (it is a URL, not a brand mention).
+
+All brand copy constants live in `src/data/constants.ts`. Use them instead of hardcoding strings:
+
+| Constant | Value / purpose |
+|---|---|
+| `BRAND_NAME` | `"OffOn"` — the brand name |
+| `BRAND_SLOGAN_PARTS` | `["Vendor-Neutral", "Open Source", "Community-Driven"]` — slogan as an array, used to render with icon separators |
+| `BRAND_SLOGAN` | The three parts joined with `". "` — use for plain-text contexts (page titles, meta) |
+| `BRAND_SECONDARY_LINE_PARTS` | `["always On.", "always Open.", "always Learning."]` — rendered in the Hero h1 |
+| `BRAND_SECONDARY_LINE` | The three parts joined with spaces — use for plain-text contexts (CTA copy) |
+| `BRAND_SHORT_DESCRIPTION` | The canonical homepage meta description |
+| `SITE_NAME` | `"offon.dev"` — the domain, always lowercase |
 
 ---
 
@@ -551,7 +561,7 @@ Full-width amber (`bg-primary`) hero banner used at the top of inner pages. Rend
 <PageHero
   eyebrow="About"
   title="Building the contributors and maintainers of tomorrow"
-  description="Vendor-neutral. Open source. Community-driven."
+  description="Vendor-Neutral. Open Source. Community-Driven."
   primaryCta={{ label: <>Start <ArrowDown size={14} aria-hidden="true" /></>, href: "#section" }}
   secondaryCta={{ label: "Learn more", href: "/handbook" }}
 />

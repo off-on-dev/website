@@ -141,6 +141,13 @@ describe("Footer - bottom strip", () => {
     expect(link.getAttribute("rel")).toBe("noopener noreferrer");
   });
 
+  it("renders all three slogan parts in the bottom strip", () => {
+    renderFooter();
+    expect(screen.getByText("Vendor-Neutral")).toBeTruthy();
+    expect(screen.getByText("Open Source")).toBeTruthy();
+    expect(screen.getByText("Community-Driven")).toBeTruthy();
+  });
+
   it("renders copyright text with the brand name", () => {
     renderFooter();
     expect(screen.getByText(/© \d{4} OffOn\. All rights reserved\./)).toBeTruthy();
