@@ -651,22 +651,24 @@ State the result of each check explicitly before finishing a task.
 2. **Run tests:** `npm test` must pass with zero failures. No tests skipped or
    commented out.
 
-3. **Run build:** `npm run build` must complete with no TypeScript errors or
+3. **Run e2e and a11y tests:** `npm run build && npm run test:e2e` must pass with zero failures. This is mandatory before every commit, not just in CI. Playwright tests cover page titles, hydration, accessibility (axe), and client-side navigation — none of these are covered by Vitest alone.
+
+4. **Run build:** `npm run build` must complete with no TypeScript errors or
    bundling failures. Run this for every non-trivial change, not just those that touch types or interfaces.
 
-4. **Re-read every file you changed:** After making changes, re-read the full
+5. **Re-read every file you changed:** After making changes, re-read the full
    affected section of each modified file to verify the final state is correct.
    Never assume an edit landed correctly without checking.
 
-5. **Check all call sites:** If you changed a function signature, component props,
+6. **Check all call sites:** If you changed a function signature, component props,
    or exported type, search for all usages and confirm they are updated.
 
-6. **Check imports:** Every import must resolve. No unused imports. No circular
+7. **Check imports:** Every import must resolve. No unused imports. No circular
    dependencies introduced.
 
-7. **Verify at three viewports:** All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px). Always test against the production build (`npm run build && npm run preview`), never the dev server.
+8. **Verify at three viewports:** All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px). Always test against the production build (`npm run build && npm run preview`), never the dev server.
 
-8. **Check discussion data on every PR:** If the PR adds or modifies adventure levels, verify that every level's Discourse topic ID and URL are present in the `DISCUSSION_TOPICS` map in `vite.config.ts`. Run `npm run build` so `src/data/discussion-data.json` is regenerated with any new topics. A missing entry means the discussion feed will silently show no posts for that level.
+9. **Check discussion data on every PR:** If the PR adds or modifies adventure levels, verify that every level's Discourse topic ID and URL are present in the `DISCUSSION_TOPICS` map in `vite.config.ts`. Run `npm run build` so `src/data/discussion-data.json` is regenerated with any new topics. A missing entry means the discussion feed will silently show no posts for that level.
 
 ### Before writing any code
 
