@@ -24,21 +24,24 @@ export const TechFilterSection = (): JSX.Element => {
           </button>
         ))}
       </div>
-      <div aria-live="polite" aria-atomic="true">
-        {activeTech && relatedLevels.length > 0 && (
-          <div key={activeTech} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {relatedLevels.map(({ level, adventureId, adventureTitle }) => (
-              <FilteredLevelCard
-                key={`${adventureId}-${level.id}`}
-                level={level}
-                adventureId={adventureId}
-                adventureTitle={adventureTitle}
-                className="animate-fade-up-delay-1"
-              />
-            ))}
-          </div>
-        )}
-      </div>
+      <p aria-live="polite" aria-atomic="true" className="sr-only">
+        {activeTech && relatedLevels.length > 0
+          ? `Showing ${relatedLevels.length} challenge${relatedLevels.length !== 1 ? "s" : ""} for ${activeTech}`
+          : ""}
+      </p>
+      {activeTech && relatedLevels.length > 0 && (
+        <div key={activeTech} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {relatedLevels.map(({ level, adventureId, adventureTitle }) => (
+            <FilteredLevelCard
+              key={`${adventureId}-${level.id}`}
+              level={level}
+              adventureId={adventureId}
+              adventureTitle={adventureTitle}
+              className="animate-fade-up-delay-1"
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -443,7 +443,7 @@ html {
     --secondary-foreground: 240 25% 8%;
 
     --muted: 220 8% 93%;
-    --muted-foreground: 35 8% 38%;
+    --muted-foreground: 35 8% 32%;
 
     --accent: 41 100% 60%;
     --accent-foreground: 0 0% 0%;
@@ -460,8 +460,8 @@ html {
     --text-primary: 240 25% 8%;
     --text-secondary: 240 20% 18%;
     --text-tertiary: 35 8% 38%;
-    --text-muted: 35 8% 38%;
-    --text-faint: 35 8% 40%;
+    --text-muted: 35 8% 32%;
+    --text-faint: 35 8% 32%;
     /* Dark amber for inline link hover in light mode — same hue as primary,
        darkened to hsl(41 100% 25%) ≈ #7f4200 for ~5.5:1 contrast on light bg */
     --link-hover-light: 41 100% 25%;
@@ -625,24 +625,24 @@ html {
 /* ─── Component classes ──────────────────────────────────── */
 
 @layer components {
-  /* Primary filled button */
+  /* Primary filled button — py-3 gives 12+20+12 = 44px (WCAG 2.5.5) */
   .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
   /* Ghost/outline button */
   .btn-ghost {
-    @apply inline-flex items-center gap-2 rounded-md border border-foreground/35 bg-transparent px-5 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 hover:bg-primary/10 hover:border-primary/60 hover:text-primary active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md border border-foreground/35 bg-transparent px-5 py-3 text-sm font-semibold text-foreground transition-all duration-200 hover:bg-primary/10 hover:border-primary/60 hover:text-primary active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
   /* Soft tinted button */
   .btn-soft {
-    @apply inline-flex items-center justify-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-5 py-2.5 text-sm font-semibold text-primary transition-all duration-200 hover:bg-primary/20 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-5 py-3 text-sm font-semibold text-primary transition-all duration-200 hover:bg-primary/20 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
   /* Inverse button - for use on primary-colored section backgrounds */
   .btn-inverse {
-    @apply inline-flex items-center gap-2 rounded-md bg-background text-primary font-bold text-sm px-5 py-2.5 border-2 border-primary transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md bg-background text-primary font-bold text-sm px-5 py-3 border-2 border-primary transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
   .btn-inverse:hover {
     background-color: hsl(var(--primary));
@@ -652,7 +652,7 @@ html {
 
   /* Ghost inverse button - for use on primary-colored section backgrounds */
   .btn-ghost-inverse {
-    @apply inline-flex items-center gap-2 rounded-md bg-transparent text-background font-bold text-sm px-5 py-2.5 border-2 border-background/70 transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md bg-transparent text-background font-bold text-sm px-5 py-3 border-2 border-background/70 transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
   .btn-ghost-inverse:hover {
     background-color: hsl(var(--primary-foreground));
@@ -660,13 +660,13 @@ html {
     color: hsl(var(--primary));
   }
 
-  /* Filter pills - smaller, lighter weight than action buttons */
+  /* Filter pills - min-h-[44px] meets WCAG 2.5.5; text is centered inside */
   .pill-active {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-primary/50 bg-primary/10 px-4 py-1.5 text-sm font-medium leading-none text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-primary/50 bg-primary/10 px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
   .pill-inactive {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-[hsl(var(--surface-border))] bg-transparent px-4 py-1.5 text-sm font-medium leading-none text-[hsl(var(--text-secondary))] hover:border-primary/60 hover:text-primary hover:bg-primary/5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-[hsl(var(--surface-border))] bg-transparent px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none text-[hsl(var(--text-secondary))] hover:border-primary/60 hover:text-primary hover:bg-primary/5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
 }
@@ -1033,9 +1033,9 @@ html {
   --ring: 0 0% 0%;
 }
 
-/* ─── Reduced-motion: non-transform active fallback ──── */
-/* active:scale-[0.97] is suppressed under prefers-reduced-motion,
-   leaving no visible press state. Use brightness instead. */
+/* ─── Reduced-motion: suppress scale transform + brightness fallback ──── */
+/* WCAG 2.3.3: active:scale-[0.97] is fully suppressed under
+   prefers-reduced-motion. Brightness provides press feedback without motion. */
 @media (prefers-reduced-motion: reduce) {
   .btn-primary:active,
   .btn-ghost:active,
@@ -1043,6 +1043,7 @@ html {
   .btn-inverse:active,
   .btn-ghost-inverse:active {
     filter: brightness(0.85);
+    transform: none;
   }
 }
 

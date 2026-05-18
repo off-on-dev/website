@@ -102,10 +102,12 @@ describe("ChallengesGrid", () => {
       });
     });
 
-    it("shows a 'Challenges tagged with <tag>' label", () => {
+    it("shows a count and tag label when a tag is active", () => {
       renderGrid();
       fireEvent.click(screen.getByRole("button", { name: firstTag }));
-      expect(screen.getByText(`Challenges tagged with ${firstTag}`)).toBeTruthy();
+      const count = adventuresWithFirstTag.flatMap((a) => a.levels).length;
+      const label = count === 1 ? "challenge" : "challenges";
+      expect(screen.getByText(`${count} ${label} tagged with ${firstTag}`)).toBeTruthy();
     });
 
     it("renders an aria-live region when a tag is active", () => {

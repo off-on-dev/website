@@ -60,6 +60,8 @@ export const ChallengeContextSection = ({
               src={architectureDiagram}
               alt={architecture ? architecture.join(" ") : "Architecture diagram"}
               loading="lazy"
+              width={1200}
+              height={800}
               className="w-full rounded-lg mb-3"
             />
           )}

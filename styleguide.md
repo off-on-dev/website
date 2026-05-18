@@ -193,7 +193,7 @@ In light mode, `bg-primary` sections (PageHero, BottomCTA) stay amber. Do **not*
 
 | Class | Style | Usage |
 |---|---|---|
-| `.btn-primary` | Filled amber, `rounded-md px-5 py-2.5 text-sm font-semibold`, electric glow on hover | Default CTA on page background |
+| `.btn-primary` | Filled amber, `rounded-md px-5 py-3 text-sm font-semibold`, electric glow on hover | Default CTA on page background |
 | `.btn-ghost` | Outlined, `border-foreground/35`, subtle glow on hover | Secondary CTA on page background |
 | `.btn-soft` | Tinted `bg-primary/10 border-primary/30`, no glow | Tertiary / low-emphasis action |
 | `.btn-inverse` | White/background fill with primary border, primary text; inverts on hover to primary bg | Primary CTA inside a `bg-primary` section (e.g. `PageHero`, `BottomCTA`) |
@@ -214,7 +214,7 @@ Never add a `bg-primary` section button without adding or verifying the correspo
 | `.pill-active` | `rounded-full bg-primary/10 border-primary/50 text-primary` |
 | `.pill-inactive` | `rounded-full bg-transparent border-surface-border text-text-secondary`; hover: `border-primary/60 text-primary bg-primary/5` with electric glow |
 
-Both use `px-4 py-1.5 text-sm font-medium leading-none inline-flex items-center gap-1.5` and include `focus-visible` ring styles (`ring-ring`).
+Both use `px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none inline-flex items-center gap-1.5` and include `focus-visible` ring styles (`ring-ring`). The `min-h-[44px]` satisfies WCAG 2.5.5 target size; content is vertically centered via `items-center`.
 
 ### Difficulty Badges
 

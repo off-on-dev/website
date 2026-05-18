@@ -189,8 +189,8 @@ const Accessibility = (): JSX.Element => {
               <table className="w-full text-sm text-muted-foreground border-collapse">
                 <thead>
                   <tr className="border-b border-[hsl(var(--surface-border))]">
-                    <th className="text-left font-semibold text-foreground py-2 pr-6 w-28">Severity</th>
-                    <th className="text-left font-semibold text-foreground py-2">Definition</th>
+                    <th scope="col" className="text-left font-semibold text-foreground py-2 pr-6 w-28">Severity</th>
+                    <th scope="col" className="text-left font-semibold text-foreground py-2">Definition</th>
                   </tr>
                 </thead>
                 <tbody>
