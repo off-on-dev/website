@@ -131,3 +131,17 @@ describe('useActiveSection - intersection tracking', () => {
     document.body.removeChild(el2);
   });
 });
+
+describe('useActiveSection - empty sectionIds guard', () => {
+  it('returns null without creating an observer when sectionIds is empty', () => {
+    const { result } = renderHook(() => useActiveSection([]));
+    expect(result.current).toBeNull();
+    expect(IntersectionObserver).not.toHaveBeenCalled();
+  });
+
+  it('does not call disconnect on unmount when sectionIds is empty', () => {
+    const { unmount } = renderHook(() => useActiveSection([]));
+    unmount();
+    expect(disconnectMock).not.toHaveBeenCalled();
+  });
+});

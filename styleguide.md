@@ -382,19 +382,21 @@ const activeSection = useActiveSection(["challenges", "about"]);
 
 | Param | Type | Description |
 |---|---|---|
-| `sectionIds` | `string[]` | Array of element IDs to observe. Pass a stable module-level constant to prevent unnecessary re-runs. |
+| `sectionIds` | `string[]` | Array of element IDs to observe. Pass a stable module-level constant to prevent unnecessary re-runs. Pass `[]` to skip observer creation entirely (e.g. on pages other than home). |
 
 | Return | Type | Description |
 |---|---|---|
 | (value) | `string \| null` | ID of the intersecting section, or `null` when none are in view |
 
-The observer fires at `threshold: 0.2` (20% visibility). The observer is disconnected on unmount.
+The observer fires at `threshold: 0.2` (20% visibility). The observer is disconnected on unmount. Passing an empty array is a no-op: no observer is created.
 
-Usage in `Navbar.tsx`:
+Usage in `Navbar.tsx` (home-page-only guard):
 
 ```ts
 const OBSERVED_SECTIONS = ["challenges"]; // stable constant, outside component
-const activeSection = useActiveSection(OBSERVED_SECTIONS);
+const activeSection = useActiveSection(
+  location.pathname === "/" ? OBSERVED_SECTIONS : []
+);
 const challengesActive = location.pathname === "/" && activeSection === "challenges";
 ```
 
@@ -489,9 +491,11 @@ const posts = useDiscussionPosts(discussionUrl, mockLoader);
 | Argument | Type | Description |
 |---|---|---|
 | `discussionUrl` | `string` | Full Discourse topic URL. Topic ID is extracted from the path. |
-| `loader` | `DiscussionDataLoader` (optional) | Async function that returns the raw JSON data. Defaults to a dynamic `import()` of the JSON file (omitted from the ChallengeDetail bundle). Pass a `vi.fn().mockResolvedValue(data)` in tests — see the Testing section of `CLAUDE.md` for the injectable-loader pattern. |
+| `loader` | `DiscussionDataLoader` (optional) | Async function that returns the raw JSON data. Defaults to a module-level promise that starts the dynamic `import()` of the JSON file as soon as the module is loaded, not on first render. This eliminates a render-cycle waterfall. The JSON chunk is still code-split (omitted from the main bundle). Pass a `vi.fn().mockResolvedValue(data)` in tests — see the Testing section of `CLAUDE.md` for the injectable-loader pattern. |
 
 **Why the injectable loader?** Vitest's dynamic-import mock runner has a multi-second first-call cost per test run. Injecting a mock loader bypasses it entirely. `vi.spyOn` on the module export does NOT work for same-module calls in ES module context.
+
+**Why a module-level promise?** The default loader is a module-scoped `Promise` so the `import()` fires when the route module is loaded, not when the component first mounts. By the time the component renders and calls `useEffect`, the JSON is usually already in-flight or resolved.
 
 ---
 

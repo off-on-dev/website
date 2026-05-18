@@ -30,13 +30,14 @@ function timeAgo(dateStr: string, now: number): string {
 }
 
 // Data is fetched at build time by the discourse-data Vite plugin in vite.config.ts
-// and written to src/data/discussion-data.json. The file is loaded dynamically so it
-// is not bundled into the ChallengeDetail chunk — only one topic's posts are needed
-// per page, but the file contains all topics.
-const defaultLoader: DiscussionDataLoader = () =>
-  import("@/data/discussion-data.json").then(
-    (m) => m.default as Record<string, StoredPost[]>
-  );
+// and written to src/data/discussion-data.json. The import is kicked off at module
+// load time (not inside useEffect) so the data is already in-flight before the
+// component mounts, eliminating the render-then-effect waterfall. The dynamic import
+// keeps the chunk code-split from ChallengeDetail.
+const discussionDataPromise: Promise<Record<string, StoredPost[]>> =
+  import("@/data/discussion-data.json").then((m) => m.default as Record<string, StoredPost[]>);
+
+const defaultLoader: DiscussionDataLoader = () => discussionDataPromise;
 
 /**
  * Loads discussion posts for an adventure level from pre-built static data.

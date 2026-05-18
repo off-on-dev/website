@@ -73,7 +73,9 @@ export const Navbar = (): JSX.Element => {
   const { theme, toggle } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
-  const activeSection = useActiveSection(OBSERVED_SECTIONS);
+  const activeSection = useActiveSection(
+    location.pathname === "/" ? OBSERVED_SECTIONS : []
+  );
   const challengesActive = location.pathname === "/" && activeSection === "challenges";
   const homeActive = location.pathname === "/" && !challengesActive;
 
@@ -92,6 +94,7 @@ export const Navbar = (): JSX.Element => {
             width={130}
             height={33}
             loading="eager"
+            fetchPriority="high"
             className="h-8"
           />
         </Link>
