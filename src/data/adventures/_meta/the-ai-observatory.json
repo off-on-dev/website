@@ -1,0 +1,18 @@
+{
+  "id": "the-ai-observatory",
+  "title": "The AI Observatory",
+  "month": "FEB 2026",
+  "story": "Investigate a mysterious bandwidth anomaly at a remote research station by instrumenting its AI system with OpenTelemetry.",
+  "tags": [
+    "OpenTelemetry",
+    "OpenLLMetry",
+    "Jaeger",
+    "Prometheus",
+    "Python"
+  ],
+  "contributor": {
+    "name": "Katharina Sick",
+    "url": "https://ksick.dev/",
+    "about": "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe."
+  }
+}

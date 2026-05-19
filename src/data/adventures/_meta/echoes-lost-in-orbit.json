@@ -1,0 +1,18 @@
+{
+  "id": "echoes-lost-in-orbit",
+  "title": "Echoes Lost in Orbit",
+  "month": "DEC 2025",
+  "story": "Restore interstellar communications by fixing broken GitOps setups, progressive delivery systems, and observability pipelines across three galactic missions.",
+  "tags": [
+    "Argo CD",
+    "Argo Rollouts",
+    "OpenTelemetry",
+    "Jaeger",
+    "PromQL"
+  ],
+  "contributor": {
+    "name": "Katharina Sick",
+    "url": "https://ksick.dev/",
+    "about": "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe."
+  }
+}

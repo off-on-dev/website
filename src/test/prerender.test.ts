@@ -19,7 +19,7 @@ type PageSpec = {
 const pages: PageSpec[] = [
   {
     file: "index.html",
-    check: { type: "exact", value: "OffOn - Vendor-neutral. Open Source. Community Driven." },
+    check: { type: "exact", value: "OffOn - Vendor-Neutral. Open Source. Community-Driven" },
   },
   {
     file: "about/index.html",
@@ -32,6 +32,10 @@ const pages: PageSpec[] = [
   {
     file: "privacy/index.html",
     check: { type: "exact", value: "Privacy Policy - OffOn" },
+  },
+  {
+    file: "accessibility/index.html",
+    check: { type: "exact", value: "Accessibility Statement - OffOn" },
   },
   {
     file: "sponsors/index.html",
@@ -91,6 +95,15 @@ const pages: PageSpec[] = [
   {
     file: "adventures/the-ai-observatory/levels/expert/index.html",
     check: { type: "contains", value: "The Noise Filter" },
+  },
+  // Adventure levels: blind-by-design
+  {
+    file: "adventures/blind-by-design/levels/beginner/index.html",
+    check: { type: "contains", value: "Stand up the Lab" },
+  },
+  {
+    file: "adventures/blind-by-design/levels/intermediate/index.html",
+    check: { type: "contains", value: "Outcome by Cohort" },
   },
 ];
 

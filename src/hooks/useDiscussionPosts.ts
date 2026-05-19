@@ -10,24 +10,15 @@ type StoredPost = {
 
 export type PostWithAge = StoredPost & { age: string };
 
-export type TopicEntry = {
-  posts: StoredPost[];
-  totalReplies: number;
-};
-
-export type DiscussionResult = {
-  posts: PostWithAge[];
-  totalReplies: number;
+/** Shape of the per-level JSON file's discussion fields. */
+type LevelDiscussionData = {
+  discussionPosts?: StoredPost[];
+  totalReplies?: number;
 };
 
 // Exported so callers can type test mocks; tests inject a mock loader to
 // avoid Vitest's dynamic-import mock runner initialization cost (~3-6s).
-export type DiscussionDataLoader = () => Promise<Record<string, TopicEntry>>;
-
-function extractTopicId(url: string): string | null {
-  const match = url.match(/\/t\/[^/]+\/(\d+)/);
-  return match ? match[1] : null;
-}
+export type DiscussionDataLoader = (adventureId: string, levelId: string) => Promise<LevelDiscussionData>;
 
 function timeAgo(dateStr: string, now: number): string {
   const diff = now - new Date(dateStr).getTime();
@@ -39,53 +30,58 @@ function timeAgo(dateStr: string, now: number): string {
   return `${days}d ago`;
 }
 
-// Data is fetched at build time by the discourse-data Vite plugin in vite.config.ts
-// and written to src/data/discussion-data.json. The file is loaded dynamically so it
-// is not bundled into the ChallengeDetail chunk — only one topic's posts are needed
-// per page, but the file contains all topics.
-const defaultLoader: DiscussionDataLoader = () =>
-  import("@/data/discussion-data.json").then(
-    (m) => m.default as Record<string, TopicEntry>
-  );
+// Default loader dynamically imports the per-level JSON file.
+// Each level JSON is expected to have optional `discussionPosts` and
+// `totalReplies` fields, populated by the daily GitHub Action.
+const defaultLoader: DiscussionDataLoader = async (adventureId, levelId) => {
+  const modules = import.meta.glob("@/data/adventures/**/*.json");
+  const key = `/src/data/adventures/${adventureId}/${levelId}.json`;
+  const loader = modules[key];
+  if (!loader) return { discussionPosts: [], totalReplies: 0 };
+  const mod = await loader() as { default: LevelDiscussionData };
+  return mod.default;
+};
 
-const EMPTY: DiscussionResult = { posts: [], totalReplies: 0 };
+export type DiscussionResult = {
+  posts: PostWithAge[];
+  totalReplies: number;
+};
 
 /**
- * Loads discussion posts for an adventure level from pre-built static data.
+ * Loads discussion posts for an adventure level from the per-level JSON file.
  * Post ages are computed client-side after mount to avoid calling Date.now() during render.
- * @param discussionUrl - Full Discourse topic URL; the numeric topic ID is extracted automatically.
- * @param loader - Optional loader for testing; defaults to dynamically importing discussion-data.json.
- * @returns Object containing posts (with computed relative age strings) and totalReplies for the source thread.
+ * @param adventureId - The adventure slug (e.g. "echoes-lost-in-orbit").
+ * @param levelId - The level slug (e.g. "beginner").
+ * @param loader - Optional loader for testing; defaults to dynamically importing the level JSON.
+ * @returns Object with posts array and totalReplies count.
  */
 export function useDiscussionPosts(
-  discussionUrl: string,
+  adventureId: string,
+  levelId: string,
   loader: DiscussionDataLoader = defaultLoader,
 ): DiscussionResult {
-  const topicId = extractTopicId(discussionUrl);
-  const [result, setResult] = useState<DiscussionResult>(EMPTY);
+  const [posts, setPosts] = useState<PostWithAge[]>([]);
+  const [totalReplies, setTotalReplies] = useState(0);
 
   useEffect(() => {
-    if (!topicId) return;
+    if (!adventureId || !levelId) return;
     let cancelled = false;
-    loader()
+    loader(adventureId, levelId)
       .then((data) => {
         if (cancelled) return;
-        const entry = data[topicId];
-        if (!entry) {
-          setResult(EMPTY);
-          return;
-        }
+        const raw = data.discussionPosts ?? [];
         const now = Date.now();
-        setResult({
-          posts: entry.posts.map((p) => ({ ...p, age: timeAgo(p.created_at, now) })),
-          totalReplies: entry.totalReplies,
-        });
+        setPosts(raw.map((p) => ({ ...p, age: timeAgo(p.created_at, now) })));
+        setTotalReplies(data.totalReplies ?? raw.length);
       })
       .catch(() => {
-        if (!cancelled) setResult(EMPTY);
+        if (!cancelled) {
+          setPosts([]);
+          setTotalReplies(0);
+        }
       });
     return () => { cancelled = true; };
-  }, [topicId, loader]);
+  }, [adventureId, levelId, loader]);
 
-  return result;
+  return { posts, totalReplies };
 }

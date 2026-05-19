@@ -11,7 +11,7 @@ import logoLight from "@/assets/offon-logo-light-color.svg";
 
 const OBSERVED_SECTIONS = ["challenges"];
 
-const linkCls = "text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent rounded px-1.5 py-0.5 -mx-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+const linkCls = "inline-flex items-center min-h-[44px] text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent rounded px-1.5 -mx-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 const activeCls = "text-primary underline decoration-primary underline-offset-4";
 
 type NavThemeToggleProps = { theme: "dark" | "light"; onToggle: () => void; className?: string };
@@ -20,12 +20,12 @@ const NavThemeToggle = ({ theme, onToggle, className }: NavThemeToggleProps): JS
   <button
     onClick={onToggle}
     className={cn(
-      "flex h-8 w-8 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      "flex h-11 w-11 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
       className
     )}
     aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
   >
-    {theme === "dark" ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
+    {theme === "dark" ? <Sun size={18} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
   </button>
 );
 
@@ -73,7 +73,9 @@ export const Navbar = (): JSX.Element => {
   const { theme, toggle } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
-  const activeSection = useActiveSection(OBSERVED_SECTIONS);
+  const activeSection = useActiveSection(
+    location.pathname === "/" ? OBSERVED_SECTIONS : []
+  );
   const challengesActive = location.pathname === "/" && activeSection === "challenges";
   const homeActive = location.pathname === "/" && !challengesActive;
 
@@ -84,7 +86,7 @@ export const Navbar = (): JSX.Element => {
       aria-label="Main"
       className="fixed top-0 left-0 right-0 z-50 border-b border-[hsl(var(--surface-border))] bg-background"
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-1.5">
         <Link to="/" className="logo-link flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm">
           <img
             src={theme === "dark" ? logoDark : logoLight}
@@ -92,6 +94,7 @@ export const Navbar = (): JSX.Element => {
             width={130}
             height={33}
             loading="eager"
+            fetchPriority="high"
             className="h-8"
           />
         </Link>
@@ -107,12 +110,12 @@ export const Navbar = (): JSX.Element => {
           <NavThemeToggle theme={theme} onToggle={toggle} />
           <button
             onClick={() => setMenuOpen((o) => !o)}
-            className="flex h-8 w-8 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="flex h-11 w-11 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
           >
-            {menuOpen ? <X size={16} aria-hidden="true" /> : <Menu size={16} aria-hidden="true" />}
+            {menuOpen ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />}
           </button>
         </div>
       </div>

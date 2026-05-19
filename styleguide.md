@@ -4,9 +4,19 @@
 
 The brand is always written **OffOn** (camelCase). Never "offon", "Offon", or "OFFON".
 
-In code, use the `BRAND_NAME` constant from `src/data/constants.ts` instead of hardcoding the string.
-
 The domain `offon.dev` is always lowercase (it is a URL, not a brand mention).
+
+All brand copy constants live in `src/data/constants.ts`. Use them instead of hardcoding strings:
+
+| Constant | Value / purpose |
+|---|---|
+| `BRAND_NAME` | `"OffOn"` — the brand name |
+| `BRAND_SLOGAN_PARTS` | `["Vendor-Neutral", "Open Source", "Community-Driven"]` — slogan as an array, used to render with icon separators |
+| `BRAND_SLOGAN` | The three parts joined with `". "` — use for plain-text contexts (page titles, meta) |
+| `BRAND_SECONDARY_LINE_PARTS` | `["always On.", "always Open.", "always Learning."]` — rendered in the Hero h1 |
+| `BRAND_SECONDARY_LINE` | The three parts joined with spaces — use for plain-text contexts (CTA copy) |
+| `BRAND_SHORT_DESCRIPTION` | The canonical homepage meta description |
+| `SITE_NAME` | `"offon.dev"` — the domain, always lowercase |
 
 ---
 
@@ -32,17 +42,17 @@ Subset coverage (via `unicode-range` in `src/index.css` -- only the needed subse
 
 ### Font preload
 
-Fonts are preloaded to avoid the three-level font discovery delay (HTML parse → CSS parse → font file request). Preloads are split across global and per-route `links()` exports:
+Fonts are preloaded to avoid the three-level font discovery delay (HTML parse → CSS parse → font file request). All preloads live in `src/root.tsx` and fire on every page load:
 
 **Global (`src/root.tsx`) — preloaded on every page:**
 - `inter-latin-400-normal.woff2` — body text (Navbar, paragraphs)
 - `inter-latin-500-normal.woff2` — medium-weight body text (Navbar links)
+- `syne-latin-700-normal.woff2` — all h1–h6 elements (the `@layer base` rule in `src/index.css` applies `font-family: 'Syne'` to every heading globally)
 
 **Per-route — preloaded only on pages that need them above the fold:**
-- `syne-latin-700-normal.woff2` — hero/page h1 that inherits Syne from `@layer base` (`src/pages/Index.tsx`, `src/pages/Privacy.tsx`, `src/pages/ChallengeDetail.tsx`, `src/pages/AdventureDetail.tsx`)
-- `inter-latin-700-normal.woff2` — PageHero CTA buttons (`.btn-inverse`, `.btn-ghost-inverse` use `font-bold` on non-heading elements) (`src/pages/Adventures.tsx`, `src/pages/About.tsx`, `src/pages/Sponsors.tsx`, `src/pages/CommunityGuide.tsx`)
+- `inter-latin-700-normal.woff2` via `interBoldPreload` — PageHero CTA buttons (`.btn-inverse`, `.btn-ghost-inverse` use `font-bold` on non-heading elements) (`src/pages/Adventures.tsx`, `src/pages/About.tsx`, `src/pages/Sponsors.tsx`, `src/pages/CommunityGuide.tsx`)
 
-Inter 600 (`font-semibold`) is used below the fold only and is not preloaded. Only Latin subset variants are preloaded. Other subsets are served from `public/fonts/` but are not preloaded. Check the relevant `links()` exports and update them whenever above-the-fold typography changes.
+Inter 600 (`font-semibold`) is used below the fold only and is not preloaded. Only Latin subset variants are preloaded. Other subsets are served from `public/fonts/` but are not preloaded. Update `src/root.tsx` whenever above-the-fold typography changes.
 
 ### Tailwind font utilities
 
@@ -193,7 +203,7 @@ In light mode, `bg-primary` sections (PageHero, BottomCTA) stay amber. Do **not*
 
 | Class | Style | Usage |
 |---|---|---|
-| `.btn-primary` | Filled amber, `rounded-md px-5 py-2.5 text-sm font-semibold`, electric glow on hover | Default CTA on page background |
+| `.btn-primary` | Filled amber, `rounded-md px-5 py-3 text-sm font-semibold`, electric glow on hover | Default CTA on page background |
 | `.btn-ghost` | Outlined, `border-foreground/35`, subtle glow on hover | Secondary CTA on page background |
 | `.btn-soft` | Tinted `bg-primary/10 border-primary/30`, no glow | Tertiary / low-emphasis action |
 | `.btn-inverse` | White/background fill with primary border, primary text; inverts on hover to primary bg | Primary CTA inside a `bg-primary` section (e.g. `PageHero`, `BottomCTA`) |
@@ -214,7 +224,7 @@ Never add a `bg-primary` section button without adding or verifying the correspo
 | `.pill-active` | `rounded-full bg-primary/10 border-primary/50 text-primary` |
 | `.pill-inactive` | `rounded-full bg-transparent border-surface-border text-text-secondary`; hover: `border-primary/60 text-primary bg-primary/5` with electric glow |
 
-Both use `px-4 py-1.5 text-sm font-medium leading-none inline-flex items-center gap-1.5` and include `focus-visible` ring styles (`ring-ring`).
+Both use `px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none inline-flex items-center gap-1.5` and include `focus-visible` ring styles (`ring-ring`). The `min-h-[44px]` satisfies WCAG 2.5.5 target size; content is vertically centered via `items-center`.
 
 ### Difficulty Badges
 
@@ -382,19 +392,21 @@ const activeSection = useActiveSection(["challenges", "about"]);
 
 | Param | Type | Description |
 |---|---|---|
-| `sectionIds` | `string[]` | Array of element IDs to observe. Pass a stable module-level constant to prevent unnecessary re-runs. |
+| `sectionIds` | `string[]` | Array of element IDs to observe. Pass a stable module-level constant to prevent unnecessary re-runs. Pass `[]` to skip observer creation entirely (e.g. on pages other than home). |
 
 | Return | Type | Description |
 |---|---|---|
 | (value) | `string \| null` | ID of the intersecting section, or `null` when none are in view |
 
-The observer fires at `threshold: 0.2` (20% visibility). The observer is disconnected on unmount.
+The observer fires at `threshold: 0.2` (20% visibility). The observer is disconnected on unmount. Passing an empty array is a no-op: no observer is created.
 
-Usage in `Navbar.tsx`:
+Usage in `Navbar.tsx` (home-page-only guard):
 
 ```ts
 const OBSERVED_SECTIONS = ["challenges"]; // stable constant, outside component
-const activeSection = useActiveSection(OBSERVED_SECTIONS);
+const activeSection = useActiveSection(
+  location.pathname === "/" ? OBSERVED_SECTIONS : []
+);
 const challengesActive = location.pathname === "/" && activeSection === "challenges";
 ```
 
@@ -489,9 +501,11 @@ const posts = useDiscussionPosts(discussionUrl, mockLoader);
 | Argument | Type | Description |
 |---|---|---|
 | `discussionUrl` | `string` | Full Discourse topic URL. Topic ID is extracted from the path. |
-| `loader` | `DiscussionDataLoader` (optional) | Async function that returns the raw JSON data. Defaults to a dynamic `import()` of the JSON file (omitted from the ChallengeDetail bundle). Pass a `vi.fn().mockResolvedValue(data)` in tests — see the Testing section of `CLAUDE.md` for the injectable-loader pattern. |
+| `loader` | `DiscussionDataLoader` (optional) | Async function that returns the raw JSON data. Defaults to a module-level promise that starts the dynamic `import()` of the JSON file as soon as the module is loaded, not on first render. This eliminates a render-cycle waterfall. The JSON chunk is still code-split (omitted from the main bundle). Pass a `vi.fn().mockResolvedValue(data)` in tests — see the Testing section of `CLAUDE.md` for the injectable-loader pattern. |
 
 **Why the injectable loader?** Vitest's dynamic-import mock runner has a multi-second first-call cost per test run. Injecting a mock loader bypasses it entirely. `vi.spyOn` on the module export does NOT work for same-module calls in ES module context.
+
+**Why a module-level promise?** The default loader is a module-scoped `Promise` so the `import()` fires when the route module is loaded, not when the component first mounts. By the time the component renders and calls `useEffect`, the JSON is usually already in-flight or resolved.
 
 ---
 
@@ -547,7 +561,7 @@ Full-width amber (`bg-primary`) hero banner used at the top of inner pages. Rend
 <PageHero
   eyebrow="About"
   title="Building the contributors and maintainers of tomorrow"
-  description="Vendor-neutral. Open source. Community-driven."
+  description="Vendor-Neutral. Open Source. Community-Driven."
   primaryCta={{ label: <>Start <ArrowDown size={14} aria-hidden="true" /></>, href: "#section" }}
   secondaryCta={{ label: "Learn more", href: "/handbook" }}
 />
@@ -758,14 +772,6 @@ No props. Self-contained section component.
 
 ---
 
-### `VerificationSection`
-
-`src/components/VerificationSection.tsx`
-
-Static card explaining how to run the in-Codespace verification script. Includes an external link to the challenges repo on GitHub.
-
-No props. Renders a self-contained `<div>` with heading, description, and external link. Used on `ChallengeDetail` pages.
-
 ---
 
 ### `DiscussionSection`
@@ -958,7 +964,7 @@ Never put a raw SVG icon next to text inside a plain `inline` or `block` element
 | Icon | Lucide name | Where used |
 |---|---|---|
 | External link (navigation) | `ArrowUpRight` | Navbar GitHub button, BottomCTA GitHub button, CommunityGuide links |
-| Navigate forward / CTA | `ArrowRight` | Inline text links (DiscussionSection, VerificationSection, CommunitySection, SponsorStrip, BottomCTA, LevelCard) |
+| Navigate forward / CTA | `ArrowRight` | Inline text links (DiscussionSection, CommunitySection, SponsorStrip, BottomCTA, LevelCard) |
 | Navigate back | `ArrowLeft` | ChallengeDetail breadcrumb |
 | Scroll down / anchor | `ArrowDown` | Hero primary CTA |
 | Community Voices card | `Megaphone` | CommunitySection card icon |
@@ -1002,10 +1008,14 @@ Used on `<span>` elements in: `CommunitySection`, `ChallengesGrid`, `NotFound`.
 
 ### `.docs-ext-link`
 
-A styled external link class for inline prose links in `CommunityGuide.tsx`. Combines an underline treatment (decoration-2 underline-offset-2) with focus-visible ring and transitions.
+The standard class for all inline prose links across the site. Handles both modes correctly without any additional Tailwind utilities for color or hover state.
 
-**Dark mode:** foreground text, `--primary`-colored underline. Hover softens both to `primary / 0.75`.
-**Light mode:** foreground text with `currentColor` underline. Hover shifts text and underline to `--muted-foreground`.
+**Dark mode:** foreground text with amber (`--primary`) underline. Hover shifts text and underline to full `hsl(var(--primary))` (`#ffc034`).
+**Light mode:** near-black foreground text with `currentColor` underline. Hover shifts text and underline to `--link-hover-light` (`hsl(41 100% 25%)` ≈ `#7f4200`) — dark amber, same hue as primary, ~5.5:1 contrast on light backgrounds. Passes WCAG AA.
+
+Used in: `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`, `ChallengeDetail`.
+
+Do not use `hover:text-primary` or `hover:underline` on inline content links — use `docs-ext-link` instead.
 
 ```ts
 const extLink = "docs-ext-link inline-flex items-center gap-1 underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";

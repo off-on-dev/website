@@ -1,0 +1,75 @@
+{
+  "id": "beginner",
+  "name": "The Foundation Stones",
+  "difficulty": "Beginner",
+  "learnings": [
+    "Infrastructure as Code with OpenTofu",
+    "Remote state management with GCS backend",
+    "Dynamic & conditional resources"
+  ],
+  "codespacesUrl": "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?devcontainer_path=.devcontainer%2F02-building-cloudhaven_01-beginner%2Fdevcontainer.json&quickstart=1",
+  "discussionUrl": "https://community.open-ecosystem.com/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656",
+  "backstory": [
+    "The Merchant's Quarter needs essential services, but the previous Guild engineer left the OpenTofu configuration incomplete and misconfigured. Your mission: fix the issues, complete the setup, and establish proper infrastructure management for the Guild."
+  ],
+  "objective": [
+    "Provision storage vaults and ledger databases for each district dynamically",
+    "Deploy the audit database only when there is more than one district",
+    "Store state remotely in a GCS backend following best practices so the Guild can collaborate",
+    "Resolve all TODOs in the code and successfully run `tofu apply`"
+  ],
+  "toolbox": [
+    {
+      "name": "tofu",
+      "description": "OpenTofu CLI for infrastructure provisioning",
+      "url": "https://opentofu.org/"
+    },
+    {
+      "name": "gcp-api-mock",
+      "description": "mock GCP API running locally to simulate cloud resources without real cloud costs (Cloud Storage and Cloud SQL only)",
+      "url": "https://github.com/KatharinaSick/gcp-api-mock"
+    }
+  ],
+  "howToPlay": [
+    "Prefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (VS Code, JetBrains IDEs, and others). The devcontainer config will be detected automatically.",
+    "Wait ~2 minutes for the environment to initialize.",
+    "Open the Ports tab, find the GCP API Mock at port 30104. Use it to explore the mock cloud resources created by your configuration.",
+    "All OpenTofu files are in `adventures/02-building-cloudhaven/beginner/`. Run `grep -r \"TODO\" .` to find everything left by the previous engineer. Files to review: main.tf, state.tf, variables.tf, merchants.tf, audit.tf, outputs.tf.",
+    "After fixing the TODOs, run `tofu apply`. If you changed the backend configuration, run `tofu init -migrate-state` first.",
+    "Run the smoke test: `./smoke-test.sh`",
+    "Commit and push your changes to your fork, then trigger the verification workflow on GitHub Actions to officially claim completion."
+  ],
+  "discussionPosts": [
+    {
+      "username": "KatharinaSick",
+      "cooked": "The intermediate level is now live: Adventure 02: Building CloudHaven | Intermediate: The Modular Metropolis",
+      "created_at": "2026-01-21T13:02:00.099Z",
+      "topicUrl": "https://community.open-ecosystem.com/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
+    },
+    {
+      "username": "KatharinaSick",
+      "cooked": "Thanks for letting us know! I’ll take a look. I hope it didn’t cost you too much time",
+      "created_at": "2026-01-18T05:22:50.240Z",
+      "topicUrl": "https://community.open-ecosystem.com/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
+    },
+    {
+      "username": "justinrand",
+      "cooked": "Had to rerun the post-start.sh script to get the gcp “credentials” to work.",
+      "created_at": "2026-01-18T04:11:43.746Z",
+      "topicUrl": "https://community.open-ecosystem.com/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
+    },
+    {
+      "username": "alvin",
+      "cooked": "Thanks for the challenge!",
+      "created_at": "2026-01-14T23:51:19.893Z",
+      "topicUrl": "https://community.open-ecosystem.com/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
+    },
+    {
+      "username": "DavidHirsch",
+      "cooked": "Wow you are definitely the fastest challenger!",
+      "created_at": "2026-01-12T21:28:18.279Z",
+      "topicUrl": "https://community.open-ecosystem.com/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
+    }
+  ],
+  "totalReplies": 7
+}

@@ -35,9 +35,8 @@ export const ChallengesGrid = (): JSX.Element => {
 
             {activeTopic ? (
               <>
-                <div aria-live="polite" aria-atomic="true">
-                <p className="animate-fade-up mb-6 font-sans text-sm font-medium tracking-wide text-primary">
-                  Challenges tagged with {activeTopic}
+                <p aria-live="polite" aria-atomic="true" className="animate-fade-up mb-6 font-sans text-sm font-medium tracking-wide text-primary">
+                  {filteredLevels.length} {filteredLevels.length === 1 ? "challenge" : "challenges"} tagged with {activeTopic}
                 </p>
                 <div key={activeTopic} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
                   {filteredLevels.map(({ level, adventureId, adventureTitle }) => (
@@ -48,7 +47,6 @@ export const ChallengesGrid = (): JSX.Element => {
                       adventureTitle={adventureTitle}
                     />
                   ))}
-                </div>
                 </div>
               </>
             ) : (

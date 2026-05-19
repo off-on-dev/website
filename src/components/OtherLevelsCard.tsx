@@ -1,8 +1,27 @@
-import type { JSX } from "react";
+import type { CSSProperties, JSX } from "react";
 import { Link } from "react-router";
 import { ArrowRight } from "lucide-react";
-import { DifficultyBadge } from "@/components/DifficultyBadge";
-import type { Adventure } from "@/data/adventures";
+import type { Adventure, AdventureLevel } from "@/data/adventures";
+
+type Difficulty = AdventureLevel["difficulty"];
+
+const pillStyle: Record<Difficulty, CSSProperties> = {
+  Beginner: {
+    borderColor: "hsl(var(--difficulty-starter-border))",
+    backgroundColor: "hsl(var(--difficulty-starter-bg))",
+    color: "hsl(var(--difficulty-text))",
+  },
+  Intermediate: {
+    borderColor: "hsl(var(--difficulty-builder-border))",
+    backgroundColor: "hsl(var(--difficulty-builder-bg))",
+    color: "hsl(var(--difficulty-text))",
+  },
+  Expert: {
+    borderColor: "hsl(var(--difficulty-architect-border))",
+    backgroundColor: "hsl(var(--difficulty-architect-bg))",
+    color: "hsl(var(--difficulty-text))",
+  },
+};
 
 type OtherLevelsCardProps = {
   adventure: Adventure;
@@ -21,7 +40,7 @@ export const OtherLevelsCard = ({
   return (
     <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
       <p className="font-sans text-sm font-semibold tracking-wide text-primary mb-4">
-        More levels
+        More Levels
       </p>
 
       <ul className="space-y-2">
@@ -29,15 +48,15 @@ export const OtherLevelsCard = ({
           <li key={level.id}>
             <Link
               to={`/adventures/${adventure.id}/levels/${level.id}`}
-              className="group flex items-center gap-3 rounded-md py-1 text-sm transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+              className="group inline-flex w-full items-center gap-2 rounded-sm border px-2.5 py-1.5 text-xs no-underline transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+              style={pillStyle[level.difficulty]}
             >
-              <DifficultyBadge difficulty={level.difficulty} showDot />
-              <span className="min-w-0 flex-1 truncate text-foreground group-hover:text-primary transition-colors">
-                {level.name}
-              </span>
+              <span className="shrink-0 uppercase font-medium">{level.difficulty}</span>
+              <span aria-hidden="true" className="opacity-40">-</span>
+              <span className="flex-1 truncate">{level.name}</span>
               <ArrowRight
-                size={12}
-                className="shrink-0 text-[hsl(var(--text-faint))] group-hover:text-primary transition-colors"
+                size={11}
+                className="shrink-0 opacity-50 transition-opacity group-hover:opacity-100"
                 aria-hidden="true"
               />
             </Link>
@@ -45,16 +64,15 @@ export const OtherLevelsCard = ({
         ))}
 
         {upcoming.map((level) => (
-          <li
-            key={`upcoming-${level.difficulty}-${level.name}`}
-            className="flex items-center gap-3 py-1 text-sm opacity-60"
-          >
-            <DifficultyBadge difficulty={level.difficulty} showDot />
-            <span className="min-w-0 flex-1 truncate text-[hsl(var(--text-secondary))]">
-              {level.name}
-            </span>
-            <span className="font-mono text-[0.65rem] uppercase tracking-widest text-[hsl(var(--text-faint))] shrink-0">
-              Soon
+          <li key={`upcoming-${level.difficulty}-${level.name}`}>
+            <span
+              className="inline-flex w-full items-center gap-2 rounded-sm border px-2.5 py-1.5 text-xs opacity-50"
+              style={pillStyle[level.difficulty]}
+            >
+              <span className="shrink-0 uppercase font-medium">{level.difficulty}</span>
+              <span aria-hidden="true" className="opacity-40">-</span>
+              <span className="flex-1 truncate">{level.name}</span>
+              <span className="shrink-0 text-[0.6rem] uppercase tracking-widest">Soon</span>
             </span>
           </li>
         ))}

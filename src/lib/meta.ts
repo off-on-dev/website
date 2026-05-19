@@ -9,14 +9,6 @@ export const interBoldPreload: ReturnType<LinksFunction> = [
   { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-700-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
 ];
 
-/**
- * Shared font preload for pages whose LCP element uses Syne 700 (hero h1 with font-heading).
- * Import and spread into the route module's `links` export.
- */
-export const syneBoldPreload: ReturnType<LinksFunction> = [
-  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/syne-latin-700-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
-];
-
 type PageMetaOptions = {
   title: string;
   description: string;

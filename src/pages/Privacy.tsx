@@ -1,15 +1,13 @@
 import type { JSX } from "react";
-import type { LinksFunction, MetaFunction } from "react-router";
+import type { MetaFunction } from "react-router";
 import { Link } from "react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
-import { buildPageMeta, syneBoldPreload } from "@/lib/meta";
+import { buildPageMeta } from "@/lib/meta";
 
 // Last reviewed date - update this whenever the policy content changes
 const LAST_UPDATED = "13 April 2026";
-
-export const links: LinksFunction = () => syneBoldPreload;
 
 export const meta: MetaFunction = () =>
   buildPageMeta({

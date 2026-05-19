@@ -1,0 +1,74 @@
+{
+  "id": "intermediate",
+  "name": "Outcome by Cohort",
+  "difficulty": "Intermediate",
+  "learnings": [
+    "How evaluation context works in OpenFeature: passing runtime attributes (user ID, cohort, region) to influence flag resolution",
+    "How to configure flagd targeting rules to route specific cohorts to specific flag variants without code changes",
+    "Why cohort-based rollouts reduce blast radius: only the targeted segment sees the new behaviour",
+    "How to verify targeting is working correctly by inspecting flag evaluation results per context"
+  ],
+  "codespacesUrl": "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?devcontainer_path=.devcontainer%2F04-blind-by-design_02-intermediate%2Fdevcontainer.json&quickstart=1",
+  "discussionUrl": "https://community.open-ecosystem.com/t/outcome-by-cohort-adventure-04-intermediate/1485",
+  "intro": [
+    "Populate all three OpenFeature evaluation-context layers on a Spring Boot service and register a custom Hook.",
+    "Transaction context (request-scoped) is populated by a Spring HandlerInterceptor that reads ?species= and clears on afterCompletion so values don't leak across pooled threads. Global context (process-scoped) is set once at startup from the COUNTRY environment variable. Invocation context (call-site) is passed as the third argument to client.getStringDetails(), carrying the per-evaluation dose attribute. An Audit Hook fires after every evaluation and writes an [AUDIT] log line with a fixed PII-safe attribute allowlist.",
+    "The broken-state lab already has the SDK and flagd provider wired in Resolver.RPC mode. The targeting in flags.json carries three branches but none of those attributes are in the eval context yet, so every request lands on the default variant. Your job: make the targeting fire by wiring the three context layers and the audit hook."
+  ],
+  "backstory": [
+    "The trial is widening. Subjects from outside the lab's local population are getting the wrong reading on their chart, and the lab director has just walked in holding a stack of complaint forms. She wants the audit log to tell her exactly which vision_state the lab recorded for which subject, and she wants the lab to read the chart properly before it records any more bad readings.",
+    "What differs between subjects is the observed outcome: some have a biology that responds enhancedly to the same serum, some absorb less or more than the protocol's standard dose, and the trial is registered in different jurisdictions with different baselines. Your shift: teach the lab to read each subject's species off the request, attach the trial's country of registration to the global context, pass the dose as invocation context at evaluation time, and register an audit hook."
+  ],
+  "architectureDiagram": "spring_boot_openfeature",
+  "architecture": [
+    "The lab and a flagd sidecar run as siblings in the devcontainer's compose stack. The OpenFeature client uses Resolver.RPC to reach flagd:8013; flagd watches flags.json and serves evaluations from it.",
+    "Three context layers merge before flagd evaluates the targeting rules: global context (country, set at startup), transaction context (species, set per request by the interceptor), and invocation context (dose, passed at the call site). Precedence on conflict: invocation > transaction > global."
+  ],
+  "objective": [
+    "curl /?species=zyklop returns 'enhanced' regardless of dose or country",
+    "With COUNTRY=de, curl /?dose=standard returns 'sharp'; with COUNTRY=at, the same call falls through to the default",
+    "curl /?dose=underdose returns 'clouded'; curl /?species=zyklop&dose=underdose returns 'enhanced' (species takes precedence)",
+    "Every evaluation produces an [AUDIT] log line naming the flag, the resolved variant, the reason, and the attributes that drove the outcome",
+    "The response is never 'untreated' (that fallback only fires when the SDK cannot reach flagd)"
+  ],
+  "toolbox": [
+    {
+      "name": "Java 21 (Temurin)",
+      "description": "pre-installed in the devcontainer"
+    },
+    {
+      "name": "./mvnw",
+      "description": "Spring Boot Maven Wrapper, no global Maven install required"
+    },
+    {
+      "name": "curl",
+      "description": "sends requests to `http://localhost:8080/` to test each targeting branch",
+      "url": "https://curl.se/"
+    },
+    {
+      "name": "jq",
+      "description": "pretty-prints the JSON evaluation details",
+      "url": "https://jqlang.org/"
+    }
+  ],
+  "howToPlay": [
+    "Prefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (VS Code, JetBrains IDEs, and others). The devcontainer config will be detected automatically.",
+    "Wait ~2-3 minutes for the Java toolchain to install.",
+    "Start the lab: run `./mvnw spring-boot:run` or click Run on Laboratory in the Spring Boot Dashboard. Confirm the broken state: `curl 'http://localhost:8080/?species=zyklop'` returns 'blurry' (no targeting fires yet). Stop the app and start fixing.",
+    "Create a Spring HandlerInterceptor named SpeciesInterceptor: in preHandle, read ?species= and put it on the transaction context; in afterCompletion, clear the context so values do not leak across pooled threads. Register a ThreadLocalTransactionContextPropagator once on the OpenFeature API in a static initialiser.",
+    "Update OpenFeatureConfig to: register SpeciesInterceptor with Spring, read the COUNTRY environment variable and set it as the global evaluation context, and register AuditHook globally on the OpenFeature API.",
+    "Update Trial so each evaluation passes dose on the invocation context ('standard' by default, overridable via ?dose=).",
+    "Implement AuditHook: in after(), write an [AUDIT] log line with flag name, variant, reason, and a fixed allowlist of attributes (species, country, dose). Log at WARN when the variant is 'clouded', otherwise INFO. Implement error() so failed evaluations are not silent.",
+    "Run the lab with `./run-germany.sh` (COUNTRY=de) or `./run-austria.sh` (COUNTRY=at). Test each targeting branch: /?species=zyklop returns 'enhanced', /?dose=standard returns 'sharp' in Germany, /?dose=underdose returns 'clouded', /?species=zyklop&dose=underdose returns 'enhanced' (species wins).",
+    "Run `./verify.sh`. If it passes, follow the on-screen instructions to commit your changes and generate a Certificate of Completion. Paste the certificate into the challenge thread to claim your victory."
+  ],
+  "discussionPosts": [
+    {
+      "username": "theharithsa",
+      "cooked": "Intermediate Challenge Accepted and Completed!! These challenges are getting more fun with each new one. I’m learning many in-depth things about OSS and Observability. --- CERTIFICATE START --- Adventure: 04-blind-by-design Level: intermediate User: Harithsa, Vishruth Repo: theharithsa/open-ecosystem-challenges Date: Tue May 19 04:30:36 AM UTC 2026 Url: --- CERTIFICATE END --- I encountered one issue when pushing the final changes to GitHub. The application generates an app.log file, which needs to be added to the .gitignore file before committing the changes to Git. Otherwise, the ./verify.sh script incorrectly reports uncommitted changes in the repository.",
+      "created_at": "2026-05-19T04:37:22.351Z",
+      "topicUrl": "https://community.open-ecosystem.com/t/outcome-by-cohort-adventure-04-intermediate/1485"
+    }
+  ],
+  "totalReplies": 1
+}

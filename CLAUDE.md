@@ -218,8 +218,7 @@ without exception. They exist to prevent debugging by accumulation.
 - `data-difficulty` attribute on `DifficultyBadge`. It is used for CSS targeting of badge text color.
 - `contributor-pill` class on `ContributorBadge`. Scopes light mode overrides: transparent background with slate border instead of the near-invisible `bg-primary/5`.
 - `contributor-pill-glow` class on `ContributorBadge` (applied via `glow` prop). Static amber box-shadow glow, sized for a small pill. Used only on `ChallengeDetail` -- not in `AdventureCard`.
-- `contributor-name-link` class on the contributor name `<a>` in `Sponsors.tsx`. Scopes light mode hover override: `hover:text-primary` (amber) fails contrast outside `<nav>`/`<footer>` where structural rules don't apply.
-- `adventure-link` class on the adventure list links in `Sponsors.tsx`. Scopes light mode overrides: readable `muted-foreground` base and `foreground-hover` on hover, replacing the inaccessible amber `hover:text-primary`.
+- `docs-ext-link` class on all inline prose links site-wide. Handles both modes: dark mode foreground text with amber underline, hover to full `#ffc034`; light mode near-black text with `currentColor` underline, hover to `--link-hover-light` (`hsl(41 100% 25%)` dark amber, ~5.5:1 contrast). Used in `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`, and `ChallengeDetail`. Do not use `hover:text-primary` or `hover:underline` on inline links — use `docs-ext-link` instead.
 
 ---
 
@@ -412,7 +411,7 @@ Check the following on every component you write or modify.
   add a test that reads the component file and asserts it imports from the
   correct path and does not import from the wrong one.
 - Prerender tests live in `src/test/prerender.test.ts` and require a production build to exist. Always run `npm run build` before `npm test` if prerender tests are included. These tests assert that each prerendered index.html contains exactly one `<title>` tag with the correct page-specific content.
-- Playwright smoke tests live in `e2e/smoke.spec.ts` and also require a production build. Run `npm run build` then `npm run test:e2e`. These tests verify each prerendered route loads in a real browser without JS errors, that `main#main-content` is present, that hydration completed (theme toggle, consent banner, client-side navigation all work), and that the skip nav is the first Tab stop. When adding a new prerendered route, add it to the `ROUTES` array in `e2e/smoke.spec.ts`. Do not add Playwright tests for logic that Vitest already covers.
+- Playwright smoke tests live in `e2e/smoke.spec.ts` and also require a production build. Run `npm run build` then `npm run test:e2e`. These tests verify each prerendered route loads in a real browser without JS errors, that `main#main-content` is present, that hydration completed (theme toggle, consent banner, client-side navigation all work), and that the skip nav is the first Tab stop. The axe-core audit runs with tags `["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"]` in both dark and light mode. Never remove `wcag22aa` from this list, and always include it alongside `wcag21aa` when updating the tag set. When adding a new prerendered route, add it to the `ROUTES` array in `e2e/smoke.spec.ts`. Do not add Playwright tests for logic that Vitest already covers.
 - SEO tests live in `src/test/seo.test.ts` and require a production build. They assert that every prerendered route has a `<meta name="description">` within 160 chars, all `og:*` tags (`og:title`, `og:description`, `og:type`, `og:url`, `og:image`, `og:image:width`, `og:image:height`, `og:image:alt`, `og:site_name`, `og:locale`), all `twitter:*` tags (`twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`, `twitter:image:alt`), and a correct `<link rel="canonical">`. When adding a new prerendered route, add it to the `ROUTES` array in `src/test/seo.test.ts`.
 - When a page renders multiple navigation landmarks (e.g. `Navbar`, `Footer`, and an in-page nav), use `within` from `@testing-library/react` to scope queries to the correct landmark before asserting link destinations. This prevents false positives when the same link text appears in more than one `<nav>`. Example: `const nav = screen.getByRole("navigation", { name: "Helpful links" }); within(nav).getByRole("link", { name: /Adventures/ })`.
 - **Testing hooks with dynamic imports:** Vitest's dynamic-import mock runner (`vi.mock("@/data/...")`) has a multi-second first-call initialization cost per test run. Never use `vi.mock` for a dynamic import that is called inside a hook and then test that hook directly — the first async tests will time out. The pattern that works: export a `DiscussionDataLoader`-style type and a default loader from the hook; accept it as an optional second argument; tests inject `vi.fn().mockResolvedValue(data)` via that argument. `vi.spyOn` on a same-module export does NOT intercept internal calls in ES module context and is not a valid alternative. See `src/hooks/useDiscussionPosts.ts` for the reference implementation.
@@ -652,22 +651,24 @@ State the result of each check explicitly before finishing a task.
 2. **Run tests:** `npm test` must pass with zero failures. No tests skipped or
    commented out.
 
-3. **Run build:** `npm run build` must complete with no TypeScript errors or
+3. **Run e2e and a11y tests:** `npm run build && npm run test:e2e` must pass with zero failures. This is mandatory before every commit, not just in CI. Playwright tests cover page titles, hydration, accessibility (axe), and client-side navigation — none of these are covered by Vitest alone.
+
+4. **Run build:** `npm run build` must complete with no TypeScript errors or
    bundling failures. Run this for every non-trivial change, not just those that touch types or interfaces.
 
-4. **Re-read every file you changed:** After making changes, re-read the full
+5. **Re-read every file you changed:** After making changes, re-read the full
    affected section of each modified file to verify the final state is correct.
    Never assume an edit landed correctly without checking.
 
-5. **Check all call sites:** If you changed a function signature, component props,
+6. **Check all call sites:** If you changed a function signature, component props,
    or exported type, search for all usages and confirm they are updated.
 
-6. **Check imports:** Every import must resolve. No unused imports. No circular
+7. **Check imports:** Every import must resolve. No unused imports. No circular
    dependencies introduced.
 
-7. **Verify at three viewports:** All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px). Always test against the production build (`npm run build && npm run preview`), never the dev server.
+8. **Verify at three viewports:** All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px). Always test against the production build (`npm run build && npm run preview`), never the dev server.
 
-8. **Check discussion data on every PR:** If the PR adds or modifies adventure levels, verify that every level's Discourse topic ID and URL are present in the `DISCUSSION_TOPICS` map in `vite.config.ts`. Run `npm run build` so `src/data/discussion-data.json` is regenerated with any new topics. A missing entry means the discussion feed will silently show no posts for that level.
+9. **Check discussion data on every PR:** If the PR adds or modifies adventure levels, verify that every level's Discourse topic ID and URL are present in the `DISCUSSION_TOPICS` map in `vite.config.ts`. Run `npm run build` so `src/data/discussion-data.json` is regenerated with any new topics. A missing entry means the discussion feed will silently show no posts for that level.
 
 ### Before writing any code
 

@@ -1,7 +1,8 @@
 import type { JSX } from "react";
 import { Link } from "react-router";
+import { Zap } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
-import { COMMUNITY_URL, BRAND_NAME, LINKEDIN_URL, BLUESKY_URL, X_URL, CURRENT_YEAR, CONTACT_EMAIL } from "@/data/constants";
+import { BRAND_NAME, BRAND_SLOGAN_PARTS, COMMUNITY_URL, CONTACT_EMAIL, CURRENT_YEAR, LINKEDIN_URL, BLUESKY_URL, X_URL } from "@/data/constants";
 import logoDark from "@/assets/offon-logo-dark-color.svg";
 import logoLight from "@/assets/offon-logo-light-color.svg";
 
@@ -35,7 +36,6 @@ export const Footer = (): JSX.Element => {
                 <Link to="/about" className={linkCls}>About</Link>
                 <Link to="/sponsors" className={linkCls}>Sponsors</Link>
                 <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" target="_blank" rel="noopener noreferrer" className={linkCls}>Propose an Adventure Idea<span className="sr-only"> (opens in new tab)</span></a>
-                <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges" target="_blank" rel="noopener noreferrer" className={linkCls}>Challenges on GitHub<span className="sr-only"> (opens in new tab)</span></a>
               </div>
             </nav>
             {/* Community */}
@@ -43,11 +43,9 @@ export const Footer = (): JSX.Element => {
               <p className="text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">Community</p>
               <div className="flex flex-col">
                 <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className={linkCls}>Hub<span className="sr-only"> (opens in new tab)</span></a>
-                <a href={`${COMMUNITY_URL}/c/community-voices/38`} target="_blank" rel="noopener noreferrer" className={linkCls}>Community Voices<span className="sr-only"> (opens in new tab)</span></a>
-                <a href={`${COMMUNITY_URL}/c/general/q-a/10`} target="_blank" rel="noopener noreferrer" className={linkCls}>Q&A<span className="sr-only"> (opens in new tab)</span></a>
                 <a href={`${COMMUNITY_URL}/t/code-of-conduct/31/1`} target="_blank" rel="noopener noreferrer" className={linkCls}>Code of Conduct<span className="sr-only"> (opens in new tab)</span></a>
-                <a href={`${COMMUNITY_URL}/t/posting-guidelines/30`} target="_blank" rel="noopener noreferrer" className={linkCls}>Posting Guidelines<span className="sr-only"> (opens in new tab)</span></a>
                 <Link to="/privacy" className={linkCls}>Privacy Policy</Link>
+                <Link to="/accessibility" className={linkCls}>Accessibility</Link>
                 <a href={`mailto:${CONTACT_EMAIL}`} className={linkCls}>Contact</a>
               </div>
             </nav>
@@ -58,7 +56,14 @@ export const Footer = (): JSX.Element => {
       <div className="border-t border-[hsl(var(--surface-border))] py-4">
         <div className="mx-auto max-w-6xl flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
           <span className="text-xs text-[hsl(var(--text-faint))] shrink-0 sm:order-1">© {CURRENT_YEAR} {BRAND_NAME}. All rights reserved.</span>
-          <span className="text-xs text-[hsl(var(--text-faint))] text-center sm:order-2 sm:flex-1">Vendor-neutral <span aria-hidden="true">·</span> Open source <span aria-hidden="true">·</span> Community-driven</span>
+          <span className="inline-flex items-center justify-center gap-1.5 text-xs text-[hsl(var(--text-faint))] sm:order-2 sm:flex-1">
+              <Zap size={10} aria-hidden="true" />
+              <span>{BRAND_SLOGAN_PARTS[0]}</span>
+              <Zap size={10} aria-hidden="true" />
+              <span>{BRAND_SLOGAN_PARTS[1]}</span>
+              <Zap size={10} aria-hidden="true" />
+              <span>{BRAND_SLOGAN_PARTS[2]}</span>
+            </span>
           <div className="flex items-center gap-3 shrink-0 sm:order-3">
             <a
               href={LINKEDIN_URL}

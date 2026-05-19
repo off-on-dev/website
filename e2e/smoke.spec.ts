@@ -6,11 +6,12 @@ import AxeBuilder from "@axe-core/playwright";
 type RouteSpec = { path: string; title: RegExp };
 
 const ROUTES: RouteSpec[] = [
-  { path: "/", title: /OffOn - Vendor-neutral/ },
+  { path: "/", title: /OffOn - Vendor-Neutral/ },
   { path: "/about", title: /Building the contributors/ },
   { path: "/sponsors", title: /Sponsorship and Independence/ },
   { path: "/handbook", title: /Handbook/ },
   { path: "/privacy", title: /Privacy Policy/ },
+  { path: "/accessibility", title: /Accessibility Statement/ },
   { path: "/404", title: /Page Not Found/ },
   { path: "/adventures", title: /Adventures - Hands-on open source challenges/ },
   { path: "/adventures/echoes-lost-in-orbit", title: /Echoes Lost in Orbit/ },
@@ -25,6 +26,9 @@ const ROUTES: RouteSpec[] = [
   { path: "/adventures/the-ai-observatory/levels/beginner", title: /Calibrating the Lens/ },
   { path: "/adventures/the-ai-observatory/levels/intermediate", title: /The Distracted Pilot/ },
   { path: "/adventures/the-ai-observatory/levels/expert", title: /The Noise Filter/ },
+  { path: "/adventures/blind-by-design", title: /Blind by Design/ },
+  { path: "/adventures/blind-by-design/levels/beginner", title: /Stand up the Lab/ },
+  { path: "/adventures/blind-by-design/levels/intermediate", title: /Outcome by Cohort/ },
 ];
 
 test.describe("every prerendered route", () => {
@@ -48,7 +52,7 @@ test.describe("every prerendered route", () => {
       // sync) to settle so axe sees stable computed styles.
       await page.waitForLoadState("networkidle");
       const a11y = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "best-practice"])
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"])
         .analyze();
       expect(a11y.violations, `axe violations on ${path}`).toEqual([]);
     });
@@ -69,7 +73,7 @@ test.describe("every prerendered route (light mode)", () => {
       // colors from the initial dark-class server render.
       await page.waitForLoadState("networkidle");
       const a11y = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "best-practice"])
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"])
         .analyze();
       expect(a11y.violations, `axe violations on ${path} (light mode)`).toEqual([]);
     });
@@ -120,7 +124,7 @@ test.describe("hydration and interactivity", () => {
 
   test("client-side navigation updates URL and title without a full reload", async ({ page }) => {
     await page.goto("/");
-    await expect(page).toHaveTitle(/OffOn - Vendor-neutral/);
+    await expect(page).toHaveTitle(/OffOn - Vendor-Neutral/);
 
     await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "About" }).click();
 

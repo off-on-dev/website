@@ -10,6 +10,22 @@ vi.mock('@/components/DiscussionSection', () => ({
   DiscussionSection: () => <div data-testid="discussion" />,
 }));
 
+vi.mock('@/components/CommunitySidebar', () => ({
+  CommunitySidebar: () => <div data-testid="community-sidebar" />,
+}));
+
+vi.mock('@/hooks/useLevelData', () => ({
+  useLevelData: () => ({
+    intro: ["Test intro paragraph"],
+    backstory: ["Test backstory"],
+    architecture: ["Test architecture"],
+    objective: ["Objective 1"],
+    toolbox: [{ name: "kubectl", description: "CLI tool" }],
+    howToPlay: [{ title: "Step 1", body: "Do something" }],
+    verification: { command: "./verify.sh", description: "Run verification" },
+  }),
+}));
+
 const adventure = ADVENTURES[0];
 const level = adventure.levels[0];
 
@@ -101,7 +117,7 @@ describe('ChallengeDetail - heading structure', () => {
     expect(screen.getByRole('heading', { level: 2, name: 'Find Challenges by Technology' })).toBeTruthy();
   });
 
-  it('does not render "Key Learnings" as any heading level', () => {
+  it('renders "Key Learnings" as an h2 heading in structured layout', () => {
     render(
       <ConsentProvider>
         <MemoryRouter initialEntries={[`/adventures/${adventure.id}/levels/${level.id}`]}>
@@ -111,7 +127,7 @@ describe('ChallengeDetail - heading structure', () => {
         </MemoryRouter>
       </ConsentProvider>
     );
-    expect(screen.queryByRole('heading', { name: 'Key Learnings' })).toBeNull();
+    expect(screen.getByRole('heading', { level: 2, name: 'Key Learnings' })).toBeTruthy();
   });
 });
 

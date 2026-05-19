@@ -1,5 +1,5 @@
 import { type JSX } from "react";
-import type { LinksFunction, MetaFunction } from "react-router";
+import type { MetaFunction } from "react-router";
 import { ArrowUpRight } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
@@ -9,15 +9,13 @@ import { CommunitySection } from "@/components/CommunitySection";
 import { SponsorStrip } from "@/components/SponsorStrip";
 import { BottomCTA } from "@/components/BottomCTA";
 import { Footer } from "@/components/Footer";
-import { SITE_URL, BRAND_NAME } from "@/data/constants";
-import { buildPageMeta, syneBoldPreload } from "@/lib/meta";
-
-export const links: LinksFunction = () => syneBoldPreload;
+import { BRAND_NAME, BRAND_SHORT_DESCRIPTION, BRAND_SLOGAN, SITE_URL } from "@/data/constants";
+import { buildPageMeta } from "@/lib/meta";
 
 export const meta: MetaFunction = () =>
   buildPageMeta({
-    title: `${BRAND_NAME} - Vendor-neutral. Open Source. Community Driven.`,
-    description: "A vendor-neutral community for open source enthusiasts. Learn through hands-on challenges, share what you know, and connect with people who love open source.",
+    title: `${BRAND_NAME} - ${BRAND_SLOGAN}`,
+    description: BRAND_SHORT_DESCRIPTION,
     url: SITE_URL,
   });
 

@@ -13,22 +13,26 @@ export const WalkthroughSection = ({ steps }: WalkthroughSectionProps): JSX.Elem
     <ol className="space-y-5">
       {steps.map((step, i) => (
         <li
-          key={step.title}
-          className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6"
+          key={i}
+          className="rounded-lg border border-[hsl(var(--surface-border))] bg-background/40 p-5"
         >
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-start gap-4">
             <span
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold"
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold mt-0.5"
               aria-hidden="true"
             >
               {i + 1}
             </span>
-            <h3 className="font-heading text-lg font-semibold text-foreground">
-              {step.title}
-            </h3>
-          </div>
-          <div className="ml-11">
-            <MarkdownContent source={step.body} />
+            <div className="min-w-0 flex-1">
+              {step.title && (
+                <h3 className="text-sm font-semibold text-foreground mb-2">
+                  {step.title}
+                </h3>
+              )}
+              <div className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+                <MarkdownContent source={step.body} />
+              </div>
+            </div>
           </div>
         </li>
       ))}
