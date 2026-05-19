@@ -27,5 +27,7 @@ export default {
     "/adventures/the-ai-observatory/levels/expert",
     "/adventures/blind-by-design",
     "/adventures/blind-by-design/levels/beginner",
+    "/adventures/lex-imperfecta",
+    "/adventures/lex-imperfecta/levels/beginner",
   ],
 } satisfies Config;

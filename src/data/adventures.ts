@@ -1,5 +1,35 @@
 import { COMMUNITY_URL } from "@/data/constants";
 
+/** A tool that ships pre-configured inside the level's Codespace. */
+export type ToolboxItem = {
+  name: string;
+  description: string;
+}
+
+/** One step in the Walkthrough section. body is rendered as markdown so it can contain code blocks and links. */
+export type WalkthroughStep = {
+  title: string;
+  body: string;
+}
+
+/** Compact card shown beneath the Walkthrough, summarising how to confirm completion. */
+export type VerificationInfo = {
+  command: string;
+  description: string;
+}
+
+/** Mock entry in the "Top players" leaderboard inside the CommunitySidebar. */
+export type TopPlayer = {
+  username: string;
+  count: number;
+}
+
+/** Placeholder for a level that hasn't shipped yet. Rendered in the "More levels" sidebar card. */
+export type UpcomingLevel = {
+  name: string;
+  difficulty: "Beginner" | "Intermediate" | "Expert";
+}
+
 /** A single challenge level within an adventure. Difficulty affects visual presentation and prerequisite expectations. */
 export type AdventureLevel = {
   id: string;
@@ -8,6 +38,26 @@ export type AdventureLevel = {
   learnings: string[];
   codespacesUrl: string;
   discussionUrl: string;
+  // Short narrative hook shown directly under the page title.
+  hook?: string;
+  // Concrete acceptance criteria shown as the "Your task" hero card.
+  objectives?: string[];
+  // Audience line shown inside the Start CTA card (e.g. "Best for platform engineers, SREs…").
+  audience?: string;
+  // Long-form narrative shown as a styled scenario block under the hero.
+  scenario?: string;
+  // Plain-prose architectural context for the challenge.
+  architecture?: string;
+  // Tools pre-installed in the Codespace, rendered as a row of cards.
+  toolbox?: ToolboxItem[];
+  // Numbered walkthrough rendered as a vertical stepper.
+  howToPlay?: WalkthroughStep[];
+  // Verification card rendered as the final section.
+  verification?: VerificationInfo;
+  // Mock community stats shown in the CommunitySidebar. Real data will replace
+  // these once we aggregate certificate posts and cross-challenge contribution.
+  solvedCount?: number;
+  topPlayers?: TopPlayer[];
 }
 
 /** An adventure with multiple difficulty levels, grouped by theme and monthly release. */
@@ -19,6 +69,9 @@ export type Adventure = {
   tags: string[];
   levels: AdventureLevel[];
   contributor?: { name: string; url?: string; about?: string };
+  // Mock placeholders for levels that haven't shipped yet. Rendered in the
+  // "More levels" sidebar card alongside actual sibling levels.
+  upcomingLevels?: UpcomingLevel[];
 }
 
 const CODESPACES_BASE = "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges";
@@ -156,6 +209,78 @@ export const ADVENTURES: Adventure[] = [
         ],
         codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F04-blind-by-design_01-beginner%2Fdevcontainer.json&quickstart=1`,
         discussionUrl: `${COMMUNITY_URL}/t/wire-openfeature-flagd-into-a-spring-boot-service-with-zero-setup-adventure-04-beginner/1419`,
+      },
+    ],
+  },
+  {
+    id: "lex-imperfecta",
+    title: "Lex Imperfecta",
+    month: "JUN 2026",
+    story: "The Republic's legal system is in disarray. Workloads run unchecked, required labels go missing, and privileged containers slip through the gates. As a newly appointed Praetor, your mission is to restore order by fixing broken Kyverno policies and enforcing proper admission control.",
+    tags: ["Kyverno", "Kubernetes", "Falco", "Policy Reporter", "Argo CD"],
+    contributor: KATHARINA_SICK,
+    upcomingLevels: [
+      { name: "The Senatus Consultum", difficulty: "Intermediate" },
+      { name: "The Edict of the Praetor", difficulty: "Expert" },
+    ],
+    levels: [
+      {
+        id: "beginner",
+        name: "The Twelve Tables",
+        difficulty: "Beginner",
+        learnings: [
+          "How Kyverno ClusterPolicies and validate rules work",
+          "The difference between Audit and Enforce enforcement modes",
+          "How to write and interpret Kyverno deny conditions",
+          "How to use custom label keys to enforce workload identity",
+        ],
+        codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F00-lex-imperfecta_01-beginner%2Fdevcontainer.json&quickstart=1`,
+        // TODO: replace with the real Lex Imperfecta thread once it exists. Pointing at the
+        // Echoes Lost in Orbit beginner thread for the demo so the CommunitySidebar populates.
+        discussionUrl: `${COMMUNITY_URL}/t/adventure-01-echoes-lost-in-orbit-beginner-broken-echoes/117/37`,
+        hook: "Two Kyverno policies guard the gates of the Republic's cluster. Both are misconfigured, and the wrong workloads are slipping through.",
+        objectives: [
+          "Workloads missing the required label are blocked at admission",
+          "Workloads running as privileged containers are blocked at admission",
+          "All other workloads deploy and run successfully",
+        ],
+        audience: "Best for platform engineers, SREs, and developers new to Kubernetes security. No prior Kyverno experience needed.",
+        scenario:
+          "The Republic's legal scholars have been busy, perhaps too busy. In their haste to codify the Twelve Tables, the foundation of the Republic's legal system, they introduced errors that now threaten the city's order. Workloads that should be blocked are running freely, and workloads that should be allowed are being turned away at the gates. Another scholar left a note: 'I tried to set up policies for privileged containers and required labels, but something's off. I can't figure out why the wrong things are getting through.' Your mission is to investigate the Kyverno policies and restore proper admission control before chaos reaches the city.",
+        architecture:
+          "The defining principle of the Twelve Tables was that Roman law was enforced at the gates, before a citizen could act, not after the damage was done. Kubernetes admission control works exactly the same way: Kyverno intercepts every request to create or update a workload and checks it against your policies before it reaches the cluster. A misconfigured policy doesn't just fail to enforce. It fails silently, letting non-compliant workloads slip through unnoticed.\n\nYour Codespace comes with a Kubernetes cluster and Kyverno pre-installed. Two `ClusterPolicy` resources are already deployed, but both are misconfigured. The policies live in `manifests/policies/`. You will edit them directly and re-apply with `kubectl`. The pods in `manifests/pods/` are there for reference only.",
+        toolbox: [
+          { name: "kubectl", description: "Apply and inspect cluster resources" },
+          { name: "kyverno CLI", description: "Test and lint policies locally before applying" },
+          { name: "k9s", description: "Explore cluster resources in a terminal UI" },
+        ],
+        howToPlay: [
+          {
+            title: "Start your challenge",
+            body: "Click **Play on GitHub** above. Wait a couple of minutes for the environment to initialize. You can follow progress with `Cmd/Ctrl + Shift + P` → `View Creation Log`.",
+          },
+          {
+            title: "Explore the cluster",
+            body: "When your Codespace is ready, four pods are already running, or trying to. Open a terminal and check what's going on:\n\n```bash\nkubectl get pods\n```\n\nInspect why a pod was blocked or admitted:\n\n```bash\nkubectl describe pod <pod-name>\n```\n\nCheck the policies that are in place:\n\n```bash\nkubectl get clusterpolicies\nkubectl get clusterpolicy require-labels -o yaml\nkubectl get clusterpolicy no-privileged-containers -o yaml\n```\n\nYou can also launch **k9s** for a terminal UI view of all cluster resources:\n\n```bash\nk9s\n```",
+          },
+          {
+            title: "Fix the policies",
+            body: "Both broken policies are in `manifests/policies/`. Read them carefully. Each has a different kind of misconfiguration.\n\nBefore applying to the cluster, use the `kyverno` CLI to test your policy changes locally against the workload manifests:\n\n```bash\nkyverno apply manifests/policies/require-labels.yaml --resource manifests/pods/missing-labels.yaml\nkyverno apply manifests/policies/no-privileged-containers.yaml --resource manifests/pods/privileged.yaml\n```\n\nOnce you're happy with your changes, re-apply everything:\n\n```bash\nmake apply\n```\n\nHelpful documentation:\n\n- [Kyverno Policy Validation](https://kyverno.io/docs/writing-policies/validate/)\n- [Kyverno Enforcement Modes](https://kyverno.io/docs/writing-policies/policy-settings/#validation-failure-action)\n- [Kyverno Deny Rules](https://kyverno.io/docs/writing-policies/validate/#deny-rules)",
+          },
+        ],
+        verification: {
+          command: "./verify.sh",
+          description:
+            "Once you think you've solved the challenge, run the verification script. If it fails it'll tell you which checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion.",
+        },
+        // Mock data for the demo. Replace with real aggregates once we parse
+        // certificate posts and cross-challenge contributor counts.
+        solvedCount: 24,
+        topPlayers: [
+          { username: "KatharinaSick", count: 12 },
+          { username: "ams0", count: 9 },
+          { username: "theharithsa", count: 7 },
+        ],
       },
     ],
   },

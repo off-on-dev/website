@@ -788,6 +788,32 @@ Uses `aria-live="polite"` so screen readers announce the age values when they up
 
 ---
 
+### `MarkdownContent`
+
+`src/components/MarkdownContent.tsx`
+
+Renders a Markdown string with `react-markdown` + `remark-gfm`, mapping each element to a themed component. Highlights:
+
+- `h2` headings get a section icon (mapped from heading text in `src/lib/markdown.ts`) and a slugged `id` attribute, so external links can deep-link to a section.
+- `h3` headings that start with `N. ` (e.g. `### 1. Start your challenge`) render as a numbered step chip + title pair, suitable for a How-to-Play sequence.
+- Fenced code blocks render with a hover/focus-visible "Copy" button that uses the clipboard API and flips to "Copied" for 1.5s.
+- Markdown tables render as a responsive grid of cards (`<thead>` hidden) rather than a literal table layout.
+- External links open in a new tab with the standard sr-only "(opens in new tab)" span.
+
+```tsx
+<MarkdownContent source={mdString} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `source` | `string` | Raw Markdown source. Pass an empty string for no content. |
+
+Used by `ChallengeDetail` when the level has a `docFile`. The doc itself lives under `src/content/challenges/<adventure>/<level>.md` and is bundled via an eager `import.meta.glob` in `ChallengeDetail.tsx`. The Markdown should start at `## ` — the page already provides the `<h1>`. Internal headings (`h2`, `h3`) are added to the existing document outline; do not introduce new `<h1>` content in Markdown.
+
+The bundled stack (`react-markdown`, `remark-gfm`, `micromark`, etc.) is code-split into the `ChallengeDetail` route chunk, so it does not affect the main bundle.
+
+---
+
 ### `TechFilterSection`
 
 `src/components/TechFilterSection.tsx`

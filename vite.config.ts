@@ -31,10 +31,19 @@ type RawPost = {
 };
 
 type DiscourseTopicResponse = {
+  posts_count?: number;
   post_stream?: { posts?: RawPost[] };
 };
 
 type StoredPost = RawPost & { topicUrl: string };
+
+/** Per-topic entry in the generated discussion-data.json. */
+type TopicEntry = {
+  posts: StoredPost[];
+  // Total reply count in the source thread (posts_count from Discourse, minus the OP).
+  // Used by the CommunitySidebar to render an accurate "+N more posts in the thread" hint.
+  totalReplies: number;
+};
 
 // Minimum number of characters of real user text a post must contain after
 // removing embeds, images, URLs, and image metadata. Posts below this threshold
@@ -101,7 +110,7 @@ function discourseDataPlugin(): Plugin {
     },
     async buildStart() {
       if (!isBuild) return;
-      const result: Record<string, StoredPost[]> = {};
+      const result: Record<string, TopicEntry> = {};
       await Promise.all(
         Object.entries(DISCUSSION_TOPICS).map(async ([id, topicUrl]) => {
           try {
@@ -111,13 +120,14 @@ function discourseDataPlugin(): Plugin {
               const posts = data.post_stream?.posts ?? [];
               // Skip index 0 (the original challenge post), filter out replies
               // that contain only images or GitHub embeds with no real user text,
-              // then take up to 3. Filtering across all replies rather than
-              // slicing first means we surface the best posts from the thread
-              // rather than being limited to whichever three happened to come first.
-              result[id] = posts
+              // take the most recent up-to-8, then reverse so newest comes first.
+              // Consumers (CommunitySidebar, DiscussionSection) read posts[0] as
+              // the latest activity.
+              const storedPosts = posts
                 .slice(1)
                 .filter((p) => hasSubstantialText(p.cooked))
-                .slice(0, 3)
+                .slice(-8)
+                .reverse()
                 .map((p) => ({
                   username: p.username,
                   // extractPostText removes onebox embeds, images, URLs, and
@@ -127,11 +137,14 @@ function discourseDataPlugin(): Plugin {
                   like_count: p.like_count,
                   topicUrl,
                 }));
+              // posts_count includes the OP; subtract 1 so we report replies only.
+              const totalReplies = Math.max(0, (data.posts_count ?? 0) - 1);
+              result[id] = { posts: storedPosts, totalReplies };
             } else {
-              result[id] = [];
+              result[id] = { posts: [], totalReplies: 0 };
             }
           } catch {
-            result[id] = [];
+            result[id] = { posts: [], totalReplies: 0 };
           }
         })
       );

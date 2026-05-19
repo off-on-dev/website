@@ -10,9 +10,19 @@ type StoredPost = {
 
 export type PostWithAge = StoredPost & { age: string };
 
+export type TopicEntry = {
+  posts: StoredPost[];
+  totalReplies: number;
+};
+
+export type DiscussionResult = {
+  posts: PostWithAge[];
+  totalReplies: number;
+};
+
 // Exported so callers can type test mocks; tests inject a mock loader to
 // avoid Vitest's dynamic-import mock runner initialization cost (~3-6s).
-export type DiscussionDataLoader = () => Promise<Record<string, StoredPost[]>>;
+export type DiscussionDataLoader = () => Promise<Record<string, TopicEntry>>;
 
 function extractTopicId(url: string): string | null {
   const match = url.match(/\/t\/[^/]+\/(\d+)/);
@@ -35,22 +45,24 @@ function timeAgo(dateStr: string, now: number): string {
 // per page, but the file contains all topics.
 const defaultLoader: DiscussionDataLoader = () =>
   import("@/data/discussion-data.json").then(
-    (m) => m.default as Record<string, StoredPost[]>
+    (m) => m.default as Record<string, TopicEntry>
   );
+
+const EMPTY: DiscussionResult = { posts: [], totalReplies: 0 };
 
 /**
  * Loads discussion posts for an adventure level from pre-built static data.
  * Post ages are computed client-side after mount to avoid calling Date.now() during render.
  * @param discussionUrl - Full Discourse topic URL; the numeric topic ID is extracted automatically.
  * @param loader - Optional loader for testing; defaults to dynamically importing discussion-data.json.
- * @returns Array of posts with computed relative age strings (e.g. "2h ago"), or empty array while loading.
+ * @returns Object containing posts (with computed relative age strings) and totalReplies for the source thread.
  */
 export function useDiscussionPosts(
   discussionUrl: string,
   loader: DiscussionDataLoader = defaultLoader,
-): PostWithAge[] {
+): DiscussionResult {
   const topicId = extractTopicId(discussionUrl);
-  const [posts, setPosts] = useState<PostWithAge[]>([]);
+  const [result, setResult] = useState<DiscussionResult>(EMPTY);
 
   useEffect(() => {
     if (!topicId) return;
@@ -58,15 +70,22 @@ export function useDiscussionPosts(
     loader()
       .then((data) => {
         if (cancelled) return;
-        const raw = data[topicId] ?? [];
+        const entry = data[topicId];
+        if (!entry) {
+          setResult(EMPTY);
+          return;
+        }
         const now = Date.now();
-        setPosts(raw.map((p) => ({ ...p, age: timeAgo(p.created_at, now) })));
+        setResult({
+          posts: entry.posts.map((p) => ({ ...p, age: timeAgo(p.created_at, now) })),
+          totalReplies: entry.totalReplies,
+        });
       })
       .catch(() => {
-        if (!cancelled) setPosts([]);
+        if (!cancelled) setResult(EMPTY);
       });
     return () => { cancelled = true; };
   }, [topicId, loader]);
 
-  return posts;
+  return result;
 }

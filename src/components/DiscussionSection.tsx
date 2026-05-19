@@ -16,7 +16,7 @@ type DiscussionSectionProps = {
 };
 
 export const DiscussionSection = ({ discussionUrl }: DiscussionSectionProps): JSX.Element => {
-  const posts = useDiscussionPosts(discussionUrl);
+  const posts = useDiscussionPosts(discussionUrl).posts.slice(0, 3);
 
   const joinLink = (
     <a

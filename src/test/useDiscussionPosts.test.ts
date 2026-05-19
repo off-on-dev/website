@@ -16,29 +16,32 @@ import type { DiscussionDataLoader } from "@/hooks/useDiscussionPosts";
 // ---------------------------------------------------------------------------
 
 const MOCK_DATA = {
-  "42": [
-    {
-      username: "alice",
-      cooked: "<p>Great challenge!</p>",
-      created_at: "2024-06-15T11:15:00Z",
-      like_count: 5,
-      topicUrl: "https://community.open-ecosystem.com/t/topic/42/1",
-    },
-    {
-      username: "bob",
-      cooked: "<p>Loved it.</p>",
-      created_at: "2024-06-15T09:00:00Z",
-      like_count: 0,
-      topicUrl: "https://community.open-ecosystem.com/t/topic/42/2",
-    },
-    {
-      username: "carol",
-      cooked: "<p>Well done everyone.</p>",
-      created_at: "2024-06-13T12:00:00Z",
-      like_count: 1,
-      topicUrl: "https://community.open-ecosystem.com/t/topic/42/3",
-    },
-  ],
+  "42": {
+    posts: [
+      {
+        username: "alice",
+        cooked: "<p>Great challenge!</p>",
+        created_at: "2024-06-15T11:15:00Z",
+        like_count: 5,
+        topicUrl: "https://community.open-ecosystem.com/t/topic/42/1",
+      },
+      {
+        username: "bob",
+        cooked: "<p>Loved it.</p>",
+        created_at: "2024-06-15T09:00:00Z",
+        like_count: 0,
+        topicUrl: "https://community.open-ecosystem.com/t/topic/42/2",
+      },
+      {
+        username: "carol",
+        cooked: "<p>Well done everyone.</p>",
+        created_at: "2024-06-13T12:00:00Z",
+        like_count: 1,
+        topicUrl: "https://community.open-ecosystem.com/t/topic/42/3",
+      },
+    ],
+    totalReplies: 3,
+  },
 };
 
 // Injected via the second argument of useDiscussionPosts instead of mocking
@@ -69,21 +72,21 @@ const URL_NO_ID = "https://community.open-ecosystem.com";
 // ---------------------------------------------------------------------------
 
 describe("useDiscussionPosts - initial state", () => {
-  it("returns an empty array before data loads", () => {
+  it("returns an empty result before data loads", () => {
     const pendingLoader = vi.fn<DiscussionDataLoader>(
-      () => new Promise<Record<string, typeof MOCK_DATA["42"]>>(() => {})
+      () => new Promise<typeof MOCK_DATA>(() => {})
     );
     const { result } = renderHook(() =>
       useDiscussionPosts(URL_42, pendingLoader)
     );
-    expect(result.current).toEqual([]);
+    expect(result.current).toEqual({ posts: [], totalReplies: 0 });
   });
 
-  it("returns an empty array when the URL has no topic ID segment", () => {
+  it("returns an empty result when the URL has no topic ID segment", () => {
     const { result } = renderHook(() =>
       useDiscussionPosts(URL_NO_ID, mockLoader)
     );
-    expect(result.current).toEqual([]);
+    expect(result.current).toEqual({ posts: [], totalReplies: 0 });
   });
 });
 
@@ -96,10 +99,10 @@ describe("useDiscussionPosts - data loading", () => {
     const { result } = renderHook(() =>
       useDiscussionPosts(URL_42, mockLoader)
     );
-    await waitFor(() => expect(result.current.length).toBe(3));
-    expect(result.current[0].username).toBe("alice");
-    expect(result.current[1].username).toBe("bob");
-    expect(result.current[2].username).toBe("carol");
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
+    expect(result.current.posts[0].username).toBe("alice");
+    expect(result.current.posts[1].username).toBe("bob");
+    expect(result.current.posts[2].username).toBe("carol");
   });
 
   it("does not populate posts for an unknown topic ID", async () => {
@@ -107,18 +110,26 @@ describe("useDiscussionPosts - data loading", () => {
       useDiscussionPosts(URL_99, mockLoader)
     );
     await waitFor(() => {
-      expect(result.current).toEqual([]);
+      expect(result.current).toEqual({ posts: [], totalReplies: 0 });
     });
+  });
+
+  it("returns totalReplies from the loaded entry", async () => {
+    const { result } = renderHook(() =>
+      useDiscussionPosts(URL_42, mockLoader)
+    );
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
+    expect(result.current.totalReplies).toBe(3);
   });
 
   it("passes each post's raw fields through unchanged", async () => {
     const { result } = renderHook(() =>
       useDiscussionPosts(URL_42, mockLoader)
     );
-    await waitFor(() => expect(result.current.length).toBe(3));
-    expect(result.current[0].cooked).toBe("<p>Great challenge!</p>");
-    expect(result.current[0].like_count).toBe(5);
-    expect(result.current[0].topicUrl).toBe(
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
+    expect(result.current.posts[0].cooked).toBe("<p>Great challenge!</p>");
+    expect(result.current.posts[0].like_count).toBe(5);
+    expect(result.current.posts[0].topicUrl).toBe(
       "https://community.open-ecosystem.com/t/topic/42/1"
     );
   });
@@ -133,32 +144,32 @@ describe("useDiscussionPosts - age computation", () => {
     const { result } = renderHook(() =>
       useDiscussionPosts(URL_42, mockLoader)
     );
-    await waitFor(() => expect(result.current.length).toBe(3));
-    expect(result.current[0].age).toBe("45m ago");
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
+    expect(result.current.posts[0].age).toBe("45m ago");
   });
 
   it("computes '3h ago' for bob (created 3 hours before now)", async () => {
     const { result } = renderHook(() =>
       useDiscussionPosts(URL_42, mockLoader)
     );
-    await waitFor(() => expect(result.current.length).toBe(3));
-    expect(result.current[1].age).toBe("3h ago");
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
+    expect(result.current.posts[1].age).toBe("3h ago");
   });
 
   it("computes '2d ago' for carol (created 2 days before now)", async () => {
     const { result } = renderHook(() =>
       useDiscussionPosts(URL_42, mockLoader)
     );
-    await waitFor(() => expect(result.current.length).toBe(3));
-    expect(result.current[2].age).toBe("2d ago");
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
+    expect(result.current.posts[2].age).toBe("2d ago");
   });
 
   it("all three relative timestamps are present after data loads", async () => {
     const { result } = renderHook(() =>
       useDiscussionPosts(URL_42, mockLoader)
     );
-    await waitFor(() => expect(result.current.length).toBe(3));
-    const ages = result.current.map((p) => p.age);
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
+    const ages = result.current.posts.map((p) => p.age);
     expect(ages).toEqual(["45m ago", "3h ago", "2d ago"]);
   });
 });
@@ -172,14 +183,14 @@ describe("useDiscussionPosts - topic ID extraction from URL", () => {
     const { result } = renderHook(() =>
       useDiscussionPosts(URL_42, mockLoader)
     );
-    await waitFor(() => expect(result.current.length).toBe(3));
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
   });
 
   it("extracts ID from a URL without a post number suffix (.../id)", async () => {
     const { result } = renderHook(() =>
       useDiscussionPosts(URL_42_NO_POST, mockLoader)
     );
-    await waitFor(() => expect(result.current.length).toBe(3));
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
   });
 });
 

@@ -40,8 +40,10 @@ const MOCK_POSTS: PostWithAge[] = [
 ];
 
 vi.mock("@/hooks/useDiscussionPosts", () => ({
-  useDiscussionPosts: (url: string): PostWithAge[] =>
-    url.includes("/t/topic/42") ? MOCK_POSTS : [],
+  useDiscussionPosts: (url: string): { posts: PostWithAge[]; totalReplies: number } =>
+    url.includes("/t/topic/42")
+      ? { posts: MOCK_POSTS, totalReplies: MOCK_POSTS.length }
+      : { posts: [], totalReplies: 0 },
 }));
 
 // ---------------------------------------------------------------------------
