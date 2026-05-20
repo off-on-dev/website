@@ -1,0 +1,94 @@
+/** A tool that ships pre-configured inside the level's Codespace. */
+export type ToolboxItem = {
+  name: string;
+  description: string;
+  url?: string;
+}
+
+/** One step in the Walkthrough section. body is rendered as markdown so it can contain code blocks and links. */
+export type WalkthroughStep = {
+  title: string;
+  body: string;
+}
+
+/** Compact card shown beneath the Walkthrough, summarising how to confirm completion. */
+export type VerificationInfo = {
+  command: string;
+  description: string;
+}
+
+/** Mock entry in the "Top players" leaderboard inside the CommunitySidebar. */
+export type TopPlayer = {
+  username: string;
+  count: number;
+}
+
+/** Placeholder for a level that hasn't shipped yet. Rendered in the "More levels" sidebar card. */
+export type UpcomingLevel = {
+  name: string;
+  difficulty: "Beginner" | "Intermediate" | "Expert";
+}
+
+/** A single challenge level within an adventure. Difficulty affects visual presentation and prerequisite expectations. */
+export type AdventureLevel = {
+  id: string;
+  name: string;
+  difficulty: "Beginner" | "Intermediate" | "Expert";
+  learnings: string[];
+  codespacesUrl: string;
+  discussionUrl: string;
+  // Short narrative hook shown directly under the page title.
+  hook?: string;
+  // Brief intro paragraph(s) shown under the page title before the main content.
+  intro?: string[];
+  // Narrative backstory paragraphs shown as a collapsible scenario section.
+  backstory?: string[];
+  // Concrete acceptance criteria shown as the "Objective" card.
+  objective?: string[];
+  // Audience line shown inside the Start CTA card (e.g. "Best for platform engineers, SREs…").
+  audience?: string;
+  // Long-form narrative shown as a styled scenario block under the hero.
+  scenario?: string;
+  // Plain-prose architectural context paragraphs for the challenge.
+  architecture?: string[];
+  // SVG import for an architecture diagram (rendered as an image).
+  architectureDiagram?: string;
+  // Tools pre-installed in the Codespace, rendered as a row of cards.
+  toolbox?: ToolboxItem[];
+  // Numbered walkthrough rendered as a vertical stepper.
+  howToPlay?: WalkthroughStep[];
+  // Verification card rendered as the final section.
+  verification?: VerificationInfo;
+  // Mock community stats shown in the CommunitySidebar. Real data will replace
+  // these once we aggregate certificate posts and cross-challenge contribution.
+  solvedCount?: number;
+  topPlayers?: TopPlayer[];
+}
+
+/** An adventure with multiple difficulty levels, grouped by theme and monthly release. */
+export type Adventure = {
+  id: string;
+  title: string;
+  month: string;
+  story: string;
+  tags: string[];
+  levels: AdventureLevel[];
+  contributor?: { name: string; url?: string; about?: string };
+  // Mock placeholders for levels that haven't shipped yet. Rendered in the
+  // "More levels" sidebar card alongside actual sibling levels.
+  upcomingLevels?: UpcomingLevel[];
+}
+
+export type AdventureContributor = {
+  name: string;
+  url?: string;
+  about?: string;
+  adventures: { id: string; title: string }[];
+};
+
+/** A level with its parent adventure context, returned when filtering by tag. */
+export type RelatedLevel = {
+  level: AdventureLevel;
+  adventureId: string;
+  adventureTitle: string;
+};

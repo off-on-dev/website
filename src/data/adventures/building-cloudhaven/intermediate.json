@@ -1,44 +1,5 @@
 {
-  "id": "intermediate",
-  "name": "The Modular Metropolis",
-  "difficulty": "Intermediate",
-  "learnings": [
-    "OpenTofu module testing with tofu test",
-    "Test-Driven Development (TDD) workflow",
-    "Input validation with regex"
-  ],
-  "codespacesUrl": "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?devcontainer_path=.devcontainer%2F02-building-cloudhaven_02-intermediate%2Fdevcontainer.json&quickstart=1",
   "discussionUrl": "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10",
-  "backstory": [
-    "After fixing the Foundation Stones, CloudHaven is thriving. The city has grown to three districts, and the Guild decided to refactor the infrastructure into reusable modules.",
-    "A senior engineer started the work using Test-Driven Development, writing tests first then implementing. But they were called away before finishing, leaving behind working tests and buggy code that doesn't match them. Your mission: fix the bugs, complete the integration test, and deploy the infrastructure."
-  ],
-  "objective": [
-    "All tests of the districts module pass",
-    "A completed integration test that applies infrastructure against the mock GCP API to verify end-to-end functionality",
-    "Three districts deployed with correctly configured infrastructure (vaults and ledgers)"
-  ],
-  "toolbox": [
-    {
-      "name": "tofu",
-      "description": "OpenTofu CLI for infrastructure provisioning",
-      "url": "https://opentofu.org/"
-    },
-    {
-      "name": "gcp-api-mock",
-      "description": "mock GCP API running locally to simulate cloud resources without real cloud costs (Cloud Storage and Cloud SQL only)",
-      "url": "https://github.com/KatharinaSick/gcp-api-mock"
-    }
-  ],
-  "howToPlay": [
-    "Prefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (VS Code, JetBrains IDEs, and others). The devcontainer config will be detected automatically.",
-    "Wait ~2 minutes for the environment to initialize.",
-    "Open the Ports tab, find the GCP API Mock at port 30104. Use it to explore mock cloud resources.",
-    "All files are in `adventures/02-building-cloudhaven/intermediate/`. Run `make test` to see which tests fail. The tests define the expected behaviour: fix the implementation in `modules/district/` to match them. Complete the integration test in `tests/integration.tftest.hcl`.",
-    "Run `make test` (all tests should pass) then `make apply`.",
-    "Run the smoke test: `./smoke-test.sh`",
-    "Commit and push your changes to your fork, then trigger the verification workflow on GitHub Actions to officially claim completion."
-  ],
   "discussionPosts": [
     {
       "username": "justinrand",

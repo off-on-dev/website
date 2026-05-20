@@ -1,49 +1,5 @@
 {
-  "id": "beginner",
-  "name": "Broken Echoes",
-  "difficulty": "Beginner",
-  "learnings": [
-    "Debug GitOps flows with Argo CD",
-    "ApplicationSet templating & pitfalls",
-    "Environment isolation & namespaces",
-    "Sync policies: automated, prune & self-heal"
-  ],
-  "codespacesUrl": "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?devcontainer_path=.devcontainer%2F01-echoes-lost-in-orbit_beginner%2Fdevcontainer.json&quickstart=1",
   "discussionUrl": "https://community.open-ecosystem.com/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40",
-  "backstory": [
-    "The Echo Server is misbehaving. Both environments seem to be down, and messages are silent. Your mission: investigate the Argo CD configuration and restore proper multi-environment delivery."
-  ],
-  "objective": [
-    "See two distinct Applications in the Argo CD dashboard (one per environment)",
-    "Ensure each Application deploys to its own isolated namespace",
-    "Make the system resilient so Argo CD automatically reverts manual cluster changes",
-    "Confirm that updates roll out automatically without leaving stale resources behind"
-  ],
-  "toolbox": [
-    {
-      "name": "kubectl",
-      "description": "Kubernetes CLI for interacting with the cluster",
-      "url": "https://kubernetes.io/docs/reference/kubectl/"
-    },
-    {
-      "name": "kubens",
-      "description": "fast way to switch between Kubernetes namespaces",
-      "url": "https://github.com/ahmetb/kubectx"
-    },
-    {
-      "name": "k9s",
-      "description": "terminal UI for managing and inspecting your cluster",
-      "url": "https://k9scli.io/"
-    }
-  ],
-  "howToPlay": [
-    "Prefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (VS Code, JetBrains IDEs, and others). The devcontainer config will be detected automatically.",
-    "Wait around 5 minutes for the Codespace to provision a Kubernetes cluster, Argo CD, and the sample app. Press Cmd+Shift+P (or Ctrl+Shift+P on Windows/Linux) and search for 'View Creation Log' to track progress.",
-    "Open the Ports tab, find port 30100 (Argo CD), and log in with username 'readonly' and password 'a-super-secure-password'.",
-    "Fix the ApplicationSet at `adventures/01-echoes-lost-in-orbit/beginner/manifests/appset.yaml`, then apply it: `kubectl apply -n argocd -f adventures/01-echoes-lost-in-orbit/beginner/manifests/appset.yaml`",
-    "Run the smoke test at `adventures/01-echoes-lost-in-orbit/beginner/smoke-test.sh` to verify your solution locally.",
-    "Commit and push your changes to your fork, then trigger the verification workflow on GitHub Actions to officially claim completion."
-  ],
   "discussionPosts": [
     {
       "username": "RoelofW",

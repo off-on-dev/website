@@ -1,58 +1,5 @@
 {
-  "id": "beginner",
-  "name": "Calibrating the Lens",
-  "difficulty": "Beginner",
-  "learnings": [
-    "Instrument Python AI apps with OpenLLMetry",
-    "Analyze traces in Jaeger"
-  ],
-  "codespacesUrl": "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?devcontainer_path=.devcontainer%2F03-the-ai-observatory_01-beginner%2Fdevcontainer.json&quickstart=1",
   "discussionUrl": "https://community.open-ecosystem.com/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8",
-  "backstory": [
-    "You're a researcher stationed at Perimeter Alpha, a remote research outpost on the newly discovered planet HB-7742. Your team of six scientists is protected by a single SecUnit, assigned by the corporation to ensure your safety during the survey mission.",
-    "Three weeks in, you notice something odd in your morning diagnostics: communication module usage at 847% above baseline. Nobody's streaming. Nobody's running large data transfers. The planet surveys are on schedule. So what's consuming all that bandwidth?",
-    "As the station's systems engineer, you decide to investigate. Time to instrument HubSystem with OpenTelemetry and find out what's really going on."
-  ],
-  "architecture": [
-    "All AI and observability infrastructure (Ollama, OpenTelemetry Collector, Jaeger) runs inside Kubernetes, while HubSystem runs as a local Python application outside the cluster.",
-    "This setup lets you focus on instrumentation without a build or deploy cycle: edit the Python code, run it, and see traces in Jaeger immediately."
-  ],
-  "objective": [
-    "Enable OpenTelemetry instrumentation for HubSystem using OpenLLMetry",
-    "Send traces to the OpenTelemetry Collector at `http://localhost:30107`",
-    "Analyze traces in Jaeger to find what causes the high bandwidth usage",
-    "Provide the correct answer in quiz.txt"
-  ],
-  "toolbox": [
-    {
-      "name": "python",
-      "description": "programming language used for the HubSystem application"
-    },
-    {
-      "name": "kubectl",
-      "description": "Kubernetes CLI for interacting with the cluster",
-      "url": "https://kubernetes.io/docs/reference/kubectl/"
-    },
-    {
-      "name": "kubens",
-      "description": "fast way to switch between Kubernetes namespaces",
-      "url": "https://github.com/ahmetb/kubectx"
-    },
-    {
-      "name": "k9s",
-      "description": "terminal UI for managing and inspecting your cluster",
-      "url": "https://k9scli.io/"
-    }
-  ],
-  "howToPlay": [
-    "Prefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (VS Code, JetBrains IDEs, and others). The devcontainer config will be detected automatically.",
-    "Wait ~10 minutes for all infrastructure to initialize.",
-    "Open the Ports tab, find Jaeger at port 30103. This is where you will analyze the traces sent by HubSystem.",
-    "Add OpenTelemetry instrumentation to hubsystem.py using OpenLLMetry. The OTel Collector and Jaeger are already configured correctly.",
-    "Run `make hubsystem` to start the application. Interact with the AI to generate traces, then check Jaeger.",
-    "Find the trace responsible for the high bandwidth usage and inspect its attributes to answer quiz.txt.",
-    "Run `./verify.sh`. If it passes, follow the on-screen instructions to commit your changes and generate a Certificate of Completion. Paste the certificate into the challenge thread to claim your victory."
-  ],
   "discussionPosts": [
     {
       "username": "theharithsa",

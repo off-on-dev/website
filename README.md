@@ -164,6 +164,37 @@ Deployment is automated via GitHub Actions:
 
 PR preview builds set the `VITE_BASE_PATH` environment variable to `/pr-preview/pr-<n>/` so all asset paths resolve correctly under the preview sub-path.
 
+## Adding Adventures and Levels
+
+New adventures and levels can be scaffolded via GitHub Actions (recommended) or locally via scripts.
+
+### Via GitHub Actions
+
+Go to the repository's **Actions** tab, select the workflow, click **Run workflow**, and fill in the form inputs.
+
+| Workflow | Inputs | What it does |
+|---|---|---|
+| **New Adventure** | `id`, `title`, `month`, `levels` (comma-separated) | Scaffolds a full adventure: TS file with TODOs, discussion JSON stubs, patches `react-router.config.ts` and `sitemap.xml`, opens a PR |
+| **New Level** | `adventure` (existing ID), `level` (beginner/intermediate/expert) | Adds a level to an existing adventure: discussion JSON stub, patches config and sitemap, opens a PR with a TS snippet to paste |
+
+Both workflows create a branch and open a PR automatically via `peter-evans/create-pull-request`. The PR description includes next steps (fill in content TODOs, run verification, etc.).
+
+### Via local scripts
+
+```sh
+# Scaffold a new adventure with all required files
+node scripts/new-adventure.mjs --id "signal-in-the-storm" --title "Signal in the Storm" --month "JUL 2026" --levels beginner,intermediate,expert
+
+# Add a level to an existing adventure
+node scripts/new-level.mjs --adventure "blind-by-design" --level expert
+```
+
+After running either script, fill in the TODO placeholders in the generated TS file, then:
+
+1. Add the `discussionUrl` in `src/data/adventures/<id>/<level>.json`
+2. Run `node scripts/refresh-discussions.mjs` to fetch posts
+3. Run `npm run lint && npm test && npm run build && npm run test:e2e`
+
 ## Accessibility
 
 OffOn targets WCAG 2.2 Level AA across every page, in both light and dark mode. Automated axe-core scans run on every pull request preview via [`e2e/smoke.spec.ts`](e2e/smoke.spec.ts). The full statement, supported environments, known limitations, and how to report a barrier are in [`ACCESSIBILITY.md`](ACCESSIBILITY.md). Contributor rules are in the Accessibility section of [`CLAUDE.md`](CLAUDE.md#accessibility-wcag-22-aa-mandatory).

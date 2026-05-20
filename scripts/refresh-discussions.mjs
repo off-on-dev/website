@@ -1,9 +1,9 @@
 /**
  * Refresh discussion posts for all adventure levels.
  *
- * Reads each per-level JSON file, extracts the discussionUrl, fetches latest
- * posts from the Discourse API, and writes them back into the file under
- * `discussionPosts` and `totalReplies`. Only writes if data changed.
+ * Reads each per-level JSON file, uses the discussionUrl to fetch latest posts
+ * from the Discourse API, and writes back `discussionPosts` and `totalReplies`.
+ * Only writes if data changed. JSON files contain only discussion data.
  *
  * Usage: node scripts/refresh-discussions.mjs
  */
@@ -71,13 +71,12 @@ function extractTopicId(url) {
 }
 
 /**
- * Recursively find all JSON files in a directory, excluding _meta/.
+ * Recursively find all JSON files in a directory.
  */
 function findLevelFiles(dir) {
   const results = [];
   for (const entry of readdirSync(dir)) {
     const full = join(dir, entry);
-    if (entry === "_meta") continue;
     if (statSync(full).isDirectory()) {
       results.push(...findLevelFiles(full));
     } else if (entry.endsWith(".json")) {
@@ -129,7 +128,7 @@ async function main() {
 
     const { posts, totalReplies } = await fetchTopicPosts(topicId, discussionUrl);
 
-    const newContent = { ...content, discussionPosts: posts, totalReplies };
+    const newContent = { discussionUrl, discussionPosts: posts, totalReplies };
     const newJson = JSON.stringify(newContent, null, 2) + "\n";
     const oldJson = readFileSync(filePath, "utf-8");
 

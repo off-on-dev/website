@@ -1,53 +1,5 @@
 {
-  "id": "expert",
-  "name": "The Guardian Protocols",
-  "difficulty": "Expert",
-  "learnings": [
-    "GitHub Actions for drift detection and plan/apply",
-    "Integration tests with service containers",
-    "Security scanning with Trivy"
-  ],
-  "codespacesUrl": "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges?devcontainer_path=.devcontainer%2F02-building-cloudhaven_03-expert%2Fdevcontainer.json&quickstart=1",
   "discussionUrl": "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8",
-  "backstory": [
-    "After the Modular Metropolis refactoring, CloudHaven flourished. But with growth came risk. One night, a rogue change slipped through unnoticed and nearly brought down the North Market's trading vaults. The Council was furious: how could this happen without anyone noticing?",
-    "The Guild Master summoned you urgently. \"We need guardians,\" she said. \"Automated sentinels that watch over our infrastructure day and night. They must catch dangerous changes before they reach the city, detect when reality drifts from our blueprints, and sound the alarm when threats appear.\"",
-    "A previous engineer began building these Guardian Protocols using GitHub Actions, but was reassigned before completing them. The workflows exist, but they're incomplete and broken. Your mission: bring the Guardian Protocols online and protect CloudHaven from chaos."
-  ],
-  "objective": [
-    "Drift detection: run tofu plan and create a PR when drift is found",
-    "PR validation: run tofu plan and comment results, run integration tests against the mock GCP API, scan for security vulnerabilities with Trivy and fail on critical or high severity issues",
-    "Automatic apply: apply infrastructure when a PR is merged to main",
-    "All three workflows must have succeeded at least once"
-  ],
-  "toolbox": [
-    {
-      "name": "tofu",
-      "description": "OpenTofu CLI for infrastructure provisioning",
-      "url": "https://opentofu.org/"
-    },
-    {
-      "name": "gcp-api-mock",
-      "description": "mock GCP API running locally (port set to public so GitHub Actions runners can access it)",
-      "url": "https://github.com/KatharinaSick/gcp-api-mock"
-    },
-    {
-      "name": "GitHub Actions",
-      "description": "the workflows you will fix are in `.github/workflows/`",
-      "url": "https://docs.github.com/en/actions"
-    }
-  ],
-  "howToPlay": [
-    "Prefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (VS Code, JetBrains IDEs, and others). The devcontainer config will be detected automatically.",
-    "Wait ~2 minutes for the environment to initialize.",
-    "Open the Ports tab, find the GCP API Mock at port 30104. The port is set to public so GitHub Actions runners can reach the mock API during workflow runs.",
-    "Fix the three workflows in `.github/workflows/`: `adventure02-expert-detect-drift.yaml`, `adventure02-expert-validate-changes.yaml`, and `adventure02-expert-apply-infrastructure.yaml`. The OpenTofu configuration is correct, focus only on the workflow files.",
-    "Commit and push to main. To trigger drift detection, go to the Actions tab, select the drift detection workflow, and click Run workflow. The infrastructure has intentional drift, so the workflow should create a draft PR.",
-    "Click Ready for Review on the draft PR to trigger the validation workflow. To re-trigger validation after pushing new changes, convert the PR back to draft then ready for review again.",
-    "When the PR is merged to main, the apply workflow runs automatically.",
-    "Run the smoke test: `cd adventures/02-building-cloudhaven/expert && ./smoke-test.sh`",
-    "Commit and push your changes to your fork, then trigger the verification workflow on GitHub Actions to officially claim completion."
-  ],
   "discussionPosts": [
     {
       "username": "enri-kapaj",

@@ -1,7 +1,8 @@
 import { type CSSProperties, type JSX } from "react";
 import { ArrowRight, Heart, Trophy } from "lucide-react";
 import { COMMUNITY_URL, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
-import { useDiscussionPosts, type PostWithAge } from "@/hooks/useDiscussionPosts";
+import { useDiscussionPosts } from "@/hooks/useDiscussionPosts";
+import { isCertificatePost, displaySnippet } from "@/lib/discussion-utils";
 
 const avatarPalette: CSSProperties[] = [
   { backgroundColor: "hsl(var(--primary) / 0.2)", color: "hsl(var(--foreground))" },
@@ -10,17 +11,6 @@ const avatarPalette: CSSProperties[] = [
   { backgroundColor: "hsl(var(--difficulty-builder) / 0.2)", color: "hsl(var(--foreground))" },
   { backgroundColor: "hsl(var(--destructive) / 0.2)", color: "hsl(var(--foreground))" },
 ];
-
-const CERT_RE = /(?:---|\u2014)\s*CERTIFICATE START\s*(?:---|\u2014)[\s\S]*?(?:---|\u2014)\s*CERTIFICATE END\s*(?:---|\u2014)/;
-
-const isCertificatePost = (post: PostWithAge): boolean =>
-  post.cooked.includes("CERTIFICATE START");
-
-const displaySnippet = (post: PostWithAge): string => {
-  if (!isCertificatePost(post)) return post.cooked;
-  const stripped = post.cooked.replace(CERT_RE, "").trim();
-  return stripped || "Completed the challenge.";
-};
 
 type DiscussionSectionProps = {
   adventureId: string;

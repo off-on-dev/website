@@ -1,0 +1,78 @@
+name: New Level
+
+on:
+  workflow_dispatch:
+    inputs:
+      adventure:
+        description: 'Adventure ID (e.g. "blind-by-design")'
+        required: true
+        type: string
+      level:
+        description: 'Level ID (beginner, intermediate, or expert)'
+        required: true
+        type: choice
+        options:
+          - beginner
+          - intermediate
+          - expert
+
+jobs:
+  scaffold:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Run new-level script
+        id: scaffold
+        run: |
+          OUTPUT=$(node scripts/new-level.mjs \
+            --adventure "${{ inputs.adventure }}" \
+            --level "${{ inputs.level }}" 2>&1)
+          echo "$OUTPUT"
+
+          # Extract the TS snippet (everything between "Paste this" and "Next steps")
+          SNIPPET=$(echo "$OUTPUT" | sed -n '/^    {$/,/^    },$/p')
+          echo "snippet<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$SNIPPET" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "feat: add ${{ inputs.level }} level to ${{ inputs.adventure }}"
+          title: "feat: add ${{ inputs.level }} level — ${{ inputs.adventure }}"
+          body: |
+            ## New Level Added
+
+            | Field | Value |
+            |---|---|
+            | Adventure | `${{ inputs.adventure }}` |
+            | Level | `${{ inputs.level }}` |
+
+            ### Generated
+            - `src/data/adventures/${{ inputs.adventure }}/${{ inputs.level }}.json` (discussion stub)
+            - Prerender entry in `react-router.config.ts`
+            - Sitemap entry in `public/sitemap.xml`
+
+            ### Manual step required
+            Paste this into the `levels` array in `src/data/adventures/${{ inputs.adventure }}.ts`:
+
+            ```typescript
+            ${{ steps.scaffold.outputs.snippet }}
+            ```
+
+            ### Next steps
+            1. Paste the snippet above and fill in the TODOs
+            2. Update `discussionUrl` in the JSON file
+            3. Run `node scripts/refresh-discussions.mjs`
+            4. Run all checks: `npm run lint && npm test && npm run build && npm run test:e2e`
+          branch: "feat/${{ inputs.adventure }}-${{ inputs.level }}"
+          delete-branch: true

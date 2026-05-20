@@ -490,12 +490,12 @@ Currently used in: `src/hooks/useTheme.tsx`.
 
 `src/hooks/useDiscussionPosts.ts`
 
-Loads Discourse posts for a single adventure level from `src/data/discussion-data.json` (written at build time). Returns them as `PostWithAge[]` — post fields plus a computed `age` string. The `cooked` field is pre-stripped plain text; HTML is removed by the build plugin before the JSON is written. Returns `[]` until the data loads or if the URL contains no recognisable topic ID.
+Loads Discourse posts for a single adventure level from its per-level JSON file at `src/data/adventures/<adventureId>/<levelId>.json` (refreshed daily by the GitHub Action). Returns them as `PostWithAge[]` — post fields plus a computed `age` string. The `cooked` field is pre-stripped plain text; HTML is removed by the refresh script before the JSON is written. Returns `[]` until the data loads or if the file does not exist.
 
 ```ts
-const posts = useDiscussionPosts(discussionUrl);
+const { posts, totalReplies } = useDiscussionPosts(adventureId, levelId);
 // or, in tests:
-const posts = useDiscussionPosts(discussionUrl, mockLoader);
+const { posts, totalReplies } = useDiscussionPosts(adventureId, levelId, mockLoader);
 ```
 
 | Argument | Type | Description |
@@ -593,7 +593,7 @@ Renders a single adventure level as a card: difficulty badge, level name, key le
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
-| `level` | `AdventureLevel` | required | Level data from `src/data/adventures.ts` |
+| `level` | `AdventureLevel` | required | Level data from `src/data/adventures` |
 | `headingLevel` | `"h2" \| "none"` | `"h2"` | Pass `"none"` when the parent page already renders the level name as `<h1>` to avoid duplicate heading in the document outline. When `"none"`, the level name renders as a `<p>`. The "Key Learnings" label always renders as a `<p>` regardless of this prop — it is a decorative sub-label, not a structural heading. |
 
 ---
@@ -614,7 +614,7 @@ Navigation card used in tag-filtered level grids. The entire card is a `<Link>` 
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
-| `level` | `AdventureLevel` | required | Level data from `src/data/adventures.ts` |
+| `level` | `AdventureLevel` | required | Level data from `src/data/adventures` |
 | `adventureId` | `string` | required | Used to build the link href: `/adventures/:id/levels/:levelId` |
 | `adventureTitle` | `string` | required | Shown in the card footer as a tag label |
 | `className` | `string?` | — | Merged onto the root `<Link>` via `cn()`. Pass `"animate-fade-up-delay-1"` when the card is in a staggered grid. |
@@ -727,7 +727,7 @@ Renders the Board section on the About page (mounted after `BrandStory`, with `C
 
 Avatars are 320px square WebP files in `src/assets/team/`, imported in `team.ts` and assigned to `BoardMember.image`. They render at 80×80 with `width`/`height` attributes set and `loading="lazy"` (the section is below the fold). Members without an `image` (placeholder seats) get a neutral circle with the lucide `User` icon as a visual filler — the icon is `aria-hidden="true"` because the name beneath it carries the meaning. To swap a placeholder for a real member, drop a 320px square WebP into `src/assets/team/`, import it in `team.ts`, and set the `image` field.
 
-`KATHARINA_SICK` is exported from `src/data/adventures.ts` and reused in `team.ts` so her bio has a single source of truth.
+`KATHARINA_SICK` is exported from `src/data/adventures/contributors.ts` (re-exported via the barrel `src/data/adventures/index.ts`) and reused in `team.ts` so her bio has a single source of truth.
 
 No props. Self-contained section component.
 
@@ -737,7 +737,7 @@ No props. Self-contained section component.
 
 `src/components/ChallengeBuildersSection.tsx`
 
-Renders the Challenge Builders section, used on both the About page (mounted directly after `BoardSection`, sharing the "the people" eyebrow group) and the Adventures page (mounted between `ChallengesGrid` and `BottomCTA`). Has no eyebrow of its own; on the About page, the visual grouping is provided by the eyebrow on the preceding `BoardSection`. Reads `ADVENTURE_CONTRIBUTORS` from `src/data/adventures.ts` and renders a card grid (`sm:grid-cols-2`) thanking everyone who has contributed an adventure. Each card shows the contributor name rendered via `PersonNameLink`, a short bio, and a list of their adventures linked via React Router `<Link>` to each detail page. Returns `null` if `ADVENTURE_CONTRIBUTORS` is empty.
+Renders the Challenge Builders section, used on both the About page (mounted directly after `BoardSection`, sharing the "the people" eyebrow group) and the Adventures page (mounted between `ChallengesGrid` and `BottomCTA`). Has no eyebrow of its own; on the About page, the visual grouping is provided by the eyebrow on the preceding `BoardSection`. Reads `ADVENTURE_CONTRIBUTORS` from `src/data/adventures` and renders a card grid (`sm:grid-cols-2`) thanking everyone who has contributed an adventure. Each card shows the contributor name rendered via `PersonNameLink`, a short bio, and a list of their adventures linked via React Router `<Link>` to each detail page. Returns `null` if `ADVENTURE_CONTRIBUTORS` is empty.
 
 No props. Self-contained section component.
 
@@ -784,7 +784,7 @@ Displays up to three community posts for an adventure level, fetched at build ti
 
 | Prop | Type | Description |
 |---|---|---|
-| `discussionUrl` | `string` | Full Discourse topic URL. The topic ID is extracted from this URL and used as the key into `src/data/discussion-data.json`. |
+| `discussionUrl` | `string` | Full Discourse topic URL. Used as the fallback link when no posts are loaded. |
 
 The component is a pure renderer. All data-loading and ID-extraction logic lives in `useDiscussionPosts` (see Hooks section). Falls back to an empty state with a "Join the discussion" link when no posts are found.
 
@@ -812,7 +812,7 @@ Renders a Markdown string with `react-markdown` + `remark-gfm`, mapping each ele
 |---|---|---|
 | `source` | `string` | Raw Markdown source. Pass an empty string for no content. |
 
-Used by `ChallengeDetail` when the level has a `docFile`. The doc itself lives under `src/content/challenges/<adventure>/<level>.md` and is bundled via an eager `import.meta.glob` in `ChallengeDetail.tsx`. The Markdown should start at `## ` — the page already provides the `<h1>`. Internal headings (`h2`, `h3`) are added to the existing document outline; do not introduce new `<h1>` content in Markdown.
+Used by `ArchitectureSection` and `WalkthroughSection` inside `ChallengeDetail`. These components pass inline markdown strings from the level data (e.g. `level.architecture.join("\n\n")` or `step.body`). The Markdown should start at `## ` or below, the page already provides the `<h1>`. Internal headings (`h2`, `h3`) are added to the existing document outline; do not introduce new `<h1>` content in Markdown.
 
 The bundled stack (`react-markdown`, `remark-gfm`, `micromark`, etc.) is code-split into the `ChallengeDetail` route chunk, so it does not affect the main bundle.
 
@@ -828,7 +828,7 @@ Self-contained technology filter used on `AdventureDetail` and `ChallengeDetail`
 <TechFilterSection />
 ```
 
-No props. Owns its own `activeTech` state internally. `ALL_TAGS` is imported from `src/data/adventures.ts` (computed once at module load; shared with `ChallengesGrid`). The results grid only renders when a tag is active and at least one matching level exists. Wraps results in `aria-live="polite"` so screen readers announce updates.
+No props. Owns its own `activeTech` state internally. `ALL_TAGS` is imported from `src/data/adventures` (computed once at module load; shared with `ChallengesGrid`). The results grid only renders when a tag is active and at least one matching level exists. Wraps results in `aria-live="polite"` so screen readers announce updates.
 
 The challenge cards in the results grid are rendered via `FilteredLevelCard` with `className="animate-fade-up-delay-1"` (see `FilteredLevelCard` in the Components section).
 

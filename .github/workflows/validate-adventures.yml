@@ -1,0 +1,86 @@
+name: Validate Adventures
+
+on:
+  pull_request:
+    paths:
+      - 'src/data/adventures/**'
+      - 'react-router.config.ts'
+      - 'public/sitemap.xml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate adventure consistency
+        run: |
+          set -euo pipefail
+
+          ERRORS=0
+
+          # Extract adventure IDs and their levels from the TS files
+          for adventure_file in src/data/adventures/*.ts; do
+            filename=$(basename "$adventure_file" .ts)
+
+            # Skip index, types, contributors
+            if [[ "$filename" == "index" || "$filename" == "types" || "$filename" == "contributors" ]]; then
+              continue
+            fi
+
+            adventure_id="$filename"
+            echo "Checking adventure: $adventure_id"
+
+            # Check adventure is imported in index.ts
+            if ! grep -q "from \"./$adventure_id\"" src/data/adventures/index.ts; then
+              echo "  ❌ Not imported in index.ts"
+              ERRORS=$((ERRORS + 1))
+            fi
+
+            # Extract level IDs from the TS file
+            level_ids=$(grep -oP 'id: "([^"]+)"' "$adventure_file" | grep -v "id: \"$adventure_id\"" | sed 's/id: "//;s/"//' || true)
+
+            # Check adventure landing page in prerender
+            if ! grep -q "\"/adventures/$adventure_id\"" react-router.config.ts; then
+              echo "  ❌ /adventures/$adventure_id missing from prerender in react-router.config.ts"
+              ERRORS=$((ERRORS + 1))
+            fi
+
+            # Check adventure landing page in sitemap
+            if ! grep -q "offon.dev/adventures/$adventure_id/" public/sitemap.xml; then
+              echo "  ❌ /adventures/$adventure_id/ missing from sitemap.xml"
+              ERRORS=$((ERRORS + 1))
+            fi
+
+            # Check each level
+            for level_id in $level_ids; do
+              # Discussion JSON exists
+              if [[ ! -f "src/data/adventures/$adventure_id/$level_id.json" ]]; then
+                echo "  ❌ Missing discussion JSON: src/data/adventures/$adventure_id/$level_id.json"
+                ERRORS=$((ERRORS + 1))
+              fi
+
+              # Prerender entry exists
+              if ! grep -q "\"/adventures/$adventure_id/levels/$level_id\"" react-router.config.ts; then
+                echo "  ❌ /adventures/$adventure_id/levels/$level_id missing from prerender"
+                ERRORS=$((ERRORS + 1))
+              fi
+
+              # Sitemap entry exists
+              if ! grep -q "offon.dev/adventures/$adventure_id/levels/$level_id/" public/sitemap.xml; then
+                echo "  ❌ /adventures/$adventure_id/levels/$level_id/ missing from sitemap.xml"
+                ERRORS=$((ERRORS + 1))
+              fi
+            done
+
+            echo "  ✓ Done"
+          done
+
+          if [[ $ERRORS -gt 0 ]]; then
+            echo ""
+            echo "❌ Found $ERRORS consistency error(s). Run 'node scripts/new-adventure.mjs' to scaffold missing entries."
+            exit 1
+          else
+            echo ""
+            echo "✓ All adventures are consistent."
+          fi

@@ -7,6 +7,8 @@ export const BRAND_NAME = "OffOn";
 export const COMMUNITY_URL = "https://community.open-ecosystem.com";
 export const COMMUNITY_DISPLAY_NAME = "community.offon.dev";
 
+export const CODESPACES_BASE = "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges";
+
 export const SITE_URL = "https://offon.dev";
 export const SITE_NAME = "offon.dev";
 

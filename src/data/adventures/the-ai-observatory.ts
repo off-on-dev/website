@@ -1,0 +1,130 @@
+import { CODESPACES_BASE, COMMUNITY_URL } from "@/data/constants";
+import { KATHARINA_SICK } from "./contributors";
+import type { Adventure } from "./types";
+
+export const THE_AI_OBSERVATORY: Adventure = {
+  id: "the-ai-observatory",
+  title: "The AI Observatory",
+  month: "FEB 2026",
+  story: "Investigate a mysterious bandwidth anomaly at a remote research station by instrumenting its AI system with OpenTelemetry.",
+  tags: ["OpenTelemetry", "OpenLLMetry", "Jaeger", "Prometheus", "Python"],
+  contributor: KATHARINA_SICK,
+  levels: [
+    {
+      id: "beginner",
+      name: "Calibrating the Lens",
+      difficulty: "Beginner",
+      learnings: ["Instrument Python AI apps with OpenLLMetry", "Analyze traces in Jaeger"],
+      codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F03-the-ai-observatory_01-beginner%2Fdevcontainer.json&quickstart=1`,
+      discussionUrl: `${COMMUNITY_URL}/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8`,
+      backstory: [
+        "You're a researcher stationed at Perimeter Alpha, a remote research outpost on the newly discovered planet HB-7742. Your team of six scientists is protected by a single SecUnit, assigned by the corporation to ensure your safety during the survey mission.",
+        "Three weeks in, you notice something odd in your morning diagnostics: communication module usage at 847% above baseline. Nobody's streaming. Nobody's running large data transfers. The planet surveys are on schedule. So what's consuming all that bandwidth?",
+        "As the station's systems engineer, you decide to investigate. Time to instrument HubSystem with OpenTelemetry and find out what's really going on.",
+      ],
+      architecture: [
+        "All AI and observability infrastructure (Ollama, OpenTelemetry Collector, Jaeger) runs inside Kubernetes, while HubSystem runs as a local Python application outside the cluster.",
+        "This setup lets you focus on instrumentation without a build or deploy cycle: edit the Python code, run it, and see traces in Jaeger immediately.",
+      ],
+      objective: [
+        "Enable OpenTelemetry instrumentation for HubSystem using OpenLLMetry",
+        "Send traces to the OpenTelemetry Collector at http://localhost:30107",
+        "Analyze traces in Jaeger to find what causes the high bandwidth usage",
+        "Provide the correct answer in quiz.txt",
+      ],
+      toolbox: [
+        { name: "python", description: "programming language used for the HubSystem application" },
+        { name: "kubectl", description: "Kubernetes CLI for interacting with the cluster", url: "https://kubernetes.io/docs/reference/kubectl/" },
+        { name: "kubens", description: "fast way to switch between Kubernetes namespaces", url: "https://github.com/ahmetb/kubectx" },
+        { name: "k9s", description: "terminal UI for managing and inspecting your cluster", url: "https://k9scli.io/" },
+      ],
+      howToPlay: [
+        { title: "Wait for Infrastructure", body: "Wait ~10 minutes for all infrastructure to initialize." },
+        { title: "Open Jaeger", body: "Open the Ports tab, find Jaeger at port 30103. This is where you will analyze the traces sent by HubSystem." },
+        { title: "Instrument the App", body: "Add OpenTelemetry instrumentation to `hubsystem.py` using OpenLLMetry. The OTel Collector and Jaeger are already configured correctly." },
+        { title: "Run and Investigate", body: "Run the application, interact with the AI to generate traces, then check Jaeger:\n\n```sh\nmake hubsystem\n```" },
+        { title: "Answer the Quiz", body: "Find the trace responsible for the high bandwidth usage and inspect its attributes to answer `quiz.txt`." },
+      ],
+      verification: {
+        command: "./verify.sh",
+        description: "Once you think you've solved the challenge, run the verification script. If it fails it will tell you which checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion.",
+      },
+    },
+    {
+      id: "intermediate",
+      name: "The Distracted Pilot",
+      difficulty: "Intermediate",
+      learnings: ["Instrument RAG pipelines with OpenLLMetry", "Create custom OpenTelemetry metrics in Python", "Write PromQL queries & recording rules in Prometheus"],
+      codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F03-the-ai-observatory_02-intermediate%2Fdevcontainer.json&quickstart=1`,
+      discussionUrl: `${COMMUNITY_URL}/t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936/2`,
+      backstory: [
+        "You're a rogue SecUnit who just escaped from Preservation Station after being identified. A researcher helped you flee aboard the Perihelion, a university research vessel with a very opinionated AI.",
+        "The ship's AI agreed to help you disappear. You've nicknamed it ART. The plan: jump to RaviHyral, lay low, and figure out your next move.",
+        "Except ART was supposed to have the jump coordinates ready an hour ago. You access the ship's diagnostic systems to find out what's going on. Your mission: diagnose ART's distraction using OpenTelemetry and fix the navigation system before you miss your jump.",
+      ],
+      architecture: [
+        "The ART Pilot System runs as a local Python application outside Kubernetes, using a RAG (Retrieval-Augmented Generation) architecture. AI infrastructure (Ollama for LLM, Qdrant for vector storage) and observability tools (OpenTelemetry Collector, Jaeger, Prometheus) run inside Kubernetes.",
+        "This setup lets you focus on observability patterns: edit Python code, run it, and see traces and metrics immediately without a build or deploy cycle.",
+      ],
+      objective: [
+        "Instrument the full RAG pipeline with OpenLLMetry (add a span named rag.context_assembly with attribute context.categories)",
+        "Implement a custom metric art.rag.retrieval.count to track how often ART retrieves entertainment vs navigation data",
+        "Create a Prometheus recording rule to calculate ART's Distraction Ratio",
+        "Restore the navigation system so ART successfully calculates jump coordinates to RaviHyral",
+      ],
+      toolbox: [
+        { name: "python", description: "programming language used for the ART application" },
+        { name: "kubectl", description: "Kubernetes CLI for interacting with the cluster", url: "https://kubernetes.io/docs/reference/kubectl/" },
+        { name: "kubens", description: "fast way to switch between Kubernetes namespaces", url: "https://github.com/ahmetb/kubectx" },
+        { name: "k9s", description: "terminal UI for managing and inspecting your cluster", url: "https://k9scli.io/" },
+      ],
+      howToPlay: [
+        { title: "Wait for Infrastructure", body: "Wait ~15 minutes for all infrastructure to initialize." },
+        { title: "Access Observability Tools", body: "Open the Ports tab: Prometheus at port 30102, Jaeger at port 30103." },
+        { title: "Instrument and Configure", body: "Instrument `art.py` with OpenLLMetry and add the custom metric. Update `manifests/prometheus-rule.yaml` with the Distraction Ratio recording rule. After changing the rule file:\n\n```sh\nmake apply\n```" },
+        { title: "Generate Traffic", body: "Run the application to interact with ART, or generate continuous traffic for your metric graphs:\n\n```sh\nmake art\n# or for continuous traffic:\nmake traffic\n```" },
+        { title: "Fix the Navigation", body: "Verify traces in Jaeger and the recording rule in Prometheus. Fix the navigation system so ART returns jump coordinates." },
+      ],
+      verification: {
+        command: "./verify.sh",
+        description: "Once you think you've solved the challenge, run the verification script. If it fails it will tell you which checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion.",
+      },
+    },
+    {
+      id: "expert",
+      name: "The Noise Filter",
+      difficulty: "Expert",
+      learnings: ["OpenTelemetry GenAI semantic conventions", "Tail sampling in the OTel Collector"],
+      codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F03-the-ai-observatory_03-expert%2Fdevcontainer.json&quickstart=1`,
+      discussionUrl: `${COMMUNITY_URL}/t/reduce-telemetry-noise-adventure-03-expert-is-live/999/1`,
+      backstory: [
+        "You made it to RaviHyral. The Perihelion docked at Outpost Verada, a small independent research station run by a loose collective of academics who agreed to look the other way. In exchange, ART offered to share its observability data with the station's monitoring team.",
+        "That was three hours ago. Now the station's lead engineer is at your docking port, looking annoyed: ART is flooding their Jaeger instance with 40,000 spans an hour. Every healthy query, every token. It doesn't even follow conventions. They only care about failures and anomalies.",
+        "Two problems to solve: ART's spans don't follow OTel GenAI semantic conventions, and the collector is forwarding everything. Fix it.",
+      ],
+      architecture: [
+        "Same setup as the intermediate level: the ART Pilot System runs as a local Python application outside Kubernetes with a RAG architecture. AI infrastructure (Ollama, Qdrant) and observability tools (OpenTelemetry Collector, Jaeger) run inside Kubernetes.",
+      ],
+      objective: [
+        "Fix ART's chat span to follow OpenTelemetry GenAI semantic conventions, including token usage attributes",
+        "Configure tail sampling in the OpenTelemetry Collector to keep only traces that contain errors or take longer than 5 seconds",
+      ],
+      toolbox: [
+        { name: "python", description: "programming language used for the ART application" },
+        { name: "kubectl", description: "Kubernetes CLI for interacting with the cluster", url: "https://kubernetes.io/docs/reference/kubectl/" },
+        { name: "kubens", description: "fast way to switch between Kubernetes namespaces", url: "https://github.com/ahmetb/kubectx" },
+        { name: "k9s", description: "terminal UI for managing and inspecting your cluster", url: "https://k9scli.io/" },
+      ],
+      howToPlay: [
+        { title: "Wait for Infrastructure", body: "Wait ~15 minutes for all infrastructure to initialize." },
+        { title: "Open Jaeger", body: "Open the Ports tab, find Jaeger at port 30103. Verify your spans look correct and that sampling works as expected." },
+        { title: "Fix Instrumentation and Sampling", body: "Fix the chat span in `art.py` to follow OpenTelemetry GenAI semantic conventions including token usage. Fix the tail sampling config in `manifests/otel-collector-config.yaml`." },
+        { title: "Apply and Test", body: "After changing `art.py`, restart traffic to pick up new instrumentation. After changing the collector config, apply it:\n\n```sh\nkubectl apply -f manifests/otel-collector-config.yaml -n otel\nkubectl rollout restart deployment/collector -n otel\n```\n\nThen generate traces:\n\n```sh\nmake traffic\n```\n\nVerify in Jaeger that spans follow conventions and only errors and slow traces appear." },
+      ],
+      verification: {
+        command: "./verify.sh",
+        description: "Once you think you've solved the challenge, run the verification script. If it fails it will tell you which checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion.",
+      },
+    },
+  ],
+};

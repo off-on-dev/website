@@ -18,7 +18,6 @@ import { OtherLevelsCard } from "@/components/OtherLevelsCard";
 import { TechFilterSection } from "@/components/TechFilterSection";
 import { SITE_URL, BRAND_NAME, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
 import { buildPageMeta, interBoldPreload } from "@/lib/meta";
-import { useLevelData } from "@/hooks/useLevelData";
 
 export const links: LinksFunction = () => interBoldPreload;
 
@@ -324,23 +323,18 @@ const ChallengeDetail = (): JSX.Element => {
   const { id, levelId } = useParams<{ id: string; levelId: string }>();
   const adventure = ADVENTURES.find((adventure) => adventure.id === id);
   const level = adventure?.levels.find((level) => level.id === levelId);
-  const extendedData = useLevelData(id ?? "", levelId ?? "");
 
   if (!adventure || !level) {
     return <NotFoundPage title="Challenge not found" message="The challenge you're looking for doesn't exist." />;
   }
 
-  // Merge static data (from adventures.ts) with dynamically loaded JSON data.
-  // Static fields take priority when present.
-  const intro = extendedData.intro;
-  const backstory = extendedData.backstory;
-  const architecture = level.architecture
-    ? [level.architecture]
-    : extendedData.architecture;
-  const objective = level.objectives ?? extendedData.objective;
-  const toolbox = level.toolbox ?? extendedData.toolbox;
-  const howToPlay = level.howToPlay ?? extendedData.howToPlay;
-  const verification = level.verification ?? extendedData.verification;
+  const intro = level.intro;
+  const backstory = level.backstory;
+  const architecture = level.architecture;
+  const objective = level.objective;
+  const toolbox = level.toolbox;
+  const howToPlay = level.howToPlay;
+  const verification = level.verification;
 
   const hasStructuredContent = !!(
     intro || backstory || architecture || toolbox || howToPlay

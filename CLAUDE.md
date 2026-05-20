@@ -50,7 +50,7 @@ Community activity happens on a separate Discourse instance. Its display name is
 
 ### What lives where
 
-- Logic derived from `ADVENTURES` belongs in `src/data/adventures.ts`, exported, and imported everywhere. Do not re-derive it in component files.
+- Logic derived from `ADVENTURES` belongs in `src/data/adventures/index.ts`, exported, and imported everywhere. Do not re-derive it in component files.
 - Reusable card or list markup belongs in `src/components/`, not duplicated inline. Extract before the second copy appears.
 - Redirect routes that share a destination share a single file in `src/pages/redirects/`. The filename describes the destination, not the source (e.g. `HandbookRedirect.tsx`).
 
@@ -226,8 +226,8 @@ without exception. They exist to prevent debugging by accumulation.
 
 - Static content lives in `src/data/` as typed TypeScript objects/arrays.
 - No runtime `fetch` calls in components. All network data must be fetched at build time.
-- **Build-time fetching:** External data may be fetched inside a Vite plugin (`buildStart` hook, guard with `config.command === "build"`). Write results to `src/data/<name>.json`. Components import the JSON statically. See `vite.config.ts` (`discourseDataPlugin`) and `src/data/discussion-data.json` for the reference implementation.
-- When adding a new adventure level, add its topic ID and URL to the `DISCUSSION_TOPICS` map in `vite.config.ts`.
+- **Build-time fetching:** Discussion data lives in per-level JSON files under `src/data/adventures/<adventure-id>/<level-id>.json`. Each file contains only `discussionUrl`, `discussionPosts`, and `totalReplies`. These are refreshed daily by the GitHub Action in `.github/workflows/refresh-discussions.yml` (runs `scripts/refresh-discussions.mjs`). Components import the JSON dynamically via `import.meta.glob`.
+- When adding a new adventure level, create its per-level JSON file with a `discussionUrl` field. The refresh script uses this URL to fetch posts.
 - `vite.config.ts` contains a `COMMUNITY_BASE` constant that is a necessary duplicate of `COMMUNITY_URL` in `src/data/constants.ts`. Vite config runs in Node and cannot import from `src/`, so the value must be maintained manually in both places. Always update them together.
 - The domain `community.open-ecosystem.com` in both `vite.config.ts` and `src/data/constants.ts` is the actual Discourse server URL used for API calls at build time. It is not a brand inconsistency. Do not change it to `community.offon.dev` or any other display name. `COMMUNITY_DISPLAY_NAME` in `src/data/constants.ts` is the separate user-facing label shown in the UI.
 
@@ -609,22 +609,22 @@ All UI labels use **title case (Chicago style)**. Body copy uses **sentence case
 When adding a new route to `src/routes.ts`, follow these rules by route type:
 
 - Static routes (e.g. `/about`, `/privacy`): add to `public/sitemap.xml`, the routes table in `README.md`, and the `prerender` array in `react-router.config.ts`.
-- Dynamic routes with statically known IDs (e.g. `/adventures/:id` when IDs are fixed): add individual URLs to `public/sitemap.xml`, the `prerender` array in `react-router.config.ts`, and the routes table in `README.md`. Also add the topic ID and URL to `DISCUSSION_TOPICS` in `vite.config.ts` if the level has a discussion thread.
+- Dynamic routes with statically known IDs (e.g. `/adventures/:id` when IDs are fixed): add individual URLs to `public/sitemap.xml`, the `prerender` array in `react-router.config.ts`, and the routes table in `README.md`. Also create a per-level discussion JSON file in `src/data/adventures/` if the level has a discussion thread.
 - Redirect routes (clientLoader returning redirect()): do not add to `sitemap.xml` or `README.md`.
 - Catch-all routes (`*`): do not add anywhere.
 
 ### When adding a new adventure
 
-Adventures are defined in `src/data/adventures.ts`. The Discourse API does not expose the structured data needed (Codespace URLs, technology tags, learnings), so this file is the authoritative source of truth. Update it manually when a new adventure is published on the community.
+Adventures are defined in `src/data/adventures/` as one TypeScript file per adventure (e.g. `blind-by-design.ts`), with shared types in `types.ts`, contributors in `contributors.ts`, and a barrel `index.ts` that re-exports `ADVENTURES`, `ALL_TAGS`, `ADVENTURE_CONTRIBUTORS`, and `getLevelsByTag`. The Discourse API does not expose the structured data needed (Codespace URLs, technology tags, learnings), so these files are the authoritative source of truth. Update them manually when a new adventure is published on the community.
 
 Complete checklist for every new adventure:
 
-1. Add the adventure object to the `ADVENTURES` array in `src/data/adventures.ts`. Required fields: `id`, `title`, `month`, `story`, `tags`, and `levels`. Each level needs `id`, `name`, `difficulty`, `learnings`, `codespacesUrl`, and `discussionUrl`. For `codespacesUrl`, use the `CODESPACES_BASE` constant with a `devcontainer_path` parameter pointing to the level's specific devcontainer config, e.g. `` `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F04-blind-by-design_01-beginner%2Fdevcontainer.json&quickstart=1` ``. Never use `quickstart=1` alone — that launches the generic default devcontainer.
+1. Create a new adventure file `src/data/adventures/<id>.ts` (use the scaffold script: `node scripts/new-adventure.mjs`). Import `CODESPACES_BASE` and `COMMUNITY_URL` from `@/data/constants` and the `Adventure` type from `./types`. Required fields: `id`, `title`, `month`, `story`, `tags`, and `levels`. Each level needs `id`, `name`, `difficulty`, `learnings`, `codespacesUrl`, and `discussionUrl`. For `codespacesUrl`, use the `CODESPACES_BASE` constant with a `devcontainer_path` parameter pointing to the level's specific devcontainer config, e.g. `` `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F04-blind-by-design_01-beginner%2Fdevcontainer.json&quickstart=1` ``. Never use `quickstart=1` alone, that launches the generic default devcontainer.
 2. Add the adventure detail route and all level routes to `src/routes.ts`.
 3. Add the adventure landing page URL and every level URL to `public/sitemap.xml`.
 4. Add the adventure landing page URL and every level URL to the `prerender` array in `react-router.config.ts`.
-5. Add each level's Discourse topic ID and full topic URL to the `DISCUSSION_TOPICS` map in `vite.config.ts`. The key is the numeric topic ID extracted from the discussion URL (e.g. `"117"` from `.../t/.../117/...`).
-6. Run `npm run build` to fetch fresh discussion data for the new topic IDs and verify that `src/data/discussion-data.json` was updated.
+5. Create a per-level JSON file at `src/data/adventures/<adventure-id>/<level-id>.json` with `{ "discussionUrl": "<full-topic-url>" }` for each level that has a discussion thread.
+6. Run `node scripts/refresh-discussions.mjs` to fetch discussion posts for the new levels.
 7. Update the routes table in `README.md`.
 
 ---
@@ -668,7 +668,7 @@ State the result of each check explicitly before finishing a task.
 
 8. **Verify at three viewports:** All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px). Always test against the production build (`npm run build && npm run preview`), never the dev server.
 
-9. **Check discussion data on every PR:** If the PR adds or modifies adventure levels, verify that every level's Discourse topic ID and URL are present in the `DISCUSSION_TOPICS` map in `vite.config.ts`. Run `npm run build` so `src/data/discussion-data.json` is regenerated with any new topics. A missing entry means the discussion feed will silently show no posts for that level.
+9. **Check discussion data on every PR:** If the PR adds or modifies adventure levels, verify that a per-level JSON file exists in `src/data/adventures/<adventure-id>/<level-id>.json` with the correct `discussionUrl`. Run `node scripts/refresh-discussions.mjs` to populate discussion posts. A missing file means the discussion feed will silently show no posts for that level.
 
 ### Before writing any code
 
@@ -703,7 +703,7 @@ State the result of each check explicitly before finishing a task.
 - Do not commit secrets, tokens, or credentials.
 - Do not change the `@theme` block in `src/index.css` without verifying the change does not break existing components.
 - Do not reinstall `@radix-ui/*` packages that were removed. If a Radix primitive is genuinely needed, check whether raw HTML with Tailwind solves the problem first.
-- Do not re-derive data from `ADVENTURES` inside component files. Any computed value that belongs to the data layer (e.g. a deduplicated tag list) should be exported from `src/data/adventures.ts` and imported. `ALL_TAGS` is the established pattern.
+- Do not re-derive data from `ADVENTURES` inside component files. Any computed value that belongs to the data layer (e.g. a deduplicated tag list) should be exported from `src/data/adventures/index.ts` and imported. `ALL_TAGS` is the established pattern.
 
 ---
 

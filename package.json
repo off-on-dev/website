@@ -13,7 +13,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "new-adventure": "node scripts/new-adventure.mjs",
+    "new-level": "node scripts/new-level.mjs"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

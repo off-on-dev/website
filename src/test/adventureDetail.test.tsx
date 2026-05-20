@@ -14,18 +14,6 @@ vi.mock('@/components/CommunitySidebar', () => ({
   CommunitySidebar: () => <div data-testid="community-sidebar" />,
 }));
 
-vi.mock('@/hooks/useLevelData', () => ({
-  useLevelData: () => ({
-    intro: ["Test intro paragraph"],
-    backstory: ["Test backstory"],
-    architecture: ["Test architecture"],
-    objective: ["Objective 1"],
-    toolbox: [{ name: "kubectl", description: "CLI tool" }],
-    howToPlay: [{ title: "Step 1", body: "Do something" }],
-    verification: { command: "./verify.sh", description: "Run verification" },
-  }),
-}));
-
 const adventure = ADVENTURES[0];
 const level = adventure.levels[0];
 
