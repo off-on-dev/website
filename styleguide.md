@@ -772,8 +772,6 @@ No props. Self-contained section component.
 
 ---
 
----
-
 ### `DiscussionSection`
 
 `src/components/DiscussionSection.tsx`

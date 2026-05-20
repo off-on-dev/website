@@ -74,7 +74,9 @@ const ChallengeDetail = (): JSX.Element => {
     : extendedData.architecture;
   const objective = level.objectives ?? extendedData.objective;
   const toolbox = level.toolbox ?? extendedData.toolbox;
-  const howToPlay = level.howToPlay ?? extendedData.howToPlay;
+  const howToPlay = level.howToPlay
+    ? level.howToPlay.map((s) => ({ title: "", body: s }))
+    : extendedData.howToPlay;
   const verification = level.verification ?? extendedData.verification;
 
   const hasStructuredContent = !!(
