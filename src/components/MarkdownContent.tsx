@@ -34,6 +34,7 @@ const CodeBlock = ({ children }: { children: ReactNode }): JSX.Element => {
     <div className="relative mb-4 group">
       <pre
         ref={preRef}
+        tabIndex={0}
         className="overflow-x-auto rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-4 pr-14 font-mono text-sm leading-relaxed text-foreground"
       >
         {children}

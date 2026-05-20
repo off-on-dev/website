@@ -1,5 +1,4 @@
 import type { JSX } from "react";
-import { ListChecks } from "lucide-react";
 import { CollapsibleSection } from "@/components/CollapsibleSection";
 import { MarkdownContent } from "@/components/MarkdownContent";
 import type { WalkthroughStep } from "@/data/adventures";
@@ -9,7 +8,7 @@ type WalkthroughSectionProps = {
 };
 
 export const WalkthroughSection = ({ steps }: WalkthroughSectionProps): JSX.Element => (
-  <CollapsibleSection id="walkthrough" title="Walkthrough" icon={ListChecks}>
+  <CollapsibleSection id="walkthrough" title="Walkthrough">
     <ol className="space-y-5">
       {steps.map((step, i) => (
         <li

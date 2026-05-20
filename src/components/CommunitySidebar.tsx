@@ -1,5 +1,5 @@
 import { type CSSProperties, type JSX, useMemo } from "react";
-import { ArrowRight, CircleCheck, MessageCircle, Trophy } from "lucide-react";
+import { ArrowRight, CircleCheck, Trophy } from "lucide-react";
 import { COMMUNITY_URL, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
 import { useDiscussionPosts, type PostWithAge } from "@/hooks/useDiscussionPosts";
 import { ContributorBadge } from "@/components/ContributorBadge";
@@ -13,12 +13,15 @@ const avatarPalette: CSSProperties[] = [
   { backgroundColor: "hsl(var(--destructive) / 0.25)", color: "hsl(var(--foreground))" },
 ];
 
+const CERT_RE = /(?:---|\u2014)\s*CERTIFICATE START\s*(?:---|\u2014)[\s\S]*?(?:---|\u2014)\s*CERTIFICATE END\s*(?:---|\u2014)/;
+
 const isCertificatePost = (post: PostWithAge): boolean =>
   post.cooked.includes("CERTIFICATE START");
 
 const displaySnippet = (post: PostWithAge): string => {
-  if (isCertificatePost(post)) return "Completed the challenge.";
-  return post.cooked;
+  if (!isCertificatePost(post)) return post.cooked;
+  const stripped = post.cooked.replace(CERT_RE, "").trim();
+  return stripped || "Completed the challenge.";
 };
 
 type TopPlayer = { username: string; count: number };
@@ -62,19 +65,19 @@ export const CommunitySidebar = ({
 
   const nonCertPosts = useMemo(() => posts.filter((p) => !isCertificatePost(p)), [posts]);
   const visibleCount = 3;
-  const visible = nonCertPosts.slice(0, visibleCount);
+  // Show non-cert posts if available; fall back to cert posts so activity is never empty when posts exist
+  const visible = nonCertPosts.length > 0
+    ? nonCertPosts.slice(0, visibleCount)
+    : posts.slice(0, visibleCount);
   const more = Math.max(0, totalReplies - visible.length);
   const hasLeaderboard = topPlayers.length > 0;
   const hasActivity = visible.length > 0;
 
   return (
     <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-      <div className="flex items-center gap-2 mb-5">
-        <MessageCircle size={14} className="text-primary" aria-hidden="true" />
-        <p className="font-sans text-sm font-semibold tracking-wide text-primary">
-          Community
-        </p>
-      </div>
+      <p className="font-sans text-sm font-semibold tracking-wide text-primary mb-5">
+        Community
+      </p>
 
       {/* Challenge builder */}
       {contributor && (

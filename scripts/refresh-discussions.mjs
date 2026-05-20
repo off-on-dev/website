@@ -13,8 +13,6 @@ import { join, resolve } from "node:path";
 
 const COMMUNITY_BASE = "https://community.open-ecosystem.com";
 const ADVENTURES_DIR = resolve("src/data/adventures");
-const MIN_POST_TEXT_LENGTH = 20;
-
 /**
  * Extracts user-written plain text from a Discourse "cooked" HTML post.
  * Removes onebox embeds, images, URLs, and metadata.
@@ -36,8 +34,35 @@ function extractPostText(html) {
     .trim();
 }
 
-function hasSubstantialText(html) {
-  return extractPostText(html).length >= MIN_POST_TEXT_LENGTH;
+/**
+ * Returns true when the post contains at least some plain text, OR when the
+ * raw HTML contains a GitHub link (challenge submissions often consist solely
+ * of a GitHub repo/actions onebox + screenshot with no prose).
+ */
+function hasChallengeSolvedBadge(post) {
+  return (post.badges_granted ?? []).some((bg) =>
+    (bg.badges ?? []).some((b) => b.slug === "challenge-solved")
+  );
+}
+
+function isMeaningfulPost(html, post) {
+  return (
+    extractPostText(html).length > 0 ||
+    /github\.com/.test(html) ||
+    hasChallengeSolvedBadge(post)
+  );
+}
+
+/**
+ * Returns the plain-text snippet to store. Falls back to a short description
+ * when the post body is purely links/images with no extractable text.
+ */
+function getCookedText(html, post) {
+  const text = extractPostText(html);
+  if (text.length > 0) return text;
+  if (hasChallengeSolvedBadge(post)) return "Completed the challenge.";
+  if (/github\.com/.test(html)) return "Submitted a solution.";
+  return "";
 }
 
 function extractTopicId(url) {
@@ -72,12 +97,12 @@ async function fetchTopicPosts(topicId, topicUrl) {
 
     const storedPosts = posts
       .slice(1)
-      .filter((p) => hasSubstantialText(p.cooked))
+      .filter((p) => isMeaningfulPost(p.cooked, p))
       .slice(-8)
       .reverse()
       .map((p) => ({
         username: p.username,
-        cooked: extractPostText(p.cooked),
+        cooked: getCookedText(p.cooked, p),
         created_at: p.created_at,
         like_count: p.like_count,
         topicUrl,

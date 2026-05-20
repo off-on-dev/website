@@ -82,15 +82,15 @@
       "topicUrl": "https://community.open-ecosystem.com/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
     },
     {
-      "username": "KatharinaSick",
-      "cooked": "That’s actually part of what you need to solve in the challenge! We’ll publish a complete walkthrough after the challenge deadline (December 10), so you can see the full solution and compare approaches. In the meantime, the ArgoCD docs on ApplicationSets might give you some helpful hints. Good luck!",
-      "created_at": "2025-11-26T07:11:42.274Z",
+      "username": "georgblumenschein",
+      "cooked": "Completed the challenge.",
+      "created_at": "2025-11-26T10:15:59.893Z",
       "topicUrl": "https://community.open-ecosystem.com/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
     },
     {
-      "username": "RoelofW",
-      "cooked": "Thanks And one question left I have this in my .yaml file namespace: argocd How do I make this work ❌ Namespace ‘echo-staging’ does not exist￼",
-      "created_at": "2025-11-26T07:04:28.435Z",
+      "username": "KatharinaSick",
+      "cooked": "That’s actually part of what you need to solve in the challenge! We’ll publish a complete walkthrough after the challenge deadline (December 10), so you can see the full solution and compare approaches. In the meantime, the ArgoCD docs on ApplicationSets might give you some helpful hints. Good luck!",
+      "created_at": "2025-11-26T07:11:42.274Z",
       "topicUrl": "https://community.open-ecosystem.com/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
     }
   ],
