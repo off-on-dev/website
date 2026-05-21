@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { Hammer } from "lucide-react";
+import { Hammer, ExternalLink } from "lucide-react";
 
 type ContributorBadgeProps = {
   name: string;
@@ -31,6 +31,7 @@ export const ContributorBadge = ({ name, url, glow = false }: ContributorBadgePr
         className={`${pillClass} hover:border-primary/40 hover:bg-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1`}
       >
         {content}
+        <ExternalLink size={11} aria-hidden="true" />
         <span className="sr-only"> (opens in new tab)</span>
       </a>
     );

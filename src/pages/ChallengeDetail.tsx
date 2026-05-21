@@ -1,7 +1,7 @@
 import { type JSX, useMemo } from "react";
 import { useParams, Link } from "react-router";
 import type { LinksFunction, MetaFunction } from "react-router";
-import { ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, ExternalLink } from "lucide-react";
 import { ADVENTURES } from "@/data/adventures";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { ContributorBadge } from "@/components/ContributorBadge";
@@ -81,8 +81,8 @@ const StructuredLayout = ({
   const outlineSections = useMemo((): SectionOutlineItem[] => {
     const items: SectionOutlineItem[] = [];
     if (objective && objective.length > 0) items.push({ id: "objective", label: "Objective" });
-    if (toolbox && toolbox.length > 0) items.push({ id: "toolbox", label: "Toolbox" });
     items.push({ id: "learnings", label: "Key Learnings" });
+    if (toolbox && toolbox.length > 0) items.push({ id: "toolbox", label: "Toolbox" });
     if (backstory && backstory.length > 0) items.push({ id: "backstory", label: "The Story" });
     if (architecture && architecture.length > 0) items.push({ id: "architecture", label: "Architecture" });
     if (howToPlay && howToPlay.length > 0) items.push({ id: "walkthrough", label: "Walkthrough" });
@@ -99,14 +99,7 @@ const StructuredLayout = ({
         </p>
         <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">{level.name}</h1>
 
-        {/* Intro as hook */}
-        {intro && intro.length > 0 && (
-          <p className="text-[hsl(var(--text-secondary))] leading-relaxed mb-5 max-w-3xl">
-            {intro[0]}
-          </p>
-        )}
-
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 mb-5">
           <DifficultyBadge difficulty={level.difficulty} showDot />
           {adventure.tags.map((tag) => (
             <span
@@ -117,76 +110,83 @@ const StructuredLayout = ({
             </span>
           ))}
         </div>
+
+        {/* Intro as hook */}
+        {intro && intro.length > 0 && (
+          <p className="text-[hsl(var(--text-secondary))] leading-relaxed mb-5 max-w-3xl">
+            {intro[0]}
+          </p>
+        )}
       </div>
 
       {/* Two-column layout: main content + sidebar */}
       <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-10">
         <div className="min-w-0">
-          {/* Objective + Toolbox side-by-side cards */}
-          {(objective || toolbox) && (
-            <div className="grid gap-5 sm:grid-cols-2 mb-6">
-              {objective && objective.length > 0 && (
-                <section id="objective" className="scroll-mt-28 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-                  <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
-                    Objective
-                  </h2>
-                  <ul className="space-y-2">
-                    {objective.map((item) => (
-                      <li key={item} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
-                        <Check size={14} className="mt-0.5 shrink-0 text-primary" aria-hidden="true" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              )}
-
-              {toolbox && toolbox.length > 0 && (
-                <section id="toolbox" className="scroll-mt-28 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-                  <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
-                    Toolbox
-                  </h2>
-                  <ul className="space-y-2">
-                    {toolbox.map((tool) => (
-                      <li key={tool.name} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
-                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                        <span>
-                          {tool.url ? (
-                            <a
-                              href={tool.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="docs-ext-link font-medium underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
-                            >
-                              {tool.name}<span className="sr-only"> (opens in new tab)</span>
-                            </a>
-                          ) : (
-                            <span className="font-medium text-foreground">{tool.name}</span>
-                          )}
-                          {tool.description && <>{" "}- {tool.description}</>}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              )}
-            </div>
+          {/* Objective card */}
+          {objective && objective.length > 0 && (
+            <section id="objective" className="mb-6 scroll-mt-28 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+              <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
+                Objective
+              </h2>
+              <ul className="space-y-2">
+                {objective.map((item) => (
+                  <li key={item} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+                    <Check size={14} className="mt-0.5 shrink-0 text-primary" aria-hidden="true" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
           )}
 
-          {/* Key Learnings */}
-          <section id="learnings" className="mb-6 scroll-mt-28 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-            <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
-              Key Learnings
-            </h2>
-            <ul className="space-y-2">
-              {level.learnings.map((learning) => (
-                <li key={learning} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
-                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                  <span>{learning}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
+          {/* Key Learnings + Toolbox side-by-side cards */}
+          <div className="grid gap-5 sm:grid-cols-2 mb-6">
+            <section id="learnings" className="scroll-mt-28 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+              <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
+                Key Learnings
+              </h2>
+              <ul className="space-y-2">
+                {level.learnings.map((learning) => (
+                  <li key={learning} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                    <span>{learning}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            {toolbox && toolbox.length > 0 && (
+              <section id="toolbox" className="scroll-mt-28 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+                <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
+                  Toolbox
+                </h2>
+                <ul className="space-y-2">
+                  {toolbox.map((tool) => (
+                    <li key={tool.name} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                      <span>
+                        {tool.url ? (
+                          <a
+                            href={tool.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="docs-ext-link font-medium"
+                          >
+                            {tool.name}
+                            <ExternalLink size={12} aria-hidden="true" />
+                            <span className="sr-only"> (opens in new tab)</span>
+                          </a>
+                        ) : (
+                          <span className="font-medium text-foreground">{tool.name}</span>
+                        )}
+                        {tool.description && <>{" "}- {tool.description}</>}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+          </div>
 
           {/* Mobile CTA - visible only below lg, after Key Learnings */}
           <div className="mb-6 lg:hidden">
@@ -248,9 +248,9 @@ const StructuredLayout = ({
                     href={level.discussionUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="docs-ext-link font-medium underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+                    className="docs-ext-link font-medium"
                   >
-                    challenge thread<span className="sr-only"> (opens in new tab)</span>
+                    challenge thread <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                   </a>{" "}
                   on {COMMUNITY_DISPLAY_NAME}.
                 </span>

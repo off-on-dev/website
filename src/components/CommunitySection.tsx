@@ -65,9 +65,9 @@ export const CommunitySection = ({ aside }: { aside?: ReactNode }): JSX.Element 
               href={card.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="docs-ext-link mt-5 inline-flex items-center gap-1 text-sm font-medium underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+              className="docs-ext-link mt-5 text-sm font-medium"
             >
-              {card.cta} <ArrowRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+              {card.cta} <ArrowRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
             </a>
           </div>
         ))}

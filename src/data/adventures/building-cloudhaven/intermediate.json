@@ -3,52 +3,80 @@
   "discussionPosts": [
     {
       "username": "justinrand",
+      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/justinrand/40/140_2.png",
       "cooked": "almost fell behind",
       "created_at": "2026-02-01T18:19:45.928Z",
+      "challengeSolved": true,
       "topicUrl": "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10"
     },
     {
       "username": "KatharinaSick",
+      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/katharinasick/40/9_2.png",
       "cooked": "The expert level is now live. And the deadline for all 3 levels has been extended until Wednesday, 4 February 2026 at 23:59 CET Adventure 02: Building CloudHaven | Expert: The Guardian Protocols",
       "created_at": "2026-01-30T05:27:19.278Z",
       "topicUrl": "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10"
     },
     {
       "username": "gsigmund",
+      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/gsigmund/40/99_2.png",
       "cooked": "Completed the challenge.",
       "created_at": "2026-01-24T14:53:00.108Z",
+      "challengeSolved": true,
       "topicUrl": "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10"
     },
     {
       "username": "enri-kapaj",
+      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/enri-kapaj/40/165_2.png",
       "cooked": "Good Morning Thank u for the fast reaponse and for updating the ci pipeline indeed the hints were very helpfull. Just confirming that on my side is all good now. Regrads",
       "created_at": "2026-01-22T09:42:45.887Z",
       "topicUrl": "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10"
     },
     {
       "username": "KatharinaSick",
+      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/katharinasick/40/9_2.png",
       "cooked": "Good morning, I took a look at your adventure and there are still a few tiny things missing. I had a hard time with the smoke test on this one as I couldn’t test if e.g. all necessary conditions are covered in the integration test. By looking at your code, I realized that the GitHub action verification script is definitely not giving away enough information to make up for the smoke test. Therefore, I added some more hints there in case something fails. If you rerun it and then open the logs for your run, you should see much more details. Thanks again for reporting and have fun playing",
       "created_at": "2026-01-22T07:39:04.233Z",
       "topicUrl": "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10"
     },
     {
       "username": "KatharinaSick",
+      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/katharinasick/40/9_2.png",
       "cooked": "Oh no. Thanks for reporting and sorry for the inconveniences! I’ll take a look and get back to you once it’s fixed.",
       "created_at": "2026-01-21T15:14:37.154Z",
       "topicUrl": "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10"
     },
     {
       "username": "enri-kapaj",
+      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/enri-kapaj/40/165_2.png",
       "cooked": "Hello i managed to find the solution but when i try to run the ci pipeline i get an error:",
       "created_at": "2026-01-21T15:11:09.831Z",
+      "challengeSolved": true,
       "topicUrl": "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10"
     },
     {
       "username": "KatharinaSick",
+      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/katharinasick/40/9_2.png",
       "cooked": "Hey Unfortunately, this would create too much overlap with the February adventure that is coming next month. Sorry! But in theory, you should be able to run the challenge locally as GitHub Codespaces are just devcontainers in the end. Also, the deadline just means that no points will be rewarded afterwards. You can always play all past challenges for learning. I created a GitHub issue to take a look at local execution as well:",
       "created_at": "2026-01-21T13:00:49.192Z",
       "topicUrl": "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10"
     }
   ],
-  "totalReplies": 9
+  "totalReplies": 9,
+  "solvers": [
+    {
+      "username": "enri-kapaj",
+      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/enri-kapaj/40/165_2.png",
+      "solvedAt": "2026-01-21T15:11:09.831Z"
+    },
+    {
+      "username": "gsigmund",
+      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/gsigmund/40/99_2.png",
+      "solvedAt": "2026-01-24T14:53:00.108Z"
+    },
+    {
+      "username": "justinrand",
+      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/justinrand/40/140_2.png",
+      "solvedAt": "2026-02-01T18:19:45.928Z"
+    }
+  ]
 }

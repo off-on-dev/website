@@ -17,6 +17,9 @@ export const BUILDING_CLOUDHAVEN: Adventure = {
       learnings: ["Infrastructure as Code with OpenTofu", "Remote state management with GCS backend", "Dynamic & conditional resources"],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F02-building-cloudhaven_01-beginner%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656`,
+      intro: [
+        "An incomplete OpenTofu configuration is blocking the Merchant's Quarter from going live. Fix the broken backend, wire up dynamic resource provisioning with for_each, and use the new enabled meta-argument to conditionally deploy the audit database.",
+      ],
       backstory: [
         "The Merchant's Quarter needs essential services, but the previous Guild engineer left the OpenTofu configuration incomplete and misconfigured. Your mission: fix the issues, complete the setup, and establish proper infrastructure management for the Guild.",
       ],
@@ -45,6 +48,9 @@ export const BUILDING_CLOUDHAVEN: Adventure = {
       learnings: ["OpenTofu module testing with tofu test", "Test-Driven Development (TDD) workflow", "Input validation with regex"],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F02-building-cloudhaven_02-intermediate%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10`,
+      intro: [
+        "A senior engineer wrote the tests first and then left. The module code is buggy and the integration test is incomplete. Fix the implementation to match the test expectations, complete the end-to-end test, and use moved blocks to refactor without destroying state.",
+      ],
       backstory: [
         "After fixing the Foundation Stones, CloudHaven is thriving. The city has grown to three districts, and the Guild decided to refactor the infrastructure into reusable modules.",
         "A senior engineer started the work using Test-Driven Development, writing tests first then implementing. But they were called away before finishing, leaving behind working tests and buggy code that doesn't match them. Your mission: fix the bugs, complete the integration test, and deploy the infrastructure.",
@@ -73,6 +79,9 @@ export const BUILDING_CLOUDHAVEN: Adventure = {
       learnings: ["GitHub Actions for drift detection and plan/apply", "Integration tests with service containers", "Security scanning with Trivy"],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F02-building-cloudhaven_03-expert%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8`,
+      intro: [
+        "Three broken GitHub Actions workflows stand between CloudHaven and automated infrastructure governance. Fix drift detection that creates PRs, PR validation with Trivy security scanning and service-container integration tests, and automatic apply on merge.",
+      ],
       backstory: [
         "After the Modular Metropolis refactoring, CloudHaven flourished. But with growth came risk. One night, a rogue change slipped through unnoticed and nearly brought down the North Market's trading vaults. The Council was furious: how could this happen without anyone noticing?",
         "The Guild Master summoned you urgently. \"We need guardians,\" she said. \"Automated sentinels that watch over our infrastructure day and night. They must catch dangerous changes before they reach the city, detect when reality drifts from our blueprints, and sound the alarm when threats appear.\"",

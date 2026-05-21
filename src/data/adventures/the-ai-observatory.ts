@@ -17,6 +17,9 @@ export const THE_AI_OBSERVATORY: Adventure = {
       learnings: ["Instrument Python AI apps with OpenLLMetry", "Analyze traces in Jaeger"],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F03-the-ai-observatory_01-beginner%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8`,
+      intro: [
+        "Something is eating 847% of your station's bandwidth and nobody knows what. Instrument HubSystem with OpenLLMetry, send traces to the OpenTelemetry Collector, and use Jaeger to uncover what the AI is doing behind the scenes.",
+      ],
       backstory: [
         "You're a researcher stationed at Perimeter Alpha, a remote research outpost on the newly discovered planet HB-7742. Your team of six scientists is protected by a single SecUnit, assigned by the corporation to ensure your safety during the survey mission.",
         "Three weeks in, you notice something odd in your morning diagnostics: communication module usage at 847% above baseline. Nobody's streaming. Nobody's running large data transfers. The planet surveys are on schedule. So what's consuming all that bandwidth?",
@@ -57,6 +60,9 @@ export const THE_AI_OBSERVATORY: Adventure = {
       learnings: ["Instrument RAG pipelines with OpenLLMetry", "Create custom OpenTelemetry metrics in Python", "Write PromQL queries & recording rules in Prometheus"],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F03-the-ai-observatory_02-intermediate%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936/2`,
+      intro: [
+        "ART's RAG pipeline is retrieving entertainment data instead of navigation coordinates and won't calculate your jump. Instrument the full retrieval pipeline with OpenLLMetry, build a custom OTel metric to quantify the distraction, and write a Prometheus recording rule to prove it.",
+      ],
       backstory: [
         "You're a rogue SecUnit who just escaped from Preservation Station after being identified. A researcher helped you flee aboard the Perihelion, a university research vessel with a very opinionated AI.",
         "The ship's AI agreed to help you disappear. You've nicknamed it ART. The plan: jump to RaviHyral, lay low, and figure out your next move.",
@@ -97,6 +103,9 @@ export const THE_AI_OBSERVATORY: Adventure = {
       learnings: ["OpenTelemetry GenAI semantic conventions", "Tail sampling in the OTel Collector"],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F03-the-ai-observatory_03-expert%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/reduce-telemetry-noise-adventure-03-expert-is-live/999/1`,
+      intro: [
+        "ART is flooding Jaeger with 40,000 non-standard spans an hour. Fix the chat span to follow OpenTelemetry GenAI semantic conventions with proper token usage attributes, then configure tail sampling in the Collector to keep only traces that contain errors or exceed 5 seconds.",
+      ],
       backstory: [
         "You made it to RaviHyral. The Perihelion docked at Outpost Verada, a small independent research station run by a loose collective of academics who agreed to look the other way. In exchange, ART offered to share its observability data with the station's monitoring team.",
         "That was three hours ago. Now the station's lead engineer is at your docking port, looking annoyed: ART is flooding their Jaeger instance with 40,000 spans an hour. Every healthy query, every token. It doesn't even follow conventions. They only care about failures and anomalies.",

@@ -13,6 +13,17 @@ import { join, resolve } from "node:path";
 
 const COMMUNITY_BASE = "https://community.open-ecosystem.com";
 const ADVENTURES_DIR = resolve("src/data/adventures");
+
+/**
+ * Resolves a Discourse avatar_template to a full URL.
+ * Templates can be relative paths (/user_avatar/...) or full URLs (https://...).
+ */
+function resolveAvatarUrl(template, size = "40") {
+  if (!template) return undefined;
+  const resolved = template.replace("{size}", size);
+  if (resolved.startsWith("http")) return resolved;
+  return `${COMMUNITY_BASE}${resolved}`;
+}
 /**
  * Extracts user-written plain text from a Discourse "cooked" HTML post.
  * Removes onebox embeds, images, URLs, and metadata.
@@ -89,28 +100,67 @@ function findLevelFiles(dir) {
 async function fetchTopicPosts(topicId, topicUrl) {
   try {
     const res = await fetch(`${COMMUNITY_BASE}/t/${topicId}.json`);
-    if (!res.ok) return { posts: [], totalReplies: 0 };
+    if (!res.ok) return { posts: [], totalReplies: 0, solvers: [] };
 
     const data = await res.json();
-    const posts = data.post_stream?.posts ?? [];
+    const firstPagePosts = data.post_stream?.posts ?? [];
+    const allPostIds = data.post_stream?.stream ?? [];
 
-    const storedPosts = posts
-      .slice(1)
+    // Fetch remaining posts not included in the first page
+    const firstPageIds = new Set(firstPagePosts.map((p) => p.id));
+    const remainingIds = allPostIds.filter((id) => !firstPageIds.has(id));
+    let allPosts = [...firstPagePosts];
+
+    // Fetch in chunks of 20 (Discourse limit)
+    for (let i = 0; i < remainingIds.length; i += 20) {
+      const chunk = remainingIds.slice(i, i + 20);
+      const params = chunk.map((id) => `post_ids[]=${id}`).join("&");
+      const chunkRes = await fetch(`${COMMUNITY_BASE}/t/${topicId}/posts.json?${params}`);
+      if (chunkRes.ok) {
+        const chunkData = await chunkRes.json();
+        allPosts = allPosts.concat(chunkData.post_stream?.posts ?? []);
+      }
+    }
+
+    // Skip the OP (first post)
+    const replies = allPosts.slice(1);
+
+    // Extract solvers: all users with challenge-solved badge, ordered by post time
+    const seenSolvers = new Set();
+    const solvers = replies
+      .filter((p) => hasChallengeSolvedBadge(p))
+      .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+      .reduce((acc, p) => {
+        if (!seenSolvers.has(p.username)) {
+          seenSolvers.add(p.username);
+          acc.push({
+            username: p.username,
+            avatarUrl: resolveAvatarUrl(p.avatar_template),
+            solvedAt: p.created_at,
+          });
+        }
+        return acc;
+      }, []);
+
+    // Store last 8 meaningful posts for activity feed
+    const storedPosts = replies
       .filter((p) => isMeaningfulPost(p.cooked, p))
       .slice(-8)
       .reverse()
       .map((p) => ({
         username: p.username,
+        avatarUrl: resolveAvatarUrl(p.avatar_template),
         cooked: getCookedText(p.cooked, p),
         created_at: p.created_at,
         like_count: p.like_count,
+        challengeSolved: hasChallengeSolvedBadge(p) || undefined,
         topicUrl,
       }));
 
     const totalReplies = Math.max(0, (data.posts_count ?? 0) - 1);
-    return { posts: storedPosts, totalReplies };
+    return { posts: storedPosts, totalReplies, solvers };
   } catch {
-    return { posts: [], totalReplies: 0 };
+    return { posts: [], totalReplies: 0, solvers: [] };
   }
 }
 
@@ -126,9 +176,9 @@ async function main() {
     const topicId = extractTopicId(discussionUrl);
     if (!topicId) continue;
 
-    const { posts, totalReplies } = await fetchTopicPosts(topicId, discussionUrl);
+    const { posts, totalReplies, solvers } = await fetchTopicPosts(topicId, discussionUrl);
 
-    const newContent = { discussionUrl, discussionPosts: posts, totalReplies };
+    const newContent = { discussionUrl, discussionPosts: posts, totalReplies, solvers };
     const newJson = JSON.stringify(newContent, null, 2) + "\n";
     const oldJson = readFileSync(filePath, "utf-8");
 

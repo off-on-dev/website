@@ -1,6 +1,6 @@
 import { useState, type JSX } from "react";
 import { Link, useLocation } from "react-router";
-import { Sun, Moon, Menu, X } from "lucide-react";
+import { Sun, Moon, Menu, X, ExternalLink } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useTheme } from "@/hooks/useTheme";
 import { useActiveSection } from "@/hooks/useActiveSection";
@@ -11,7 +11,7 @@ import logoLight from "@/assets/offon-logo-light-color.svg";
 
 const OBSERVED_SECTIONS = ["challenges"];
 
-const linkCls = "inline-flex items-center min-h-[44px] text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent rounded px-1.5 -mx-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+const linkCls = "inline-flex items-center gap-1 min-h-[44px] text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent rounded px-1.5 -mx-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 const activeCls = "text-primary underline decoration-primary underline-offset-4";
 
 type NavThemeToggleProps = { theme: "dark" | "light"; onToggle: () => void; className?: string };
@@ -62,7 +62,7 @@ const NavLinks = ({ homeActive, challengesActive, onNavigate }: NavLinksProps): 
       className={linkCls}
       onClick={onNavigate}
     >
-      Community<span className="sr-only"> (opens in new tab)</span>
+      Community <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
     </a>
     <NavLink to="/handbook" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Handbook</NavLink>
     <NavLink to="/sponsors" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Sponsors</NavLink>

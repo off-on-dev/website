@@ -14,8 +14,6 @@ const avatarPalette: CSSProperties[] = [
   { backgroundColor: "hsl(var(--destructive) / 0.25)", color: "hsl(var(--foreground))" },
 ];
 
-type TopPlayer = { username: string; count: number };
-
 type CommunitySidebarProps = {
   adventureId: string;
   levelId: string;
@@ -23,7 +21,7 @@ type CommunitySidebarProps = {
   contributor?: Adventure["contributor"];
 };
 
-const SectionLabel = ({ children }: { children: string }): JSX.Element => (
+const SidebarLabel = ({ children }: { children: string }): JSX.Element => (
   <p className="font-mono text-[0.65rem] uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">
     {children}
   </p>
@@ -35,23 +33,13 @@ export const CommunitySidebar = ({
   discussionUrl,
   contributor,
 }: CommunitySidebarProps): JSX.Element => {
-  const { posts, totalReplies } = useDiscussionPosts(adventureId, levelId);
+  const { posts, totalReplies, solvers } = useDiscussionPosts(adventureId, levelId);
   const hasThread = discussionUrl !== COMMUNITY_URL;
 
-  // Derive solvedCount and topPlayers from certificate posts
-  const { solvedCount, topPlayers } = useMemo(() => {
-    const certPosts = posts.filter(isCertificatePost);
-    const userCounts = new Map<string, number>();
-    for (const post of certPosts) {
-      userCounts.set(post.username, (userCounts.get(post.username) ?? 0) + 1);
-    }
-    const uniqueSolvers = userCounts.size;
-    const leaders: TopPlayer[] = Array.from(userCounts.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5)
-      .map(([username, count]) => ({ username, count }));
-    return { solvedCount: uniqueSolvers, topPlayers: leaders };
-  }, [posts]);
+  const LEADERBOARD_VISIBLE = 3;
+  const hasLeaderboard = solvers.length > 0;
+  const topSolvers = solvers.slice(0, LEADERBOARD_VISIBLE);
+  const remainingSolvers = solvers.length - LEADERBOARD_VISIBLE;
 
   const nonCertPosts = useMemo(() => posts.filter((p) => !isCertificatePost(p)), [posts]);
   const visibleCount = 3;
@@ -60,7 +48,6 @@ export const CommunitySidebar = ({
     ? nonCertPosts.slice(0, visibleCount)
     : posts.slice(0, visibleCount);
   const more = Math.max(0, totalReplies - visible.length);
-  const hasLeaderboard = topPlayers.length > 0;
   const hasActivity = visible.length > 0;
 
   return (
@@ -79,33 +66,45 @@ export const CommunitySidebar = ({
       {/* Leaderboard */}
       {hasLeaderboard && (
         <div className="mb-5 pb-5 border-b border-[hsl(var(--surface-border))]">
-          <SectionLabel>Leaderboard</SectionLabel>
+          <SidebarLabel>Leaderboard</SidebarLabel>
           <ol className="space-y-2.5" aria-label="Players who completed this challenge">
-            {topPlayers.map((player, i) => (
+            {topSolvers.map((solver, i) => (
               <li
-                key={player.username}
+                key={solver.username}
                 className="flex items-center gap-3 text-sm"
               >
                 <span className="font-mono text-xs text-[hsl(var(--text-faint))] w-4 shrink-0 text-right" aria-hidden="true">
                   {i + 1}
                 </span>
-                <div
-                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[0.6rem] font-semibold"
-                  style={avatarPalette[i % avatarPalette.length]}
-                  aria-hidden="true"
-                >
-                  {player.username.slice(0, 2).toUpperCase()}
-                </div>
+                {solver.avatarUrl ? (
+                  <img
+                    src={solver.avatarUrl}
+                    alt=""
+                    aria-hidden="true"
+                    width={24}
+                    height={24}
+                    className="h-6 w-6 shrink-0 rounded-full"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div
+                    className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[0.6rem] font-semibold"
+                    style={avatarPalette[i % avatarPalette.length]}
+                    aria-hidden="true"
+                  >
+                    {solver.username.slice(0, 2).toUpperCase()}
+                  </div>
+                )}
                 <span className="font-medium text-foreground min-w-0 flex-1 truncate">
-                  {player.username}
+                  {solver.username}
                 </span>
                 <Trophy size={12} className="shrink-0 text-primary" aria-hidden="true" />
               </li>
             ))}
           </ol>
-          {solvedCount > 5 && (
+          {remainingSolvers > 0 && (
             <p className="text-xs text-[hsl(var(--text-secondary))] mt-3">
-              Solved by {solvedCount}
+              +{remainingSolvers} more solved this challenge
             </p>
           )}
         </div>
@@ -114,7 +113,7 @@ export const CommunitySidebar = ({
       {/* Latest activity */}
       {hasActivity ? (
         <div className="mb-5">
-          <SectionLabel>Latest activity</SectionLabel>
+          <SidebarLabel>Latest activity</SidebarLabel>
 
           <div className="space-y-3">
             {visible.map((post) => (
@@ -145,7 +144,7 @@ export const CommunitySidebar = ({
         href={hasThread ? discussionUrl : COMMUNITY_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+        className="docs-ext-link text-sm font-medium"
       >
         {hasThread && more > 0
           ? `+${more} more ${more === 1 ? "post" : "posts"}, join the discussion`

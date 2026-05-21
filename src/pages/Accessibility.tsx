@@ -1,6 +1,7 @@
 import type { JSX } from "react";
 import type { MetaFunction } from "react-router";
 import { Link } from "react-router";
+import { ExternalLink } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
@@ -18,7 +19,7 @@ const Accessibility = (): JSX.Element => {
   const heading3 = "text-lg font-heading font-semibold text-foreground mt-6 mb-2";
   const paragraph = "text-sm text-muted-foreground leading-relaxed mb-4";
   const list = "list-disc list-inside space-y-1 text-sm text-muted-foreground mb-4 ml-2";
-  const link = "underline underline-offset-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
+  const link = "inline-flex items-center gap-1 underline underline-offset-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
 
   return (
     <div className="min-h-screen bg-background">
@@ -41,7 +42,7 @@ const Accessibility = (): JSX.Element => {
               <li>
                 <strong>Target:</strong>{" "}
                 <a href="https://www.w3.org/TR/WCAG22/" target="_blank" rel="noopener noreferrer" className={link}>
-                  WCAG 2.2 Level AA<span className="sr-only"> (opens in new tab)</span>
+                  WCAG 2.2 Level AA <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>{" "}
                 across every page on offon.dev.
               </li>
@@ -81,7 +82,7 @@ const Accessibility = (): JSX.Element => {
               <li>
                 Tested with{" "}
                 <a href="https://github.com/dequelabs/axe-core" target="_blank" rel="noopener noreferrer" className={link}>
-                  axe-core<span className="sr-only"> (opens in new tab)</span>
+                  axe-core <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>{" "}
                 on every pull request preview, in both light and dark mode.
               </li>
@@ -161,7 +162,7 @@ const Accessibility = (): JSX.Element => {
                 rel="noopener noreferrer"
                 className={link}
               >
-                open an accessibility issue<span className="sr-only"> (opens in new tab)</span>
+                open an accessibility issue <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
               </a>
               . The form prompts for the page, your assistive technology, and severity, which helps
               us reproduce and prioritize.
@@ -222,7 +223,7 @@ const Accessibility = (): JSX.Element => {
                 rel="noopener noreferrer"
                 className={link}
               >
-                CLAUDE.md<span className="sr-only"> (opens in new tab)</span>
+                CLAUDE.md <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
               </a>{" "}
               and applies to every change.
             </p>

@@ -962,9 +962,21 @@ html {
 /* ─── CommunityGuide external link states ──────────────── */
 /* Dark mode (default): yellow underline, foreground text */
 .docs-ext-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
   color: hsl(var(--foreground));
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
   text-decoration-color: hsl(var(--primary));
+  border-radius: 2px;
   transition: color 200ms ease, text-decoration-color 200ms ease;
+}
+
+.docs-ext-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
 }
 
 /* Dark mode hover: full primary amber (#ffc034) */

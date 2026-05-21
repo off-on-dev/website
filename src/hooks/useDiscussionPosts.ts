@@ -2,18 +2,27 @@ import { useState, useEffect } from "react";
 
 type StoredPost = {
   username: string;
+  avatarUrl?: string;
   cooked: string;
   created_at: string;
   like_count?: number;
+  challengeSolved?: boolean;
   topicUrl: string;
 };
 
 export type PostWithAge = StoredPost & { age: string };
 
+export type Solver = {
+  username: string;
+  avatarUrl?: string;
+  solvedAt: string;
+};
+
 /** Shape of the per-level JSON file's discussion fields. */
 type LevelDiscussionData = {
   discussionPosts?: StoredPost[];
   totalReplies?: number;
+  solvers?: Solver[];
 };
 
 // Exported so callers can type test mocks; tests inject a mock loader to
@@ -45,6 +54,7 @@ const defaultLoader: DiscussionDataLoader = async (adventureId, levelId) => {
 export type DiscussionResult = {
   posts: PostWithAge[];
   totalReplies: number;
+  solvers: Solver[];
 };
 
 /**
@@ -62,6 +72,7 @@ export function useDiscussionPosts(
 ): DiscussionResult {
   const [posts, setPosts] = useState<PostWithAge[]>([]);
   const [totalReplies, setTotalReplies] = useState(0);
+  const [solvers, setSolvers] = useState<Solver[]>([]);
 
   useEffect(() => {
     if (!adventureId || !levelId) return;
@@ -73,15 +84,17 @@ export function useDiscussionPosts(
         const now = Date.now();
         setPosts(raw.map((p) => ({ ...p, age: timeAgo(p.created_at, now) })));
         setTotalReplies(data.totalReplies ?? raw.length);
+        setSolvers(data.solvers ?? []);
       })
       .catch(() => {
         if (!cancelled) {
           setPosts([]);
           setTotalReplies(0);
+          setSolvers([]);
         }
       });
     return () => { cancelled = true; };
   }, [adventureId, levelId, loader]);
 
-  return { posts, totalReplies };
+  return { posts, totalReplies, solvers };
 }

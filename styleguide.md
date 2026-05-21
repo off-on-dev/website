@@ -1185,7 +1185,13 @@ Used in: `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`,
 Do not use `hover:text-primary` or `hover:underline` on inline content links — use `docs-ext-link` instead.
 
 ```ts
-const extLink = "docs-ext-link inline-flex items-center gap-1 underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
+// The CSS class now bundles: inline-flex, align-items, gap, underline,
+// decoration-thickness, underline-offset, border-radius, focus-visible ring,
+// and color/hover transitions. No additional utilities needed for basic usage.
+const extLink = "docs-ext-link";
+
+// Add contextual utilities as needed (font-size, weight, margin):
+className="docs-ext-link text-sm font-medium mt-4"
 ```
 
 ---

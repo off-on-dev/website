@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { Trophy, Target, Building2, Wrench, Heart, MessageCircle, HandHeart } from "lucide-react";
+import { Trophy, Target, Building2, Wrench, Heart, MessageCircle, HandHeart, ExternalLink } from "lucide-react";
 import { COMMUNITY_URL } from "@/data/constants";
 import communityLeadersData from "@/data/community-leaders.json";
 
@@ -63,9 +63,11 @@ const LeaderRow = ({ user, rank }: { user: LeaderUser; rank: number }): JSX.Elem
       href={`${COMMUNITY_URL}/u/${user.username}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-sm font-medium text-foreground min-w-0 flex-1 truncate hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+      className="docs-ext-link text-sm font-medium min-w-0 flex-1"
     >
-      {user.username}<span className="sr-only"> (opens in new tab)</span>
+      <span className="truncate">{user.username}</span>
+      <ExternalLink size={12} aria-hidden="true" className="shrink-0" />
+      <span className="sr-only"> (opens in new tab)</span>
     </a>
     <span className="text-xs font-mono text-[hsl(var(--text-secondary))] tabular-nums shrink-0">
       {user.count}

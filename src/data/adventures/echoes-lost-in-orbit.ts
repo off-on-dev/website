@@ -17,6 +17,9 @@ export const ECHOES_LOST_IN_ORBIT: Adventure = {
       learnings: ["Debug GitOps flows with Argo CD", "ApplicationSet templating & pitfalls", "Environment isolation & namespaces", "Sync policies: automated, prune & self-heal"],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F01-echoes-lost-in-orbit_beginner%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40`,
+      intro: [
+        "The Echo Server is down across both environments and messages are silent. Investigate the Argo CD ApplicationSet configuration, spot the templating pitfalls, and restore proper multi-environment delivery to bring communications back online.",
+      ],
       backstory: [
         "The Echo Server is misbehaving. Both environments seem to be down, and messages are silent. Your mission: investigate the Argo CD configuration and restore proper multi-environment delivery.",
       ],
@@ -45,6 +48,9 @@ export const ECHOES_LOST_IN_ORBIT: Adventure = {
       learnings: ["Progressive delivery with Argo Rollouts", "Canary deployments & automated analysis", "Write PromQL queries for health validation", "Kube-state-metrics for deployment decisions"],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F01-echoes-lost-in-orbit_intermediate%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/adventure-01-echoes-lost-in-orbit-intermediate-the-silent-canary/310/8`,
+      intro: [
+        "A canary rollout is stuck and the Zephyrians are still waiting to communicate. Debug the broken progressive delivery system by writing PromQL health checks that let Argo Rollouts automatically validate and advance the deployment.",
+      ],
       backstory: [
         "After fixing the communication outage in Level 1, the Intergalactic Union welcomed a new species: the Zephyrians.",
         "The communications team attempted to deploy their language files using a progressive delivery system, but the rollout is failing. The Zephyrians are still waiting to communicate with the rest of the galaxy.",
@@ -79,6 +85,9 @@ export const ECHOES_LOST_IN_ORBIT: Adventure = {
       learnings: ["Configure OpenTelemetry Collector pipelines", "Spanmetrics connector (traces to metrics)", "Detect idle canaries with traffic validation", "Distributed tracing with Jaeger"],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F01-echoes-lost-in-orbit_expert%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351/4`,
+      intro: [
+        "The observability pipeline is broken and HotROD's canary can't validate. Wire an OpenTelemetry Collector with spanmetrics to convert distributed traces into Prometheus metrics, then write PromQL queries that catch idle canaries, high error rates, and latency spikes before they reach production.",
+      ],
       backstory: [
         "After fixing the Zephyrian communications, word of your progressive release mastery spread across the galaxy. The Bytari, a highly advanced species from the Andromeda sector, were impressed.",
         "They want to apply progressive delivery to their mission-critical service: HotROD (Hyperspace Operations & Transport, Rapid Orbital Dispatch), an interstellar ride-sharing service handling dispatch requests across thousands of star systems. Every millisecond of latency matters, and any error could strand travelers between dimensions.",

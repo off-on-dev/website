@@ -11,7 +11,7 @@ import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/const
 import { CommunityLeaders } from "@/components/CommunityLeaders";
 import { buildPageMeta, interBoldPreload } from "@/lib/meta";
 
-const extLink = "docs-ext-link inline-flex items-center gap-1 underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
+const extLink = "docs-ext-link";
 
 export const links: LinksFunction = () => interBoldPreload;
 
@@ -50,7 +50,7 @@ const CommunityGuide = (): JSX.Element => {
                   Create your account to access challenges, Q&amp;A, community discussions, and everything else.
                 </p>
                 <a href={`${COMMUNITY_URL}/signup`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Create an account <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  Create an account <ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </div>
 
@@ -60,7 +60,7 @@ const CommunityGuide = (): JSX.Element => {
                   Say hello and tell the community who you are and what you're working on. It's the first step.
                 </p>
                 <a href={`${COMMUNITY_URL}/c/general/introductions/18`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Say hello <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  Say hello <ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </div>
 
@@ -70,7 +70,7 @@ const CommunityGuide = (): JSX.Element => {
                   Stuck on a technical problem? Post a clear question and get answers from the community. No question is too basic.
                 </p>
                 <a href={`${COMMUNITY_URL}/c/public-categories/q-a/10`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Ask a question <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  Ask a question <ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </div>
 
@@ -80,7 +80,7 @@ const CommunityGuide = (): JSX.Element => {
                   Share a tutorial, showcase a project, or write about what you've learned. Every contribution makes the community stronger.
                 </p>
                 <a href={`${COMMUNITY_URL}/c/community-voices/38`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Share something <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  Share something <ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </div>
             </div>
@@ -96,7 +96,7 @@ const CommunityGuide = (): JSX.Element => {
                   Hands-on scenarios with broken environments, misconfigured pipelines, and real-world failures to debug and fix. Post your solution and see how others approached it.
                 </p>
                 <a href={`${COMMUNITY_URL}/c/challenges/11`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Start a challenge <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  Start a challenge <ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </div>
 
@@ -106,7 +106,7 @@ const CommunityGuide = (): JSX.Element => {
                   Bring your expertise and experience. Help build adventures for others to learn from open source tech with a broken scenario, a real-world failure, or a skill gap. Shape the next adventure.
                 </p>
                 <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Submit an idea <ArrowUpRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  Submit an idea <ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </div>
             </div>

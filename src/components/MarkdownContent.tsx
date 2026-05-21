@@ -1,7 +1,7 @@
 import { useRef, useState, type JSX, type ReactNode } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Check, Copy } from "lucide-react";
+import { Check, Copy, ExternalLink } from "lucide-react";
 import { getSectionIcon, slugify } from "@/lib/markdown";
 
 const isExternalHref = (href: string | undefined): boolean =>
@@ -128,9 +128,10 @@ const components: Components = {
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className="docs-ext-link underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+          className="docs-ext-link"
         >
           {children}
+          <ExternalLink size={12} aria-hidden="true" className="shrink-0" />
           <span className="sr-only"> (opens in new tab)</span>
         </a>
       );
@@ -138,7 +139,7 @@ const components: Components = {
     return (
       <a
         href={href}
-        className="docs-ext-link underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+        className="docs-ext-link"
       >
         {children}
       </a>
@@ -167,6 +168,8 @@ const components: Components = {
       {children}
     </blockquote>
   ),
+  // Tables in adventure markdown are used as feature-card grids (2-column key/value).
+  // If real tabular data is ever needed, add a detection heuristic or a separate component.
   table: ({ children }) => (
     <table className="mb-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
       {children}

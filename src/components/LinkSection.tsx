@@ -8,7 +8,7 @@ type LinkSectionProps = {
   links: LinkItem[];
 };
 
-const extLinkCls = "docs-ext-link inline-flex items-center gap-1 underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
+const extLinkCls = "docs-ext-link";
 
 export const LinkSection = ({ heading, links }: LinkSectionProps): JSX.Element => (
   <div>
