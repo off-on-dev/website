@@ -46,12 +46,17 @@ jobs:
           fi
 
       - name: Run scaffold script
+        env:
+          ADVENTURE_ID: ${{ inputs.id }}
+          ADVENTURE_TITLE: ${{ inputs.title }}
+          ADVENTURE_MONTH: ${{ inputs.month }}
+          ADVENTURE_LEVELS: ${{ inputs.levels }}
         run: |
           node scripts/new-adventure.mjs \
-            --id "${{ inputs.id }}" \
-            --title "${{ inputs.title }}" \
-            --month "${{ inputs.month }}" \
-            --levels "${{ inputs.levels }}"
+            --id "$ADVENTURE_ID" \
+            --title "$ADVENTURE_TITLE" \
+            --month "$ADVENTURE_MONTH" \
+            --levels "$ADVENTURE_LEVELS"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6

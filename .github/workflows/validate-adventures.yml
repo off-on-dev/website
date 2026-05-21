@@ -38,7 +38,7 @@ jobs:
             fi
 
             # Extract level IDs from the TS file
-            level_ids=$(grep -oP 'id: "([^"]+)"' "$adventure_file" | grep -v "id: \"$adventure_id\"" | sed 's/id: "//;s/"//' || true)
+            level_ids=$(grep -oE 'id: "[^"]+"' "$adventure_file" | grep -v "id: \"$adventure_id\"" | sed 's/id: "//;s/"//' || true)
 
             # Check adventure landing page in prerender
             if ! grep -q "\"/adventures/$adventure_id\"" react-router.config.ts; then

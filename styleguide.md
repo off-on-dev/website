@@ -881,9 +881,10 @@ A native `<details>/<summary>` wrapper with consistent card styling, chevron ani
 | Prop | Type | Default | Description |
 |---|---|---|---|
 | `id` | `string` | required | Sets the `id` attribute on the `<details>` element for anchor linking. |
-| `title` | `string` | required | Text shown in the `<summary>` as an `h2`. |
+| `title` | `string` | required | Text shown in the `<summary>` as a heading. |
 | `children` | `ReactNode` | required | Content revealed when open. |
 | `defaultOpen` | `boolean?` | `true` | Whether the section starts expanded. |
+| `headingLevel` | `2 \| 3 \| 4` | `2` | The `aria-level` for the heading inside `<summary>`. Match the surrounding heading hierarchy. |
 
 ---
 

@@ -57,13 +57,25 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <div
-                    className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold"
-                    style={avatarPalette[i % avatarPalette.length]}
-                    aria-hidden="true"
-                  >
-                    {post.username.slice(0, 2).toUpperCase()}
-                  </div>
+                  {post.avatarUrl ? (
+                    <img
+                      src={post.avatarUrl}
+                      alt=""
+                      aria-hidden="true"
+                      width={32}
+                      height={32}
+                      loading="lazy"
+                      className="h-8 w-8 shrink-0 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div
+                      className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold"
+                      style={avatarPalette[i % avatarPalette.length]}
+                      aria-hidden="true"
+                    >
+                      {post.username.slice(0, 2).toUpperCase()}
+                    </div>
+                  )}
                   {post.age && (
                     <span className="text-xs text-[hsl(var(--text-faint))]">{post.age}</span>
                   )}

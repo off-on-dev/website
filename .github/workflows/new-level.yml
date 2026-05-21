@@ -38,10 +38,13 @@ jobs:
 
       - name: Run new-level script
         id: scaffold
+        env:
+          ADVENTURE_ID: ${{ inputs.adventure }}
+          LEVEL_ID: ${{ inputs.level }}
         run: |
           OUTPUT=$(node scripts/new-level.mjs \
-            --adventure "${{ inputs.adventure }}" \
-            --level "${{ inputs.level }}" 2>&1)
+            --adventure "$ADVENTURE_ID" \
+            --level "$LEVEL_ID" 2>&1)
           echo "$OUTPUT"
 
           # Extract the TS snippet (everything between "Paste this" and "Next steps")

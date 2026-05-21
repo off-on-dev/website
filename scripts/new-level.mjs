@@ -50,6 +50,11 @@ if (!args.level) fail("--level is required (e.g. --level expert)");
 const adventureId = args.adventure;
 const levelId = args.level;
 
+const VALID_LEVELS = ["beginner", "intermediate", "expert"];
+if (!VALID_LEVELS.includes(levelId)) {
+  fail(`--level must be one of: ${VALID_LEVELS.join(", ")}`);
+}
+
 const ADVENTURES_DIR = resolve(ROOT, "src/data/adventures");
 const adventureFile = resolve(ADVENTURES_DIR, `${adventureId}.ts`);
 const adventureDataDir = resolve(ADVENTURES_DIR, adventureId);

@@ -192,4 +192,7 @@ async function main() {
   console.log(`Done. ${updated} file(s) updated out of ${levelFiles.length} levels.`);
 }
 
-main();
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

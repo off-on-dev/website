@@ -156,11 +156,6 @@ if (adventureImportPattern.test(indexContent)) {
 
 // Add to ADVENTURES array (before the closing ];)
 indexContent = indexContent.replace(
-  /(\s+\w+),\n\];/,
-  `$&`.replace("];", `  ${constName},\n];`)
-);
-// More robust: find the array and append before ];
-indexContent = indexContent.replace(
   /(export const ADVENTURES: Adventure\[\] = \[[\s\S]*?)(];)/,
   (match, before, closing) => {
     const trimmed = before.trimEnd();
