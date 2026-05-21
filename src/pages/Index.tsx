@@ -6,6 +6,7 @@ import { Hero } from "@/components/Hero";
 import { ChallengesGrid } from "@/components/ChallengesGrid";
 import { ChallengeHighlights } from "@/components/ChallengeHighlights";
 import { CommunitySection } from "@/components/CommunitySection";
+import { CommunityLeaders } from "@/components/CommunityLeaders";
 import { SponsorStrip } from "@/components/SponsorStrip";
 import { BottomCTA } from "@/components/BottomCTA";
 import { Footer } from "@/components/Footer";
@@ -50,7 +51,13 @@ const Index = (): JSX.Element => {
             </div>
           </div>
         </section>
-        <CommunitySection />
+        <CommunitySection
+          aside={
+            <CommunityLeaders
+              sections={["top-contributors", "top-challenge-solvers", "most-liked"]}
+            />
+          }
+        />
         <SponsorStrip />
         <BottomCTA />
       </main>

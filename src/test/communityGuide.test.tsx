@@ -137,3 +137,33 @@ describe("CommunityGuide - policies section", () => {
     expect(link.getAttribute("target")).toBe("_blank");
   });
 });
+
+// ---------------------------------------------------------------------------
+// Community Leaders sidebar
+// ---------------------------------------------------------------------------
+
+describe("CommunityGuide - community leaders sidebar", () => {
+  it("renders the community leaders aside landmark", () => {
+    renderCommunityGuide();
+    const sidebar = screen.getByRole("complementary", { name: /community leaders/i });
+    expect(sidebar).toBeInTheDocument();
+  });
+
+  it("renders leader section headings inside the sidebar", () => {
+    renderCommunityGuide();
+    const sidebar = screen.getByRole("complementary", { name: /community leaders/i });
+    expect(within(sidebar).getByRole("heading", { name: /top contributors/i })).toBeInTheDocument();
+    expect(within(sidebar).getByRole("heading", { name: /most liked/i })).toBeInTheDocument();
+  });
+
+  it("renders user profile links pointing to the community", () => {
+    renderCommunityGuide();
+    const sidebar = screen.getByRole("complementary", { name: /community leaders/i });
+    const links = within(sidebar).getAllByRole("link");
+    const profileLink = links.find((a) =>
+      a.getAttribute("href")?.startsWith(`${COMMUNITY_URL}/u/`)
+    );
+    expect(profileLink).toBeTruthy();
+    expect(profileLink?.getAttribute("target")).toBe("_blank");
+  });
+});

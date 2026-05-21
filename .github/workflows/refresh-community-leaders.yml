@@ -1,0 +1,38 @@
+name: Refresh Community Leaders
+
+on:
+  schedule:
+    # Every day at 06:30 UTC (30 min after discussion refresh)
+    - cron: "30 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Fetch community leaders from Discourse
+        env:
+          DISCOURSE_API_KEY: ${{ secrets.DISCOURSE_API_KEY }}
+          DISCOURSE_API_USERNAME: ${{ secrets.DISCOURSE_API_USERNAME }}
+        run: node scripts/refresh-community-leaders.mjs
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/community-leaders.json
+          if git diff --cached --quiet; then
+            echo "No community leaders changes."
+          else
+            git commit -m "chore: refresh community leaders data [skip ci]"
+            git push
+          fi

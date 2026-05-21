@@ -218,7 +218,7 @@ without exception. They exist to prevent debugging by accumulation.
 - `data-difficulty` attribute on `DifficultyBadge`. It is used for CSS targeting of badge text color.
 - `contributor-pill` class on `ContributorBadge`. Scopes light mode overrides: transparent background with slate border instead of the near-invisible `bg-primary/5`.
 - `contributor-pill-glow` class on `ContributorBadge` (applied via `glow` prop). Static amber box-shadow glow, sized for a small pill. Used only on `ChallengeDetail` -- not in `AdventureCard`.
-- `docs-ext-link` class on all inline prose links site-wide. Handles both modes: dark mode foreground text with amber underline, hover to full `#ffc034`; light mode near-black text with `currentColor` underline, hover to `--link-hover-light` (`hsl(41 100% 25%)` dark amber, ~5.5:1 contrast). Used in `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`, and `ChallengeDetail`. Do not use `hover:text-primary` or `hover:underline` on inline links — use `docs-ext-link` instead.
+- `docs-ext-link` class on all inline prose links site-wide. Handles both modes: dark mode foreground text with amber underline, hover to full `#ffc034`; light mode near-black text with `currentColor` underline, hover to `--link-hover-light` (`hsl(41 100% 25%)` dark amber, ~5.5:1 contrast). Used in `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`, `ChallengeDetail`, and `MarkdownContent`. Do not use `hover:text-primary` or `hover:underline` on inline links — use `docs-ext-link` instead.
 
 ---
 

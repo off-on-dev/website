@@ -8,6 +8,7 @@ import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
 import { SectionLabel } from "@/components/SectionLabel";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
+import { CommunityLeaders } from "@/components/CommunityLeaders";
 import { buildPageMeta, interBoldPreload } from "@/lib/meta";
 
 const extLink = "docs-ext-link inline-flex items-center gap-1 underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
@@ -35,7 +36,8 @@ const CommunityGuide = (): JSX.Element => {
 
       <div className="px-6 md:px-16 py-16">
       <div className="mx-auto max-w-6xl">
-        <div className="max-w-3xl space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12">
+        <div className="space-y-8">
 
           {/* Get Involved */}
           <section aria-labelledby="get-involved">
@@ -157,6 +159,13 @@ const CommunityGuide = (): JSX.Element => {
             </ul>
           </section>
 
+        </div>
+
+        <div className="hidden lg:block">
+          <div className="sticky top-24">
+            <CommunityLeaders />
+          </div>
+        </div>
         </div>
 
       </div>

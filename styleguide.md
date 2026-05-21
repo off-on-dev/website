@@ -639,6 +639,34 @@ No props. Used only in `Index.tsx`.
 
 ---
 
+### `CommunityLeaders`
+
+`src/components/CommunityLeaders.tsx`
+
+Sidebar card displaying community leaders fetched daily from Discourse Data Explorer queries. Renders an `<aside aria-label="Community leaders">` with ranked lists per category. Each category uses a lucide-react icon and an `<ol>` of user rows (rank, avatar, username link, count). Avatars are lazy-loaded from external Discourse CDN URLs.
+
+Data source: `src/data/community-leaders.json` (refreshed daily by `.github/workflows/refresh-community-leaders.yml`).
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `sections` | `string[]` | all | Filter to show only specific section IDs |
+
+Section IDs: `top-contributors`, `top-challenge-solvers`, `challenge-grand-builders`, `challenge-builders`, `most-liked`, `most-replies`, `most-supportive`.
+
+| Section | Icon |
+|---|---|
+| Top Contributors | `Trophy` |
+| Top Challenge Solvers | `Target` |
+| Challenge Grand Builders | `Building2` |
+| Challenge Builders | `Wrench` |
+| Most Liked | `Heart` |
+| Most Replies | `MessageCircle` |
+| Most Supportive | `HandHeart` |
+
+Used in: `Index.tsx` (via CommunitySection aside), `Adventures.tsx` (via ChallengeBuildersSection aside), `CommunityGuide.tsx` (standalone sidebar).
+
+---
+
 ### `CommunitySection`
 
 `src/components/CommunitySection.tsx`
@@ -652,7 +680,11 @@ Merged replacement for the former `CommunityVoicesSection` and `ConnectSection`.
 | Introduce Yourself | `UserPlus` | `COMMUNITY_URL/c/general/introductions/18` |
 | Events & Meetups | `CalendarDays` | `COMMUNITY_URL/c/events-and-talks/12` |
 
-No props. Used only in `Index.tsx`.
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `aside` | `ReactNode` | — | Optional sidebar content rendered in a sticky column at lg breakpoint |
+
+Used in `Index.tsx`.
 
 ---
 
@@ -739,7 +771,11 @@ No props. Self-contained section component.
 
 Renders the Challenge Builders section, used on both the About page (mounted directly after `BoardSection`, sharing the "the people" eyebrow group) and the Adventures page (mounted between `ChallengesGrid` and `BottomCTA`). Has no eyebrow of its own; on the About page, the visual grouping is provided by the eyebrow on the preceding `BoardSection`. Reads `ADVENTURE_CONTRIBUTORS` from `src/data/adventures` and renders a card grid (`sm:grid-cols-2`) thanking everyone who has contributed an adventure. Each card shows the contributor name rendered via `PersonNameLink`, a short bio, and a list of their adventures linked via React Router `<Link>` to each detail page. Returns `null` if `ADVENTURE_CONTRIBUTORS` is empty.
 
-No props. Self-contained section component.
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `aside` | `ReactNode` | — | Optional sidebar content rendered in a sticky column at lg breakpoint |
+
+Used in `Adventures.tsx` and `About.tsx`.
 
 ---
 
@@ -776,19 +812,126 @@ No props. Self-contained section component.
 
 `src/components/DiscussionSection.tsx`
 
-Displays up to three community posts for an adventure level, fetched at build time from Discourse. Post content (`cooked`) is plain text — HTML is stripped by the Vite build plugin before the JSON is written, so no runtime processing is needed. Post ages are computed on the client after mount to avoid calling `Date.now()` at render time.
+Displays up to three community posts for an adventure level, fetched at build time from Discourse. Post content (`cooked`) is plain text — HTML is stripped by the refresh script before the JSON is written, so no runtime processing is needed. Post ages are computed on the client after mount to avoid calling `Date.now()` at render time.
 
 ```tsx
-<DiscussionSection discussionUrl={level.discussionUrl} />
+<DiscussionSection adventureId={adventure.id} levelId={level.id} discussionUrl={level.discussionUrl} />
 ```
 
 | Prop | Type | Description |
 |---|---|---|
+| `adventureId` | `string` | Adventure slug used to locate the per-level JSON file. |
+| `levelId` | `string` | Level slug used to locate the per-level JSON file. |
 | `discussionUrl` | `string` | Full Discourse topic URL. Used as the fallback link when no posts are loaded. |
 
-The component is a pure renderer. All data-loading and ID-extraction logic lives in `useDiscussionPosts` (see Hooks section). Falls back to an empty state with a "Join the discussion" link when no posts are found.
+The component is a pure renderer. All data-loading logic lives in `useDiscussionPosts` (see Hooks section). Falls back to an empty state with a "Join the discussion" link when no posts are found.
 
 Uses `aria-live="polite"` so screen readers announce the age values when they update after mount.
+
+---
+
+### `CommunitySidebar`
+
+`src/components/CommunitySidebar.tsx`
+
+Sidebar panel for the structured challenge detail layout. Shows the challenge builder (contributor badge), a completion stat, a leaderboard of top solvers (derived from certificate posts), latest activity feed (non-certificate posts preferred), and a link to the discussion thread. Used inside `ChallengeDetail` structured layout only.
+
+```tsx
+<CommunitySidebar adventureId={adventure.id} levelId={level.id} discussionUrl={level.discussionUrl} contributor={adventure.contributor} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `adventureId` | `string` | Adventure slug for loading discussion data. |
+| `levelId` | `string` | Level slug for loading discussion data. |
+| `discussionUrl` | `string` | Full Discourse topic URL. Used for the "Join the discussion" link. |
+| `contributor` | `Adventure["contributor"]?` | Optional contributor shown at the top of the panel. |
+
+---
+
+### `OtherLevelsCard`
+
+`src/components/OtherLevelsCard.tsx`
+
+Sidebar card listing sibling levels in the same adventure (excluding the current one) plus any upcoming levels. Each active level is a `<Link>` pill styled with the difficulty color palette. Upcoming levels render as inert `<span>` pills with an opacity fade and a "Soon" label. Returns `null` if there are no other levels or upcoming levels.
+
+```tsx
+<OtherLevelsCard adventure={adventure} currentLevelId={level.id} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `adventure` | `Adventure` | Full adventure object (provides `levels` and `upcomingLevels`). |
+| `currentLevelId` | `string` | ID of the current level to exclude from the list. |
+
+---
+
+### `CollapsibleSection`
+
+`src/components/CollapsibleSection.tsx`
+
+A native `<details>/<summary>` wrapper with consistent card styling, chevron animation, and focus ring. Used by `ScenarioSection`, `ArchitectureSection`, and `WalkthroughSection` as their outer shell.
+
+```tsx
+<CollapsibleSection id="backstory" title="The Story">
+  <p>Content here</p>
+</CollapsibleSection>
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `id` | `string` | required | Sets the `id` attribute on the `<details>` element for anchor linking. |
+| `title` | `string` | required | Text shown in the `<summary>` as an `h2`. |
+| `children` | `ReactNode` | required | Content revealed when open. |
+| `defaultOpen` | `boolean?` | `true` | Whether the section starts expanded. |
+
+---
+
+### `ScenarioSection`
+
+`src/components/ScenarioSection.tsx`
+
+Renders the narrative backstory for a challenge level inside a `CollapsibleSection` titled "The Story". Each paragraph renders as a `<p>` with secondary text styling.
+
+```tsx
+<ScenarioSection backstory={level.backstory} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `backstory` | `string[]` | Array of narrative paragraphs. |
+
+---
+
+### `ArchitectureSection`
+
+`src/components/ArchitectureSection.tsx`
+
+Renders architecture content inside a `CollapsibleSection` titled "Architecture". Content is passed as a single markdown string and rendered via `MarkdownContent`.
+
+```tsx
+<ArchitectureSection architecture={level.architecture.join("\n\n")} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `architecture` | `string` | Markdown string describing the system architecture. |
+
+---
+
+### `WalkthroughSection`
+
+`src/components/WalkthroughSection.tsx`
+
+Renders a numbered walkthrough as a vertical stepper inside a `CollapsibleSection` titled "Walkthrough". Each step shows a numbered circle, an optional title, and markdown body content.
+
+```tsx
+<WalkthroughSection steps={level.howToPlay} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `steps` | `WalkthroughStep[]` | Array of `{ title: string; body: string }`. `body` is rendered as markdown via `MarkdownContent`. |
 
 ---
 
@@ -921,6 +1064,32 @@ Every page's `meta()` must use this function. Do not inline the og/twitter tag b
 
 ---
 
+### `discussion-utils`
+
+`src/lib/discussion-utils.ts`
+
+Helper functions for processing discussion posts in `DiscussionSection` and `CommunitySidebar`.
+
+| Export | Signature | Description |
+|---|---|---|
+| `isCertificatePost` | `(post: PostWithAge) => boolean` | Returns true if the post contains a `CERTIFICATE START` block (completion proof). |
+| `displaySnippet` | `(post: PostWithAge) => string` | Returns the display text for a post. For certificate posts, strips the certificate block and falls back to "Completed the challenge." if nothing else remains. |
+
+---
+
+### `markdown`
+
+`src/lib/markdown.ts`
+
+Helper functions for the `MarkdownContent` component.
+
+| Export | Signature | Description |
+|---|---|---|
+| `slugify` | `(text: string) => string` | Converts heading text to a URL-safe slug for `id` attributes. |
+| `getSectionIcon` | `(slug: string) => LucideIcon \| undefined` | Maps known section slugs (`architecture`, `toolbox`, `how-to-play`) to their lucide-react icon. Returns `undefined` for unrecognised slugs. |
+
+---
+
 ## Icons
 
 All icons use **lucide-react** (already a project dependency; no other icon library may be added).
@@ -1011,7 +1180,7 @@ The standard class for all inline prose links across the site. Handles both mode
 **Dark mode:** foreground text with amber (`--primary`) underline. Hover shifts text and underline to full `hsl(var(--primary))` (`#ffc034`).
 **Light mode:** near-black foreground text with `currentColor` underline. Hover shifts text and underline to `--link-hover-light` (`hsl(41 100% 25%)` ≈ `#7f4200`) — dark amber, same hue as primary, ~5.5:1 contrast on light backgrounds. Passes WCAG AA.
 
-Used in: `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`, `ChallengeDetail`.
+Used in: `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`, `ChallengeDetail`, `MarkdownContent`.
 
 Do not use `hover:text-primary` or `hover:underline` on inline content links — use `docs-ext-link` instead.
 
