@@ -63,6 +63,7 @@ type StructuredLayoutProps = {
   toolbox: { name: string; url?: string; description?: string }[] | undefined;
   backstory: string[] | undefined;
   architecture: string[] | undefined;
+  architectureDiagram: string | undefined;
   howToPlay: { title: string; body: string }[] | undefined;
   verification: (typeof ADVENTURES)[number]["levels"][number]["verification"];
 };
@@ -75,6 +76,7 @@ const StructuredLayout = ({
   toolbox,
   backstory,
   architecture,
+  architectureDiagram,
   howToPlay,
   verification,
 }: StructuredLayoutProps): JSX.Element => {
@@ -84,7 +86,7 @@ const StructuredLayout = ({
     items.push({ id: "learnings", label: "Key Learnings" });
     if (toolbox && toolbox.length > 0) items.push({ id: "toolbox", label: "Toolbox" });
     if (backstory && backstory.length > 0) items.push({ id: "backstory", label: "The Story" });
-    if (architecture && architecture.length > 0) items.push({ id: "architecture", label: "Architecture" });
+    if (architecture && architecture.length > 0 || architectureDiagram) items.push({ id: "architecture", label: "Architecture" });
     if (howToPlay && howToPlay.length > 0) items.push({ id: "walkthrough", label: "Walkthrough" });
     items.push({ id: "completion", label: "Completion" });
     return items;
@@ -208,8 +210,8 @@ const StructuredLayout = ({
           {backstory && backstory.length > 0 && (
             <ScenarioSection backstory={backstory} />
           )}
-          {architecture && architecture.length > 0 && (
-            <ArchitectureSection architecture={architecture.join("\n\n")} />
+          {(architecture && architecture.length > 0 || architectureDiagram) && (
+            <ArchitectureSection architecture={(architecture ?? []).join("\n\n")} diagram={architectureDiagram} />
           )}
           {howToPlay && howToPlay.length > 0 && (
             <WalkthroughSection
@@ -331,6 +333,7 @@ const ChallengeDetail = (): JSX.Element => {
   const intro = level.intro;
   const backstory = level.backstory;
   const architecture = level.architecture;
+  const architectureDiagram = level.architectureDiagram;
   const objective = level.objective;
   const toolbox = level.toolbox;
   const howToPlay = level.howToPlay;
@@ -368,6 +371,7 @@ const ChallengeDetail = (): JSX.Element => {
               toolbox={toolbox}
               backstory={backstory}
               architecture={architecture}
+              architectureDiagram={architectureDiagram}
               howToPlay={howToPlay}
               verification={verification}
             />

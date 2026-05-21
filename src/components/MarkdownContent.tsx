@@ -7,6 +7,9 @@ import { getSectionIcon, slugify } from "@/lib/markdown";
 const isExternalHref = (href: string | undefined): boolean =>
   typeof href === "string" && /^https?:\/\//i.test(href);
 
+const isLocalhostHref = (href: string | undefined): boolean =>
+  typeof href === "string" && /^https?:\/\/localhost(:\d+)?/i.test(href);
+
 const childrenToText = (children: ReactNode): string => {
   if (typeof children === "string" || typeof children === "number") return String(children);
   if (Array.isArray(children)) return children.map(childrenToText).join("");
@@ -125,6 +128,10 @@ const components: Components = {
     // Block dangerous URI schemes (XSS protection)
     if (typeof href === "string" && /^(javascript|data|vbscript):/i.test(href.trim())) {
       return <span>{children}</span>;
+    }
+    // Render localhost URLs as plain text (not clickable)
+    if (isLocalhostHref(href)) {
+      return <code className="rounded bg-[hsl(var(--surface))] px-1.5 py-0.5 text-sm font-mono text-foreground">{children}</code>;
     }
     if (isExternalHref(href)) {
       return (

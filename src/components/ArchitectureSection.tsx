@@ -4,10 +4,19 @@ import { MarkdownContent } from "@/components/MarkdownContent";
 
 type ArchitectureSectionProps = {
   architecture: string;
+  diagram?: string;
 };
 
-export const ArchitectureSection = ({ architecture }: ArchitectureSectionProps): JSX.Element => (
+export const ArchitectureSection = ({ architecture, diagram }: ArchitectureSectionProps): JSX.Element => (
   <CollapsibleSection id="architecture" title="Architecture">
-    <MarkdownContent source={architecture} />
+    {diagram ? (
+      <img
+        src={diagram}
+        alt="Architecture diagram"
+        className="w-full rounded-lg"
+      />
+    ) : (
+      <MarkdownContent source={architecture} />
+    )}
   </CollapsibleSection>
 );

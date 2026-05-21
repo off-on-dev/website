@@ -1,5 +1,5 @@
 import { CODESPACES_BASE, COMMUNITY_URL } from "@/data/constants";
-import springBootOpenfeatureDiagram from "@/assets/diagrams/spring_boot_openfeature.svg";
+import blindByDesignIntermediateDiagram from "@/assets/diagrams/blind-by-design-intermediate.svg";
 import type { Adventure } from "./types";
 
 export const BLIND_BY_DESIGN: Adventure = {
@@ -83,7 +83,7 @@ export const BLIND_BY_DESIGN: Adventure = {
         "The trial is widening. Subjects from outside the lab's local population are getting the wrong reading on their chart, and the lab director has just walked in holding a stack of complaint forms. She wants the audit log to tell her exactly which vision_state the lab recorded for which subject, and she wants the lab to read the chart properly before it records any more bad readings.",
         "What differs between subjects is the observed outcome: some have a biology that responds enhancedly to the same serum, some absorb less or more than the protocol's standard dose, and the trial is registered in different jurisdictions with different baselines. Your shift: teach the lab to read each subject's species off the request, attach the trial's country of registration to the global context, pass the dose as invocation context at evaluation time, and register an audit hook.",
       ],
-      architectureDiagram: springBootOpenfeatureDiagram,
+      architectureDiagram: blindByDesignIntermediateDiagram,
       architecture: [
         "The lab and a flagd sidecar run as siblings in the devcontainer's compose stack. The OpenFeature client uses Resolver.RPC to reach flagd:8013; flagd watches flags.json and serves evaluations from it.",
         "Three context layers merge before flagd evaluates the targeting rules: global context (country, set at startup), transaction context (species, set per request by the interceptor), and invocation context (dose, passed at the call site). Precedence on conflict: invocation > transaction > global.",
