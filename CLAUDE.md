@@ -228,8 +228,8 @@ without exception. They exist to prevent debugging by accumulation.
 - No runtime `fetch` calls in components. All network data must be fetched at build time.
 - **Build-time fetching:** Discussion data lives in per-level JSON files under `src/data/adventures/<adventure-id>/<level-id>.json`. Each file contains only `discussionUrl`, `discussionPosts`, and `totalReplies`. These are refreshed daily by the GitHub Action in `.github/workflows/refresh-discussions.yml` (runs `scripts/refresh-discussions.mjs`). Components import the JSON dynamically via `import.meta.glob`.
 - When adding a new adventure level, create its per-level JSON file with a `discussionUrl` field. The refresh script uses this URL to fetch posts.
-- `vite.config.ts` contains a `COMMUNITY_BASE` constant that is a necessary duplicate of `COMMUNITY_URL` in `src/data/constants.ts`. Vite config runs in Node and cannot import from `src/`, so the value must be maintained manually in both places. Always update them together.
-- The domain `community.open-ecosystem.com` in both `vite.config.ts` and `src/data/constants.ts` is the actual Discourse server URL used for API calls at build time. It is not a brand inconsistency. Do not change it to `community.offon.dev` or any other display name. `COMMUNITY_DISPLAY_NAME` in `src/data/constants.ts` is the separate user-facing label shown in the UI.
+- `scripts/refresh-discussions.mjs` contains a `COMMUNITY_BASE` constant that is a necessary duplicate of `COMMUNITY_URL` in `src/data/constants.ts`. The script runs in Node and cannot import from `src/`, so the value must be maintained manually in both places. Always update them together.
+- The domain `community.open-ecosystem.com` in both `scripts/refresh-discussions.mjs` and `src/data/constants.ts` is the actual Discourse server URL used for API calls at build time. It is not a brand inconsistency. Do not change it to `community.offon.dev` or any other display name. `COMMUNITY_DISPLAY_NAME` in `src/data/constants.ts` is the separate user-facing label shown in the UI.
 
 ---
 

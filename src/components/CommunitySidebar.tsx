@@ -1,5 +1,5 @@
 import { type CSSProperties, type JSX, useMemo } from "react";
-import { ArrowRight, CircleCheck, Trophy } from "lucide-react";
+import { ArrowRight, Trophy } from "lucide-react";
 import { COMMUNITY_URL, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
 import { useDiscussionPosts } from "@/hooks/useDiscussionPosts";
 import { isCertificatePost, displaySnippet } from "@/lib/discussion-utils";
@@ -76,23 +76,10 @@ export const CommunitySidebar = ({
         </div>
       )}
 
-      {/* Completion stat */}
-      {solvedCount > 0 && (
-        <div className="flex items-center gap-2 mb-5 pb-5 border-b border-[hsl(var(--surface-border))]">
-          <CircleCheck size={16} className="text-primary shrink-0" aria-hidden="true" />
-          <p className="text-sm text-foreground">
-            <span className="font-semibold">{solvedCount}</span>{" "}
-            <span className="text-[hsl(var(--text-secondary))]">
-              {solvedCount === 1 ? "person has" : "people have"} solved this
-            </span>
-          </p>
-        </div>
-      )}
-
-      {/* Top players */}
+      {/* Leaderboard */}
       {hasLeaderboard && (
         <div className="mb-5 pb-5 border-b border-[hsl(var(--surface-border))]">
-          <SectionLabel>Completions</SectionLabel>
+          <SectionLabel>Leaderboard</SectionLabel>
           <ol className="space-y-2.5" aria-label="Players who completed this challenge">
             {topPlayers.map((player, i) => (
               <li
@@ -116,6 +103,11 @@ export const CommunitySidebar = ({
               </li>
             ))}
           </ol>
+          {solvedCount > 5 && (
+            <p className="text-xs text-[hsl(var(--text-secondary))] mt-3">
+              Solved by {solvedCount}
+            </p>
+          )}
         </div>
       )}
 

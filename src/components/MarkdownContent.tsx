@@ -128,7 +128,7 @@ const components: Components = {
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-primary underline underline-offset-2 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+          className="docs-ext-link underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
         >
           {children}
           <span className="sr-only"> (opens in new tab)</span>
@@ -138,7 +138,7 @@ const components: Components = {
     return (
       <a
         href={href}
-        className="text-primary underline underline-offset-2 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+        className="docs-ext-link underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
       >
         {children}
       </a>
