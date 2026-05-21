@@ -122,6 +122,10 @@ const components: Components = {
     </li>
   ),
   a: ({ href, children }) => {
+    // Block dangerous URI schemes (XSS protection)
+    if (typeof href === "string" && /^(javascript|data|vbscript):/i.test(href.trim())) {
+      return <span>{children}</span>;
+    }
     if (isExternalHref(href)) {
       return (
         <a
@@ -169,24 +173,25 @@ const components: Components = {
     </blockquote>
   ),
   // Tables in adventure markdown are used as feature-card grids (2-column key/value).
-  // If real tabular data is ever needed, add a detection heuristic or a separate component.
+  // Rendered as divs because applying display:grid on <table> breaks semantic table
+  // structure for screen readers. Real tabular data would need a different component.
   table: ({ children }) => (
-    <table className="mb-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+    <div role="list" className="mb-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
       {children}
-    </table>
+    </div>
   ),
-  thead: ({ children }) => <thead className="hidden">{children}</thead>,
-  tbody: ({ children }) => <tbody className="contents">{children}</tbody>,
+  thead: ({ children }) => <div className="hidden">{children}</div>,
+  tbody: ({ children }) => <div className="contents">{children}</div>,
   tr: ({ children }) => (
-    <tr className="flex flex-col gap-2 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+    <div role="listitem" className="flex flex-col gap-2 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
       {children}
-    </tr>
+    </div>
   ),
-  th: ({ children }) => <th className="sr-only">{children}</th>,
+  th: ({ children }) => <span className="sr-only">{children}</span>,
   td: ({ children }) => (
-    <td className="block first:font-mono first:font-semibold first:text-foreground last:text-sm last:leading-relaxed last:text-[hsl(var(--text-secondary))]">
+    <span className="block first:font-mono first:font-semibold first:text-foreground last:text-sm last:leading-relaxed last:text-[hsl(var(--text-secondary))]">
       {children}
-    </td>
+    </span>
   ),
   hr: () => (
     <hr className="my-8 border-t border-[hsl(var(--surface-border))]" />

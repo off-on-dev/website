@@ -151,10 +151,10 @@ function extractResultSets(response) {
 async function main() {
   console.log("Fetching community leaders from Data Explorer queries 8 and 9...");
 
-  const [response8, response9] = await Promise.all([
-    runQuery(8),
-    runQuery(9),
-  ]);
+  // Run queries sequentially with a delay to avoid hitting Discourse rate limits
+  const response8 = await runQuery(8);
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  const response9 = await runQuery(9);
 
   const resultSets8 = extractResultSets(response8);
   const resultSets9 = extractResultSets(response9);

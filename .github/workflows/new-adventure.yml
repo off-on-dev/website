@@ -34,6 +34,17 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
+      - name: Validate inputs
+        run: |
+          if ! echo "${{ inputs.id }}" | grep -qE '^[a-z0-9][a-z0-9-]*[a-z0-9]$'; then
+            echo "Error: Adventure ID must be kebab-case (lowercase letters, numbers, hyphens only)"
+            exit 1
+          fi
+          if ! echo "${{ inputs.levels }}" | grep -qE '^(beginner|intermediate|expert)(,(beginner|intermediate|expert))*$'; then
+            echo "Error: Levels must be comma-separated list of beginner, intermediate, expert"
+            exit 1
+          fi
+
       - name: Run scaffold script
         run: |
           node scripts/new-adventure.mjs \

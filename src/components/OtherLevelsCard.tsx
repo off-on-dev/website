@@ -39,9 +39,9 @@ export const OtherLevelsCard = ({
 
   return (
     <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-      <p className="font-sans text-sm font-semibold tracking-wide text-primary mb-4">
+      <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-4">
         More Levels
-      </p>
+      </h2>
 
       <ul className="space-y-2">
         {otherLevels.map((level) => (

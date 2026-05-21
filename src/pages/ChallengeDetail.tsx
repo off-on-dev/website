@@ -1,4 +1,4 @@
-import { type JSX, useMemo } from "react";
+import { type JSX } from "react";
 import { useParams, Link } from "react-router";
 import type { LinksFunction, MetaFunction } from "react-router";
 import { ArrowLeft, ArrowRight, Check, ExternalLink } from "lucide-react";
@@ -78,7 +78,7 @@ const StructuredLayout = ({
   howToPlay,
   verification,
 }: StructuredLayoutProps): JSX.Element => {
-  const outlineSections = useMemo((): SectionOutlineItem[] => {
+  const outlineSections: SectionOutlineItem[] = (() => {
     const items: SectionOutlineItem[] = [];
     if (objective && objective.length > 0) items.push({ id: "objective", label: "Objective" });
     items.push({ id: "learnings", label: "Key Learnings" });
@@ -88,15 +88,15 @@ const StructuredLayout = ({
     if (howToPlay && howToPlay.length > 0) items.push({ id: "walkthrough", label: "Walkthrough" });
     items.push({ id: "completion", label: "Completion" });
     return items;
-  }, [objective, toolbox, backstory, architecture, howToPlay]);
+  })();
 
   return (
     <>
       {/* Header */}
       <div className="mb-10">
-        <p className="text-xs font-mono uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">
+        <span className="block text-xs font-mono uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">
           Adventure <span aria-hidden="true">&middot;</span> {adventure.title}
-        </p>
+        </span>
         <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">{level.name}</h1>
 
         <div className="flex flex-wrap items-center gap-2 mb-5">
@@ -214,7 +214,7 @@ const StructuredLayout = ({
           {howToPlay && howToPlay.length > 0 && (
             <WalkthroughSection
               steps={[
-                { title: "Get Started", body: `[Open in GitHub Codespaces](${level.codespacesUrl}). The devcontainer is pre-configured and starts automatically. GitHub will fork the repo to your account when you make your first commit.\n\nPrefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (VS Code, JetBrains IDEs, and others). The devcontainer config will be detected automatically.` },
+                { title: "Get Started", body: `[Open in GitHub Codespaces](${level.codespacesUrl.replace(/[()]/g, (c) => encodeURIComponent(c))}). The devcontainer is pre-configured and starts automatically. GitHub will fork the repo to your account when you make your first commit.\n\nPrefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (VS Code, JetBrains IDEs, and others). The devcontainer config will be detected automatically.` },
                 ...(howToPlay.filter((s) => !s.body.startsWith("Prefer working locally"))),
               ]}
             />

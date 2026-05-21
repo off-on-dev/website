@@ -29,6 +29,13 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
+      - name: Validate inputs
+        run: |
+          if ! echo "${{ inputs.adventure }}" | grep -qE '^[a-z0-9][a-z0-9-]*[a-z0-9]$'; then
+            echo "Error: Adventure ID must be kebab-case (lowercase letters, numbers, hyphens only)"
+            exit 1
+          fi
+
       - name: Run new-level script
         id: scaffold
         run: |
