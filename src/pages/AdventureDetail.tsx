@@ -12,6 +12,7 @@ import { PersonNameLink } from "@/components/PersonNameLink";
 import { TechFilterSection } from "@/components/TechFilterSection";
 import { RewardsCard } from "@/components/RewardsCard";
 import { AdventureLeaderboard } from "@/components/AdventureLeaderboard";
+import { ContributorBadge } from "@/components/ContributorBadge";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 
@@ -61,7 +62,7 @@ const AdventureLevelLink = ({ level, adventureId }: AdventureLevelLinkProps): JS
         {level.name}
       </h3>
       {description && (
-        <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed line-clamp-3 mb-4 flex-1">
+        <p className="text-xs text-[hsl(var(--text-secondary))] leading-relaxed line-clamp-4 mb-4 flex-1">
           {description}
         </p>
       )}
@@ -86,13 +87,16 @@ const AdventureDetail = (): JSX.Element => {
       <main id="main-content" className="px-6 md:px-16 pt-28 pb-24">
         <div className="mx-auto max-w-6xl">
 
-          {/* Header */}
+          {/* Header: title + tags + intro */}
           <div className="mb-10">
             <span className="inline-block mb-4 rounded-sm border border-[hsl(var(--surface-border))] px-2 py-0.5 font-mono text-xs text-[hsl(var(--text-faint))] uppercase tracking-wider">
               {adventure.month}
             </span>
             <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">{adventure.title}</h1>
-            <div className="flex flex-wrap gap-1.5 mb-5">
+            <div className="flex flex-wrap items-center gap-1.5 mb-5">
+              {adventure.contributor && (
+                <ContributorBadge name={adventure.contributor.name} url={adventure.contributor.url} label="Adventure Builder" />
+              )}
               {adventure.tags.map((tag) => (
                 <span
                   key={tag}
@@ -105,14 +109,42 @@ const AdventureDetail = (): JSX.Element => {
             <p className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl">{adventure.story}</p>
           </div>
 
-          {/* Two-column layout: main content + sidebar */}
+          {/* Two-column layout */}
           <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-10">
 
             {/* Main content */}
-            <div>
+            <div className="space-y-8">
+
+              {/* Challenges */}
+              <section aria-labelledby="challenges-heading">
+                <h2 id="challenges-heading" className="text-lg font-semibold text-foreground mb-5">
+                  Challenges
+                </h2>
+                <div className={`grid gap-5 ${adventure.levels.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3"}`}>
+                  {adventure.levels.map((level) => (
+                    <AdventureLevelLink key={level.id} level={level} adventureId={adventure.id} />
+                  ))}
+                </div>
+              </section>
+
+              {/* Your Mission */}
+              {adventure.context && (
+                <CollapsibleSection id="mission" title="Your Mission" defaultOpen={true}>
+                  <ul className="space-y-2.5">
+                    {adventure.context.body.map((para, i) => (
+                      <li key={i} className="flex items-start gap-2.5">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                        <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">{para}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </CollapsibleSection>
+              )}
+
+              {/* The Story */}
               {adventure.backstory && adventure.backstory.length > 0 && (
                 <CollapsibleSection id="backstory" title="The Story" defaultOpen={true}>
-                  <ul className="space-y-4">
+                  <ul className="space-y-3">
                     {adventure.backstory.map((para, i) => (
                       <li key={i} className="flex items-start gap-3">
                         <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
@@ -123,22 +155,19 @@ const AdventureDetail = (): JSX.Element => {
                 </CollapsibleSection>
               )}
 
-              {adventure.context && (
-                <CollapsibleSection id="context" title={adventure.context.title} defaultOpen={true}>
-                  <ul className="space-y-4">
-                    {adventure.context.body.map((para, i) => (
-                      <li key={i} className="flex items-start gap-3">
-                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                        <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">{para}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </CollapsibleSection>
+              {adventure.rewards && (
+                <div>
+                  <RewardsCard rewards={adventure.rewards} />
+                </div>
               )}
+            </div>
 
+            {/* Sidebar: leaderboard + contributor */}
+            <aside className="mt-10 lg:mt-12 space-y-6 lg:sticky lg:top-28 lg:self-start">
+              <AdventureLeaderboard adventureId={adventure.id} />
               {adventure.contributor && (
-                <div className="mb-6 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-5 py-4">
-                  <p className="font-mono text-[0.65rem] uppercase tracking-widest text-[hsl(var(--text-faint))] mb-2">
+                <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-5 py-4">
+                  <p className="font-mono text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] mb-2">
                     Adventure by
                   </p>
                   <PersonNameLink name={adventure.contributor.name} url={adventure.contributor.url} />
@@ -149,34 +178,12 @@ const AdventureDetail = (): JSX.Element => {
                   )}
                 </div>
               )}
-
-              <section aria-labelledby="challenges-heading" className="mt-10 mb-12">
-                <h2 id="challenges-heading" className="text-xl font-semibold text-foreground mb-6">
-                  Challenges
-                </h2>
-                <div className="grid gap-5 sm:grid-cols-2">
-                  {adventure.levels.map((level) => (
-                    <AdventureLevelLink key={level.id} level={level} adventureId={adventure.id} />
-                  ))}
-                </div>
-              </section>
-
-              {adventure.rewards && (
-                <div className="mb-12">
-                  <RewardsCard rewards={adventure.rewards} />
-                </div>
-              )}
-            </div>
-
-            {/* Sidebar */}
-            <div className="mt-10 lg:mt-0 lg:sticky lg:top-28 lg:self-start">
-              <AdventureLeaderboard adventureId={adventure.id} />
-            </div>
+            </aside>
 
           </div>
         </div>
 
-        <div className="mx-auto max-w-6xl mt-8">
+        <div className="mx-auto max-w-6xl mt-12">
           <TechFilterSection />
         </div>
       </main>

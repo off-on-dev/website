@@ -5,18 +5,19 @@ type ContributorBadgeProps = {
   name: string;
   url?: string;
   glow?: boolean;
+  label?: string;
 };
 
 const basePillClass =
   "contributor-pill inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-2.5 py-0.5 text-xs text-primary";
 
-export const ContributorBadge = ({ name, url, glow = false }: ContributorBadgeProps): JSX.Element => {
+export const ContributorBadge = ({ name, url, glow = false, label = "Challenge Builder" }: ContributorBadgeProps): JSX.Element => {
   const pillClass = glow ? `${basePillClass} contributor-pill-glow` : basePillClass;
 
   const content = (
     <>
       <Hammer size={11} aria-hidden="true" />
-      <span>Challenge Builder</span>
+      <span>{label}</span>
       <span className="opacity-40" aria-hidden="true">·</span>
       <span>{name}</span>
     </>
