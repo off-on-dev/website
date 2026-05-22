@@ -5,7 +5,7 @@ import { BRAND_NAME, BRAND_SECONDARY_LINE, COMMUNITY_URL } from "@/data/constant
 export const BottomCTA = (): JSX.Element => {
   return (
     <section className="bg-primary py-16 px-6 md:px-16 relative overflow-hidden">
-      <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1fr_1fr_auto] gap-12 lg:gap-16 items-center">
           {/* Left - headline */}
           <div>
             <h2 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground">
@@ -49,6 +49,16 @@ export const BottomCTA = (): JSX.Element => {
               </a>
             </div>
           </div>
+
+          {/* Nyx mascot - third column, visible on lg+ only */}
+          <img
+            src={`${import.meta.env.BASE_URL}nyx.webp`}
+            alt=""
+            aria-hidden="true"
+            width={240}
+            height={240}
+            className="hidden lg:block w-[240px] h-[240px] self-start"
+          />
       </div>
     </section>
   );
