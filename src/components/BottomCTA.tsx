@@ -4,11 +4,11 @@ import { BRAND_NAME, BRAND_SECONDARY_LINE, COMMUNITY_URL } from "@/data/constant
 
 export const BottomCTA = (): JSX.Element => {
   return (
-    <section className="bg-primary py-16 px-6 md:px-16 relative overflow-hidden">
+    <section aria-labelledby="bottom-cta-heading" className="bg-primary py-16 px-6 md:px-16 relative overflow-hidden">
       <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1fr_1fr_auto] gap-12 lg:gap-16 items-center">
           {/* Left - headline */}
           <div>
-            <h2 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground">
+            <h2 id="bottom-cta-heading" className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground">
               <span className="block">Start Curious.</span>
               <span className="block">Break Things.</span>
               <span className="block">Learn Together.</span>
@@ -45,7 +45,7 @@ export const BottomCTA = (): JSX.Element => {
                 rel="noopener noreferrer"
               className="btn-ghost-inverse"
               >
-                GitHub <ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                View Challenges on GitHub <ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
               </a>
             </div>
           </div>

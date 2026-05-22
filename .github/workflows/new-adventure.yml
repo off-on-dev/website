@@ -21,6 +21,9 @@ on:
         type: string
         default: 'beginner'
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   scaffold:
     runs-on: ubuntu-latest
@@ -28,19 +31,22 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
 
       - name: Validate inputs
+        env:
+          INPUT_ID: ${{ inputs.id }}
+          INPUT_LEVELS: ${{ inputs.levels }}
         run: |
-          if ! echo "${{ inputs.id }}" | grep -qE '^[a-z0-9][a-z0-9-]*[a-z0-9]$'; then
+          if ! echo "$INPUT_ID" | grep -qE '^[a-z0-9][a-z0-9-]*[a-z0-9]$'; then
             echo "Error: Adventure ID must be kebab-case (lowercase letters, numbers, hyphens only)"
             exit 1
           fi
-          if ! echo "${{ inputs.levels }}" | grep -qE '^(beginner|intermediate|expert)(,(beginner|intermediate|expert))*$'; then
+          if ! echo "$INPUT_LEVELS" | grep -qE '^(beginner|intermediate|expert)(,(beginner|intermediate|expert))*$'; then
             echo "Error: Levels must be comma-separated list of beginner, intermediate, expert"
             exit 1
           fi

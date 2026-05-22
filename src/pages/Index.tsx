@@ -28,9 +28,9 @@ const Index = (): JSX.Element => {
         <Hero />
         <ChallengesGrid />
         <ChallengeHighlights />
-        <section className="bg-primary py-16 px-6 md:px-16">
+        <section aria-labelledby="adventure-idea-heading" className="bg-primary py-16 px-6 md:px-16">
           <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <h2 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground">
+            <h2 id="adventure-idea-heading" className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground">
               <span className="block">Got an Idea</span>
               <span className="block">for an Adventure?</span>
             </h2>

@@ -9,10 +9,12 @@
  */
 
 import { readFileSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const COMMUNITY_BASE = "https://community.open-ecosystem.com";
-const OUTPUT_PATH = resolve("src/data/community-leaders.json");
+const OUTPUT_PATH = resolve(__dirname, "../src/data/community-leaders.json");
 const AVATAR_SIZE = 40;
 
 const API_KEY = process.env.DISCOURSE_API_KEY;
@@ -30,13 +32,13 @@ if (!API_KEY) {
  * Adjust the queryId and columnMapping if the Data Explorer queries change.
  */
 const SECTION_DEFINITIONS = [
-  { id: "top-contributors", title: "Top Contributors", emoji: "🏆", queryId: 8, resultIndex: 0 },
-  { id: "top-challenge-solvers", title: "Top Challenge Solvers", emoji: "🎯", queryId: 8, resultIndex: 1 },
-  { id: "challenge-grand-builders", title: "Challenge Grand Builders", emoji: "🏗️", queryId: 8, resultIndex: 2 },
-  { id: "challenge-builders", title: "Challenge Builders", emoji: "🔧", queryId: 8, resultIndex: 3 },
-  { id: "most-liked", title: "Most Liked", emoji: "❤️", queryId: 9, resultIndex: 0 },
-  { id: "most-replies", title: "Most Replies", emoji: "💬", queryId: 9, resultIndex: 1 },
-  { id: "most-supportive", title: "Most Supportive", emoji: "👏", queryId: 9, resultIndex: 2 },
+  { id: "top-contributors", title: "Top Contributors", queryId: 8, resultIndex: 0 },
+  { id: "top-challenge-solvers", title: "Top Challenge Solvers", queryId: 8, resultIndex: 1 },
+  { id: "challenge-grand-builders", title: "Challenge Grand Builders", queryId: 8, resultIndex: 2 },
+  { id: "challenge-builders", title: "Challenge Builders", queryId: 8, resultIndex: 3 },
+  { id: "most-liked", title: "Most Liked", queryId: 9, resultIndex: 0 },
+  { id: "most-replies", title: "Most Replies", queryId: 9, resultIndex: 1 },
+  { id: "most-supportive", title: "Most Supportive", queryId: 9, resultIndex: 2 },
 ];
 
 /**
@@ -168,30 +170,29 @@ async function main() {
 
     if (!resultSet) {
       console.warn(`No result set at index ${def.resultIndex} for query ${def.queryId} (${def.title})`);
-      sections.push({ id: def.id, title: def.title, emoji: def.emoji, users: [] });
+      sections.push({ id: def.id, title: def.title, users: [] });
       continue;
     }
 
     const users = parseResultSet(resultSet);
-    sections.push({ id: def.id, title: def.title, emoji: def.emoji, users });
-    console.log(`  ${def.emoji} ${def.title}: ${users.length} users`);
+    sections.push({ id: def.id, title: def.title, users });
+    console.log(`  ${def.title}: ${users.length} users`);
   }
 
-  const output = {
-    lastUpdated: new Date().toISOString(),
-    sections,
-  };
-
-  const newJson = JSON.stringify(output, null, 2) + "\n";
-  let oldJson = "";
+  // Compare only sections for change detection — excluding lastUpdated prevents
+  // spurious commits on every run when leader data has not changed.
+  const newSectionsJson = JSON.stringify(sections);
+  let oldSectionsJson = "";
   try {
-    oldJson = readFileSync(OUTPUT_PATH, "utf-8");
+    const existing = JSON.parse(readFileSync(OUTPUT_PATH, "utf-8"));
+    oldSectionsJson = JSON.stringify(existing.sections ?? []);
   } catch {
     // File doesn't exist yet
   }
 
-  if (newJson !== oldJson) {
-    writeFileSync(OUTPUT_PATH, newJson);
+  if (newSectionsJson !== oldSectionsJson) {
+    const output = { lastUpdated: new Date().toISOString(), sections };
+    writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2) + "\n");
     console.log("Updated community-leaders.json");
   } else {
     console.log("No changes to community-leaders.json");

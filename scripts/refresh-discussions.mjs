@@ -9,10 +9,12 @@
  */
 
 import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { join, resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const COMMUNITY_BASE = "https://community.open-ecosystem.com";
-const ADVENTURES_DIR = resolve("src/data/adventures");
+const ADVENTURES_DIR = resolve(__dirname, "../src/data/adventures");
 
 /**
  * Resolves a Discourse avatar_template to a full URL.
@@ -100,7 +102,10 @@ function findLevelFiles(dir) {
 async function fetchTopicPosts(topicId, topicUrl) {
   try {
     const res = await fetch(`${COMMUNITY_BASE}/t/${topicId}.json`);
-    if (!res.ok) return { posts: [], totalReplies: 0, solvers: [] };
+    if (!res.ok) {
+      console.warn(`  Skipping ${topicUrl}: HTTP ${res.status}`);
+      return null;
+    }
 
     const data = await res.json();
     const firstPagePosts = data.post_stream?.posts ?? [];
@@ -159,8 +164,9 @@ async function fetchTopicPosts(topicId, topicUrl) {
 
     const totalReplies = Math.max(0, (data.posts_count ?? 0) - 1);
     return { posts: storedPosts, totalReplies, solvers };
-  } catch {
-    return { posts: [], totalReplies: 0, solvers: [] };
+  } catch (err) {
+    console.warn(`  Skipping ${topicUrl}: ${err.message}`);
+    return null;
   }
 }
 
@@ -176,8 +182,12 @@ async function main() {
     const topicId = extractTopicId(discussionUrl);
     if (!topicId) continue;
 
-    const { posts, totalReplies, solvers } = await fetchTopicPosts(topicId, discussionUrl);
+    const result = await fetchTopicPosts(topicId, discussionUrl);
+    // 500ms delay between requests to stay within Discourse's anonymous rate limit
+    await new Promise((res) => setTimeout(res, 500));
+    if (result === null) continue;
 
+    const { posts, totalReplies, solvers } = result;
     const newContent = { discussionUrl, discussionPosts: posts, totalReplies, solvers };
     const newJson = JSON.stringify(newContent, null, 2) + "\n";
     const oldJson = readFileSync(filePath, "utf-8");

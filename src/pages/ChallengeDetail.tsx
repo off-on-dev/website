@@ -64,6 +64,7 @@ type StructuredLayoutProps = {
   backstory: string[] | undefined;
   architecture: string[] | undefined;
   architectureDiagram: string | undefined;
+  diagramAlt: string | undefined;
   howToPlay: { title: string; body: string }[] | undefined;
   verification: (typeof ADVENTURES)[number]["levels"][number]["verification"];
 };
@@ -77,6 +78,7 @@ const StructuredLayout = ({
   backstory,
   architecture,
   architectureDiagram,
+  diagramAlt,
   howToPlay,
   verification,
 }: StructuredLayoutProps): JSX.Element => {
@@ -211,7 +213,7 @@ const StructuredLayout = ({
             <ScenarioSection backstory={backstory} />
           )}
           {(architecture && architecture.length > 0 || architectureDiagram) && (
-            <ArchitectureSection architecture={(architecture ?? []).join("\n\n")} diagram={architectureDiagram} />
+            <ArchitectureSection architecture={(architecture ?? []).join("\n\n")} diagram={architectureDiagram} diagramAlt={diagramAlt} />
           )}
           {howToPlay && howToPlay.length > 0 && (
             <WalkthroughSection
@@ -262,8 +264,7 @@ const StructuredLayout = ({
         </div>
 
         {/* Sidebar */}
-        <aside
-          aria-label="Challenge sidebar"
+        <div
           className="mt-10 lg:mt-0 space-y-4 lg:sticky lg:top-28 lg:self-start"
         >
           {/* CTA panel - hidden on mobile where it shows above content */}
@@ -310,7 +311,7 @@ const StructuredLayout = ({
             contributor={adventure.contributor}
           />
           <OtherLevelsCard adventure={adventure} currentLevelId={level.id} />
-        </aside>
+        </div>
       </div>
 
       {/* Tech filter spans full width */}
@@ -334,6 +335,7 @@ const ChallengeDetail = (): JSX.Element => {
   const backstory = level.backstory;
   const architecture = level.architecture;
   const architectureDiagram = level.architectureDiagram;
+  const diagramAlt = level.diagramAlt;
   const objective = level.objective;
   const toolbox = level.toolbox;
   const howToPlay = level.howToPlay;
@@ -354,7 +356,7 @@ const ChallengeDetail = (): JSX.Element => {
               <li>
                 <Link
                   to={`/adventures/${adventure.id}`}
-                  className="inline-flex items-center gap-1.5 text-sm text-[hsl(var(--text-faint))] hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+                  className="inline-flex items-center gap-1.5 text-sm text-[hsl(var(--text-faint))] hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
                 >
                   <ArrowLeft size={14} aria-hidden="true" /> {adventure.title}
                 </Link>
@@ -372,6 +374,7 @@ const ChallengeDetail = (): JSX.Element => {
               backstory={backstory}
               architecture={architecture}
               architectureDiagram={architectureDiagram}
+              diagramAlt={diagramAlt}
               howToPlay={howToPlay}
               verification={verification}
             />

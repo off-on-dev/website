@@ -12,7 +12,6 @@ type LeaderUser = {
 type LeaderSection = {
   id: string;
   title: string;
-  emoji: string;
   users: LeaderUser[];
 };
 
@@ -69,7 +68,10 @@ const LeaderRow = ({ user, rank }: { user: LeaderUser; rank: number }): JSX.Elem
       <ExternalLink size={12} aria-hidden="true" className="shrink-0" />
       <span className="sr-only"> (opens in new tab)</span>
     </a>
-    <span className="text-xs font-mono text-[hsl(var(--text-secondary))] tabular-nums shrink-0">
+    <span
+      className="text-xs font-mono text-[hsl(var(--text-secondary))] tabular-nums shrink-0"
+      aria-label={`${user.count} contributions`}
+    >
       {user.count}
     </span>
   </li>
@@ -97,11 +99,10 @@ export const CommunityLeaders = ({
     : ALL_SECTIONS;
 
   return (
-    <aside
+    <div
       className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5"
-      aria-label="Community leaders"
     >
-      <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-5">
+      <h2 className="font-sans text-base font-semibold text-foreground mb-5">
         Community Leaders
       </h2>
       <div className="space-y-5">
@@ -114,6 +115,6 @@ export const CommunityLeaders = ({
           </div>
         ))}
       </div>
-    </aside>
+    </div>
   );
 };

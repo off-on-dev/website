@@ -46,7 +46,7 @@ export const CommunitySection = ({ aside }: { aside?: ReactNode }): JSX.Element 
   const content = (
     <div>
       <SectionLabel>community</SectionLabel>
-      <h2 className="mb-6 text-3xl font-bold text-primary md:text-4xl">
+      <h2 id="community-section-heading" className="mb-6 text-3xl font-bold text-primary md:text-4xl">
         Get Involved
       </h2>
       <p className="mb-12 max-w-xl text-[hsl(var(--text-secondary))] leading-relaxed">
@@ -76,7 +76,7 @@ export const CommunitySection = ({ aside }: { aside?: ReactNode }): JSX.Element 
   );
 
   return (
-    <section className="py-24 px-6 md:px-16">
+    <section aria-labelledby="community-section-heading" className="py-24 px-6 md:px-16">
       <div className="mx-auto max-w-6xl">
         {aside ? (
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12">

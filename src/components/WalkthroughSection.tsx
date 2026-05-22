@@ -12,7 +12,7 @@ export const WalkthroughSection = ({ steps }: WalkthroughSectionProps): JSX.Elem
     <ol className="space-y-5">
       {steps.map((step, i) => (
         <li
-          key={i}
+          key={step.title}
           className="rounded-lg border border-[hsl(var(--surface-border))] bg-background/40 p-5"
         >
           <div className="flex items-start gap-4">

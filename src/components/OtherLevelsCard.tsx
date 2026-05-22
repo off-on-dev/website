@@ -39,7 +39,7 @@ export const OtherLevelsCard = ({
 
   return (
     <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-      <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-4">
+      <h2 className="font-sans text-base font-semibold text-foreground mb-4">
         More Levels
       </h2>
 

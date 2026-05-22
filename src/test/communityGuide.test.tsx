@@ -143,22 +143,23 @@ describe("CommunityGuide - policies section", () => {
 // ---------------------------------------------------------------------------
 
 describe("CommunityGuide - community leaders sidebar", () => {
-  it("renders the community leaders aside landmark", () => {
+  it("renders the community leaders section heading", () => {
     renderCommunityGuide();
-    const sidebar = screen.getByRole("complementary", { name: /community leaders/i });
-    expect(sidebar).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /community leaders/i, level: 2 })).toBeInTheDocument();
   });
 
   it("renders leader section headings inside the sidebar", () => {
     renderCommunityGuide();
-    const sidebar = screen.getByRole("complementary", { name: /community leaders/i });
+    const heading = screen.getByRole("heading", { name: /community leaders/i, level: 2 });
+    const sidebar = heading.parentElement!;
     expect(within(sidebar).getByRole("heading", { name: /top contributors/i })).toBeInTheDocument();
     expect(within(sidebar).getByRole("heading", { name: /most liked/i })).toBeInTheDocument();
   });
 
   it("renders user profile links pointing to the community", () => {
     renderCommunityGuide();
-    const sidebar = screen.getByRole("complementary", { name: /community leaders/i });
+    const heading = screen.getByRole("heading", { name: /community leaders/i, level: 2 });
+    const sidebar = heading.parentElement!;
     const links = within(sidebar).getAllByRole("link");
     const profileLink = links.find((a) =>
       a.getAttribute("href")?.startsWith(`${COMMUNITY_URL}/u/`)

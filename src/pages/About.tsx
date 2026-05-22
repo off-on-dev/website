@@ -26,6 +26,7 @@ const About = (): JSX.Element => {
       <Navbar />
       <main id="main-content">
       <section
+        aria-labelledby="about-hero-heading"
         className="bg-primary pt-32 pb-20 px-6 md:px-16 overflow-hidden min-h-[560px] flex flex-col justify-center bg-[length:8rem] md:bg-[length:12rem]"
         style={{ backgroundImage: `url(${import.meta.env.BASE_URL}nyx_peek.webp)`, backgroundPosition: '75% bottom', backgroundRepeat: 'no-repeat' }}
       >
@@ -34,7 +35,7 @@ const About = (): JSX.Element => {
             <span className="font-sans text-sm font-medium uppercase tracking-widest text-background/90 block mb-4">
               About
             </span>
-            <h1 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground mb-5">
+            <h1 id="about-hero-heading" className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground mb-5">
               The Home for Open Source Enthusiasts
             </h1>
             <p className="font-sans text-base leading-relaxed text-background/90 max-w-2xl mb-8">

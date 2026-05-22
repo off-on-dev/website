@@ -191,6 +191,9 @@ writeFileSync(configPath, configContent);
 console.log(`  Patched: react-router.config.ts`);
 
 // 5. Patch sitemap.xml
+// NOTE: "https://offon.dev" is intentionally duplicated here from SITE_URL in
+// src/data/constants.ts. This script runs in Node and cannot import from src/.
+// If SITE_URL ever changes, update this constant here too. See CLAUDE.md.
 const sitemapPath = resolve(ROOT, "public/sitemap.xml");
 let sitemapContent = readFileSync(sitemapPath, "utf-8");
 

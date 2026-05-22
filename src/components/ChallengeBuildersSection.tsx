@@ -10,7 +10,7 @@ export const ChallengeBuildersSection = ({ aside }: { aside?: ReactNode }): JSX.
 
   const content = (
     <div>
-      <h2 className="text-2xl font-bold text-foreground">Challenge Builders</h2>
+      <h2 id="challenge-builders-heading" className="text-2xl font-bold text-foreground">Challenge Builders</h2>
       <p className="mt-4 max-w-3xl text-muted-foreground leading-relaxed">
         Adventures don't build themselves. A heartfelt thank you to everyone who has put in the time and care to create them.
       </p>
@@ -45,7 +45,7 @@ export const ChallengeBuildersSection = ({ aside }: { aside?: ReactNode }): JSX.
   );
 
   return (
-    <section id="challenge-builders" className="px-6 md:px-16 pb-16">
+    <section id="challenge-builders" aria-labelledby="challenge-builders-heading" className="px-6 md:px-16 pb-16">
       <div className="mx-auto max-w-6xl">
         {aside ? (
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12">

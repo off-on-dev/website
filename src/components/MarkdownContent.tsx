@@ -112,7 +112,7 @@ const components: Components = {
     </p>
   ),
   ul: ({ children }) => (
-    <ul className="mb-4 list-disc space-y-2 pl-5 marker:text-primary">{children}</ul>
+    <ul className="mb-4 list-disc space-y-2 pl-5 marker:text-[hsl(var(--text-faint))]">{children}</ul>
   ),
   ol: ({ children }) => (
     <ol className="mb-4 list-decimal space-y-2 pl-5 marker:text-[hsl(var(--text-faint))]">

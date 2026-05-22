@@ -40,10 +40,10 @@ const MOCK_POSTS: PostWithAge[] = [
 ];
 
 vi.mock("@/hooks/useDiscussionPosts", () => ({
-  useDiscussionPosts: (adventureId: string, levelId: string): { posts: PostWithAge[]; totalReplies: number } =>
+  useDiscussionPosts: (adventureId: string, levelId: string) =>
     adventureId === "test-adventure" && levelId === "beginner"
-      ? { posts: MOCK_POSTS, totalReplies: MOCK_POSTS.length }
-      : { posts: [], totalReplies: 0 },
+      ? { posts: MOCK_POSTS, totalReplies: MOCK_POSTS.length, solvers: [] }
+      : { posts: [], totalReplies: 0, solvers: [] },
 }));
 
 // ---------------------------------------------------------------------------

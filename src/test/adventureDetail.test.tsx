@@ -14,7 +14,7 @@ vi.mock('@/components/CommunitySidebar', () => ({
   CommunitySidebar: () => <div data-testid="community-sidebar" />,
 }));
 
-const adventure = ADVENTURES[0];
+const adventure = ADVENTURES.find((a) => a.id === "echoes-lost-in-orbit")!;
 const level = adventure.levels[0];
 
 describe('AdventureDetail', () => {
@@ -198,7 +198,7 @@ describe('AdventureLevelLink', () => {
         </MemoryRouter>
       </ConsentProvider>
     );
-    // Each level card renders level.learnings.slice(0, 3). adventure[0].levels[0] has 4 learnings.
+    // Each level card renders level.learnings.slice(0, 3). echoes-lost-in-orbit levels[0] has 4 learnings.
     // The first 3 learnings of levels[0] are present; the 4th should not appear as a bullet.
     const fourthLearning = adventure.levels[0].learnings[3];
     expect(screen.queryByText(fourthLearning)).toBeNull();
@@ -215,12 +215,12 @@ describe('AdventureLevelLink', () => {
       </ConsentProvider>
     );
     const overflowItems = screen.getAllByText('+1 more');
-    // All 3 levels of adventure[0] have 4 learnings, so 3 overflow items
+    // All 3 levels of echoes-lost-in-orbit have 4 learnings, so 3 overflow items
     expect(overflowItems.length).toBe(adventure.levels.length);
   });
 
   it("does not render '+N more' text when all levels have 3 or fewer learnings", () => {
-    const threeLearnAdventure = ADVENTURES[1]; // building-cloudhaven: all levels have 3 learnings
+    const threeLearnAdventure = ADVENTURES.find((a) => a.id === "building-cloudhaven")!; // all levels have 3 learnings
     render(
       <ConsentProvider>
         <MemoryRouter initialEntries={[`/adventures/${threeLearnAdventure.id}`]}>

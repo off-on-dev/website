@@ -84,6 +84,7 @@ export const BLIND_BY_DESIGN: Adventure = {
         "What differs between subjects is the observed outcome: some have a biology that responds enhancedly to the same serum, some absorb less or more than the protocol's standard dose, and the trial is registered in different jurisdictions with different baselines. Your shift: teach the lab to read each subject's species off the request, attach the trial's country of registration to the global context, pass the dose as invocation context at evaluation time, and register an audit hook.",
       ],
       architectureDiagram: blindByDesignIntermediateDiagram,
+      diagramAlt: "HTTP flows through SpeciesInterceptor, Trial, and OpenFeature client left to right, then down through AuditHook and FlagdProvider, connecting via gRPC to a flagd sidecar.",
       architecture: [
         "The lab and a flagd sidecar run as siblings in the devcontainer's compose stack. The OpenFeature client uses Resolver.RPC to reach flagd:8013; flagd watches flags.json and serves evaluations from it.",
         "Three context layers merge before flagd evaluates the targeting rules: global context (country, set at startup), transaction context (species, set per request by the interceptor), and invocation context (dose, passed at the call site). Precedence on conflict: invocation > transaction > global.",

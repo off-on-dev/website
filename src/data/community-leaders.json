@@ -4,7 +4,6 @@
     {
       "id": "top-contributors",
       "title": "Top Contributors",
-      "emoji": "🏆",
       "users": [
         { "username": "KatharinaSick", "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/katharinasick/40/9_2.png", "count": 18 },
         { "username": "adrianamvillela", "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/adrianamvillela/40/46_2.png", "count": 14 },
@@ -16,7 +15,6 @@
     {
       "id": "top-challenge-solvers",
       "title": "Top Challenge Solvers",
-      "emoji": "🎯",
       "users": [
         { "username": "gsigmund", "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/gsigmund/40/99_2.png", "count": 8 },
         { "username": "enri-kapaj", "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/enri-kapaj/40/165_2.png", "count": 6 },
@@ -28,7 +26,6 @@
     {
       "id": "challenge-grand-builders",
       "title": "Challenge Grand Builders",
-      "emoji": "🏗️",
       "users": [
         { "username": "KatharinaSick", "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/katharinasick/40/9_2.png", "count": 10 }
       ]
@@ -36,7 +33,6 @@
     {
       "id": "challenge-builders",
       "title": "Challenge Builders",
-      "emoji": "🔧",
       "users": [
         { "username": "simon.schrottner", "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/simon.schrottner/40/311_2.png", "count": 2 }
       ]
@@ -44,7 +40,6 @@
     {
       "id": "most-liked",
       "title": "Most Liked",
-      "emoji": "❤️",
       "users": [
         { "username": "KatharinaSick", "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/katharinasick/40/9_2.png", "count": 55 },
         { "username": "adrianamvillela", "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/adrianamvillela/40/46_2.png", "count": 26 },
@@ -56,7 +51,6 @@
     {
       "id": "most-replies",
       "title": "Most Replies",
-      "emoji": "💬",
       "users": [
         { "username": "KatharinaSick", "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/katharinasick/40/9_2.png", "count": 29 },
         { "username": "theharithsa", "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/theharithsa/40/297_2.png", "count": 10 },
@@ -68,7 +62,6 @@
     {
       "id": "most-supportive",
       "title": "Most Supportive",
-      "emoji": "👏",
       "users": [
         { "username": "KatharinaSick", "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/katharinasick/40/9_2.png", "count": 78 },
         { "username": "DavidHirsch", "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/davidhirsch/40/8_2.png", "count": 44 },

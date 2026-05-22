@@ -52,7 +52,7 @@ export const CommunitySidebar = ({
 
   return (
     <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-      <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-5">
+      <h2 className="font-sans text-base font-semibold text-foreground mb-5">
         Community
       </h2>
 

@@ -53,6 +53,8 @@ export type AdventureLevel = {
   architecture?: string[];
   // SVG import for an architecture diagram (rendered as an image).
   architectureDiagram?: string;
+  // Accessible alt text for the architecture diagram image.
+  diagramAlt?: string;
   // Tools pre-installed in the Codespace, rendered as a row of cards.
   toolbox?: ToolboxItem[];
   // Numbered walkthrough rendered as a vertical stepper.
