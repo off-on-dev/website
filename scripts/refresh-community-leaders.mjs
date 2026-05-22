@@ -1,205 +1,244 @@
+#!/usr/bin/env node
+
 /**
- * Refresh community leaders data from Discourse Data Explorer queries.
+ * Fetch community leaders data from the Discourse Data Explorer.
  *
- * Calls two Data Explorer queries (IDs 8 and 9) and writes the results to
- * src/data/community-leaders.json. Requires DISCOURSE_API_KEY and
- * DISCOURSE_API_USERNAME environment variables.
+ * Requires a Discourse API key with admin access. Set via environment variables
+ * or a local .env file (never commit the .env file).
  *
- * Usage: DISCOURSE_API_KEY=xxx DISCOURSE_API_USERNAME=system node scripts/refresh-community-leaders.mjs
+ * Usage:
+ *   node scripts/refresh-community-leaders.mjs
+ *
+ * Environment variables:
+ *   DISCOURSE_API_KEY      - Discourse admin API key
+ *   DISCOURSE_API_USERNAME - Discourse username the key belongs to
+ *
+ * Queries:
+ *   7 - Community stats per category (topics_created, likes_received, replies, likes_given)
+ *       Columns: user_id, username, likes_received, topics_created, replies, solutions,
+ *                likes_given, uploaded_avatar_id
+ *   8 - Challenge solver/builder stats (solve_count, is_grand_builder, challenges_created)
+ *       Columns: user_id, username, solve_count, is_grand_builder, challenges_created,
+ *                is_challenge_builder, uploaded_avatar_id
+ *
+ * Writes:
+ *   src/data/community-leaders.json
+ *
+ * NOTE: community.open-ecosystem.com here is the actual Discourse server URL.
+ * It is not the same as the display name community.offon.dev. Do not change it.
  */
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = resolve(__dirname, "..");
+const OUT_PATH = resolve(ROOT, "src/data/community-leaders.json");
 const COMMUNITY_BASE = "https://community.open-ecosystem.com";
-const OUTPUT_PATH = resolve(__dirname, "../src/data/community-leaders.json");
-const AVATAR_SIZE = 40;
 
-const API_KEY = process.env.DISCOURSE_API_KEY;
-const API_USERNAME = process.env.DISCOURSE_API_USERNAME || "system";
+// Query IDs in Discourse Data Explorer.
+const COMMUNITY_QUERY_ID = 7;
+const CHALLENGE_QUERY_ID = 8;
 
-if (!API_KEY) {
-  console.error("Error: DISCOURSE_API_KEY environment variable is required.");
-  process.exit(1);
+// Category IDs passed to the community stats query (matches CATEGORY_IDS in the Discourse plugin).
+const COMMUNITY_CATEGORY_IDS = "38,18,2,10,11";
+
+// Badge names passed to the challenge stats query.
+const CHALLENGE_PARAMS = {
+  solver_badge_name: "Challenge Solved",
+  builder_badge_name: "Challenge Grand Builder",
+  cb_badge_name: "Challenge Builder",
+};
+
+const TOP_N = 5;
+const AVATAR_SIZE = "40";
+
+// Load .env file for local development. Never used in CI (secrets are env vars).
+function loadDotEnv() {
+  const envPath = resolve(ROOT, ".env");
+  if (!existsSync(envPath)) return;
+  try {
+    const content = readFileSync(envPath, "utf-8");
+    for (const line of content.split("\n")) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+      const idx = trimmed.indexOf("=");
+      if (idx === -1) continue;
+      const key = trimmed.slice(0, idx).trim();
+      const value = trimmed.slice(idx + 1).trim().replace(/^["']|["']$/g, "");
+      if (key && !(key in process.env)) process.env[key] = value;
+    }
+    console.log("  Loaded .env");
+  } catch {
+    // Ignore parse errors
+  }
 }
 
-/**
- * Section definitions mapping Data Explorer query results to our JSON structure.
- * Each entry specifies which query ID provides the data and what the section is called.
- *
- * Adjust the queryId and columnMapping if the Data Explorer queries change.
- */
-const SECTION_DEFINITIONS = [
-  { id: "top-contributors", title: "Top Contributors", queryId: 8, resultIndex: 0 },
-  { id: "top-challenge-solvers", title: "Top Challenge Solvers", queryId: 8, resultIndex: 1 },
-  { id: "challenge-grand-builders", title: "Challenge Grand Builders", queryId: 8, resultIndex: 2 },
-  { id: "challenge-builders", title: "Challenge Builders", queryId: 8, resultIndex: 3 },
-  { id: "most-liked", title: "Most Liked", queryId: 9, resultIndex: 0 },
-  { id: "most-replies", title: "Most Replies", queryId: 9, resultIndex: 1 },
-  { id: "most-supportive", title: "Most Supportive", queryId: 9, resultIndex: 2 },
-];
-
-/**
- * Resolve a Discourse avatar template to a full URL at the given size.
- */
-function resolveAvatarUrl(template, size) {
-  if (!template) return "";
-  const url = template.replace("{size}", String(size));
-  if (url.startsWith("http")) return url;
-  return `${COMMUNITY_BASE}${url}`;
+// Build avatar URL from the uploaded_avatar_id returned by queries 7 and 8.
+// If no ID is present, falls back to the Discourse CDN letter avatar.
+function buildAvatarUrl(username, uploadedAvatarId, size = AVATAR_SIZE) {
+  if (!uploadedAvatarId) {
+    const letter = username.charAt(0).toLowerCase();
+    return `https://avatars.discourse-cdn.com/v4/letter/${letter}/b5a626/${size}.png`;
+  }
+  return `${COMMUNITY_BASE}/user_avatar/community.open-ecosystem.com/${encodeURIComponent(username)}/${size}/${uploadedAvatarId}_2.png`;
 }
 
-/**
- * Run a Data Explorer query and return the raw JSON response.
- */
-async function runQuery(queryId) {
-  const url = `${COMMUNITY_BASE}/admin/plugins/explorer/queries/${queryId}/run`;
+async function runQuery(queryId, params, apiKey, apiUsername) {
+  const url = `${COMMUNITY_BASE}/admin/plugins/discourse-data-explorer/queries/${queryId}/run`;
+  const body = new URLSearchParams({ limit: "200" });
+  for (const [k, v] of Object.entries(params)) {
+    body.append(`params[${k}]`, String(v));
+  }
+
   const res = await fetch(url, {
     method: "POST",
     headers: {
-      "Api-Key": API_KEY,
-      "Api-Username": API_USERNAME,
-      "Content-Type": "application/json",
+      "Api-Key": apiKey,
+      "Api-Username": apiUsername,
+      "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: JSON.stringify({ params: {}, limit: 10 }),
+    body: body.toString(),
   });
 
   if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Query ${queryId} failed (${res.status}): ${text}`);
+    throw new Error(`HTTP ${res.status} for query ${queryId}`);
   }
 
-  return res.json();
+  const data = await res.json();
+  if (!data.success) {
+    throw new Error(`Query ${queryId} failed: ${JSON.stringify(data.errors)}`);
+  }
+
+  return { columns: data.columns, rows: data.rows ?? [] };
 }
 
-/**
- * Parse a Data Explorer result set into our user array format.
- * Expects columns: username (string), avatar_template or avatar (string), count (number).
- * The column order may vary, so we detect by column name.
- */
-function parseResultSet(result) {
-  const columns = result.columns || [];
-  const rows = result.rows || [];
-
-  // Find column indices by name patterns
-  const usernameIdx = columns.findIndex((c) =>
-    /username/i.test(c) || /user_?name/i.test(c)
-  );
-  const avatarIdx = columns.findIndex((c) =>
-    /avatar/i.test(c)
-  );
-  const countIdx = columns.findIndex((c) =>
-    /count|total|num|score|likes|replies/i.test(c)
-  );
-
-  if (usernameIdx === -1 || countIdx === -1) {
-    console.warn("Could not find username/count columns in:", columns);
-    return [];
-  }
-
-  return rows.map((row) => ({
-    username: String(row[usernameIdx]),
-    avatarUrl: avatarIdx !== -1 ? resolveAvatarUrl(String(row[avatarIdx]), AVATAR_SIZE) : "",
-    count: Number(row[countIdx]) || 0,
-  }));
+// Require a named column. Throws with a clear message if missing.
+function col(columns, name) {
+  const idx = columns.indexOf(name);
+  if (idx === -1) throw new Error(`Column "${name}" not found in [${columns.join(", ")}]`);
+  return idx;
 }
 
-/**
- * Some Data Explorer queries return multiple result sets as a single query
- * with a UNION or separate statements. If the query returns a single flat result,
- * we need to split by a grouping column. This function handles both cases.
- *
- * Strategy:
- * 1. If the response has a `result_sets` array, use each set directly.
- * 2. If it has a single `rows`/`columns`, check for a "section" or "category" column
- *    and split by that. Otherwise treat it as a single result set.
- */
-function extractResultSets(response) {
-  // Some Discourse setups return result_sets
-  if (response.result_sets && Array.isArray(response.result_sets)) {
-    return response.result_sets;
-  }
-
-  const columns = response.columns || [];
-  const rows = response.rows || [];
-
-  // Check for a grouping column
-  const groupIdx = columns.findIndex((c) =>
-    /section|category|group|type/i.test(c)
-  );
-
-  if (groupIdx !== -1) {
-    // Split rows by the grouping column value
-    const groups = new Map();
-    for (const row of rows) {
-      const key = String(row[groupIdx]);
-      if (!groups.has(key)) groups.set(key, []);
-      groups.get(key).push(row);
-    }
-    // Filter out the grouping column from each result set
-    const filteredColumns = columns.filter((_, i) => i !== groupIdx);
-    return Array.from(groups.values()).map((groupRows) => ({
-      columns: filteredColumns,
-      rows: groupRows.map((r) => r.filter((_, i) => i !== groupIdx)),
-    }));
-  }
-
-  // Single result set
-  return [{ columns, rows }];
+function topByCol(rows, usernameIdx, valueIdx, avatarIdx, n) {
+  return rows
+    .map((row) => ({
+      username: String(row[usernameIdx]),
+      value: Number(row[valueIdx]),
+      avatarUrl: buildAvatarUrl(String(row[usernameIdx]), row[avatarIdx] ?? null),
+    }))
+    .filter((u) => u.value > 0)
+    .sort((a, b) => b.value - a.value)
+    .slice(0, n)
+    .map((u) => ({ username: u.username, avatarUrl: u.avatarUrl, count: u.value }));
 }
 
 async function main() {
-  console.log("Fetching community leaders from Data Explorer queries 8 and 9...");
+  loadDotEnv();
 
-  // Run queries sequentially with a delay to avoid hitting Discourse rate limits
-  const response8 = await runQuery(8);
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  const response9 = await runQuery(9);
+  const apiKey = process.env.DISCOURSE_API_KEY;
+  const apiUsername = process.env.DISCOURSE_API_USERNAME ?? "system";
 
-  const resultSets8 = extractResultSets(response8);
-  const resultSets9 = extractResultSets(response9);
-
-  const allResultSets = { 8: resultSets8, 9: resultSets9 };
-
-  const sections = [];
-  for (const def of SECTION_DEFINITIONS) {
-    const sets = allResultSets[def.queryId] || [];
-    const resultSet = sets[def.resultIndex];
-
-    if (!resultSet) {
-      console.warn(`No result set at index ${def.resultIndex} for query ${def.queryId} (${def.title})`);
-      sections.push({ id: def.id, title: def.title, users: [] });
-      continue;
-    }
-
-    const users = parseResultSet(resultSet);
-    sections.push({ id: def.id, title: def.title, users });
-    console.log(`  ${def.title}: ${users.length} users`);
+  if (!apiKey) {
+    console.warn("  DISCOURSE_API_KEY not set, skipping community leaders refresh.");
+    console.warn("  Set it in .env (local) or as a GitHub secret (CI).");
+    process.exit(0);
   }
 
-  // Compare only sections for change detection — excluding lastUpdated prevents
-  // spurious commits on every run when leader data has not changed.
-  const newSectionsJson = JSON.stringify(sections);
-  let oldSectionsJson = "";
-  try {
-    const existing = JSON.parse(readFileSync(OUTPUT_PATH, "utf-8"));
-    oldSectionsJson = JSON.stringify(existing.sections ?? []);
-  } catch {
-    // File doesn't exist yet
+  console.log("  Fetching community stats (query 7)...");
+  const community = await runQuery(
+    COMMUNITY_QUERY_ID,
+    { category_ids: COMMUNITY_CATEGORY_IDS },
+    apiKey,
+    apiUsername,
+  );
+
+  console.log("  Fetching challenge stats (query 8)...");
+  const challenge = await runQuery(
+    CHALLENGE_QUERY_ID,
+    CHALLENGE_PARAMS,
+    apiKey,
+    apiUsername,
+  );
+
+  // Community query column indices
+  const cCols = community.columns;
+  const cUsername       = col(cCols, "username");
+  const cLikesReceived  = col(cCols, "likes_received");
+  const cTopics         = col(cCols, "topics_created");
+  const cReplies        = col(cCols, "replies");
+  const cLikesGiven     = col(cCols, "likes_given");
+  const cAvatarId       = col(cCols, "uploaded_avatar_id");
+
+  // Challenge query column indices
+  const chCols = challenge.columns;
+  const chUsername           = col(chCols, "username");
+  const chSolveCount         = col(chCols, "solve_count");
+  const chIsGrandBuilder     = col(chCols, "is_grand_builder");
+  const chChallengesCreated  = col(chCols, "challenges_created");
+  const chIsChallengeBuilder = col(chCols, "is_challenge_builder");
+  const chAvatarId           = col(chCols, "uploaded_avatar_id");
+
+  const cRows  = community.rows;
+  const chRows = challenge.rows;
+
+  const solvers = chRows
+    .map((r) => ({
+      username: String(r[chUsername]),
+      value: Number(r[chSolveCount]),
+      avatarUrl: buildAvatarUrl(String(r[chUsername]), r[chAvatarId] ?? null),
+    }))
+    .filter((u) => u.value > 0)
+    .sort((a, b) => b.value - a.value)
+    .slice(0, TOP_N)
+    .map((u) => ({ username: u.username, avatarUrl: u.avatarUrl, count: u.value }));
+
+  const grandBuilders = chRows
+    .filter((r) => r[chIsGrandBuilder])
+    .map((r) => ({
+      username: String(r[chUsername]),
+      avatarUrl: buildAvatarUrl(String(r[chUsername]), r[chAvatarId] ?? null),
+      count: Number(r[chChallengesCreated]),
+    }));
+
+  const builders = chRows
+    .filter((r) => r[chIsChallengeBuilder] && !r[chIsGrandBuilder])
+    .sort((a, b) => Number(b[chChallengesCreated]) - Number(a[chChallengesCreated]))
+    .slice(0, TOP_N)
+    .map((r) => ({
+      username: String(r[chUsername]),
+      avatarUrl: buildAvatarUrl(String(r[chUsername]), r[chAvatarId] ?? null),
+      count: Number(r[chChallengesCreated]),
+    }));
+
+  const sections = [
+    { id: "top-contributors",         title: "Top Contributors",         users: topByCol(cRows,  cUsername, cTopics,        cAvatarId,  TOP_N) },
+    { id: "top-challenge-solvers",    title: "Top Challenge Solvers",    users: solvers },
+    { id: "challenge-grand-builders", title: "Challenge Grand Builders", users: grandBuilders },
+    { id: "challenge-builders",       title: "Challenge Builders",       users: builders },
+    { id: "most-liked",               title: "Most Liked",               users: topByCol(cRows,  cUsername, cLikesReceived, cAvatarId,  TOP_N) },
+    { id: "most-replies",             title: "Most Replies",             users: topByCol(cRows,  cUsername, cReplies,       cAvatarId,  TOP_N) },
+    { id: "most-supportive",          title: "Most Supportive",          users: topByCol(cRows,  cUsername, cLikesGiven,    cAvatarId,  TOP_N) },
+  ].filter((s) => s.users.length > 0);
+
+  for (const s of sections) {
+    console.log(`  ${s.title}: ${s.users.length} users`);
   }
 
-  if (newSectionsJson !== oldSectionsJson) {
-    const output = { lastUpdated: new Date().toISOString(), sections };
-    writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2) + "\n");
-    console.log("Updated community-leaders.json");
+  const payload = JSON.stringify({ lastUpdated: new Date().toISOString(), sections }, null, 2) + "\n";
+
+  const existing = existsSync(OUT_PATH) ? readFileSync(OUT_PATH, "utf-8") : "";
+  const existingParsed = existing ? JSON.parse(existing) : {};
+  if (JSON.stringify(existingParsed.sections) !== JSON.stringify(sections)) {
+    writeFileSync(OUT_PATH, payload);
+    console.log("  Updated community-leaders.json");
   } else {
-    console.log("No changes to community-leaders.json");
+    console.log("  No change to community-leaders.json");
   }
 }
 
 main().catch((err) => {
-  console.error(err);
+  console.error(`  Error: ${err.message}`);
   process.exit(1);
 });

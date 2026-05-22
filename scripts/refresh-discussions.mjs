@@ -175,7 +175,13 @@ async function main() {
   let updated = 0;
 
   for (const filePath of levelFiles) {
-    const content = JSON.parse(readFileSync(filePath, "utf-8"));
+    let content;
+    try {
+      content = JSON.parse(readFileSync(filePath, "utf-8"));
+    } catch (err) {
+      console.warn(`  Skipping ${filePath}: malformed JSON (${err.message})`);
+      continue;
+    }
     const discussionUrl = content.discussionUrl;
     if (!discussionUrl) continue;
 

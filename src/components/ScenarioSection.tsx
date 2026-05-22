@@ -8,8 +8,8 @@ type ScenarioSectionProps = {
 export const ScenarioSection = ({ backstory }: ScenarioSectionProps): JSX.Element => (
   <CollapsibleSection id="backstory" title="The Story">
     <div className="space-y-3">
-      {backstory.map((para) => (
-        <p key={para} className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+      {backstory.map((para, i) => (
+        <p key={i} className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
           {para}
         </p>
       ))}

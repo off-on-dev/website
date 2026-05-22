@@ -62,6 +62,17 @@ const month = args.month;
 const levels = args.levels.split(",").map((l) => l.trim());
 const constName = toConstName(id);
 
+// Validate inputs for safe use in regex patterns and file writes
+if (!/^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(id)) {
+  fail("--id must be kebab-case (lowercase letters, numbers, hyphens; cannot start/end with hyphen)");
+}
+const VALID_LEVELS = ["beginner", "intermediate", "expert"];
+for (const level of levels) {
+  if (!VALID_LEVELS.includes(level)) {
+    fail(`Invalid level "${level}". Must be one of: ${VALID_LEVELS.join(", ")}`);
+  }
+}
+
 const ADVENTURES_DIR = resolve(ROOT, "src/data/adventures");
 const adventureFile = resolve(ADVENTURES_DIR, `${id}.ts`);
 const adventureDataDir = resolve(ADVENTURES_DIR, id);
@@ -98,9 +109,13 @@ const levelEntries = levels
       id: "${level}",
       name: "TODO: Level name",
       difficulty: "${difficulty}",
+      topics: ["TODO: Add topic tags"],
       learnings: ["TODO: Add learnings"],
       codespacesUrl: \`\${CODESPACES_BASE}?devcontainer_path=TODO&quickstart=1\`,
       discussionUrl: \`\${COMMUNITY_URL}/t/TODO\`,
+      intro: [
+        "TODO: Add intro paragraph (shown on adventure overview card)",
+      ],
       backstory: [
         "TODO: Add backstory",
       ],
@@ -126,6 +141,9 @@ export const ${constName}: Adventure = {
   month: "${month}",
   story: "TODO: Add adventure story summary",
   tags: ["TODO: Add tags"],
+  backstory: [
+    "TODO: Add adventure backstory paragraph 1",
+  ],
   levels: [
 ${levelEntries},
   ],
@@ -164,6 +182,9 @@ indexContent = indexContent.replace(
   }
 );
 
+if (!indexContent.includes(`import { ${constName} }`) || !indexContent.includes(`  ${constName},`)) {
+  fail("Failed to patch index.ts. The file format may have changed. Patch manually.");
+}
 writeFileSync(indexPath, indexContent);
 console.log(`  Patched: src/data/adventures/index.ts`);
 
@@ -187,6 +208,9 @@ configContent = configContent.replace(
   }
 );
 
+if (!configContent.includes(`"/adventures/${id}"`)) {
+  fail("Failed to patch react-router.config.ts. The file format may have changed. Patch manually.");
+}
 writeFileSync(configPath, configContent);
 console.log(`  Patched: react-router.config.ts`);
 
@@ -205,6 +229,9 @@ const sitemapEntries = [
   ),
 ];
 
+if (!sitemapContent.includes("</urlset>")) {
+  fail("Failed to patch sitemap.xml. Could not find </urlset> marker.");
+}
 sitemapContent = sitemapContent.replace(
   "</urlset>",
   `${sitemapEntries.join("\n")}\n</urlset>`

@@ -29,14 +29,26 @@ jobs:
       - name: Fetch and update discussion posts
         run: node scripts/refresh-discussions.mjs
 
+      - name: Fetch and update leaderboard data
+        env:
+          DISCOURSE_API_KEY: ${{ secrets.DISCOURSE_API_KEY }}
+          DISCOURSE_API_USERNAME: ${{ secrets.DISCOURSE_API_USERNAME }}
+        run: node scripts/refresh-leaderboard.mjs
+
+      - name: Fetch and update community leaders
+        env:
+          DISCOURSE_API_KEY: ${{ secrets.DISCOURSE_API_KEY }}
+          DISCOURSE_API_USERNAME: ${{ secrets.DISCOURSE_API_USERNAME }}
+        run: node scripts/refresh-community-leaders.mjs
+
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/data/adventures/
+          git add src/data/adventures/ src/data/community-leaders.json
           if git diff --cached --quiet; then
-            echo "No discussion data changes."
+            echo "No data changes."
           else
-            git commit -m "chore: refresh discussion data [skip ci]"
+            git commit -m "chore: refresh discussion, leaderboard, and community leaders data [skip ci]"
             git push
           fi

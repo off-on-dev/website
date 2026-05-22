@@ -183,12 +183,11 @@ describe('ChallengeDetail - technology filter', () => {
 });
 
 // ---------------------------------------------------------------------------
-// AdventureLevelLink: learnings overflow and link hrefs
+// AdventureLevelLink: topics pills, intro description, and link hrefs
 // ---------------------------------------------------------------------------
 
 describe('AdventureLevelLink', () => {
-  // adventure[0] levels all have 4 learnings — shows first 3 + "+1 more"
-  it('shows only the first 3 learnings as bullet points when a level has more than 3', () => {
+  it('renders topic pills for each level that has topics', () => {
     render(
       <ConsentProvider>
         <MemoryRouter initialEntries={[`/adventures/${adventure.id}`]}>
@@ -198,13 +197,14 @@ describe('AdventureLevelLink', () => {
         </MemoryRouter>
       </ConsentProvider>
     );
-    // Each level card renders level.learnings.slice(0, 3). echoes-lost-in-orbit levels[0] has 4 learnings.
-    // The first 3 learnings of levels[0] are present; the 4th should not appear as a bullet.
-    const fourthLearning = adventure.levels[0].learnings[3];
-    expect(screen.queryByText(fourthLearning)).toBeNull();
+    // echoes-lost-in-orbit beginner has topics ["ArgoCD ApplicationSets", "GitOps fundamentals"]
+    const firstTopic = adventure.levels[0].topics?.[0];
+    if (firstTopic) {
+      expect(screen.getAllByText(firstTopic).length).toBeGreaterThan(0);
+    }
   });
 
-  it("renders '+1 more' overflow text when a level has 4 learnings", () => {
+  it('renders intro description for a level that has intro text', () => {
     render(
       <ConsentProvider>
         <MemoryRouter initialEntries={[`/adventures/${adventure.id}`]}>
@@ -214,22 +214,24 @@ describe('AdventureLevelLink', () => {
         </MemoryRouter>
       </ConsentProvider>
     );
-    const overflowItems = screen.getAllByText('+1 more');
-    // All 3 levels of echoes-lost-in-orbit have 4 learnings, so 3 overflow items
-    expect(overflowItems.length).toBe(adventure.levels.length);
+    // echoes-lost-in-orbit beginner has intro[0]
+    const introText = adventure.levels[0].intro?.[0];
+    if (introText) {
+      expect(screen.getByText(introText)).toBeInTheDocument();
+    }
   });
 
-  it("does not render '+N more' text when all levels have 3 or fewer learnings", () => {
-    const threeLearnAdventure = ADVENTURES.find((a) => a.id === "building-cloudhaven")!; // all levels have 3 learnings
+  it('does not render "+N more" learnings overflow text', () => {
     render(
       <ConsentProvider>
-        <MemoryRouter initialEntries={[`/adventures/${threeLearnAdventure.id}`]}>
+        <MemoryRouter initialEntries={[`/adventures/${adventure.id}`]}>
           <Routes>
             <Route path="/adventures/:id" element={<AdventureDetail />} />
           </Routes>
         </MemoryRouter>
       </ConsentProvider>
     );
+    // Old learnings overflow pattern removed — must never appear
     expect(screen.queryByText(/\+\d+ more/)).toBeNull();
   });
 

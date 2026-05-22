@@ -1,0 +1,17 @@
+{
+  "updatedAt": "2026-05-22T12:45:15.145Z",
+  "rows": [
+    {
+      "rank": 1,
+      "username": "theharithsa",
+      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/theharithsa/90/297.png",
+      "points": 300,
+      "challengesSolved": 2,
+      "beginnerPoints": 150,
+      "intermediatePoints": 150,
+      "expertPoints": 0,
+      "singlePoints": 0,
+      "breakdown": ":green_circle: Wire OpenFeature + flagd into a Spring Boot service with zero setup | Adventure 04 : Beginner [beginner] rank #1 x1.5 = 150 pts | 🟡 Outcome by cohort | Adventure 04: Intermediate [intermediate] rank #1 x1.5 = 150 pts"
+    }
+  ]
+}

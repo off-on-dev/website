@@ -15,6 +15,7 @@ import { WalkthroughSection } from "@/components/WalkthroughSection";
 import { DiscussionSection } from "@/components/DiscussionSection";
 import { CommunitySidebar } from "@/components/CommunitySidebar";
 import { OtherLevelsCard } from "@/components/OtherLevelsCard";
+import { RewardsCard } from "@/components/RewardsCard";
 import { TechFilterSection } from "@/components/TechFilterSection";
 import { SITE_URL, BRAND_NAME, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
 import { buildPageMeta, interBoldPreload } from "@/lib/meta";
@@ -53,8 +54,6 @@ export const meta: MetaFunction = ({ params }) => {
   });
 };
 
-type SectionOutlineItem = { id: string; label: string };
-
 type StructuredLayoutProps = {
   adventure: (typeof ADVENTURES)[number];
   level: (typeof ADVENTURES)[number]["levels"][number];
@@ -82,18 +81,6 @@ const StructuredLayout = ({
   howToPlay,
   verification,
 }: StructuredLayoutProps): JSX.Element => {
-  const outlineSections: SectionOutlineItem[] = (() => {
-    const items: SectionOutlineItem[] = [];
-    if (objective && objective.length > 0) items.push({ id: "objective", label: "Objective" });
-    items.push({ id: "learnings", label: "Key Learnings" });
-    if (toolbox && toolbox.length > 0) items.push({ id: "toolbox", label: "Toolbox" });
-    if (backstory && backstory.length > 0) items.push({ id: "backstory", label: "The Story" });
-    if (architecture && architecture.length > 0 || architectureDiagram) items.push({ id: "architecture", label: "Architecture" });
-    if (howToPlay && howToPlay.length > 0) items.push({ id: "walkthrough", label: "Walkthrough" });
-    items.push({ id: "completion", label: "Completion" });
-    return items;
-  })();
-
   return (
     <>
       {/* Header */}
@@ -105,7 +92,7 @@ const StructuredLayout = ({
 
         <div className="flex flex-wrap items-center gap-2 mb-5">
           <DifficultyBadge difficulty={level.difficulty} showDot />
-          {adventure.tags.map((tag) => (
+          {(level.topics ?? adventure.tags).map((tag) => (
             <span
               key={tag}
               className="rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))]"
@@ -283,27 +270,9 @@ const StructuredLayout = ({
             </p>
           </div>
 
-          {/* Section outline nav */}
-          {outlineSections.length > 2 && (
-            <nav aria-label="Page sections" className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-4">
-              <p className="font-mono text-[0.65rem] uppercase tracking-widest text-[hsl(var(--text-faint))] mb-2.5">
-                On this page
-              </p>
-              <ul className="space-y-1">
-                {outlineSections.map((section) => (
-                  <li key={section.id}>
-                    <a
-                      href={`#${section.id}`}
-                      className="flex items-center gap-2 rounded-sm px-2 py-1.5 text-xs text-[hsl(var(--text-secondary))] hover:text-foreground hover:bg-background/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
-                    >
-                      {section.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+          {adventure.rewards && (
+            <RewardsCard rewards={adventure.rewards} compact />
           )}
-
           <CommunitySidebar
             adventureId={adventure.id}
             levelId={level.id}
@@ -386,7 +355,7 @@ const ChallengeDetail = (): JSX.Element => {
                 <p className="text-sm font-mono text-[hsl(var(--text-faint))] mb-4">{adventure.title}</p>
                 <div className="flex flex-wrap items-center gap-2 mb-4">
                   <DifficultyBadge difficulty={level.difficulty} showDot />
-                  {adventure.tags.map((tag) => (
+                  {(level.topics ?? adventure.tags).map((tag) => (
                     <span
                       key={tag}
                       className="rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))]"

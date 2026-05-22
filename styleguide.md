@@ -509,6 +509,27 @@ const { posts, totalReplies } = useDiscussionPosts(adventureId, levelId, mockLoa
 
 ---
 
+### `useAdventureLeaderboard`
+
+`src/hooks/useAdventureLeaderboard.ts`
+
+Loads the per-adventure leaderboard from `src/data/adventures/<adventureId>/leaderboard.json` (refreshed daily by the GitHub Action). Returns ranked rows with points, avatar URL, and optional breakdown fields. Returns `[]` until data loads or if the file does not exist.
+
+```ts
+const { rows, updatedAt } = useAdventureLeaderboard(adventureId);
+// or, in tests:
+const { rows, updatedAt } = useAdventureLeaderboard(adventureId, mockLoader);
+```
+
+| Argument | Type | Description |
+|---|---|---|
+| `adventureId` | `string` | Adventure slug (e.g. `"blind-by-design"`). |
+| `loader` | `LeaderboardLoader` (optional) | Async function that returns `{ updatedAt, rows }`. Defaults to a dynamic `import.meta.glob` import. Pass `vi.fn().mockResolvedValue(data)` in tests. |
+
+`LeaderboardRow` shape: `rank`, `username`, `avatarUrl?`, `points`, `challengesSolved?`, `beginnerPoints?`, `intermediatePoints?`, `expertPoints?`, `breakdown?`.
+
+---
+
 ## Components
 
 ### `ConsentBanner`
@@ -842,10 +863,47 @@ Sidebar panel for the structured challenge detail layout. Shows the challenge bu
 
 | Prop | Type | Description |
 |---|---|---|
-| `adventureId` | `string` | Adventure slug for loading discussion data. |
+| `adventureId` | `string` | Adventure slug for loading discussion data and leaderboard points lookup. |
 | `levelId` | `string` | Level slug for loading discussion data. |
 | `discussionUrl` | `string` | Full Discourse topic URL. Used for the "Join the discussion" link. |
 | `contributor` | `Adventure["contributor"]?` | Optional contributor shown at the top of the panel. |
+
+The leaderboard section renders the top 3 solvers (from certificate posts) via `LeaderboardList`, cross-referencing points from `useAdventureLeaderboard` by username.
+
+---
+
+### `LeaderboardList`
+
+`src/components/LeaderboardList.tsx`
+
+Shared primitive for rendering a ranked list of players with avatar, username, and optional points. Used by both `AdventureLeaderboard` (adventure page sidebar) and `CommunitySidebar` (challenge detail sidebar). Ranks are plain numbers, no medal icons.
+
+```tsx
+<LeaderboardList rows={rows} label="Adventure leaderboard" />
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `rows` | `LeaderboardEntry[]` | required | Ranked entries to render. |
+| `label` | `string` | `"Ranked players"` | Accessible `aria-label` for the `<ol>`. |
+
+`LeaderboardEntry` shape: `rank`, `username`, `avatarUrl?`, `points?`, `avatarFallbackStyle?` (inline style for the avatar initials fallback, used by `CommunitySidebar` for palette colors).
+
+---
+
+### `AdventureLeaderboard`
+
+`src/components/AdventureLeaderboard.tsx`
+
+Sidebar card for the adventure detail page. Loads ranked player data via `useAdventureLeaderboard` and renders it via `LeaderboardList`. Returns `null` when no leaderboard data exists for the adventure, so the sidebar is fully absent until data is available.
+
+```tsx
+<AdventureLeaderboard adventureId={adventure.id} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `adventureId` | `string` | Adventure slug. Passed directly to `useAdventureLeaderboard`. |
 
 ---
 

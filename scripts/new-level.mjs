@@ -100,6 +100,9 @@ if (configContent.includes(newRoute)) {
       return `${trimmed}${needsComma ? "," : ""}\n    ${newRoute},\n${closing}`;
     }
   );
+  if (!configContent.includes(newRoute)) {
+    fail("Failed to patch react-router.config.ts. The file format may have changed. Patch manually.");
+  }
   writeFileSync(configPath, configContent);
   console.log(`  Patched: react-router.config.ts`);
 }
@@ -113,6 +116,9 @@ const sitemapEntry = `  <url><loc>https://offon.dev/adventures/${adventureId}/le
 if (sitemapContent.includes(`/adventures/${adventureId}/levels/${levelId}/`)) {
   console.log(`  Skipped: public/sitemap.xml (entry already exists)`);
 } else {
+  if (!sitemapContent.includes("</urlset>")) {
+    fail("Failed to patch sitemap.xml. Could not find </urlset> marker.");
+  }
   sitemapContent = sitemapContent.replace("</urlset>", `${sitemapEntry}\n</urlset>`);
   writeFileSync(sitemapPath, sitemapContent);
   console.log(`  Patched: public/sitemap.xml`);
@@ -125,9 +131,13 @@ console.log(`    {
       id: "${levelId}",
       name: "TODO: Level name",
       difficulty: "${difficulty}",
+      topics: ["TODO: Add topic tags"],
       learnings: ["TODO: Add learnings"],
       codespacesUrl: \`\${CODESPACES_BASE}?devcontainer_path=TODO&quickstart=1\`,
       discussionUrl: \`\${COMMUNITY_URL}/t/TODO\`,
+      intro: [
+        "TODO: Add intro paragraph (shown on adventure overview card)",
+      ],
       backstory: [
         "TODO: Add backstory",
       ],

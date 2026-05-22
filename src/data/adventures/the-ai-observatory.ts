@@ -9,11 +9,17 @@ export const THE_AI_OBSERVATORY: Adventure = {
   story: "Investigate a mysterious bandwidth anomaly at a remote research station by instrumenting its AI system with OpenTelemetry.",
   tags: ["OpenTelemetry", "OpenLLMetry", "Jaeger", "Prometheus", "Python"],
   contributor: KATHARINA_SICK,
+  backstory: [
+    "You are stationed at Perimeter Alpha, a research outpost on the newly discovered planet HB-7742. The station is run by HubSystem, a central AI that manages everything from life support to data analysis.",
+    "Recently, the station's bandwidth usage has spiked to 847% above baseline, but no one knows why. As the systems engineer, it's your job to instrument the AI, trace its activities, and uncover the root cause of the anomaly.",
+    "Your mission: bring visibility to the station's AI and solve the mystery.",
+  ],
   levels: [
     {
       id: "beginner",
       name: "Calibrating the Lens",
       difficulty: "Beginner",
+      topics: ["OpenTelemetry", "OpenLLMetry", "Jaeger"],
       learnings: ["Instrument Python AI apps with OpenLLMetry", "Analyze traces in Jaeger"],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F03-the-ai-observatory_01-beginner%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8`,
@@ -57,6 +63,7 @@ export const THE_AI_OBSERVATORY: Adventure = {
       id: "intermediate",
       name: "The Distracted Pilot",
       difficulty: "Intermediate",
+      topics: ["OpenTelemetry", "OpenLLMetry", "Jaeger", "Prometheus"],
       learnings: ["Instrument RAG pipelines with OpenLLMetry", "Create custom OpenTelemetry metrics in Python", "Write PromQL queries & recording rules in Prometheus"],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F03-the-ai-observatory_02-intermediate%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936/2`,
@@ -100,6 +107,7 @@ export const THE_AI_OBSERVATORY: Adventure = {
       id: "expert",
       name: "The Noise Filter",
       difficulty: "Expert",
+      topics: ["OpenTelemetry", "OpenLLMetry", "Jaeger"],
       learnings: ["OpenTelemetry GenAI semantic conventions", "Tail sampling in the OTel Collector"],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F03-the-ai-observatory_03-expert%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/reduce-telemetry-noise-adventure-03-expert-is-live/999/1`,

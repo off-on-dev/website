@@ -625,7 +625,9 @@ Complete checklist for every new adventure:
 4. Add the adventure landing page URL and every level URL to the `prerender` array in `react-router.config.ts`.
 5. Create a per-level JSON file at `src/data/adventures/<adventure-id>/<level-id>.json` with `{ "discussionUrl": "<full-topic-url>" }` for each level that has a discussion thread.
 6. Run `node scripts/refresh-discussions.mjs` to fetch discussion posts for the new levels.
-7. Update the routes table in `README.md`.
+7. Add the adventure to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs` with the correct `categoryId` (find it at `<COMMUNITY_URL>/categories.json`) and `levelCount`.
+8. Run `node scripts/refresh-leaderboard.mjs` to create `src/data/adventures/<adventure-id>/leaderboard.json`.
+9. Update the routes table in `README.md`.
 
 ---
 

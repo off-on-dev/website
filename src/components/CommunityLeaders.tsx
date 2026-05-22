@@ -52,7 +52,7 @@ const LeaderRow = ({ user, rank }: { user: LeaderUser; rank: number }): JSX.Elem
       />
     ) : (
       <span
-        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[hsl(var(--primary)/0.2)] text-[0.6rem] font-semibold text-foreground"
+        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-[0.6rem] font-semibold text-foreground"
         aria-hidden="true"
       >
         {user.username.slice(0, 2).toUpperCase()}

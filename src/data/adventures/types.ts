@@ -34,6 +34,8 @@ export type AdventureLevel = {
   id: string;
   name: string;
   difficulty: "Beginner" | "Intermediate" | "Expert";
+  // Short topic tags shown on the adventure overview card (e.g. ["Argo CD", "GitOps"]).
+  topics?: string[];
   learnings: string[];
   codespacesUrl: string;
   discussionUrl: string;
@@ -67,6 +69,19 @@ export type AdventureLevel = {
   topPlayers?: TopPlayer[];
 }
 
+export type AdventureRewardTier = {
+  label: string;
+  description: string;
+};
+
+export type AdventureRewards = {
+  deadline: string;
+  eligibility: string;
+  tiers: AdventureRewardTier[];
+  rankingNote?: string;
+  rankingRulesUrl?: string;
+};
+
 /** An adventure with multiple difficulty levels, grouped by theme and monthly release. */
 export type Adventure = {
   id: string;
@@ -76,6 +91,11 @@ export type Adventure = {
   tags: string[];
   levels: AdventureLevel[];
   contributor?: { name: string; url?: string; about?: string };
+  // Narrative backstory paragraphs shown on the adventure overview page.
+  backstory?: string[];
+  // Optional "What you'll be using" style context section shown after the backstory.
+  context?: { title: string; body: string[] };
+  rewards?: AdventureRewards;
   // Mock placeholders for levels that haven't shipped yet. Rendered in the
   // "More levels" sidebar card alongside actual sibling levels.
   upcomingLevels?: UpcomingLevel[];

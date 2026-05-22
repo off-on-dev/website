@@ -139,6 +139,7 @@ const Sponsors = (): JSX.Element => {
             <h3 className="text-lg font-semibold text-foreground mb-3">What We Ask in Return</h3>
             <div className="max-w-2xl mb-8">
               <BulletList
+                marker="check"
                 spacing="loose"
                 items={[
                   "Respect for our community guidelines and code of conduct",

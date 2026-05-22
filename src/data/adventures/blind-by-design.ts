@@ -13,11 +13,34 @@ export const BLIND_BY_DESIGN: Adventure = {
     url: "https://schrottner.at/",
     about: "CNCF Ambassador and maintainer of OpenFeature and JUnit Pioneer. Helps teams release faster and with more confidence through open standards, feature flagging, and the communities that make both possible. A familiar face at KubeCon EU, Devoxx, ContainerDays, and meetups across Europe.",
   },
+  backstory: [
+    "The Aletheia Institute is running a multi-phase vision-enhancement trial. The lab is a Spring Boot service whose one job is to record the vision_state of every subject who walks through the protocol (blurry, sharp, enhanced, or clouded), because subjects don't all arrive with the same biology, the same dose adherence, or the same trial-jurisdiction baseline. The flag definitions that drive those readings live in flags.json, watched by a flagd sidecar; the OpenFeature SDK is supposed to call that sidecar on every evaluation.",
+    "It hasn't been. For the past eight months, every subject through the door has been recorded as \"untreated\": the integration was never finished, and the lab director assumed the system was reading the chart. Worse, eight weeks ago the Institute opened its flagship Phase 3 trial: a new amplifier variant rolled out fractionally to a cohort by a targeting rule in flags.json. Four adverse-event reports have since been filed, each one a subject whose vision_state at discharge was worse than at enrollment.",
+    "The monitoring is dark, not by accident but because no one ever turned the lights on. Your mission across three levels: stand up the lab so it reads the chart, read the chart by cohort so outcomes can be tracked, then turn on the lights and roll back the Phase 3 variant before the director signs off on the next enrollment batch.",
+  ],
+  context: {
+    title: "What you'll be using",
+    body: [
+      "OpenFeature is a vendor-neutral standard for feature flags. The reference cloud-native implementation is flagd, which serves flag definitions from a JSON file, locally or remotely, and the OpenFeature SDK in your application calls it on every evaluation.",
+      "In this adventure, the lab uses OpenFeature exactly the way a real engineering team would: a Spring Boot service holds the SDK client, flagd holds the flag definitions, and the targeting rules in flags.json decide what reading every subject ends up with. By the end, you'll have wired the SDK in from scratch, learned to record outcomes by cohort, and rolled back a misbehaving Phase 3 trial without redeploying.",
+    ],
+  },
+  rewards: {
+    deadline: "Tuesday, 26 May 2026 at 23:59 CET",
+    eligibility: "Complete all three levels before the deadline to be eligible.",
+    tiers: [
+      { label: "1st place", description: "50% voucher for a Linux Foundation certification" },
+      { label: "Top 3", description: "Credly badge to showcase the achievement" },
+    ],
+    rankingNote: "Ranking is determined by total points across all three levels. Points per level are awarded by submission order within the active week (100 for the first valid solution, 95 for the second, and so on; late submissions still earn 60).",
+    rankingRulesUrl: `${COMMUNITY_URL}/t/about-the-challenges-category/16`,
+  },
   levels: [
     {
       id: "beginner",
       name: "Stand up the Lab",
       difficulty: "Beginner",
+      topics: ["OpenFeature", "flagd", "Spring Boot"],
       learnings: [
         "How an OpenFeature client and provider work together: the SDK is provider-agnostic and the flagd provider plugs in via dependency only",
         "What remote provider means in practice: the SDK calls a separate flag service (flagd) over gRPC, not parsing flags.json itself",
@@ -66,6 +89,7 @@ export const BLIND_BY_DESIGN: Adventure = {
       id: "intermediate",
       name: "Outcome by Cohort",
       difficulty: "Intermediate",
+      topics: ["OpenFeature", "flagd", "Spring Boot", "Java"],
       learnings: [
         "How evaluation context works in OpenFeature: passing runtime attributes (user ID, cohort, region) to influence flag resolution",
         "How to configure flagd targeting rules to route specific cohorts to specific flag variants without code changes",
@@ -104,7 +128,7 @@ export const BLIND_BY_DESIGN: Adventure = {
       ],
       howToPlay: [
         { title: "Wait for Setup", body: "Wait ~2-3 minutes for the Java toolchain to install." },
-        { title: "Confirm the Broken State", body: "Start the lab and confirm the broken state, where no targeting fires yet. Stop the app and start fixing:\n\n```sh\n./mvnw spring-boot:run\ncurl 'http://localhost:8080/?species=zyklop'\n# returns 'blurry' — wrong cohort, targeting can't fire\n```" },
+        { title: "Confirm the Broken State", body: "Start the lab and confirm the broken state, where no targeting fires yet. Stop the app and start fixing:\n\n```sh\n./mvnw spring-boot:run\ncurl 'http://localhost:8080/?species=zyklop'\n# returns 'blurry', wrong cohort, targeting can't fire\n```" },
         { title: "Inspect the Targeting Rules", body: "Open `flags.json` and inspect the targeting. Three branches exist but none fire because nothing in the app populates the attributes yet:\n\n```json\n\"targeting\": {\n  \"if\": [\n    { \"===\": [{\"var\": \"species\"}, \"zyklop\"] },        \"enhanced\",\n    { \"in\":  [{\"var\": \"dose\"}, [\"underdose\", \"overdose\"]] }, \"clouded\",\n    { \"===\": [{\"var\": \"country\"}, \"de\"] },             \"sharp\"\n  ]\n}\n```\n\nYour job: populate `species`, `country`, and `dose` on the evaluation context so the targeting fires." },
         { title: "Build the SpeciesInterceptor", body: "Create a Spring `HandlerInterceptor` named `SpeciesInterceptor`: in `preHandle`, read `?species=` and put it on the transaction context; in `afterCompletion`, clear the context so values do not leak across pooled threads. Register a `ThreadLocalTransactionContextPropagator` once on the OpenFeature API in a static initializer." },
         { title: "Wire OpenFeatureConfig", body: "Update `OpenFeatureConfig` to: register `SpeciesInterceptor` with Spring (`WebMvcConfigurer.addInterceptors`), read the `COUNTRY` environment variable and set it as the global evaluation context, and register `AuditHook` globally on the OpenFeature API." },

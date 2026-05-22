@@ -1,9 +1,11 @@
 import { type CSSProperties, type JSX, useMemo } from "react";
-import { ArrowRight, Trophy } from "lucide-react";
-import { COMMUNITY_URL, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
+import { ExternalLink } from "lucide-react";
+import { COMMUNITY_URL } from "@/data/constants";
 import { useDiscussionPosts } from "@/hooks/useDiscussionPosts";
+import { useAdventureLeaderboard } from "@/hooks/useAdventureLeaderboard";
 import { isCertificatePost, displaySnippet } from "@/lib/discussion-utils";
 import { ContributorBadge } from "@/components/ContributorBadge";
+import { LeaderboardList } from "@/components/LeaderboardList";
 import type { Adventure } from "@/data/adventures";
 
 const avatarPalette: CSSProperties[] = [
@@ -33,13 +35,28 @@ export const CommunitySidebar = ({
   discussionUrl,
   contributor,
 }: CommunitySidebarProps): JSX.Element => {
-  const { posts, totalReplies, solvers } = useDiscussionPosts(adventureId, levelId);
+  const { posts, solvers } = useDiscussionPosts(adventureId, levelId);
+  const { rows: leaderboardRows } = useAdventureLeaderboard(adventureId);
   const hasThread = discussionUrl !== COMMUNITY_URL;
 
   const LEADERBOARD_VISIBLE = 3;
   const hasLeaderboard = solvers.length > 0;
   const topSolvers = solvers.slice(0, LEADERBOARD_VISIBLE);
-  const remainingSolvers = solvers.length - LEADERBOARD_VISIBLE;
+
+  // Points for this specific level, keyed by username.
+  const pointsByUsername = useMemo(() => {
+    const levelKey =
+      levelId === "beginner"     ? "beginnerPoints"     :
+      levelId === "intermediate" ? "intermediatePoints" :
+      levelId === "expert"       ? "expertPoints"       :
+      levelId === "single"       ? "singlePoints"       : null;
+    return Object.fromEntries(
+      leaderboardRows.map((r) => [
+        r.username,
+        levelKey !== null ? r[levelKey] : undefined,
+      ])
+    );
+  }, [leaderboardRows, levelId]);
 
   const nonCertPosts = useMemo(() => posts.filter((p) => !isCertificatePost(p)), [posts]);
   const visibleCount = 3;
@@ -47,7 +64,6 @@ export const CommunitySidebar = ({
   const visible = nonCertPosts.length > 0
     ? nonCertPosts.slice(0, visibleCount)
     : posts.slice(0, visibleCount);
-  const more = Math.max(0, totalReplies - visible.length);
   const hasActivity = visible.length > 0;
 
   return (
@@ -67,46 +83,19 @@ export const CommunitySidebar = ({
       {hasLeaderboard && (
         <div className="mb-5 pb-5 border-b border-[hsl(var(--surface-border))]">
           <SidebarLabel>Leaderboard</SidebarLabel>
-          <ol className="space-y-2.5" aria-label="Players who completed this challenge">
-            {topSolvers.map((solver, i) => (
-              <li
-                key={solver.username}
-                className="flex items-center gap-3 text-sm"
-              >
-                <span className="font-mono text-xs text-[hsl(var(--text-faint))] w-4 shrink-0 text-right" aria-hidden="true">
-                  {i + 1}
-                </span>
-                {solver.avatarUrl ? (
-                  <img
-                    src={solver.avatarUrl}
-                    alt=""
-                    aria-hidden="true"
-                    width={24}
-                    height={24}
-                    className="h-6 w-6 shrink-0 rounded-full"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div
-                    className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[0.6rem] font-semibold"
-                    style={avatarPalette[i % avatarPalette.length]}
-                    aria-hidden="true"
-                  >
-                    {solver.username.slice(0, 2).toUpperCase()}
-                  </div>
-                )}
-                <span className="font-medium text-foreground min-w-0 flex-1 truncate">
-                  {solver.username}
-                </span>
-                <Trophy size={12} className="shrink-0 text-primary" aria-hidden="true" />
-              </li>
-            ))}
-          </ol>
-          {remainingSolvers > 0 && (
-            <p className="text-xs text-[hsl(var(--text-secondary))] mt-3">
-              +{remainingSolvers} more solved this challenge
-            </p>
-          )}
+          <LeaderboardList
+            label="Players who completed this challenge"
+            rows={topSolvers.map((solver, i) => ({
+              rank: i + 1,
+              username: solver.username,
+              avatarUrl: solver.avatarUrl,
+              points: pointsByUsername[solver.username],
+              avatarFallbackStyle: avatarPalette[i % avatarPalette.length],
+            }))}
+          />
+          <p className="text-xs text-[hsl(var(--text-secondary))] mt-3">
+            Challenge solved by {solvers.length} {solvers.length === 1 ? "person" : "people"}
+          </p>
         </div>
       )}
 
@@ -146,12 +135,8 @@ export const CommunitySidebar = ({
         rel="noopener noreferrer"
         className="docs-ext-link text-sm font-medium"
       >
-        {hasThread && more > 0
-          ? `+${more} more ${more === 1 ? "post" : "posts"}, join the discussion`
-          : hasThread
-            ? "Join the discussion"
-            : `Visit ${COMMUNITY_DISPLAY_NAME}`}
-        <ArrowRight size={12} aria-hidden="true" />
+        Join the discussion
+        <ExternalLink size={12} aria-hidden="true" />
         <span className="sr-only"> (opens in new tab)</span>
       </a>
     </div>

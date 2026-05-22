@@ -193,7 +193,27 @@ After running either script, fill in the TODO placeholders in the generated TS f
 
 1. Add the `discussionUrl` in `src/data/adventures/<id>/<level>.json`
 2. Run `node scripts/refresh-discussions.mjs` to fetch posts
-3. Run `npm run lint && npm test && npm run build && npm run test:e2e`
+3. Add the adventure's `categoryId` and `levelCount` to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs`
+4. Run `node scripts/refresh-leaderboard.mjs` to fetch leaderboard data
+5. Run `npm run lint && npm test && npm run build && npm run test:e2e`
+
+### Leaderboard data
+
+Leaderboard data lives in `src/data/adventures/<adventure-id>/leaderboard.json` and is refreshed daily by the GitHub Action. The `refresh-leaderboard.mjs` script calls the Discourse Data Explorer query (query ID 5) with `category_id` and `level_count` params.
+
+```sh
+# Requires DISCOURSE_API_KEY and DISCOURSE_API_USERNAME in .env or environment
+node scripts/refresh-leaderboard.mjs
+```
+
+For local development, create a `.env` file in the repo root:
+
+```sh
+DISCOURSE_API_KEY=your_key_here
+DISCOURSE_API_USERNAME=your_username
+```
+
+The `.env` file is gitignored. For CI, set `DISCOURSE_API_KEY` and `DISCOURSE_API_USERNAME` as repository secrets in **Settings > Secrets and variables > Actions**.
 
 ## Accessibility
 
