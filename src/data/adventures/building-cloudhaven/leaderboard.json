@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-22T12:45:14.751Z",
+  "updatedAt": "2026-05-26T11:26:14.933Z",
   "rows": [
     {
       "rank": 1,
@@ -11,7 +11,7 @@
       "intermediatePoints": 95,
       "expertPoints": 100,
       "singlePoints": 0,
-      "breakdown": "Practice Infrastructure as Code with Zero Setup (🌆 Adventure 02 | Beginner) [beginner] rank #1 x1.0 = 100 pts | Adventure 02: Building CloudHaven | 🔴 Expert: The Guardian Protocols [expert] rank #1 x1.0 = 100 pts | Adventure 02: Building CloudHaven | 🟡 Intermediate: The Modular Metropolis [intermediate] rank #2 x1.0 = 95 pts"
+      "breakdown": "Practice Infrastructure as Code with Zero Setup (🌆 Adventure 02 | Beginner) [beginner] rank #1 = 100 pts | Adventure 02: Building CloudHaven | 🔴 Expert: The Guardian Protocols [expert] rank #1 = 100 pts | Adventure 02: Building CloudHaven | 🟡 Intermediate: The Modular Metropolis [intermediate] rank #2 = 95 pts"
     },
     {
       "rank": 2,
@@ -23,7 +23,7 @@
       "intermediatePoints": 100,
       "expertPoints": 90,
       "singlePoints": 0,
-      "breakdown": "Adventure 02: Building CloudHaven | 🟡 Intermediate: The Modular Metropolis [intermediate] rank #1 x1.0 = 100 pts | Practice Infrastructure as Code with Zero Setup (🌆 Adventure 02 | Beginner) [beginner] rank #3 x1.0 = 90 pts | Adventure 02: Building CloudHaven | 🔴 Expert: The Guardian Protocols [expert] rank #3 x1.0 = 90 pts"
+      "breakdown": "Adventure 02: Building CloudHaven | 🟡 Intermediate: The Modular Metropolis [intermediate] rank #1 = 100 pts | Practice Infrastructure as Code with Zero Setup (🌆 Adventure 02 | Beginner) [beginner] rank #3 = 90 pts | Adventure 02: Building CloudHaven | 🔴 Expert: The Guardian Protocols [expert] rank #3 = 90 pts"
     },
     {
       "rank": 3,
@@ -35,7 +35,7 @@
       "intermediatePoints": 60,
       "expertPoints": 95,
       "singlePoints": 0,
-      "breakdown": "Adventure 02: Building CloudHaven | 🔴 Expert: The Guardian Protocols [expert] rank #2 x1.0 = 95 pts | Practice Infrastructure as Code with Zero Setup (🌆 Adventure 02 | Beginner) [beginner] rank #4 x1.0 = 85 pts | Adventure 02: Building CloudHaven | 🟡 Intermediate: The Modular Metropolis [intermediate] late = 60 pts"
+      "breakdown": "Adventure 02: Building CloudHaven | 🔴 Expert: The Guardian Protocols [expert] rank #2 = 95 pts | Practice Infrastructure as Code with Zero Setup (🌆 Adventure 02 | Beginner) [beginner] rank #4 = 85 pts | Adventure 02: Building CloudHaven | 🟡 Intermediate: The Modular Metropolis [intermediate] late = 60 pts"
     },
     {
       "rank": 4,
@@ -47,7 +47,7 @@
       "intermediatePoints": 0,
       "expertPoints": 0,
       "singlePoints": 0,
-      "breakdown": "Practice Infrastructure as Code with Zero Setup (🌆 Adventure 02 | Beginner) [beginner] rank #2 x1.0 = 95 pts"
+      "breakdown": "Practice Infrastructure as Code with Zero Setup (🌆 Adventure 02 | Beginner) [beginner] rank #2 = 95 pts"
     }
   ]
 }
