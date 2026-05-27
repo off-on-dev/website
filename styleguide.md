@@ -665,7 +665,7 @@ No props. Used only in `Index.tsx`.
 
 `src/components/CommunityLeaders.tsx`
 
-Sidebar card displaying community leaders fetched daily from Discourse Data Explorer queries. Renders an `<aside aria-label="Community leaders">` with ranked lists per category. Each category uses a lucide-react icon and an `<ol>` of user rows (rank, avatar, username link, count). Avatars are lazy-loaded from external Discourse CDN URLs.
+Sidebar card displaying community leaders fetched daily from Discourse Data Explorer queries. Renders an `<aside aria-label="Community leaders">` with ranked lists per category. Each category uses a lucide-react icon and an `<ol>` of user rows (rank, avatar, username, count). Avatars are lazy-loaded from external Discourse CDN URLs.
 
 Data source: `src/data/community-leaders.json` (refreshed daily by `.github/workflows/refresh-community-leaders.yml`).
 
@@ -877,26 +877,26 @@ The leaderboard section renders the top 3 solvers (from certificate posts) via `
 
 `src/components/AvatarLink.tsx`
 
-Renders a user avatar followed by a linked username. The avatar is either an `<img>` (when `avatarUrl` is provided) or an initials fallback `<span>` (both `aria-hidden`). The username is a community profile link that opens in a new tab. Used by `LeaderboardList` and `CommunityLeaders`.
+Renders a user avatar followed by a plain-text username. The avatar is either an `<img>` (when `avatarUrl` is provided) or an initials fallback `<span>` (both `aria-hidden`). The username is rendered as a `<span>`, not a link. Used by `LeaderboardList` and `CommunityLeaders`.
 
 ```tsx
 <AvatarLink
   username="alice"
   avatarUrl="https://example.com/alice.png"
   size={24}
-  linkClassName="inline-flex items-center gap-1 font-medium text-foreground"
+  className="inline-flex items-center gap-1 font-medium text-foreground"
 />
 ```
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
-| `username` | `string` | required | Discourse username. Used as link text and for the initials fallback. |
+| `username` | `string` | required | Discourse username. Used as display text and for the initials fallback. |
 | `avatarUrl` | `string` (optional) | — | Avatar image URL. Falls back to initials when omitted. |
 | `size` | `24 \| 28` | `24` | Avatar diameter in pixels. |
 | `avatarFallbackStyle` | `CSSProperties` (optional) | — | Inline style for the initials `<span>`. Use palette colors from `CommunitySidebar`. |
-| `linkClassName` | `string` | required | Class applied to the profile `<a>` element. Caller controls layout and typography. |
+| `className` | `string` | required | Class applied to the username `<span>` element. Caller controls layout and typography. |
 
-The avatar image and initials span are both `aria-hidden="true"`. The profile link exposes the username as its text content and includes a screen-reader "(opens in new tab)" notice.
+The avatar image and initials span are both `aria-hidden="true"`.
 
 ---
 

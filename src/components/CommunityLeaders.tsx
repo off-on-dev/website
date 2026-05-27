@@ -44,7 +44,7 @@ const LeaderRow = ({ user, rank }: { user: LeaderUser; rank: number }): JSX.Elem
       username={user.username}
       avatarUrl={user.avatarUrl}
       size={28}
-      linkClassName="docs-ext-link text-sm font-medium min-w-0 flex-1"
+      className="text-sm font-medium text-foreground min-w-0 flex-1"
     />
     <span
       className="text-xs font-mono text-[hsl(var(--text-secondary))] tabular-nums shrink-0"

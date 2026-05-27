@@ -20,7 +20,6 @@ type LeaderboardListProps = {
  * Renders a ranked list of players with avatar, username, and optional points.
  * Used by AdventureLeaderboard (adventure page sidebar) and CommunitySidebar
  * (challenge detail sidebar). Ranks are plain numbers, no medal icons.
- * Usernames link to the user's Discourse profile.
  */
 export const LeaderboardList = ({ rows, label = "Ranked players" }: LeaderboardListProps): JSX.Element => (
   <ol className="space-y-2.5" aria-label={label}>
@@ -37,7 +36,7 @@ export const LeaderboardList = ({ rows, label = "Ranked players" }: LeaderboardL
           avatarUrl={row.avatarUrl}
           size={24}
           avatarFallbackStyle={row.avatarFallbackStyle}
-          linkClassName="inline-flex items-center gap-1 font-medium text-foreground min-w-0 flex-1 hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+          className="inline-flex items-center gap-1 font-medium text-foreground min-w-0 flex-1"
         />
         {row.points != null && (
           <span className="shrink-0 font-mono text-xs font-semibold text-primary tabular-nums">

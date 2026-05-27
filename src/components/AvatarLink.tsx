@@ -1,6 +1,4 @@
 import type { CSSProperties, JSX } from "react";
-import { ExternalLink } from "lucide-react";
-import { COMMUNITY_URL } from "@/data/constants";
 
 type AvatarLinkProps = {
   username: string;
@@ -9,8 +7,8 @@ type AvatarLinkProps = {
   size?: 24 | 28;
   /** Inline style for the initials fallback (background + text color). */
   avatarFallbackStyle?: CSSProperties;
-  /** Class applied to the profile link element. */
-  linkClassName: string;
+  /** Class applied to the username span element. */
+  className: string;
 };
 
 const SIZE_CLASSES: Record<24 | 28, string> = {
@@ -23,10 +21,9 @@ export const AvatarLink = ({
   avatarUrl,
   size = 24,
   avatarFallbackStyle,
-  linkClassName,
+  className,
 }: AvatarLinkProps): JSX.Element => {
   const sizeClass = SIZE_CLASSES[size];
-  const iconSize = size === 28 ? 12 : 10;
 
   return (
     <>
@@ -49,16 +46,9 @@ export const AvatarLink = ({
           {username.slice(0, 2).toUpperCase()}
         </span>
       )}
-      <a
-        href={`${COMMUNITY_URL}/u/${username}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={linkClassName}
-      >
+      <span className={className}>
         <span className="truncate">{username}</span>
-        <ExternalLink size={iconSize} aria-hidden="true" className="shrink-0" />
-        <span className="sr-only"> (opens in new tab)</span>
-      </a>
+      </span>
     </>
   );
 };

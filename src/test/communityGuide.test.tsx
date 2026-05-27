@@ -156,15 +156,14 @@ describe("CommunityGuide - community leaders sidebar", () => {
     expect(within(sidebar).getByRole("heading", { name: /most liked/i })).toBeInTheDocument();
   });
 
-  it("renders user profile links pointing to the community", () => {
+  it("renders usernames as plain text, not links to community profiles", () => {
     renderCommunityGuide();
     const heading = screen.getByRole("heading", { name: /community leaders/i, level: 2 });
     const sidebar = heading.parentElement!;
-    const links = within(sidebar).getAllByRole("link");
-    const profileLink = links.find((a) =>
+    expect(within(sidebar).getAllByText("KatharinaSick").length).toBeGreaterThan(0);
+    const profileLinks = within(sidebar).queryAllByRole("link").filter((a) =>
       a.getAttribute("href")?.startsWith(`${COMMUNITY_URL}/u/`)
     );
-    expect(profileLink).toBeTruthy();
-    expect(profileLink?.getAttribute("target")).toBe("_blank");
+    expect(profileLinks).toHaveLength(0);
   });
 });
