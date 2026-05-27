@@ -1,5 +1,5 @@
 import { useState, type JSX } from "react";
-import { ADVENTURES, ALL_TAGS, getLevelsByTag } from "@/data/adventures";
+import { ADVENTURE_SUMMARIES, SUMMARY_TAGS, getLevelSummariesByTag } from "@/data/adventures/summaries";
 import { FilteredLevelCard } from "@/components/FilteredLevelCard";
 import { AdventureCard } from "@/components/AdventureCard";
 import { SectionLabel } from "@/components/SectionLabel";
@@ -7,7 +7,7 @@ import { SectionLabel } from "@/components/SectionLabel";
 export const ChallengesGrid = (): JSX.Element => {
   const [activeTopic, setActiveTopic] = useState<string | null>(null);
 
-  const filteredLevels = activeTopic ? getLevelsByTag(activeTopic) : [];
+  const filteredLevels = activeTopic ? getLevelSummariesByTag(activeTopic) : [];
 
   return (
     <section id="challenges" className="py-24 px-6 md:px-16">
@@ -20,7 +20,7 @@ export const ChallengesGrid = (): JSX.Element => {
 
             {/* Topic filter chips */}
             <div role="group" aria-label="Filter challenges by technology" className="mb-8 flex flex-wrap items-center gap-2">
-              {ALL_TAGS.map((tag) => (
+              {SUMMARY_TAGS.map((tag) => (
                 <button
                   key={tag}
                   type="button"
@@ -52,7 +52,7 @@ export const ChallengesGrid = (): JSX.Element => {
             ) : (
               /* Adventure cards */
               <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-                {ADVENTURES.map((adventure) => (
+                {ADVENTURE_SUMMARIES.map((adventure) => (
                   <AdventureCard key={adventure.id} adventure={adventure} />
                 ))}
               </div>

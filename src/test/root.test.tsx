@@ -54,11 +54,14 @@ describe("root.tsx - gated-load Consent Mode v2 bootstrap", () => {
     expect(source).not.toContain("GA_COOKIE_DOMAIN");
   });
 
-  it("keeps the JSON-LD blocks and does not re-add font preloads removed in simplification", () => {
+  it("keeps the JSON-LD blocks and includes critical font preloads via the links() export", () => {
     expect(source).toContain("application/ld+json");
-    // Font preloads were removed to eliminate "preloaded but not used" warnings.
-    // font-display: swap handles FOUT without needing manual preload hints.
-    expect(source).not.toContain("inter-latin-400-normal.woff2");
-    expect(source).not.toContain("syne-latin-700-normal.woff2");
+    // font-display: optional requires preloads to work correctly. Without them the optional
+    // window expires on throttled connections (Lighthouse uses 4G) before fonts are discovered,
+    // causing the browser to use system fonts permanently. Only the Latin subset is preloaded —
+    // always needed for English content and never generates "preloaded but not used" warnings.
+    expect(source).toContain("inter-latin-400-normal.woff2");
+    expect(source).toContain("inter-latin-500-normal.woff2");
+    expect(source).toContain("syne-latin-700-normal.woff2");
   });
 });

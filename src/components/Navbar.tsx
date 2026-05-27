@@ -90,7 +90,7 @@ export const Navbar = (): JSX.Element => {
         <Link to="/" aria-label="offon.dev" className="logo-link flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm">
           {/* Both always in DOM so React Router preloads both; CSS controls visibility. */}
           <img src={logoDark} alt="" aria-hidden="true" width={130} height={33} loading="eager" fetchPriority="high" className="h-8 dark:block hidden" />
-          <img src={logoLight} alt="" aria-hidden="true" width={130} height={33} loading="eager" className="h-8 block dark:hidden" />
+          <img src={logoLight} alt="" aria-hidden="true" width={130} height={33} loading="eager" fetchPriority="low" className="h-8 block dark:hidden" />
         </Link>
 
         {/* Desktop nav */}

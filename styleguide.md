@@ -203,8 +203,8 @@ In light mode, `bg-primary` sections (PageHero, BottomCTA) stay amber. Do **not*
 
 | Class | Style | Usage |
 |---|---|---|
-| `.btn-primary` | Filled amber, `rounded-md px-5 py-3 text-sm font-semibold`, electric glow on hover | Default CTA on page background |
-| `.btn-ghost` | Outlined, `border-foreground/35`, subtle glow on hover | Secondary CTA on page background |
+| `.btn-primary` | Filled amber, `rounded-md px-5 py-3 text-sm font-semibold`, `brightness-110` on hover | Default CTA on page background |
+| `.btn-ghost` | Outlined, `border-foreground/35`, amber border and text on hover | Secondary CTA on page background |
 | `.btn-soft` | Tinted `bg-primary/10 border-primary/30`, no glow | Tertiary / low-emphasis action |
 | `.btn-inverse` | White/background fill with primary border, primary text; inverts on hover to primary bg | Primary CTA inside a `bg-primary` section (e.g. `PageHero`, `BottomCTA`) |
 | `.btn-ghost-inverse` | Transparent with background-colored border and text; inverts on hover to background fill | Secondary CTA inside a `bg-primary` section |
@@ -636,7 +636,7 @@ Navigation card used in tag-filtered level grids. The entire card is a `<Link>` 
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
-| `level` | `AdventureLevel` | required | Level data from `src/data/adventures` |
+| `level` | `AdventureLevelSummary` | required | Level data — accepts both `AdventureLevelSummary` (from `summaries.ts`) and full `AdventureLevel` (from `index.ts`), since the summary is a structural subset |
 | `adventureId` | `string` | required | Used to build the link href: `/adventures/:id/levels/:levelId` |
 | `adventureTitle` | `string` | required | Shown in the card footer as a tag label |
 | `className` | `string?` | — | Merged onto the root `<Link>` via `cn()`. Pass `"animate-fade-up-delay-1"` when the card is in a staggered grid. |

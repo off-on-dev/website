@@ -1,11 +1,11 @@
 import type { JSX } from "react";
 import { Link } from "react-router";
 import { Layers } from "lucide-react";
-import type { Adventure } from "@/data/adventures";
+import type { AdventureCardSummary } from "@/data/adventures";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { ContributorBadge } from "@/components/ContributorBadge";
 
-type AdventureCardProps = { adventure: Adventure };
+type AdventureCardProps = { adventure: AdventureCardSummary };
 
 export const AdventureCard = ({ adventure }: AdventureCardProps): JSX.Element => (
   <Link
