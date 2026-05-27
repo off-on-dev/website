@@ -136,11 +136,17 @@ function validateAdventure(data, id) {
       if (!["Beginner", "Intermediate", "Expert"].includes(level.difficulty)) {
         errors.push(`${prefix}: Invalid difficulty "${level.difficulty}"`);
       }
+      if (!level.topics || level.topics.length === 0) errors.push(`${prefix}: Missing topics`);
       if (!level.learnings || level.learnings.length === 0) {
         errors.push(`${prefix}: Missing learnings`);
       }
       if (!level.devcontainerPath) errors.push(`${prefix}: Missing devcontainerPath`);
       if (!level.discussionUrl) errors.push(`${prefix}: Missing discussionUrl`);
+      if (!level.intro || level.intro.length === 0) errors.push(`${prefix}: Missing intro`);
+      if (!level.objective || level.objective.length === 0) errors.push(`${prefix}: Missing objective`);
+      if (!level.toolbox || level.toolbox.length === 0) errors.push(`${prefix}: Missing toolbox`);
+      if (!level.howToPlay || level.howToPlay.length === 0) errors.push(`${prefix}: Missing howToPlay`);
+      if (!level.verification) errors.push(`${prefix}: Missing verification`);
     }
   }
   return errors;

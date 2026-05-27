@@ -99,28 +99,55 @@ const levelEntries = levels
   .map((level) => {
     const difficulty = difficultyMap[level];
     return `  - id: ${level}
+    # required | e.g. "Stand up the Lab" / "Outcome by Cohort" / "Lights On"
     name: "TODO: Level name"
     difficulty: ${difficulty}
     topics:
+      # required | technology and tool names shown as pill tags on the level card.
+      # e.g. OpenFeature, flagd, Spring Boot
       - "TODO: Add topic tags"
     learnings:
+      # required | full sentences describing concrete skills or insights gained.
+      # e.g. "How an OpenFeature client and provider work together: the SDK is provider-agnostic and plugs in via dependency only"
       - "TODO: Add learning 1"
       - "TODO: Add learning 2"
-    devcontainerPath: ".devcontainer/TODO/devcontainer.json"
-    discussionUrl: "/t/TODO"
+    devcontainerPath: ".devcontainer/TODO/devcontainer.json" # required
+    discussionUrl: "/t/TODO" # required
     intro:
+      # required | one or two sentences: what the player will wire up and what they will prove works.
+      # e.g. "Wire the OpenFeature Java SDK into a Spring Boot service so flag evaluations are resolved by a flagd sidecar. Prove that editing flags.json flips the response without restarting the app."
       - "TODO: Add intro paragraph"
     backstory:
+      # optional | narrative context that sets the scene for this specific level.
+      # e.g. "The lab is on its first shift and it isn't reading the chart. Every subject who walks through the door gets the same hard-coded reading, no matter what the director signed off on."
       - "TODO: Add backstory"
     objective:
+      # required | verifiable outcomes a player can check with a command.
+      # e.g. "curl http://localhost:8080/ returns a vision_state resolved from flags.json (not the hard-coded fallback)"
       - "TODO: Add objective 1"
+    # optional | uncomment to describe who this level is aimed at and what prior knowledge helps.
+    # audience: "Best suited for: Platform engineers, SREs, and developers curious about Kubernetes security. No prior Kyverno experience needed, but familiarity with basic kubectl and YAML will help."
+    # optional | uncomment to describe the technical setup (services, ports, how they connect).
+    # architecture:
+    #   - "TODO: e.g. Two containers run side-by-side: the app on http://localhost:8080 and a sidecar on :8013."
+    #   - "TODO: e.g. Edit config.json through the IDE; the file watcher picks up changes within a second."
     toolbox:
+      # required | list the CLI tools and services available in the Codespace. Add a url field for external docs.
+      # e.g. name: "./mvnw" / description: "Maven wrapper; builds and runs the Spring Boot service"
       - name: "TODO"
         description: "TODO: Add tool description"
     howToPlay:
+      # required | walk the player from the broken state to a working solution, one titled step at a time.
+      # Use fenced code blocks for commands. First step: confirm the broken state. Last step: run the verifier.
       - title: "TODO: Step 1"
         body: "TODO: Add instructions"
+    helpfulLinks:
+      # optional | reference docs the player will need. label is the link text; url must be a full https:// URL.
+      # e.g. label: "OpenFeature Java SDK" / url: https://openfeature.dev/docs/reference/technologies/server/java/
+      - label: "TODO: Doc title"
+        url: "https://TODO"
     verification:
+      # required | keep the defaults unless the verification script name or message differs.
       command: "./verify.sh"
       description: "Once you think you've solved the challenge, run the verification script."`;
   })
@@ -129,26 +156,33 @@ const levelEntries = levels
 const yamlContent = `id: ${id}
 title: "${title}"
 month: "${month}"
+# required | 2-3 sentences covering what technology is used and what each level does.
+# e.g. "Three levels of OpenFeature with flagd as the provider, in a Java + Spring Boot service.
+#   Wire the SDK (Beginner), add cohort targeting (Intermediate), then instrument with OpenTelemetry (Expert)."
 story: "TODO: Add adventure story summary"
 tags:
+  # required | technology and tool names. Mirror the topics used across all levels.
+  # e.g. OpenFeature, flagd, Spring Boot, Java, OpenTelemetry
   - "TODO: Add tags"
 
-# Uncomment and fill in if the adventure has an external contributor:
+# optional | uncomment and fill in if the adventure has an external contributor:
 # contributor:
 #   name: "TODO: Contributor name"
 #   url: "https://TODO"
 #   about: "TODO: Short bio"
 
 backstory:
+  # optional | sets the scene for the whole adventure. Can be 1-3 paragraphs.
+  # e.g. "The Aletheia Institute is running a multi-phase vision-enhancement trial. The lab is a Spring Boot service whose one job is to record the vision_state of every subject..."
   - "TODO: Add adventure backstory paragraph 1"
 
-# Uncomment and fill in for a 'What you will be using' section:
+# optional | uncomment and fill in for a 'What you will be using' section:
 # context:
 #   title: "What you'll be using"
 #   body:
 #     - "TODO: Explain the main technology"
 
-# Uncomment and fill in for reward info:
+# optional | uncomment and fill in for reward info:
 # rewards:
 #   deadline: "TODO: Day, DD Month YYYY at HH:MM CET"
 #   eligibility: "TODO: Eligibility criteria"
@@ -215,6 +249,11 @@ writeFileSync(sitemapPath, sitemapContent);
 console.log(`  Patched: public/sitemap.xml`);
 
 // Done
+const levelList =
+  levels.length === 1
+    ? levels[0]
+    : levels.slice(0, -1).join(", ") + ", and " + levels[levels.length - 1];
+
 console.log(`\n\x1b[32mDone!\x1b[0m Adventure "${title}" scaffolded.\n`);
 console.log("Next steps:");
 console.log(`  1. Fill in the TODOs in src/data/adventures/${id}/adventure.yaml`);
@@ -222,3 +261,4 @@ console.log(`  2. Update discussion URLs in the YAML and matching *-posts.json f
 console.log(`  3. Run: npm run generate`);
 console.log(`  4. Run: node scripts/refresh-discussions.mjs`);
 console.log(`  5. Run: npm run lint && npm test && npm run build && npm run test:e2e`);
+console.log(`  6. Commit: git commit -s -m "feat(adventures): add ${title} adventure with ${levelList} levels"`);

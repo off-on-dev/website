@@ -12,9 +12,15 @@ const LEVEL: AdventureLevel = {
   id: "beginner",
   name: "Beginner Challenge",
   difficulty: "Beginner",
+  topics: ["Kubernetes", "GitOps"],
   learnings: ["Deploy a service", "Configure observability", "Write a test"],
   codespacesUrl: "https://codespaces.example.com/level/1",
   discussionUrl: "https://community.example.com/t/topic/42/1",
+  intro: ["Fix the broken deployment and restore service."],
+  objective: ["The service responds on port 8080.", "All health checks pass."],
+  toolbox: [{ name: "kubectl", description: "Kubernetes CLI" }],
+  howToPlay: [{ title: "Confirm the broken state", body: "Run kubectl get pods and observe the error." }],
+  verification: { command: "./verify.sh", description: "Run the verification script to confirm your solution." },
 };
 
 const LEVEL_MANY_LEARNINGS: AdventureLevel = {
