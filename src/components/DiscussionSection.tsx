@@ -53,7 +53,6 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
               href={post.topicUrl}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`Community post by ${post.username} (opens in new tab)`}
               className="block card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               <div className="flex items-center justify-between mb-3">
@@ -77,8 +76,9 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
                       {post.username.slice(0, 2).toUpperCase()}
                     </div>
                   )}
+                  <span className="sr-only">{post.username}: </span>
                   {post.age && (
-                    <span className="text-xs text-[hsl(var(--text-faint))]">{post.age}</span>
+                    <span className="text-xs text-[hsl(var(--text-faint))]" aria-hidden="true">{post.age}</span>
                   )}
                 </div>
                 {(post.like_count ?? 0) > 0 && (
@@ -93,6 +93,7 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
                 {isCertificatePost(post) && <Trophy size={14} className="inline mr-1 text-primary" aria-hidden="true" />}
                 {displaySnippet(post)}
               </p>
+              <span className="sr-only"> (opens in new tab)</span>
             </a>
           ))}
           {joinLink}
