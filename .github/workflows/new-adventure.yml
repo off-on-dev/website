@@ -31,9 +31,9 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
 
@@ -65,32 +65,40 @@ jobs:
             --levels "$ADVENTURE_LEVELS"
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "feat: scaffold adventure ${{ inputs.id }}"
-          title: "feat: scaffold adventure — ${{ inputs.title }}"
-          body: |
-            ## New Adventure Scaffolded
-
-            | Field | Value |
-            |---|---|
-            | ID | `${{ inputs.id }}` |
-            | Title | ${{ inputs.title }} |
-            | Month | ${{ inputs.month }} |
-            | Levels | ${{ inputs.levels }} |
-
-            ### Generated files
-            - `src/data/adventures/${{ inputs.id }}/adventure.yaml` (fill in TODOs)
-            - Discussion JSON stubs per level
-            - Routes added to `react-router.config.ts`
-            - Sitemap entries added
-
-            ### Next steps
-            1. Fill in the TODOs in `src/data/adventures/${{ inputs.id }}/adventure.yaml`
-            2. Update `discussionUrl` in the YAML and each level's `-posts.json` file
-            3. Run `npm run generate` to produce the TypeScript from YAML
-            4. Run `node scripts/refresh-discussions.mjs`
-            5. Run all checks: `npm run lint && npm test && npm run build && npm run test:e2e`
-          branch: "feat/adventure-${{ inputs.id }}"
-          delete-branch: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADVENTURE_ID: ${{ inputs.id }}
+          ADVENTURE_TITLE: ${{ inputs.title }}
+          ADVENTURE_MONTH: ${{ inputs.month }}
+          ADVENTURE_LEVELS: ${{ inputs.levels }}
+        run: |
+          BRANCH="feat/adventure-${ADVENTURE_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add -A
+          git commit -m "feat: scaffold adventure ${ADVENTURE_ID}"
+          git push origin "$BRANCH"
+          {
+            printf '## New Adventure Scaffolded\n\n'
+            printf '| Field | Value |\n|---|---|\n'
+            printf '| ID | `%s` |\n' "$ADVENTURE_ID"
+            printf '| Title | %s |\n' "$ADVENTURE_TITLE"
+            printf '| Month | %s |\n' "$ADVENTURE_MONTH"
+            printf '| Levels | %s |\n\n' "$ADVENTURE_LEVELS"
+            printf '### Generated files\n'
+            printf -- '- `src/data/adventures/%s/adventure.yaml` (fill in TODOs)\n' "$ADVENTURE_ID"
+            printf -- '- Discussion JSON stubs per level\n'
+            printf -- '- Routes added to `react-router.config.ts`\n'
+            printf -- '- Sitemap entries added\n\n'
+            printf '### Next steps\n'
+            printf '1. Fill in the TODOs in `src/data/adventures/%s/adventure.yaml`\n' "$ADVENTURE_ID"
+            printf '2. Update `discussionUrl` in the YAML and each level `-posts.json` file\n'
+            printf '3. Run `npm run generate` to produce the TypeScript from YAML\n'
+            printf '4. Run `node scripts/refresh-discussions.mjs`\n'
+            printf '5. Run all checks: `npm run lint && npm test && npm run build && npm run test:e2e`\n'
+          } > /tmp/pr-body.md
+          gh pr create \
+            --title "feat: scaffold adventure — ${ADVENTURE_TITLE}" \
+            --body-file /tmp/pr-body.md \
+            --head "$BRANCH"

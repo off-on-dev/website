@@ -646,6 +646,25 @@ Complete checklist for every new adventure:
 - Only static files in `dist/client/` are deployed. No server config is needed.
 - The base path is set via the `VITE_BASE_PATH` environment variable (defaults to `/`). PR previews set this automatically in `preview.yml`. Never change this without verifying GitHub Pages routing.
 
+### GitHub Actions allowlist
+
+The `off-on-dev` organisation restricts which third-party actions can run. Only the following are permitted:
+
+| Action | Pinned version |
+|---|---|
+| `actions/checkout` | `@v4` — never `@v5`, `@v6`, or any other version |
+| `actions/setup-node` | `@v4` — never `@v5`, `@v6`, or any other version |
+| `JamesIves/github-pages-deploy-action` | any tag (`@*`) |
+| `marocchino/sticky-pull-request-comment` | any tag (`@*`) |
+| `rossjrw/pr-preview-action` | any tag (`@*`) |
+| Actions owned by `off-on-dev` | any |
+| Actions created by GitHub | any |
+| Actions verified in the GitHub Marketplace | any |
+
+**Before adding any new `uses:` line to a workflow file, verify the action is on this list.** If it is not, replace it with an equivalent using `gh` (GitHub CLI, pre-installed on all `ubuntu-latest` runners) or native shell commands. Do not ask for the allowlist to be expanded unless there is no alternative.
+
+This rule is enforced at the org level. A workflow that references an action outside the allowlist will fail immediately with an "action is not allowed" error — it will never even reach the step that uses it.
+
 ---
 
 ## Before Submitting Code
