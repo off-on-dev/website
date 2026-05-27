@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-CDQJG8fg.js";var t=e(),n=({children:e})=>(0,t.jsx)(`div`,{className:`mb-3`,children:(0,t.jsx)(`span`,{className:`section-label font-sans text-sm font-medium uppercase tracking-widest text-primary`,children:e})});export{n as t};
