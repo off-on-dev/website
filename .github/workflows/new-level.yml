@@ -26,9 +26,9 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
 
@@ -59,35 +59,38 @@ jobs:
           echo "EOF" >> "$GITHUB_OUTPUT"
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "feat: add ${{ inputs.level }} level to ${{ inputs.adventure }}"
-          title: "feat: add ${{ inputs.level }} level — ${{ inputs.adventure }}"
-          body: |
-            ## New Level Added
-
-            | Field | Value |
-            |---|---|
-            | Adventure | `${{ inputs.adventure }}` |
-            | Level | `${{ inputs.level }}` |
-
-            ### Generated
-            - `src/data/adventures/${{ inputs.adventure }}/${{ inputs.level }}-posts.json` (discussion stub)
-            - Prerender entry in `react-router.config.ts`
-            - Sitemap entry in `public/sitemap.xml`
-
-            ### Manual step required
-            Paste this into the `levels` array in `src/data/adventures/${{ inputs.adventure }}/adventure.yaml`:
-
-            ```yaml
-            ${{ steps.scaffold.outputs.snippet }}
-            ```
-
-            ### Next steps
-            1. Paste the snippet above and fill in the TODOs
-            2. Update `discussionUrl` in the YAML and the `-posts.json` file
-            3. Run `node scripts/refresh-discussions.mjs`
-            4. Run all checks: `npm run lint && npm test && npm run build && npm run test:e2e`
-          branch: "feat/${{ inputs.adventure }}-${{ inputs.level }}"
-          delete-branch: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADVENTURE: ${{ inputs.adventure }}
+          LEVEL: ${{ inputs.level }}
+          SNIPPET: ${{ steps.scaffold.outputs.snippet }}
+        run: |
+          BRANCH="feat/${ADVENTURE}-${LEVEL}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add -A
+          git commit -m "feat: add ${LEVEL} level to ${ADVENTURE}"
+          git push origin "$BRANCH"
+          {
+            printf '## New Level Added\n\n'
+            printf '| Field | Value |\n|---|---|\n'
+            printf '| Adventure | `%s` |\n' "$ADVENTURE"
+            printf '| Level | `%s` |\n\n' "$LEVEL"
+            printf '### Generated\n'
+            printf -- '- `src/data/adventures/%s/%s-posts.json` (discussion stub)\n' "$ADVENTURE" "$LEVEL"
+            printf -- '- Prerender entry in `react-router.config.ts`\n'
+            printf -- '- Sitemap entry in `public/sitemap.xml`\n\n'
+            printf '### Manual step required\n'
+            printf 'Paste this into the `levels` array in `src/data/adventures/%s/adventure.yaml`:\n\n' "$ADVENTURE"
+            printf '```yaml\n%s\n```\n\n' "$SNIPPET"
+            printf '### Next steps\n'
+            printf '1. Paste the snippet above and fill in the TODOs\n'
+            printf '2. Update `discussionUrl` in the YAML and the `-posts.json` file\n'
+            printf '3. Run `node scripts/refresh-discussions.mjs`\n'
+            printf '4. Run all checks: `npm run lint && npm test && npm run build && npm run test:e2e`\n'
+          } > /tmp/pr-body.md
+          gh pr create \
+            --title "feat: add ${LEVEL} level — ${ADVENTURE}" \
+            --body-file /tmp/pr-body.md \
+            --head "$BRANCH"

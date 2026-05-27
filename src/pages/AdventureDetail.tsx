@@ -2,7 +2,7 @@ import { type JSX } from "react";
 import { useParams, Link } from "react-router";
 import type { MetaFunction } from "react-router";
 import { ArrowRight } from "lucide-react";
-import { ADVENTURES, type AdventureLevel, tagToSlug } from "@/data/adventures";
+import { ADVENTURES, type AdventureLevel } from "@/data/adventures";
 import { NotFoundPage } from "@/components/NotFoundPage";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -13,6 +13,7 @@ import { TechFilterSection } from "@/components/TechFilterSection";
 import { RewardsCard } from "@/components/RewardsCard";
 import { AdventureLeaderboard } from "@/components/AdventureLeaderboard";
 import { ContributorBadge } from "@/components/ContributorBadge";
+import { TagChips } from "@/components/TagChips";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 
@@ -97,15 +98,7 @@ const AdventureDetail = (): JSX.Element => {
               {adventure.contributor && (
                 <ContributorBadge name={adventure.contributor.name} url={adventure.contributor.url} label="Adventure Builder" />
               )}
-              {adventure.tags.map((tag) => (
-                <Link
-                  key={tag}
-                  to={`/challenges/${tagToSlug(tag)}`}
-                  className="tag-chip-link rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary hover:text-primary transition-colors"
-                >
-                  {tag}
-                </Link>
-              ))}
+              <TagChips tags={adventure.tags} />
             </div>
             <p className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl">{adventure.story}</p>
           </div>

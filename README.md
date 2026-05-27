@@ -197,7 +197,7 @@ Go to the repository's **Actions** tab, select the workflow, click **Run workflo
 | **New Adventure** | `id`, `title`, `month`, `levels` (comma-separated) | Scaffolds a full adventure: TS file with TODOs, discussion JSON stubs, patches `react-router.config.ts` and `sitemap.xml`, opens a PR |
 | **New Level** | `adventure` (existing ID), `level` (beginner/intermediate/expert) | Adds a level to an existing adventure: discussion JSON stub, patches config and sitemap, opens a PR with a TS snippet to paste |
 
-Both workflows create a branch and open a PR automatically via `peter-evans/create-pull-request`. The PR description includes next steps (fill in content TODOs, run verification, etc.).
+Both workflows commit the scaffolded files to a new branch and open a PR automatically using the GitHub CLI (`gh pr create`). The PR description includes next steps (fill in content TODOs, run verification, etc.).
 
 ### Via local scripts
 

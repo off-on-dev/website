@@ -583,9 +583,6 @@ html {
   .animate-marquee {
     animation: none;
   }
-  .btn-primary {
-    animation: none;
-  }
   /* Firefly particles run a continuous 9-keyframe animation with positional
      transforms. Vestibular disorder and motion-sensitive users are affected
      by persistent movement even from decorative elements. */
@@ -639,7 +636,7 @@ html {
 
   /* Ghost/outline button */
   .btn-ghost {
-    @apply inline-flex items-center gap-2 rounded-md border border-foreground/35 bg-transparent px-5 py-3 text-sm font-semibold text-foreground transition-all duration-200 hover:bg-primary/10 hover:border-primary/60 hover:text-primary active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md border border-foreground/35 bg-transparent px-5 py-3 text-sm font-semibold text-foreground transition-all duration-200 hover:border-primary/60 hover:text-primary active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
   /* Soft tinted button */
@@ -680,26 +677,6 @@ html {
 
 /* ─── Electric glow effects ──────────────────────────────── */
 
-@keyframes ctaGlow {
-  0%, 100% { box-shadow: none; }
-  50%       { box-shadow: 0 0 18px 4px hsl(var(--primary) / 0.35); }
-}
-
-/* Button primary: idle pulse glow to draw the eye */
-.btn-primary {
-  animation: ctaGlow 3s ease-in-out infinite;
-}
-
-/* Button primary: electric glow on hover/focus — stops the idle pulse */
-.btn-primary:hover,
-.btn-primary:focus-visible {
-  animation: none;
-  box-shadow:
-    0 0 28px -2px hsl(var(--primary) / 0.8),
-    0 0 60px -8px hsl(var(--primary) / 0.4),
-    0 2px 8px -2px hsl(0 0% 0% / 0.3);
-}
-
 /* Tag pill: electric glow on hover */
 .pill-inactive:hover {
   box-shadow:
@@ -707,12 +684,6 @@ html {
     0 0 30px -8px hsl(var(--primary) / 0.25);
 }
 
-/* Ghost button: electric glow on hover */
-.btn-ghost:hover {
-  box-shadow:
-    0 0 20px -4px hsl(var(--primary) / 0.45),
-    0 0 40px -8px hsl(var(--primary) / 0.2);
-}
 
 /* Glowing card hover - add card-glow class to cards */
 .card-glow {
@@ -784,14 +755,6 @@ html {
 
 .light .btn-ghost:hover {
   color: hsl(var(--foreground-hover));
-}
-
-.light .btn-primary {
-  box-shadow: none;
-}
-
-.light .btn-primary:hover {
-  box-shadow: none;
 }
 
 .light .pill-active {

@@ -124,3 +124,34 @@ export type RelatedLevel = {
   adventureId: string;
   adventureTitle: string;
 };
+
+/**
+ * Lightweight level shape used for card and filter views on the home/challenges pages.
+ * Contains only the fields needed to render AdventureCard and FilteredLevelCard.
+ * Generated into summaries.ts — do not import the full AdventureLevel where this suffices.
+ */
+export type AdventureLevelSummary = {
+  id: string;
+  name: string;
+  difficulty: "Beginner" | "Intermediate" | "Expert";
+  topics?: string[];
+  learnings: string[];
+};
+
+/** Lightweight adventure shape for card grid views. Generated into summaries.ts. */
+export type AdventureCardSummary = {
+  id: string;
+  title: string;
+  month: string;
+  story: string;
+  tags: string[];
+  levels: AdventureLevelSummary[];
+  contributor?: { name: string };
+};
+
+/** A level summary with its parent adventure context, for filtered card views. */
+export type RelatedLevelSummary = {
+  level: AdventureLevelSummary;
+  adventureId: string;
+  adventureTitle: string;
+};

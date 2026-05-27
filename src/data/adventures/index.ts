@@ -4,7 +4,7 @@ import { ECHOES_LOST_IN_ORBIT } from "./echoes-lost-in-orbit.generated";
 import { THE_AI_OBSERVATORY } from "./the-ai-observatory.generated";
 import type { Adventure, AdventureContributor, RelatedLevel } from "./types";
 
-export type { Adventure, AdventureLevel, AdventureContributor, RelatedLevel, ToolboxItem, WalkthroughStep, VerificationInfo, TopPlayer, UpcomingLevel } from "./types";
+export type { Adventure, AdventureLevel, AdventureContributor, RelatedLevel, ToolboxItem, WalkthroughStep, VerificationInfo, TopPlayer, UpcomingLevel, AdventureLevelSummary, AdventureCardSummary, RelatedLevelSummary } from "./types";
 
 export const ADVENTURES: Adventure[] = [
   BLIND_BY_DESIGN,

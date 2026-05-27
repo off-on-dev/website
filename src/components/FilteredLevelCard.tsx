@@ -1,11 +1,11 @@
 import type { JSX } from "react";
 import { Link } from "react-router";
 import { cn } from "@/lib/utils";
-import type { AdventureLevel } from "@/data/adventures";
+import type { AdventureLevelSummary } from "@/data/adventures";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 
 type FilteredLevelCardProps = {
-  level: AdventureLevel;
+  level: AdventureLevelSummary;
   adventureId: string;
   adventureTitle: string;
   className?: string;
