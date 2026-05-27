@@ -41,4 +41,5 @@
   <url><loc>https://offon.dev/challenges/terraform/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://offon.dev/challenges/trivy/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://offon.dev/challenges/flagd/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://offon.dev/adventures/blind-by-design/levels/expert/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>
