@@ -41,7 +41,7 @@ export type AdventureLevel = {
   name: string;
   difficulty: "Beginner" | "Intermediate" | "Expert";
   // Short topic tags shown on the adventure overview card (e.g. ["Argo CD", "GitOps"]).
-  topics?: string[];
+  topics: string[];
   learnings: string[];
   codespacesUrl: string;
   discussionUrl: string;
@@ -50,11 +50,11 @@ export type AdventureLevel = {
   // Short narrative hook shown directly under the page title.
   hook?: string;
   // Brief intro paragraph(s) shown under the page title before the main content.
-  intro?: string[];
+  intro: string[];
   // Narrative backstory paragraphs shown as a collapsible scenario section.
   backstory?: string[];
   // Concrete acceptance criteria shown as the "Objective" card.
-  objective?: string[];
+  objective: string[];
   // Audience line shown inside the Start CTA card (e.g. "Best for platform engineers, SREs…").
   audience?: string;
   // Long-form narrative shown as a styled scenario block under the hero.
@@ -66,13 +66,13 @@ export type AdventureLevel = {
   // Accessible alt text for the architecture diagram image.
   diagramAlt?: string;
   // Tools pre-installed in the Codespace, rendered as a row of cards.
-  toolbox?: ToolboxItem[];
+  toolbox: ToolboxItem[];
   // Numbered walkthrough rendered as a vertical stepper.
-  howToPlay?: WalkthroughStep[];
+  howToPlay: WalkthroughStep[];
   // Reference documentation links shown after the walkthrough.
   helpfulLinks?: HelpfulLink[];
   // Verification card rendered as the final section.
-  verification?: VerificationInfo;
+  verification: VerificationInfo;
   // Mock community stats shown in the CommunitySidebar. Real data will replace
   // these once we aggregate certificate posts and cross-challenge contribution.
   solvedCount?: number;
@@ -134,7 +134,7 @@ export type AdventureLevelSummary = {
   id: string;
   name: string;
   difficulty: "Beginner" | "Intermediate" | "Expert";
-  topics?: string[];
+  topics: string[];
   learnings: string[];
 };
 

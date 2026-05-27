@@ -79,6 +79,10 @@ kubectl apply -n argocd -f adventures/01-echoes-lost-in-orbit/beginner/manifests
 adventures/01-echoes-lost-in-orbit/beginner/smoke-test.sh
 \`\`\`` },
       ],
+      verification: {
+        command: "adventures/01-echoes-lost-in-orbit/beginner/smoke-test.sh",
+        description: "Once you think you've solved the challenge, run the smoke test to verify your solution.",
+      },
     },
     {
       id: "intermediate",
@@ -173,6 +177,10 @@ adventures/01-echoes-lost-in-orbit/intermediate/smoke-test.sh
         { label: "PromQL basics", url: "https://prometheus.io/docs/prometheus/latest/querying/basics/" },
         { label: "kube-state-metrics exposed metrics", url: "https://github.com/kubernetes/kube-state-metrics/tree/main/docs#exposed-metrics" },
       ],
+      verification: {
+        command: "adventures/01-echoes-lost-in-orbit/intermediate/smoke-test.sh",
+        description: "Once you think you've solved the challenge, run the smoke test to verify your solution.",
+      },
     },
     {
       id: "expert",
@@ -266,6 +274,10 @@ adventures/01-echoes-lost-in-orbit/expert/smoke-test.sh
         { label: "Argo Rollouts analysis", url: "https://argo-rollouts.readthedocs.io/en/stable/features/analysis/" },
         { label: "PromQL basics", url: "https://prometheus.io/docs/prometheus/latest/querying/basics/" },
       ],
+      verification: {
+        command: "adventures/01-echoes-lost-in-orbit/expert/smoke-test.sh",
+        description: "Once you think you've solved the challenge, run the smoke test to verify your solution.",
+      },
     },
   ],
 };

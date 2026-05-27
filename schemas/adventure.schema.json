@@ -115,7 +115,7 @@
     },
     "level": {
       "type": "object",
-      "required": ["id", "name", "difficulty", "learnings", "devcontainerPath", "discussionUrl"],
+      "required": ["id", "name", "difficulty", "topics", "learnings", "devcontainerPath", "discussionUrl", "intro", "objective", "toolbox", "howToPlay", "verification"],
       "additionalProperties": false,
       "properties": {
         "id": { "type": "string" },

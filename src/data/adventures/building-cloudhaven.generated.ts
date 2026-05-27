@@ -80,6 +80,10 @@ If you changed the backend configuration, run \`tofu init -migrate-state\` first
         { label: "OpenTofu backend configuration", url: "https://opentofu.org/docs/language/settings/backends/configuration/" },
         { label: "Google Cloud provider", url: "https://registry.terraform.io/providers/hashicorp/google/latest/docs" },
       ],
+      verification: {
+        command: "./smoke-test.sh",
+        description: "Once you think you've solved the challenge, run the smoke test to verify your solution.",
+      },
     },
     {
       id: "intermediate",
@@ -158,6 +162,10 @@ make apply
         { label: "Input validation rules", url: "https://opentofu.org/docs/language/values/variables/#custom-validation-rules" },
         { label: "Moved blocks", url: "https://opentofu.org/docs/language/modules/develop/refactoring/" },
       ],
+      verification: {
+        command: "./smoke-test.sh",
+        description: "Once you think you've solved the challenge, run the smoke test to verify your solution.",
+      },
     },
     {
       id: "expert",
@@ -219,6 +227,10 @@ cd adventures/02-building-cloudhaven/expert
         { label: "Trivy action", url: "https://github.com/aquasecurity/trivy-action" },
         { label: "TF-via-PR action", url: "https://github.com/OP5dev/TF-via-PR" },
       ],
+      verification: {
+        command: "./smoke-test.sh",
+        description: "Once you think you've solved the challenge, run the smoke test to verify your solution.",
+      },
     },
   ],
 };
