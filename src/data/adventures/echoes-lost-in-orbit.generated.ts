@@ -195,8 +195,8 @@ adventures/01-echoes-lost-in-orbit/intermediate/smoke-test.sh
       backstory: [
         "After fixing the Zephyrian communications, word of your progressive release mastery spread across the galaxy. The Bytari, a highly advanced species from the Andromeda sector, were impressed.",
         "They want to apply progressive delivery to their mission-critical service: HotROD (Hyperspace Operations & Transport, Rapid Orbital Dispatch), an interstellar ride-sharing service handling dispatch requests across thousands of star systems. Every millisecond of latency matters, and any error could strand travelers between dimensions.",
-        "A previous engineer started instrumenting HotROD with OpenTelemetry and configured Argo Rollouts for automated validation, but left the setup incomplete. The observability pipeline is broken. The Bytari don't use staging/production environments; they believe in single-environment progressive delivery validated purely by trace-derived metrics.",
-        "Your mission: fix the observability pipeline and canary validation.",
+        "A previous engineer started instrumenting HotROD with OpenTelemetry and configured Argo Rollouts for automated validation, but left the setup incomplete. The observability pipeline is broken. The Bytari don't use staging/production environments; they believe in single-environment progressive delivery validated purely by trace-derived metrics and automated health checks.",
+        "Your mission: fix the observability pipeline and canary validation. Make HotROD deployment-ready with proper distributed tracing.",
       ],
       objective: [
         "Automated rollout progression to HotROD version 1.76.0 driven by observability signals",

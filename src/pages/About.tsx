@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import type { LinksFunction, MetaFunction } from "react-router";
+import type { MetaFunction } from "react-router";
 import { Mail } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -9,9 +9,7 @@ import { ChallengeBuildersSection } from "@/components/ChallengeBuildersSection"
 import { BrandStory } from "@/components/BrandStory";
 import { BottomCTA } from "@/components/BottomCTA";
 import { SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
-import { buildPageMeta, interBoldPreload } from "@/lib/meta";
-
-export const links: LinksFunction = () => interBoldPreload;
+import { buildPageMeta } from "@/lib/meta";
 
 export const meta: MetaFunction = () =>
   buildPageMeta({

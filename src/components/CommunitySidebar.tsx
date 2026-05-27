@@ -27,7 +27,7 @@ type CommunitySidebarProps = {
 };
 
 const SidebarLabel = ({ children }: { children: string }): JSX.Element => (
-  <p className="font-mono text-[0.65rem] uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">
+  <p className="font-mono text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">
     {children}
   </p>
 );

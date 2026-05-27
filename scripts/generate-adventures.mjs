@@ -7,10 +7,21 @@
  *   node scripts/generate-adventures.mjs [--validate-only]
  *
  * Reads all src/data/adventures/<id>/adventure.yaml files and generates
- * the corresponding <id>.ts files plus patches index.ts with the correct
+ * the corresponding <id>.generated.ts files plus index.ts with the correct
  * imports and ADVENTURES array.
  *
  * With --validate-only, parses and validates YAML without writing files.
+ *
+ * Why YAML + generated TS instead of authoring TS directly?
+ * - YAML is easier to write and review for non-engineers, and is validated
+ *   by JSON Schema (schemas/adventure.schema.json) before generation.
+ * - Vite cannot import YAML natively, so the generator converts each file
+ *   to fully-typed TypeScript that the app can statically import and
+ *   tree-shake.
+ * - The generated files are committed so the build works without running
+ *   this script first. CI can detect out-of-sync output by running
+ *   `npm run generate` and checking for a clean git diff.
+ * - Never edit *.generated.ts by hand — changes will be overwritten.
  */
 
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";

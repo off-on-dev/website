@@ -2,7 +2,8 @@ id: building-cloudhaven
 title: Building CloudHaven
 month: JAN 2026
 story: Join the Infrastructure Guild and modernize CloudHaven's infrastructure from manual provisioning to a
-  self-service platform using Infrastructure as Code.
+  self-service platform using Infrastructure as Code. A hands-on journey through infrastructure as code with
+  OpenTofu and GitHub Actions.
 tags:
   - OpenTofu
   - Terraform
@@ -25,8 +26,8 @@ backstory:
     reliable, scalable infrastructure services.
   - The Guild used to provision everything manually through cloud consoles, a process that was slow, error-prone, and
     impossible to track. Recently, they've started adopting Infrastructure as Code, but the transition is incomplete.
-  - "The Guild Master has assigned you to complete the modernization journey. Your mission: build the services and tools
-    that will support CloudHaven's future growth."
+  - The Guild Master has assigned you to complete the modernization journey.
+  - "Your mission: build the services and tools that will support CloudHaven's future growth."
 levels:
   - id: beginner
     name: The Foundation Stones
@@ -36,7 +37,8 @@ levels:
     learnings:
       - Infrastructure as Code with OpenTofu
       - Remote state management with GCS backend
-      - Dynamic & conditional resources
+      - Dynamic resource provisioning with for_each
+      - Conditional resources with the enabled meta-argument, new in OpenTofu
     devcontainerPath: .devcontainer/02-building-cloudhaven_01-beginner/devcontainer.json
     discussionUrl: /t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656
     deadline: "4 February 2026 at 23:59 CET"
@@ -45,9 +47,10 @@ levels:
         wire up dynamic resource provisioning with for_each, and use the new enabled meta-argument to conditionally
         deploy the audit database.
     backstory:
-      - "The Merchant's Quarter needs essential services, but the previous Guild engineer left the OpenTofu
-        configuration incomplete and misconfigured. Your mission: fix the issues, complete the setup, and establish
-        proper infrastructure management for the Guild."
+      - The Merchant's Quarter needs essential services, but the previous Guild engineer left the OpenTofu
+        configuration incomplete and misconfigured. The state is stored locally, making collaboration impossible,
+        and some services remain half-configured or missing.
+      - "Your mission: fix the issues, complete the setup, and establish proper infrastructure management for the Guild."
     objective:
       - Provision storage vaults and ledger databases for each district dynamically
       - Deploy the audit database only when there is more than one district
@@ -110,7 +113,8 @@ levels:
     learnings:
       - OpenTofu module testing with tofu test
       - Test-Driven Development (TDD) workflow
-      - Input validation with regex
+      - Input validation with custom rules
+      - Refactoring infrastructure safely with moved blocks
     devcontainerPath: .devcontainer/02-building-cloudhaven_02-intermediate/devcontainer.json
     discussionUrl: /t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10
     deadline: "4 February 2026 at 23:59 CET"
@@ -121,9 +125,9 @@ levels:
     backstory:
       - After fixing the Foundation Stones, CloudHaven is thriving. The city has grown to three districts, and the Guild
         decided to refactor the infrastructure into reusable modules.
-      - "A senior engineer started the work using Test-Driven Development, writing tests first then implementing. But
+      - A senior engineer started the work using Test-Driven Development, writing tests first then implementing. But
         they were called away before finishing, leaving behind working tests and buggy code that doesn't match them.
-        Your mission: fix the bugs, complete the integration test, and deploy the infrastructure."
+      - "Your mission: fix the bugs, complete the integration test, and deploy the infrastructure."
     objective:
       - All tests of the districts module pass
       - A completed integration test that applies infrastructure against the mock GCP API to verify end-to-end
@@ -218,9 +222,9 @@ levels:
       - The Guild Master summoned you urgently. "We need guardians," she said. "Automated sentinels that watch over our
         infrastructure day and night. They must catch dangerous changes before they reach the city, detect when reality
         drifts from our blueprints, and sound the alarm when threats appear."
-      - "A previous engineer began building these Guardian Protocols using GitHub Actions, but was reassigned before
-        completing them. The workflows exist, but they're incomplete and broken. Your mission: bring the Guardian
-        Protocols online and protect CloudHaven from chaos."
+      - A previous engineer began building these Guardian Protocols using GitHub Actions, but was reassigned before
+        completing them. The workflows exist, but they're incomplete and broken.
+      - "Your mission: bring the Guardian Protocols online and protect CloudHaven from chaos."
     objective:
       - "Drift detection: run tofu plan and create a PR when drift is found"
       - "PR validation: run tofu plan and comment results, run integration tests against the mock GCP API, scan for

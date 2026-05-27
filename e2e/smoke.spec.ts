@@ -80,6 +80,57 @@ test.describe("every prerendered route (light mode)", () => {
   }
 });
 
+// axe-core does not check WCAG 1.4.11 border contrast on styled <a> link elements.
+// This block fills that gap for the specific interactive chip/pill components.
+test.describe("WCAG 1.4.11 border contrast — light mode (axe gap)", () => {
+  // All contrast math runs inside page.evaluate so helpers are inline there.
+  async function getBorderContrast(page: import("@playwright/test").Page, selector: string): Promise<number | null> {
+    return page.evaluate((sel) => {
+      const el = document.querySelector(sel);
+      if (!el) return null;
+      const cs = window.getComputedStyle(el);
+      const parse = (s: string) => {
+        const m = s.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+        return m ? [+m[1], +m[2], +m[3]] as [number, number, number] : null;
+      };
+      const border = parse(cs.borderTopColor);
+      let bg: [number, number, number] | null = null;
+      let cur: Element | null = el;
+      while (cur) {
+        const b = parse(window.getComputedStyle(cur).backgroundColor);
+        if (b && window.getComputedStyle(cur).backgroundColor !== "rgba(0, 0, 0, 0)") { bg = b; break; }
+        cur = cur.parentElement;
+      }
+      if (!border || !bg) return null;
+      const lin = (c: number) => { const n = c / 255; return n <= 0.03928 ? n / 12.92 : Math.pow((n + 0.055) / 1.055, 2.4); };
+      const lum = ([r, g, b]: [number, number, number]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+      const l1 = lum(border);
+      const l2 = lum(bg);
+      return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+    }, selector);
+  }
+
+  test("tag-chip-link border contrast >= 3:1 on challenge detail (light mode)", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("theme", "light"));
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/adventures/blind-by-design/levels/beginner");
+    await page.waitForLoadState("networkidle");
+    const ratio = await getBorderContrast(page, ".tag-chip-link");
+    expect(ratio, "tag-chip-link border contrast must be >= 3:1 (WCAG 1.4.11)").not.toBeNull();
+    expect(ratio!).toBeGreaterThanOrEqual(3.0);
+  });
+
+  test("contributor-pill border contrast >= 3:1 on adventure page (light mode)", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("theme", "light"));
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/adventures/blind-by-design");
+    await page.waitForLoadState("networkidle");
+    const ratio = await getBorderContrast(page, ".contributor-pill");
+    expect(ratio, "contributor-pill border contrast must be >= 3:1 (WCAG 1.4.11)").not.toBeNull();
+    expect(ratio!).toBeGreaterThanOrEqual(3.0);
+  });
+});
+
 test.describe("hydration and interactivity", () => {
   test("theme toggle switches from dark to light", async ({ page }) => {
     await page.goto("/");

@@ -38,7 +38,7 @@ backstory:
     Four adverse-event reports have since been filed, each one a subject whose vision_state at
     discharge was worse than at enrollment.
   - >-
-    The monitoring is dark, not by accident but because no one ever turned the lights on. Your
+    The monitoring is dark, not by accident, but because no one ever turned the lights on. Your
     mission across three levels: stand up the lab so it reads the chart, read the chart by cohort
     so outcomes can be tracked, then turn on the lights and roll back the Phase 3 variant before
     the director signs off on the next enrollment batch.
@@ -195,21 +195,25 @@ levels:
         every evaluation and writes an [AUDIT] log line with a fixed PII-safe attribute allowlist.
       - >-
         The broken-state lab already has the SDK and flagd provider wired in Resolver.RPC mode. The targeting in
-        flags.json carries three branches but none of those attributes are in the eval context yet, so every request
-        lands on the default variant. Your job: make the targeting fire by wiring the three context layers and the
-        audit hook.
+        flags.json already carries three branches (species == zyklop, improper dose for non-zyklops, country == de),
+        but none of those attributes are in the eval context yet, so every request lands on the default variant.
+        Your job: make the targeting fire by wiring the three context layers and the audit hook.
     backstory:
       - >-
         The trial is widening. Subjects from outside the lab's local population are getting the wrong reading on
         their chart, and the lab director has just walked in holding a stack of complaint forms. She wants the audit
-        log to tell her exactly which vision_state the lab recorded for which subject, and she wants the lab to read
-        the chart properly before it records any more bad readings.
+        log to tell her, after the fact, exactly which vision_state the lab recorded for which subject, and she
+        wants the lab to read the chart properly before it records any more bad readings.
       - >-
-        What differs between subjects is the observed outcome: some have a biology that responds enhancedly to the
-        same serum, some absorb less or more than the protocol's standard dose, and the trial is registered in
-        different jurisdictions with different baselines. Your shift: teach the lab to read each subject's species
-        off the request, attach the trial's country of registration to the global context, pass the dose as
-        invocation context at evaluation time, and register an audit hook.
+        The protocol is the same for every subject; the lab is not varying the trial. What differs is the observed
+        outcome: some subjects have a biology that responds enhancedly to the same serum, some absorb less or more
+        than the protocol's standard dose, and the trial is registered in different jurisdictions with different
+        baselines.
+      - >-
+        Your shift: teach the lab to read each subject's species off the request, attach the trial's country of
+        registration (set on the JVM via the COUNTRY environment variable) to the global context, pass the dose as
+        invocation context at the moment of the flag evaluation, and register an audit hook that records every dose
+        with its variant and reason.
     architectureDiagram: "blind-by-design-intermediate.svg"
     diagramAlt: "HTTP flows through SpeciesInterceptor, Trial, and OpenFeature client left to right, then down through AuditHook and FlagdProvider, connecting via gRPC to a flagd sidecar."
     architecture:

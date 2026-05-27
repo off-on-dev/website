@@ -87,16 +87,10 @@ export const Navbar = (): JSX.Element => {
       className="fixed top-0 left-0 right-0 z-50 border-b border-[hsl(var(--surface-border))] bg-background"
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-1.5">
-        <Link to="/" className="logo-link flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm">
-          <img
-            src={theme === "dark" ? logoDark : logoLight}
-            alt="offon.dev"
-            width={130}
-            height={33}
-            loading="eager"
-            fetchPriority="high"
-            className="h-8"
-          />
+        <Link to="/" aria-label="offon.dev" className="logo-link flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm">
+          {/* Both always in DOM so React Router preloads both; CSS controls visibility. */}
+          <img src={logoDark} alt="" aria-hidden="true" width={130} height={33} loading="eager" fetchPriority="high" className="h-8 dark:block hidden" />
+          <img src={logoLight} alt="" aria-hidden="true" width={130} height={33} loading="eager" className="h-8 block dark:hidden" />
         </Link>
 
         {/* Desktop nav */}

@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import type { LinksFunction, MetaFunction } from "react-router";
+import type { MetaFunction } from "react-router";
 import { Link } from "react-router";
 import { Navbar } from "@/components/Navbar";
 import { ExternalLink } from "lucide-react";
@@ -10,11 +10,9 @@ import { SectionLabel } from "@/components/SectionLabel";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
 import { CommunityLeaders } from "@/components/CommunityLeaders";
 import { SidebarLayout } from "@/components/SidebarLayout";
-import { buildPageMeta, interBoldPreload } from "@/lib/meta";
+import { buildPageMeta } from "@/lib/meta";
 
 const extLink = "docs-ext-link";
-
-export const links: LinksFunction = () => interBoldPreload;
 
 export const meta: MetaFunction = () =>
   buildPageMeta({

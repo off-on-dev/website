@@ -30,9 +30,13 @@ beforeEach(() => {
 // ---------------------------------------------------------------------------
 
 describe("Navbar - logo", () => {
-  it("renders the logo with alt text 'offon.dev'", () => {
+  it("renders both logo images (dark and light) in the DOM", () => {
     renderNavbar();
-    expect(screen.getByRole("img", { name: "offon.dev" })).toBeTruthy();
+    const logoLink = screen.getByRole("link", { name: "offon.dev" });
+    const imgs = logoLink.querySelectorAll("img");
+    expect(imgs).toHaveLength(2);
+    expect(imgs[0].getAttribute("aria-hidden")).toBe("true");
+    expect(imgs[1].getAttribute("aria-hidden")).toBe("true");
   });
 
   it("logo link navigates to home (/)", () => {

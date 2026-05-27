@@ -11,15 +11,12 @@ type ArchitectureSectionProps = {
 export const ArchitectureSection = ({ architecture, diagram, diagramAlt }: ArchitectureSectionProps): JSX.Element => (
   <CollapsibleSection id="architecture" title="Architecture">
     {diagram ? (
-      /* The SVG has a hardcoded dark background, so we keep it on a dark surface in all modes. */
-      <div className="rounded-lg overflow-hidden bg-[#111110]">
+      <div className="rounded-lg overflow-hidden">
         <img
           src={diagram}
           alt={diagramAlt ?? "Architecture diagram"}
-          width={1102}
-          height={660}
           loading="eager"
-          className="w-full"
+          className="w-full h-auto max-h-[560px] object-contain block"
         />
       </div>
     ) : (

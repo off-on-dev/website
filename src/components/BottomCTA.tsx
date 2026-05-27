@@ -57,6 +57,7 @@ export const BottomCTA = (): JSX.Element => {
             aria-hidden="true"
             width={240}
             height={240}
+            loading="lazy"
             className="hidden lg:block w-[240px] h-[240px] self-start"
           />
       </div>

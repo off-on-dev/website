@@ -54,8 +54,11 @@ describe("root.tsx - gated-load Consent Mode v2 bootstrap", () => {
     expect(source).not.toContain("GA_COOKIE_DOMAIN");
   });
 
-  it("keeps the JSON-LD blocks and font preloads (untouched by this refactor)", () => {
+  it("keeps the JSON-LD blocks and does not re-add font preloads removed in simplification", () => {
     expect(source).toContain("application/ld+json");
-    expect(source).toContain("inter-latin-400-normal.woff2");
+    // Font preloads were removed to eliminate "preloaded but not used" warnings.
+    // font-display: swap handles FOUT without needing manual preload hints.
+    expect(source).not.toContain("inter-latin-400-normal.woff2");
+    expect(source).not.toContain("syne-latin-700-normal.woff2");
   });
 });

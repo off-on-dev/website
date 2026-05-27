@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { useParams, Link } from "react-router";
-import type { LinksFunction, MetaFunction } from "react-router";
+import type { MetaFunction } from "react-router";
 import { ArrowLeft, Check, ExternalLink } from "lucide-react";
 import { ADVENTURES, tagToSlug } from "@/data/adventures";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
@@ -19,9 +19,7 @@ import { OtherLevelsCard } from "@/components/OtherLevelsCard";
 import { RewardsCard } from "@/components/RewardsCard";
 import { TechFilterSection } from "@/components/TechFilterSection";
 import { SITE_URL, BRAND_NAME, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
-import { buildPageMeta, interBoldPreload } from "@/lib/meta";
-
-export const links: LinksFunction = () => interBoldPreload;
+import { buildPageMeta } from "@/lib/meta";
 
 export const meta: MetaFunction = ({ params }) => {
   const adventure = ADVENTURES.find((a) => a.id === params.id);
@@ -99,7 +97,7 @@ const StructuredLayout = ({
             <Link
               key={tag}
               to={`/challenges/${tagToSlug(tag)}`}
-              className="rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary hover:text-primary transition-colors"
+              className="tag-chip-link rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary hover:text-primary transition-colors"
             >
               {tag}
             </Link>
@@ -165,70 +163,6 @@ const StructuredLayout = ({
           )}
           {(architecture && architecture.length > 0 || architectureDiagram) && (
             <ArchitectureSection architecture={(architecture ?? []).join("\n\n")} diagram={architectureDiagram} diagramAlt={diagramAlt} />
-          )}
-
-          {/* Toolbox + Helpful Documentation side-by-side */}
-          {((toolbox && toolbox.length > 0) || (helpfulLinks && helpfulLinks.length > 0)) && (
-            <div className={`grid gap-5 mb-6${toolbox && toolbox.length > 0 && helpfulLinks && helpfulLinks.length > 0 ? " sm:grid-cols-2" : ""}`}>
-              {toolbox && toolbox.length > 0 && (
-                <section id="toolbox" className="scroll-mt-28 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-                  <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
-                    Toolbox
-                  </h2>
-                  <ul className="space-y-2">
-                    {toolbox.map((tool) => (
-                      <li key={tool.name} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
-                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                        <span>
-                          {tool.url ? (
-                            <a
-                              href={tool.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="docs-ext-link font-medium"
-                            >
-                              {tool.name}
-                              <ExternalLink size={12} aria-hidden="true" />
-                              <span className="sr-only"> (opens in new tab)</span>
-                            </a>
-                          ) : (
-                            <span className="font-medium text-foreground">{tool.name}</span>
-                          )}
-                          {tool.description && <>{" "}- {tool.description}</>}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              )}
-
-              {helpfulLinks && helpfulLinks.length > 0 && (
-                <section aria-labelledby="helpful-links-heading" className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-                  <h2 id="helpful-links-heading" className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
-                    Helpful Documentation
-                  </h2>
-                  <ul className="space-y-2">
-                    {helpfulLinks.map((link) => (
-                      <li key={link.url} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
-                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                        <span>
-                          <a
-                            href={link.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="docs-ext-link font-medium"
-                          >
-                            {link.label}
-                            <ExternalLink size={11} aria-hidden="true" />
-                            <span className="sr-only"> (opens in new tab)</span>
-                          </a>
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              )}
-            </div>
           )}
 
           {/* CTA card */}
@@ -311,6 +245,70 @@ const StructuredLayout = ({
               </li>
             </ul>
           </section>
+
+          {/* Toolbox + Helpful Documentation side-by-side */}
+          {((toolbox && toolbox.length > 0) || (helpfulLinks && helpfulLinks.length > 0)) && (
+            <div className={`grid gap-5 mb-6${toolbox && toolbox.length > 0 && helpfulLinks && helpfulLinks.length > 0 ? " sm:grid-cols-2" : ""}`}>
+              {toolbox && toolbox.length > 0 && (
+                <section id="toolbox" className="scroll-mt-28 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+                  <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
+                    Toolbox
+                  </h2>
+                  <ul className="space-y-2">
+                    {toolbox.map((tool) => (
+                      <li key={tool.name} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                        <span>
+                          {tool.url ? (
+                            <a
+                              href={tool.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="docs-ext-link font-medium"
+                            >
+                              {tool.name}
+                              <ExternalLink size={12} aria-hidden="true" />
+                              <span className="sr-only"> (opens in new tab)</span>
+                            </a>
+                          ) : (
+                            <span className="font-medium text-foreground">{tool.name}</span>
+                          )}
+                          {tool.description && <>{" "}- {tool.description}</>}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
+              {helpfulLinks && helpfulLinks.length > 0 && (
+                <section aria-labelledby="helpful-links-heading" className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+                  <h2 id="helpful-links-heading" className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
+                    Helpful Documentation
+                  </h2>
+                  <ul className="space-y-2">
+                    {helpfulLinks.map((link) => (
+                      <li key={link.url} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                        <span>
+                          <a
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="docs-ext-link font-medium"
+                          >
+                            {link.label}
+                            <ExternalLink size={11} aria-hidden="true" />
+                            <span className="sr-only"> (opens in new tab)</span>
+                          </a>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Sidebar */}
@@ -424,7 +422,7 @@ const ChallengeDetail = (): JSX.Element => {
                     <Link
                       key={tag}
                       to={`/challenges/${tagToSlug(tag)}`}
-                      className="rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary hover:text-primary transition-colors"
+                      className="tag-chip-link rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary hover:text-primary transition-colors"
                     >
                       {tag}
                     </Link>

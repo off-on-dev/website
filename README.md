@@ -102,6 +102,7 @@ Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and
 | `/about` | `About.tsx` | About the community |
 | `/handbook` | `CommunityGuide.tsx` | Community handbook / documentation |
 | `/privacy` | `Privacy.tsx` | GDPR-compliant privacy policy |
+| `/accessibility` | `Accessibility.tsx` | WCAG accessibility statement |
 | `/404` | `NotFound.tsx` | Prerendered 404 page |
 | `/community-guide` | redirects to `/handbook` | Legacy alias |
 | `/docs` | redirects to `/handbook` | Legacy alias |

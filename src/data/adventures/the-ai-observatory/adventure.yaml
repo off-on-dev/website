@@ -2,7 +2,7 @@ id: the-ai-observatory
 title: The AI Observatory
 month: FEB 2026
 story: Investigate a mysterious bandwidth anomaly at a remote research station by instrumenting its AI system with
-  OpenTelemetry.
+  OpenTelemetry, OpenLLMetry, and Jaeger.
 tags:
   - OpenTelemetry
   - OpenLLMetry

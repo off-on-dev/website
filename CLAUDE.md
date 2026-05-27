@@ -229,6 +229,7 @@ without exception. They exist to prevent debugging by accumulation.
 - Static content lives in `src/data/` as typed TypeScript objects/arrays.
 - No runtime `fetch` calls in components. All network data must be fetched at build time.
 - **Adventure content pipeline:** Adventure data is authored as YAML files at `src/data/adventures/<id>/adventure.yaml` and compiled to TypeScript via `scripts/generate-adventures.mjs`. The generated files (`*.generated.ts` and `index.ts`) are committed to the repo. The `prebuild` hook runs the generator automatically before every build. Never edit `*.generated.ts` or `src/data/adventures/index.ts` by hand.
+  - **Why YAML + generated TS instead of writing TS directly?** YAML is easier to author and review for non-engineers, and validated by JSON Schema. Vite cannot import YAML natively, so a generator converts it to fully-typed TS that the app can statically import. Committing the generated files means the build works without running the generator first, and CI can detect when generated output is out of sync with the source YAML.
 - **Schema validation:** Adventure YAML files are validated against `schemas/adventure.schema.json` (JSON Schema Draft 2020-12). Run `npm run generate:validate` to check without writing files.
 - **Build-time fetching:** Discussion data lives in per-level JSON files under `src/data/adventures/<adventure-id>/<level-id>-posts.json`. Each file contains only `discussionUrl`, `discussionPosts`, and `totalReplies`. These are refreshed hourly by the GitHub Action in `.github/workflows/refresh-community-data.yml` (runs `scripts/refresh-discussions.mjs`). Components import the JSON dynamically via `import.meta.glob`.
 - When adding a new adventure level, create its per-level discussion JSON file (`<level-id>-posts.json`) with a `discussionUrl` field. The refresh script uses this URL to fetch posts.
@@ -370,6 +371,8 @@ Check the following on every component you write or modify.
 ### Icons and special characters
 - Decorative icons paired with visible text: always add `aria-hidden="true"`. Do not omit it.
 - Never use raw Unicode characters (e.g. `→`, `♥`, `✓`) to convey meaning. Use proper text, lucide-react icons with `aria-hidden`, or an `aria-label`/`<span className="sr-only">` for screen readers.
+- Decorative separators between pill segments (e.g. `·` or `-`): use an empty `<span aria-hidden="true" className="inline-block w-px h-3 bg-current opacity-40" />` instead of a text character. A text character with `opacity-*` composites its color against the background, and the resulting blended color must pass WCAG 1.4.3 — even if the element is `aria-hidden`. An empty span has no text node so the color-contrast rule does not fire.
+- Never apply `opacity-*` to an element that contains visible text. Use a CSS color token that already has the desired luminance (e.g. `text-[hsl(var(--text-faint))]`).
 
 ### ARIA
 - Only add ARIA attributes when semantic HTML is not enough.
@@ -831,7 +834,10 @@ One-time `src/root.tsx` check (not per page): manifest link, both theme-color ta
 - Semantic landmarks: `<main>`, `<nav>`, `<footer>`, `<section>`, `<article>`. Every page: `<main id="main-content">`. (See Accessibility > Semantic HTML.)
 - One `<h1>` per page, no skipped levels. No `<br />` in headings — use block `<span>` elements.
 - Every `<a target="_blank">` needs `<span className="sr-only"> (opens in new tab)</span>`. (See Accessibility > External links.)
-- Decorative icons: `aria-hidden="true"`. No raw Unicode symbols (`→`, `♥`, `✓`, `★`) for meaning. Decorative separators (e.g. `·`): `<span aria-hidden="true">·</span>`. (See Accessibility > Icons and special characters.)
+- Decorative icons: `aria-hidden="true"`. No raw Unicode symbols (`→`, `♥`, `✓`, `★`) for meaning. (See Accessibility > Icons and special characters.)
+- **Decorative separators** (e.g. `·`, `-` between pill segments): never use a text character with `opacity-*`. Use an empty `<span>` styled as a CSS divider: `<span aria-hidden="true" className="inline-block w-px h-3 bg-current opacity-40" />`. No text content means axe's color-contrast rule does not evaluate it, and the WCAG 1.4.11 non-text-contrast exemption covers purely decorative separators.
+- **Never use `opacity-*` on an element that contains visible text** — opacity composites the text color against the background and the resulting blended color must still meet contrast requirements. Use explicit CSS color values (e.g. `text-[hsl(var(--text-faint))]`) instead of opacity to produce muted text.
+- **Minimum visible text size is 12px** (`text-xs`). Do not use `text-[0.6rem]` or `text-[0.65rem]` for any visible (non-`aria-hidden`) text. Avatar initials and rank numbers that are purely decorative and `aria-hidden` are exempt.
 - All page content (including `PageHero` and `BottomCTA`) inside `<main id="main-content">`.
 - Dynamic content updates: use `aria-live` regions. (See Accessibility > ARIA.)
 

@@ -5,7 +5,7 @@ export const THE_AI_OBSERVATORY: Adventure = {
   id: "the-ai-observatory",
   title: "The AI Observatory",
   month: "FEB 2026",
-  story: "Investigate a mysterious bandwidth anomaly at a remote research station by instrumenting its AI system with OpenTelemetry.",
+  story: "Investigate a mysterious bandwidth anomaly at a remote research station by instrumenting its AI system with OpenTelemetry, OpenLLMetry, and Jaeger.",
   tags: ["OpenTelemetry", "OpenLLMetry", "Jaeger", "Prometheus", "Python"],
   contributor: {
     name: "Katharina Sick",

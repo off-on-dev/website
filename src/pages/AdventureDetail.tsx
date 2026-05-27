@@ -101,7 +101,7 @@ const AdventureDetail = (): JSX.Element => {
                 <Link
                   key={tag}
                   to={`/challenges/${tagToSlug(tag)}`}
-                  className="rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary hover:text-primary transition-colors"
+                  className="tag-chip-link rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary hover:text-primary transition-colors"
                 >
                   {tag}
                 </Link>

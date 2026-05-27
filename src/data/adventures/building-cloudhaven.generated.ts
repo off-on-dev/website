@@ -5,7 +5,7 @@ export const BUILDING_CLOUDHAVEN: Adventure = {
   id: "building-cloudhaven",
   title: "Building CloudHaven",
   month: "JAN 2026",
-  story: "Join the Infrastructure Guild and modernize CloudHaven's infrastructure from manual provisioning to a self-service platform using Infrastructure as Code.",
+  story: "Join the Infrastructure Guild and modernize CloudHaven's infrastructure from manual provisioning to a self-service platform using Infrastructure as Code. A hands-on journey through infrastructure as code with OpenTofu and GitHub Actions.",
   tags: ["OpenTofu", "Terraform", "GitHub Actions", "Trivy", "TDD"],
   contributor: {
     name: "Katharina Sick",
@@ -16,7 +16,8 @@ export const BUILDING_CLOUDHAVEN: Adventure = {
     "Welcome to CloudHaven, a bustling digital metropolis where every district depends on essential services to thrive. You've just joined the Infrastructure Guild, a team of platform engineers responsible for providing the tools and services that keep the city running.",
     "CloudHaven is expanding rapidly. The Merchant's Quarter needs storage vaults for their goods and ledgers for tracking inventory. The Scholar's District requires secure archives for ancient texts. The Artisan's Quarter demands workshops with specialized tools. Each district has unique needs, but they all depend on the Guild to provide reliable, scalable infrastructure services.",
     "The Guild used to provision everything manually through cloud consoles, a process that was slow, error-prone, and impossible to track. Recently, they've started adopting Infrastructure as Code, but the transition is incomplete.",
-    "The Guild Master has assigned you to complete the modernization journey. Your mission: build the services and tools that will support CloudHaven's future growth.",
+    "The Guild Master has assigned you to complete the modernization journey.",
+    "Your mission: build the services and tools that will support CloudHaven's future growth.",
   ],
   levels: [
     {
@@ -27,7 +28,8 @@ export const BUILDING_CLOUDHAVEN: Adventure = {
       learnings: [
         "Infrastructure as Code with OpenTofu",
         "Remote state management with GCS backend",
-        "Dynamic & conditional resources",
+        "Dynamic resource provisioning with for_each",
+        "Conditional resources with the enabled meta-argument, new in OpenTofu",
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F02-building-cloudhaven_01-beginner%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656`,
@@ -36,7 +38,8 @@ export const BUILDING_CLOUDHAVEN: Adventure = {
         "An incomplete OpenTofu configuration is blocking the Merchant's Quarter from going live. Fix the broken backend, wire up dynamic resource provisioning with for_each, and use the new enabled meta-argument to conditionally deploy the audit database.",
       ],
       backstory: [
-        "The Merchant's Quarter needs essential services, but the previous Guild engineer left the OpenTofu configuration incomplete and misconfigured. Your mission: fix the issues, complete the setup, and establish proper infrastructure management for the Guild.",
+        "The Merchant's Quarter needs essential services, but the previous Guild engineer left the OpenTofu configuration incomplete and misconfigured. The state is stored locally, making collaboration impossible, and some services remain half-configured or missing.",
+        "Your mission: fix the issues, complete the setup, and establish proper infrastructure management for the Guild.",
       ],
       objective: [
         "Provision storage vaults and ledger databases for each district dynamically",
@@ -86,7 +89,8 @@ If you changed the backend configuration, run \`tofu init -migrate-state\` first
       learnings: [
         "OpenTofu module testing with tofu test",
         "Test-Driven Development (TDD) workflow",
-        "Input validation with regex",
+        "Input validation with custom rules",
+        "Refactoring infrastructure safely with moved blocks",
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F02-building-cloudhaven_02-intermediate%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10`,
@@ -96,7 +100,8 @@ If you changed the backend configuration, run \`tofu init -migrate-state\` first
       ],
       backstory: [
         "After fixing the Foundation Stones, CloudHaven is thriving. The city has grown to three districts, and the Guild decided to refactor the infrastructure into reusable modules.",
-        "A senior engineer started the work using Test-Driven Development, writing tests first then implementing. But they were called away before finishing, leaving behind working tests and buggy code that doesn't match them. Your mission: fix the bugs, complete the integration test, and deploy the infrastructure.",
+        "A senior engineer started the work using Test-Driven Development, writing tests first then implementing. But they were called away before finishing, leaving behind working tests and buggy code that doesn't match them.",
+        "Your mission: fix the bugs, complete the integration test, and deploy the infrastructure.",
       ],
       objective: [
         "All tests of the districts module pass",
@@ -173,7 +178,8 @@ make apply
       backstory: [
         "After the Modular Metropolis refactoring, CloudHaven flourished. But with growth came risk. One night, a rogue change slipped through unnoticed and nearly brought down the North Market's trading vaults. The Council was furious: how could this happen without anyone noticing?",
         "The Guild Master summoned you urgently. \"We need guardians,\" she said. \"Automated sentinels that watch over our infrastructure day and night. They must catch dangerous changes before they reach the city, detect when reality drifts from our blueprints, and sound the alarm when threats appear.\"",
-        "A previous engineer began building these Guardian Protocols using GitHub Actions, but was reassigned before completing them. The workflows exist, but they're incomplete and broken. Your mission: bring the Guardian Protocols online and protect CloudHaven from chaos.",
+        "A previous engineer began building these Guardian Protocols using GitHub Actions, but was reassigned before completing them. The workflows exist, but they're incomplete and broken.",
+        "Your mission: bring the Guardian Protocols online and protect CloudHaven from chaos.",
       ],
       objective: [
         "Drift detection: run tofu plan and create a PR when drift is found",

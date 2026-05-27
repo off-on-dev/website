@@ -926,6 +926,69 @@ Sidebar card for the adventure detail page. Loads ranked player data via `useAdv
 
 ---
 
+### `RewardsCard`
+
+`src/components/RewardsCard.tsx`
+
+Displays the rewards for an adventure (trophy tiers, eligibility text, deadline, and an optional ranking rules link). Rendered only when `adventure.rewards` is defined. Supports two modes: full (used on `AdventureDetail`) and compact (used in the `ChallengeDetail` sidebar, where the adventure-level deadline is replaced by the per-level `deadline` field).
+
+```tsx
+{/* Full mode — AdventureDetail */}
+<RewardsCard rewards={adventure.rewards} />
+
+{/* Compact mode — ChallengeDetail sidebar */}
+<RewardsCard rewards={adventure.rewards} compact levelDeadline={level.deadline} />
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `rewards` | `AdventureRewards` | required | Reward tiers, eligibility, deadline, and optional ranking rules. |
+| `compact` | `boolean` | `false` | Hides eligibility text and ranking note; shows per-level deadline instead of adventure-wide deadline. |
+| `levelDeadline` | `string \| undefined` | — | Per-level deadline string shown only in compact mode. |
+
+Deadline is always stored as a plain date-and-time string (e.g. `"26 May 2026 at 23:59 CET"`), never as a days-remaining calculation.
+
+---
+
+### `ContributorBadge`
+
+`src/components/ContributorBadge.tsx`
+
+Small pill identifying the adventure or challenge builder. Renders a `Hammer` icon, a configurable label, a separator, and the contributor name. When `url` is provided the pill is an `<a>` link to the contributor's profile; otherwise a plain `<span>`. The optional `glow` prop adds an amber box-shadow for emphasis (used on `ChallengeDetail` header only, not on `AdventureCard`).
+
+```tsx
+<ContributorBadge name={adventure.contributor.name} url={adventure.contributor.url} label="Adventure Builder" />
+<ContributorBadge name={level.contributor.name} glow />
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `name` | `string` | required | Contributor display name. |
+| `url` | `string \| undefined` | — | External profile URL. Omit to render as a non-interactive pill. |
+| `glow` | `boolean` | `false` | Adds `contributor-pill-glow` amber box-shadow. Use on `ChallengeDetail` only. |
+| `label` | `string` | `"Challenge Builder"` | Text label before the name separator. |
+
+CSS classes: `contributor-pill` (scopes light mode overrides), `contributor-pill-glow` (static amber glow, sized for a small pill).
+
+---
+
+### `LinkSection`
+
+`src/components/LinkSection.tsx`
+
+A headed list of external links, each rendered as a `docs-ext-link` anchor with an `ExternalLink` icon and a screen-reader new-tab notice. Used in `ChallengeDetail` for the "Helpful Documentation" block.
+
+```tsx
+<LinkSection heading="Helpful Documentation" links={[{ label: "Kyverno Docs", href: "https://kyverno.io/docs/" }]} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `heading` | `string` | Section heading rendered as `<h3>`. |
+| `links` | `{ label: string; href: string }[]` | List of external links. All open in a new tab. |
+
+---
+
 ### `OtherLevelsCard`
 
 `src/components/OtherLevelsCard.tsx`
@@ -1276,6 +1339,27 @@ const extLink = "docs-ext-link";
 // Add contextual utilities as needed (font-size, weight, margin):
 className="docs-ext-link text-sm font-medium mt-4"
 ```
+
+---
+
+### `.tag-chip-link`
+
+CSS class applied to tag/technology chip `<Link>` elements in `ChallengeDetail` and `AdventureDetail`. Added alongside the standard Tailwind border and text utilities to provide light mode overrides that meet WCAG 1.4.11 (3:1 border contrast for interactive components).
+
+**Dark mode:** inherits border from `border-[hsl(var(--surface-border))]` and text from `text-[hsl(var(--text-faint))]`; hover shifts to `border-primary` / `text-primary` (amber).
+**Light mode:** `.light .tag-chip-link` overrides border to `hsl(220 12% 55%)` (~3.25:1) and text to `--text-secondary`. Hover shifts to `hsl(220 12% 38%)` border and `hsl(220 12% 20%)` text (dark slate), avoiding amber which is below 3:1 on light backgrounds.
+
+Usage pattern:
+```tsx
+<Link
+  to={`/challenges/${tagToSlug(tag)}`}
+  className="tag-chip-link rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary hover:text-primary transition-colors"
+>
+  {tag}
+</Link>
+```
+
+Always add `tag-chip-link` to interactive tag chip links. Do not use `hover:border-primary hover:text-primary` alone — in light mode those produce amber, which fails 1.4.11.
 
 ---
 

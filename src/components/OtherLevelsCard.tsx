@@ -52,7 +52,7 @@ export const OtherLevelsCard = ({
               style={pillStyle[level.difficulty]}
             >
               <span className="shrink-0 uppercase font-medium">{level.difficulty}</span>
-              <span aria-hidden="true" className="opacity-40">-</span>
+              <span aria-hidden="true" className="inline-block w-px h-3 bg-current opacity-40" />
               <span className="flex-1 truncate">{level.name}</span>
               <ArrowRight
                 size={11}
@@ -70,9 +70,9 @@ export const OtherLevelsCard = ({
               style={pillStyle[level.difficulty]}
             >
               <span className="shrink-0 uppercase font-medium">{level.difficulty}</span>
-              <span aria-hidden="true" className="opacity-40">-</span>
+              <span aria-hidden="true" className="inline-block w-px h-3 bg-current opacity-40" />
               <span className="flex-1 truncate">{level.name}</span>
-              <span className="shrink-0 text-[0.6rem] uppercase tracking-widest">Soon</span>
+              <span className="shrink-0 text-xs uppercase tracking-widest">Soon</span>
             </span>
           </li>
         ))}

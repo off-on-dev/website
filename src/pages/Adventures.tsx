@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import type { LinksFunction, MetaFunction } from "react-router";
+import type { MetaFunction } from "react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
@@ -8,9 +8,7 @@ import { ChallengeBuildersSection } from "@/components/ChallengeBuildersSection"
 import { CommunityLeaders } from "@/components/CommunityLeaders";
 import { BottomCTA } from "@/components/BottomCTA";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
-import { buildPageMeta, interBoldPreload } from "@/lib/meta";
-
-export const links: LinksFunction = () => interBoldPreload;
+import { buildPageMeta } from "@/lib/meta";
 
 export const meta: MetaFunction = () =>
   buildPageMeta({

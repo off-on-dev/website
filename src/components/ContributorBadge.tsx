@@ -18,7 +18,7 @@ export const ContributorBadge = ({ name, url, glow = false, label = "Challenge B
     <>
       <Hammer size={11} aria-hidden="true" />
       <span>{label}</span>
-      <span className="opacity-40" aria-hidden="true">·</span>
+      <span aria-hidden="true" className="inline-block w-px h-3 bg-current opacity-40" />
       <span>{name}</span>
     </>
   );
