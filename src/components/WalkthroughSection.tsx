@@ -17,7 +17,7 @@ export const WalkthroughSection = ({ steps }: WalkthroughSectionProps): JSX.Elem
         >
           <div className="flex items-start gap-4">
             <span
-              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold mt-0.5"
+              className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold"
               aria-hidden="true"
             >
               {i + 1}

@@ -47,7 +47,7 @@ Fonts are preloaded to avoid the three-level font discovery delay (HTML parse �
 **Global (`src/root.tsx`) — preloaded on every page:**
 - `inter-latin-400-normal.woff2` — body text (Navbar, paragraphs)
 - `inter-latin-500-normal.woff2` — medium-weight body text (Navbar links)
-- `syne-latin-700-normal.woff2` — all h1–h6 elements (the `@layer base` rule in `src/index.css` applies `font-family: 'Syne'` to every heading globally)
+- `syne-latin-700-normal.woff2` — h1 and h2 elements (the `@layer base` rule in `src/index.css` applies `font-family: 'Syne'` to h1 and h2 only; h3–h6 use Inter)
 
 **Per-route — preloaded only on pages that need them above the fold:**
 - `inter-latin-700-normal.woff2` via `interBoldPreload` — PageHero CTA buttons (`.btn-inverse`, `.btn-ghost-inverse` use `font-bold` on non-heading elements) (`src/pages/Adventures.tsx`, `src/pages/About.tsx`, `src/pages/Sponsors.tsx`, `src/pages/CommunityGuide.tsx`)
@@ -68,7 +68,7 @@ Inter 600 (`font-semibold`) is used below the fold only and is not preloaded. On
 |---|---|---|
 | H1 | `text-4xl font-bold` md:`text-5xl` | Syne, weight 700 |
 | H2 | `text-3xl font-bold` md:`text-4xl` | Syne, weight 700 |
-| H3 | `text-lg font-semibold` | Syne, weight 600 |
+| H3 | `text-lg font-semibold` | Inter, weight 600 |
 | Body | `text-base` | Inter, weight 400 |
 | Small / caption | `text-sm` | Inter, weight 400 |
 | Overline label | `font-sans text-sm font-medium uppercase tracking-widest` | Inter |
