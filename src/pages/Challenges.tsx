@@ -78,9 +78,15 @@ const Challenges = (): JSX.Element => {
 
             {activeTag ? (
               <>
-                <p aria-live="polite" aria-atomic="true" className="animate-fade-up mb-6 font-sans text-sm font-medium tracking-wide text-primary">
+                <h2 className="animate-fade-up mb-6 text-lg font-semibold text-foreground">
+                  {activeTag} Challenges
+                  <span className="ml-2 font-normal text-sm text-muted-foreground">
+                    &middot; {filteredLevels.length} result{filteredLevels.length !== 1 ? "s" : ""}
+                  </span>
+                </h2>
+                <span aria-live="polite" aria-atomic="true" className="sr-only">
                   {filteredLevels.length} {filteredLevels.length === 1 ? "challenge" : "challenges"} tagged with {activeTag}
-                </p>
+                </span>
                 <div key={activeTag} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
                   {filteredLevels.map(({ level, adventureId, adventureTitle }) => (
                     <FilteredLevelCard
