@@ -1,11 +1,12 @@
 import { type JSX } from "react";
 import type { MetaFunction } from "react-router";
-import { ArrowUpRight } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { ChallengesGrid } from "@/components/ChallengesGrid";
 import { ChallengeHighlights } from "@/components/ChallengeHighlights";
 import { CommunitySection } from "@/components/CommunitySection";
+import { CommunityLeaders } from "@/components/CommunityLeaders";
 import { SponsorStrip } from "@/components/SponsorStrip";
 import { BottomCTA } from "@/components/BottomCTA";
 import { Footer } from "@/components/Footer";
@@ -27,9 +28,9 @@ const Index = (): JSX.Element => {
         <Hero />
         <ChallengesGrid />
         <ChallengeHighlights />
-        <section className="bg-primary py-16 px-6 md:px-16">
+        <section aria-labelledby="adventure-idea-heading" className="bg-primary py-16 px-6 md:px-16">
           <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <h2 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground">
+            <h2 id="adventure-idea-heading" className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground">
               <span className="block">Got an Idea</span>
               <span className="block">for an Adventure?</span>
             </h2>
@@ -44,13 +45,19 @@ const Index = (): JSX.Element => {
                   rel="noopener noreferrer"
                   className="btn-inverse"
                 >
-                  Propose an Adventure Idea <ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  Propose an Adventure Idea <ExternalLink size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </div>
             </div>
           </div>
         </section>
-        <CommunitySection />
+        <CommunitySection
+          aside={
+            <CommunityLeaders
+              sections={["top-contributors", "top-challenge-solvers", "most-liked"]}
+            />
+          }
+        />
         <SponsorStrip />
         <BottomCTA />
       </main>

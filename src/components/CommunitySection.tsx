@@ -1,7 +1,8 @@
 import { type ReactNode, type JSX } from "react";
-import { ArrowRight, Megaphone, CircleHelp, UserPlus, CalendarDays } from "lucide-react";
+import { ExternalLink, Megaphone, CircleHelp, UserPlus, CalendarDays } from "lucide-react";
 import { COMMUNITY_URL } from "@/data/constants";
 import { SectionLabel } from "@/components/SectionLabel";
+import { SidebarLayout } from "@/components/SidebarLayout";
 
 type Card = {
   icon: ReactNode;
@@ -42,37 +43,43 @@ const cards: Card[] = [
   },
 ];
 
-export const CommunitySection = (): JSX.Element => {
-  return (
-    <section className="py-24 px-6 md:px-16">
-      <div className="mx-auto max-w-6xl">
-        <SectionLabel>community</SectionLabel>
-        <h2 className="mb-6 text-3xl font-bold text-primary md:text-4xl">
-          Get Involved
-        </h2>
-        <p className="mb-12 max-w-xl text-[hsl(var(--text-secondary))] leading-relaxed">
-          The community is where open source comes alive. Share what you know, ask for help, meet the people behind the projects, and find events near you.
-        </p>
-        <div className="grid gap-6 sm:grid-cols-2">
-          {cards.map((card) => (
-            <div
-              key={card.title}
-              className="card-glow flex flex-col rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8"
+export const CommunitySection = ({ aside }: { aside?: ReactNode }): JSX.Element => {
+  const content = (
+    <div>
+      <SectionLabel>community</SectionLabel>
+      <h2 id="community-section-heading" className="mb-6 text-3xl font-bold text-primary md:text-4xl">
+        Get Involved
+      </h2>
+      <p className="mb-12 max-w-xl text-[hsl(var(--text-secondary))] leading-relaxed">
+        The community is where open source comes alive. Share what you know, ask for help, meet the people behind the projects, and find events near you.
+      </p>
+      <div className="grid gap-6 sm:grid-cols-2">
+        {cards.map((card) => (
+          <div
+            key={card.title}
+            className="card-glow flex flex-col rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8"
+          >
+            <span className="mb-4 text-primary">{card.icon}</span>
+            <h3 className="text-xl font-semibold text-foreground">{card.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground flex-1">{card.desc}</p>
+            <a
+              href={card.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="docs-ext-link mt-5 text-sm font-medium"
             >
-              <span className="mb-4 text-primary">{card.icon}</span>
-              <h3 className="text-xl font-semibold text-foreground">{card.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground flex-1">{card.desc}</p>
-              <a
-                href={card.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="docs-ext-link mt-5 inline-flex items-center gap-1 text-sm font-medium underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
-              >
-                {card.cta} <ArrowRight size={13} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-              </a>
-            </div>
-          ))}
-        </div>
+              {card.cta} <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  return (
+    <section aria-labelledby="community-section-heading" className="py-24 px-6 md:px-16">
+      <div className="mx-auto max-w-6xl">
+        <SidebarLayout aside={aside}>{content}</SidebarLayout>
       </div>
     </section>
   );

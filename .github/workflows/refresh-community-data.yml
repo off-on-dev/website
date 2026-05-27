@@ -1,0 +1,110 @@
+name: Refresh Community Data
+
+on:
+  schedule:
+    # Every hour
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: refresh-community-data
+  cancel-in-progress: false
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Fetch and update discussion posts
+        run: node scripts/refresh-discussions.mjs
+
+      - name: Fetch and update leaderboard data
+        env:
+          DISCOURSE_API_KEY: ${{ secrets.DISCOURSE_API_KEY }}
+          DISCOURSE_API_USERNAME: ${{ secrets.DISCOURSE_API_USERNAME }}
+        run: node scripts/refresh-leaderboard.mjs
+
+      - name: Fetch and update community leaders
+        env:
+          DISCOURSE_API_KEY: ${{ secrets.DISCOURSE_API_KEY }}
+          DISCOURSE_API_USERNAME: ${{ secrets.DISCOURSE_API_USERNAME }}
+        run: node scripts/refresh-community-leaders.mjs
+
+      - name: Validate refreshed JSON structure
+        run: |
+          set -euo pipefail
+          ERRORS=0
+
+          # Each *-posts.json must have a "discussionPosts" array
+          for f in src/data/adventures/*/*-posts.json; do
+            if ! node -e "
+              const d = JSON.parse(require('fs').readFileSync('$f', 'utf-8'));
+              if (!Array.isArray(d.discussionPosts)) { console.error('❌ $f: missing discussionPosts array'); process.exit(1); }
+            " 2>&1; then
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+
+          # Each leaderboard.json must have a "rows" array
+          for f in src/data/adventures/*/leaderboard.json; do
+            if ! node -e "
+              const d = JSON.parse(require('fs').readFileSync('$f', 'utf-8'));
+              if (!Array.isArray(d.rows)) { console.error('❌ $f: missing rows array'); process.exit(1); }
+            " 2>&1; then
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+
+          # community-leaders.json must have a "sections" array
+          if ! node -e "
+            const d = JSON.parse(require('fs').readFileSync('src/data/community-leaders.json', 'utf-8'));
+            if (!Array.isArray(d.sections)) { console.error('❌ community-leaders.json: missing sections array'); process.exit(1); }
+          " 2>&1; then
+            ERRORS=$((ERRORS + 1))
+          fi
+
+          if [[ $ERRORS -gt 0 ]]; then
+            echo "VALIDATION_FAILED=true" >> "$GITHUB_ENV"
+            echo "❌ JSON validation failed. Aborting commit to protect main."
+            exit 1
+          else
+            echo "✓ All refreshed JSON files are structurally valid."
+          fi
+
+      - name: Open issue on validation failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Refresh community data: JSON validation failed" \
+            --label "bug" \
+            --body "The scheduled \`refresh-community-data\` workflow failed JSON structure validation and did not commit new data to \`main\`.
+
+          **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          Check the run log for which file failed and which field was missing or malformed. Fix the upstream script that writes that file, then re-run the workflow manually via workflow_dispatch."
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/adventures/ src/data/community-leaders.json
+          if git diff --cached --quiet; then
+            echo "No data changes."
+          else
+            git commit -m "chore: refresh community data"
+            git push
+          fi

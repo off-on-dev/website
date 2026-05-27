@@ -1,6 +1,6 @@
 import type { JSX } from "react";
-import type { LinksFunction, MetaFunction } from "react-router";
-import { ArrowRight, Mail } from "lucide-react";
+import type { MetaFunction } from "react-router";
+import { ExternalLink, Mail } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
@@ -9,9 +9,7 @@ import { BulletList } from "@/components/BulletList";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
 import { SPONSORS, SUPPORT_WAYS } from "@/data/sponsors";
 import { useTheme } from "@/hooks/useTheme";
-import { buildPageMeta, interBoldPreload } from "@/lib/meta";
-
-export const links: LinksFunction = () => interBoldPreload;
+import { buildPageMeta } from "@/lib/meta";
 
 export const meta: MetaFunction = () =>
   buildPageMeta({
@@ -32,7 +30,7 @@ const Sponsors = (): JSX.Element => {
         title="Sponsorship and Independence"
         description="Sponsors provide financial support and participate as community members, but do not control editorial direction, content priorities, or governance. This community belongs to its members."
         primaryCta={{ label: <span className="inline-flex items-center gap-2"><Mail size={14} aria-hidden="true" /> Become a Sponsor</span>, href: `mailto:${CONTACT_EMAIL}` }}
-        secondaryCta={{ label: <span className="inline-flex items-center gap-2">Join the Community <ArrowRight size={14} aria-hidden="true" /></span>, href: COMMUNITY_URL, external: true }}
+        secondaryCta={{ label: <span className="inline-flex items-center gap-2">Join the Community <ExternalLink size={14} aria-hidden="true" /></span>, href: COMMUNITY_URL, external: true }}
       />
 
       <div className="px-6 md:px-16 py-16">
@@ -139,6 +137,7 @@ const Sponsors = (): JSX.Element => {
             <h3 className="text-lg font-semibold text-foreground mb-3">What We Ask in Return</h3>
             <div className="max-w-2xl mb-8">
               <BulletList
+                marker="check"
                 spacing="loose"
                 items={[
                   "Respect for our community guidelines and code of conduct",

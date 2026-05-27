@@ -1,4 +1,4 @@
-import { KATHARINA_SICK } from "@/data/adventures";
+import { KATHARINA_SICK } from "@/data/adventures/contributors";
 import davidImage from "@/assets/team/david.webp";
 import katharinaImage from "@/assets/team/katharina.webp";
 import kenyattaImage from "@/assets/team/kenyatta.webp";

@@ -1,0 +1,235 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://offon.dev/schemas/adventure.schema.json",
+  "title": "Adventure",
+  "description": "Schema for an OffOn adventure YAML file.",
+  "type": "object",
+  "required": ["id", "title", "month", "story", "tags", "levels"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
+      "description": "Kebab-case identifier. Must match the folder name."
+    },
+    "title": {
+      "type": "string",
+      "description": "Display title for the adventure."
+    },
+    "month": {
+      "type": "string",
+      "pattern": "^[A-Z]{3} \\d{4}$",
+      "description": "Release month in format 'MMM YYYY' (e.g. 'MAY 2026')."
+    },
+    "story": {
+      "type": "string",
+      "description": "One-paragraph summary of the adventure."
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "Technology tags (e.g. ['OpenFeature', 'Spring Boot'])."
+    },
+    "contributor": {
+      "$ref": "#/$defs/contributor"
+    },
+    "backstory": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Narrative backstory paragraphs shown on the adventure overview page."
+    },
+    "context": {
+      "type": "object",
+      "required": ["title", "body"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "body": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "description": "Optional 'What you'll be using' style context section."
+    },
+    "rewards": {
+      "$ref": "#/$defs/rewards"
+    },
+    "upcomingLevels": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/upcomingLevel" },
+      "description": "Placeholder levels that haven't shipped yet."
+    },
+    "levels": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/level" },
+      "minItems": 1,
+      "description": "The challenge levels within this adventure."
+    }
+  },
+  "$defs": {
+    "contributor": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "url": { "type": "string", "format": "uri" },
+        "about": { "type": "string" }
+      }
+    },
+    "rewards": {
+      "type": "object",
+      "required": ["deadline", "eligibility", "tiers"],
+      "additionalProperties": false,
+      "properties": {
+        "deadline": { "type": "string" },
+        "eligibility": { "type": "string" },
+        "tiers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["label", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "label": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "rankingNote": { "type": "string" },
+        "rankingRulesUrl": { "type": "string" }
+      }
+    },
+    "upcomingLevel": {
+      "type": "object",
+      "required": ["name", "difficulty"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "difficulty": {
+          "type": "string",
+          "enum": ["Beginner", "Intermediate", "Expert"]
+        }
+      }
+    },
+    "level": {
+      "type": "object",
+      "required": ["id", "name", "difficulty", "learnings", "devcontainerPath", "discussionUrl"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "difficulty": {
+          "type": "string",
+          "enum": ["Beginner", "Intermediate", "Expert"]
+        },
+        "topics": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "learnings": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "devcontainerPath": {
+          "type": "string",
+          "description": "Path to the devcontainer.json relative to the challenges repo root (e.g. '.devcontainer/04-blind-by-design_01-beginner/devcontainer.json'). The codegen script builds the full Codespaces URL from this."
+        },
+        "discussionUrl": {
+          "type": "string",
+          "description": "Full Discourse topic URL or a path relative to COMMUNITY_URL (e.g. '/t/topic-slug/1419')."
+        },
+        "deadline": {
+          "type": "string",
+          "description": "Submission deadline for this level (e.g. '10 December 2025 at 09:00 CET'). Only shown when rewards are active."
+        },
+        "hook": { "type": "string" },
+        "intro": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "backstory": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "objective": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "audience": { "type": "string" },
+        "scenario": { "type": "string" },
+        "architecture": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "architectureDiagram": {
+          "type": "string",
+          "description": "Filename of the SVG diagram in src/assets/diagrams/ (e.g. 'blind-by-design-intermediate.svg')."
+        },
+        "diagramAlt": { "type": "string" },
+        "toolbox": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "url": { "type": "string", "format": "uri" }
+            }
+          }
+        },
+        "howToPlay": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title", "body"],
+            "additionalProperties": false,
+            "properties": {
+              "title": { "type": "string" },
+              "body": { "type": "string", "description": "Markdown content. Can contain code blocks." }
+            }
+          }
+        },
+        "verification": {
+          "type": "object",
+          "required": ["command", "description"],
+          "additionalProperties": false,
+          "properties": {
+            "command": { "type": "string" },
+            "description": { "type": "string" }
+          }
+        },
+        "helpfulLinks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["label", "url"],
+            "additionalProperties": false,
+            "properties": {
+              "label": { "type": "string" },
+              "url": { "type": "string", "format": "uri" }
+            }
+          },
+          "description": "Reference documentation links shown at the end of the challenge walkthrough."
+        },
+        "solvedCount": { "type": "integer" },
+        "topPlayers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["username", "count"],
+            "additionalProperties": false,
+            "properties": {
+              "username": { "type": "string" },
+              "count": { "type": "integer" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

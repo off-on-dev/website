@@ -105,6 +105,10 @@ const pages: PageSpec[] = [
     file: "adventures/blind-by-design/levels/intermediate/index.html",
     check: { type: "contains", value: "Outcome by Cohort" },
   },
+  {
+    file: "challenges/index.html",
+    check: { type: "exact", value: "Challenges - Hands-on open source challenges | OffOn" },
+  },
 ];
 
 function extractTitles(html: string): string[] {
@@ -160,4 +164,23 @@ describe("prerendered HTML title tags", () => {
       }
     });
   }
+});
+
+describe("prerendered challenge pages include all content sections", () => {
+  const challengePage = "adventures/echoes-lost-in-orbit/levels/beginner/index.html";
+  const requiredSections = ["objective", "backstory", "toolbox", "learnings", "walkthrough", "completion"];
+
+  it(`dist/client/${challengePage} contains all section IDs`, () => {
+    const fullPath = path.join(DIST_ROOT, challengePage);
+
+    if (!fs.existsSync(fullPath)) {
+      throw new Error(`dist/client/${challengePage} not found. Run npm run build first.`);
+    }
+
+    const html = fs.readFileSync(fullPath, "utf-8");
+
+    for (const section of requiredSections) {
+      expect(html, `Missing section id="${section}" in prerendered HTML`).toContain(`id="${section}"`);
+    }
+  });
 });

@@ -50,7 +50,7 @@ Community activity happens on a separate Discourse instance. Its display name is
 
 ### What lives where
 
-- Logic derived from `ADVENTURES` belongs in `src/data/adventures.ts`, exported, and imported everywhere. Do not re-derive it in component files.
+- Logic derived from `ADVENTURES` belongs in `src/data/adventures/index.ts`, exported, and imported everywhere. Do not re-derive it in component files.
 - Reusable card or list markup belongs in `src/components/`, not duplicated inline. Extract before the second copy appears.
 - Redirect routes that share a destination share a single file in `src/pages/redirects/`. The filename describes the destination, not the source (e.g. `HandbookRedirect.tsx`).
 
@@ -105,6 +105,8 @@ npm run test:watch   # Tests in watch mode
 npm run test:coverage  # Run tests with v8 coverage (uses @vitest/coverage-v8)
 npm run test:e2e     # Playwright smoke tests (requires npm run build first)
 npm run preview      # Copy 404 fallback and serve the production build locally
+npm run generate     # Regenerate TypeScript from adventure YAML files
+npm run generate:validate  # Validate YAML against schema without writing files
 
 npx shadcn@latest add <component>   # Add a shadcn/ui component
 ```
@@ -218,7 +220,7 @@ without exception. They exist to prevent debugging by accumulation.
 - `data-difficulty` attribute on `DifficultyBadge`. It is used for CSS targeting of badge text color.
 - `contributor-pill` class on `ContributorBadge`. Scopes light mode overrides: transparent background with slate border instead of the near-invisible `bg-primary/5`.
 - `contributor-pill-glow` class on `ContributorBadge` (applied via `glow` prop). Static amber box-shadow glow, sized for a small pill. Used only on `ChallengeDetail` -- not in `AdventureCard`.
-- `docs-ext-link` class on all inline prose links site-wide. Handles both modes: dark mode foreground text with amber underline, hover to full `#ffc034`; light mode near-black text with `currentColor` underline, hover to `--link-hover-light` (`hsl(41 100% 25%)` dark amber, ~5.5:1 contrast). Used in `CommunityGuide`, `ChallengeContextSection`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, and `ChallengeBuildersSection`. Do not use `hover:text-primary` or `hover:underline` on inline links — use `docs-ext-link` instead.
+- `docs-ext-link` class on all inline prose links site-wide. Bundles `inline-flex`, `align-items: center`, `gap`, `underline`, `decoration-thickness`, `underline-offset`, `border-radius`, focus-visible ring, and color/hover transitions. Handles both modes: dark mode foreground text with amber underline, hover to full `#ffc034`; light mode near-black text with `currentColor` underline, hover to `--link-hover-light` (`hsl(41 100% 25%)` dark amber, ~5.5:1 contrast). Used in `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`, `ChallengeDetail`, and `MarkdownContent`. Do not use `hover:text-primary` or `hover:underline` on inline links, and do not add redundant `inline-flex items-center gap-*` utilities. Use `docs-ext-link` alone, adding only contextual utilities (font-size, weight, margin).
 
 ---
 
@@ -226,10 +228,13 @@ without exception. They exist to prevent debugging by accumulation.
 
 - Static content lives in `src/data/` as typed TypeScript objects/arrays.
 - No runtime `fetch` calls in components. All network data must be fetched at build time.
-- **Build-time fetching:** External data may be fetched inside a Vite plugin (`buildStart` hook, guard with `config.command === "build"`). Write results to `src/data/<name>.json`. Components import the JSON statically. See `vite.config.ts` (`discourseDataPlugin`) and `src/data/discussion-data.json` for the reference implementation.
-- When adding a new adventure level, add its topic ID and URL to the `DISCUSSION_TOPICS` map in `vite.config.ts`.
-- `vite.config.ts` contains a `COMMUNITY_BASE` constant that is a necessary duplicate of `COMMUNITY_URL` in `src/data/constants.ts`. Vite config runs in Node and cannot import from `src/`, so the value must be maintained manually in both places. Always update them together.
-- The domain `community.open-ecosystem.com` in both `vite.config.ts` and `src/data/constants.ts` is the actual Discourse server URL used for API calls at build time. It is not a brand inconsistency. Do not change it to `community.offon.dev` or any other display name. `COMMUNITY_DISPLAY_NAME` in `src/data/constants.ts` is the separate user-facing label shown in the UI.
+- **Adventure content pipeline:** Adventure data is authored as YAML files at `src/data/adventures/<id>/adventure.yaml` and compiled to TypeScript via `scripts/generate-adventures.mjs`. The generated files (`*.generated.ts` and `index.ts`) are committed to the repo. The `prebuild` hook runs the generator automatically before every build. Never edit `*.generated.ts` or `src/data/adventures/index.ts` by hand.
+  - **Why YAML + generated TS instead of writing TS directly?** YAML is easier to author and review for non-engineers, and validated by JSON Schema. Vite cannot import YAML natively, so a generator converts it to fully-typed TS that the app can statically import. Committing the generated files means the build works without running the generator first, and CI can detect when generated output is out of sync with the source YAML.
+- **Schema validation:** Adventure YAML files are validated against `schemas/adventure.schema.json` (JSON Schema Draft 2020-12). Run `npm run generate:validate` to check without writing files.
+- **Build-time fetching:** Discussion data lives in per-level JSON files under `src/data/adventures/<adventure-id>/<level-id>-posts.json`. Each file contains only `discussionUrl`, `discussionPosts`, and `totalReplies`. These are refreshed hourly by the GitHub Action in `.github/workflows/refresh-community-data.yml` (runs `scripts/refresh-discussions.mjs`). Components import the JSON dynamically via `import.meta.glob`.
+- When adding a new adventure level, create its per-level discussion JSON file (`<level-id>-posts.json`) with a `discussionUrl` field. The refresh script uses this URL to fetch posts.
+- `scripts/refresh-discussions.mjs` contains a `COMMUNITY_BASE` constant that is a necessary duplicate of `COMMUNITY_URL` in `src/data/constants.ts`. The script runs in Node and cannot import from `src/`, so the value must be maintained manually in both places. Always update them together.
+- The domain `community.open-ecosystem.com` in both `scripts/refresh-discussions.mjs` and `src/data/constants.ts` is the actual Discourse server URL used for API calls at build time. It is not a brand inconsistency. Do not change it to `community.offon.dev` or any other display name. `COMMUNITY_DISPLAY_NAME` in `src/data/constants.ts` is the separate user-facing label shown in the UI.
 
 ---
 
@@ -366,6 +371,8 @@ Check the following on every component you write or modify.
 ### Icons and special characters
 - Decorative icons paired with visible text: always add `aria-hidden="true"`. Do not omit it.
 - Never use raw Unicode characters (e.g. `→`, `♥`, `✓`) to convey meaning. Use proper text, lucide-react icons with `aria-hidden`, or an `aria-label`/`<span className="sr-only">` for screen readers.
+- Decorative separators between pill segments (e.g. `·` or `-`): use an empty `<span aria-hidden="true" className="inline-block w-px h-3 bg-current opacity-40" />` instead of a text character. A text character with `opacity-*` composites its color against the background, and the resulting blended color must pass WCAG 1.4.3 — even if the element is `aria-hidden`. An empty span has no text node so the color-contrast rule does not fire.
+- Never apply `opacity-*` to an element that contains visible text. Use a CSS color token that already has the desired luminance (e.g. `text-[hsl(var(--text-faint))]`).
 
 ### ARIA
 - Only add ARIA attributes when semantic HTML is not enough.
@@ -609,23 +616,26 @@ All UI labels use **title case (Chicago style)**. Body copy uses **sentence case
 When adding a new route to `src/routes.ts`, follow these rules by route type:
 
 - Static routes (e.g. `/about`, `/privacy`): add to `public/sitemap.xml`, the routes table in `README.md`, and the `prerender` array in `react-router.config.ts`.
-- Dynamic routes with statically known IDs (e.g. `/adventures/:id` when IDs are fixed): add individual URLs to `public/sitemap.xml`, the `prerender` array in `react-router.config.ts`, and the routes table in `README.md`. Also add the topic ID and URL to `DISCUSSION_TOPICS` in `vite.config.ts` if the level has a discussion thread.
+- Dynamic routes with statically known IDs (e.g. `/adventures/:id` when IDs are fixed): add individual URLs to `public/sitemap.xml`, the `prerender` array in `react-router.config.ts`, and the routes table in `README.md`. Also create a per-level discussion JSON file in `src/data/adventures/` if the level has a discussion thread.
 - Redirect routes (clientLoader returning redirect()): do not add to `sitemap.xml` or `README.md`.
 - Catch-all routes (`*`): do not add anywhere.
 
 ### When adding a new adventure
 
-Adventures are defined in `src/data/adventures.ts`. The Discourse API does not expose the structured data needed (Codespace URLs, technology tags, learnings), so this file is the authoritative source of truth. Update it manually when a new adventure is published on the community.
+Adventures are authored as YAML files at `src/data/adventures/<id>/adventure.yaml` and compiled to TypeScript by `scripts/generate-adventures.mjs`. Shared types live in `types.ts`, contributors in `contributors.ts`. The generated barrel `index.ts` re-exports `ADVENTURES`, `ALL_TAGS`, `ADVENTURE_CONTRIBUTORS`, `getLevelsByTag`, `tagToSlug`, and `slugToTag`. The Discourse API does not expose the structured data needed (Codespace URLs, technology tags, learnings), so these YAML files are the authoritative source of truth.
 
 Complete checklist for every new adventure:
 
-1. Add the adventure object to the `ADVENTURES` array in `src/data/adventures.ts`. Required fields: `id`, `title`, `month`, `story`, `tags`, and `levels`. Each level needs `id`, `name`, `difficulty`, `learnings`, `codespacesUrl`, and `discussionUrl`. For `codespacesUrl`, use the `CODESPACES_BASE` constant with a `devcontainer_path` parameter pointing to the level's specific devcontainer config, e.g. `` `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F04-blind-by-design_01-beginner%2Fdevcontainer.json&quickstart=1` ``. Never use `quickstart=1` alone — that launches the generic default devcontainer.
-2. Add the adventure detail route and all level routes to `src/routes.ts`.
-3. Add the adventure landing page URL and every level URL to `public/sitemap.xml`.
-4. Add the adventure landing page URL and every level URL to the `prerender` array in `react-router.config.ts`.
-5. Add each level's Discourse topic ID and full topic URL to the `DISCUSSION_TOPICS` map in `vite.config.ts`. The key is the numeric topic ID extracted from the discussion URL (e.g. `"117"` from `.../t/.../117/...`).
-6. Run `npm run build` to fetch fresh discussion data for the new topic IDs and verify that `src/data/discussion-data.json` was updated.
-7. Update the routes table in `README.md`.
+1. Run `node scripts/new-adventure.mjs` to scaffold a new `src/data/adventures/<id>/adventure.yaml`. Fill in the required fields: `id`, `title`, `month`, `story`, `tags`, and `levels`. Each level needs `id`, `name`, `difficulty`, `learnings`, `devcontainerPath` (relative path to the devcontainer.json, e.g. `.devcontainer/04-blind-by-design_01-beginner/devcontainer.json`), and `discussionUrl` (full URL or path relative to `COMMUNITY_URL`). The schema is at `schemas/adventure.schema.json`.
+2. Run `npm run generate` to produce `<id>.generated.ts` and update `index.ts`.
+3. Add the adventure detail route and all level routes to `src/routes.ts`.
+4. Add the adventure landing page URL and every level URL to `public/sitemap.xml`.
+5. Add the adventure landing page URL and every level URL to the `prerender` array in `react-router.config.ts`.
+6. Create a per-level discussion JSON file at `src/data/adventures/<adventure-id>/<level-id>-posts.json` with `{ "discussionUrl": "<full-topic-url>" }` for each level that has a discussion thread.
+7. Run `node scripts/refresh-discussions.mjs` to fetch discussion posts for the new levels.
+8. Add the adventure to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs` with the correct `categoryId` (find it at `<COMMUNITY_URL>/categories.json`) and `levelCount`.
+9. Run `node scripts/refresh-leaderboard.mjs` to create `src/data/adventures/<adventure-id>/leaderboard.json`.
+10. Update the routes table in `README.md`.
 
 ---
 
@@ -668,7 +678,7 @@ State the result of each check explicitly before finishing a task.
 
 8. **Verify at three viewports:** All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px). Always test against the production build (`npm run build && npm run preview`), never the dev server.
 
-9. **Check discussion data on every PR:** If the PR adds or modifies adventure levels, verify that every level's Discourse topic ID and URL are present in the `DISCUSSION_TOPICS` map in `vite.config.ts`. Run `npm run build` so `src/data/discussion-data.json` is regenerated with any new topics. A missing entry means the discussion feed will silently show no posts for that level.
+9. **Check discussion data on every PR:** If the PR adds or modifies adventure levels, verify that a per-level discussion JSON file exists at `src/data/adventures/<adventure-id>/<level-id>-posts.json` with the correct `discussionUrl`. Run `node scripts/refresh-discussions.mjs` to populate discussion posts. A missing file means the discussion feed will silently show no posts for that level.
 
 ### Before writing any code
 
@@ -703,7 +713,8 @@ State the result of each check explicitly before finishing a task.
 - Do not commit secrets, tokens, or credentials.
 - Do not change the `@theme` block in `src/index.css` without verifying the change does not break existing components.
 - Do not reinstall `@radix-ui/*` packages that were removed. If a Radix primitive is genuinely needed, check whether raw HTML with Tailwind solves the problem first.
-- Do not re-derive data from `ADVENTURES` inside component files. Any computed value that belongs to the data layer (e.g. a deduplicated tag list) should be exported from `src/data/adventures.ts` and imported. `ALL_TAGS` is the established pattern.
+- Do not re-derive data from `ADVENTURES` inside component files. Any computed value that belongs to the data layer (e.g. a deduplicated tag list) should be exported from `src/data/adventures/index.ts` and imported. `ALL_TAGS` is the established pattern.
+- Do not edit `*.generated.ts` or `src/data/adventures/index.ts` by hand. These are produced by `scripts/generate-adventures.mjs` from the YAML source files. Edit the YAML and run `npm run generate` instead.
 
 ---
 
@@ -823,7 +834,10 @@ One-time `src/root.tsx` check (not per page): manifest link, both theme-color ta
 - Semantic landmarks: `<main>`, `<nav>`, `<footer>`, `<section>`, `<article>`. Every page: `<main id="main-content">`. (See Accessibility > Semantic HTML.)
 - One `<h1>` per page, no skipped levels. No `<br />` in headings — use block `<span>` elements.
 - Every `<a target="_blank">` needs `<span className="sr-only"> (opens in new tab)</span>`. (See Accessibility > External links.)
-- Decorative icons: `aria-hidden="true"`. No raw Unicode symbols (`→`, `♥`, `✓`, `★`) for meaning. Decorative separators (e.g. `·`): `<span aria-hidden="true">·</span>`. (See Accessibility > Icons and special characters.)
+- Decorative icons: `aria-hidden="true"`. No raw Unicode symbols (`→`, `♥`, `✓`, `★`) for meaning. (See Accessibility > Icons and special characters.)
+- **Decorative separators** (e.g. `·`, `-` between pill segments): never use a text character with `opacity-*`. Use an empty `<span>` styled as a CSS divider: `<span aria-hidden="true" className="inline-block w-px h-3 bg-current opacity-40" />`. No text content means axe's color-contrast rule does not evaluate it, and the WCAG 1.4.11 non-text-contrast exemption covers purely decorative separators.
+- **Never use `opacity-*` on an element that contains visible text** — opacity composites the text color against the background and the resulting blended color must still meet contrast requirements. Use explicit CSS color values (e.g. `text-[hsl(var(--text-faint))]`) instead of opacity to produce muted text.
+- **Minimum visible text size is 12px** (`text-xs`). Do not use `text-[0.6rem]` or `text-[0.65rem]` for any visible (non-`aria-hidden`) text. Avatar initials and rank numbers that are purely decorative and `aria-hidden` are exempt.
 - All page content (including `PageHero` and `BottomCTA`) inside `<main id="main-content">`.
 - Dynamic content updates: use `aria-live` regions. (See Accessibility > ARIA.)
 

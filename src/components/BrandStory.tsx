@@ -18,6 +18,12 @@ export const BrandStory = (): JSX.Element => {
           <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
             Nyx is more than a mascot. The firefly reflects what {BRAND_NAME} is about: people showing up for each other, sharing what they know, and building something brighter together. Each person brings their own spark, but together, we glow brighter.
           </p>
+          <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
+            That spark matters more than ever. AI can write code, but when it takes over all the work, how do people discover their passion or the creativity needed to design the best solutions? When curiosity fades, growth stops.
+          </p>
+          <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
+            Understanding how things work still matters. When we combine our thinking, that is where the real magic happens. The power of community is not just about being part of something. It is an engine that fuels human connection, curiosity, and genuine love for a topic. AI cannot replicate that experience.
+          </p>
         </div>
       </div>
     </section>

@@ -1,6 +1,7 @@
 import type { JSX } from "react";
 import type { MetaFunction } from "react-router";
 import { Link } from "react-router";
+import { ExternalLink } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
@@ -22,7 +23,6 @@ const Privacy = (): JSX.Element => {
   const heading3 = "text-lg font-heading font-semibold text-foreground mt-6 mb-2";
   const paragraph = "text-sm text-muted-foreground leading-relaxed mb-4";
   const list = "list-disc list-inside space-y-1 text-sm text-muted-foreground mb-4 ml-2";
-  const link = "underline underline-offset-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
 
   return (
     <div className="min-h-screen bg-background">
@@ -46,9 +46,9 @@ const Privacy = (): JSX.Element => {
           at any time:
         </p>
         <ul className={list}>
-          <li>Email: <a href={`mailto:${CONTACT_EMAIL}`} className={link}>{CONTACT_EMAIL}</a></li>
+          <li>Email: <a href={`mailto:${CONTACT_EMAIL}`} className="docs-ext-link">{CONTACT_EMAIL}</a></li>
           <li>
-            Board: <Link to="/about#board" className={link}>reach out to the board</Link>
+            Board: <Link to="/about#board" className="docs-ext-link">reach out to the board</Link>
           </li>
         </ul>
         <p className={paragraph}>
@@ -110,12 +110,12 @@ const Privacy = (): JSX.Element => {
           may transfer data to and process it in the United States. Such transfers occur under the
           EU-U.S. Data Privacy Framework and Standard Contractual Clauses as appropriate
           safeguards. For more information, see{" "}
-          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className={link}>
-            Google's Privacy Policy<span className="sr-only"> (opens in new tab)</span>
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="docs-ext-link">
+            Google's Privacy Policy <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
           </a>{" "}
           and{" "}
-          <a href="https://support.google.com/analytics/answer/6004245" target="_blank" rel="noopener noreferrer" className={link}>
-            Google Analytics data safeguards<span className="sr-only"> (opens in new tab)</span>
+          <a href="https://support.google.com/analytics/answer/6004245" target="_blank" rel="noopener noreferrer" className="docs-ext-link">
+            Google Analytics data safeguards <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
           </a>
           .
         </p>
@@ -137,7 +137,7 @@ const Privacy = (): JSX.Element => {
         <h2 className={heading2}>5. Your rights under GDPR</h2>
         <p className={paragraph}>
           As a data subject under GDPR, you have the following rights. To exercise any of them,
-          contact us at <a href={`mailto:${CONTACT_EMAIL}`} className={link}>{CONTACT_EMAIL}</a>.
+          contact us at <a href={`mailto:${CONTACT_EMAIL}`} className="docs-ext-link">{CONTACT_EMAIL}</a>.
           We will respond within 30 days.
         </p>
         <ul className={list}>
@@ -179,8 +179,8 @@ const Privacy = (): JSX.Element => {
           lodge a complaint with a supervisory authority. In the EU, this is typically the data
           protection authority in your country of residence or the country where the alleged
           violation occurred. A list of EU supervisory authorities is available from the{" "}
-          <a href="https://edpb.europa.eu/about-edpb/about-edpb/members_en" target="_blank" rel="noopener noreferrer" className={link}>
-            European Data Protection Board<span className="sr-only"> (opens in new tab)</span>
+          <a href="https://edpb.europa.eu/about-edpb/about-edpb/members_en" target="_blank" rel="noopener noreferrer" className="docs-ext-link">
+            European Data Protection Board <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
           </a>
           . We do ask that you contact us first so we have an opportunity to address the issue
           directly.
@@ -204,8 +204,8 @@ const Privacy = (): JSX.Element => {
         <h2 className={heading2}>9. Contact</h2>
         <p className={paragraph}>
           For any questions or requests relating to this policy or your personal data, contact us
-          at <a href={`mailto:${CONTACT_EMAIL}`} className={link}>{CONTACT_EMAIL}</a> or by{" "}
-          <Link to="/about#board" className={link}>reaching out to the board</Link>.
+          at <a href={`mailto:${CONTACT_EMAIL}`} className="docs-ext-link">{CONTACT_EMAIL}</a> or by{" "}
+          <Link to="/about#board" className="docs-ext-link">reaching out to the board</Link>.
         </p>
         </div>
         </div>

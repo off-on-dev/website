@@ -2,22 +2,32 @@ import { useState, useEffect } from "react";
 
 type StoredPost = {
   username: string;
+  avatarUrl?: string;
   cooked: string;
   created_at: string;
   like_count?: number;
+  challengeSolved?: boolean;
   topicUrl: string;
 };
 
 export type PostWithAge = StoredPost & { age: string };
 
+export type Solver = {
+  username: string;
+  avatarUrl?: string;
+  solvedAt: string;
+};
+
+/** Shape of the per-level JSON file's discussion fields. */
+type LevelDiscussionData = {
+  discussionPosts?: StoredPost[];
+  totalReplies?: number;
+  solvers?: Solver[];
+};
+
 // Exported so callers can type test mocks; tests inject a mock loader to
 // avoid Vitest's dynamic-import mock runner initialization cost (~3-6s).
-export type DiscussionDataLoader = () => Promise<Record<string, StoredPost[]>>;
-
-function extractTopicId(url: string): string | null {
-  const match = url.match(/\/t\/[^/]+\/(\d+)/);
-  return match ? match[1] : null;
-}
+export type DiscussionDataLoader = (adventureId: string, levelId: string) => Promise<LevelDiscussionData>;
 
 function timeAgo(dateStr: string, now: number): string {
   const diff = now - new Date(dateStr).getTime();
@@ -29,45 +39,63 @@ function timeAgo(dateStr: string, now: number): string {
   return `${days}d ago`;
 }
 
-// Data is fetched at build time by the discourse-data Vite plugin in vite.config.ts
-// and written to src/data/discussion-data.json. The import is kicked off at module
-// load time (not inside useEffect) so the data is already in-flight before the
-// component mounts, eliminating the render-then-effect waterfall. The dynamic import
-// keeps the chunk code-split from ChallengeDetail.
-const discussionDataPromise: Promise<Record<string, StoredPost[]>> =
-  import("@/data/discussion-data.json").then((m) => m.default as Record<string, StoredPost[]>);
+const discussionModules = import.meta.glob("@/data/adventures/**/*-posts.json");
 
-const defaultLoader: DiscussionDataLoader = () => discussionDataPromise;
+// Default loader dynamically imports the per-level JSON file.
+// Each level JSON is expected to have optional `discussionPosts` and
+// `totalReplies` fields, populated by the daily GitHub Action.
+const defaultLoader: DiscussionDataLoader = async (adventureId, levelId) => {
+  const key = `/src/data/adventures/${adventureId}/${levelId}-posts.json`;
+  const loader = discussionModules[key];
+  if (!loader) return { discussionPosts: [], totalReplies: 0 };
+  const mod = await loader() as { default: LevelDiscussionData };
+  return mod.default;
+};
+
+export type DiscussionResult = {
+  posts: PostWithAge[];
+  totalReplies: number;
+  solvers: Solver[];
+};
 
 /**
- * Loads discussion posts for an adventure level from pre-built static data.
+ * Loads discussion posts for an adventure level from the per-level JSON file.
  * Post ages are computed client-side after mount to avoid calling Date.now() during render.
- * @param discussionUrl - Full Discourse topic URL; the numeric topic ID is extracted automatically.
- * @param loader - Optional loader for testing; defaults to dynamically importing discussion-data.json.
- * @returns Array of posts with computed relative age strings (e.g. "2h ago"), or empty array while loading.
+ * @param adventureId - The adventure slug (e.g. "echoes-lost-in-orbit").
+ * @param levelId - The level slug (e.g. "beginner").
+ * @param loader - Optional loader for testing; defaults to dynamically importing the level JSON.
+ * @returns Object with posts array and totalReplies count.
  */
 export function useDiscussionPosts(
-  discussionUrl: string,
+  adventureId: string,
+  levelId: string,
   loader: DiscussionDataLoader = defaultLoader,
-): PostWithAge[] {
-  const topicId = extractTopicId(discussionUrl);
+): DiscussionResult {
   const [posts, setPosts] = useState<PostWithAge[]>([]);
+  const [totalReplies, setTotalReplies] = useState(0);
+  const [solvers, setSolvers] = useState<Solver[]>([]);
 
   useEffect(() => {
-    if (!topicId) return;
+    if (!adventureId || !levelId) return;
     let cancelled = false;
-    loader()
+    loader(adventureId, levelId)
       .then((data) => {
         if (cancelled) return;
-        const raw = data[topicId] ?? [];
+        const raw = data.discussionPosts ?? [];
         const now = Date.now();
         setPosts(raw.map((p) => ({ ...p, age: timeAgo(p.created_at, now) })));
+        setTotalReplies(data.totalReplies ?? raw.length);
+        setSolvers(data.solvers ?? []);
       })
       .catch(() => {
-        if (!cancelled) setPosts([]);
+        if (!cancelled) {
+          setPosts([]);
+          setTotalReplies(0);
+          setSolvers([]);
+        }
       });
     return () => { cancelled = true; };
-  }, [topicId, loader]);
+  }, [adventureId, levelId, loader]);
 
-  return posts;
+  return { posts, totalReplies, solvers };
 }

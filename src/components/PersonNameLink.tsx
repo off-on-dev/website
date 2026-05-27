@@ -16,10 +16,10 @@ export const PersonNameLink = ({ name, url }: PersonNameLinkProps): JSX.Element 
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="docs-ext-link inline-flex items-center gap-1.5 text-base font-semibold underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+      className="docs-ext-link text-base font-semibold"
     >
       {name}
-      <ExternalLink size={13} aria-hidden="true" />
+      <ExternalLink size={12} aria-hidden="true" />
       <span className="sr-only"> (opens in new tab)</span>
     </a>
   );

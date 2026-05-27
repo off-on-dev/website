@@ -13,7 +13,12 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "generate": "node scripts/generate-adventures.mjs",
+    "generate:validate": "node scripts/generate-adventures.mjs --validate-only",
+    "prebuild": "node scripts/generate-adventures.mjs",
+    "new-adventure": "node scripts/new-adventure.mjs",
+    "new-level": "node scripts/new-level.mjs"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -21,7 +26,9 @@
     "lucide-react": "^1.11.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-markdown": "^10.1.0",
     "react-router": "^7.14.2",
+    "remark-gfm": "^4.0.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0"
   },
@@ -48,6 +55,7 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.2",
     "vite": "^8.0.10",
-    "vitest": "^4.1.5"
+    "vitest": "^4.1.5",
+    "yaml": "^2.9.0"
   }
 }

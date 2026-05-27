@@ -1,5 +1,5 @@
 import { useMemo, type JSX } from "react";
-import { ArrowDown, ArrowRight, Zap } from "lucide-react";
+import { ArrowDown, ExternalLink, Zap } from "lucide-react";
 import { BRAND_SECONDARY_LINE_PARTS, BRAND_SLOGAN_PARTS, COMMUNITY_URL } from "@/data/constants";
 
 export const Hero = (): JSX.Element => {
@@ -45,7 +45,7 @@ export const Hero = (): JSX.Element => {
                 rel="noopener noreferrer"
                 className="btn-ghost"
               >
-                Join the Community <ArrowRight size={16} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                Join the Community <ExternalLink size={16} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
               </a>
             </div>
       </div>

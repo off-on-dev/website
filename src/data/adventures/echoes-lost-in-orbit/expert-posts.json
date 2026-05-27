@@ -1,0 +1,47 @@
+{
+  "discussionUrl": "https://community.open-ecosystem.com/t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351/4",
+  "discussionPosts": [
+    {
+      "username": "georgblumenschein",
+      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/georgblumenschein/40/116_2.png",
+      "cooked": "Completed the challenge.",
+      "created_at": "2026-01-07T13:42:55.927Z",
+      "challengeSolved": true,
+      "topicUrl": "https://community.open-ecosystem.com/t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351/4"
+    },
+    {
+      "username": "enri-kapaj",
+      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/enri-kapaj/40/165_2.png",
+      "cooked": "DONE",
+      "created_at": "2025-12-26T17:49:20.719Z",
+      "challengeSolved": true,
+      "topicUrl": "https://community.open-ecosystem.com/t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351/4"
+    },
+    {
+      "username": "gsigmund",
+      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/gsigmund/40/99_2.png",
+      "cooked": "Completed the challenge.",
+      "created_at": "2025-12-26T12:58:27.995Z",
+      "challengeSolved": true,
+      "topicUrl": "https://community.open-ecosystem.com/t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351/4"
+    }
+  ],
+  "totalReplies": 3,
+  "solvers": [
+    {
+      "username": "gsigmund",
+      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/gsigmund/40/99_2.png",
+      "solvedAt": "2025-12-26T12:58:27.995Z"
+    },
+    {
+      "username": "enri-kapaj",
+      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/enri-kapaj/40/165_2.png",
+      "solvedAt": "2025-12-26T17:49:20.719Z"
+    },
+    {
+      "username": "georgblumenschein",
+      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/georgblumenschein/40/116_2.png",
+      "solvedAt": "2026-01-07T13:42:55.927Z"
+    }
+  ]
+}

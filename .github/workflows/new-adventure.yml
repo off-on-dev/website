@@ -1,0 +1,96 @@
+name: New Adventure
+
+on:
+  workflow_dispatch:
+    inputs:
+      id:
+        description: 'Adventure ID (kebab-case, e.g. "signal-in-the-storm")'
+        required: true
+        type: string
+      title:
+        description: 'Adventure title (e.g. "Signal in the Storm")'
+        required: true
+        type: string
+      month:
+        description: 'Release month (e.g. "JUN 2026")'
+        required: true
+        type: string
+      levels:
+        description: 'Comma-separated levels (e.g. "beginner" or "beginner,intermediate,expert")'
+        required: true
+        type: string
+        default: 'beginner'
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  scaffold:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Validate inputs
+        env:
+          INPUT_ID: ${{ inputs.id }}
+          INPUT_LEVELS: ${{ inputs.levels }}
+        run: |
+          if ! echo "$INPUT_ID" | grep -qE '^[a-z0-9][a-z0-9-]*[a-z0-9]$'; then
+            echo "Error: Adventure ID must be kebab-case (lowercase letters, numbers, hyphens only)"
+            exit 1
+          fi
+          if ! echo "$INPUT_LEVELS" | grep -qE '^(beginner|intermediate|expert)(,(beginner|intermediate|expert))*$'; then
+            echo "Error: Levels must be comma-separated list of beginner, intermediate, expert"
+            exit 1
+          fi
+
+      - name: Run scaffold script
+        env:
+          ADVENTURE_ID: ${{ inputs.id }}
+          ADVENTURE_TITLE: ${{ inputs.title }}
+          ADVENTURE_MONTH: ${{ inputs.month }}
+          ADVENTURE_LEVELS: ${{ inputs.levels }}
+        run: |
+          node scripts/new-adventure.mjs \
+            --id "$ADVENTURE_ID" \
+            --title "$ADVENTURE_TITLE" \
+            --month "$ADVENTURE_MONTH" \
+            --levels "$ADVENTURE_LEVELS"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "feat: scaffold adventure ${{ inputs.id }}"
+          title: "feat: scaffold adventure — ${{ inputs.title }}"
+          body: |
+            ## New Adventure Scaffolded
+
+            | Field | Value |
+            |---|---|
+            | ID | `${{ inputs.id }}` |
+            | Title | ${{ inputs.title }} |
+            | Month | ${{ inputs.month }} |
+            | Levels | ${{ inputs.levels }} |
+
+            ### Generated files
+            - `src/data/adventures/${{ inputs.id }}/adventure.yaml` (fill in TODOs)
+            - Discussion JSON stubs per level
+            - Routes added to `react-router.config.ts`
+            - Sitemap entries added
+
+            ### Next steps
+            1. Fill in the TODOs in `src/data/adventures/${{ inputs.id }}/adventure.yaml`
+            2. Update `discussionUrl` in the YAML and each level's `-posts.json` file
+            3. Run `npm run generate` to produce the TypeScript from YAML
+            4. Run `node scripts/refresh-discussions.mjs`
+            5. Run all checks: `npm run lint && npm test && npm run build && npm run test:e2e`
+          branch: "feat/adventure-${{ inputs.id }}"
+          delete-branch: true

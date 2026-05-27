@@ -47,7 +47,7 @@ Fonts are preloaded to avoid the three-level font discovery delay (HTML parse �
 **Global (`src/root.tsx`) — preloaded on every page:**
 - `inter-latin-400-normal.woff2` — body text (Navbar, paragraphs)
 - `inter-latin-500-normal.woff2` — medium-weight body text (Navbar links)
-- `syne-latin-700-normal.woff2` — all h1–h6 elements (the `@layer base` rule in `src/index.css` applies `font-family: 'Syne'` to every heading globally)
+- `syne-latin-700-normal.woff2` — h1 and h2 elements (the `@layer base` rule in `src/index.css` applies `font-family: 'Syne'` to h1 and h2 only; h3–h6 use Inter)
 
 **Per-route — preloaded only on pages that need them above the fold:**
 - `inter-latin-700-normal.woff2` via `interBoldPreload` — PageHero CTA buttons (`.btn-inverse`, `.btn-ghost-inverse` use `font-bold` on non-heading elements) (`src/pages/Adventures.tsx`, `src/pages/About.tsx`, `src/pages/Sponsors.tsx`, `src/pages/CommunityGuide.tsx`)
@@ -68,7 +68,7 @@ Inter 600 (`font-semibold`) is used below the fold only and is not preloaded. On
 |---|---|---|
 | H1 | `text-4xl font-bold` md:`text-5xl` | Syne, weight 700 |
 | H2 | `text-3xl font-bold` md:`text-4xl` | Syne, weight 700 |
-| H3 | `text-lg font-semibold` | Syne, weight 600 |
+| H3 | `text-lg font-semibold` | Inter, weight 600 |
 | Body | `text-base` | Inter, weight 400 |
 | Small / caption | `text-sm` | Inter, weight 400 |
 | Overline label | `font-sans text-sm font-medium uppercase tracking-widest` | Inter |
@@ -490,22 +490,44 @@ Currently used in: `src/hooks/useTheme.tsx`.
 
 `src/hooks/useDiscussionPosts.ts`
 
-Loads Discourse posts for a single adventure level from `src/data/discussion-data.json` (written at build time). Returns them as `PostWithAge[]` — post fields plus a computed `age` string. The `cooked` field is pre-stripped plain text; HTML is removed by the build plugin before the JSON is written. Returns `[]` until the data loads or if the URL contains no recognisable topic ID.
+Loads Discourse posts for a single adventure level from its per-level JSON file at `src/data/adventures/<adventureId>/<levelId>-posts.json` (refreshed daily by the GitHub Action). Returns `{ posts, totalReplies, solvers }`. The `cooked` field is pre-stripped plain text; HTML is removed by the refresh script before the JSON is written. All three fields are empty until data loads or if the file does not exist.
 
 ```ts
-const posts = useDiscussionPosts(discussionUrl);
+const { posts, totalReplies, solvers } = useDiscussionPosts(adventureId, levelId);
 // or, in tests:
-const posts = useDiscussionPosts(discussionUrl, mockLoader);
+const { posts, totalReplies, solvers } = useDiscussionPosts(adventureId, levelId, mockLoader);
 ```
 
 | Argument | Type | Description |
 |---|---|---|
-| `discussionUrl` | `string` | Full Discourse topic URL. Topic ID is extracted from the path. |
-| `loader` | `DiscussionDataLoader` (optional) | Async function that returns the raw JSON data. Defaults to a module-level promise that starts the dynamic `import()` of the JSON file as soon as the module is loaded, not on first render. This eliminates a render-cycle waterfall. The JSON chunk is still code-split (omitted from the main bundle). Pass a `vi.fn().mockResolvedValue(data)` in tests — see the Testing section of `CLAUDE.md` for the injectable-loader pattern. |
+| `adventureId` | `string` | Adventure slug (e.g. `"echoes-lost-in-orbit"`). |
+| `levelId` | `string` | Level slug (e.g. `"beginner"`). |
+| `loader` | `DiscussionDataLoader` (optional) | Async function that returns `{ discussionPosts?, totalReplies?, solvers? }`. Defaults to a `import.meta.glob` import of the per-level JSON. Pass a `vi.fn().mockResolvedValue(data)` in tests — see the Testing section of `CLAUDE.md` for the injectable-loader pattern. |
+
+`DiscussionResult` shape: `posts: PostWithAge[]`, `totalReplies: number`, `solvers: Solver[]`. `PostWithAge` is `StoredPost & { age: string }`. `Solver` has `username`, `avatarUrl?`, `solvedAt`.
 
 **Why the injectable loader?** Vitest's dynamic-import mock runner has a multi-second first-call cost per test run. Injecting a mock loader bypasses it entirely. `vi.spyOn` on the module export does NOT work for same-module calls in ES module context.
 
-**Why a module-level promise?** The default loader is a module-scoped `Promise` so the `import()` fires when the route module is loaded, not when the component first mounts. By the time the component renders and calls `useEffect`, the JSON is usually already in-flight or resolved.
+---
+
+### `useAdventureLeaderboard`
+
+`src/hooks/useAdventureLeaderboard.ts`
+
+Loads the per-adventure leaderboard from `src/data/adventures/<adventureId>/leaderboard.json` (refreshed daily by the GitHub Action). Returns ranked rows with points, avatar URL, and optional breakdown fields. Returns `[]` until data loads or if the file does not exist.
+
+```ts
+const { rows, updatedAt } = useAdventureLeaderboard(adventureId);
+// or, in tests:
+const { rows, updatedAt } = useAdventureLeaderboard(adventureId, mockLoader);
+```
+
+| Argument | Type | Description |
+|---|---|---|
+| `adventureId` | `string` | Adventure slug (e.g. `"blind-by-design"`). |
+| `loader` | `LeaderboardLoader` (optional) | Async function that returns `{ updatedAt, rows }`. Defaults to a dynamic `import.meta.glob` import. Pass `vi.fn().mockResolvedValue(data)` in tests. |
+
+`LeaderboardRow` shape: `rank`, `username`, `avatarUrl?`, `points`, `challengesSolved?`, `beginnerPoints?`, `intermediatePoints?`, `expertPoints?`, `breakdown?`.
 
 ---
 
@@ -593,7 +615,7 @@ Renders a single adventure level as a card: difficulty badge, level name, key le
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
-| `level` | `AdventureLevel` | required | Level data from `src/data/adventures.ts` |
+| `level` | `AdventureLevel` | required | Level data from `src/data/adventures` |
 | `headingLevel` | `"h2" \| "none"` | `"h2"` | Pass `"none"` when the parent page already renders the level name as `<h1>` to avoid duplicate heading in the document outline. When `"none"`, the level name renders as a `<p>`. The "Key Learnings" label always renders as a `<p>` regardless of this prop — it is a decorative sub-label, not a structural heading. |
 
 ---
@@ -614,7 +636,7 @@ Navigation card used in tag-filtered level grids. The entire card is a `<Link>` 
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
-| `level` | `AdventureLevel` | required | Level data from `src/data/adventures.ts` |
+| `level` | `AdventureLevel` | required | Level data from `src/data/adventures` |
 | `adventureId` | `string` | required | Used to build the link href: `/adventures/:id/levels/:levelId` |
 | `adventureTitle` | `string` | required | Shown in the card footer as a tag label |
 | `className` | `string?` | — | Merged onto the root `<Link>` via `cn()`. Pass `"animate-fade-up-delay-1"` when the card is in a staggered grid. |
@@ -639,6 +661,34 @@ No props. Used only in `Index.tsx`.
 
 ---
 
+### `CommunityLeaders`
+
+`src/components/CommunityLeaders.tsx`
+
+Sidebar card displaying community leaders fetched daily from Discourse Data Explorer queries. Renders an `<aside aria-label="Community leaders">` with ranked lists per category. Each category uses a lucide-react icon and an `<ol>` of user rows (rank, avatar, username, count). Avatars are lazy-loaded from external Discourse CDN URLs.
+
+Data source: `src/data/community-leaders.json` (refreshed daily by `.github/workflows/refresh-community-leaders.yml`).
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `sections` | `string[]` | all | Filter to show only specific section IDs |
+
+Section IDs: `top-contributors`, `top-challenge-solvers`, `challenge-grand-builders`, `challenge-builders`, `most-liked`, `most-replies`, `most-supportive`.
+
+| Section | Icon |
+|---|---|
+| Top Contributors | `Trophy` |
+| Top Challenge Solvers | `Target` |
+| Challenge Grand Builders | `Building2` |
+| Challenge Builders | `Wrench` |
+| Most Liked | `Heart` |
+| Most Replies | `MessageCircle` |
+| Most Supportive | `HandHeart` |
+
+Used in: `Index.tsx` (via CommunitySection aside), `Adventures.tsx` (via ChallengeBuildersSection aside), `CommunityGuide.tsx` (standalone sidebar).
+
+---
+
 ### `CommunitySection`
 
 `src/components/CommunitySection.tsx`
@@ -652,7 +702,11 @@ Merged replacement for the former `CommunityVoicesSection` and `ConnectSection`.
 | Introduce Yourself | `UserPlus` | `COMMUNITY_URL/c/general/introductions/18` |
 | Events & Meetups | `CalendarDays` | `COMMUNITY_URL/c/events-and-talks/12` |
 
-No props. Used only in `Index.tsx`.
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `aside` | `ReactNode` | — | Optional sidebar content rendered in a sticky column at lg breakpoint |
+
+Used in `Index.tsx`.
 
 ---
 
@@ -727,7 +781,7 @@ Renders the Board section on the About page (mounted after `BrandStory`, with `C
 
 Avatars are 320px square WebP files in `src/assets/team/`, imported in `team.ts` and assigned to `BoardMember.image`. They render at 80×80 with `width`/`height` attributes set and `loading="lazy"` (the section is below the fold). Members without an `image` (placeholder seats) get a neutral circle with the lucide `User` icon as a visual filler — the icon is `aria-hidden="true"` because the name beneath it carries the meaning. To swap a placeholder for a real member, drop a 320px square WebP into `src/assets/team/`, import it in `team.ts`, and set the `image` field.
 
-`KATHARINA_SICK` is exported from `src/data/adventures.ts` and reused in `team.ts` so her bio has a single source of truth.
+`KATHARINA_SICK` is exported from `src/data/adventures/contributors.ts` (re-exported via the barrel `src/data/adventures/index.ts`) and reused in `team.ts` so her bio has a single source of truth.
 
 No props. Self-contained section component.
 
@@ -737,9 +791,13 @@ No props. Self-contained section component.
 
 `src/components/ChallengeBuildersSection.tsx`
 
-Renders the Challenge Builders section, used on both the About page (mounted directly after `BoardSection`, sharing the "the people" eyebrow group) and the Adventures page (mounted between `ChallengesGrid` and `BottomCTA`). Has no eyebrow of its own; on the About page, the visual grouping is provided by the eyebrow on the preceding `BoardSection`. Reads `ADVENTURE_CONTRIBUTORS` from `src/data/adventures.ts` and renders a card grid (`sm:grid-cols-2`) thanking everyone who has contributed an adventure. Each card shows the contributor name rendered via `PersonNameLink`, a short bio, and a list of their adventures linked via React Router `<Link>` to each detail page. Returns `null` if `ADVENTURE_CONTRIBUTORS` is empty.
+Renders the Challenge Builders section, used on both the About page (mounted directly after `BoardSection`, sharing the "the people" eyebrow group) and the Adventures page (mounted between `ChallengesGrid` and `BottomCTA`). Has no eyebrow of its own; on the About page, the visual grouping is provided by the eyebrow on the preceding `BoardSection`. Reads `ADVENTURE_CONTRIBUTORS` from `src/data/adventures` and renders a card grid (`sm:grid-cols-2`) thanking everyone who has contributed an adventure. Each card shows the contributor name rendered via `PersonNameLink`, a short bio, and a list of their adventures linked via React Router `<Link>` to each detail page. Returns `null` if `ADVENTURE_CONTRIBUTORS` is empty.
 
-No props. Self-contained section component.
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `aside` | `ReactNode` | — | Optional sidebar content rendered in a sticky column at lg breakpoint |
+
+Used in `Adventures.tsx` and `About.tsx`.
 
 ---
 
@@ -772,61 +830,308 @@ No props. Self-contained section component.
 
 ---
 
-### `ChallengeContextSection`
-
-`src/components/ChallengeContextSection.tsx`
-
-Renders all contextual content for a challenge level between the `LevelCard` and `DiscussionSection`. Sections are displayed only when the corresponding prop is provided. Returns `null` if every prop is empty.
-
-```tsx
-<ChallengeContextSection
-  intro={level.intro}
-  backstory={level.backstory}
-  architecture={level.architecture}
-  architectureDiagram={level.architectureDiagram}
-  howToPlay={level.howToPlay}
-  toolbox={level.toolbox}
-  objective={level.objective}
-  codespacesUrl={level.codespacesUrl}
-  verificationUrl="https://..."
-  discussionUrl={level.discussionUrl}
-/>
-```
-
-| Prop | Type | Description |
-|---|---|---|
-| `intro` | `string[]` (optional) | Technical premise paragraphs. Rendered under a "challenge" label. |
-| `backstory` | `string[]` (optional) | Narrative scene-setting paragraphs. Rendered in italic under a "backstory" label. |
-| `architecture` | `string[]` (optional) | System overview paragraphs. Rendered under an "architecture" label. When `architectureDiagram` is also set, these paragraphs become the `alt` text and are not rendered visually. |
-| `architectureDiagram` | `string` (optional) | URL of an architecture diagram image (import SVG/PNG/WebP from `src/assets/diagrams/`). Renders an `<img>` with `loading="lazy"`. The `architecture` text is used as `alt`. |
-| `objective` | `string[]` (optional) | Bullet list of completion criteria. |
-| `toolbox` | `{ name: string; description?: string; url?: string }[]` (optional) | List of tools. `name` renders as a link if `url` is set, otherwise bold. `description` appended as plain text. |
-| `howToPlay` | `string[]` (optional) | Numbered steps. Step 1 is auto-generated from `codespacesUrl` when provided; final step links to the discussion thread. |
-| `codespacesUrl` | `string` (optional) | Codespaces deep link. Auto-generates step 1 of How to Play. |
-| `verificationUrl` | `string` (optional) | Link to verification guide. Rendered as a footer note below How to Play. |
-| `discussionUrl` | `string` (optional) | Discussion thread URL. Auto-generates the final How to Play step. |
-
-**Rendering order:** Challenge (intro), Backstory, Architecture, How to Play, then Objective and Toolbox side-by-side.
-
----
-
 ### `DiscussionSection`
 
 `src/components/DiscussionSection.tsx`
 
-Displays up to three community posts for an adventure level, fetched at build time from Discourse. Post content (`cooked`) is plain text — HTML is stripped by the Vite build plugin before the JSON is written, so no runtime processing is needed. Post ages are computed on the client after mount to avoid calling `Date.now()` at render time.
+Displays up to three community posts for an adventure level, fetched at build time from Discourse. Post content (`cooked`) is plain text — HTML is stripped by the refresh script before the JSON is written, so no runtime processing is needed. Post ages are computed on the client after mount to avoid calling `Date.now()` at render time.
 
 ```tsx
-<DiscussionSection discussionUrl={level.discussionUrl} />
+<DiscussionSection adventureId={adventure.id} levelId={level.id} discussionUrl={level.discussionUrl} />
 ```
 
 | Prop | Type | Description |
 |---|---|---|
-| `discussionUrl` | `string` | Full Discourse topic URL. The topic ID is extracted from this URL and used as the key into `src/data/discussion-data.json`. |
+| `adventureId` | `string` | Adventure slug used to locate the per-level JSON file. |
+| `levelId` | `string` | Level slug used to locate the per-level JSON file. |
+| `discussionUrl` | `string` | Full Discourse topic URL. Used as the fallback link when no posts are loaded. |
 
-The component is a pure renderer. All data-loading and ID-extraction logic lives in `useDiscussionPosts` (see Hooks section). Falls back to an empty state with a "Join the discussion" link when no posts are found.
+The component is a pure renderer. All data-loading logic lives in `useDiscussionPosts` (see Hooks section). Falls back to an empty state with a "Join the discussion" link when no posts are found.
 
 Uses `aria-live="polite"` so screen readers announce the age values when they update after mount.
+
+---
+
+### `CommunitySidebar`
+
+`src/components/CommunitySidebar.tsx`
+
+Sidebar panel for the structured challenge detail layout. Shows the challenge builder (contributor badge), a completion stat, a leaderboard of top solvers (derived from certificate posts), latest activity feed (non-certificate posts preferred), and a link to the discussion thread. Used inside `ChallengeDetail` structured layout only.
+
+```tsx
+<CommunitySidebar adventureId={adventure.id} levelId={level.id} discussionUrl={level.discussionUrl} contributor={adventure.contributor} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `adventureId` | `string` | Adventure slug for loading discussion data and leaderboard points lookup. |
+| `levelId` | `string` | Level slug for loading discussion data. |
+| `discussionUrl` | `string` | Full Discourse topic URL. Used for the "Join the discussion" link. |
+| `contributor` | `Adventure["contributor"]?` | Optional contributor shown at the top of the panel. |
+
+The leaderboard section renders the top 3 solvers (from certificate posts) via `LeaderboardList`, cross-referencing points from `useAdventureLeaderboard` by username.
+
+---
+
+### `AvatarLink`
+
+`src/components/AvatarLink.tsx`
+
+Renders a user avatar followed by a plain-text username. The avatar is either an `<img>` (when `avatarUrl` is provided) or an initials fallback `<span>` (both `aria-hidden`). The username is rendered as a `<span>`, not a link. Used by `LeaderboardList` and `CommunityLeaders`.
+
+```tsx
+<AvatarLink
+  username="alice"
+  avatarUrl="https://example.com/alice.png"
+  size={24}
+  className="inline-flex items-center gap-1 font-medium text-foreground"
+/>
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `username` | `string` | required | Discourse username. Used as display text and for the initials fallback. |
+| `avatarUrl` | `string` (optional) | — | Avatar image URL. Falls back to initials when omitted. |
+| `size` | `24 \| 28` | `24` | Avatar diameter in pixels. |
+| `avatarFallbackStyle` | `CSSProperties` (optional) | — | Inline style for the initials `<span>`. Use palette colors from `CommunitySidebar`. |
+| `className` | `string` | required | Class applied to the username `<span>` element. Caller controls layout and typography. |
+
+The avatar image and initials span are both `aria-hidden="true"`.
+
+---
+
+### `LeaderboardList`
+
+`src/components/LeaderboardList.tsx`
+
+Shared primitive for rendering a ranked list of players with avatar, username, and optional points. Used by both `AdventureLeaderboard` (adventure page sidebar) and `CommunitySidebar` (challenge detail sidebar). Ranks are plain numbers, no medal icons.
+
+```tsx
+<LeaderboardList rows={rows} label="Adventure leaderboard" />
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `rows` | `LeaderboardEntry[]` | required | Ranked entries to render. |
+| `label` | `string` | `"Ranked players"` | Accessible `aria-label` for the `<ol>`. |
+
+`LeaderboardEntry` shape: `rank`, `username`, `avatarUrl?`, `points?`, `avatarFallbackStyle?` (inline style for the avatar initials fallback, used by `CommunitySidebar` for palette colors).
+
+---
+
+### `SidebarLayout`
+
+`src/components/SidebarLayout.tsx`
+
+Layout primitive that renders a two-column grid (`1fr 300px`) on `lg+` when `aside` is provided, with the aside column sticky at `top-24`. Falls back to rendering `children` alone when `aside` is omitted. Used by `CommunitySection`, `ChallengeBuildersSection`, and `CommunityGuide` so the sticky-sidebar pattern is defined in one place.
+
+```tsx
+<SidebarLayout aside={<CommunityLeaders />}>
+  {/* main content */}
+</SidebarLayout>
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `children` | `ReactNode` | required | Main content (left column). |
+| `aside` | `ReactNode` (optional) | — | Sidebar content (right column, sticky). When omitted, children render without a grid wrapper. |
+
+---
+
+### `AdventureLeaderboard`
+
+`src/components/AdventureLeaderboard.tsx`
+
+Sidebar card for the adventure detail page. Loads ranked player data via `useAdventureLeaderboard` and renders it via `LeaderboardList`. Returns `null` when no leaderboard data exists for the adventure, so the sidebar is fully absent until data is available.
+
+```tsx
+<AdventureLeaderboard adventureId={adventure.id} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `adventureId` | `string` | Adventure slug. Passed directly to `useAdventureLeaderboard`. |
+
+---
+
+### `RewardsCard`
+
+`src/components/RewardsCard.tsx`
+
+Displays the rewards for an adventure (trophy tiers, eligibility text, deadline, and an optional ranking rules link). Rendered only when `adventure.rewards` is defined. Supports two modes: full (used on `AdventureDetail`) and compact (used in the `ChallengeDetail` sidebar, where the adventure-level deadline is replaced by the per-level `deadline` field).
+
+```tsx
+{/* Full mode — AdventureDetail */}
+<RewardsCard rewards={adventure.rewards} />
+
+{/* Compact mode — ChallengeDetail sidebar */}
+<RewardsCard rewards={adventure.rewards} compact levelDeadline={level.deadline} />
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `rewards` | `AdventureRewards` | required | Reward tiers, eligibility, deadline, and optional ranking rules. |
+| `compact` | `boolean` | `false` | Hides eligibility text and ranking note; shows per-level deadline instead of adventure-wide deadline. |
+| `levelDeadline` | `string \| undefined` | — | Per-level deadline string shown only in compact mode. |
+
+Deadline is always stored as a plain date-and-time string (e.g. `"26 May 2026 at 23:59 CET"`), never as a days-remaining calculation.
+
+---
+
+### `ContributorBadge`
+
+`src/components/ContributorBadge.tsx`
+
+Small pill identifying the adventure or challenge builder. Renders a `Hammer` icon, a configurable label, a separator, and the contributor name. When `url` is provided the pill is an `<a>` link to the contributor's profile; otherwise a plain `<span>`. The optional `glow` prop adds an amber box-shadow for emphasis (used on `ChallengeDetail` header only, not on `AdventureCard`).
+
+```tsx
+<ContributorBadge name={adventure.contributor.name} url={adventure.contributor.url} label="Adventure Builder" />
+<ContributorBadge name={level.contributor.name} glow />
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `name` | `string` | required | Contributor display name. |
+| `url` | `string \| undefined` | — | External profile URL. Omit to render as a non-interactive pill. |
+| `glow` | `boolean` | `false` | Adds `contributor-pill-glow` amber box-shadow. Use on `ChallengeDetail` only. |
+| `label` | `string` | `"Challenge Builder"` | Text label before the name separator. |
+
+CSS classes: `contributor-pill` (scopes light mode overrides), `contributor-pill-glow` (static amber glow, sized for a small pill).
+
+---
+
+### `LinkSection`
+
+`src/components/LinkSection.tsx`
+
+A headed list of external links, each rendered as a `docs-ext-link` anchor with an `ExternalLink` icon and a screen-reader new-tab notice. Used in `ChallengeDetail` for the "Helpful Documentation" block.
+
+```tsx
+<LinkSection heading="Helpful Documentation" links={[{ label: "Kyverno Docs", href: "https://kyverno.io/docs/" }]} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `heading` | `string` | Section heading rendered as `<h3>`. |
+| `links` | `{ label: string; href: string }[]` | List of external links. All open in a new tab. |
+
+---
+
+### `OtherLevelsCard`
+
+`src/components/OtherLevelsCard.tsx`
+
+Sidebar card listing sibling levels in the same adventure (excluding the current one) plus any upcoming levels. Each active level is a `<Link>` pill styled with the difficulty color palette. Upcoming levels render as inert `<span>` pills with an opacity fade and a "Soon" label. Returns `null` if there are no other levels or upcoming levels.
+
+```tsx
+<OtherLevelsCard adventure={adventure} currentLevelId={level.id} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `adventure` | `Adventure` | Full adventure object (provides `levels` and `upcomingLevels`). |
+| `currentLevelId` | `string` | ID of the current level to exclude from the list. |
+
+---
+
+### `CollapsibleSection`
+
+`src/components/CollapsibleSection.tsx`
+
+A native `<details>/<summary>` wrapper with consistent card styling, chevron animation, and focus ring. Used by `ScenarioSection`, `ArchitectureSection`, and `WalkthroughSection` as their outer shell.
+
+```tsx
+<CollapsibleSection id="backstory" title="The Story">
+  <p>Content here</p>
+</CollapsibleSection>
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `id` | `string` | required | Sets the `id` attribute on the `<details>` element for anchor linking. |
+| `title` | `string` | required | Text shown in the `<summary>` as a heading. |
+| `children` | `ReactNode` | required | Content revealed when open. |
+| `defaultOpen` | `boolean?` | `true` | Whether the section starts expanded. |
+| `headingLevel` | `2 \| 3 \| 4` | `2` | The `aria-level` for the heading inside `<summary>`. Match the surrounding heading hierarchy. |
+
+---
+
+### `ScenarioSection`
+
+`src/components/ScenarioSection.tsx`
+
+Renders the narrative backstory for a challenge level inside a `CollapsibleSection` titled "The Story". Each paragraph renders as a `<p>` with secondary text styling.
+
+```tsx
+<ScenarioSection backstory={level.backstory} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `backstory` | `string[]` | Array of narrative paragraphs. |
+
+---
+
+### `ArchitectureSection`
+
+`src/components/ArchitectureSection.tsx`
+
+Renders architecture content inside a `CollapsibleSection` titled "Architecture". When `diagram` is supplied it renders an `<img>` (eager-loaded, `max-h-[560px]`); otherwise it renders the `architecture` markdown string via `MarkdownContent`. At least one of `architecture` or `diagram` should be provided; rendering neither produces an empty collapsible.
+
+```tsx
+{/* Markdown variant */}
+<ArchitectureSection architecture={level.architecture.join("\n\n")} />
+{/* Diagram variant */}
+<ArchitectureSection diagram={diagramUrl} diagramAlt="Spring Boot OpenFeature architecture" />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `architecture` | `string` (optional) | Markdown string describing the system architecture. Rendered via `MarkdownContent`. Ignored when `diagram` is present. |
+| `diagram` | `string` (optional) | URL of an architecture diagram image (SVG or raster). Takes precedence over `architecture`. |
+| `diagramAlt` | `string` (optional) | Alt text for the diagram image. Defaults to `"Architecture diagram"` when omitted. |
+
+---
+
+### `WalkthroughSection`
+
+`src/components/WalkthroughSection.tsx`
+
+Renders a numbered walkthrough as a vertical stepper inside a `CollapsibleSection` titled "Walkthrough". Each step shows a numbered circle, an optional title, and markdown body content.
+
+```tsx
+<WalkthroughSection steps={level.howToPlay} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `steps` | `WalkthroughStep[]` | Array of `{ title: string; body: string }`. `body` is rendered as markdown via `MarkdownContent`. |
+
+---
+
+### `MarkdownContent`
+
+`src/components/MarkdownContent.tsx`
+
+Renders a Markdown string with `react-markdown` + `remark-gfm`, mapping each element to a themed component. Highlights:
+
+- `h2` headings get a section icon (mapped from heading text in `src/lib/markdown.ts`) and a slugged `id` attribute, so external links can deep-link to a section.
+- `h3` headings that start with `N. ` (e.g. `### 1. Start your challenge`) render as a numbered step chip + title pair, suitable for a How-to-Play sequence.
+- Fenced code blocks render with a hover/focus-visible "Copy" button that uses the clipboard API and flips to "Copied" for 1.5s.
+- Markdown tables render as a responsive grid of cards (`<thead>` hidden) rather than a literal table layout.
+- External links open in a new tab with the standard sr-only "(opens in new tab)" span.
+
+```tsx
+<MarkdownContent source={mdString} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `source` | `string` | Raw Markdown source. Pass an empty string for no content. |
+
+Used by `ArchitectureSection` and `WalkthroughSection` inside `ChallengeDetail`. These components pass inline markdown strings from the level data (e.g. `level.architecture.join("\n\n")` or `step.body`). The Markdown should start at `## ` or below, the page already provides the `<h1>`. Internal headings (`h2`, `h3`) are added to the existing document outline; do not introduce new `<h1>` content in Markdown.
+
+The bundled stack (`react-markdown`, `remark-gfm`, `micromark`, etc.) is code-split into the `ChallengeDetail` route chunk, so it does not affect the main bundle.
 
 ---
 
@@ -840,7 +1145,7 @@ Self-contained technology filter used on `AdventureDetail` and `ChallengeDetail`
 <TechFilterSection />
 ```
 
-No props. Owns its own `activeTech` state internally. `ALL_TAGS` is imported from `src/data/adventures.ts` (computed once at module load; shared with `ChallengesGrid`). The results grid only renders when a tag is active and at least one matching level exists. Wraps results in `aria-live="polite"` so screen readers announce updates.
+No props. Owns its own `activeTech` state internally. `ALL_TAGS` is imported from `src/data/adventures` (computed once at module load; shared with `ChallengesGrid`). The results grid only renders when a tag is active and at least one matching level exists. Wraps results in `aria-live="polite"` so screen readers announce updates.
 
 The challenge cards in the results grid are rendered via `FilteredLevelCard` with `className="animate-fade-up-delay-1"` (see `FilteredLevelCard` in the Components section).
 
@@ -933,6 +1238,32 @@ Every page's `meta()` must use this function. Do not inline the og/twitter tag b
 
 ---
 
+### `discussion-utils`
+
+`src/lib/discussion-utils.ts`
+
+Helper functions for processing discussion posts in `DiscussionSection` and `CommunitySidebar`.
+
+| Export | Signature | Description |
+|---|---|---|
+| `isCertificatePost` | `(post: PostWithAge) => boolean` | Returns true if the post contains a `CERTIFICATE START` block (completion proof). |
+| `displaySnippet` | `(post: PostWithAge) => string` | Returns the display text for a post. For certificate posts, strips the certificate block and falls back to "Completed the challenge." if nothing else remains. |
+
+---
+
+### `markdown`
+
+`src/lib/markdown.ts`
+
+Helper functions for the `MarkdownContent` component.
+
+| Export | Signature | Description |
+|---|---|---|
+| `slugify` | `(text: string) => string` | Converts heading text to a URL-safe slug for `id` attributes. |
+| `getSectionIcon` | `(slug: string) => LucideIcon \| undefined` | Maps known section slugs (`architecture`, `toolbox`, `how-to-play`) to their lucide-react icon. Returns `undefined` for unrecognised slugs. |
+
+---
+
 ## Icons
 
 All icons use **lucide-react** (already a project dependency; no other icon library may be added).
@@ -952,9 +1283,14 @@ When pairing an icon with text inside a link or button, always use `inline-flex 
 Never put a raw SVG icon next to text inside a plain `inline` or `block` element. The icon will drop below the baseline.
 
 ```tsx
-// Correct
-<a className="inline-flex items-center gap-1 ...">
-  Share something <ArrowRight size={13} aria-hidden="true" />
+// Correct — internal navigation
+<Link className="inline-flex items-center gap-1 ...">
+  Next step <ArrowRight size={13} aria-hidden="true" />
+</Link>
+
+// Correct — external link (opens in new tab)
+<a target="_blank" ... className="docs-ext-link">
+  View docs <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
 </a>
 
 // Incorrect: icon drops below text baseline
@@ -973,8 +1309,8 @@ Never put a raw SVG icon next to text inside a plain `inline` or `block` element
 
 | Icon | Lucide name | Where used |
 |---|---|---|
-| External link (navigation) | `ArrowUpRight` | Navbar GitHub button, BottomCTA GitHub button, CommunityGuide links |
-| Navigate forward / CTA | `ArrowRight` | Inline text links (DiscussionSection, CommunitySection, SponsorStrip, BottomCTA, LevelCard) |
+| External link (opens in new tab) | `ExternalLink` | All `<a target="_blank">` links — Navbar, BottomCTA, Hero, CommunityGuide, LevelCard, DiscussionSection, LinkSection, LeaderboardList, Privacy, and more |
+| Navigate forward / CTA | `ArrowRight` | Internal `<Link>` navigation only (OtherLevelsCard, SponsorStrip, AdventureDetail) |
 | Navigate back | `ArrowLeft` | ChallengeDetail breadcrumb |
 | Scroll down / anchor | `ArrowDown` | Hero primary CTA |
 | Community Voices card | `Megaphone` | CommunitySection card icon |
@@ -1023,13 +1359,40 @@ The standard class for all inline prose links across the site. Handles both mode
 **Dark mode:** foreground text with amber (`--primary`) underline. Hover shifts text and underline to full `hsl(var(--primary))` (`#ffc034`).
 **Light mode:** near-black foreground text with `currentColor` underline. Hover shifts text and underline to `--link-hover-light` (`hsl(41 100% 25%)` ≈ `#7f4200`) — dark amber, same hue as primary, ~5.5:1 contrast on light backgrounds. Passes WCAG AA.
 
-Used in: `CommunityGuide`, `ChallengeContextSection`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`.
+Used in: `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`, `ChallengeDetail`, `MarkdownContent`.
 
 Do not use `hover:text-primary` or `hover:underline` on inline content links — use `docs-ext-link` instead.
 
 ```ts
-const extLink = "docs-ext-link inline-flex items-center gap-1 underline decoration-2 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
+// The CSS class now bundles: inline-flex, align-items, gap, underline,
+// decoration-thickness, underline-offset, border-radius, focus-visible ring,
+// and color/hover transitions. No additional utilities needed for basic usage.
+const extLink = "docs-ext-link";
+
+// Add contextual utilities as needed (font-size, weight, margin):
+className="docs-ext-link text-sm font-medium mt-4"
 ```
+
+---
+
+### `.tag-chip-link`
+
+CSS class applied to tag/technology chip `<Link>` elements in `ChallengeDetail` and `AdventureDetail`. Added alongside the standard Tailwind border and text utilities to provide light mode overrides that meet WCAG 1.4.11 (3:1 border contrast for interactive components).
+
+**Dark mode:** inherits border from `border-[hsl(var(--surface-border))]` and text from `text-[hsl(var(--text-faint))]`; hover shifts to `border-primary` / `text-primary` (amber).
+**Light mode:** `.light .tag-chip-link` overrides border to `hsl(220 12% 55%)` (~3.25:1) and text to `--text-secondary`. Hover shifts to `hsl(220 12% 38%)` border and `hsl(220 12% 20%)` text (dark slate), avoiding amber which is below 3:1 on light backgrounds.
+
+Usage pattern:
+```tsx
+<Link
+  to={`/challenges/${tagToSlug(tag)}`}
+  className="tag-chip-link rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary hover:text-primary transition-colors"
+>
+  {tag}
+</Link>
+```
+
+Always add `tag-chip-link` to interactive tag chip links. Do not use `hover:border-primary hover:text-primary` alone — in light mode those produce amber, which fails 1.4.11.
 
 ---
 

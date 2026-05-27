@@ -42,6 +42,8 @@ Node.js **22** is required. Version is pinned in `.nvmrc`, run `nvm use` to swit
 | `npm run test:watch` | Run tests in watch mode |
 | `npm run test:coverage` | Run tests with v8 coverage report |
 | `npm run test:e2e` | Playwright smoke tests (requires `npm run build` first) |
+| `npm run generate` | Regenerate TypeScript from adventure YAML files |
+| `npm run generate:validate` | Validate adventure YAML against schema without writing files |
 
 Run `npm run lint` and `npm test` before marking any work done.
 
@@ -55,6 +57,7 @@ src/
   components/ui/  # shadcn/ui primitives, do not edit directly
   pages/          # Route-level page components
   data/           # Static content as typed TypeScript objects and arrays
+  data/adventures/<id>/adventure.yaml  # Adventure YAML source files
   hooks/          # Custom React hooks
   lib/            # Shared utilities
   test/           # Vitest + Testing Library unit and component tests
@@ -65,12 +68,27 @@ src/
   Layout.tsx      # App shell with all providers and Outlet
 e2e/
   smoke.spec.ts   # Playwright smoke tests (requires npm run build first)
+schemas/
+  adventure.schema.json  # JSON Schema for adventure YAML validation
+scripts/
+  generate-adventures.mjs  # YAML -> TypeScript codegen (runs as prebuild hook)
+  new-adventure.mjs        # Scaffold a new adventure YAML template
 public/
   fonts/          # Self-hosted Inter, Syne, and JetBrains Mono font files
   sitemap.xml
   robots.txt
   og.png
 ```
+
+### Adventure Content Pipeline
+
+Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and compiled to TypeScript by `scripts/generate-adventures.mjs`. The `prebuild` hook runs the generator automatically before every build.
+
+- **Source of truth:** the YAML files. Never edit `*.generated.ts` or `index.ts` by hand.
+- **Schema:** `schemas/adventure.schema.json` (JSON Schema Draft 2020-12). Run `npm run generate:validate` to check.
+- **Scaffold a new adventure:** `node scripts/new-adventure.mjs`
+- **Generated outputs:** `<id>.generated.ts` (one per adventure) + `index.ts` (barrel with `ADVENTURES`, `ALL_TAGS`, `ADVENTURE_CONTRIBUTORS`, `getLevelsByTag`, `tagToSlug`, `slugToTag`).
+- **Generated files are committed** so the dev server works without an extra step.
 
 ## Routes
 
@@ -84,14 +102,16 @@ public/
 | `/about` | `About.tsx` | About the community |
 | `/handbook` | `CommunityGuide.tsx` | Community handbook / documentation |
 | `/privacy` | `Privacy.tsx` | GDPR-compliant privacy policy |
+| `/accessibility` | `Accessibility.tsx` | WCAG accessibility statement |
 | `/404` | `NotFound.tsx` | Prerendered 404 page |
 | `/community-guide` | redirects to `/handbook` | Legacy alias |
 | `/docs` | redirects to `/handbook` | Legacy alias |
 | `/docs/community-guide` | redirects to `/handbook` | Legacy alias |
-| `/topics/:tag` | redirects to `/#challenges` | Tag filter shortlink |
+| `/challenges` | `Challenges.tsx` | All challenges by technology |
+| `/challenges/:tag` | `Challenges.tsx` | Challenges filtered by technology tag (SEO-friendly slug) |
 | `*` | `CatchAll.tsx` | Client-side 404 fallback (re-exports `NotFound.tsx`; required because React Router v7 needs unique files per route) |
 
-> **Technology tag filtering** is handled inline on the home page, adventure detail, and challenge detail pages via local `useState`. Topics are filtered inline. `/topics/:tag` redirects to `/#challenges`.
+> **Technology tag filtering** is handled inline on the home page via local `useState`. Adventure detail and challenge detail pages link tags to `/challenges/:tag`. The `/challenges` page uses URL params for shareable filtered views.
 
 ## SEO and Metadata
 
@@ -163,6 +183,57 @@ Deployment is automated via GitHub Actions:
 `dist/client/404/index.html` (the prerendered 404 page) is copied to `dist/client/404.html` as a fallback for unknown routes. Each valid route has its own prerendered `index.html` so GitHub Pages serves a 200 directly.
 
 PR preview builds set the `VITE_BASE_PATH` environment variable to `/pr-preview/pr-<n>/` so all asset paths resolve correctly under the preview sub-path.
+
+## Adding Adventures and Levels
+
+New adventures and levels can be scaffolded via GitHub Actions (recommended) or locally via scripts.
+
+### Via GitHub Actions
+
+Go to the repository's **Actions** tab, select the workflow, click **Run workflow**, and fill in the form inputs.
+
+| Workflow | Inputs | What it does |
+|---|---|---|
+| **New Adventure** | `id`, `title`, `month`, `levels` (comma-separated) | Scaffolds a full adventure: TS file with TODOs, discussion JSON stubs, patches `react-router.config.ts` and `sitemap.xml`, opens a PR |
+| **New Level** | `adventure` (existing ID), `level` (beginner/intermediate/expert) | Adds a level to an existing adventure: discussion JSON stub, patches config and sitemap, opens a PR with a TS snippet to paste |
+
+Both workflows create a branch and open a PR automatically via `peter-evans/create-pull-request`. The PR description includes next steps (fill in content TODOs, run verification, etc.).
+
+### Via local scripts
+
+```sh
+# Scaffold a new adventure with all required files
+node scripts/new-adventure.mjs --id "signal-in-the-storm" --title "Signal in the Storm" --month "JUL 2026" --levels beginner,intermediate,expert
+
+# Add a level to an existing adventure
+node scripts/new-level.mjs --adventure "blind-by-design" --level expert
+```
+
+After running either script, fill in the TODO placeholders in the generated TS file, then:
+
+1. Add the `discussionUrl` in `src/data/adventures/<id>/<level>.json`
+2. Run `node scripts/refresh-discussions.mjs` to fetch posts
+3. Add the adventure's `categoryId` and `levelCount` to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs`
+4. Run `node scripts/refresh-leaderboard.mjs` to fetch leaderboard data
+5. Run `npm run lint && npm test && npm run build && npm run test:e2e`
+
+### Leaderboard data
+
+Leaderboard data lives in `src/data/adventures/<adventure-id>/leaderboard.json` and is refreshed daily by the GitHub Action. The `refresh-leaderboard.mjs` script calls the Discourse Data Explorer query (query ID 5) with `category_id` and `level_count` params.
+
+```sh
+# Requires DISCOURSE_API_KEY and DISCOURSE_API_USERNAME in .env or environment
+node scripts/refresh-leaderboard.mjs
+```
+
+For local development, create a `.env` file in the repo root:
+
+```sh
+DISCOURSE_API_KEY=your_key_here
+DISCOURSE_API_USERNAME=your_username
+```
+
+The `.env` file is gitignored. For CI, set `DISCOURSE_API_KEY` and `DISCOURSE_API_USERNAME` as repository secrets in **Settings > Secrets and variables > Actions**.
 
 ## Accessibility
 

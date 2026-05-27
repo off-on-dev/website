@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import { Link } from "react-router";
-import { Zap } from "lucide-react";
+import { Zap, ExternalLink } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { BRAND_NAME, BRAND_SLOGAN_PARTS, COMMUNITY_URL, CONTACT_EMAIL, CURRENT_YEAR, LINKEDIN_URL, BLUESKY_URL, X_URL } from "@/data/constants";
 import logoDark from "@/assets/offon-logo-dark-color.svg";
@@ -9,7 +9,7 @@ import logoLight from "@/assets/offon-logo-light-color.svg";
 export const Footer = (): JSX.Element => {
   const { theme } = useTheme();
 
-  const linkCls = "flex items-center min-h-[48px] font-sans text-sm text-[hsl(var(--text-secondary))] hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
+  const linkCls = "flex items-center gap-1 min-h-[48px] font-sans text-sm text-[hsl(var(--text-secondary))] hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
 
   return (
     <footer className="bg-background border-t border-[hsl(var(--surface-border))] px-6 sm:px-8 md:px-16 lg:px-20">
@@ -35,15 +35,15 @@ export const Footer = (): JSX.Element => {
                 <Link to="/handbook" className={linkCls}>Handbook</Link>
                 <Link to="/about" className={linkCls}>About</Link>
                 <Link to="/sponsors" className={linkCls}>Sponsors</Link>
-                <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" target="_blank" rel="noopener noreferrer" className={linkCls}>Propose an Adventure Idea<span className="sr-only"> (opens in new tab)</span></a>
+                <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" target="_blank" rel="noopener noreferrer" className={linkCls}>Propose an Adventure Idea <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
               </div>
             </nav>
             {/* Community */}
             <nav aria-label="Community">
               <p className="text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">Community</p>
               <div className="flex flex-col">
-                <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className={linkCls}>Hub<span className="sr-only"> (opens in new tab)</span></a>
-                <a href={`${COMMUNITY_URL}/t/code-of-conduct/31/1`} target="_blank" rel="noopener noreferrer" className={linkCls}>Code of Conduct<span className="sr-only"> (opens in new tab)</span></a>
+                <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className={linkCls}>Hub <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
+                <a href={`${COMMUNITY_URL}/t/code-of-conduct/31/1`} target="_blank" rel="noopener noreferrer" className={linkCls}>Code of Conduct <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
                 <Link to="/privacy" className={linkCls}>Privacy Policy</Link>
                 <Link to="/accessibility" className={linkCls}>Accessibility</Link>
                 <a href={`mailto:${CONTACT_EMAIL}`} className={linkCls}>Contact</a>

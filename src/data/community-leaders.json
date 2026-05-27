@@ -1,0 +1,182 @@
+{
+  "lastUpdated": "2026-05-22T12:45:20.438Z",
+  "sections": [
+    {
+      "id": "top-contributors",
+      "title": "Top Contributors",
+      "users": [
+        {
+          "username": "KatharinaSick",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/KatharinaSick/40/9_2.png",
+          "count": 17
+        },
+        {
+          "username": "adrianamvillela",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/adrianamvillela/40/46_2.png",
+          "count": 14
+        },
+        {
+          "username": "DavidHirsch",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/DavidHirsch/40/8_2.png",
+          "count": 14
+        },
+        {
+          "username": "sinduri",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/sinduri/40/194_2.png",
+          "count": 11
+        },
+        {
+          "username": "theharithsa",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/theharithsa/40/297_2.png",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "top-challenge-solvers",
+      "title": "Top Challenge Solvers",
+      "users": [
+        {
+          "username": "gsigmund",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/gsigmund/40/99_2.png",
+          "count": 8
+        },
+        {
+          "username": "enri-kapaj",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/enri-kapaj/40/165_2.png",
+          "count": 6
+        },
+        {
+          "username": "justinrand",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/justinrand/40/140_2.png",
+          "count": 6
+        },
+        {
+          "username": "alvin",
+          "avatarUrl": "https://avatars.discourse-cdn.com/v4/letter/a/b5a626/40.png",
+          "count": 4
+        },
+        {
+          "username": "theharithsa",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/theharithsa/40/297_2.png",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-grand-builders",
+      "title": "Challenge Grand Builders",
+      "users": [
+        {
+          "username": "KatharinaSick",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/KatharinaSick/40/9_2.png",
+          "count": 9
+        }
+      ]
+    },
+    {
+      "id": "challenge-builders",
+      "title": "Challenge Builders",
+      "users": [
+        {
+          "username": "simon.schrottner",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/simon.schrottner/40/311_2.png",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "most-liked",
+      "title": "Most Liked",
+      "users": [
+        {
+          "username": "KatharinaSick",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/KatharinaSick/40/9_2.png",
+          "count": 54
+        },
+        {
+          "username": "adrianamvillela",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/adrianamvillela/40/46_2.png",
+          "count": 26
+        },
+        {
+          "username": "sinduri",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/sinduri/40/194_2.png",
+          "count": 21
+        },
+        {
+          "username": "theharithsa",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/theharithsa/40/297_2.png",
+          "count": 19
+        },
+        {
+          "username": "DavidHirsch",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/DavidHirsch/40/8_2.png",
+          "count": 17
+        }
+      ]
+    },
+    {
+      "id": "most-replies",
+      "title": "Most Replies",
+      "users": [
+        {
+          "username": "KatharinaSick",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/KatharinaSick/40/9_2.png",
+          "count": 29
+        },
+        {
+          "username": "theharithsa",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/theharithsa/40/297_2.png",
+          "count": 10
+        },
+        {
+          "username": "enri-kapaj",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/enri-kapaj/40/165_2.png",
+          "count": 10
+        },
+        {
+          "username": "RoelofW",
+          "avatarUrl": "https://avatars.discourse-cdn.com/v4/letter/r/b5a626/40.png",
+          "count": 10
+        },
+        {
+          "username": "gsigmund",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/gsigmund/40/99_2.png",
+          "count": 9
+        }
+      ]
+    },
+    {
+      "id": "most-supportive",
+      "title": "Most Supportive",
+      "users": [
+        {
+          "username": "KatharinaSick",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/KatharinaSick/40/9_2.png",
+          "count": 78
+        },
+        {
+          "username": "DavidHirsch",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/DavidHirsch/40/8_2.png",
+          "count": 44
+        },
+        {
+          "username": "theharithsa",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/theharithsa/40/297_2.png",
+          "count": 28
+        },
+        {
+          "username": "sinduri",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/sinduri/40/194_2.png",
+          "count": 26
+        },
+        {
+          "username": "AgataWlodarczyk",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/AgataWlodarczyk/40/51_2.png",
+          "count": 20
+        }
+      ]
+    }
+  ]
+}

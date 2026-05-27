@@ -1,6 +1,6 @@
 import { useState, type JSX } from "react";
 import { Link, useLocation } from "react-router";
-import { Sun, Moon, Menu, X } from "lucide-react";
+import { Sun, Moon, Menu, X, ExternalLink } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useTheme } from "@/hooks/useTheme";
 import { useActiveSection } from "@/hooks/useActiveSection";
@@ -11,7 +11,7 @@ import logoLight from "@/assets/offon-logo-light-color.svg";
 
 const OBSERVED_SECTIONS = ["challenges"];
 
-const linkCls = "inline-flex items-center min-h-[44px] text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent rounded px-1.5 -mx-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+const linkCls = "inline-flex items-center gap-1 min-h-[44px] text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent rounded px-1.5 -mx-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 const activeCls = "text-primary underline decoration-primary underline-offset-4";
 
 type NavThemeToggleProps = { theme: "dark" | "light"; onToggle: () => void; className?: string };
@@ -62,7 +62,7 @@ const NavLinks = ({ homeActive, challengesActive, onNavigate }: NavLinksProps): 
       className={linkCls}
       onClick={onNavigate}
     >
-      Community<span className="sr-only"> (opens in new tab)</span>
+      Community <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
     </a>
     <NavLink to="/handbook" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Handbook</NavLink>
     <NavLink to="/sponsors" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Sponsors</NavLink>
@@ -87,16 +87,10 @@ export const Navbar = (): JSX.Element => {
       className="fixed top-0 left-0 right-0 z-50 border-b border-[hsl(var(--surface-border))] bg-background"
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-1.5">
-        <Link to="/" className="logo-link flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm">
-          <img
-            src={theme === "dark" ? logoDark : logoLight}
-            alt="offon.dev"
-            width={130}
-            height={33}
-            loading="eager"
-            fetchPriority="high"
-            className="h-8"
-          />
+        <Link to="/" aria-label="offon.dev" className="logo-link flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm">
+          {/* Both always in DOM so React Router preloads both; CSS controls visibility. */}
+          <img src={logoDark} alt="" aria-hidden="true" width={130} height={33} loading="eager" fetchPriority="high" className="h-8 dark:block hidden" />
+          <img src={logoLight} alt="" aria-hidden="true" width={130} height={33} loading="eager" className="h-8 block dark:hidden" />
         </Link>
 
         {/* Desktop nav */}

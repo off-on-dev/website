@@ -12,36 +12,39 @@ import type { DiscussionDataLoader } from "@/hooks/useDiscussionPosts";
 //   alice: 45m ago → "45m ago"
 //   bob:   3h ago  → "3h ago"
 //   carol: 2d ago  → "2d ago"
-// Topic ID "42" has data; all other IDs return empty.
+// adventureId "test-adventure" + levelId "beginner" has data; others return empty.
 // ---------------------------------------------------------------------------
 
-const MOCK_DATA = {
-  "42": [
-    {
-      username: "alice",
-      cooked: "<p>Great challenge!</p>",
-      created_at: "2024-06-15T11:15:00Z",
-      like_count: 5,
-      topicUrl: "https://community.open-ecosystem.com/t/topic/42/1",
-    },
-    {
-      username: "bob",
-      cooked: "<p>Loved it.</p>",
-      created_at: "2024-06-15T09:00:00Z",
-      like_count: 0,
-      topicUrl: "https://community.open-ecosystem.com/t/topic/42/2",
-    },
-    {
-      username: "carol",
-      cooked: "<p>Well done everyone.</p>",
-      created_at: "2024-06-13T12:00:00Z",
-      like_count: 1,
-      topicUrl: "https://community.open-ecosystem.com/t/topic/42/3",
-    },
-  ],
+const MOCK_POSTS = [
+  {
+    username: "alice",
+    cooked: "<p>Great challenge!</p>",
+    created_at: "2024-06-15T11:15:00Z",
+    like_count: 5,
+    topicUrl: "https://community.open-ecosystem.com/t/topic/42/1",
+  },
+  {
+    username: "bob",
+    cooked: "<p>Loved it.</p>",
+    created_at: "2024-06-15T09:00:00Z",
+    like_count: 0,
+    topicUrl: "https://community.open-ecosystem.com/t/topic/42/2",
+  },
+  {
+    username: "carol",
+    cooked: "<p>Well done everyone.</p>",
+    created_at: "2024-06-13T12:00:00Z",
+    like_count: 1,
+    topicUrl: "https://community.open-ecosystem.com/t/topic/42/3",
+  },
+];
+
+const MOCK_LEVEL_DATA = {
+  discussionPosts: MOCK_POSTS,
+  totalReplies: 12,
 };
 
-// Injected via the second argument of useDiscussionPosts instead of mocking
+// Injected via the third argument of useDiscussionPosts instead of mocking
 // the JSON module. Avoids Vitest's dynamic-import mock runner initialization
 // cost (~3-6s per test run) that caused the first async tests to time out.
 let mockLoader: DiscussionDataLoader;
@@ -50,7 +53,7 @@ let mockLoader: DiscussionDataLoader;
 const FAKE_NOW = new Date("2024-06-15T12:00:00Z").getTime();
 
 beforeEach(() => {
-  mockLoader = vi.fn<DiscussionDataLoader>().mockResolvedValue(MOCK_DATA);
+  mockLoader = vi.fn<DiscussionDataLoader>().mockResolvedValue(MOCK_LEVEL_DATA);
   vi.spyOn(Date, "now").mockReturnValue(FAKE_NOW);
 });
 
@@ -58,32 +61,33 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-// Convenience: render the hook with the mock loader for topic-42 URL
-const URL_42 = "https://community.open-ecosystem.com/t/topic/42/1";
-const URL_42_NO_POST = "https://community.open-ecosystem.com/t/topic/42";
-const URL_99 = "https://community.open-ecosystem.com/t/topic/99/1";
-const URL_NO_ID = "https://community.open-ecosystem.com";
-
 // ---------------------------------------------------------------------------
 // Initial state
 // ---------------------------------------------------------------------------
 
 describe("useDiscussionPosts - initial state", () => {
-  it("returns an empty array before data loads", () => {
+  it("returns an empty result before data loads", () => {
     const pendingLoader = vi.fn<DiscussionDataLoader>(
-      () => new Promise<Record<string, typeof MOCK_DATA["42"]>>(() => {})
+      () => new Promise(() => {})
     );
     const { result } = renderHook(() =>
-      useDiscussionPosts(URL_42, pendingLoader)
+      useDiscussionPosts("test-adventure", "beginner", pendingLoader)
     );
-    expect(result.current).toEqual([]);
+    expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [] });
   });
 
-  it("returns an empty array when the URL has no topic ID segment", () => {
+  it("returns an empty result when adventureId is empty", () => {
     const { result } = renderHook(() =>
-      useDiscussionPosts(URL_NO_ID, mockLoader)
+      useDiscussionPosts("", "beginner", mockLoader)
     );
-    expect(result.current).toEqual([]);
+    expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [] });
+  });
+
+  it("returns an empty result when levelId is empty", () => {
+    const { result } = renderHook(() =>
+      useDiscussionPosts("test-adventure", "", mockLoader)
+    );
+    expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [] });
   });
 });
 
@@ -92,35 +96,63 @@ describe("useDiscussionPosts - initial state", () => {
 // ---------------------------------------------------------------------------
 
 describe("useDiscussionPosts - data loading", () => {
-  it("returns all posts after data loads for a known topic ID", async () => {
+  it("returns all posts after data loads", async () => {
     const { result } = renderHook(() =>
-      useDiscussionPosts(URL_42, mockLoader)
+      useDiscussionPosts("test-adventure", "beginner", mockLoader)
     );
-    await waitFor(() => expect(result.current.length).toBe(3));
-    expect(result.current[0].username).toBe("alice");
-    expect(result.current[1].username).toBe("bob");
-    expect(result.current[2].username).toBe("carol");
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
+    expect(result.current.posts[0].username).toBe("alice");
+    expect(result.current.posts[1].username).toBe("bob");
+    expect(result.current.posts[2].username).toBe("carol");
   });
 
-  it("does not populate posts for an unknown topic ID", async () => {
+  it("returns empty posts when loader returns no discussionPosts", async () => {
+    const emptyLoader = vi.fn<DiscussionDataLoader>().mockResolvedValue({});
     const { result } = renderHook(() =>
-      useDiscussionPosts(URL_99, mockLoader)
+      useDiscussionPosts("test-adventure", "beginner", emptyLoader)
     );
     await waitFor(() => {
-      expect(result.current).toEqual([]);
+      expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [] });
     });
+  });
+
+  it("returns totalReplies from the loaded entry", async () => {
+    const { result } = renderHook(() =>
+      useDiscussionPosts("test-adventure", "beginner", mockLoader)
+    );
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
+    expect(result.current.totalReplies).toBe(12);
+  });
+
+  it("falls back to posts.length when totalReplies is not provided", async () => {
+    const noTotalLoader = vi.fn<DiscussionDataLoader>().mockResolvedValue({
+      discussionPosts: MOCK_POSTS,
+    });
+    const { result } = renderHook(() =>
+      useDiscussionPosts("test-adventure", "beginner", noTotalLoader)
+    );
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
+    expect(result.current.totalReplies).toBe(3);
   });
 
   it("passes each post's raw fields through unchanged", async () => {
     const { result } = renderHook(() =>
-      useDiscussionPosts(URL_42, mockLoader)
+      useDiscussionPosts("test-adventure", "beginner", mockLoader)
     );
-    await waitFor(() => expect(result.current.length).toBe(3));
-    expect(result.current[0].cooked).toBe("<p>Great challenge!</p>");
-    expect(result.current[0].like_count).toBe(5);
-    expect(result.current[0].topicUrl).toBe(
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
+    expect(result.current.posts[0].cooked).toBe("<p>Great challenge!</p>");
+    expect(result.current.posts[0].like_count).toBe(5);
+    expect(result.current.posts[0].topicUrl).toBe(
       "https://community.open-ecosystem.com/t/topic/42/1"
     );
+  });
+
+  it("calls loader with adventureId and levelId", async () => {
+    const { result } = renderHook(() =>
+      useDiscussionPosts("test-adventure", "beginner", mockLoader)
+    );
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
+    expect(mockLoader).toHaveBeenCalledWith("test-adventure", "beginner");
   });
 });
 
@@ -131,55 +163,51 @@ describe("useDiscussionPosts - data loading", () => {
 describe("useDiscussionPosts - age computation", () => {
   it("computes '45m ago' for alice (created 45 minutes before now)", async () => {
     const { result } = renderHook(() =>
-      useDiscussionPosts(URL_42, mockLoader)
+      useDiscussionPosts("test-adventure", "beginner", mockLoader)
     );
-    await waitFor(() => expect(result.current.length).toBe(3));
-    expect(result.current[0].age).toBe("45m ago");
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
+    expect(result.current.posts[0].age).toBe("45m ago");
   });
 
   it("computes '3h ago' for bob (created 3 hours before now)", async () => {
     const { result } = renderHook(() =>
-      useDiscussionPosts(URL_42, mockLoader)
+      useDiscussionPosts("test-adventure", "beginner", mockLoader)
     );
-    await waitFor(() => expect(result.current.length).toBe(3));
-    expect(result.current[1].age).toBe("3h ago");
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
+    expect(result.current.posts[1].age).toBe("3h ago");
   });
 
   it("computes '2d ago' for carol (created 2 days before now)", async () => {
     const { result } = renderHook(() =>
-      useDiscussionPosts(URL_42, mockLoader)
+      useDiscussionPosts("test-adventure", "beginner", mockLoader)
     );
-    await waitFor(() => expect(result.current.length).toBe(3));
-    expect(result.current[2].age).toBe("2d ago");
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
+    expect(result.current.posts[2].age).toBe("2d ago");
   });
 
   it("all three relative timestamps are present after data loads", async () => {
     const { result } = renderHook(() =>
-      useDiscussionPosts(URL_42, mockLoader)
+      useDiscussionPosts("test-adventure", "beginner", mockLoader)
     );
-    await waitFor(() => expect(result.current.length).toBe(3));
-    const ages = result.current.map((p) => p.age);
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
+    const ages = result.current.posts.map((p) => p.age);
     expect(ages).toEqual(["45m ago", "3h ago", "2d ago"]);
   });
 });
 
 // ---------------------------------------------------------------------------
-// URL topic ID extraction
+// Error handling
 // ---------------------------------------------------------------------------
 
-describe("useDiscussionPosts - topic ID extraction from URL", () => {
-  it("extracts ID from a URL with a post number suffix (.../id/postNumber)", async () => {
+describe("useDiscussionPosts - error handling", () => {
+  it("returns empty on loader rejection", async () => {
+    const failLoader = vi.fn<DiscussionDataLoader>().mockRejectedValue(new Error("fail"));
     const { result } = renderHook(() =>
-      useDiscussionPosts(URL_42, mockLoader)
+      useDiscussionPosts("test-adventure", "beginner", failLoader)
     );
-    await waitFor(() => expect(result.current.length).toBe(3));
-  });
-
-  it("extracts ID from a URL without a post number suffix (.../id)", async () => {
-    const { result } = renderHook(() =>
-      useDiscussionPosts(URL_42_NO_POST, mockLoader)
-    );
-    await waitFor(() => expect(result.current.length).toBe(3));
+    await waitFor(() => {
+      expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [] });
+    });
   });
 });
 
@@ -193,27 +221,26 @@ describe("useDiscussionPosts - file content regressions", () => {
     "utf-8"
   );
 
-  it("defaultLoader uses a dynamic import of discussion-data.json", () => {
-    expect(source).toContain('import("@/data/discussion-data.json")');
+  it("defaultLoader uses import.meta.glob for per-level JSON", () => {
+    expect(source).toContain("import.meta.glob");
   });
 
-  it("useEffect calls loader(), not the dynamic import directly", () => {
-    const effectMatch = source.match(/useEffect\(\(\) => \{([\s\S]*?)\}, \[topicId, loader\]\)/);
+  it("does not import discussion-data.json", () => {
+    expect(source).not.toContain("discussion-data.json");
+  });
+
+  it("useEffect calls loader(), not a dynamic import directly", () => {
+    const effectMatch = source.match(/useEffect\(\(\) => \{([\s\S]*?)\}, \[adventureId, levelId, loader\]\)/);
     expect(effectMatch).toBeTruthy();
     const effectBody = effectMatch![1];
-    expect(effectBody).toContain("loader()");
-    expect(effectBody).not.toContain('import("@/data/discussion-data.json")');
+    expect(effectBody).toContain("loader(");
   });
 
-  it("useEffect dependency array includes [topicId, loader]", () => {
-    expect(source).toContain("[topicId, loader]");
-    expect(source).not.toContain("[discussionUrl]");
+  it("useEffect dependency array includes [adventureId, levelId, loader]", () => {
+    expect(source).toContain("[adventureId, levelId, loader]");
   });
 
-  it("extractTopicId is called at hook top level, not inside useEffect", () => {
-    const effectMatch = source.match(/useEffect\(\(\) => \{([\s\S]*?)\}, \[topicId, loader\]\)/);
-    expect(effectMatch).toBeTruthy();
-    const effectBody = effectMatch![1];
-    expect(effectBody).not.toContain("extractTopicId");
+  it("does not contain extractTopicId", () => {
+    expect(source).not.toContain("extractTopicId");
   });
 });
