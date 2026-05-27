@@ -78,6 +78,7 @@ jobs:
           git checkout -b "$BRANCH"
           git add -A
           git commit -m "feat: scaffold adventure ${ADVENTURE_ID}"
+          git push origin --delete "$BRANCH" 2>/dev/null || true
           git push origin "$BRANCH"
           {
             printf '## New Adventure Scaffolded\n\n'
