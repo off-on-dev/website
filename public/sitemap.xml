@@ -41,4 +41,7 @@
   <url><loc>https://offon.dev/challenges/terraform/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://offon.dev/challenges/trivy/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://offon.dev/challenges/flagd/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://offon.dev/adventures/test-gh-adventure-actions/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://offon.dev/adventures/test-gh-adventure-actions/levels/beginner/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://offon.dev/adventures/test-gh-adventure-actions/levels/intermediate/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>

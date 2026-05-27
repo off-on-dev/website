@@ -48,5 +48,8 @@ export default {
     "/challenges/terraform",
     "/challenges/trivy",
     "/challenges/flagd",
+    "/adventures/test-gh-adventure-actions",
+    "/adventures/test-gh-adventure-actions/levels/beginner",
+    "/adventures/test-gh-adventure-actions/levels/intermediate",
   ],
 } satisfies Config;

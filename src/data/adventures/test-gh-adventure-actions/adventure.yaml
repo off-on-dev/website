@@ -1,0 +1,84 @@
+id: test-gh-adventure-actions
+title: "Raiders of the Storm"
+month: "July 2026"
+story: "TODO: Add adventure story summary"
+tags:
+  - "TODO: Add tags"
+
+# Uncomment and fill in if the adventure has an external contributor:
+# contributor:
+#   name: "TODO: Contributor name"
+#   url: "https://TODO"
+#   about: "TODO: Short bio"
+
+backstory:
+  - "TODO: Add adventure backstory paragraph 1"
+
+# Uncomment and fill in for a 'What you will be using' section:
+# context:
+#   title: "What you'll be using"
+#   body:
+#     - "TODO: Explain the main technology"
+
+# Uncomment and fill in for reward info:
+# rewards:
+#   deadline: "TODO: Day, DD Month YYYY at HH:MM CET"
+#   eligibility: "TODO: Eligibility criteria"
+#   tiers:
+#     - label: "1st place"
+#       description: "TODO: Prize"
+#   rankingNote: "TODO: How ranking works"
+#   rankingRulesUrl: "/t/about-the-challenges-category/16"
+
+levels:
+  - id: beginner
+    name: "TODO: Level name"
+    difficulty: Beginner
+    topics:
+      - "TODO: Add topic tags"
+    learnings:
+      - "TODO: Add learning 1"
+      - "TODO: Add learning 2"
+    devcontainerPath: ".devcontainer/TODO/devcontainer.json"
+    discussionUrl: "/t/TODO"
+    intro:
+      - "TODO: Add intro paragraph"
+    backstory:
+      - "TODO: Add backstory"
+    objective:
+      - "TODO: Add objective 1"
+    toolbox:
+      - name: "TODO"
+        description: "TODO: Add tool description"
+    howToPlay:
+      - title: "TODO: Step 1"
+        body: "TODO: Add instructions"
+    verification:
+      command: "./verify.sh"
+      description: "Once you think you've solved the challenge, run the verification script."
+
+  - id: intermediate
+    name: "TODO: Level name"
+    difficulty: Intermediate
+    topics:
+      - "TODO: Add topic tags"
+    learnings:
+      - "TODO: Add learning 1"
+      - "TODO: Add learning 2"
+    devcontainerPath: ".devcontainer/TODO/devcontainer.json"
+    discussionUrl: "/t/TODO"
+    intro:
+      - "TODO: Add intro paragraph"
+    backstory:
+      - "TODO: Add backstory"
+    objective:
+      - "TODO: Add objective 1"
+    toolbox:
+      - name: "TODO"
+        description: "TODO: Add tool description"
+    howToPlay:
+      - title: "TODO: Step 1"
+        body: "TODO: Add instructions"
+    verification:
+      command: "./verify.sh"
+      description: "Once you think you've solved the challenge, run the verification script."
