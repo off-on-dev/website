@@ -1,1 +1,0 @@
-import{t as e}from"./jsx-runtime-DIItBH_j.js";var t=e(),n=({children:e,aside:n})=>n?(0,t.jsxs)(`div`,{className:`grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12`,children:[e,(0,t.jsx)(`div`,{className:`hidden lg:block`,children:(0,t.jsx)(`div`,{className:`sticky top-24`,children:n})})]}):(0,t.jsx)(t.Fragment,{children:e});export{n as t};
