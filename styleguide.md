@@ -490,22 +490,23 @@ Currently used in: `src/hooks/useTheme.tsx`.
 
 `src/hooks/useDiscussionPosts.ts`
 
-Loads Discourse posts for a single adventure level from its per-level JSON file at `src/data/adventures/<adventureId>/<levelId>.json` (refreshed daily by the GitHub Action). Returns them as `PostWithAge[]` — post fields plus a computed `age` string. The `cooked` field is pre-stripped plain text; HTML is removed by the refresh script before the JSON is written. Returns `[]` until the data loads or if the file does not exist.
+Loads Discourse posts for a single adventure level from its per-level JSON file at `src/data/adventures/<adventureId>/<levelId>-posts.json` (refreshed daily by the GitHub Action). Returns `{ posts, totalReplies, solvers }`. The `cooked` field is pre-stripped plain text; HTML is removed by the refresh script before the JSON is written. All three fields are empty until data loads or if the file does not exist.
 
 ```ts
-const { posts, totalReplies } = useDiscussionPosts(adventureId, levelId);
+const { posts, totalReplies, solvers } = useDiscussionPosts(adventureId, levelId);
 // or, in tests:
-const { posts, totalReplies } = useDiscussionPosts(adventureId, levelId, mockLoader);
+const { posts, totalReplies, solvers } = useDiscussionPosts(adventureId, levelId, mockLoader);
 ```
 
 | Argument | Type | Description |
 |---|---|---|
-| `discussionUrl` | `string` | Full Discourse topic URL. Topic ID is extracted from the path. |
-| `loader` | `DiscussionDataLoader` (optional) | Async function that returns the raw JSON data. Defaults to a module-level promise that starts the dynamic `import()` of the JSON file as soon as the module is loaded, not on first render. This eliminates a render-cycle waterfall. The JSON chunk is still code-split (omitted from the main bundle). Pass a `vi.fn().mockResolvedValue(data)` in tests — see the Testing section of `CLAUDE.md` for the injectable-loader pattern. |
+| `adventureId` | `string` | Adventure slug (e.g. `"echoes-lost-in-orbit"`). |
+| `levelId` | `string` | Level slug (e.g. `"beginner"`). |
+| `loader` | `DiscussionDataLoader` (optional) | Async function that returns `{ discussionPosts?, totalReplies?, solvers? }`. Defaults to a `import.meta.glob` import of the per-level JSON. Pass a `vi.fn().mockResolvedValue(data)` in tests — see the Testing section of `CLAUDE.md` for the injectable-loader pattern. |
+
+`DiscussionResult` shape: `posts: PostWithAge[]`, `totalReplies: number`, `solvers: Solver[]`. `PostWithAge` is `StoredPost & { age: string }`. `Solver` has `username`, `avatarUrl?`, `solvedAt`.
 
 **Why the injectable loader?** Vitest's dynamic-import mock runner has a multi-second first-call cost per test run. Injecting a mock loader bypasses it entirely. `vi.spyOn` on the module export does NOT work for same-module calls in ES module context.
-
-**Why a module-level promise?** The default loader is a module-scoped `Promise` so the `import()` fires when the route module is loaded, not when the component first mounts. By the time the component renders and calls `useEffect`, the JSON is usually already in-flight or resolved.
 
 ---
 
@@ -872,6 +873,33 @@ The leaderboard section renders the top 3 solvers (from certificate posts) via `
 
 ---
 
+### `AvatarLink`
+
+`src/components/AvatarLink.tsx`
+
+Renders a user avatar followed by a linked username. The avatar is either an `<img>` (when `avatarUrl` is provided) or an initials fallback `<span>` (both `aria-hidden`). The username is a community profile link that opens in a new tab. Used by `LeaderboardList` and `CommunityLeaders`.
+
+```tsx
+<AvatarLink
+  username="alice"
+  avatarUrl="https://example.com/alice.png"
+  size={24}
+  linkClassName="inline-flex items-center gap-1 font-medium text-foreground"
+/>
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `username` | `string` | required | Discourse username. Used as link text and for the initials fallback. |
+| `avatarUrl` | `string` (optional) | — | Avatar image URL. Falls back to initials when omitted. |
+| `size` | `24 \| 28` | `24` | Avatar diameter in pixels. |
+| `avatarFallbackStyle` | `CSSProperties` (optional) | — | Inline style for the initials `<span>`. Use palette colors from `CommunitySidebar`. |
+| `linkClassName` | `string` | required | Class applied to the profile `<a>` element. Caller controls layout and typography. |
+
+The avatar image and initials span are both `aria-hidden="true"`. The profile link exposes the username as its text content and includes a screen-reader "(opens in new tab)" notice.
+
+---
+
 ### `LeaderboardList`
 
 `src/components/LeaderboardList.tsx`
@@ -1048,15 +1076,20 @@ Renders the narrative backstory for a challenge level inside a `CollapsibleSecti
 
 `src/components/ArchitectureSection.tsx`
 
-Renders architecture content inside a `CollapsibleSection` titled "Architecture". Content is passed as a single markdown string and rendered via `MarkdownContent`.
+Renders architecture content inside a `CollapsibleSection` titled "Architecture". When `diagram` is supplied it renders an `<img>` (eager-loaded, `max-h-[560px]`); otherwise it renders the `architecture` markdown string via `MarkdownContent`. At least one of `architecture` or `diagram` should be provided; rendering neither produces an empty collapsible.
 
 ```tsx
+{/* Markdown variant */}
 <ArchitectureSection architecture={level.architecture.join("\n\n")} />
+{/* Diagram variant */}
+<ArchitectureSection diagram={diagramUrl} diagramAlt="Spring Boot OpenFeature architecture" />
 ```
 
 | Prop | Type | Description |
 |---|---|---|
-| `architecture` | `string` | Markdown string describing the system architecture. |
+| `architecture` | `string` (optional) | Markdown string describing the system architecture. Rendered via `MarkdownContent`. Ignored when `diagram` is present. |
+| `diagram` | `string` (optional) | URL of an architecture diagram image (SVG or raster). Takes precedence over `architecture`. |
+| `diagramAlt` | `string` (optional) | Alt text for the diagram image. Defaults to `"Architecture diagram"` when omitted. |
 
 ---
 

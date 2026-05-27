@@ -2,7 +2,7 @@ import { type CSSProperties, type JSX, useMemo } from "react";
 import { ExternalLink } from "lucide-react";
 import { COMMUNITY_URL } from "@/data/constants";
 import { useDiscussionPosts } from "@/hooks/useDiscussionPosts";
-import { useAdventureLeaderboard } from "@/hooks/useAdventureLeaderboard";
+import { useAdventureLeaderboard, type LeaderboardRow } from "@/hooks/useAdventureLeaderboard";
 import { isCertificatePost, displaySnippet } from "@/lib/discussion-utils";
 import { ContributorBadge } from "@/components/ContributorBadge";
 import { LeaderboardList } from "@/components/LeaderboardList";
@@ -47,11 +47,13 @@ export const CommunitySidebar = ({
 
   // Points for this specific level, keyed by username.
   const pointsByUsername = useMemo(() => {
-    const levelKey =
-      levelId === "beginner"     ? "beginnerPoints"     :
-      levelId === "intermediate" ? "intermediatePoints" :
-      levelId === "expert"       ? "expertPoints"       :
-      levelId === "single"       ? "singlePoints"       : null;
+    const LEVEL_POINT_KEY = {
+      beginner:     "beginnerPoints",
+      intermediate: "intermediatePoints",
+      expert:       "expertPoints",
+      single:       "singlePoints",
+    } as const satisfies Partial<Record<string, keyof LeaderboardRow>>;
+    const levelKey = LEVEL_POINT_KEY[levelId as keyof typeof LEVEL_POINT_KEY] ?? null;
     return Object.fromEntries(
       leaderboardRows.map((r) => [
         r.username,

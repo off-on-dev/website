@@ -1,7 +1,7 @@
 import type { JSX } from "react";
-import { Trophy, Target, Building2, Wrench, Heart, MessageCircle, HandHeart, ExternalLink } from "lucide-react";
-import { COMMUNITY_URL } from "@/data/constants";
+import { Trophy, Target, Building2, Wrench, Heart, MessageCircle, HandHeart } from "lucide-react";
 import communityLeadersData from "@/data/community-leaders.json";
+import { AvatarLink } from "@/components/AvatarLink";
 
 type LeaderUser = {
   username: string;
@@ -40,34 +40,12 @@ const LeaderRow = ({ user, rank }: { user: LeaderUser; rank: number }): JSX.Elem
     >
       {rank}
     </span>
-    {user.avatarUrl ? (
-      <img
-        src={user.avatarUrl}
-        alt=""
-        aria-hidden="true"
-        width={28}
-        height={28}
-        loading="lazy"
-        className="h-7 w-7 rounded-full shrink-0 object-cover"
-      />
-    ) : (
-      <span
-        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-[0.6rem] font-semibold text-foreground"
-        aria-hidden="true"
-      >
-        {user.username.slice(0, 2).toUpperCase()}
-      </span>
-    )}
-    <a
-      href={`${COMMUNITY_URL}/u/${user.username}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="docs-ext-link text-sm font-medium min-w-0 flex-1"
-    >
-      <span className="truncate">{user.username}</span>
-      <ExternalLink size={12} aria-hidden="true" className="shrink-0" />
-      <span className="sr-only"> (opens in new tab)</span>
-    </a>
+    <AvatarLink
+      username={user.username}
+      avatarUrl={user.avatarUrl}
+      size={28}
+      linkClassName="docs-ext-link text-sm font-medium min-w-0 flex-1"
+    />
     <span
       className="text-xs font-mono text-[hsl(var(--text-secondary))] tabular-nums shrink-0"
       aria-label={`${user.count} contributions`}

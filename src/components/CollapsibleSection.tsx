@@ -6,7 +6,6 @@ type CollapsibleSectionProps = {
   title: string;
   children: ReactNode;
   defaultOpen?: boolean;
-  headingLevel?: 2 | 3 | 4;
 };
 
 export const CollapsibleSection = ({
@@ -14,7 +13,6 @@ export const CollapsibleSection = ({
   title,
   children,
   defaultOpen = true,
-  headingLevel = 2,
 }: CollapsibleSectionProps): JSX.Element => (
   <details
     id={id}
@@ -22,7 +20,7 @@ export const CollapsibleSection = ({
     className="card-glow group mb-6 scroll-mt-28 rounded-lg"
   >
     <summary className="flex cursor-pointer list-none items-center gap-3 rounded-t-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-4 py-3 group-open:rounded-b-none group-open:border-b-0 rounded-b-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 [&::-webkit-details-marker]:hidden">
-      <span role="heading" aria-level={headingLevel} className="font-sans text-sm font-semibold tracking-wide text-primary flex-1">
+      <span className="font-sans text-sm font-semibold tracking-wide text-primary flex-1">
         {title}
       </span>
       <ChevronDown

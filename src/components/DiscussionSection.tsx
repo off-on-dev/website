@@ -33,8 +33,9 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
   );
 
   return (
-    <div aria-live="polite" className="space-y-4">
+    <div className="space-y-4">
       <h2 className="text-lg font-semibold text-foreground mb-4">Discussion</h2>
+      <div aria-live="polite" aria-atomic="false">
       {posts.length === 0 ? (
         <>
           <div className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8 text-center">
@@ -97,6 +98,7 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
           {joinLink}
         </>
       )}
+      </div>
     </div>
   );
 };

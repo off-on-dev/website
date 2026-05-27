@@ -8,7 +8,7 @@ const isExternalHref = (href: string | undefined): boolean =>
   typeof href === "string" && /^https?:\/\//i.test(href);
 
 const isLocalhostHref = (href: string | undefined): boolean =>
-  typeof href === "string" && /^https?:\/\/localhost(:\d+)?/i.test(href);
+  typeof href === "string" && /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?/i.test(href);
 
 const childrenToText = (children: ReactNode): string => {
   if (typeof children === "string" || typeof children === "number") return String(children);
@@ -18,6 +18,17 @@ const childrenToText = (children: ReactNode): string => {
     return childrenToText(props?.children);
   }
   return "";
+};
+
+// Strip the leading "N. " prefix from the first text node in a ReactNode tree,
+// preserving all subsequent nodes (inline code, bold, etc.) unchanged.
+const stripLeadingStepNumber = (children: ReactNode): ReactNode => {
+  if (typeof children === "string") return children.replace(/^\d+\.\s+/, "");
+  if (Array.isArray(children)) {
+    const [first, ...rest] = children as ReactNode[];
+    return [stripLeadingStepNumber(first), ...rest];
+  }
+  return children;
 };
 
 const CodeBlock = ({ children, showCopy = true }: { children: ReactNode; showCopy?: boolean }): JSX.Element => {
@@ -97,7 +108,7 @@ const components: Components = {
           >
             {stepMatch[1]}
           </span>
-          <span>{stepMatch[2]}</span>
+          <span>{stripLeadingStepNumber(children)}</span>
         </h3>
       );
     }
@@ -176,9 +187,9 @@ const components: Components = {
   },
   pre: ({ children }) => {
     const child = Array.isArray(children) ? children[0] : children;
-    const cls = (child as { props?: { className?: string } })?.props?.className ?? "";
-    const showCopy = typeof cls === "string" && cls.startsWith("language-");
-    return <CodeBlock showCopy={showCopy}>{children}</CodeBlock>;
+    // Show copy for all fenced code blocks; language-tagged and bare blocks both wrap <code>
+    const hasCode = child != null && typeof child === "object" && "props" in (child as object);
+    return <CodeBlock showCopy={hasCode}>{children}</CodeBlock>;
   },
   blockquote: ({ children }) => (
     <blockquote className="mb-6 rounded-lg border-l-4 border-primary bg-[hsl(var(--surface))]/60 px-5 py-4 text-[hsl(var(--text-secondary))]">

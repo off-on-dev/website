@@ -1039,8 +1039,13 @@ html {
     0 0 18px 4px hsl(var(--primary) / 0.07);
 }
 
-/* ─── Tag chip links (light mode) ───────────────────────── */
-/* --surface-border in light mode is hsl(220 12% 87%) — only 1.30:1 on near-white.
+/* ─── Tag chip links ─────────────────────────────────────── */
+.tag-chip-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
+}
+
+/* Light mode: --surface-border is hsl(220 12% 87%) — only 1.30:1 on near-white.
    WCAG 1.4.11 requires 3:1 for interactive component boundaries.
    Hover amber (#ffc034) is also below 3:1. Override in light mode only. */
 .light .tag-chip-link {

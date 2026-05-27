@@ -115,3 +115,25 @@ jobs:
             echo ""
             echo "✓ All adventures are consistent."
           fi
+
+      - name: Verify all adventures are registered in ADVENTURE_CATEGORIES
+        run: |
+          set -euo pipefail
+          ERRORS=0
+          for adventure_dir in src/data/adventures/*/; do
+            adventure_id=$(basename "$adventure_dir")
+            if [[ ! -f "$adventure_dir/adventure.yaml" ]]; then
+              continue
+            fi
+            if ! grep -q "\"$adventure_id\"" scripts/refresh-leaderboard.mjs; then
+              echo "❌ '$adventure_id' is missing from ADVENTURE_CATEGORIES in scripts/refresh-leaderboard.mjs"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+          if [[ $ERRORS -gt 0 ]]; then
+            echo ""
+            echo "❌ Add missing adventure IDs to ADVENTURE_CATEGORIES in scripts/refresh-leaderboard.mjs before merging."
+            exit 1
+          else
+            echo "✓ All adventure IDs are registered in ADVENTURE_CATEGORIES."
+          fi

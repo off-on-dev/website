@@ -105,6 +105,10 @@ const pages: PageSpec[] = [
     file: "adventures/blind-by-design/levels/intermediate/index.html",
     check: { type: "contains", value: "Outcome by Cohort" },
   },
+  {
+    file: "challenges/index.html",
+    check: { type: "exact", value: "Challenges - Hands-on open source challenges | OffOn" },
+  },
 ];
 
 function extractTitles(html: string): string[] {

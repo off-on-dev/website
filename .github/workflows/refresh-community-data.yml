@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: refresh-community-data
@@ -40,6 +41,61 @@ jobs:
           DISCOURSE_API_KEY: ${{ secrets.DISCOURSE_API_KEY }}
           DISCOURSE_API_USERNAME: ${{ secrets.DISCOURSE_API_USERNAME }}
         run: node scripts/refresh-community-leaders.mjs
+
+      - name: Validate refreshed JSON structure
+        run: |
+          set -euo pipefail
+          ERRORS=0
+
+          # Each *-posts.json must have a "discussionPosts" array
+          for f in src/data/adventures/*/*-posts.json; do
+            if ! node -e "
+              const d = JSON.parse(require('fs').readFileSync('$f', 'utf-8'));
+              if (!Array.isArray(d.discussionPosts)) { console.error('❌ $f: missing discussionPosts array'); process.exit(1); }
+            " 2>&1; then
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+
+          # Each leaderboard.json must have a "rows" array
+          for f in src/data/adventures/*/leaderboard.json; do
+            if ! node -e "
+              const d = JSON.parse(require('fs').readFileSync('$f', 'utf-8'));
+              if (!Array.isArray(d.rows)) { console.error('❌ $f: missing rows array'); process.exit(1); }
+            " 2>&1; then
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+
+          # community-leaders.json must have a "sections" array
+          if ! node -e "
+            const d = JSON.parse(require('fs').readFileSync('src/data/community-leaders.json', 'utf-8'));
+            if (!Array.isArray(d.sections)) { console.error('❌ community-leaders.json: missing sections array'); process.exit(1); }
+          " 2>&1; then
+            ERRORS=$((ERRORS + 1))
+          fi
+
+          if [[ $ERRORS -gt 0 ]]; then
+            echo "VALIDATION_FAILED=true" >> "$GITHUB_ENV"
+            echo "❌ JSON validation failed. Aborting commit to protect main."
+            exit 1
+          else
+            echo "✓ All refreshed JSON files are structurally valid."
+          fi
+
+      - name: Open issue on validation failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Refresh community data: JSON validation failed" \
+            --label "bug" \
+            --body "The scheduled \`refresh-community-data\` workflow failed JSON structure validation and did not commit new data to \`main\`.
+
+          **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          Check the run log for which file failed and which field was missing or malformed. Fix the upstream script that writes that file, then re-run the workflow manually via workflow_dispatch."
 
       - name: Commit if changed
         run: |

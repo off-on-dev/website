@@ -1,6 +1,5 @@
 import type { CSSProperties, JSX } from "react";
-import { ExternalLink } from "lucide-react";
-import { COMMUNITY_URL } from "@/data/constants";
+import { AvatarLink } from "@/components/AvatarLink";
 
 export type LeaderboardEntry = {
   rank: number;
@@ -33,35 +32,13 @@ export const LeaderboardList = ({ rows, label = "Ranked players" }: LeaderboardL
         >
           {row.rank}
         </span>
-        {row.avatarUrl ? (
-          <img
-            src={row.avatarUrl}
-            alt=""
-            aria-hidden="true"
-            width={24}
-            height={24}
-            loading="lazy"
-            className="h-6 w-6 rounded-full shrink-0"
-          />
-        ) : (
-          <span
-            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted font-mono text-[0.6rem] font-semibold text-foreground"
-            style={row.avatarFallbackStyle}
-            aria-hidden="true"
-          >
-            {row.username.slice(0, 2).toUpperCase()}
-          </span>
-        )}
-        <a
-          href={`${COMMUNITY_URL}/u/${row.username}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 font-medium text-foreground min-w-0 flex-1 hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
-        >
-          <span className="truncate">{row.username}</span>
-          <ExternalLink size={10} aria-hidden="true" className="shrink-0" />
-          <span className="sr-only"> (opens in new tab)</span>
-        </a>
+        <AvatarLink
+          username={row.username}
+          avatarUrl={row.avatarUrl}
+          size={24}
+          avatarFallbackStyle={row.avatarFallbackStyle}
+          linkClassName="inline-flex items-center gap-1 font-medium text-foreground min-w-0 flex-1 hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+        />
         {row.points != null && (
           <span className="shrink-0 font-mono text-xs font-semibold text-primary tabular-nums">
             {row.points} pts

@@ -161,8 +161,12 @@ const StructuredLayout = ({
           {backstory && backstory.length > 0 && (
             <ScenarioSection backstory={backstory} />
           )}
-          {(architecture && architecture.length > 0 || architectureDiagram) && (
-            <ArchitectureSection architecture={(architecture ?? []).join("\n\n")} diagram={architectureDiagram} diagramAlt={diagramAlt} />
+          {((architecture && architecture.length > 0) || architectureDiagram) && (
+            <ArchitectureSection
+              architecture={architecture && architecture.length > 0 ? architecture.join("\n\n") : undefined}
+              diagram={architectureDiagram}
+              diagramAlt={diagramAlt}
+            />
           )}
 
           {/* CTA card */}
@@ -196,8 +200,8 @@ const StructuredLayout = ({
           {howToPlay && howToPlay.length > 0 && (
             <WalkthroughSection
               steps={[
-                { title: "Get Started", body: `[Open in GitHub Codespaces](${level.codespacesUrl.replace(/[()]/g, (c) => encodeURIComponent(c))}). The devcontainer is pre-configured and starts automatically. GitHub will fork the repo to your account when you make your first commit.\n\nPrefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (VS Code, JetBrains IDEs, and others). The devcontainer config will be detected automatically.` },
-                ...(howToPlay.filter((s) => !s.body.startsWith("Prefer working locally"))),
+                { title: "Get Started", body: `[Open in GitHub Codespaces](${level.codespacesUrl.replace(/[()]/g, (c) => encodeURIComponent(c))}). The devcontainer is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.\n\nPrefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (VS Code, JetBrains IDEs, and others). The devcontainer config will be detected automatically.` },
+                ...howToPlay,
               ]}
             />
           )}
@@ -211,7 +215,7 @@ const StructuredLayout = ({
               <li className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                 <span>
-                  GitHub automatically forks the repository to your account when you push your first commit from Codespaces.
+                  When you push from Codespaces, GitHub forks the repository to your account automatically. If you are working locally, fork the repository on GitHub before pushing.
                 </span>
               </li>
               <li className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
@@ -312,7 +316,8 @@ const StructuredLayout = ({
         </div>
 
         {/* Sidebar */}
-        <div
+        <aside
+          aria-label="Challenge resources"
           className="mt-10 lg:mt-0 space-y-4 lg:sticky lg:top-28 lg:self-start"
         >
           {adventure.rewards && (
@@ -341,7 +346,7 @@ const StructuredLayout = ({
             contributor={adventure.contributor}
           />
           <OtherLevelsCard adventure={adventure} currentLevelId={level.id} />
-        </div>
+        </aside>
       </div>
 
       {/* Tech filter spans full width */}
