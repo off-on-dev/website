@@ -71,6 +71,7 @@ jobs:
           git checkout -b "$BRANCH"
           git add -A
           git commit -m "feat: add ${LEVEL} level to ${ADVENTURE}"
+          git push origin --delete "$BRANCH" 2>/dev/null || true
           git push origin "$BRANCH"
           {
             printf '## New Level Added\n\n'
