@@ -21,10 +21,11 @@ type LeaderboardData = {
 // Exported so tests can inject a mock loader without Vitest dynamic-import cost.
 export type LeaderboardLoader = (adventureId: string) => Promise<LeaderboardData>;
 
+const leaderboardModules = import.meta.glob("@/data/adventures/**/*.json");
+
 const defaultLoader: LeaderboardLoader = async (adventureId) => {
-  const modules = import.meta.glob("@/data/adventures/**/*.json");
   const key = `/src/data/adventures/${adventureId}/leaderboard.json`;
-  const loader = modules[key];
+  const loader = leaderboardModules[key];
   if (!loader) return { updatedAt: null, rows: [] };
   const mod = await loader() as { default: LeaderboardData };
   return mod.default;

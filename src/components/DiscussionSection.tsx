@@ -1,5 +1,5 @@
 import { type CSSProperties, type JSX } from "react";
-import { ArrowRight, Heart, Trophy } from "lucide-react";
+import { ExternalLink, Heart, Trophy } from "lucide-react";
 import { COMMUNITY_URL, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
 import { useDiscussionPosts } from "@/hooks/useDiscussionPosts";
 import { isCertificatePost, displaySnippet } from "@/lib/discussion-utils";
@@ -28,7 +28,7 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
       rel="noopener noreferrer"
       className="docs-ext-link mt-4 text-sm font-medium"
     >
-      Join the Discussion on {COMMUNITY_DISPLAY_NAME} <ArrowRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+      Join the Discussion on {COMMUNITY_DISPLAY_NAME} <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
     </a>
   );
 

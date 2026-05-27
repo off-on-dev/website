@@ -1,17 +1,16 @@
-import { ECHOES_LOST_IN_ORBIT } from "./echoes-lost-in-orbit";
-import { BUILDING_CLOUDHAVEN } from "./building-cloudhaven";
-import { THE_AI_OBSERVATORY } from "./the-ai-observatory";
-import { BLIND_BY_DESIGN } from "./blind-by-design";
+import { BLIND_BY_DESIGN } from "./blind-by-design.generated";
+import { BUILDING_CLOUDHAVEN } from "./building-cloudhaven.generated";
+import { ECHOES_LOST_IN_ORBIT } from "./echoes-lost-in-orbit.generated";
+import { THE_AI_OBSERVATORY } from "./the-ai-observatory.generated";
 import type { Adventure, AdventureContributor, RelatedLevel } from "./types";
 
 export type { Adventure, AdventureLevel, AdventureContributor, RelatedLevel, ToolboxItem, WalkthroughStep, VerificationInfo, TopPlayer, UpcomingLevel } from "./types";
-export { KATHARINA_SICK } from "./contributors";
 
 export const ADVENTURES: Adventure[] = [
-  ECHOES_LOST_IN_ORBIT,
-  BUILDING_CLOUDHAVEN,
-  THE_AI_OBSERVATORY,
   BLIND_BY_DESIGN,
+  BUILDING_CLOUDHAVEN,
+  ECHOES_LOST_IN_ORBIT,
+  THE_AI_OBSERVATORY,
 ];
 
 /** All unique technology tags across all adventures, sorted alphabetically. Shared with filter components; do not re-derive in component files. */
@@ -42,3 +41,15 @@ export const getLevelsByTag = (tag: string): RelatedLevel[] =>
       adventureTitle: adventure.title,
     }))
   );
+
+/** Convert a tag display name to a URL-safe slug. */
+export const tagToSlug = (tag: string): string =>
+  tag.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+/** Lookup map from slug back to the original tag name. */
+const SLUG_TO_TAG: Record<string, string> = Object.fromEntries(
+  ALL_TAGS.map((tag) => [tagToSlug(tag), tag])
+);
+
+/** Resolve a URL slug back to the original tag name, or undefined if not found. */
+export const slugToTag = (slug: string): string | undefined => SLUG_TO_TAG[slug];

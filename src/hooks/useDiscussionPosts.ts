@@ -39,13 +39,14 @@ function timeAgo(dateStr: string, now: number): string {
   return `${days}d ago`;
 }
 
+const discussionModules = import.meta.glob("@/data/adventures/**/*-posts.json");
+
 // Default loader dynamically imports the per-level JSON file.
 // Each level JSON is expected to have optional `discussionPosts` and
 // `totalReplies` fields, populated by the daily GitHub Action.
 const defaultLoader: DiscussionDataLoader = async (adventureId, levelId) => {
-  const modules = import.meta.glob("@/data/adventures/**/*.json");
-  const key = `/src/data/adventures/${adventureId}/${levelId}.json`;
-  const loader = modules[key];
+  const key = `/src/data/adventures/${adventureId}/${levelId}-posts.json`;
+  const loader = discussionModules[key];
   if (!loader) return { discussionPosts: [], totalReplies: 0 };
   const mod = await loader() as { default: LevelDiscussionData };
   return mod.default;

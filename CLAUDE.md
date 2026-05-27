@@ -105,6 +105,8 @@ npm run test:watch   # Tests in watch mode
 npm run test:coverage  # Run tests with v8 coverage (uses @vitest/coverage-v8)
 npm run test:e2e     # Playwright smoke tests (requires npm run build first)
 npm run preview      # Copy 404 fallback and serve the production build locally
+npm run generate     # Regenerate TypeScript from adventure YAML files
+npm run generate:validate  # Validate YAML against schema without writing files
 
 npx shadcn@latest add <component>   # Add a shadcn/ui component
 ```
@@ -226,8 +228,10 @@ without exception. They exist to prevent debugging by accumulation.
 
 - Static content lives in `src/data/` as typed TypeScript objects/arrays.
 - No runtime `fetch` calls in components. All network data must be fetched at build time.
-- **Build-time fetching:** Discussion data lives in per-level JSON files under `src/data/adventures/<adventure-id>/<level-id>.json`. Each file contains only `discussionUrl`, `discussionPosts`, and `totalReplies`. These are refreshed daily by the GitHub Action in `.github/workflows/refresh-discussions.yml` (runs `scripts/refresh-discussions.mjs`). Components import the JSON dynamically via `import.meta.glob`.
-- When adding a new adventure level, create its per-level JSON file with a `discussionUrl` field. The refresh script uses this URL to fetch posts.
+- **Adventure content pipeline:** Adventure data is authored as YAML files at `src/data/adventures/<id>/adventure.yaml` and compiled to TypeScript via `scripts/generate-adventures.mjs`. The generated files (`*.generated.ts` and `index.ts`) are committed to the repo. The `prebuild` hook runs the generator automatically before every build. Never edit `*.generated.ts` or `src/data/adventures/index.ts` by hand.
+- **Schema validation:** Adventure YAML files are validated against `schemas/adventure.schema.json` (JSON Schema Draft 2020-12). Run `npm run generate:validate` to check without writing files.
+- **Build-time fetching:** Discussion data lives in per-level JSON files under `src/data/adventures/<adventure-id>/<level-id>-posts.json`. Each file contains only `discussionUrl`, `discussionPosts`, and `totalReplies`. These are refreshed hourly by the GitHub Action in `.github/workflows/refresh-community-data.yml` (runs `scripts/refresh-discussions.mjs`). Components import the JSON dynamically via `import.meta.glob`.
+- When adding a new adventure level, create its per-level discussion JSON file (`<level-id>-posts.json`) with a `discussionUrl` field. The refresh script uses this URL to fetch posts.
 - `scripts/refresh-discussions.mjs` contains a `COMMUNITY_BASE` constant that is a necessary duplicate of `COMMUNITY_URL` in `src/data/constants.ts`. The script runs in Node and cannot import from `src/`, so the value must be maintained manually in both places. Always update them together.
 - The domain `community.open-ecosystem.com` in both `scripts/refresh-discussions.mjs` and `src/data/constants.ts` is the actual Discourse server URL used for API calls at build time. It is not a brand inconsistency. Do not change it to `community.offon.dev` or any other display name. `COMMUNITY_DISPLAY_NAME` in `src/data/constants.ts` is the separate user-facing label shown in the UI.
 
@@ -615,19 +619,20 @@ When adding a new route to `src/routes.ts`, follow these rules by route type:
 
 ### When adding a new adventure
 
-Adventures are defined in `src/data/adventures/` as one TypeScript file per adventure (e.g. `blind-by-design.ts`), with shared types in `types.ts`, contributors in `contributors.ts`, and a barrel `index.ts` that re-exports `ADVENTURES`, `ALL_TAGS`, `ADVENTURE_CONTRIBUTORS`, and `getLevelsByTag`. The Discourse API does not expose the structured data needed (Codespace URLs, technology tags, learnings), so these files are the authoritative source of truth. Update them manually when a new adventure is published on the community.
+Adventures are authored as YAML files at `src/data/adventures/<id>/adventure.yaml` and compiled to TypeScript by `scripts/generate-adventures.mjs`. Shared types live in `types.ts`, contributors in `contributors.ts`. The generated barrel `index.ts` re-exports `ADVENTURES`, `ALL_TAGS`, `ADVENTURE_CONTRIBUTORS`, `getLevelsByTag`, `tagToSlug`, and `slugToTag`. The Discourse API does not expose the structured data needed (Codespace URLs, technology tags, learnings), so these YAML files are the authoritative source of truth.
 
 Complete checklist for every new adventure:
 
-1. Create a new adventure file `src/data/adventures/<id>.ts` (use the scaffold script: `node scripts/new-adventure.mjs`). Import `CODESPACES_BASE` and `COMMUNITY_URL` from `@/data/constants` and the `Adventure` type from `./types`. Required fields: `id`, `title`, `month`, `story`, `tags`, and `levels`. Each level needs `id`, `name`, `difficulty`, `learnings`, `codespacesUrl`, and `discussionUrl`. For `codespacesUrl`, use the `CODESPACES_BASE` constant with a `devcontainer_path` parameter pointing to the level's specific devcontainer config, e.g. `` `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F04-blind-by-design_01-beginner%2Fdevcontainer.json&quickstart=1` ``. Never use `quickstart=1` alone, that launches the generic default devcontainer.
-2. Add the adventure detail route and all level routes to `src/routes.ts`.
-3. Add the adventure landing page URL and every level URL to `public/sitemap.xml`.
-4. Add the adventure landing page URL and every level URL to the `prerender` array in `react-router.config.ts`.
-5. Create a per-level JSON file at `src/data/adventures/<adventure-id>/<level-id>.json` with `{ "discussionUrl": "<full-topic-url>" }` for each level that has a discussion thread.
-6. Run `node scripts/refresh-discussions.mjs` to fetch discussion posts for the new levels.
-7. Add the adventure to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs` with the correct `categoryId` (find it at `<COMMUNITY_URL>/categories.json`) and `levelCount`.
-8. Run `node scripts/refresh-leaderboard.mjs` to create `src/data/adventures/<adventure-id>/leaderboard.json`.
-9. Update the routes table in `README.md`.
+1. Run `node scripts/new-adventure.mjs` to scaffold a new `src/data/adventures/<id>/adventure.yaml`. Fill in the required fields: `id`, `title`, `month`, `story`, `tags`, and `levels`. Each level needs `id`, `name`, `difficulty`, `learnings`, `devcontainerPath` (relative path to the devcontainer.json, e.g. `.devcontainer/04-blind-by-design_01-beginner/devcontainer.json`), and `discussionUrl` (full URL or path relative to `COMMUNITY_URL`). The schema is at `schemas/adventure.schema.json`.
+2. Run `npm run generate` to produce `<id>.generated.ts` and update `index.ts`.
+3. Add the adventure detail route and all level routes to `src/routes.ts`.
+4. Add the adventure landing page URL and every level URL to `public/sitemap.xml`.
+5. Add the adventure landing page URL and every level URL to the `prerender` array in `react-router.config.ts`.
+6. Create a per-level discussion JSON file at `src/data/adventures/<adventure-id>/<level-id>-posts.json` with `{ "discussionUrl": "<full-topic-url>" }` for each level that has a discussion thread.
+7. Run `node scripts/refresh-discussions.mjs` to fetch discussion posts for the new levels.
+8. Add the adventure to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs` with the correct `categoryId` (find it at `<COMMUNITY_URL>/categories.json`) and `levelCount`.
+9. Run `node scripts/refresh-leaderboard.mjs` to create `src/data/adventures/<adventure-id>/leaderboard.json`.
+10. Update the routes table in `README.md`.
 
 ---
 
@@ -670,7 +675,7 @@ State the result of each check explicitly before finishing a task.
 
 8. **Verify at three viewports:** All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px). Always test against the production build (`npm run build && npm run preview`), never the dev server.
 
-9. **Check discussion data on every PR:** If the PR adds or modifies adventure levels, verify that a per-level JSON file exists in `src/data/adventures/<adventure-id>/<level-id>.json` with the correct `discussionUrl`. Run `node scripts/refresh-discussions.mjs` to populate discussion posts. A missing file means the discussion feed will silently show no posts for that level.
+9. **Check discussion data on every PR:** If the PR adds or modifies adventure levels, verify that a per-level discussion JSON file exists at `src/data/adventures/<adventure-id>/<level-id>-posts.json` with the correct `discussionUrl`. Run `node scripts/refresh-discussions.mjs` to populate discussion posts. A missing file means the discussion feed will silently show no posts for that level.
 
 ### Before writing any code
 
@@ -706,6 +711,7 @@ State the result of each check explicitly before finishing a task.
 - Do not change the `@theme` block in `src/index.css` without verifying the change does not break existing components.
 - Do not reinstall `@radix-ui/*` packages that were removed. If a Radix primitive is genuinely needed, check whether raw HTML with Tailwind solves the problem first.
 - Do not re-derive data from `ADVENTURES` inside component files. Any computed value that belongs to the data layer (e.g. a deduplicated tag list) should be exported from `src/data/adventures/index.ts` and imported. `ALL_TAGS` is the established pattern.
+- Do not edit `*.generated.ts` or `src/data/adventures/index.ts` by hand. These are produced by `scripts/generate-adventures.mjs` from the YAML source files. Edit the YAML and run `npm run generate` instead.
 
 ---
 

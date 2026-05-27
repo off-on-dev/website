@@ -2,7 +2,7 @@ import { type JSX } from "react";
 import { useParams, Link } from "react-router";
 import type { MetaFunction } from "react-router";
 import { ArrowRight } from "lucide-react";
-import { ADVENTURES, type AdventureLevel } from "@/data/adventures";
+import { ADVENTURES, type AdventureLevel, tagToSlug } from "@/data/adventures";
 import { NotFoundPage } from "@/components/NotFoundPage";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -98,12 +98,13 @@ const AdventureDetail = (): JSX.Element => {
                 <ContributorBadge name={adventure.contributor.name} url={adventure.contributor.url} label="Adventure Builder" />
               )}
               {adventure.tags.map((tag) => (
-                <span
+                <Link
                   key={tag}
-                  className="rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))]"
+                  to={`/challenges/${tagToSlug(tag)}`}
+                  className="rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary hover:text-primary transition-colors"
                 >
                   {tag}
-                </span>
+                </Link>
               ))}
             </div>
             <p className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl">{adventure.story}</p>
@@ -127,6 +128,12 @@ const AdventureDetail = (): JSX.Element => {
                 </div>
               </section>
 
+              {adventure.rewards && (
+                <div>
+                  <RewardsCard rewards={adventure.rewards} />
+                </div>
+              )}
+
               {/* Your Mission */}
               {adventure.context && (
                 <CollapsibleSection id="mission" title="Your Mission" defaultOpen={true}>
@@ -144,22 +151,14 @@ const AdventureDetail = (): JSX.Element => {
               {/* The Story */}
               {adventure.backstory && adventure.backstory.length > 0 && (
                 <CollapsibleSection id="backstory" title="The Story" defaultOpen={true}>
-                  <ul className="space-y-3">
+                  <div className="space-y-3">
                     {adventure.backstory.map((para, i) => (
-                      <li key={i} className="flex items-start gap-3">
-                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                        <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">{para}</p>
-                      </li>
+                      <p key={i} className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">{para}</p>
                     ))}
-                  </ul>
+                  </div>
                 </CollapsibleSection>
               )}
 
-              {adventure.rewards && (
-                <div>
-                  <RewardsCard rewards={adventure.rewards} />
-                </div>
-              )}
             </div>
 
             {/* Sidebar: leaderboard + contributor */}

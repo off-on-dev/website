@@ -14,6 +14,9 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
+    "generate": "node scripts/generate-adventures.mjs",
+    "generate:validate": "node scripts/generate-adventures.mjs --validate-only",
+    "prebuild": "node scripts/generate-adventures.mjs",
     "new-adventure": "node scripts/new-adventure.mjs",
     "new-level": "node scripts/new-level.mjs"
   },
@@ -52,6 +55,7 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.2",
     "vite": "^8.0.10",
-    "vitest": "^4.1.5"
+    "vitest": "^4.1.5",
+    "yaml": "^2.9.0"
   }
 }

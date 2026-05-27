@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import type { MetaFunction } from "react-router";
-import { ArrowUpRight } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { ChallengesGrid } from "@/components/ChallengesGrid";
@@ -45,7 +45,7 @@ const Index = (): JSX.Element => {
                   rel="noopener noreferrer"
                   className="btn-inverse"
                 >
-                  Propose an Adventure Idea <ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  Propose an Adventure Idea <ExternalLink size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </div>
             </div>

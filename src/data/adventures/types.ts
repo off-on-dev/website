@@ -17,6 +17,12 @@ export type VerificationInfo = {
   description: string;
 }
 
+/** A reference documentation link shown at the end of the challenge walkthrough. */
+export type HelpfulLink = {
+  label: string;
+  url: string;
+}
+
 /** Mock entry in the "Top players" leaderboard inside the CommunitySidebar. */
 export type TopPlayer = {
   username: string;
@@ -39,6 +45,8 @@ export type AdventureLevel = {
   learnings: string[];
   codespacesUrl: string;
   discussionUrl: string;
+  // Submission deadline for this level (e.g. "10 December 2025 at 09:00 CET"). Only shown when rewards are active.
+  deadline?: string;
   // Short narrative hook shown directly under the page title.
   hook?: string;
   // Brief intro paragraph(s) shown under the page title before the main content.
@@ -61,6 +69,8 @@ export type AdventureLevel = {
   toolbox?: ToolboxItem[];
   // Numbered walkthrough rendered as a vertical stepper.
   howToPlay?: WalkthroughStep[];
+  // Reference documentation links shown after the walkthrough.
+  helpfulLinks?: HelpfulLink[];
   // Verification card rendered as the final section.
   verification?: VerificationInfo;
   // Mock community stats shown in the CommunitySidebar. Real data will replace

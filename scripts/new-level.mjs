@@ -7,10 +7,10 @@
  *   node scripts/new-level.mjs --adventure "blind-by-design" --level expert
  *
  * What it does:
- *   - Creates src/data/adventures/<adventure>/<level>.json (discussion stub)
+ *   - Creates src/data/adventures/<adventure>/<level>-posts.json (discussion stub)
  *   - Adds prerender entry to react-router.config.ts
  *   - Adds sitemap entry to public/sitemap.xml
- *   - Prints a TS snippet to paste into the adventure file's levels array
+ *   - Prints a YAML snippet to paste into the adventure's adventure.yaml levels array
  */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -56,16 +56,16 @@ if (!VALID_LEVELS.includes(levelId)) {
 }
 
 const ADVENTURES_DIR = resolve(ROOT, "src/data/adventures");
-const adventureFile = resolve(ADVENTURES_DIR, `${adventureId}.ts`);
 const adventureDataDir = resolve(ADVENTURES_DIR, adventureId);
+const yamlPath = resolve(adventureDataDir, "adventure.yaml");
 
-if (!existsSync(adventureFile)) {
-  fail(`Adventure file not found: src/data/adventures/${adventureId}.ts\nRun 'npm run new-adventure' first to create the adventure.`);
+if (!existsSync(yamlPath)) {
+  fail(`Adventure YAML not found: src/data/adventures/${adventureId}/adventure.yaml\nRun 'npm run new-adventure' first to create the adventure.`);
 }
 
-const jsonPath = resolve(adventureDataDir, `${levelId}.json`);
+const jsonPath = resolve(adventureDataDir, `${levelId}-posts.json`);
 if (existsSync(jsonPath)) {
-  fail(`Level JSON already exists: src/data/adventures/${adventureId}/${levelId}.json`);
+  fail(`Level JSON already exists: src/data/adventures/${adventureId}/${levelId}-posts.json`);
 }
 
 const difficultyMap = {
@@ -81,7 +81,7 @@ writeFileSync(
   jsonPath,
   JSON.stringify({ discussionUrl: "TODO: Add Discourse topic URL" }, null, 2) + "\n"
 );
-console.log(`  Created: src/data/adventures/${adventureId}/${levelId}.json`);
+console.log(`  Created: src/data/adventures/${adventureId}/${levelId}-posts.json`);
 
 // 2. Patch react-router.config.ts
 const configPath = resolve(ROOT, "react-router.config.ts");
@@ -124,36 +124,37 @@ if (sitemapContent.includes(`/adventures/${adventureId}/levels/${levelId}/`)) {
   console.log(`  Patched: public/sitemap.xml`);
 }
 
-// 4. Print the TS snippet to paste
+// 4. Print the YAML snippet to paste
 console.log(`\n\x1b[32mDone!\x1b[0m Level "${levelId}" config added for "${adventureId}".\n`);
-console.log("Paste this into the levels array in src/data/adventures/" + adventureId + ".ts:\n");
-console.log(`    {
-      id: "${levelId}",
-      name: "TODO: Level name",
-      difficulty: "${difficulty}",
-      topics: ["TODO: Add topic tags"],
-      learnings: ["TODO: Add learnings"],
-      codespacesUrl: \`\${CODESPACES_BASE}?devcontainer_path=TODO&quickstart=1\`,
-      discussionUrl: \`\${COMMUNITY_URL}/t/TODO\`,
-      intro: [
-        "TODO: Add intro paragraph (shown on adventure overview card)",
-      ],
-      backstory: [
-        "TODO: Add backstory",
-      ],
-      objective: [
-        "TODO: Add objectives",
-      ],
-      toolbox: [
-        { name: "TODO", description: "TODO: Add tools" },
-      ],
-      howToPlay: [
-        { title: "TODO: Step 1", body: "TODO: Add instructions" },
-      ],
-    },`);
+console.log("Paste this into the levels array in src/data/adventures/" + adventureId + "/adventure.yaml:\n");
+console.log(`  - id: ${levelId}
+    name: "TODO: Level name"
+    difficulty: ${difficulty}
+    topics:
+      - "TODO: Add topic tags"
+    learnings:
+      - "TODO: Add learning 1"
+    devcontainerPath: ".devcontainer/TODO/devcontainer.json"
+    discussionUrl: "/t/TODO"
+    intro:
+      - "TODO: Add intro paragraph"
+    backstory:
+      - "TODO: Add backstory"
+    objective:
+      - "TODO: Add objective 1"
+    toolbox:
+      - name: "TODO"
+        description: "TODO: Add tool description"
+    howToPlay:
+      - title: "TODO: Step 1"
+        body: "TODO: Add instructions"
+    verification:
+      command: "./verify.sh"
+      description: "Once you think you've solved the challenge, run the verification script."`);
 console.log(`\nNext steps:`);
-console.log(`  1. Paste the snippet above into src/data/adventures/${adventureId}.ts`);
+console.log(`  1. Paste the snippet above into src/data/adventures/${adventureId}/adventure.yaml`);
 console.log(`  2. Fill in the TODOs`);
-console.log(`  3. Update the discussionUrl in src/data/adventures/${adventureId}/${levelId}.json`);
-console.log(`  4. Run: node scripts/refresh-discussions.mjs`);
-console.log(`  5. Run: npm run lint && npm test && npm run build && npm run test:e2e`);
+console.log(`  3. Update the discussionUrl in the YAML and src/data/adventures/${adventureId}/${levelId}-posts.json`);
+console.log(`  4. Run: npm run generate`);
+console.log(`  5. Run: node scripts/refresh-discussions.mjs`);
+console.log(`  6. Run: npm run lint && npm test && npm run build && npm run test:e2e`);

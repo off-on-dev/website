@@ -6,6 +6,7 @@ on:
       - 'src/data/adventures/**'
       - 'react-router.config.ts'
       - 'public/sitemap.xml'
+      - 'schemas/adventure.schema.json'
 
 permissions:
   contents: read
@@ -19,32 +20,56 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Validate YAML schema
+        run: node scripts/generate-adventures.mjs --validate-only
+
+      - name: Verify generated files are up-to-date
+        run: |
+          node scripts/generate-adventures.mjs
+          if ! git diff --quiet src/data/adventures/; then
+            echo "❌ Generated adventure files are out of date. Run 'npm run generate' and commit the result."
+            git diff --stat src/data/adventures/
+            exit 1
+          fi
+
       - name: Validate adventure consistency
         run: |
           set -euo pipefail
 
           ERRORS=0
 
-          # Extract adventure IDs and their levels from the TS files
-          for adventure_file in src/data/adventures/*.ts; do
-            filename=$(basename "$adventure_file" .ts)
+          # Extract adventure IDs from YAML files
+          for adventure_dir in src/data/adventures/*/; do
+            adventure_id=$(basename "$adventure_dir")
 
-            # Skip index, types, contributors
-            if [[ "$filename" == "index" || "$filename" == "types" || "$filename" == "contributors" ]]; then
+            # Skip if no adventure.yaml
+            if [[ ! -f "$adventure_dir/adventure.yaml" ]]; then
               continue
             fi
 
-            adventure_id="$filename"
             echo "Checking adventure: $adventure_id"
 
+            # Check generated TS file exists
+            if [[ ! -f "src/data/adventures/$adventure_id.generated.ts" ]]; then
+              echo "  ❌ Missing generated file: src/data/adventures/$adventure_id.generated.ts"
+              ERRORS=$((ERRORS + 1))
+            fi
+
             # Check adventure is imported in index.ts
-            if ! grep -q "from \"./$adventure_id\"" src/data/adventures/index.ts; then
+            if ! grep -q "from \"./$adventure_id.generated\"" src/data/adventures/index.ts; then
               echo "  ❌ Not imported in index.ts"
               ERRORS=$((ERRORS + 1))
             fi
 
-            # Extract level IDs from the TS file
-            level_ids=$(grep -oE 'id: "[^"]+"' "$adventure_file" | grep -v "id: \"$adventure_id\"" | sed 's/id: "//;s/"//' || true)
+            # Extract level IDs from the YAML file
+            level_ids=$(grep -E '^\s+- id: ' "$adventure_dir/adventure.yaml" | sed 's/.*- id: //' | tr -d '"' || true)
 
             # Check adventure landing page in prerender
             if ! grep -q "\"/adventures/$adventure_id\"" react-router.config.ts; then
@@ -61,8 +86,8 @@ jobs:
             # Check each level
             for level_id in $level_ids; do
               # Discussion JSON exists
-              if [[ ! -f "src/data/adventures/$adventure_id/$level_id.json" ]]; then
-                echo "  ❌ Missing discussion JSON: src/data/adventures/$adventure_id/$level_id.json"
+              if [[ ! -f "src/data/adventures/$adventure_id/$level_id-posts.json" ]]; then
+                echo "  ❌ Missing discussion JSON: src/data/adventures/$adventure_id/$level_id-posts.json"
                 ERRORS=$((ERRORS + 1))
               fi
 
@@ -84,7 +109,7 @@ jobs:
 
           if [[ $ERRORS -gt 0 ]]; then
             echo ""
-            echo "❌ Found $ERRORS consistency error(s). Run 'node scripts/new-adventure.mjs' to scaffold missing entries."
+            echo "❌ Found $ERRORS consistency error(s). Run 'npm run new-adventure' to scaffold or 'npm run generate' to regenerate."
             exit 1
           else
             echo ""

@@ -42,6 +42,8 @@ Node.js **22** is required. Version is pinned in `.nvmrc`, run `nvm use` to swit
 | `npm run test:watch` | Run tests in watch mode |
 | `npm run test:coverage` | Run tests with v8 coverage report |
 | `npm run test:e2e` | Playwright smoke tests (requires `npm run build` first) |
+| `npm run generate` | Regenerate TypeScript from adventure YAML files |
+| `npm run generate:validate` | Validate adventure YAML against schema without writing files |
 
 Run `npm run lint` and `npm test` before marking any work done.
 
@@ -55,6 +57,7 @@ src/
   components/ui/  # shadcn/ui primitives, do not edit directly
   pages/          # Route-level page components
   data/           # Static content as typed TypeScript objects and arrays
+  data/adventures/<id>/adventure.yaml  # Adventure YAML source files
   hooks/          # Custom React hooks
   lib/            # Shared utilities
   test/           # Vitest + Testing Library unit and component tests
@@ -65,12 +68,27 @@ src/
   Layout.tsx      # App shell with all providers and Outlet
 e2e/
   smoke.spec.ts   # Playwright smoke tests (requires npm run build first)
+schemas/
+  adventure.schema.json  # JSON Schema for adventure YAML validation
+scripts/
+  generate-adventures.mjs  # YAML -> TypeScript codegen (runs as prebuild hook)
+  new-adventure.mjs        # Scaffold a new adventure YAML template
 public/
   fonts/          # Self-hosted Inter, Syne, and JetBrains Mono font files
   sitemap.xml
   robots.txt
   og.png
 ```
+
+### Adventure Content Pipeline
+
+Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and compiled to TypeScript by `scripts/generate-adventures.mjs`. The `prebuild` hook runs the generator automatically before every build.
+
+- **Source of truth:** the YAML files. Never edit `*.generated.ts` or `index.ts` by hand.
+- **Schema:** `schemas/adventure.schema.json` (JSON Schema Draft 2020-12). Run `npm run generate:validate` to check.
+- **Scaffold a new adventure:** `node scripts/new-adventure.mjs`
+- **Generated outputs:** `<id>.generated.ts` (one per adventure) + `index.ts` (barrel with `ADVENTURES`, `ALL_TAGS`, `ADVENTURE_CONTRIBUTORS`, `getLevelsByTag`, `tagToSlug`, `slugToTag`).
+- **Generated files are committed** so the dev server works without an extra step.
 
 ## Routes
 
@@ -88,10 +106,11 @@ public/
 | `/community-guide` | redirects to `/handbook` | Legacy alias |
 | `/docs` | redirects to `/handbook` | Legacy alias |
 | `/docs/community-guide` | redirects to `/handbook` | Legacy alias |
-| `/topics/:tag` | redirects to `/#challenges` | Tag filter shortlink |
+| `/challenges` | `Challenges.tsx` | All challenges by technology |
+| `/challenges/:tag` | `Challenges.tsx` | Challenges filtered by technology tag (SEO-friendly slug) |
 | `*` | `CatchAll.tsx` | Client-side 404 fallback (re-exports `NotFound.tsx`; required because React Router v7 needs unique files per route) |
 
-> **Technology tag filtering** is handled inline on the home page, adventure detail, and challenge detail pages via local `useState`. Topics are filtered inline. `/topics/:tag` redirects to `/#challenges`.
+> **Technology tag filtering** is handled inline on the home page via local `useState`. Adventure detail and challenge detail pages link tags to `/challenges/:tag`. The `/challenges` page uses URL params for shareable filtered views.
 
 ## SEO and Metadata
 

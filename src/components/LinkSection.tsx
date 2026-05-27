@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 type LinkItem = { label: string; href: string };
 
@@ -18,7 +18,7 @@ export const LinkSection = ({ heading, links }: LinkSectionProps): JSX.Element =
         <li key={item.label} className="flex items-center gap-2.5 text-sm">
           <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
           <a href={item.href} target="_blank" rel="noopener noreferrer" className={extLinkCls}>
-            {item.label} <ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+            {item.label} <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
           </a>
         </li>
       ))}

@@ -1,7 +1,8 @@
 import { type ReactNode, type JSX } from "react";
-import { ArrowRight, Megaphone, CircleHelp, UserPlus, CalendarDays } from "lucide-react";
+import { ExternalLink, Megaphone, CircleHelp, UserPlus, CalendarDays } from "lucide-react";
 import { COMMUNITY_URL } from "@/data/constants";
 import { SectionLabel } from "@/components/SectionLabel";
+import { SidebarLayout } from "@/components/SidebarLayout";
 
 type Card = {
   icon: ReactNode;
@@ -67,7 +68,7 @@ export const CommunitySection = ({ aside }: { aside?: ReactNode }): JSX.Element 
               rel="noopener noreferrer"
               className="docs-ext-link mt-5 text-sm font-medium"
             >
-              {card.cta} <ArrowRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+              {card.cta} <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
             </a>
           </div>
         ))}
@@ -78,16 +79,7 @@ export const CommunitySection = ({ aside }: { aside?: ReactNode }): JSX.Element 
   return (
     <section aria-labelledby="community-section-heading" className="py-24 px-6 md:px-16">
       <div className="mx-auto max-w-6xl">
-        {aside ? (
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12">
-            {content}
-            <div className="hidden lg:block">
-              <div className="sticky top-24">{aside}</div>
-            </div>
-          </div>
-        ) : (
-          content
-        )}
+        <SidebarLayout aside={aside}>{content}</SidebarLayout>
       </div>
     </section>
   );

@@ -1,8 +1,8 @@
 import { type JSX } from "react";
 import { useParams, Link } from "react-router";
 import type { LinksFunction, MetaFunction } from "react-router";
-import { ArrowLeft, ArrowRight, Check, ExternalLink } from "lucide-react";
-import { ADVENTURES } from "@/data/adventures";
+import { ArrowLeft, Check, ExternalLink } from "lucide-react";
+import { ADVENTURES, tagToSlug } from "@/data/adventures";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { ContributorBadge } from "@/components/ContributorBadge";
 import { NotFoundPage } from "@/components/NotFoundPage";
@@ -10,6 +10,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { LevelCard } from "@/components/LevelCard";
 import { ScenarioSection } from "@/components/ScenarioSection";
+import { CollapsibleSection } from "@/components/CollapsibleSection";
 import { ArchitectureSection } from "@/components/ArchitectureSection";
 import { WalkthroughSection } from "@/components/WalkthroughSection";
 import { DiscussionSection } from "@/components/DiscussionSection";
@@ -65,6 +66,7 @@ type StructuredLayoutProps = {
   architectureDiagram: string | undefined;
   diagramAlt: string | undefined;
   howToPlay: { title: string; body: string }[] | undefined;
+  helpfulLinks: { label: string; url: string }[] | undefined;
   verification: (typeof ADVENTURES)[number]["levels"][number]["verification"];
 };
 
@@ -79,6 +81,7 @@ const StructuredLayout = ({
   architectureDiagram,
   diagramAlt,
   howToPlay,
+  helpfulLinks,
   verification,
 }: StructuredLayoutProps): JSX.Element => {
   return (
@@ -93,12 +96,13 @@ const StructuredLayout = ({
         <div className="flex flex-wrap items-center gap-2 mb-5">
           <DifficultyBadge difficulty={level.difficulty} showDot />
           {(level.topics ?? adventure.tags).map((tag) => (
-            <span
+            <Link
               key={tag}
-              className="rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))]"
+              to={`/challenges/${tagToSlug(tag)}`}
+              className="rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary hover:text-primary transition-colors"
             >
               {tag}
-            </span>
+            </Link>
           ))}
         </div>
 
@@ -113,25 +117,24 @@ const StructuredLayout = ({
       {/* Two-column layout: main content + sidebar */}
       <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-10">
         <div className="min-w-0">
-          {/* Objective card */}
-          {objective && objective.length > 0 && (
-            <section id="objective" className="mb-6 scroll-mt-28 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-              <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
-                Objective
-              </h2>
-              <ul className="space-y-2">
-                {objective.map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
-                    <Check size={14} className="mt-0.5 shrink-0 text-primary" aria-hidden="true" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-
-          {/* Key Learnings + Toolbox side-by-side cards */}
+          {/* Objective + Key Learnings side-by-side */}
           <div className="grid gap-5 sm:grid-cols-2 mb-6">
+            {objective && objective.length > 0 && (
+              <section id="objective" className="scroll-mt-28 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+                <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
+                  Mission Objective
+                </h2>
+                <ul className="space-y-2">
+                  {objective.map((item) => (
+                    <li key={item} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+                      <Check size={14} className="mt-0.5 shrink-0 text-primary" aria-hidden="true" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
             <section id="learnings" className="scroll-mt-28 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
               <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
                 Key Learnings
@@ -145,55 +148,16 @@ const StructuredLayout = ({
                 ))}
               </ul>
             </section>
-
-            {toolbox && toolbox.length > 0 && (
-              <section id="toolbox" className="scroll-mt-28 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-                <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
-                  Toolbox
-                </h2>
-                <ul className="space-y-2">
-                  {toolbox.map((tool) => (
-                    <li key={tool.name} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
-                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                      <span>
-                        {tool.url ? (
-                          <a
-                            href={tool.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="docs-ext-link font-medium"
-                          >
-                            {tool.name}
-                            <ExternalLink size={12} aria-hidden="true" />
-                            <span className="sr-only"> (opens in new tab)</span>
-                          </a>
-                        ) : (
-                          <span className="font-medium text-foreground">{tool.name}</span>
-                        )}
-                        {tool.description && <>{" "}- {tool.description}</>}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
           </div>
 
-          {/* Mobile CTA - visible only below lg, after Key Learnings */}
-          <div className="mb-6 lg:hidden">
-            <a
-              href={level.codespacesUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary w-full justify-center"
-            >
-              Open in Codespaces <ArrowRight size={14} aria-hidden="true" />
-              <span className="sr-only"> (opens in new tab)</span>
-            </a>
-            <p className="mt-2 text-center text-xs text-[hsl(var(--text-faint))] font-mono">
-              Free GitHub account required
-            </p>
-          </div>
+          {/* Audience */}
+          {level.audience && (
+            <CollapsibleSection id="audience" title="Best Suited For">
+              <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+                {level.audience}
+              </p>
+            </CollapsibleSection>
+          )}
 
           {/* Collapsible sections */}
           {backstory && backstory.length > 0 && (
@@ -202,6 +166,99 @@ const StructuredLayout = ({
           {(architecture && architecture.length > 0 || architectureDiagram) && (
             <ArchitectureSection architecture={(architecture ?? []).join("\n\n")} diagram={architectureDiagram} diagramAlt={diagramAlt} />
           )}
+
+          {/* Toolbox + Helpful Documentation side-by-side */}
+          {((toolbox && toolbox.length > 0) || (helpfulLinks && helpfulLinks.length > 0)) && (
+            <div className={`grid gap-5 mb-6${toolbox && toolbox.length > 0 && helpfulLinks && helpfulLinks.length > 0 ? " sm:grid-cols-2" : ""}`}>
+              {toolbox && toolbox.length > 0 && (
+                <section id="toolbox" className="scroll-mt-28 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+                  <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
+                    Toolbox
+                  </h2>
+                  <ul className="space-y-2">
+                    {toolbox.map((tool) => (
+                      <li key={tool.name} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                        <span>
+                          {tool.url ? (
+                            <a
+                              href={tool.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="docs-ext-link font-medium"
+                            >
+                              {tool.name}
+                              <ExternalLink size={12} aria-hidden="true" />
+                              <span className="sr-only"> (opens in new tab)</span>
+                            </a>
+                          ) : (
+                            <span className="font-medium text-foreground">{tool.name}</span>
+                          )}
+                          {tool.description && <>{" "}- {tool.description}</>}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
+              {helpfulLinks && helpfulLinks.length > 0 && (
+                <section aria-labelledby="helpful-links-heading" className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+                  <h2 id="helpful-links-heading" className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
+                    Helpful Documentation
+                  </h2>
+                  <ul className="space-y-2">
+                    {helpfulLinks.map((link) => (
+                      <li key={link.url} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                        <span>
+                          <a
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="docs-ext-link font-medium"
+                          >
+                            {link.label}
+                            <ExternalLink size={11} aria-hidden="true" />
+                            <span className="sr-only"> (opens in new tab)</span>
+                          </a>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+            </div>
+          )}
+
+          {/* CTA card */}
+          <section className="mb-6 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+            <div className="lg:grid lg:grid-cols-2 lg:gap-6 lg:items-center">
+              <div>
+                <h3 className="text-sm font-semibold text-foreground mb-1">
+                  Ready to start?
+                </h3>
+                <p className="text-xs text-[hsl(var(--text-secondary))]">
+                  Launch in a preconfigured devcontainer
+                </p>
+              </div>
+              <div className="mt-4 lg:mt-0 flex flex-col lg:items-end">
+                <a
+                  href={level.codespacesUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary w-fit"
+                >
+                  Open in Codespaces <ExternalLink size={14} aria-hidden="true" />
+                  <span className="sr-only"> (opens in new tab)</span>
+                </a>
+                <p className="mt-2.5 text-xs text-[hsl(var(--text-faint))] font-mono">
+                  Free GitHub account required
+                </p>
+              </div>
+            </div>
+          </section>
+
           {howToPlay && howToPlay.length > 0 && (
             <WalkthroughSection
               steps={[
@@ -217,6 +274,12 @@ const StructuredLayout = ({
               Complete Your Challenge
             </h2>
             <ul className="space-y-3">
+              <li className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                <span>
+                  GitHub automatically forks the repository to your account when you push your first commit from Codespaces.
+                </span>
+              </li>
               <li className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                 {verification ? (
@@ -254,7 +317,11 @@ const StructuredLayout = ({
         <div
           className="mt-10 lg:mt-0 space-y-4 lg:sticky lg:top-28 lg:self-start"
         >
-          {/* CTA panel - hidden on mobile where it shows above content */}
+          {adventure.rewards && (
+            <RewardsCard rewards={adventure.rewards} compact levelDeadline={level.deadline} />
+          )}
+
+          {/* CTA panel - hidden on mobile where inline CTA is shown */}
           <div className="hidden lg:block rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
             <a
               href={level.codespacesUrl}
@@ -262,17 +329,13 @@ const StructuredLayout = ({
               rel="noopener noreferrer"
               className="btn-primary w-full justify-center"
             >
-              Open in Codespaces <ArrowRight size={14} aria-hidden="true" />
+              Open in Codespaces <ExternalLink size={14} aria-hidden="true" />
               <span className="sr-only"> (opens in new tab)</span>
             </a>
             <p className="mt-2.5 text-center text-xs text-[hsl(var(--text-faint))] font-mono">
               Free GitHub account required
             </p>
           </div>
-
-          {adventure.rewards && (
-            <RewardsCard rewards={adventure.rewards} compact />
-          )}
           <CommunitySidebar
             adventureId={adventure.id}
             levelId={level.id}
@@ -308,10 +371,11 @@ const ChallengeDetail = (): JSX.Element => {
   const objective = level.objective;
   const toolbox = level.toolbox;
   const howToPlay = level.howToPlay;
+  const helpfulLinks = level.helpfulLinks;
   const verification = level.verification;
 
   const hasStructuredContent = !!(
-    intro || backstory || architecture || toolbox || howToPlay
+    intro || backstory || architecture || toolbox || howToPlay || helpfulLinks
   );
 
   return (
@@ -345,6 +409,7 @@ const ChallengeDetail = (): JSX.Element => {
               architectureDiagram={architectureDiagram}
               diagramAlt={diagramAlt}
               howToPlay={howToPlay}
+              helpfulLinks={helpfulLinks}
               verification={verification}
             />
           ) : (
@@ -356,12 +421,13 @@ const ChallengeDetail = (): JSX.Element => {
                 <div className="flex flex-wrap items-center gap-2 mb-4">
                   <DifficultyBadge difficulty={level.difficulty} showDot />
                   {(level.topics ?? adventure.tags).map((tag) => (
-                    <span
+                    <Link
                       key={tag}
-                      className="rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))]"
+                      to={`/challenges/${tagToSlug(tag)}`}
+                      className="rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary hover:text-primary transition-colors"
                     >
                       {tag}
-                    </span>
+                    </Link>
                   ))}
                 </div>
                 {adventure.contributor && (

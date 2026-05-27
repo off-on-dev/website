@@ -1,39 +1,41 @@
-import { Fragment, type JSX } from "react";
+import { type JSX } from "react";
 import { ExternalLink, Trophy } from "lucide-react";
 import type { AdventureRewards } from "@/data/adventures/types";
 
 type RewardsCardProps = {
   rewards: AdventureRewards;
   compact?: boolean;
+  levelDeadline?: string;
 };
 
-export const RewardsCard = ({ rewards, compact = false }: RewardsCardProps): JSX.Element => (
+export const RewardsCard = ({ rewards, compact = false, levelDeadline }: RewardsCardProps): JSX.Element => (
   <div className="rounded-xl border border-primary/30 bg-[hsl(var(--surface))] p-5">
     <div className="flex items-center gap-2 mb-4">
       <Trophy size={15} className="text-primary shrink-0" aria-hidden="true" />
       <h2 className="font-sans text-base font-semibold text-foreground">Rewards</h2>
     </div>
 
-    {!compact && (
-      <>
-        <p className="font-mono text-[0.65rem] uppercase tracking-widest text-[hsl(var(--text-faint))] mb-1">
-          Deadline
-        </p>
-        <p className="text-sm font-medium text-foreground mb-4">{rewards.deadline}</p>
-        <p className="text-xs text-[hsl(var(--text-secondary))] leading-relaxed mb-4">
-          {rewards.eligibility}
-        </p>
-      </>
+    {!compact && rewards.deadline && (
+      <p className="text-xs text-[hsl(var(--text-faint))] mb-3">
+        <span className="font-mono uppercase tracking-widest">Deadline:</span>{" "}
+        <span className="font-medium text-foreground">{rewards.deadline}</span>
+      </p>
     )}
 
-    <dl className={`grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5${compact ? "" : " mb-4"}`}>
+    {!compact && (
+      <p className="text-xs text-[hsl(var(--text-secondary))] leading-relaxed mb-4">
+        {rewards.eligibility}
+      </p>
+    )}
+
+    <div className={`space-y-2${compact ? "" : " mb-4"}`}>
       {rewards.tiers.map((tier) => (
-        <Fragment key={tier.label}>
-          <dt className="text-xs font-semibold text-foreground whitespace-nowrap">{tier.label}:</dt>
-          <dd className="text-xs text-[hsl(var(--text-secondary))] m-0">{tier.description}</dd>
-        </Fragment>
+        <div key={tier.label}>
+          <p className="text-xs font-semibold text-foreground">{tier.label}</p>
+          <p className="text-xs text-[hsl(var(--text-secondary))]">{tier.description}</p>
+        </div>
       ))}
-    </dl>
+    </div>
 
     {!compact && rewards.rankingNote && (
       <p className="text-xs text-[hsl(var(--text-faint))] leading-relaxed mt-4">
@@ -51,6 +53,18 @@ export const RewardsCard = ({ rewards, compact = false }: RewardsCardProps): JSX
           </a>
         )}
       </p>
+    )}
+
+    {(compact ? levelDeadline : rewards.deadline) && (
+      <>
+        <div className="border-t border-[hsl(var(--surface-border))] my-3" />
+        <p className="text-xs text-[hsl(var(--text-faint))]">
+          Deadline:{" "}
+          <span className="font-medium text-foreground">
+            {compact ? levelDeadline : rewards.deadline}
+          </span>
+        </p>
+      </>
     )}
   </div>
 );

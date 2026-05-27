@@ -84,7 +84,7 @@ function extractTopicId(url) {
 }
 
 /**
- * Recursively find all JSON files in a directory.
+ * Recursively find all discussion JSON files in a directory.
  */
 function findLevelFiles(dir) {
   const results = [];
@@ -92,7 +92,7 @@ function findLevelFiles(dir) {
     const full = join(dir, entry);
     if (statSync(full).isDirectory()) {
       results.push(...findLevelFiles(full));
-    } else if (entry.endsWith(".json")) {
+    } else if (entry.endsWith("-posts.json")) {
       results.push(full);
     }
   }

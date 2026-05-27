@@ -1,5 +1,5 @@
 import { CODESPACES_BASE, COMMUNITY_URL } from "@/data/constants";
-import blindByDesignIntermediateDiagram from "@/assets/diagrams/blind-by-design-intermediate.svg";
+import blindByDesignIntermediate from "@/assets/diagrams/blind-by-design-intermediate.svg";
 import type { Adventure } from "./types";
 
 export const BLIND_BY_DESIGN: Adventure = {
@@ -26,8 +26,8 @@ export const BLIND_BY_DESIGN: Adventure = {
     ],
   },
   rewards: {
-    deadline: "Tuesday, 26 May 2026 at 23:59 CET",
-    eligibility: "Complete all three levels before the deadline to be eligible.",
+    deadline: "26 May 2026 at 23:59 CET",
+    eligibility: "Complete all levels and post your solution in the community before the deadline to be eligible.",
     tiers: [
       { label: "1st place", description: "50% voucher for a Linux Foundation certification" },
       { label: "Top 3", description: "Credly badge to showcase the achievement" },
@@ -41,6 +41,7 @@ export const BLIND_BY_DESIGN: Adventure = {
       name: "Stand up the Lab",
       difficulty: "Beginner",
       topics: ["OpenFeature", "flagd", "Spring Boot"],
+      audience: "Platform engineers, SREs, and developers curious about feature flags, with no prior OpenFeature experience needed, but familiarity with Spring Boot and basic Java will help.",
       learnings: [
         "How an OpenFeature client and provider work together: the SDK is provider-agnostic and the flagd provider plugs in via dependency only",
         "What remote provider means in practice: the SDK calls a separate flag service (flagd) over gRPC, not parsing flags.json itself",
@@ -49,6 +50,7 @@ export const BLIND_BY_DESIGN: Adventure = {
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F04-blind-by-design_01-beginner%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/wire-openfeature-flagd-into-a-spring-boot-service-with-zero-setup-adventure-04-beginner/1419`,
+      deadline: "26 May 2026 at 23:59 CET",
       intro: [
         "Wire the OpenFeature Java SDK and the flagd contrib provider into a Spring Boot service so flag evaluations are resolved by a flagd sidecar against a flags.json file. Author your first flag, then prove that editing flags.json flips the response on the next request: no app restart, no flagd restart, no redeploy.",
       ],
@@ -56,14 +58,14 @@ export const BLIND_BY_DESIGN: Adventure = {
         "The lab is on its first shift and it isn't reading the chart. Every subject who walks through the door gets the same hard-coded reading on their record, no matter what the lab director just signed off on. The label coming out of the lab is a literal string baked into the controller, not a reading pulled from the chart.",
         "Your mission: replace that hard-coded label with an OpenFeature client, point that client at the flagd sidecar that already runs next to your Codespace, and let flags.json drive what gets recorded as the subject's vision_state. Prove the lab can change what it records without restarting anything.",
       ],
-      architecture: [
-        "This level runs as two containers side-by-side in your Codespace: the Spring Boot lab and a flagd sidecar.",
-        "The Spring Boot service runs on http://localhost:8080/ with one endpoint, GET /. flags.json is mounted read-only into the flagd sidecar; edit it through the IDE and flagd's file watcher picks up the change within about a second. The flagd sidecar serves flag evaluations over gRPC on :8013. The OpenFeature SDK reads FLAGD_HOST and FLAGD_PORT from the environment (pre-set by the devcontainer), so there is no host or port to hard-code.",
-      ],
       objective: [
         "curl http://localhost:8080/ returns a vision_state reading resolved from flags.json (not the hard-coded 'untreated' fallback)",
         "The response payload includes OpenFeature evaluation details: flag key, variant, reason, and value",
         "Editing flags.json to change defaultVariant causes the next request to return the new variant without restarting the app or flagd",
+      ],
+      architecture: [
+        "This level runs as two containers side-by-side in your Codespace: the Spring Boot lab and a flagd sidecar.",
+        "The Spring Boot service runs on http://localhost:8080/ with one endpoint, GET /. flags.json is mounted read-only into the flagd sidecar; edit it through the IDE and flagd's file watcher picks up the change within about a second. The flagd sidecar serves flag evaluations over gRPC on :8013. The OpenFeature SDK reads FLAGD_HOST and FLAGD_PORT from the environment (pre-set by the devcontainer), so there is no host or port to hard-code.",
       ],
       toolbox: [
         { name: "./mvnw", description: "Maven wrapper checked in next to pom.xml, builds and runs the Spring Boot lab" },
@@ -72,13 +74,28 @@ export const BLIND_BY_DESIGN: Adventure = {
         { name: "flagd sidecar", description: "already running in the devcontainer compose stack on the docker-internal network, no port forwarding needed" },
       ],
       howToPlay: [
-        { title: "Start the Lab", body: "Run the lab from the terminal, or press F5 in VS Code with `Laboratory.java` open. The lab starts in the broken state, returning the hard-coded 'untreated' response:\n\n```sh\n./mvnw spring-boot:run\n```" },
+        { title: "Start the Lab", body: `Run the lab from the terminal, or press F5 in VS Code with \`Laboratory.java\` open. The lab starts in the broken state, returning the hard-coded 'untreated' response:
+
+\`\`\`sh
+./mvnw spring-boot:run
+\`\`\`
+` },
         { title: "Confirm the Broken State", body: "Open the Ports tab, set port 8080 to Public, then click the forwarded address to confirm the hard-coded 'untreated' response." },
-        { title: "Add Dependencies", body: "Add the OpenFeature Java SDK and flagd contrib provider to `pom.xml`. GroupIds, artifactIds, and versions are in the OpenFeature Java SDK docs and the flagd Java provider README." },
-        { title: "Configure the Provider", body: "Create a Spring `@Configuration` class that builds a `FlagdProvider` in RPC mode and registers it on the OpenFeature API at startup. No host or port to configure: the devcontainer pre-sets `FLAGD_HOST` and `FLAGD_PORT`." },
-        { title: "Author Your First Flag", body: "Open `flags.json` and add a flag named `vision_state` with two string variants (for example 'blurry' and 'clouded') and a `defaultVariant`. flagd's file watcher picks up changes within about a second, no restart needed." },
-        { title: "Wire the Evaluation", body: "Replace the hard-coded return in `Trial` with an OpenFeature evaluation of `vision_state`, returning the full evaluation details (flag key, variant, value, reason)." },
-        { title: "Test Hot Reload", body: "Restart the lab. Confirm the value resolves from `flags.json`, then edit `flags.json`, change `defaultVariant`, save, and re-run curl without restarting anything:\n\n```sh\ncurl -s http://localhost:8080/ | jq\n```" },
+        { title: "Add Dependencies", body: `Add the OpenFeature Java SDK and flagd contrib provider to \`pom.xml\`. GroupIds, artifactIds, and versions are in the OpenFeature Java SDK docs and the flagd Java provider README.` },
+        { title: "Configure the Provider", body: `Create a Spring \`@Configuration\` class that builds a \`FlagdProvider\` in RPC mode and registers it on the OpenFeature API at startup. No host or port to configure: the devcontainer pre-sets \`FLAGD_HOST\` and \`FLAGD_PORT\`.` },
+        { title: "Author Your First Flag", body: `Open \`flags.json\` and add a flag named \`vision_state\` with two string variants (for example 'blurry' and 'clouded') and a \`defaultVariant\`. flagd's file watcher picks up changes within about a second, no restart needed.` },
+        { title: "Wire the Evaluation", body: `Replace the hard-coded return in \`Trial\` with an OpenFeature evaluation of \`vision_state\`, returning the full evaluation details (flag key, variant, value, reason).` },
+        { title: "Test Hot Reload", body: `Restart the lab. Confirm the value resolves from \`flags.json\`, then edit \`flags.json\`, change \`defaultVariant\`, save, and re-run curl without restarting anything:
+
+\`\`\`sh
+curl -s http://localhost:8080/ | jq
+\`\`\`
+` },
+      ],
+      helpfulLinks: [
+        { label: "OpenFeature Java SDK", url: "https://openfeature.dev/docs/reference/technologies/server/java/" },
+        { label: "flagd Java provider", url: "https://github.com/open-feature/java-sdk-contrib/tree/main/providers/flagd" },
+        { label: "flagd flag definitions", url: "https://flagd.dev/reference/flag-definitions/" },
       ],
       verification: {
         command: "./verify.sh",
@@ -98,6 +115,7 @@ export const BLIND_BY_DESIGN: Adventure = {
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F04-blind-by-design_02-intermediate%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/outcome-by-cohort-adventure-04-intermediate/1485`,
+      deadline: "26 May 2026 at 23:59 CET",
       intro: [
         "Populate all three OpenFeature evaluation-context layers on a Spring Boot service and register a custom Hook.",
         "Transaction context (request-scoped) is populated by a Spring HandlerInterceptor that reads ?species= and clears on afterCompletion so values don't leak across pooled threads. Global context (process-scoped) is set once at startup from the COUNTRY environment variable. Invocation context (call-site) is passed as the third argument to client.getStringDetails(), carrying the per-evaluation dose attribute. An Audit Hook fires after every evaluation and writes an [AUDIT] log line with a fixed PII-safe attribute allowlist.",
@@ -107,12 +125,6 @@ export const BLIND_BY_DESIGN: Adventure = {
         "The trial is widening. Subjects from outside the lab's local population are getting the wrong reading on their chart, and the lab director has just walked in holding a stack of complaint forms. She wants the audit log to tell her exactly which vision_state the lab recorded for which subject, and she wants the lab to read the chart properly before it records any more bad readings.",
         "What differs between subjects is the observed outcome: some have a biology that responds enhancedly to the same serum, some absorb less or more than the protocol's standard dose, and the trial is registered in different jurisdictions with different baselines. Your shift: teach the lab to read each subject's species off the request, attach the trial's country of registration to the global context, pass the dose as invocation context at evaluation time, and register an audit hook.",
       ],
-      architectureDiagram: blindByDesignIntermediateDiagram,
-      diagramAlt: "HTTP flows through SpeciesInterceptor, Trial, and OpenFeature client left to right, then down through AuditHook and FlagdProvider, connecting via gRPC to a flagd sidecar.",
-      architecture: [
-        "The lab and a flagd sidecar run as siblings in the devcontainer's compose stack. The OpenFeature client uses Resolver.RPC to reach flagd:8013; flagd watches flags.json and serves evaluations from it.",
-        "Three context layers merge before flagd evaluates the targeting rules: global context (country, set at startup), transaction context (species, set per request by the interceptor), and invocation context (dose, passed at the call site). Precedence on conflict: invocation > transaction > global.",
-      ],
       objective: [
         "curl /?species=zyklop returns 'enhanced' regardless of dose or country",
         "With COUNTRY=de, curl /?dose=standard returns 'sharp'; with COUNTRY=at, the same call falls through to the default",
@@ -120,6 +132,12 @@ export const BLIND_BY_DESIGN: Adventure = {
         "Every evaluation produces an [AUDIT] log line naming the flag, the resolved variant, the reason, and the attributes that drove the outcome",
         "The response is never 'untreated' (that fallback only fires when the SDK cannot reach flagd)",
       ],
+      architecture: [
+        "The lab and a flagd sidecar run as siblings in the devcontainer's compose stack. The OpenFeature client uses Resolver.RPC to reach flagd:8013; flagd watches flags.json and serves evaluations from it.",
+        "Three context layers merge before flagd evaluates the targeting rules: global context (country, set at startup), transaction context (species, set per request by the interceptor), and invocation context (dose, passed at the call site). Precedence on conflict: invocation > transaction > global.",
+      ],
+      architectureDiagram: blindByDesignIntermediate,
+      diagramAlt: "HTTP flows through SpeciesInterceptor, Trial, and OpenFeature client left to right, then down through AuditHook and FlagdProvider, connecting via gRPC to a flagd sidecar.",
       toolbox: [
         { name: "Java 21 (Temurin)", description: "pre-installed in the devcontainer" },
         { name: "./mvnw", description: "Spring Boot Maven Wrapper, no global Maven install required" },
@@ -128,13 +146,67 @@ export const BLIND_BY_DESIGN: Adventure = {
       ],
       howToPlay: [
         { title: "Wait for Setup", body: "Wait ~2-3 minutes for the Java toolchain to install." },
-        { title: "Confirm the Broken State", body: "Start the lab and confirm the broken state, where no targeting fires yet. Stop the app and start fixing:\n\n```sh\n./mvnw spring-boot:run\ncurl 'http://localhost:8080/?species=zyklop'\n# returns 'blurry', wrong cohort, targeting can't fire\n```" },
-        { title: "Inspect the Targeting Rules", body: "Open `flags.json` and inspect the targeting. Three branches exist but none fire because nothing in the app populates the attributes yet:\n\n```json\n\"targeting\": {\n  \"if\": [\n    { \"===\": [{\"var\": \"species\"}, \"zyklop\"] },        \"enhanced\",\n    { \"in\":  [{\"var\": \"dose\"}, [\"underdose\", \"overdose\"]] }, \"clouded\",\n    { \"===\": [{\"var\": \"country\"}, \"de\"] },             \"sharp\"\n  ]\n}\n```\n\nYour job: populate `species`, `country`, and `dose` on the evaluation context so the targeting fires." },
-        { title: "Build the SpeciesInterceptor", body: "Create a Spring `HandlerInterceptor` named `SpeciesInterceptor`: in `preHandle`, read `?species=` and put it on the transaction context; in `afterCompletion`, clear the context so values do not leak across pooled threads. Register a `ThreadLocalTransactionContextPropagator` once on the OpenFeature API in a static initializer." },
-        { title: "Wire OpenFeatureConfig", body: "Update `OpenFeatureConfig` to: register `SpeciesInterceptor` with Spring (`WebMvcConfigurer.addInterceptors`), read the `COUNTRY` environment variable and set it as the global evaluation context, and register `AuditHook` globally on the OpenFeature API." },
-        { title: "Update the Trial", body: "Update `Trial` so each evaluation passes `dose` on the invocation context (the third argument to `client.getStringDetails`). Default to 'standard', but make it overridable via `?dose=` so you can test each branch by hand." },
-        { title: "Implement AuditHook", body: "Implement `AuditHook`: in `after()`, write an `[AUDIT]` log line with flag name, variant, reason, and a fixed allowlist of attributes (species, country, dose). Log at WARN when the variant is 'clouded', otherwise INFO. Implement `error()` so failed evaluations are not silent." },
-        { title: "Test All Targeting Branches", body: "Run the lab with country-specific scripts. These pipe output through `tee app.log`, which the verifier needs:\n\n```sh\n./run-germany.sh   # COUNTRY=de\n./run-austria.sh   # COUNTRY=at\n```\n\nIn another terminal, verify each branch:\n\n```sh\ncurl -s 'http://localhost:8080/?species=zyklop' | jq .value\n# => \"enhanced\"\n\ncurl -s 'http://localhost:8080/?dose=standard' | jq .value\n# => \"sharp\" (Germany) / \"blurry\" (Austria)\n\ncurl -s 'http://localhost:8080/?dose=underdose' | jq .value\n# => \"clouded\"\n\ncurl -s 'http://localhost:8080/?species=zyklop&dose=underdose' | jq .value\n# => \"enhanced\" (species wins)\n```\n\nCheck the audit trail:\n\n```sh\ngrep '\\[AUDIT\\]' app.log | head\n```" },
+        { title: "Confirm the Broken State", body: `Start the lab and confirm the broken state, where no targeting fires yet. Stop the app and start fixing:
+
+\`\`\`sh
+./mvnw spring-boot:run
+curl 'http://localhost:8080/?species=zyklop'
+# returns 'blurry', wrong cohort, targeting can't fire
+\`\`\`
+` },
+        { title: "Inspect the Targeting Rules", body: `Open \`flags.json\` and inspect the targeting. Three branches exist but none fire because nothing in the app populates the attributes yet:
+
+\`\`\`json
+"targeting": {
+  "if": [
+    { "===": [{"var": "species"}, "zyklop"] },        "enhanced",
+    { "in":  [{"var": "dose"}, ["underdose", "overdose"]] }, "clouded",
+    { "===": [{"var": "country"}, "de"] },             "sharp"
+  ]
+}
+\`\`\`
+
+Your job: populate \`species\`, \`country\`, and \`dose\` on the evaluation context so the targeting fires.
+` },
+        { title: "Build the SpeciesInterceptor", body: `Create a Spring \`HandlerInterceptor\` named \`SpeciesInterceptor\`: in \`preHandle\`, read \`?species=\` and put it on the transaction context; in \`afterCompletion\`, clear the context so values do not leak across pooled threads. Register a \`ThreadLocalTransactionContextPropagator\` once on the OpenFeature API in a static initializer.` },
+        { title: "Wire OpenFeatureConfig", body: `Update \`OpenFeatureConfig\` to: register \`SpeciesInterceptor\` with Spring (\`WebMvcConfigurer.addInterceptors\`), read the \`COUNTRY\` environment variable and set it as the global evaluation context, and register \`AuditHook\` globally on the OpenFeature API.` },
+        { title: "Update the Trial", body: `Update \`Trial\` so each evaluation passes \`dose\` on the invocation context (the third argument to \`client.getStringDetails\`). Default to 'standard', but make it overridable via \`?dose=\` so you can test each branch by hand.` },
+        { title: "Implement AuditHook", body: `Implement \`AuditHook\`: in \`after()\`, write an \`[AUDIT]\` log line with flag name, variant, reason, and a fixed allowlist of attributes (species, country, dose). Log at WARN when the variant is 'clouded', otherwise INFO. Implement \`error()\` so failed evaluations are not silent.` },
+        { title: "Test All Targeting Branches", body: `Run the lab with country-specific scripts. These pipe output through \`tee app.log\`, which the verifier needs:
+
+\`\`\`sh
+./run-germany.sh   # COUNTRY=de
+./run-austria.sh   # COUNTRY=at
+\`\`\`
+
+In another terminal, verify each branch:
+
+\`\`\`sh
+curl -s 'http://localhost:8080/?species=zyklop' | jq .value
+# => "enhanced"
+
+curl -s 'http://localhost:8080/?dose=standard' | jq .value
+# => "sharp" (Germany) / "blurry" (Austria)
+
+curl -s 'http://localhost:8080/?dose=underdose' | jq .value
+# => "clouded"
+
+curl -s 'http://localhost:8080/?species=zyklop&dose=underdose' | jq .value
+# => "enhanced" (species wins)
+\`\`\`
+
+Check the audit trail:
+
+\`\`\`sh
+grep '\\[AUDIT\\]' app.log | head
+\`\`\`
+` },
+      ],
+      helpfulLinks: [
+        { label: "OpenFeature Java SDK", url: "https://openfeature.dev/docs/reference/technologies/server/java/" },
+        { label: "OpenFeature Hooks", url: "https://openfeature.dev/docs/reference/concepts/hooks" },
+        { label: "Spring HandlerInterceptor", url: "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/HandlerInterceptor.html" },
+        { label: "flagd flag definitions", url: "https://flagd.dev/reference/flag-definitions/" },
       ],
       verification: {
         command: "./verify.sh",

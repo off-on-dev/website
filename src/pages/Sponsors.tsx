@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import type { LinksFunction, MetaFunction } from "react-router";
-import { ArrowRight, Mail } from "lucide-react";
+import { ExternalLink, Mail } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
@@ -32,7 +32,7 @@ const Sponsors = (): JSX.Element => {
         title="Sponsorship and Independence"
         description="Sponsors provide financial support and participate as community members, but do not control editorial direction, content priorities, or governance. This community belongs to its members."
         primaryCta={{ label: <span className="inline-flex items-center gap-2"><Mail size={14} aria-hidden="true" /> Become a Sponsor</span>, href: `mailto:${CONTACT_EMAIL}` }}
-        secondaryCta={{ label: <span className="inline-flex items-center gap-2">Join the Community <ArrowRight size={14} aria-hidden="true" /></span>, href: COMMUNITY_URL, external: true }}
+        secondaryCta={{ label: <span className="inline-flex items-center gap-2">Join the Community <ExternalLink size={14} aria-hidden="true" /></span>, href: COMMUNITY_URL, external: true }}
       />
 
       <div className="px-6 md:px-16 py-16">

@@ -1,16 +1,16 @@
-name: Refresh Discussion Data
+name: Refresh Community Data
 
 on:
   schedule:
-    # Every day at 06:00 UTC
-    - cron: "0 6 * * *"
+    # Every hour
+    - cron: "0 * * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: refresh-discussions
+  group: refresh-community-data
   cancel-in-progress: false
 
 env:
@@ -49,6 +49,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No data changes."
           else
-            git commit -m "chore: refresh discussion, leaderboard, and community leaders data [skip ci]"
+            git commit -m "chore: refresh community data"
             git push
           fi

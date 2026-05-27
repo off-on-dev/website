@@ -52,8 +52,8 @@ jobs:
             --level "$LEVEL_ID" 2>&1)
           echo "$OUTPUT"
 
-          # Extract the TS snippet (everything between "Paste this" and "Next steps")
-          SNIPPET=$(echo "$OUTPUT" | sed -n '/^    {$/,/^    },$/p')
+          # Extract the YAML snippet (from "  - id:" through to just before "Next steps:")
+          SNIPPET=$(echo "$OUTPUT" | awk '/^  - id:/{found=1} /^Next steps:/{exit} found')
           echo "snippet<<EOF" >> "$GITHUB_OUTPUT"
           echo "$SNIPPET" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
@@ -73,20 +73,20 @@ jobs:
             | Level | `${{ inputs.level }}` |
 
             ### Generated
-            - `src/data/adventures/${{ inputs.adventure }}/${{ inputs.level }}.json` (discussion stub)
+            - `src/data/adventures/${{ inputs.adventure }}/${{ inputs.level }}-posts.json` (discussion stub)
             - Prerender entry in `react-router.config.ts`
             - Sitemap entry in `public/sitemap.xml`
 
             ### Manual step required
-            Paste this into the `levels` array in `src/data/adventures/${{ inputs.adventure }}.ts`:
+            Paste this into the `levels` array in `src/data/adventures/${{ inputs.adventure }}/adventure.yaml`:
 
-            ```typescript
+            ```yaml
             ${{ steps.scaffold.outputs.snippet }}
             ```
 
             ### Next steps
             1. Paste the snippet above and fill in the TODOs
-            2. Update `discussionUrl` in the JSON file
+            2. Update `discussionUrl` in the YAML and the `-posts.json` file
             3. Run `node scripts/refresh-discussions.mjs`
             4. Run all checks: `npm run lint && npm test && npm run build && npm run test:e2e`
           branch: "feat/${{ inputs.adventure }}-${{ inputs.level }}"

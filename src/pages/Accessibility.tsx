@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import { ExternalLink } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
+import { SITE_URL, SITE_NAME, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 
 export const meta: MetaFunction = () =>
@@ -19,7 +19,7 @@ const Accessibility = (): JSX.Element => {
   const heading3 = "text-lg font-heading font-semibold text-foreground mt-6 mb-2";
   const paragraph = "text-sm text-muted-foreground leading-relaxed mb-4";
   const list = "list-disc list-inside space-y-1 text-sm text-muted-foreground mb-4 ml-2";
-  const link = "inline-flex items-center gap-1 underline underline-offset-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm";
+  const link = "docs-ext-link";
 
   return (
     <div className="min-h-screen bg-background">
@@ -44,7 +44,7 @@ const Accessibility = (): JSX.Element => {
                 <a href="https://www.w3.org/TR/WCAG22/" target="_blank" rel="noopener noreferrer" className={link}>
                   WCAG 2.2 Level AA <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>{" "}
-                across every page on offon.dev.
+                across every page on {SITE_NAME}.
               </li>
               <li>
                 <strong>Both color modes:</strong> light and dark mode must meet contrast and focus
@@ -155,7 +155,7 @@ const Accessibility = (): JSX.Element => {
 
             <h2 className={heading2}>Reporting an Accessibility Barrier</h2>
             <p className={paragraph}>
-              If something on offon.dev blocks you or is hard to use,{" "}
+              If something on {SITE_NAME} blocks you or is hard to use,{" "}
               <a
                 href="https://github.com/off-on-dev/website/issues/new?template=accessibility.yml"
                 target="_blank"

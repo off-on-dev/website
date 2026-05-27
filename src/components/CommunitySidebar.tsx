@@ -8,6 +8,9 @@ import { ContributorBadge } from "@/components/ContributorBadge";
 import { LeaderboardList } from "@/components/LeaderboardList";
 import type { Adventure } from "@/data/adventures";
 
+const LEADERBOARD_ROWS_VISIBLE = 3;
+const POSTS_VISIBLE = 3;
+
 const avatarPalette: CSSProperties[] = [
   { backgroundColor: "hsl(var(--primary) / 0.25)", color: "hsl(var(--foreground))" },
   { backgroundColor: "hsl(var(--difficulty-architect) / 0.25)", color: "hsl(var(--foreground))" },
@@ -39,9 +42,8 @@ export const CommunitySidebar = ({
   const { rows: leaderboardRows } = useAdventureLeaderboard(adventureId);
   const hasThread = discussionUrl !== COMMUNITY_URL;
 
-  const LEADERBOARD_VISIBLE = 3;
   const hasLeaderboard = solvers.length > 0;
-  const topSolvers = solvers.slice(0, LEADERBOARD_VISIBLE);
+  const topSolvers = solvers.slice(0, LEADERBOARD_ROWS_VISIBLE);
 
   // Points for this specific level, keyed by username.
   const pointsByUsername = useMemo(() => {
@@ -59,11 +61,10 @@ export const CommunitySidebar = ({
   }, [leaderboardRows, levelId]);
 
   const nonCertPosts = useMemo(() => posts.filter((p) => !isCertificatePost(p)), [posts]);
-  const visibleCount = 3;
   // Show non-cert posts if available; fall back to cert posts so activity is never empty when posts exist
   const visible = nonCertPosts.length > 0
-    ? nonCertPosts.slice(0, visibleCount)
-    : posts.slice(0, visibleCount);
+    ? nonCertPosts.slice(0, POSTS_VISIBLE)
+    : posts.slice(0, POSTS_VISIBLE);
   const hasActivity = visible.length > 0;
 
   return (

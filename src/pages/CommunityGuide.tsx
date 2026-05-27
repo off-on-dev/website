@@ -2,13 +2,14 @@ import type { JSX } from "react";
 import type { LinksFunction, MetaFunction } from "react-router";
 import { Link } from "react-router";
 import { Navbar } from "@/components/Navbar";
-import { ArrowUpRight } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
 import { SectionLabel } from "@/components/SectionLabel";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
 import { CommunityLeaders } from "@/components/CommunityLeaders";
+import { SidebarLayout } from "@/components/SidebarLayout";
 import { buildPageMeta, interBoldPreload } from "@/lib/meta";
 
 const extLink = "docs-ext-link";
@@ -31,12 +32,12 @@ const CommunityGuide = (): JSX.Element => {
         eyebrow="Handbook"
         title="Everything You Need to Participate"
         description={`Community guidelines, policies, and resources to help get you started and grow in the ${BRAND_NAME} community.`}
-        primaryCta={{ label: <span className="inline-flex items-center gap-2">Meet the Community <ArrowUpRight size={14} aria-hidden="true" /></span>, href: COMMUNITY_URL, external: true }}
+        primaryCta={{ label: <span className="inline-flex items-center gap-2">Meet the Community <ExternalLink size={14} aria-hidden="true" /></span>, href: COMMUNITY_URL, external: true }}
       />
 
       <div className="px-6 md:px-16 py-16">
       <div className="mx-auto max-w-6xl">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12">
+        <SidebarLayout aside={<CommunityLeaders />}>
         <div className="space-y-8">
 
           {/* Get Involved */}
@@ -50,7 +51,7 @@ const CommunityGuide = (): JSX.Element => {
                   Create your account to access challenges, Q&amp;A, community discussions, and everything else.
                 </p>
                 <a href={`${COMMUNITY_URL}/signup`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Create an account <ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  Create an account <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </div>
 
@@ -60,7 +61,7 @@ const CommunityGuide = (): JSX.Element => {
                   Say hello and tell the community who you are and what you're working on. It's the first step.
                 </p>
                 <a href={`${COMMUNITY_URL}/c/general/introductions/18`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Say hello <ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  Say hello <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </div>
 
@@ -70,7 +71,7 @@ const CommunityGuide = (): JSX.Element => {
                   Stuck on a technical problem? Post a clear question and get answers from the community. No question is too basic.
                 </p>
                 <a href={`${COMMUNITY_URL}/c/public-categories/q-a/10`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Ask a question <ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  Ask a question <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </div>
 
@@ -80,7 +81,7 @@ const CommunityGuide = (): JSX.Element => {
                   Share a tutorial, showcase a project, or write about what you've learned. Every contribution makes the community stronger.
                 </p>
                 <a href={`${COMMUNITY_URL}/c/community-voices/38`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Share something <ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  Share something <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </div>
             </div>
@@ -96,7 +97,7 @@ const CommunityGuide = (): JSX.Element => {
                   Hands-on scenarios with broken environments, misconfigured pipelines, and real-world failures to debug and fix. Post your solution and see how others approached it.
                 </p>
                 <a href={`${COMMUNITY_URL}/c/challenges/11`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Start a challenge <ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  Start a challenge <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </div>
 
@@ -106,7 +107,7 @@ const CommunityGuide = (): JSX.Element => {
                   Bring your expertise and experience. Help build adventures for others to learn from open source tech with a broken scenario, a real-world failure, or a skill gap. Shape the next adventure.
                 </p>
                 <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Submit an idea <ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  Submit an idea <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </div>
             </div>
@@ -125,7 +126,7 @@ const CommunityGuide = (): JSX.Element => {
                 <li key={item.label} className="flex items-center gap-2.5 text-sm">
                   <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                   <a href={item.href} target="_blank" rel="noopener noreferrer" className={extLink}>
-                    {item.label} <ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                    {item.label} <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                   </a>
                 </li>
               ))}
@@ -161,12 +162,7 @@ const CommunityGuide = (): JSX.Element => {
 
         </div>
 
-        <div className="hidden lg:block">
-          <div className="sticky top-24">
-            <CommunityLeaders />
-          </div>
-        </div>
-        </div>
+        </SidebarLayout>
 
       </div>
       </div>

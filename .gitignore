@@ -26,6 +26,9 @@ playwright-report/
 # Test coverage
 coverage/
 
+# Temporary working files
+tmp/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

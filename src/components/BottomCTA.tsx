@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { BRAND_NAME, BRAND_SECONDARY_LINE, COMMUNITY_URL } from "@/data/constants";
 
 export const BottomCTA = (): JSX.Element => {
@@ -37,7 +37,7 @@ export const BottomCTA = (): JSX.Element => {
                 rel="noopener noreferrer"
               className="btn-inverse"
               >
-                Join the Community <ArrowRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                Join the Community <ExternalLink size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
               </a>
               <a
                 href="https://github.com/dynatrace-oss/open-ecosystem-challenges"
@@ -45,7 +45,7 @@ export const BottomCTA = (): JSX.Element => {
                 rel="noopener noreferrer"
               className="btn-ghost-inverse"
               >
-                View Challenges on GitHub <ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                View Challenges on GitHub <ExternalLink size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
               </a>
             </div>
           </div>

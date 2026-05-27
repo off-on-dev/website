@@ -891,6 +891,25 @@ Shared primitive for rendering a ranked list of players with avatar, username, a
 
 ---
 
+### `SidebarLayout`
+
+`src/components/SidebarLayout.tsx`
+
+Layout primitive that renders a two-column grid (`1fr 300px`) on `lg+` when `aside` is provided, with the aside column sticky at `top-24`. Falls back to rendering `children` alone when `aside` is omitted. Used by `CommunitySection`, `ChallengeBuildersSection`, and `CommunityGuide` so the sticky-sidebar pattern is defined in one place.
+
+```tsx
+<SidebarLayout aside={<CommunityLeaders />}>
+  {/* main content */}
+</SidebarLayout>
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `children` | `ReactNode` | required | Main content (left column). |
+| `aside` | `ReactNode` (optional) | — | Sidebar content (right column, sticky). When omitted, children render without a grid wrapper. |
+
+---
+
 ### `AdventureLeaderboard`
 
 `src/components/AdventureLeaderboard.tsx`
@@ -1168,9 +1187,14 @@ When pairing an icon with text inside a link or button, always use `inline-flex 
 Never put a raw SVG icon next to text inside a plain `inline` or `block` element. The icon will drop below the baseline.
 
 ```tsx
-// Correct
-<a className="inline-flex items-center gap-1 ...">
-  Share something <ArrowRight size={13} aria-hidden="true" />
+// Correct — internal navigation
+<Link className="inline-flex items-center gap-1 ...">
+  Next step <ArrowRight size={13} aria-hidden="true" />
+</Link>
+
+// Correct — external link (opens in new tab)
+<a target="_blank" ... className="docs-ext-link">
+  View docs <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
 </a>
 
 // Incorrect: icon drops below text baseline
@@ -1189,8 +1213,8 @@ Never put a raw SVG icon next to text inside a plain `inline` or `block` element
 
 | Icon | Lucide name | Where used |
 |---|---|---|
-| External link (navigation) | `ArrowUpRight` | Navbar GitHub button, BottomCTA GitHub button, CommunityGuide links |
-| Navigate forward / CTA | `ArrowRight` | Inline text links (DiscussionSection, CommunitySection, SponsorStrip, BottomCTA, LevelCard) |
+| External link (opens in new tab) | `ExternalLink` | All `<a target="_blank">` links — Navbar, BottomCTA, Hero, CommunityGuide, LevelCard, DiscussionSection, LinkSection, LeaderboardList, Privacy, and more |
+| Navigate forward / CTA | `ArrowRight` | Internal `<Link>` navigation only (OtherLevelsCard, SponsorStrip, AdventureDetail) |
 | Navigate back | `ArrowLeft` | ChallengeDetail breadcrumb |
 | Scroll down / anchor | `ArrowDown` | Hero primary CTA |
 | Community Voices card | `Megaphone` | CommunitySection card icon |

@@ -81,15 +81,16 @@ jobs:
             | Levels | ${{ inputs.levels }} |
 
             ### Generated files
-            - `src/data/adventures/${{ inputs.id }}.ts` (fill in TODOs)
+            - `src/data/adventures/${{ inputs.id }}/adventure.yaml` (fill in TODOs)
             - Discussion JSON stubs per level
             - Routes added to `react-router.config.ts`
             - Sitemap entries added
 
             ### Next steps
-            1. Fill in the TODOs in the adventure TS file
-            2. Update `discussionUrl` in each level's JSON file
-            3. Run `node scripts/refresh-discussions.mjs`
-            4. Run all checks: `npm run lint && npm test && npm run build && npm run test:e2e`
+            1. Fill in the TODOs in `src/data/adventures/${{ inputs.id }}/adventure.yaml`
+            2. Update `discussionUrl` in the YAML and each level's `-posts.json` file
+            3. Run `npm run generate` to produce the TypeScript from YAML
+            4. Run `node scripts/refresh-discussions.mjs`
+            5. Run all checks: `npm run lint && npm test && npm run build && npm run test:e2e`
           branch: "feat/adventure-${{ inputs.id }}"
           delete-branch: true

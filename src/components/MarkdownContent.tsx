@@ -14,14 +14,13 @@ const childrenToText = (children: ReactNode): string => {
   if (typeof children === "string" || typeof children === "number") return String(children);
   if (Array.isArray(children)) return children.map(childrenToText).join("");
   if (children && typeof children === "object" && "props" in children) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const props = (children as any).props;
+    const { props } = children as { props?: { children?: ReactNode } };
     return childrenToText(props?.children);
   }
   return "";
 };
 
-const CodeBlock = ({ children }: { children: ReactNode }): JSX.Element => {
+const CodeBlock = ({ children, showCopy = true }: { children: ReactNode; showCopy?: boolean }): JSX.Element => {
   const preRef = useRef<HTMLPreElement>(null);
   const [copied, setCopied] = useState(false);
 
@@ -38,26 +37,28 @@ const CodeBlock = ({ children }: { children: ReactNode }): JSX.Element => {
       <pre
         ref={preRef}
         tabIndex={0}
-        className="overflow-x-auto rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-4 pr-14 font-mono text-sm leading-relaxed text-foreground"
+        className={`overflow-x-auto rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-4 font-mono text-sm leading-relaxed text-foreground [&>code]:border-none [&>code]:bg-transparent [&>code]:p-0 [&>code]:rounded-none [&>code]:text-[1em]${showCopy ? " pr-14" : ""}`}
       >
         {children}
       </pre>
-      <button
-        type="button"
-        onClick={onCopy}
-        aria-label={copied ? "Copied to clipboard" : "Copy code to clipboard"}
-        className="absolute top-2 right-2 inline-flex items-center gap-1 rounded-md border border-[hsl(var(--surface-border))] bg-background/80 px-2 py-1 text-xs font-medium text-[hsl(var(--text-secondary))] opacity-0 transition-opacity hover:text-foreground focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 group-hover:opacity-100"
-      >
-        {copied ? (
-          <>
-            <Check size={12} aria-hidden="true" /> Copied
-          </>
-        ) : (
-          <>
-            <Copy size={12} aria-hidden="true" /> Copy
-          </>
-        )}
-      </button>
+      {showCopy && (
+        <button
+          type="button"
+          onClick={onCopy}
+          aria-label={copied ? "Copied to clipboard" : "Copy code to clipboard"}
+          className="absolute top-2 right-2 inline-flex items-center gap-1 rounded-md border border-[hsl(var(--surface-border))] bg-background/80 px-2 py-1 text-xs font-medium text-[hsl(var(--text-secondary))] opacity-0 transition-opacity hover:text-foreground focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 group-hover:opacity-100"
+        >
+          {copied ? (
+            <>
+              <Check size={12} aria-hidden="true" /> Copied
+            </>
+          ) : (
+            <>
+              <Copy size={12} aria-hidden="true" /> Copy
+            </>
+          )}
+        </button>
+      )}
     </div>
   );
 };
@@ -173,7 +174,12 @@ const components: Components = {
       </code>
     );
   },
-  pre: ({ children }) => <CodeBlock>{children}</CodeBlock>,
+  pre: ({ children }) => {
+    const child = Array.isArray(children) ? children[0] : children;
+    const cls = (child as { props?: { className?: string } })?.props?.className ?? "";
+    const showCopy = typeof cls === "string" && cls.startsWith("language-");
+    return <CodeBlock showCopy={showCopy}>{children}</CodeBlock>;
+  },
   blockquote: ({ children }) => (
     <blockquote className="mb-6 rounded-lg border-l-4 border-primary bg-[hsl(var(--surface))]/60 px-5 py-4 text-[hsl(var(--text-secondary))]">
       {children}

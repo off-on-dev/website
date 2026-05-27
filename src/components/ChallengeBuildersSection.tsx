@@ -2,6 +2,7 @@ import type { JSX, ReactNode } from "react";
 import { Link } from "react-router";
 import { ADVENTURE_CONTRIBUTORS } from "@/data/adventures";
 import { PersonNameLink } from "@/components/PersonNameLink";
+import { SidebarLayout } from "@/components/SidebarLayout";
 
 export const ChallengeBuildersSection = ({ aside }: { aside?: ReactNode }): JSX.Element | null => {
   if (ADVENTURE_CONTRIBUTORS.length === 0) {
@@ -47,16 +48,7 @@ export const ChallengeBuildersSection = ({ aside }: { aside?: ReactNode }): JSX.
   return (
     <section id="challenge-builders" aria-labelledby="challenge-builders-heading" className="px-6 md:px-16 pb-16">
       <div className="mx-auto max-w-6xl">
-        {aside ? (
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12">
-            {content}
-            <div className="hidden lg:block">
-              <div className="sticky top-24">{aside}</div>
-            </div>
-          </div>
-        ) : (
-          content
-        )}
+        <SidebarLayout aside={aside}>{content}</SidebarLayout>
       </div>
     </section>
   );
