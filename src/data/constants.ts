@@ -30,7 +30,7 @@ export const CONTACT_EMAIL = "offondev@gmail.com";
 export const BRAND_SLOGAN_PARTS = ["Vendor-Neutral", "Open Source", "Community-Driven"] as const;
 export const BRAND_SLOGAN = BRAND_SLOGAN_PARTS.join(". ");
 
-export const BRAND_SECONDARY_LINE_WORD = "always";
+const BRAND_SECONDARY_LINE_WORD = "always";
 export const BRAND_SECONDARY_LINE_PARTS = [
 	`${BRAND_SECONDARY_LINE_WORD} On.`,
 	`${BRAND_SECONDARY_LINE_WORD} Open.`,

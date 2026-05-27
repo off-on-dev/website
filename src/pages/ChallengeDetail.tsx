@@ -2,7 +2,9 @@ import { type JSX } from "react";
 import { useParams, Link } from "react-router";
 import type { MetaFunction } from "react-router";
 import { ArrowLeft, Check, ExternalLink } from "lucide-react";
-import { ADVENTURES, tagToSlug } from "@/data/adventures";
+import { ADVENTURES } from "@/data/adventures";
+import { TagChips } from "@/components/TagChips";
+import { CodespacesButton } from "@/components/CodespacesButton";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { ContributorBadge } from "@/components/ContributorBadge";
 import { NotFoundPage } from "@/components/NotFoundPage";
@@ -56,32 +58,10 @@ export const meta: MetaFunction = ({ params }) => {
 type StructuredLayoutProps = {
   adventure: (typeof ADVENTURES)[number];
   level: (typeof ADVENTURES)[number]["levels"][number];
-  intro: string[] | undefined;
-  objective: string[] | undefined;
-  toolbox: { name: string; url?: string; description?: string }[] | undefined;
-  backstory: string[] | undefined;
-  architecture: string[] | undefined;
-  architectureDiagram: string | undefined;
-  diagramAlt: string | undefined;
-  howToPlay: { title: string; body: string }[] | undefined;
-  helpfulLinks: { label: string; url: string }[] | undefined;
-  verification: (typeof ADVENTURES)[number]["levels"][number]["verification"];
 };
 
-const StructuredLayout = ({
-  adventure,
-  level,
-  intro,
-  objective,
-  toolbox,
-  backstory,
-  architecture,
-  architectureDiagram,
-  diagramAlt,
-  howToPlay,
-  helpfulLinks,
-  verification,
-}: StructuredLayoutProps): JSX.Element => {
+const StructuredLayout = ({ adventure, level }: StructuredLayoutProps): JSX.Element => {
+  const { intro, objective, toolbox, backstory, architecture, architectureDiagram, diagramAlt, howToPlay, helpfulLinks, verification } = level;
   return (
     <>
       {/* Header */}
@@ -93,15 +73,7 @@ const StructuredLayout = ({
 
         <div className="flex flex-wrap items-center gap-2 mb-5">
           <DifficultyBadge difficulty={level.difficulty} showDot />
-          {(level.topics ?? adventure.tags).map((tag) => (
-            <Link
-              key={tag}
-              to={`/challenges/${tagToSlug(tag)}`}
-              className="tag-chip-link rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary hover:text-primary transition-colors"
-            >
-              {tag}
-            </Link>
-          ))}
+          <TagChips tags={level.topics ?? adventure.tags} />
         </div>
 
         {/* Intro as hook */}
@@ -181,18 +153,7 @@ const StructuredLayout = ({
                 </p>
               </div>
               <div className="mt-4 lg:mt-0 flex flex-col lg:items-end">
-                <a
-                  href={level.codespacesUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary w-fit"
-                >
-                  Open in Codespaces <ExternalLink size={14} aria-hidden="true" />
-                  <span className="sr-only"> (opens in new tab)</span>
-                </a>
-                <p className="mt-2.5 text-xs text-[hsl(var(--text-faint))] font-mono">
-                  Free GitHub account required
-                </p>
+                <CodespacesButton href={level.codespacesUrl} />
               </div>
             </div>
           </section>
@@ -326,18 +287,7 @@ const StructuredLayout = ({
 
           {/* CTA panel - hidden on mobile where inline CTA is shown */}
           <div className="hidden lg:block rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-            <a
-              href={level.codespacesUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary w-full justify-center"
-            >
-              Open in Codespaces <ExternalLink size={14} aria-hidden="true" />
-              <span className="sr-only"> (opens in new tab)</span>
-            </a>
-            <p className="mt-2.5 text-center text-xs text-[hsl(var(--text-faint))] font-mono">
-              Free GitHub account required
-            </p>
+            <CodespacesButton href={level.codespacesUrl} fullWidth />
           </div>
           <CommunitySidebar
             adventureId={adventure.id}
@@ -366,19 +316,8 @@ const ChallengeDetail = (): JSX.Element => {
     return <NotFoundPage title="Challenge not found" message="The challenge you're looking for doesn't exist." />;
   }
 
-  const intro = level.intro;
-  const backstory = level.backstory;
-  const architecture = level.architecture;
-  const architectureDiagram = level.architectureDiagram;
-  const diagramAlt = level.diagramAlt;
-  const objective = level.objective;
-  const toolbox = level.toolbox;
-  const howToPlay = level.howToPlay;
-  const helpfulLinks = level.helpfulLinks;
-  const verification = level.verification;
-
   const hasStructuredContent = !!(
-    intro || backstory || architecture || toolbox || howToPlay || helpfulLinks
+    level.intro || level.backstory || level.architecture || level.toolbox || level.howToPlay || level.helpfulLinks
   );
 
   return (
@@ -401,20 +340,7 @@ const ChallengeDetail = (): JSX.Element => {
           </nav>
 
           {hasStructuredContent ? (
-            <StructuredLayout
-              adventure={adventure}
-              level={level}
-              intro={intro}
-              objective={objective}
-              toolbox={toolbox}
-              backstory={backstory}
-              architecture={architecture}
-              architectureDiagram={architectureDiagram}
-              diagramAlt={diagramAlt}
-              howToPlay={howToPlay}
-              helpfulLinks={helpfulLinks}
-              verification={verification}
-            />
+            <StructuredLayout adventure={adventure} level={level} />
           ) : (
             <>
               {/* Legacy layout for levels without structured content */}
@@ -423,15 +349,7 @@ const ChallengeDetail = (): JSX.Element => {
                 <p className="text-sm font-mono text-[hsl(var(--text-faint))] mb-4">{adventure.title}</p>
                 <div className="flex flex-wrap items-center gap-2 mb-4">
                   <DifficultyBadge difficulty={level.difficulty} showDot />
-                  {(level.topics ?? adventure.tags).map((tag) => (
-                    <Link
-                      key={tag}
-                      to={`/challenges/${tagToSlug(tag)}`}
-                      className="tag-chip-link rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary hover:text-primary transition-colors"
-                    >
-                      {tag}
-                    </Link>
-                  ))}
+                  <TagChips tags={level.topics ?? adventure.tags} />
                 </div>
                 {adventure.contributor && (
                   <div>
