@@ -1,6 +1,6 @@
 import { type JSX } from "react";
-import { useParams, Link } from "react-router";
-import type { MetaFunction } from "react-router";
+import { useParams, Link, useLoaderData } from "react-router";
+import type { MetaFunction, LoaderFunctionArgs } from "react-router";
 import { ArrowRight } from "lucide-react";
 import { ADVENTURES, type AdventureLevel } from "@/data/adventures";
 import { NotFoundPage } from "@/components/NotFoundPage";
@@ -9,13 +9,18 @@ import { Footer } from "@/components/Footer";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { CollapsibleSection } from "@/components/CollapsibleSection";
 import { PersonNameLink } from "@/components/PersonNameLink";
-import { TechFilterSection } from "@/components/TechFilterSection";
 import { RewardsCard } from "@/components/RewardsCard";
 import { AdventureLeaderboard } from "@/components/AdventureLeaderboard";
 import { ContributorBadge } from "@/components/ContributorBadge";
 import { TagChips } from "@/components/TagChips";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
+import { isDeadlinePast } from "@/lib/utils";
+
+export function loader({ params }: LoaderFunctionArgs): { rewardsBelowFold: boolean } {
+  const adventure = ADVENTURES.find((a) => a.id === params.id);
+  return { rewardsBelowFold: isDeadlinePast(adventure?.rewards?.deadline) };
+}
 
 export const meta: MetaFunction = ({ params }) => {
   const adventure = ADVENTURES.find((a) => a.id === params.id);
@@ -76,6 +81,7 @@ const AdventureLevelLink = ({ level, adventureId }: AdventureLevelLinkProps): JS
 
 const AdventureDetail = (): JSX.Element => {
   const { id } = useParams<{ id: string }>();
+  const { rewardsBelowFold } = useLoaderData<{ rewardsBelowFold: boolean }>();
   const adventure = ADVENTURES.find((adventure) => adventure.id === id);
 
   if (!adventure) {
@@ -121,9 +127,9 @@ const AdventureDetail = (): JSX.Element => {
                 </div>
               </section>
 
-              {adventure.rewards && (
+              {adventure.rewards && !rewardsBelowFold && (
                 <div>
-                  <RewardsCard rewards={adventure.rewards} />
+                  <RewardsCard rewards={adventure.rewards} deadlinePast={rewardsBelowFold} />
                 </div>
               )}
 
@@ -152,6 +158,12 @@ const AdventureDetail = (): JSX.Element => {
                 </CollapsibleSection>
               )}
 
+              {adventure.rewards && rewardsBelowFold && (
+                <div>
+                  <RewardsCard rewards={adventure.rewards} deadlinePast={rewardsBelowFold} />
+                </div>
+              )}
+
             </div>
 
             {/* Sidebar: leaderboard + contributor */}
@@ -175,9 +187,6 @@ const AdventureDetail = (): JSX.Element => {
           </div>
         </div>
 
-        <div className="mx-auto max-w-6xl mt-12">
-          <TechFilterSection />
-        </div>
       </main>
       <Footer />
     </div>

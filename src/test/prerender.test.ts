@@ -107,7 +107,7 @@ const pages: PageSpec[] = [
   },
   {
     file: "challenges/index.html",
-    check: { type: "exact", value: "Challenges - Hands-on open source challenges | OffOn" },
+    check: { type: "exact", value: "Open Source Challenges | OffOn" },
   },
 ];
 

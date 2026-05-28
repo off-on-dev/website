@@ -28,7 +28,7 @@ Community activity happens on a separate Discourse instance. Its display name is
 
 - **Framework:** React 19 with TypeScript, bundled via Vite. Check `package.json` for current versions.
 - **Styling:** Tailwind CSS 4, configured CSS-first via `src/index.css` (`@theme` block). There is no `tailwind.config.ts` — it was deleted as part of the Tailwind 4 migration.
-- **Components:** Minimal shadcn/ui surface. `src/components/ui/` contains only `badge.tsx`, `sonner.tsx`, and `tooltip.tsx`. Most Radix UI packages were intentionally removed.
+- **Components:** Minimal shadcn/ui surface. `src/components/ui/` contains only `badge.tsx` and `tooltip.tsx`. Most Radix UI packages were intentionally removed.
 - **Routing:** React Router v7 framework mode (static prerendering with `ssr: false`)
 - **Testing:** Vitest + @testing-library/react (unit/component); Playwright (smoke tests in `e2e/`)
 - **Hosting:** GitHub Pages
@@ -63,8 +63,8 @@ Community activity happens on a separate Discourse instance. Its display name is
 - The og:image file is public/og.png and its full URL is https://offon.dev/og.png.
 - PR preview deployments are served from the gh-pages branch under /pr-preview/pr-{number}/.
 - The open source challenges content lives in a separate organisation at https://github.com/dynatrace-oss/open-ecosystem-challenges. This is an intentional external link and must never be changed or flagged as a violation.
-- The community Discourse instance is at https://community.open-ecosystem.com. Use the COMMUNITY_URL constant from src/data/constants.ts, never hardcode this URL.
-- COMMUNITY_DISPLAY_NAME is defined in src/data/constants.ts as the user-facing display name for the community URL. Use it for visible text, use COMMUNITY_URL for href attributes.
+- The community Discourse instance is at https://community.open-ecosystem.com. Use the `COMMUNITY_URL` constant from `src/data/constants.ts`, never hardcode this URL.
+- `COMMUNITY_DISPLAY_NAME` is defined in `src/data/constants.ts` as the user-facing display name for the community URL. Use it for visible text, use `COMMUNITY_URL` for href attributes.
 
 ---
 
@@ -77,7 +77,6 @@ src/
   data/         # Static data files (TypeScript objects/arrays)
   hooks/        # Custom React hooks
   lib/          # Shared utilities
-  utils/        # Additional utility functions (e.g. stripHtml)
   assets/       # Static assets bundled by Vite
   Layout.tsx    # App shell: providers, skip nav, scroll-to-top, consent banner, and Outlet
 e2e/
@@ -86,8 +85,12 @@ public/
   fonts/        # Self-hosted fonts (Inter, Syne, JetBrains Mono)
 .github/
   workflows/
-    deploy.yml  # Production deploy to GitHub Pages (push to main)
-    preview.yml # PR preview deploy (runs smoke tests before deploying)
+    deploy.yml              # Production deploy to GitHub Pages (push to main)
+    preview.yml             # PR preview deploy (runs smoke tests before deploying)
+    refresh-community-data.yml  # Hourly discussion and leaderboard data refresh
+    new-adventure.yml       # workflow_dispatch: scaffold a new adventure
+    new-level.yml           # workflow_dispatch: add a level to an existing adventure
+    validate-adventures.yml # PR check: validates adventure YAML, routes, and sitemap consistency
 ```
 
 ---
@@ -107,6 +110,8 @@ npm run test:e2e     # Playwright smoke tests (requires npm run build first)
 npm run preview      # Copy 404 fallback and serve the production build locally
 npm run generate     # Regenerate TypeScript from adventure YAML files
 npm run generate:validate  # Validate YAML against schema without writing files
+npm run new-adventure   # Scaffold a new adventure YAML and stub files
+npm run new-level       # Add a new level to an existing adventure
 
 npx shadcn@latest add <component>   # Add a shadcn/ui component
 ```
@@ -118,6 +123,7 @@ npx shadcn@latest add <component>   # Add a shadcn/ui component
 - Use explicit return types on all functions and components.
 - Prefer named exports for components.
 - Keep components small and single-responsibility.
+- Functions must have a single responsibility. If a function requires more than one level of conditional nesting to describe in plain language, split it.
 - Use functional components with hooks only. No class components.
 - Prefer `const` over `let`, never `var`.
 - Use async/await over promise chains. Always handle errors explicitly.
@@ -140,53 +146,33 @@ npx shadcn@latest add <component>   # Add a shadcn/ui component
 
 ## Debugging Rules
 
-When diagnosing a bug, especially in the production build, follow these rules
-without exception. They exist to prevent debugging by accumulation.
+When diagnosing a bug, especially in the production build, follow these rules without exception. They exist to prevent debugging by accumulation.
 
 ### Evidence rules
 
-- Never claim a fix worked based on source inspection alone. The only signal
-  that counts is the expected behavior observed in a real browser against the
-  current bundle hash.
-- Before acting on any error message, verify the error came from the current
-  build. Compare the bundle hash in the error stack trace (e.g. `index-XXXX.js`)
-  against the latest build output. If they differ, the browser is serving
-  cached code and the error is stale.
-- Before acting on any diagnostic output, state what evidence supports the
-  conclusion. "Only X was left in the DOM" is not evidence of what the DOM
-  looked like at error time. React's error recovery can tear down the tree
-  before the diagnostic runs.
-- When a grep claims to confirm something, verify the grep pattern is specific
-  enough to exclude false positives. Strings like "hydrateRoot" exist in
-  production React too, so their presence proves nothing about whether the
-  build is minified.
+- Never claim a fix worked based on source inspection alone. The only signal that counts is the expected behavior observed in a real browser against the current bundle hash.
+- Before acting on any error message, verify the error came from the current build. Compare the bundle hash in the error stack trace (e.g. `index-XXXX.js`) against the latest build output. If they differ, the browser is serving cached code and the error is stale.
+- Before acting on any diagnostic output, state what evidence supports the conclusion. "Only X was left in the DOM" is not evidence of what the DOM looked like at error time. React's error recovery can tear down the tree before the diagnostic runs.
+- When a grep claims to confirm something, verify the grep pattern is specific enough to exclude false positives. Strings like "hydrateRoot" exist in production React too, so their presence proves nothing about whether the build is minified.
 
 ### One-fix-at-a-time rule
 
-- Never stack fixes. One change, rebuild, verify in a real browser, then the
-  next. If you apply two fixes before verifying, you cannot tell which one
-  worked or if either did.
+- Never stack fixes. One change, rebuild, verify in a real browser, then the next. If you apply two fixes before verifying, you cannot tell which one worked or if either did.
 - Commit after every verified fix. Each commit should have a clear before/after.
-- If the same bug has been "fixed" more than once in a session and still
-  reproduces, stop. The diagnosis is wrong. Go back to first principles.
+- If the same bug has been "fixed" more than once in a session and still reproduces, stop. The diagnosis is wrong. Go back to first principles.
 
 ### Build cache rules
 
-- Always run `rm -rf dist node_modules/.vite` before any rebuild you intend to
-  verify against. Vite's cache can silently produce stale output.
-- After rebuilding, always compare the new bundle hash to the previous one. If
-  the hash is identical, the cache was reused. Clear it and rebuild.
+- Always run `rm -rf dist node_modules/.vite` before any rebuild you intend to verify against. Vite's cache can silently produce stale output.
+- After rebuilding, always compare the new bundle hash to the previous one. If the hash is identical, the cache was reused. Clear it and rebuild.
 
 ### Getting unminified React errors
 
-- The `--mode development` flag alone does not produce a dev React build with
-  Vite's React plugin. Proof: a dev React bundle is roughly 1.4 MB; a production
-  bundle is roughly 330 KB.
+- The `--mode development` flag alone does not produce a dev React build with Vite's React plugin. Proof: a dev React bundle is roughly 1.4 MB; a production bundle is roughly 330 KB.
 - To force a dev React build, add to vite.config.ts inside defineConfig:
     define: { 'process.env.NODE_ENV': JSON.stringify('development') },
     build: { minify: false, sourcemap: true }
-- Verify the dev build actually happened: `ls -lh dist/assets/index-*.js`.
-  Size should be ~1.4 MB, not ~330 KB.
+- Verify the dev build actually happened: `ls -lh dist/assets/index-*.js`. Size should be ~1.4 MB, not ~330 KB.
 - Revert this change before merging to main.
 
 ---
@@ -204,14 +190,14 @@ without exception. They exist to prevent debugging by accumulation.
 ## Components
 
 - Always check `src/components/ui/` before building a new primitive.
-- `src/components/ui/` contains three files: `badge.tsx`, `sonner.tsx`, `tooltip.tsx`. Adding a new shadcn component requires an immediate use case in the same PR. Unused components are removed. To add one: `npx shadcn@latest add <component>`.
+- `src/components/ui/` contains two files: `badge.tsx` and `tooltip.tsx`. Adding a new shadcn component requires an immediate use case in the same PR. Unused components are removed. To add one: `npx shadcn@latest add <component>`.
 - Never modify files inside `src/components/ui/` directly. Extend or wrap them in `src/components/`.
 - Page-level components go in `src/pages/`. Reusable components go in `src/components/`.
 - Extract sub-components into `src/components/` rather than nesting them inline.
 - Do not duplicate card or list markup across components. If the same JSX structure appears in two places, extract a shared component. `FilteredLevelCard` is the established pattern.
 - **Buttons:** use raw `<button>` elements with the CSS utility classes defined in `src/index.css` (`.btn-primary`, `.btn-ghost`, `.btn-soft`, `.btn-inverse`, `.btn-ghost-inverse`). There is no `Button` component wrapper and no `@radix-ui/react-slot` dependency. See `styleguide.md` for which class to use on which background color.
-- **Toasts:** use Sonner via `import { toast } from "@/components/ui/sonner"`. The Radix-based toast stack (`react-toast`, `use-toast`) was removed. Do not reinstall it.
-- **Sonner (`<Toaster>`) and TooltipProvider are intentionally not mounted in `Layout.tsx`** until a call site exists. Do not add them back to `Layout.tsx` speculatively. Mount `<Toaster>` in the nearest layout that actually triggers a toast, and wrap only the subtree that uses `<Tooltip>` with `<TooltipProvider>` at that point.
+- **Toasts:** if toast notifications are ever needed, install `sonner` and add `src/components/ui/sonner.tsx` (shadcn pattern). Mount `<Toaster>` in the nearest layout that actually triggers a toast. Do not install speculatively.
+- **TooltipProvider** is intentionally not mounted in `Layout.tsx` until a call site exists. Wrap only the subtree that uses `<Tooltip>` with `<TooltipProvider>` at that point.
 
 ### Component CSS patterns
 
@@ -220,7 +206,7 @@ without exception. They exist to prevent debugging by accumulation.
 - `data-difficulty` attribute on `DifficultyBadge`. It is used for CSS targeting of badge text color.
 - `contributor-pill` class on `ContributorBadge`. Scopes light mode overrides: transparent background with slate border instead of the near-invisible `bg-primary/5`.
 - `contributor-pill-glow` class on `ContributorBadge` (applied via `glow` prop). Static amber box-shadow glow, sized for a small pill. Used only on `ChallengeDetail` -- not in `AdventureCard`.
-- `docs-ext-link` class on all inline prose links site-wide. Bundles `inline-flex`, `align-items: center`, `gap`, `underline`, `decoration-thickness`, `underline-offset`, `border-radius`, focus-visible ring, and color/hover transitions. Handles both modes: dark mode foreground text with amber underline, hover to full `#ffc034`; light mode near-black text with `currentColor` underline, hover to `--link-hover-light` (`hsl(41 100% 25%)` dark amber, ~5.5:1 contrast). Used in `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`, `ChallengeDetail`, and `MarkdownContent`. Do not use `hover:text-primary` or `hover:underline` on inline links, and do not add redundant `inline-flex items-center gap-*` utilities. Use `docs-ext-link` alone, adding only contextual utilities (font-size, weight, margin).
+- `docs-ext-link` class on all inline prose links site-wide. Bundles `inline-flex`, `align-items: center`, `gap`, `underline`, `decoration-thickness`, `underline-offset`, `border-radius`, focus-visible ring, and color/hover transitions. Handles both modes: dark mode foreground text with amber underline, hover to full `#ffc034`; light mode near-black text with `currentColor` underline, hover to `--link-hover-light` (`hsl(41 100% 25%)` dark amber, ~5.5:1 contrast). Used in `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`, `ChallengeDetail`, `MarkdownContent`, `CommunitySidebar`, `RewardsCard`, `Accessibility`, and `Privacy`. Do not use `hover:text-primary` or `hover:underline` on inline links, and do not add redundant `inline-flex items-center gap-*` utilities. Use `docs-ext-link` alone, adding only contextual utilities (font-size, weight, margin).
 
 ---
 
@@ -234,8 +220,8 @@ without exception. They exist to prevent debugging by accumulation.
 - **Schema validation:** Adventure YAML files are validated against `schemas/adventure.schema.json` (JSON Schema Draft 2020-12). Run `npm run generate:validate` to check without writing files.
 - **Build-time fetching:** Discussion data lives in per-level JSON files under `src/data/adventures/<adventure-id>/<level-id>-posts.json`. Each file contains only `discussionUrl`, `discussionPosts`, and `totalReplies`. These are refreshed hourly by the GitHub Action in `.github/workflows/refresh-community-data.yml` (runs `scripts/refresh-discussions.mjs`). Components import the JSON dynamically via `import.meta.glob`.
 - When adding a new adventure level, create its per-level discussion JSON file (`<level-id>-posts.json`) with a `discussionUrl` field. The refresh script uses this URL to fetch posts.
-- `scripts/refresh-discussions.mjs` contains a `COMMUNITY_BASE` constant that is a necessary duplicate of `COMMUNITY_URL` in `src/data/constants.ts`. The script runs in Node and cannot import from `src/`, so the value must be maintained manually in both places. Always update them together.
-- The domain `community.open-ecosystem.com` in both `scripts/refresh-discussions.mjs` and `src/data/constants.ts` is the actual Discourse server URL used for API calls at build time. It is not a brand inconsistency. Do not change it to `community.offon.dev` or any other display name. `COMMUNITY_DISPLAY_NAME` in `src/data/constants.ts` is the separate user-facing label shown in the UI.
+- `scripts/refresh-discussions.mjs`, `scripts/refresh-leaderboard.mjs`, and `scripts/refresh-community-leaders.mjs` each contain a `COMMUNITY_BASE` constant that is a necessary duplicate of `COMMUNITY_URL` in `src/data/constants.ts`. The scripts run in Node and cannot import from `src/`, so the value must be maintained manually in all four places. Always update them together.
+- The domain `community.open-ecosystem.com` in the three refresh scripts and `src/data/constants.ts` is the actual Discourse server URL used for API calls at build time. It is not a brand inconsistency. Do not change it to `community.offon.dev` or any other display name. `COMMUNITY_DISPLAY_NAME` in `src/data/constants.ts` is the separate user-facing label shown in the UI.
 
 ---
 
@@ -243,14 +229,11 @@ without exception. They exist to prevent debugging by accumulation.
 
 - Use Tailwind utility classes directly on JSX elements.
 - Always check the `@theme` block in `src/index.css` before introducing any new color, font, spacing, or border radius value. Never hardcode these. There is no `tailwind.config.ts` — all theme values live in the `@theme` block in `src/index.css`.
-- Both light and dark mode must work. Use the CSS variable pairs (`bg-background`,
-  `text-foreground`) that shadcn sets up. Never hardcode a color that only works in one mode.
+- Both light and dark mode must work. Use the CSS variable pairs (`bg-background`, `text-foreground`) that shadcn sets up. Never hardcode a color that only works in one mode.
 - Never add a `dark:` override without a corresponding base (light) style.
 - Mobile first. Write base styles for mobile, then add `sm:`, `md:`, `lg:` breakpoints as needed.
 - For font utilities, type scale, component class patterns (buttons, pills, badges, overline labels), and animations, see `styleguide.md`. It is the source of truth. Do not duplicate those details here.
-- All fonts are self-hosted under `public/fonts/`.
-- Never write custom CSS unless Tailwind genuinely cannot do the job.
-  If you must, add it to `src/index.css` with a comment explaining why.
+- Never write custom CSS unless Tailwind genuinely cannot do the job. If you must, add it to `src/index.css` with a comment explaining why.
 - Light mode overrides: do NOT put them inside `@layer base` — rules there are always overridden by `@layer utilities`. Add unlayered rules to the "Light mode overrides" section at the bottom of `src/index.css`, scoped to `.light`.
 
 ### Design system rules
@@ -260,6 +243,14 @@ without exception. They exist to prevent debugging by accumulation.
 - Dark mode uses `:root` and `.dark`. Never modify these when fixing light mode issues.
 - Tailwind `group-hover:*` and `group-focus:*` utilities are not matched by `.light .classname` selectors. Always add explicit `.light .group:hover` rules in the unlayered light mode overrides section of `src/index.css`.
 - Avatar palette colors must not be used directly as text colors in light mode — they fail contrast on near-white surfaces. Use `hsl(var(--foreground))` as the text color for avatar initials in all modes.
+
+---
+
+## Accessibility
+
+Read [`ACCESSIBILITY.md`](ACCESSIBILITY.md) before writing or modifying any component. It contains the full contributor checklist, WCAG principle reference, and manual testing requirements.
+
+The target is not minimum compliance. Every component must be genuinely usable by keyboard-only users, screen reader users, and people with low vision. WCAG 2.2 AA is the floor, not the goal.
 
 ---
 
@@ -287,6 +278,7 @@ All analytics-related constants live in `src/data/constants.ts`:
 | `LINKEDIN_URL` | LinkedIn company page URL. |
 | `BLUESKY_URL` | Bluesky profile URL (`https://bsky.app/profile/off-on-dev.bsky.social`). Used in `Footer.tsx`. |
 | `X_URL` | X (Twitter) profile URL (`https://x.com/OffonDev`). Used in `Footer.tsx`. |
+| `THEME_STORAGE_KEY` | `localStorage` key for the stored theme preference (`"theme"`). Used by `useTheme.tsx`. |
 
 ### How it works
 
@@ -313,173 +305,77 @@ All analytics-related constants live in `src/data/constants.ts`:
 
 ### Do not
 
-- Do not load `gtag.js` outside the consent injector. The `<script src="...googletagmanager...">` tag belongs in `useConsent.tsx`'s injector, not in `root.tsx`.
+- Do not load `gtag.js` outside the consent injector.
 - Do not put `gtag('js')` or `gtag('config')` in `root.tsx`. Both belong in the injector, queued after the consent update.
-- Do not reintroduce `wait_for_update`. There are no buffered pings to wait for under gated load.
+- Do not reintroduce `wait_for_update`.
 - Do not reintroduce GPC/DNT detection.
-- Do not reintroduce `ANALYTICS_LINKER_DOMAINS` or `cookie_domain`. Cross-domain measurement is configured in the GA4 admin UI.
+- Do not reintroduce `ANALYTICS_LINKER_DOMAINS` or `cookie_domain`.
 - Do not put the consent update inside `script.onload`. It must be queued before `appendChild` so the dataLayer drains in the correct order.
-- Do not remove the script tag, wipe `dataLayer`, or replace `window.gtag` on deny. `gtag.js` self-gates when `analytics_storage` flips to denied; doing more orphans its internal references.
-- Do not push `page_view` or `click_event` when consent is not granted. The retroactive-replay-on-Accept bug is the reason both trackers gate.
-- Do not skip clearing `_ga*` cookies on deny or reset. Users reasonably expect "decline" to remove existing analytics cookies, and the privacy policy promises this.
-
----
-
-## Accessibility (WCAG 2.2 AA, mandatory)
-
-Check the following on every component you write or modify.
-
-### Skip navigation
-- Every page must have a skip link as the first focusable element so keyboard users can bypass the nav bar.
-- The skip link in `Layout.tsx` targets `#main-content`. Every page's `<main>` element must carry `id="main-content"`.
-- The skip link is styled with the `.skip-nav` class in `src/index.css`. Never remove this class or its focus rules.
-- When adding a new page, always add `id="main-content"` to its `<main>` element.
-
-### Color contrast
-- Normal text (under 18px / non-bold under 14px): minimum 4.5:1 ratio
-- Large text (18px+ or bold 14px+): minimum 3:1 ratio
-- UI components and focus indicators: minimum 3:1 against adjacent colors
-- Never rely on color alone to convey meaning. Always pair with text, icon, or pattern.
-- Always verify contrast in both light and dark mode.
-
-### Keyboard navigation
-- Every interactive element must be reachable and operable via keyboard.
-- Tab order must follow a logical reading order.
-- Never remove focus outlines. Use `focus-visible` utilities to style them.
-  Standard pattern: `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`
-  (adjust ring offset as needed; use `ring-offset-1` for inline elements, `ring-offset-2` for blocks)
-- Always use `ring-ring` for focus rings, never `ring-primary/xx`. `--ring` is set per theme: dark mode amber (`41 100% 60%`), light mode dark amber (`41 100% 35%`) to ensure WCAG AA contrast in both modes.
-- Modals must trap focus while open and return focus on close. Use shadcn `Dialog`.
-
-### External links
-- Every `<a target="_blank">` link must include `<span className="sr-only"> (opens in new tab)</span>` as its last child.
-- Never add `target="_blank"` without this span. Keyboard and screen reader users must know the link opens a new tab.
-- Exception: icon-only buttons with `aria-label` already state the new-tab behavior in the label.
-
-### Semantic HTML
-- Use the correct element for the job (`<button>` for actions, `<a>` for navigation,
-  `<nav>`, `<main>`, `<header>`, `<footer>`, `<article>`, `<section>`).
-- Never use a `<div>` or `<span>` as an interactive element. Use the right element instead.
-- One `<h1>` per page. No skipped heading levels.
-- Never apply overline/label typography (`text-sm uppercase tracking-widest`) to a heading tag (`<h1>`–`<h6>`). Overline styling signals a decorative caption, not a structural heading, and a sighted user will not recognise it as a heading. If the text is a genuine section heading, give it heading-appropriate typography from `styleguide.md`. If it is purely decorative, use `<span>` or `<p>` instead.
-- Never use a non-heading tag (`<p>`, `<span>`, `<div>`) for text that is visually styled as a heading (e.g. `text-lg font-semibold` or larger, `font-heading`, `font-bold`). Promote it to the correct heading level that fits the page outline.
-- Every page's primary content must live inside a single `<main id="main-content">` element. Do not split the page content across multiple `<main>` elements or leave major sections (e.g. `PageHero`, `BottomCTA`) outside `<main>`.
-- The `<html lang="en">` attribute is set in `src/root.tsx`. Never remove or change it.
-
-### Forms
-- Every `<input>`, `<select>`, and `<textarea>` must have an associated `<label>` via `for`/`id` pairing or `aria-label`. Never use placeholder text as a substitute for a label.
-
-### Icons and special characters
-- Decorative icons paired with visible text: always add `aria-hidden="true"`. Do not omit it.
-- Never use raw Unicode characters (e.g. `→`, `♥`, `✓`) to convey meaning. Use proper text, lucide-react icons with `aria-hidden`, or an `aria-label`/`<span className="sr-only">` for screen readers.
-- Decorative separators between pill segments (e.g. `·` or `-`): use an empty `<span aria-hidden="true" className="inline-block w-px h-3 bg-current opacity-40" />` instead of a text character. A text character with `opacity-*` composites its color against the background, and the resulting blended color must pass WCAG 1.4.3 — even if the element is `aria-hidden`. An empty span has no text node so the color-contrast rule does not fire.
-- Never apply `opacity-*` to an element that contains visible text. Use a CSS color token that already has the desired luminance (e.g. `text-[hsl(var(--text-faint))]`).
-
-### ARIA
-- Only add ARIA attributes when semantic HTML is not enough.
-- Never use ARIA to paper over bad markup. Fix the markup first.
-- Always add `aria-label` or `aria-labelledby` to icon-only buttons.
-- Use `aria-expanded` on toggles that open/close UI (e.g., menu buttons).
-- Use `aria-live` regions for dynamic content updates.
-
-### Images and media
-- Every `<img>` must have an `alt` attribute. No exceptions.
-- Meaningful images: `alt` must describe the content or purpose (e.g. `alt="offon.dev"` for a logo, `alt={sponsor.name}` for a sponsor logo).
-- Decorative images (no informational value at all): use `alt=""` AND `aria-hidden="true"` together.
-- Illustrations and brand images: use a brief descriptive `alt`. Do not use `aria-hidden="true"` when alt text is present — it overrides the alt and hides the image from AT entirely.
-- Never omit the `alt` attribute entirely.
-- Icons that convey meaning need an `aria-label` or accompanying visible text.
+- Do not remove the script tag, wipe `dataLayer`, or replace `window.gtag` on deny.
+- Do not push `page_view` or `click_event` when consent is not granted.
+- Do not skip clearing `_ga*` cookies on deny or reset.
 
 ---
 
 ## Testing
 
 - Use Vitest for all unit and integration tests.
-- Use `@testing-library/react` for component tests. Test from the user's perspective,
-  not implementation details.
+- Use `@testing-library/react` for component tests. Test from the user's perspective, not implementation details.
 - Test files live in `src/test/` or co-located alongside the module as `*.test.ts(x)`.
-- Write tests for all logic in `src/lib/` and `src/hooks/`. Target 80% coverage for
-  new utility and hook files.
+- Write tests for all logic in `src/lib/` and `src/hooks/`. Target 80% coverage for new utility and hook files.
 - Visual components do not require tests unless they contain non-trivial logic.
-- Prefer `getByRole` and `getByLabelText` queries over `getByTestId`. They also
-  validate accessibility.
+- Prefer `getByRole` and `getByLabelText` queries over `getByTestId`. They also validate accessibility.
 - Never ship code that causes test or lint failures.
-- Every new hook, utility function, or stateful component must have tests covering:
-  - The happy path (expected inputs produce expected outputs)
-  - Edge cases (empty state, expired data, missing provider, etc.)
-  - All state transitions for any multi-state feature
+- Every new hook, utility function, or stateful component must have tests covering the happy path, edge cases, and all state transitions.
 - Tests must be written as part of the implementation, not as an afterthought.
-- If a component or hook has side effects (DOM mutations, localStorage, external scripts),
-  mock those side effects in tests and assert they are called correctly.
+- If a component or hook has side effects (DOM mutations, localStorage, external scripts), mock those side effects in tests and assert they are called correctly.
 - When fixing a bug, add a regression test that would have caught it before writing the fix.
-- When fixing a bug caused by an incorrect import, file path, or configuration
-  value, add a regression test that asserts on the file's contents. Behavior
-  tests can miss silent bugs where the wrong dependency is pulled in. For
-  example, after fixing a component that imported from the wrong theme library,
-  add a test that reads the component file and asserts it imports from the
-  correct path and does not import from the wrong one.
-- Prerender tests live in `src/test/prerender.test.ts` and require a production build to exist. Always run `npm run build` before `npm test` if prerender tests are included. These tests assert that each prerendered index.html contains exactly one `<title>` tag with the correct page-specific content.
-- Playwright smoke tests live in `e2e/smoke.spec.ts` and also require a production build. Run `npm run build` then `npm run test:e2e`. These tests verify each prerendered route loads in a real browser without JS errors, that `main#main-content` is present, that hydration completed (theme toggle, consent banner, client-side navigation all work), and that the skip nav is the first Tab stop. The axe-core audit runs with tags `["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"]` in both dark and light mode. Never remove `wcag22aa` from this list, and always include it alongside `wcag21aa` when updating the tag set. When adding a new prerendered route, add it to the `ROUTES` array in `e2e/smoke.spec.ts`. Do not add Playwright tests for logic that Vitest already covers.
-- SEO tests live in `src/test/seo.test.ts` and require a production build. They assert that every prerendered route has a `<meta name="description">` within 160 chars, all `og:*` tags (`og:title`, `og:description`, `og:type`, `og:url`, `og:image`, `og:image:width`, `og:image:height`, `og:image:alt`, `og:site_name`, `og:locale`), all `twitter:*` tags (`twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`, `twitter:image:alt`), and a correct `<link rel="canonical">`. When adding a new prerendered route, add it to the `ROUTES` array in `src/test/seo.test.ts`.
-- When a page renders multiple navigation landmarks (e.g. `Navbar`, `Footer`, and an in-page nav), use `within` from `@testing-library/react` to scope queries to the correct landmark before asserting link destinations. This prevents false positives when the same link text appears in more than one `<nav>`. Example: `const nav = screen.getByRole("navigation", { name: "Helpful links" }); within(nav).getByRole("link", { name: /Adventures/ })`.
-- **Testing hooks with dynamic imports:** Vitest's dynamic-import mock runner (`vi.mock("@/data/...")`) has a multi-second first-call initialization cost per test run. Never use `vi.mock` for a dynamic import that is called inside a hook and then test that hook directly — the first async tests will time out. The pattern that works: export a `DiscussionDataLoader`-style type and a default loader from the hook; accept it as an optional second argument; tests inject `vi.fn().mockResolvedValue(data)` via that argument. `vi.spyOn` on a same-module export does NOT intercept internal calls in ES module context and is not a valid alternative. See `src/hooks/useDiscussionPosts.ts` for the reference implementation.
-- **Coverage:** run `npm run test:coverage` for v8 coverage reports. The `coverage/` directory is gitignored. `@vitest/coverage-v8` is installed as a dev dependency.
+- When fixing a bug caused by an incorrect import, file path, or configuration value, add a regression test that asserts on the file's contents.
+- Prerender tests live in `src/test/prerender.test.ts` and require a production build. Always run `npm run build` before `npm test` if prerender tests are included.
+- Playwright smoke tests live in `e2e/smoke.spec.ts` and require a production build. The axe audit runs with tags `["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"]` in both dark and light mode. Never remove `wcag22aa` from this list. When adding a new prerendered route, add it to the `ROUTES` array in `e2e/smoke.spec.ts` and `src/test/seo.test.ts`, and to the `pages` array in `src/test/prerender.test.ts` with the expected `<title>` value.
+- SEO tests live in `src/test/seo.test.ts` and require a production build. When adding a new prerendered route, add it to the `ROUTES` array in `src/test/seo.test.ts`.
+- When a page renders multiple navigation landmarks, use `within` from `@testing-library/react` to scope queries to the correct landmark before asserting link destinations.
+- **Testing hooks with dynamic imports:** Never use `vi.mock` for a dynamic import called inside a hook. Export a loader type and default loader; tests inject `vi.fn().mockResolvedValue(data)` via an optional argument. See `src/hooks/useDiscussionPosts.ts` for the reference implementation.
+- **Coverage:** run `npm run test:coverage` for v8 coverage reports. `@vitest/coverage-v8` is installed as a dev dependency.
 
 ---
 
 ## Hydration and Prerender Safety
 
-Whether or not the site is prerendered today, these patterns cause bugs.
-They produce visible flashes in client-only apps and break hydration entirely
-if the site is ever prerendered. Never introduce them.
+Whether or not the site is prerendered today, these patterns cause bugs. They produce visible flashes in client-only apps and break hydration entirely if the site is ever prerendered. Never introduce them.
 
 ### Do not read browser-only globals during render
 
-- Never read `window`, `document`, `navigator`, `localStorage`, or
-  `sessionStorage` in a component function body.
-- Never read them in a `useState` lazy initializer. Initializers run on every
-  render, including the first, and the first render must be deterministic
-  without browser APIs.
-- Correct pattern: initialize state with a safe default, then update it in
-  `useEffect` or `useLayoutEffect`.
+- Never read `window`, `document`, `navigator`, `localStorage`, or `sessionStorage` in a component function body.
+- Never read them in a `useState` lazy initializer.
+- Correct pattern: initialize state with a safe default, then update it in `useEffect` or `useLayoutEffect`.
 
 ### Do not use non-deterministic values during render
 
-- Never call `Math.random()`, `Date.now()`, `new Date()`, `crypto.randomUUID()`,
-  or `performance.now()` in a render body.
-- If you need a timestamp in rendered output, capture it at module load or in
-  an effect, not at render.
-- `new Date().getFullYear()` in JSX is a common mistake. Use a module-level
-  constant instead.
+- Never call `Math.random()`, `Date.now()`, `new Date()`, `crypto.randomUUID()`, or `performance.now()` in a render body.
+- `new Date().getFullYear()` in JSX is a common mistake. Use a module-level constant instead.
 
 ### Client-only behavior must be gated
 
-- Anything that depends on `localStorage`, `matchMedia`, or similar must
-  produce the same initial render as a fresh visitor with no stored state.
-- For theme and consent state, this means: always render the default (dark,
-  no-consent) on first render, then update in an effect. To avoid a visible
-  flash, apply the stored value via an inline script in `<head>` before React
-  runs.
+- Anything that depends on `localStorage`, `matchMedia`, or similar must produce the same initial render as a fresh visitor with no stored state.
+- For theme and consent state: always render the default (dark, no-consent) on first render, then update in an effect.
 
 ### No IntersectionObserver or ResizeObserver at render time
 
-- Always create observers inside `useEffect`, never at the top level of a
-  component or module.
-- Creating observers inside `useEffect` is safe. The risk is only when an observer fires during a prerender pass and changes rendered output, causing a hydration mismatch. Guard any observer that affects rendered content with a `typeof window !== 'undefined'` check.
-- Use `useIsomorphicLayoutEffect` instead of `useLayoutEffect` in any component that renders during SSG. Define it as `const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect` and guard any localStorage or browser API access inside the callback with `if (typeof window === "undefined") return`.
+- Always create observers inside `useEffect`, never at the top level of a component or module.
+- Guard any observer that affects rendered content with a `typeof window !== 'undefined'` check.
+- Use `useIsomorphicLayoutEffect` instead of `useLayoutEffect` in any component that renders during SSG.
 
 ### entry.server.tsx must use renderToPipeableStream, not renderToString
 
-- `renderToString` emits `<!--$!-->` (failed Suspense fallback) markers for any Suspense boundary that suspends during prerender, including React Router v7's own internal Suspense for route loading.
-- These markers appear outside `</html>` in the prerendered HTML. When `hydrateRoot(document, ...)` runs, it encounters DOM nodes with no matching React component output, causing hydration to fail silently. All event handlers (button clicks, theme toggle, consent banner) are never attached.
-- `entry.server.tsx` must always use `renderToPipeableStream` with `onAllReady` callback. This waits for all Suspense boundaries to resolve before writing output, producing clean HTML with no `<!--$!-->` markers.
-- Never revert to `renderToString` in `entry.server.tsx`. The prerender test in `src/test/prerender.test.ts` asserts that no `<!--$!-->` markers appear in the built HTML.
+- `renderToString` emits `<!--$!-->` markers for any Suspense boundary that suspends during prerender.
+- `entry.server.tsx` must always use `renderToPipeableStream` with `onAllReady` callback.
+- Never revert to `renderToString` in `entry.server.tsx`.
 
 ### Do not add Suspense wrappers around Outlet in Layout.tsx
 
-- React Router v7 handles its own Suspense internally for lazy route loading. Adding `<Suspense>` around `<Outlet />` in Layout.tsx creates an extra Suspense boundary that React Router does not resolve during prerender.
-- Result: `<!--$!-->` marker outside `</html>`, broken hydration, and non-functional interactivity in the production build.
-- If you need loading states for routes, configure them in the route module itself, not in the layout.
+- Adding `<Suspense>` around `<Outlet />` in Layout.tsx creates an extra boundary React Router does not resolve during prerender, producing broken hydration.
+- If you need loading states for routes, configure them in the route module itself.
 
 ---
 
@@ -488,57 +384,51 @@ if the site is ever prerendered. Never introduce them.
 This is a fully static React site. Apply these practices on every page.
 
 ### Document structure
+
 - Every page must have a unique, descriptive `<title>` tag.
 - Every page must have a `<meta name="description">` under 160 characters.
-- Add Open Graph tags to every page: `og:title`, `og:description`, `og:url`,
-  `og:type`, and `og:image` where an image is available.
-- Add Twitter meta tags: always include `twitter:card` (use `summary_large_image` for pages with images),
-  `twitter:title`, `twitter:description`, and `twitter:image`.
-- Use React Router v7's `meta()` export on each route module to manage head tags per page. Use the `buildPageMeta` helper from `src/lib/meta.ts` — it generates the full standard set (title, canonical, description, og:*, twitter:*) from three required fields. Do not rely on `index.html` alone.
+- Add Open Graph tags to every page: `og:title`, `og:description`, `og:url`, `og:type`, and `og:image` where an image is available.
+- Add Twitter meta tags: always include `twitter:card` (use `summary_large_image` for pages with images), `twitter:title`, `twitter:description`, and `twitter:image`.
+- Use React Router v7's `meta()` export on each route module to manage head tags per page. Use the `buildPageMeta` helper from `src/lib/meta.ts`.
 
 ### Heading hierarchy
+
 - One `<h1>` per page that clearly describes the page topic.
 - Headings follow a logical order with no skipped levels.
-- Include relevant keywords in headings naturally, not forced.
-- For multi-line hero or section headings, do not use `<br />` inside `h1`/`h2`.
-  Use block-level `<span>` elements for visual line breaks so parsers read predictable text.
-- When splitting heading text across multiple visual lines, keep the text directly readable
-  in the heading via normal block `<span>` elements. Do not add a redundant `aria-label`
-  or `aria-hidden` on the line-split spans.
+- For multi-line hero or section headings, do not use `<br />` inside `h1`/`h2`. Use block-level `<span>` elements for visual line breaks.
 
 ### Links and navigation
+
 - Internal links use React Router `<Link>`. Never trigger full page reloads.
 - Use descriptive link text. Never use "click here" or "read more" alone.
-- Set the canonical URL for each page as `${SITE_URL}${pathname}` using the `SITE_URL` constant from `src/data/constants.ts`. Do not derive canonical URLs from `window.location` or `VITE_BASE_PATH`.
+- Set the canonical URL for each page as `${SITE_URL}${pathname}` using the `SITE_URL` constant from `src/data/constants.ts`.
 
 ### Performance
-- Before adding any new dependency, run `npm run build` and check the bundle size in the Vite output. If it adds more than 10 KB to the main bundle, evaluate whether a lighter alternative exists.
-- Route-level code splitting is handled automatically by React Router v7's build pipeline. No manual `React.lazy` or `Suspense` wrappers are needed or should be added.
-- Avoid layout shift by setting explicit `width` and `height` attributes on every `<img>` element.
-- For all other performance requirements including font preloading, LCP image handling, and Lighthouse baselines, see the Performance Checklist section.
+
+Read [`PERFORMANCE.md`](PERFORMANCE.md) before adding any new dependency, font, image, or route.
 
 ### Global head setup (root.tsx)
+
 - Add `<link rel="manifest" href="/site.webmanifest" />` to link the web app manifest.
-- Add `<meta name="theme-color">` tags for dark and light mode: `content="#0a0a0a" media="(prefers-color-scheme: dark)"` and `content="#f5f5ff" media="(prefers-color-scheme: light)"`.
-- Add JSON-LD structured data as two `<script type="application/ld+json">` blocks: one with `@type: "WebSite"` and one with `@type: "Organization"`. Both are already present in `src/root.tsx`. Note: the `"OffOn"` brand name is hardcoded as a string literal in both JSON-LD inline scripts (they cannot reference TypeScript constants inside `dangerouslySetInnerHTML`). Update them manually if the brand name ever changes.
+- Add `<meta name="theme-color">` tags for dark and light mode.
+- Add JSON-LD structured data as two `<script type="application/ld+json">` blocks: one `@type: "WebSite"` and one `@type: "Organization"`. The `"OffOn"` brand name is hardcoded as a string literal in both (they cannot reference TypeScript constants inside `dangerouslySetInnerHTML`). Update them manually if the brand name ever changes.
 - Always include `og:image:width`, `og:image:height`, and `og:image:alt` for all OG image tags.
 - Add `og:site_name` and `og:locale` (en_GB) to all global OG tags in `src/root.tsx`.
-- Do not add page-specific meta tags (description, og:*, twitter:*) to `src/root.tsx`. These must live in each route module's `meta()` export only. Tags in `root.tsx` are rendered on every page and will produce duplicate meta tags.
+- Do not add page-specific meta tags to `src/root.tsx`. These must live in each route module's `meta()` export only.
 
 ---
 
 ## Content and Copy
 
-All written content, code comments, commit messages, and documentation must follow
-these rules.
-
 ### Brand Name
+
 - The brand is always written **OffOn** (camelCase). Never "offon", "Offon", or "OFFON".
-- The community was previously known as "Open Ecosystem". That name is retired. Never use it anywhere in code, copy, comments, or documentation.
+- The community was previously known as "Open Ecosystem". That name is retired. Never use it anywhere.
 - In code, always use the `BRAND_NAME` constant from `src/data/constants.ts` instead of hardcoding the string.
-- The domain `offon.dev` is always lowercase (it is a URL, not a brand mention).
+- The domain `offon.dev` is always lowercase.
 
 ### Tone
+
 - Direct, positive, and community-focused.
 - Write for open source enthusiasts, not a corporate audience.
 - Use plain language. Avoid jargon unless it is standard in open source contexts.
@@ -549,29 +439,23 @@ these rules.
 
 All UI labels use **title case (Chicago style)**. Body copy uses **sentence case**.
 
-**Title case applies to:**
-- Button and CTA labels: `"Join the Community"`, `"Start a Challenge"`, `"Get in Touch"`
-- Section headings (h2/h3): `"Choose Your Adventure"`, `"Find Challenges by Technology"`
-- Card and value titles: `"Learn by Doing"`, `"Open Source First"`, `"Events & Meetups"`
-- Navigation labels and footer links: `"Propose an Adventure Idea"`
-- Pill and badge text
+**Title case applies to:** button and CTA labels, section headings (h2/h3), card and value titles, navigation labels and footer links, pill and badge text.
 
-**Title case rule:** capitalise every word except articles (a, an, the), prepositions shorter than five letters (by, in, on, of, to, for, at, up), and coordinating conjunctions (and, but, or, nor) — unless they open or close the label.
-- Correct: `"Join the Community"`, `"Share and Learn Together"`, `"Find Challenges by Technology"`
-- Incorrect: `"Join The Community"`, `"Share And Learn Together"`, `"Find challenges by technology"`
+**Title case rule:** capitalise every word except articles (a, an, the), prepositions shorter than five letters, and coordinating conjunctions (and, but, or, nor) — unless they open or close the label.
 
-**Sentence case applies to:** body paragraphs, meta descriptions, `<p>` elements, hero sub-headings, and card descriptions. Capitalise the first word and proper nouns only.
+**Sentence case applies to:** body paragraphs, meta descriptions, `<p>` elements, hero sub-headings, and card descriptions.
 
-**Exception:** decorative overline labels (spans with `section-label` / `uppercase tracking-widest`) use CSS `text-transform: uppercase`, so write their source text in plain lowercase — `"adventures"` not `"Adventures"` or `"ADVENTURES"`.
+**Exception:** decorative overline labels use CSS `text-transform: uppercase`, so write their source text in plain lowercase.
 
 ### Formatting
-- Never use em dashes anywhere, including comments and documentation.
-  Use commas, periods, or restructure the sentence instead.
+
+- Never use em dashes anywhere, including comments and documentation. Use commas, periods, or restructure the sentence instead.
 - Maintain a cohesive tone across all pages and components.
 - Do not mix formal and casual registers within the same page.
 
 ### External URLs
-- `LINKEDIN_URL` in `src/data/constants.ts` contains the current LinkedIn company page URL. The slug currently reflects a legacy brand name but is controlled by LinkedIn. Update `LINKEDIN_URL` in `src/data/constants.ts` when the LinkedIn company page URL changes.
+
+- `LINKEDIN_URL` in `src/data/constants.ts` contains the current LinkedIn company page URL. Update it when the LinkedIn company page URL changes.
 
 ---
 
@@ -602,41 +486,46 @@ All UI labels use **title case (Chicago style)**. Body copy uses **sentence case
 ## Site Maintenance
 
 ### Sitemap
+
 - Every time a new static page is added to `src/pages/` and registered as a route in `src/routes.ts`, its URL must also be added to `public/sitemap.xml`.
-- Dynamic routes with **statically known IDs** (e.g. adventure and challenge detail pages) must also be added to `public/sitemap.xml`. All adventure and level routes are statically known at build time.
-- Dynamic routes whose IDs are not known at build time must not be added to the sitemap.
-- The sitemap lives at `public/sitemap.xml` and is served at `https://offon.dev/sitemap.xml`.
+- Dynamic routes with statically known IDs must also be added to `public/sitemap.xml`.
 - `robots.txt` at `public/robots.txt` must include: `Sitemap: https://offon.dev/sitemap.xml`
 
 ### SSG prerendered routes
-- The list of routes that React Router v7 prerenders is in the `prerender` array inside `react-router.config.ts`.
+
+- The list of routes React Router v7 prerenders is in the `prerender` array inside `react-router.config.ts`.
 - When adding a new static route, add it to **all three** of: `src/routes.ts`, `public/sitemap.xml`, and the `prerender` array in `react-router.config.ts`.
-- Dynamic routes with statically known IDs (e.g. adventure and challenge detail pages) must also be listed in the `prerender` array individually and in `public/sitemap.xml`.
-- Routes not listed in the `prerender` array will not have a prerendered `index.html` and will fall back to the client-side 404 flow on GitHub Pages.
 
 When adding a new route to `src/routes.ts`, follow these rules by route type:
 
-- Static routes (e.g. `/about`, `/privacy`): add to `public/sitemap.xml`, the routes table in `README.md`, and the `prerender` array in `react-router.config.ts`.
-- Dynamic routes with statically known IDs (e.g. `/adventures/:id` when IDs are fixed): add individual URLs to `public/sitemap.xml`, the `prerender` array in `react-router.config.ts`, and the routes table in `README.md`. Also create a per-level discussion JSON file in `src/data/adventures/` if the level has a discussion thread.
-- Redirect routes (clientLoader returning redirect()): do not add to `sitemap.xml` or `README.md`.
-- Catch-all routes (`*`): do not add anywhere.
+- Static routes: add to `public/sitemap.xml`, the routes table in `README.md`, and the `prerender` array in `react-router.config.ts`.
+- Dynamic routes with statically known IDs: add individual URLs to `public/sitemap.xml`, the `prerender` array, and `README.md`. Also create a per-level discussion JSON file if the level has a discussion thread.
+- Redirect routes: do not add to `sitemap.xml` or `README.md`.
+- Catch-all routes: do not add anywhere.
 
 ### When adding a new adventure
 
-Adventures are authored as YAML files at `src/data/adventures/<id>/adventure.yaml` and compiled to TypeScript by `scripts/generate-adventures.mjs`. Shared types live in `types.ts`, contributors in `contributors.ts`. The generated barrel `index.ts` re-exports `ADVENTURES`, `ALL_TAGS`, `ADVENTURE_CONTRIBUTORS`, `getLevelsByTag`, `tagToSlug`, and `slugToTag`. The Discourse API does not expose the structured data needed (Codespace URLs, technology tags, learnings), so these YAML files are the authoritative source of truth.
-
 Complete checklist for every new adventure:
 
-1. Run `node scripts/new-adventure.mjs` to scaffold a new `src/data/adventures/<id>/adventure.yaml`. Fill in the required fields: `id`, `title`, `month`, `story`, `tags`, and `levels`. Each level needs `id`, `name`, `difficulty`, `learnings`, `devcontainerPath` (relative path to the devcontainer.json, e.g. `.devcontainer/04-blind-by-design_01-beginner/devcontainer.json`), and `discussionUrl` (full URL or path relative to `COMMUNITY_URL`). The schema is at `schemas/adventure.schema.json`.
+1. Run `npm run new-adventure` to scaffold a new `src/data/adventures/<id>/adventure.yaml`.
 2. Run `npm run generate` to produce `<id>.generated.ts` and update `index.ts`.
 3. Add the adventure detail route and all level routes to `src/routes.ts`.
-4. Add the adventure landing page URL and every level URL to `public/sitemap.xml`.
-5. Add the adventure landing page URL and every level URL to the `prerender` array in `react-router.config.ts`.
-6. Create a per-level discussion JSON file at `src/data/adventures/<adventure-id>/<level-id>-posts.json` with `{ "discussionUrl": "<full-topic-url>" }` for each level that has a discussion thread.
-7. Run `node scripts/refresh-discussions.mjs` to fetch discussion posts for the new levels.
-8. Add the adventure to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs` with the correct `categoryId` (find it at `<COMMUNITY_URL>/categories.json`) and `levelCount`.
-9. Run `node scripts/refresh-leaderboard.mjs` to create `src/data/adventures/<adventure-id>/leaderboard.json`.
+4. Add all URLs to `public/sitemap.xml`.
+5. Add all URLs to the `prerender` array in `react-router.config.ts`.
+6. Create a per-level discussion JSON file at `src/data/adventures/<adventure-id>/<level-id>-posts.json` with `{ "discussionUrl": "<full-topic-url>" }`.
+7. Run `node scripts/refresh-discussions.mjs` to fetch discussion posts.
+8. Add the adventure to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs` with the correct `categoryId` and level booleans.
+9. Run `node scripts/refresh-leaderboard.mjs` to create `leaderboard.json`.
 10. Update the routes table in `README.md`.
+
+### When adding a new level to an existing adventure
+
+1. Run `npm run new-level -- --adventure <id> --level <id>`. This scaffolds `<level-id>-posts.json`, adds the prerender entry to `react-router.config.ts`, and adds the URL to `public/sitemap.xml`.
+2. Add the level fields to `src/data/adventures/<id>/adventure.yaml` and run `npm run generate`.
+3. Add the level route to `src/routes.ts`.
+4. Add the level to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs` and run `node scripts/refresh-leaderboard.mjs`.
+5. Add the level URL to the `ROUTES` array in `e2e/smoke.spec.ts` and `src/test/seo.test.ts`, and to the `pages` array in `src/test/prerender.test.ts` with the expected `<title>` value.
+6. Update the routes table in `README.md`.
 
 ---
 
@@ -645,7 +534,7 @@ Complete checklist for every new adventure:
 - Push to `main` triggers `deploy.yml` and deploys to GitHub Pages.
 - Open PRs trigger `preview.yml` and create a PR preview deployment.
 - Only static files in `dist/client/` are deployed. No server config is needed.
-- The base path is set via the `VITE_BASE_PATH` environment variable (defaults to `/`). PR previews set this automatically in `preview.yml`. Never change this without verifying GitHub Pages routing.
+- The base path is set via the `VITE_BASE_PATH` environment variable (defaults to `/`). Never change this without verifying GitHub Pages routing.
 
 ### GitHub Actions allowlist
 
@@ -653,52 +542,34 @@ The `off-on-dev` organisation restricts which third-party actions can run. Only 
 
 | Action | Pinned version |
 |---|---|
-| `actions/checkout` | `@v4` — never `@v5`, `@v6`, or any other version |
-| `actions/setup-node` | `@v4` — never `@v5`, `@v6`, or any other version |
-| `JamesIves/github-pages-deploy-action` | any tag (`@*`) |
-| `marocchino/sticky-pull-request-comment` | any tag (`@*`) |
-| `rossjrw/pr-preview-action` | any tag (`@*`) |
+| `actions/checkout` | `@v4` only |
+| `actions/setup-node` | `@v4` only |
+| `JamesIves/github-pages-deploy-action` | any tag |
+| `marocchino/sticky-pull-request-comment` | any tag |
+| `rossjrw/pr-preview-action` | any tag |
 | Actions owned by `off-on-dev` | any |
 | Actions created by GitHub | any |
 | Actions verified in the GitHub Marketplace | any |
 
-**Before adding any new `uses:` line to a workflow file, verify the action is on this list.** If it is not, replace it with an equivalent using `gh` (GitHub CLI, pre-installed on all `ubuntu-latest` runners) or native shell commands. Do not ask for the allowlist to be expanded unless there is no alternative.
-
-This rule is enforced at the org level. A workflow that references an action outside the allowlist will fail immediately with an "action is not allowed" error — it will never even reach the step that uses it.
+Before adding any new `uses:` line to a workflow file, verify the action is on this list. If it is not, replace it with an equivalent using `gh` (GitHub CLI) or native shell commands.
 
 ---
 
 ## Before Submitting Code
 
-Every code change must pass all of these checks before being considered done.
-State the result of each check explicitly before finishing a task.
+Every code change must pass all of these checks before being considered done. State the result of each check explicitly before finishing a task.
 
-### Mandatory checks (non-negotiable)
+### Mandatory checks
 
-1. **Run lint:** `npm run lint` must exit with zero errors. No warnings suppressed
-   with eslint-disable unless the reason is documented in a comment on the same line.
-
-2. **Run tests:** `npm test` must pass with zero failures. No tests skipped or
-   commented out.
-
-3. **Run e2e and a11y tests:** `npm run build && npm run test:e2e` must pass with zero failures. This is mandatory before every commit, not just in CI. Playwright tests cover page titles, hydration, accessibility (axe), and client-side navigation — none of these are covered by Vitest alone.
-
-4. **Run build:** `npm run build` must complete with no TypeScript errors or
-   bundling failures. Run this for every non-trivial change, not just those that touch types or interfaces.
-
-5. **Re-read every file you changed:** After making changes, re-read the full
-   affected section of each modified file to verify the final state is correct.
-   Never assume an edit landed correctly without checking.
-
-6. **Check all call sites:** If you changed a function signature, component props,
-   or exported type, search for all usages and confirm they are updated.
-
-7. **Check imports:** Every import must resolve. No unused imports. No circular
-   dependencies introduced.
-
-8. **Verify at three viewports:** All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px). Always test against the production build (`npm run build && npm run preview`), never the dev server.
-
-9. **Check discussion data on every PR:** If the PR adds or modifies adventure levels, verify that a per-level discussion JSON file exists at `src/data/adventures/<adventure-id>/<level-id>-posts.json` with the correct `discussionUrl`. Run `node scripts/refresh-discussions.mjs` to populate discussion posts. A missing file means the discussion feed will silently show no posts for that level.
+1. **Run lint:** `npm run lint` must exit with zero errors.
+2. **Run tests:** `npm test` must pass with zero failures.
+3. **Run e2e and a11y tests:** `npm run build && npm run test:e2e` must pass with zero failures. The axe audit runs tags `["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"]` in both light and dark mode. Never reduce this tag set.
+4. **Run build:** `npm run build` must complete with no TypeScript errors or bundling failures.
+5. **Re-read every file you changed:** verify the final state is correct. Never assume an edit landed correctly without checking.
+6. **Check all call sites:** if you changed a function signature, component props, or exported type, search for all usages and confirm they are updated.
+7. **Check imports:** every import must resolve. No unused imports. No circular dependencies introduced.
+8. **Verify at three viewports:** 375px, 768px, and 1280px. Always test against the production build, never the dev server.
+9. **Check discussion data on every PR:** if the PR adds or modifies adventure levels, verify that a per-level discussion JSON file exists with the correct `discussionUrl`.
 
 ### Before writing any code
 
@@ -706,21 +577,17 @@ State the result of each check explicitly before finishing a task.
 2. If the change touches more than one file, list all affected files before starting.
 3. If the change involves a state machine, enumerate all transitions first.
 4. If the change involves shared state, confirm a context provider is used.
-5. If the change involves a side effect (DOM, localStorage, external scripts),
-   write the test before or alongside the implementation, not after.
+5. If the change involves a side effect (DOM, localStorage, external scripts), write the test before or alongside the implementation.
 
 ### Red flags that require stopping and flagging to the user
 
-- A fix requires changing more than 3 files you did not plan to change
-- A type error requires adding a cast or suppression to resolve
-- A test requires mocking something that was not mocked before
-- The same bug has been fixed more than once in this session
-- A replacement did not change the file (silent no-op)
-- The error in the browser console shows a different bundle hash than the
-  latest build output
-- A "fix" has been applied but the same error reproduces unchanged
-- Debugging requires making a diagnostic script more complex instead of
-  reading what the simpler diagnostic already said
+- A fix requires changing more than 3 files you did not plan to change.
+- A type error requires adding a cast or suppression to resolve.
+- A test requires mocking something that was not mocked before.
+- The same bug has been fixed more than once in this session.
+- A replacement did not change the file (silent no-op).
+- The error in the browser console shows a different bundle hash than the latest build output.
+- A "fix" has been applied but the same error reproduces unchanged.
 
 ---
 
@@ -732,144 +599,80 @@ State the result of each check explicitly before finishing a task.
 - Do not install new dependencies without checking if shadcn/ui or an existing utility covers the need.
 - Do not commit secrets, tokens, or credentials.
 - Do not change the `@theme` block in `src/index.css` without verifying the change does not break existing components.
-- Do not reinstall `@radix-ui/*` packages that were removed. If a Radix primitive is genuinely needed, check whether raw HTML with Tailwind solves the problem first.
-- Do not re-derive data from `ADVENTURES` inside component files. Any computed value that belongs to the data layer (e.g. a deduplicated tag list) should be exported from `src/data/adventures/index.ts` and imported. `ALL_TAGS` is the established pattern.
-- Do not edit `*.generated.ts`, `src/data/adventures/index.ts`, or `src/data/adventures/summaries.ts` by hand. These are produced by `scripts/generate-adventures.mjs` from the YAML source files. Edit the YAML and run `npm run generate` instead.
+- Do not reinstall `@radix-ui/*` packages that were removed.
+- Do not re-derive data from `ADVENTURES` inside component files.
+- Do not edit `*.generated.ts`, `src/data/adventures/index.ts`, or `src/data/adventures/summaries.ts` by hand.
 
 ---
 
 ## When Suggesting Code
 
 - Always read `styleguide.md` before making any UI, copy, or component changes.
-  It is the source of truth for typography, color tokens, spacing, and brand rules.
-  Never introduce values that contradict it.
 - Follow all rules in the Styling and Components sections.
-- Flag any accessibility concerns before writing the code, not after.
+- Flag any accessibility concerns before writing the code, not after. Read `ACCESSIBILITY.md` first.
 - Flag any breaking changes explicitly.
 - Prefer simple, readable solutions over clever ones.
-- If something could be done multiple ways, briefly explain the tradeoff and
-  recommend one approach.
+- If something could be done multiple ways, briefly explain the tradeoff and recommend one approach.
 
 ---
 
 ## After Making Changes
 
-Documentation updates are not optional. They are part of completing a task.
-A task is not done until the relevant docs are updated. Run this checklist
-before every commit:
+A task is not done until the relevant docs are updated.
 
-### Always check these four things after any non-trivial change:
+### Always check these four things after any non-trivial change
 
-1. **Did you add or change a component, hook, or utility?**
-   If yes, update `styleguide.md` with a brief entry under the relevant section.
-   Include: what it does, its props or return type, and any usage notes.
-   Do not skip this even for small hooks.
+1. **Did you add or change a component, hook, or utility?** Update `styleguide.md`.
+2. **Did you add or change a page or route?** Update the routes table in `README.md`.
+3. **Did you add or change an environment variable, constant, or config value?** Document it in `README.md`.
+4. **Did you change a build, deploy, or dev workflow?** Update the Commands section in both `CLAUDE.md` and `README.md`.
 
-2. **Did you add or change a page or route?**
-   If yes, update the routes table in `README.md` with the path and purpose.
-
-3. **Did you add or change an environment variable, constant, or config value?**
-   If yes, document it in `README.md`. If it affects visual output, add it to
-   `styleguide.md` too. Never reference a constant value directly in docs,
-   point to the file it lives in instead.
-
-4. **Did you change a build, deploy, or dev workflow?**
-   If yes, update the Commands section in both `CLAUDE.md` and `README.md`.
-
-### After completing any task, explicitly state:
-- Which of the four checks above applied
-- What was updated in each doc, or why it was skipped
-- If nothing needed updating, say so and explain why
-
-### Triggers and what to update:
+After completing any task, explicitly state which checks applied, what was updated, or why it was skipped.
 
 | Change | Update |
 |---|---|
 | New component | styleguide.md: component entry with props and usage |
 | New hook | styleguide.md: hook entry with return type and behavior |
 | New utility function | styleguide.md: brief entry if it affects patterns |
-| New page or route | README.md routes table for all non-redirect routes; `public/sitemap.xml` and `prerender` array in `react-router.config.ts` for static routes only. |
-| New constant | README.md: constants section, styleguide.md if visual |
-| New workflow step | README.md: commands section, CLAUDE.md if it changes a rule |
+| New page or route | README.md routes table; sitemap.xml and prerender array for static routes |
+| New constant | README.md constants section, styleguide.md if visual |
+| New workflow step | README.md commands section, CLAUDE.md if it changes a rule |
 | New brand or copy rule | styleguide.md first, then apply across codebase |
 | Bug fix that reveals a missing rule | CLAUDE.md: add the rule to prevent recurrence |
 | New test pattern | CLAUDE.md: add to Testing section if it sets a precedent |
-
-Do not document trivial fixes (typos, one-line patches) unless they change a
-rule or pattern others should follow.
 
 ---
 
 ## Implementation Rules
 
-These rules exist to prevent specific classes of mistakes. Follow them unconditionally.
-
 ### Shared state
-- If a hook or piece of state is consumed by more than one sibling component, it must
-  be a React context provider, not a plain hook. Verify this at design time before
-  writing any code.
+
+If a hook or piece of state is consumed by more than one sibling component, it must be a React context provider, not a plain hook.
 
 ### File extensions
-- Any file that renders or returns JSX must use the `.tsx` extension. Files that are
-  pure TypeScript logic with no JSX use `.ts`. Catch this before writing, not after lint.
+
+Any file that renders or returns JSX must use the `.tsx` extension. Files that are pure TypeScript logic with no JSX use `.ts`.
 
 ### React hooks
-- Each `useEffect` must have a single responsibility. Never combine side effects that
-  have different trigger conditions into one effect with a merged dependency array.
-  Split them into separate `useEffect` calls.
+
+Each `useEffect` must have a single responsibility. Never combine side effects with different trigger conditions into one effect. Split them.
 
 ### State machines
-- When implementing any feature with multiple states (e.g. consent: granted / denied /
-  null), enumerate every transition before writing code. For each transition, list every
-  system that must be updated (storage, UI state, external APIs, DOM). Verify all of
-  them are handled before marking the task done.
+
+When implementing any feature with multiple states, enumerate every transition before writing code. For each transition, list every system that must be updated (storage, UI state, external APIs, DOM).
 
 ---
 
 ## SEO Checklist: Required for Every New Page
 
-Add via the route module's `meta()` export — never in `src/root.tsx`:
+Add via the route module's `meta()` export, never in `src/root.tsx`:
+
 - `<title>` (unique) and `<meta name="description">` (under 160 chars)
 - `og:title`, `og:description`, `og:url`, `og:type`, `og:image`, `og:image:width` (1200), `og:image:height` (630), `og:image:alt`, `og:site_name`, `og:locale` (en_GB)
 - `twitter:card` (`summary_large_image`), `twitter:title`, `twitter:description`, `twitter:image`, `twitter:image:alt`
 - `<link rel="canonical">` set to `${SITE_URL}${pathname}`
 - Correct heading hierarchy: one `h1`, `h2` for sections, `h3` for subsections
 
-Static routes only — add to both:
-- `public/sitemap.xml`
-- `prerender` array in `react-router.config.ts`
+Static routes only: add to `public/sitemap.xml` and the `prerender` array in `react-router.config.ts`.
 
-One-time `src/root.tsx` check (not per page): manifest link, both theme-color tags, JSON-LD block, `lang="en"` on `<html>`. See SEO > Global head setup for the full requirements.
-
----
-
-## WCAG AA Checklist: Required for Every New Component
-
-- Text contrast: 4.5:1 for normal, 3:1 for large (18px+). Test both light and dark modes. (See Accessibility > Color contrast.)
-- Never use `hsl(41 100% 60%)` (`#ffc034` yellow) as text in light mode — fails contrast.
-- Never place text on `bg-primary` without verifying light mode contrast.
-- Focus rings: `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm`. Inline elements: `ring-offset-1`. (See Accessibility > Keyboard navigation.)
-- Every `<img>` needs `alt`. Meaningful/brand images: describe content. Purely decorative: `alt=""` + `aria-hidden="true"` together. Never use `aria-hidden="true"` when alt text is present. (See Accessibility > Images and media.)
-- Hover states must not change layout properties (padding, border, font-weight, width). Use color and opacity only.
-- Semantic landmarks: `<main>`, `<nav>`, `<footer>`, `<section>`, `<article>`. Every page: `<main id="main-content">`. (See Accessibility > Semantic HTML.)
-- One `<h1>` per page, no skipped levels. No `<br />` in headings — use block `<span>` elements.
-- Every `<a target="_blank">` needs `<span className="sr-only"> (opens in new tab)</span>`. (See Accessibility > External links.)
-- Decorative icons: `aria-hidden="true"`. No raw Unicode symbols (`→`, `♥`, `✓`, `★`) for meaning. (See Accessibility > Icons and special characters.)
-- **Decorative separators** (e.g. `·`, `-` between pill segments): never use a text character with `opacity-*`. Use an empty `<span>` styled as a CSS divider: `<span aria-hidden="true" className="inline-block w-px h-3 bg-current opacity-40" />`. No text content means axe's color-contrast rule does not evaluate it, and the WCAG 1.4.11 non-text-contrast exemption covers purely decorative separators.
-- **Never use `opacity-*` on an element that contains visible text** — opacity composites the text color against the background and the resulting blended color must still meet contrast requirements. Use explicit CSS color values (e.g. `text-[hsl(var(--text-faint))]`) instead of opacity to produce muted text.
-- **Minimum visible text size is 12px** (`text-xs`). Do not use `text-[0.6rem]` or `text-[0.65rem]` for any visible (non-`aria-hidden`) text. Avatar initials and rank numbers that are purely decorative and `aria-hidden` are exempt.
-- All page content (including `PageHero` and `BottomCTA`) inside `<main id="main-content">`.
-- Dynamic content updates: use `aria-live` regions. (See Accessibility > ARIA.)
-
----
-
-## Performance Checklist: Required When Adding Fonts, Images, or New Routes
-
-- Preload critical fonts via the `links()` export in `src/root.tsx` (not as hardcoded `<link>` tags in the JSX). React Router's `<Links />` component manages these correctly during SSR and hydration, preventing the "preloaded but not used" browser warning that hardcoded preloads cause. Example: `{ rel: "preload", href: \`${import.meta.env.BASE_URL}fonts/inter-latin-400-normal.woff2\`, as: "font", type: "font/woff2", crossOrigin: "anonymous" }`.
-- Only preload fonts used above the fold. Check the `links()` export in `src/root.tsx` for the current preload list and update it whenever above-the-fold typography changes.
-- Do not lazy-load LCP images. Remove `loading="lazy"` from any above-the-fold image.
-- Add `loading="lazy"` to all `<img>` elements that are not visible in the initial viewport.
-- Add `fetchpriority="high"` to the LCP image.
-- Add `width` and `height` attributes to every `<img>` element to prevent layout shift (CLS).
-- New routes are automatically code-split by Vite. No manual action needed.
-- Always run Lighthouse against the production build: `npm run build && npm run preview`. Never run it against the dev server.
+One-time `src/root.tsx` check (not per page): manifest link, both theme-color tags, JSON-LD block, `lang="en"` on `<html>`.

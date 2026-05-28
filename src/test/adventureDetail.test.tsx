@@ -1,6 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
+
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual<typeof import('react-router')>('react-router');
+  return { ...actual, useLoaderData: vi.fn().mockReturnValue({ rewardsBelowFold: false }) };
+});
 import { ConsentProvider } from '@/hooks/useConsent';
 import { ADVENTURES } from '@/data/adventures';
 import AdventureDetail from '@/pages/AdventureDetail';
@@ -87,24 +92,10 @@ describe('AdventureDetail - heading structure', () => {
       </ConsentProvider>
     );
     expect(screen.getByRole('heading', { level: 2, name: 'Challenges' })).toBeTruthy();
-    expect(screen.getByRole('heading', { level: 2, name: 'Find Challenges by Technology' })).toBeTruthy();
   });
 });
 
 describe('ChallengeDetail - heading structure', () => {
-  it('renders "Find challenges by technology" as a visible h2 heading, not an overline label', () => {
-    render(
-      <ConsentProvider>
-        <MemoryRouter initialEntries={[`/adventures/${adventure.id}/levels/${level.id}`]}>
-          <Routes>
-            <Route path="/adventures/:id/levels/:levelId" element={<ChallengeDetail />} />
-          </Routes>
-        </MemoryRouter>
-      </ConsentProvider>
-    );
-    expect(screen.getByRole('heading', { level: 2, name: 'Find Challenges by Technology' })).toBeTruthy();
-  });
-
   it('renders "Key Learnings" as an h2 heading in structured layout', () => {
     render(
       <ConsentProvider>
@@ -119,68 +110,6 @@ describe('ChallengeDetail - heading structure', () => {
   });
 });
 
-describe('AdventureDetail - technology filter', () => {
-  const wrapper = (
-    <ConsentProvider>
-      <MemoryRouter initialEntries={[`/adventures/${adventure.id}`]}>
-        <Routes>
-          <Route path="/adventures/:id" element={<AdventureDetail />} />
-          <Route path="/adventures/:id/levels/:levelId" element={<ChallengeDetail />} />
-        </Routes>
-      </MemoryRouter>
-    </ConsentProvider>
-  );
-
-  it('clicking a technology chip shows related challenge cards', () => {
-    render(wrapper);
-    const tag = adventure.tags[0];
-    const chip = screen.getByRole('button', { name: tag });
-    const initialOccurrences = screen.getAllByText(adventure.levels[0].name).length;
-    fireEvent.click(chip);
-    expect(screen.getByRole('button', { name: tag }).getAttribute('aria-pressed')).toBe('true');
-    expect(screen.getAllByText(adventure.levels[0].name).length).toBeGreaterThan(initialOccurrences);
-  });
-
-  it('clicking the same technology chip again hides the challenge cards', () => {
-    render(wrapper);
-    const tag = adventure.tags[0];
-    const chip = screen.getByRole('button', { name: tag });
-    fireEvent.click(chip);
-    fireEvent.click(chip);
-    expect(chip.getAttribute('aria-pressed')).toBe('false');
-  });
-});
-
-describe('ChallengeDetail - technology filter', () => {
-  const wrapper = (
-    <ConsentProvider>
-      <MemoryRouter initialEntries={[`/adventures/${adventure.id}/levels/${level.id}`]}>
-        <Routes>
-          <Route path="/adventures/:id/levels/:levelId" element={<ChallengeDetail />} />
-        </Routes>
-      </MemoryRouter>
-    </ConsentProvider>
-  );
-
-  it('clicking a technology chip shows related challenge cards', () => {
-    render(wrapper);
-    const tag = adventure.tags[0];
-    const chip = screen.getByRole('button', { name: tag });
-    const initialOccurrences = screen.getAllByText(adventure.levels[0].name).length;
-    fireEvent.click(chip);
-    expect(chip.getAttribute('aria-pressed')).toBe('true');
-    expect(screen.getAllByText(adventure.levels[0].name).length).toBeGreaterThan(initialOccurrences);
-  });
-
-  it('clicking the same technology chip again hides the challenge cards', () => {
-    render(wrapper);
-    const tag = adventure.tags[0];
-    const chip = screen.getByRole('button', { name: tag });
-    fireEvent.click(chip);
-    fireEvent.click(chip);
-    expect(chip.getAttribute('aria-pressed')).toBe('false');
-  });
-});
 
 // ---------------------------------------------------------------------------
 // AdventureLevelLink: topics pills, intro description, and link hrefs

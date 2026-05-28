@@ -29,7 +29,7 @@ const ROUTES: RouteSpec[] = [
   { path: "/adventures/blind-by-design", title: /Blind by Design/ },
   { path: "/adventures/blind-by-design/levels/beginner", title: /Stand up the Lab/ },
   { path: "/adventures/blind-by-design/levels/intermediate", title: /Outcome by Cohort/ },
-  { path: "/challenges", title: /Challenges - Hands-on/ },
+  { path: "/challenges", title: /Open Source Challenges/ },
   { path: "/challenges/argo-cd", title: /Argo CD Challenges/ },
   { path: "/challenges/argo-rollouts", title: /Argo Rollouts Challenges/ },
   { path: "/challenges/github-actions", title: /GitHub Actions Challenges/ },
@@ -171,7 +171,7 @@ test.describe("hydration and interactivity", () => {
 
   test("consent accept stores granted and replaces banner with preferences button", async ({ page }) => {
     await page.goto("/");
-    const banner = page.getByRole("region", { name: "Cookie consent" });
+    const banner = page.getByRole("region", { name: "This site uses analytics cookies" });
     await expect(banner).toBeVisible();
 
     await page.getByRole("button", { name: "Accept analytics cookies" }).click();
@@ -186,7 +186,7 @@ test.describe("hydration and interactivity", () => {
     await page.goto("/");
     await page.getByRole("button", { name: "Decline analytics cookies" }).click();
 
-    await expect(page.getByRole("region", { name: "Cookie consent" })).not.toBeVisible();
+    await expect(page.getByRole("region", { name: "This site uses analytics cookies" })).not.toBeVisible();
     await expect(page.getByRole("button", { name: "Change cookie preferences" })).toBeVisible();
     const stored = await page.evaluate(() => localStorage.getItem("analytics_consent"));
     expect(JSON.parse(stored!).value).toBe("denied");

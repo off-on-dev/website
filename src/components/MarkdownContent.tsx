@@ -48,6 +48,7 @@ const CodeBlock = ({ children, showCopy = true }: { children: ReactNode; showCop
       <pre
         ref={preRef}
         tabIndex={0}
+        aria-label="Code block"
         className={`overflow-x-auto rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-4 font-mono text-sm leading-relaxed text-foreground [&>code]:border-none [&>code]:bg-transparent [&>code]:p-0 [&>code]:rounded-none [&>code]:text-[1em]${showCopy ? " pr-14" : ""}`}
       >
         {children}

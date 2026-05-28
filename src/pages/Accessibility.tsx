@@ -91,6 +91,34 @@ const Accessibility = (): JSX.Element => {
                 Google Analytics is opt-in only via the consent banner. No tracking runs until the
                 user accepts.
               </li>
+              <li>
+                Page navigation is announced to screen readers via a polite live region on every
+                client-side route change, so users do not have to manually explore to discover
+                they have moved to a new page.
+              </li>
+              <li>
+                The mobile navigation menu traps focus while open. Content behind the menu is
+                hidden from assistive technology until the menu is dismissed, preventing screen
+                reader users from navigating into obscured content by mistake.
+              </li>
+              <li>
+                Interactive filter buttons announce the result count when a filter is applied, and
+                announce when a filter is cleared, so screen reader users receive confirmation
+                of both actions.
+              </li>
+              <li>
+                Scrollable code blocks are keyboard-focusable with a descriptive label, so
+                keyboard users can reach and scroll long code samples.
+              </li>
+              <li>
+                <code>prefers-contrast: more</code> is respected: borders and muted elements
+                increase in contrast when the user enables Increase Contrast in their OS settings.
+              </li>
+              <li>
+                Windows High Contrast Mode is supported via a <code>forced-colors: active</code>{" "}
+                media query that restores interactive component boundaries using system color
+                keywords.
+              </li>
             </ul>
 
             <h2 className={heading2}>Supported Environments</h2>
@@ -218,12 +246,12 @@ const Accessibility = (): JSX.Element => {
               If you are submitting a pull request, every UI change should pass the accessibility
               checklist in our pull request template. The full ruleset lives in{" "}
               <a
-                href="https://github.com/off-on-dev/website/blob/main/CLAUDE.md"
+                href="https://github.com/off-on-dev/website/blob/main/ACCESSIBILITY.md"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={link}
               >
-                CLAUDE.md <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                ACCESSIBILITY.md <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
               </a>{" "}
               and applies to every change.
             </p>
@@ -234,6 +262,22 @@ const Accessibility = (): JSX.Element => {
             <p className="text-sm text-muted-foreground mt-10">
               Have a question?{" "}
               <Link to="/about" className={link}>Reach out to the team</Link>.
+            </p>
+
+            <hr className="my-8 border-t border-[hsl(var(--surface-border))]" />
+            <p className={`${paragraph} text-xs`}>
+              The accessibility audit that informed this statement used guidance from{" "}
+              <a
+                href="https://github.com/mgifford/ACCESSIBILITY.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={link}
+              >
+                mgifford/ACCESSIBILITY.md <ExternalLink size={10} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+              </a>
+              , a community resource for accessibility best practices, testing criteria, and
+              issue severity frameworks. Thank you to Mike Gifford and all contributors for
+              making that guidance openly available.
             </p>
           </div>
         </div>

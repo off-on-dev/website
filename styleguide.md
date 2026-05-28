@@ -377,41 +377,6 @@ The default is dark. All light mode color overrides live in `src/index.css` as u
 
 ---
 
-### `useActiveSection`
-
-`src/hooks/useActiveSection.ts`
-
-Observes a list of section element IDs using `IntersectionObserver` and returns the ID of whichever section is currently visible in the viewport, or `null` if none are.
-
-Designed for anchor-based nav items on single-page layouts. Runs off the main thread with zero scroll listeners.
-
-```ts
-const activeSection = useActiveSection(["challenges", "about"]);
-// returns "challenges" | "about" | null
-```
-
-| Param | Type | Description |
-|---|---|---|
-| `sectionIds` | `string[]` | Array of element IDs to observe. Pass a stable module-level constant to prevent unnecessary re-runs. Pass `[]` to skip observer creation entirely (e.g. on pages other than home). |
-
-| Return | Type | Description |
-|---|---|---|
-| (value) | `string \| null` | ID of the intersecting section, or `null` when none are in view |
-
-The observer fires at `threshold: 0.2` (20% visibility). The observer is disconnected on unmount. Passing an empty array is a no-op: no observer is created.
-
-Usage in `Navbar.tsx` (home-page-only guard):
-
-```ts
-const OBSERVED_SECTIONS = ["challenges"]; // stable constant, outside component
-const activeSection = useActiveSection(
-  location.pathname === "/" ? OBSERVED_SECTIONS : []
-);
-const challengesActive = location.pathname === "/" && activeSection === "challenges";
-```
-
----
-
 ### `useConsent`
 
 `src/hooks/useConsent.tsx`
@@ -449,7 +414,7 @@ Returns nothing. Reads consent via `useConsent`, so the call site must be inside
 
 | Event property | Source | Fallback |
 |---|---|---|
-| `click_text` | `tracked.textContent?.trim()`, sliced to 100 chars | `"unknown"` |
+| `click_text` | `tracked.getAttribute("aria-label")` when non-empty, otherwise `tracked.textContent?.trim()`, sliced to 100 chars | `"unknown"` |
 | `click_url` | `<a>`: `href`. `<button>`: `data-url` attribute. | `"no-url"` |
 | `click_element` | `tracked.tagName.toLowerCase()` (`"a"` or `"button"`) | none |
 | `click_page` | `window.location.pathname` | none |
@@ -527,7 +492,7 @@ const { rows, updatedAt } = useAdventureLeaderboard(adventureId, mockLoader);
 | `adventureId` | `string` | Adventure slug (e.g. `"blind-by-design"`). |
 | `loader` | `LeaderboardLoader` (optional) | Async function that returns `{ updatedAt, rows }`. Defaults to a dynamic `import.meta.glob` import. Pass `vi.fn().mockResolvedValue(data)` in tests. |
 
-`LeaderboardRow` shape: `rank`, `username`, `avatarUrl?`, `points`, `challengesSolved?`, `beginnerPoints?`, `intermediatePoints?`, `expertPoints?`, `breakdown?`.
+`LeaderboardRow` shape: `rank`, `username`, `avatarUrl?`, `points`, `challengesSolved?`, `beginnerPoints?`, `intermediatePoints?`, `expertPoints?`, `singlePoints?`, `breakdown?`.
 
 ---
 
@@ -546,7 +511,19 @@ The banner uses `paddingBottom: env(safe-area-inset-bottom)` and the floating bu
 
 Touch target is 44×44 px (`h-11 w-11`) to meet WCAG 2.5.5 (minimum 44×44 px).
 
+The banner uses `role="region"` with `aria-labelledby="consent-banner-title"` (pointing to the visible title paragraph). When the banner first mounts, focus is moved to the Decline button so keyboard users immediately know a decision is available.
+
 No props. Uses `useConsent` context internally.
+
+---
+
+### `RouteAnnouncer` (internal, `src/Layout.tsx`)
+
+Announces the page title to screen readers on every SPA navigation. Renders a visually hidden `role="status"` live region. The announcement is deferred one `requestAnimationFrame` so React Router's `<Meta />` head update completes before the title is read.
+
+Skips the initial mount so users do not hear an announcement when they first load the page. Only fires on subsequent `pathname` changes via `useLocation`.
+
+No props. Internal to `Layout.tsx`. Do not extract or reuse elsewhere.
 
 ---
 
@@ -554,7 +531,7 @@ No props. Uses `useConsent` context internally.
 
 `src/components/NavLink.tsx`
 
-A thin wrapper around React Router's `NavLink` that normalises the `className` API. React Router v6's `NavLink` passes a function to `className`; this wrapper accepts plain strings for `className`, `activeClassName`, and `pendingClassName` and merges them via `cn`.
+A thin wrapper around React Router's `NavLink` that normalises the `className` API. React Router's `NavLink` passes a function to `className`; this wrapper accepts plain strings for `className`, `activeClassName`, and `pendingClassName` and merges them via `cn`.
 
 ```tsx
 <NavLink to="/about" className="base-class" activeClassName="active-class">
@@ -665,7 +642,7 @@ No props. Used only in `Index.tsx`.
 
 `src/components/CommunityLeaders.tsx`
 
-Sidebar card displaying community leaders fetched daily from Discourse Data Explorer queries. Renders an `<aside aria-label="Community leaders">` with ranked lists per category. Each category uses a lucide-react icon and an `<ol>` of user rows (rank, avatar, username, count). Avatars are lazy-loaded from external Discourse CDN URLs.
+Sidebar card displaying community leaders fetched daily from Discourse Data Explorer queries. Renders a `<div>` card with an `<h2>` "Community Leaders" heading and a ranked list per category. Each category uses a lucide-react icon and an `<ol aria-label="{section.title}">` of user rows (rank, avatar, username, count). Avatars are lazy-loaded from external Discourse CDN URLs.
 
 Data source: `src/data/community-leaders.json` (refreshed daily by `.github/workflows/refresh-community-leaders.yml`).
 
@@ -1135,22 +1112,6 @@ The bundled stack (`react-markdown`, `remark-gfm`, `micromark`, etc.) is code-sp
 
 ---
 
-### `TechFilterSection`
-
-`src/components/TechFilterSection.tsx`
-
-Self-contained technology filter used on `AdventureDetail` and `ChallengeDetail` pages. Renders a row of filter pills (one per unique tag across all adventures) and a grid of matching challenge cards when a tag is selected.
-
-```tsx
-<TechFilterSection />
-```
-
-No props. Owns its own `activeTech` state internally. `ALL_TAGS` is imported from `src/data/adventures` (computed once at module load; shared with `ChallengesGrid`). The results grid only renders when a tag is active and at least one matching level exists. Wraps results in `aria-live="polite"` so screen readers announce updates.
-
-The challenge cards in the results grid are rendered via `FilteredLevelCard` with `className="animate-fade-up-delay-1"` (see `FilteredLevelCard` in the Components section).
-
----
-
 ### `ChallengesGrid`
 
 `src/components/ChallengesGrid.tsx`
@@ -1165,12 +1126,10 @@ No props. Owns its own `activeTopic` state internally.
 
 **Two display modes:**
 
-- **No tag selected (default):** renders one `AdventureCard` per adventure. Each card links to `/adventures/:id` and carries `aria-label={adventure.title}`.
-- **Tag selected:** replaces adventure cards with a grid of `FilteredLevelCard` instances (one per matching level across all adventures). Each card links to `/adventures/:id/levels/:levelId`. Wrapped in `aria-live="polite"` so screen readers announce updates.
+- **All selected (default):** renders one `AdventureCard` per adventure. Each card links to `/adventures/:id`.
+- **Tag selected:** replaces adventure cards with a grid of `FilteredLevelCard` instances (one per matching level). Wrapped in `aria-live="polite"` so screen readers announce updates.
 
-The filter chips use `role="group"` with `aria-label="Filter challenges by technology"`. Clicking an active chip deselects it and returns to the adventure card view. The `aria-live` region is only mounted when a tag is active.
-
-**Important:** the Technology Filter Pattern in the Patterns section documents the shared state logic. `AdventureDetail` and `ChallengeDetail` use `TechFilterSection` for the same filter — do not add a second instance of `ChallengesGrid` on those pages.
+The filter chips use `role="group"` with `aria-label="Filter challenges by technology"`. An "All" pill appears first and is active by default. Clicking an active tag chip deselects it and returns to the adventure card view. No URL changes occur on selection.
 
 ---
 
@@ -1189,21 +1148,21 @@ Use `FilteredLevelCard` (see Components section). Do not inline the card markup.
 />
 ```
 
-Used in `ChallengesGrid` and `TechFilterSection` (and wherever a tag-filtered level result grid is needed). Each card is a `<Link>` to `/adventures/:id/levels/:levelId`.
+Used in `ChallengesGrid` and `Challenges` (and wherever a tag-filtered level result grid is needed). Each card is a `<Link>` to `/adventures/:id/levels/:levelId`.
 
 ### Technology Filter Pattern
 
-Used on the home page (`ChallengesGrid`) and on adventure/challenge detail pages via the `TechFilterSection` component. `AdventureDetail` and `ChallengeDetail` must use `<TechFilterSection />` — do not inline this pattern in those pages again.
+Used in `ChallengesGrid` (home/adventures pages) and `Challenges` (challenges/ page).
 
 ```ts
-const [activeTech, setActiveTech] = useState<string | null>(null);
+const [activeTopic, setActiveTopic] = useState<string | null>(null);
 ```
 
-- Filter chips render with `.pill-active` when selected and `.pill-inactive` otherwise.
-- Each chip sets `aria-pressed={activeTech === tag}`.
-- Clicking an already-active chip deselects it: `setActiveTech(activeTech === tag ? null : tag)`.
-- No URL change and no page navigation occur on selection.
-- The filtered results grid only renders when `activeTech` is non-null and results exist.
+- An "All" pill appears first. It is active (`aria-pressed={activeTopic === null}`) when no tag is selected.
+- Tag chips render with `.pill-active` when selected and `.pill-inactive` otherwise. Each sets `aria-pressed={activeTopic === tag}`.
+- Clicking an already-active chip deselects it and returns to the default view.
+- `ChallengesGrid`: no URL change on selection. Default (All) = adventure card grid. Tag = flat level card grid.
+- `Challenges`: URL updates to `/challenges/:tag` when a tag is selected. Default (All) = flat grid of every challenge level. Tag = filtered flat grid.
 
 ---
 
@@ -1230,7 +1189,7 @@ export const meta: MetaFunction = () =>
 |---|---|---|---|
 | `title` | `string` | required | Page title and `og:title` / `twitter:title` |
 | `description` | `string` | required | Meta description and `og:description` / `twitter:description` |
-| `url` | `string` | required | Canonical URL and `og:url` |
+| `url` | `string` | required | Canonical URL and `og:url`. Normalized to end with `/` to match GitHub Pages' 301 redirects for directory routes. |
 | `ogType` | `string?` | `"website"` | `og:type` value. Use `"article"` for adventure and challenge pages. |
 | `extra` | `MetaDescriptor[]?` | `[]` | Additional tags appended after the standard set (e.g. `{ name: "robots", content: "noindex" }` for `Privacy`). |
 
@@ -1246,8 +1205,8 @@ Helper functions for processing discussion posts in `DiscussionSection` and `Com
 
 | Export | Signature | Description |
 |---|---|---|
-| `isCertificatePost` | `(post: PostWithAge) => boolean` | Returns true if the post contains a `CERTIFICATE START` block (completion proof). |
-| `displaySnippet` | `(post: PostWithAge) => string` | Returns the display text for a post. For certificate posts, strips the certificate block and falls back to "Completed the challenge." if nothing else remains. |
+| `isCertificatePost` | `(post: PostWithAge) => boolean` | Returns true when `post.challengeSolved === true`. The `challengeSolved` flag is set by the refresh script when it identifies a completion post. |
+| `displaySnippet` | `(post: PostWithAge) => string` | Returns the display text for a post. For certificate posts, strips the `CERTIFICATE START … CERTIFICATE END` block from `cooked` and falls back to `"Completed the challenge."` if nothing else remains. |
 
 ---
 
@@ -1359,7 +1318,7 @@ The standard class for all inline prose links across the site. Handles both mode
 **Dark mode:** foreground text with amber (`--primary`) underline. Hover shifts text and underline to full `hsl(var(--primary))` (`#ffc034`).
 **Light mode:** near-black foreground text with `currentColor` underline. Hover shifts text and underline to `--link-hover-light` (`hsl(41 100% 25%)` ≈ `#7f4200`) — dark amber, same hue as primary, ~5.5:1 contrast on light backgrounds. Passes WCAG AA.
 
-Used in: `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`, `ChallengeDetail`, `MarkdownContent`.
+Used in: `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`, `ChallengeDetail`, `MarkdownContent`, `CommunitySidebar`, `RewardsCard`, `Accessibility`, and `Privacy`.
 
 Do not use `hover:text-primary` or `hover:underline` on inline content links — use `docs-ext-link` instead.
 
@@ -1424,6 +1383,29 @@ Never place a `bg-primary` section without verifying that focusable children inh
 
 ---
 
+### `@media (prefers-contrast: more)`
+
+Located at the end of `src/index.css`. Fires when the user enables "Increase Contrast" on macOS/iOS or equivalent OS settings.
+
+Overrides:
+- `.btn-ghost` border: full-opacity foreground color (removes `border-foreground/35` opacity)
+- `.btn-ghost-inverse` border: full-opacity background color
+- `.pill-inactive` border and text: full-opacity foreground
+
+Use this block for any element whose visible boundary or text relies on opacity-based color tokens. Do not use it for already-opaque elements.
+
+---
+
+### `@media (forced-colors: active)`
+
+Located at the end of `src/index.css`. Fires when the user enables Windows High Contrast Mode or any forced-color OS mode.
+
+Applies system color keywords (`ButtonFace`, `ButtonText`, `Highlight`, `HighlightText`) to buttons and pills. Uses `forced-color-adjust: none` to prevent the browser from adding conflicting overrides on top of our manual system-color assignments. Focus rings use `Highlight` so they remain visible regardless of the `--ring` variable value.
+
+When adding a new interactive component (button, pill, toggle, chip), add a corresponding rule to the `forced-colors` block so its boundaries and labels remain visible in High Contrast Mode.
+
+---
+
 ## Performance
 
 ### Lighthouse scores (production build)
@@ -1432,7 +1414,7 @@ Measured against the production build locally (`npm run build && npm run preview
 
 | Category | Score |
 |---|---|
-| Performance | 95 |
+| Performance | 93 (target: 95) |
 | Accessibility | 100 |
 | Best Practices | 100 |
 | SEO | 100 |

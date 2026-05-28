@@ -1,4 +1,4 @@
-import { useState, useEffect, type JSX } from "react";
+import { useState, useEffect, useRef, type JSX } from "react";
 import { Link } from "react-router";
 import { Cookie } from "lucide-react";
 import { useConsent } from "@/hooks/useConsent";
@@ -6,10 +6,19 @@ import { useConsent } from "@/hooks/useConsent";
 export function ConsentBanner(): JSX.Element | null {
   const { consent, grant, deny, reset } = useConsent();
   const [mounted, setMounted] = useState(false);
+  const declineRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setMounted(true); // eslint-disable-line react-hooks/set-state-in-effect -- mount guard; SSG requires a safe default (null) on first render so the banner is absent from prerendered HTML and cannot become the LCP element
   }, []);
+
+  // Move focus to Decline when the banner appears (initial visit or after reset)
+  // so keyboard users are not left with focus stranded on an unmounted button.
+  useEffect(() => {
+    if (mounted && consent === null) {
+      declineRef.current?.focus();
+    }
+  }, [mounted, consent]);
 
   if (!mounted) return null;
 
@@ -31,14 +40,14 @@ export function ConsentBanner(): JSX.Element | null {
   return (
     <div
       role="region"
-      aria-label="Cookie consent"
+      aria-labelledby="consent-banner-title"
       aria-live="polite"
       style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background shadow-lg"
     >
       <div className="mx-auto flex max-w-screen-xl flex-col gap-4 px-4 py-5 sm:flex-row sm:items-start sm:gap-8 sm:px-6">
         <div className="flex-1 space-y-1">
-          <p className="text-sm text-foreground">This site uses analytics cookies</p>
+          <p id="consent-banner-title" className="text-sm text-foreground">This site uses analytics cookies</p>
           <p className="text-sm text-muted-foreground">
             We use Google Analytics to understand how visitors use offon.dev. No data is sent to
             Google until you accept. You can change your preference at any time. See our{" "}
@@ -53,6 +62,7 @@ export function ConsentBanner(): JSX.Element | null {
         </div>
         <div className="flex shrink-0 flex-wrap gap-2 sm:items-center">
           <button
+            ref={declineRef}
             type="button"
             onClick={deny}
             aria-label="Decline analytics cookies"

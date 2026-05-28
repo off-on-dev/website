@@ -1,6 +1,6 @@
 import { type JSX } from "react";
-import { useParams, Link } from "react-router";
-import type { MetaFunction } from "react-router";
+import { useParams, Link, useLoaderData } from "react-router";
+import type { MetaFunction, LoaderFunctionArgs } from "react-router";
 import { ArrowLeft, Check, ExternalLink } from "lucide-react";
 import { ADVENTURES } from "@/data/adventures";
 import { TagChips } from "@/components/TagChips";
@@ -19,9 +19,16 @@ import { DiscussionSection } from "@/components/DiscussionSection";
 import { CommunitySidebar } from "@/components/CommunitySidebar";
 import { OtherLevelsCard } from "@/components/OtherLevelsCard";
 import { RewardsCard } from "@/components/RewardsCard";
-import { TechFilterSection } from "@/components/TechFilterSection";
 import { SITE_URL, BRAND_NAME, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
+import { isDeadlinePast } from "@/lib/utils";
+
+export function loader({ params }: LoaderFunctionArgs): { rewardsBelowFold: boolean } {
+  const adventure = ADVENTURES.find((a) => a.id === params.id);
+  const level = adventure?.levels.find((l) => l.id === params.levelId);
+  const deadline = level?.deadline ?? adventure?.rewards?.deadline;
+  return { rewardsBelowFold: isDeadlinePast(deadline) };
+}
 
 export const meta: MetaFunction = ({ params }) => {
   const adventure = ADVENTURES.find((a) => a.id === params.id);
@@ -58,9 +65,10 @@ export const meta: MetaFunction = ({ params }) => {
 type StructuredLayoutProps = {
   adventure: (typeof ADVENTURES)[number];
   level: (typeof ADVENTURES)[number]["levels"][number];
+  rewardsBelowFold: boolean;
 };
 
-const StructuredLayout = ({ adventure, level }: StructuredLayoutProps): JSX.Element => {
+const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayoutProps): JSX.Element => {
   const { intro, objective, toolbox, backstory, architecture, architectureDiagram, diagramAlt, howToPlay, helpfulLinks, verification } = level;
   return (
     <>
@@ -184,7 +192,7 @@ const StructuredLayout = ({ adventure, level }: StructuredLayoutProps): JSX.Elem
                 {verification ? (
                   <span>
                     Verify your solution:
-                    <pre tabIndex={0} className="mt-2 overflow-x-auto rounded-lg border border-[hsl(var(--surface-border))] bg-background/60 px-4 py-3 font-mono text-sm text-foreground">
+                    <pre tabIndex={0} aria-label="Verification command" className="mt-2 overflow-x-auto rounded-lg border border-[hsl(var(--surface-border))] bg-background/60 px-4 py-3 font-mono text-sm text-foreground">
                       <code>{verification.command}</code>
                     </pre>
                     <span className="mt-2 block text-[hsl(var(--text-faint))]">If it passes, it generates a Certificate of Completion you can paste into the discussion.</span>
@@ -281,8 +289,8 @@ const StructuredLayout = ({ adventure, level }: StructuredLayoutProps): JSX.Elem
           aria-label="Challenge resources"
           className="mt-10 lg:mt-0 space-y-4 lg:sticky lg:top-28 lg:self-start"
         >
-          {adventure.rewards && (
-            <RewardsCard rewards={adventure.rewards} compact levelDeadline={level.deadline} />
+          {adventure.rewards && !rewardsBelowFold && (
+            <RewardsCard rewards={adventure.rewards} compact levelDeadline={level.deadline} deadlinePast={rewardsBelowFold} />
           )}
 
           {/* CTA panel - hidden on mobile where inline CTA is shown */}
@@ -296,19 +304,20 @@ const StructuredLayout = ({ adventure, level }: StructuredLayoutProps): JSX.Elem
             contributor={adventure.contributor}
           />
           <OtherLevelsCard adventure={adventure} currentLevelId={level.id} />
+
+          {adventure.rewards && rewardsBelowFold && (
+            <RewardsCard rewards={adventure.rewards} compact levelDeadline={level.deadline} deadlinePast={rewardsBelowFold} />
+          )}
         </aside>
       </div>
 
-      {/* Tech filter spans full width */}
-      <div className="mt-16">
-        <TechFilterSection />
-      </div>
     </>
   );
 };
 
 const ChallengeDetail = (): JSX.Element => {
   const { id, levelId } = useParams<{ id: string; levelId: string }>();
+  const { rewardsBelowFold } = useLoaderData<{ rewardsBelowFold: boolean }>();
   const adventure = ADVENTURES.find((adventure) => adventure.id === id);
   const level = adventure?.levels.find((level) => level.id === levelId);
 
@@ -340,7 +349,7 @@ const ChallengeDetail = (): JSX.Element => {
           </nav>
 
           {hasStructuredContent ? (
-            <StructuredLayout adventure={adventure} level={level} />
+            <StructuredLayout adventure={adventure} level={level} rewardsBelowFold={rewardsBelowFold} />
           ) : (
             <>
               {/* Legacy layout for levels without structured content */}
@@ -366,7 +375,6 @@ const ChallengeDetail = (): JSX.Element => {
                 <DiscussionSection adventureId={adventure.id} levelId={level.id} discussionUrl={level.discussionUrl} />
               </div>
 
-              <TechFilterSection />
             </>
           )}
         </div>

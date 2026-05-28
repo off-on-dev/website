@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from "react-router";
-import { useEffect, type JSX } from "react";
+import { useEffect, useRef, useState, type JSX } from "react";
 import { ThemeProvider } from "@/hooks/useTheme";
 import { ConsentBanner } from "@/components/ConsentBanner";
 import { ConsentProvider, useConsent } from "@/hooks/useConsent";
@@ -51,6 +51,31 @@ const ClickTracker = (): null => {
   return null;
 };
 
+// Announces page title to screen readers on SPA navigation. Skips the initial
+// mount so users don't hear an announcement when they first load the page.
+const RouteAnnouncer = (): JSX.Element => {
+  const { pathname } = useLocation();
+  const [announcement, setAnnouncement] = useState("");
+  const hasMounted = useRef(false);
+
+  useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
+    const raf = requestAnimationFrame(() => {
+      setAnnouncement(document.title || pathname);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [pathname]);
+
+  return (
+    <span role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+      {announcement}
+    </span>
+  );
+};
+
 export function Layout(): JSX.Element {
   return (
     <ThemeProvider>
@@ -59,6 +84,7 @@ export function Layout(): JSX.Element {
           Skip to main content
         </a>
         <ScrollToTop />
+        <RouteAnnouncer />
         <PageViewTracker />
         <ClickTracker />
         <ConsentBanner />
