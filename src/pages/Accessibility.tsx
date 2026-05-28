@@ -246,12 +246,12 @@ const Accessibility = (): JSX.Element => {
               If you are submitting a pull request, every UI change should pass the accessibility
               checklist in our pull request template. The full ruleset lives in{" "}
               <a
-                href="https://github.com/off-on-dev/website/blob/main/CLAUDE.md"
+                href="https://github.com/off-on-dev/website/blob/main/ACCESSIBILITY.md"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={link}
               >
-                CLAUDE.md <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                ACCESSIBILITY.md <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
               </a>{" "}
               and applies to every change.
             </p>

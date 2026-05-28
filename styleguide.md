@@ -377,41 +377,6 @@ The default is dark. All light mode color overrides live in `src/index.css` as u
 
 ---
 
-### `useActiveSection`
-
-`src/hooks/useActiveSection.ts`
-
-Observes a list of section element IDs using `IntersectionObserver` and returns the ID of whichever section is currently visible in the viewport, or `null` if none are.
-
-Designed for anchor-based nav items on single-page layouts. Runs off the main thread with zero scroll listeners.
-
-```ts
-const activeSection = useActiveSection(["challenges", "about"]);
-// returns "challenges" | "about" | null
-```
-
-| Param | Type | Description |
-|---|---|---|
-| `sectionIds` | `string[]` | Array of element IDs to observe. Pass a stable module-level constant to prevent unnecessary re-runs. Pass `[]` to skip observer creation entirely (e.g. on pages other than home). |
-
-| Return | Type | Description |
-|---|---|---|
-| (value) | `string \| null` | ID of the intersecting section, or `null` when none are in view |
-
-The observer fires at `threshold: 0.2` (20% visibility). The observer is disconnected on unmount. Passing an empty array is a no-op: no observer is created.
-
-Usage in `Navbar.tsx` (home-page-only guard):
-
-```ts
-const OBSERVED_SECTIONS = ["challenges"]; // stable constant, outside component
-const activeSection = useActiveSection(
-  location.pathname === "/" ? OBSERVED_SECTIONS : []
-);
-const challengesActive = location.pathname === "/" && activeSection === "challenges";
-```
-
----
-
 ### `useConsent`
 
 `src/hooks/useConsent.tsx`
@@ -449,7 +414,7 @@ Returns nothing. Reads consent via `useConsent`, so the call site must be inside
 
 | Event property | Source | Fallback |
 |---|---|---|
-| `click_text` | `tracked.textContent?.trim()`, sliced to 100 chars | `"unknown"` |
+| `click_text` | `tracked.getAttribute("aria-label")` when non-empty, otherwise `tracked.textContent?.trim()`, sliced to 100 chars | `"unknown"` |
 | `click_url` | `<a>`: `href`. `<button>`: `data-url` attribute. | `"no-url"` |
 | `click_element` | `tracked.tagName.toLowerCase()` (`"a"` or `"button"`) | none |
 | `click_page` | `window.location.pathname` | none |
@@ -527,7 +492,7 @@ const { rows, updatedAt } = useAdventureLeaderboard(adventureId, mockLoader);
 | `adventureId` | `string` | Adventure slug (e.g. `"blind-by-design"`). |
 | `loader` | `LeaderboardLoader` (optional) | Async function that returns `{ updatedAt, rows }`. Defaults to a dynamic `import.meta.glob` import. Pass `vi.fn().mockResolvedValue(data)` in tests. |
 
-`LeaderboardRow` shape: `rank`, `username`, `avatarUrl?`, `points`, `challengesSolved?`, `beginnerPoints?`, `intermediatePoints?`, `expertPoints?`, `breakdown?`.
+`LeaderboardRow` shape: `rank`, `username`, `avatarUrl?`, `points`, `challengesSolved?`, `beginnerPoints?`, `intermediatePoints?`, `expertPoints?`, `singlePoints?`, `breakdown?`.
 
 ---
 
@@ -566,7 +531,7 @@ No props. Internal to `Layout.tsx`. Do not extract or reuse elsewhere.
 
 `src/components/NavLink.tsx`
 
-A thin wrapper around React Router's `NavLink` that normalises the `className` API. React Router v6's `NavLink` passes a function to `className`; this wrapper accepts plain strings for `className`, `activeClassName`, and `pendingClassName` and merges them via `cn`.
+A thin wrapper around React Router's `NavLink` that normalises the `className` API. React Router's `NavLink` passes a function to `className`; this wrapper accepts plain strings for `className`, `activeClassName`, and `pendingClassName` and merges them via `cn`.
 
 ```tsx
 <NavLink to="/about" className="base-class" activeClassName="active-class">
@@ -677,7 +642,7 @@ No props. Used only in `Index.tsx`.
 
 `src/components/CommunityLeaders.tsx`
 
-Sidebar card displaying community leaders fetched daily from Discourse Data Explorer queries. Renders an `<aside aria-label="Community leaders">` with ranked lists per category. Each category uses a lucide-react icon and an `<ol>` of user rows (rank, avatar, username, count). Avatars are lazy-loaded from external Discourse CDN URLs.
+Sidebar card displaying community leaders fetched daily from Discourse Data Explorer queries. Renders a `<div>` card with an `<h2>` "Community Leaders" heading and a ranked list per category. Each category uses a lucide-react icon and an `<ol aria-label="{section.title}">` of user rows (rank, avatar, username, count). Avatars are lazy-loaded from external Discourse CDN URLs.
 
 Data source: `src/data/community-leaders.json` (refreshed daily by `.github/workflows/refresh-community-leaders.yml`).
 
@@ -1224,7 +1189,7 @@ export const meta: MetaFunction = () =>
 |---|---|---|---|
 | `title` | `string` | required | Page title and `og:title` / `twitter:title` |
 | `description` | `string` | required | Meta description and `og:description` / `twitter:description` |
-| `url` | `string` | required | Canonical URL and `og:url` |
+| `url` | `string` | required | Canonical URL and `og:url`. Normalized to end with `/` to match GitHub Pages' 301 redirects for directory routes. |
 | `ogType` | `string?` | `"website"` | `og:type` value. Use `"article"` for adventure and challenge pages. |
 | `extra` | `MetaDescriptor[]?` | `[]` | Additional tags appended after the standard set (e.g. `{ name: "robots", content: "noindex" }` for `Privacy`). |
 
@@ -1240,8 +1205,8 @@ Helper functions for processing discussion posts in `DiscussionSection` and `Com
 
 | Export | Signature | Description |
 |---|---|---|
-| `isCertificatePost` | `(post: PostWithAge) => boolean` | Returns true if the post contains a `CERTIFICATE START` block (completion proof). |
-| `displaySnippet` | `(post: PostWithAge) => string` | Returns the display text for a post. For certificate posts, strips the certificate block and falls back to "Completed the challenge." if nothing else remains. |
+| `isCertificatePost` | `(post: PostWithAge) => boolean` | Returns true when `post.challengeSolved === true`. The `challengeSolved` flag is set by the refresh script when it identifies a completion post. |
+| `displaySnippet` | `(post: PostWithAge) => string` | Returns the display text for a post. For certificate posts, strips the `CERTIFICATE START … CERTIFICATE END` block from `cooked` and falls back to `"Completed the challenge."` if nothing else remains. |
 
 ---
 
@@ -1353,7 +1318,7 @@ The standard class for all inline prose links across the site. Handles both mode
 **Dark mode:** foreground text with amber (`--primary`) underline. Hover shifts text and underline to full `hsl(var(--primary))` (`#ffc034`).
 **Light mode:** near-black foreground text with `currentColor` underline. Hover shifts text and underline to `--link-hover-light` (`hsl(41 100% 25%)` ≈ `#7f4200`) — dark amber, same hue as primary, ~5.5:1 contrast on light backgrounds. Passes WCAG AA.
 
-Used in: `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`, `ChallengeDetail`, `MarkdownContent`.
+Used in: `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`, `ChallengeDetail`, `MarkdownContent`, `CommunitySidebar`, `RewardsCard`, `Accessibility`, and `Privacy`.
 
 Do not use `hover:text-primary` or `hover:underline` on inline content links — use `docs-ext-link` instead.
 
@@ -1449,7 +1414,7 @@ Measured against the production build locally (`npm run build && npm run preview
 
 | Category | Score |
 |---|---|
-| Performance | 95 |
+| Performance | 93 (target: 95) |
 | Accessibility | 100 |
 | Best Practices | 100 |
 | SEO | 100 |

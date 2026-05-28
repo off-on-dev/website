@@ -7,7 +7,7 @@ Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for op
 - **React 19** + **TypeScript**: UI and type safety
 - **Vite**: build tooling and dev server
 - **Tailwind CSS**: utility-first styling
-- **shadcn/ui**: accessible component primitives built on Radix UI
+- **shadcn/ui**: minimal component surface (`badge.tsx`, `tooltip.tsx`); most Radix UI packages were intentionally removed
 - **React Router v7**: client-side routing with static prerendering
 - **Vitest**: unit and component testing
 - **Playwright**: browser smoke tests (`e2e/`)
