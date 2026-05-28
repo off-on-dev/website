@@ -31,7 +31,7 @@ export const WalkthroughSection = ({ steps }: WalkthroughSectionProps): JSX.Elem
                 onClick={() => toggle(i)}
                 aria-expanded={isOpen}
                 aria-controls={contentId}
-                className="flex w-full items-start gap-4 p-5 text-left"
+                className="flex w-full items-start gap-4 p-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg"
               >
                 <span
                   className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold"
@@ -44,21 +44,20 @@ export const WalkthroughSection = ({ steps }: WalkthroughSectionProps): JSX.Elem
                 </span>
                 <ChevronDown
                   size={16}
-                  className={`mt-0.5 shrink-0 text-[hsl(var(--text-faint))] transition-transform duration-200 ${isOpen ? "rotate-0" : "-rotate-90"}`}
+                  className={`mt-0.5 shrink-0 text-[hsl(var(--text-faint))] transition-transform duration-200 ${isOpen ? "rotate-180" : "rotate-0"}`}
                   aria-hidden="true"
                 />
               </button>
-              {isOpen && (
-                <div
-                  id={contentId}
-                  className="grid grid-cols-[1.25rem_1fr] gap-4 px-5 pb-5"
-                >
-                  <div aria-hidden="true" />
-                  <div className="min-w-0 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
-                    <MarkdownContent source={step.body} />
-                  </div>
+              <div
+                id={contentId}
+                hidden={!isOpen}
+                className="grid grid-cols-[1.25rem_1fr] gap-4 px-5 pb-5"
+              >
+                <div aria-hidden="true" />
+                <div className="min-w-0 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+                  <MarkdownContent source={step.body} />
                 </div>
-              )}
+              </div>
             </li>
           );
         })}
