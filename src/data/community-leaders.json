@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-22T12:45:20.438Z",
+  "lastUpdated": "2026-05-28T07:57:14.990Z",
   "sections": [
     {
       "id": "top-contributors",
@@ -42,23 +42,23 @@
           "count": 8
         },
         {
-          "username": "enri-kapaj",
-          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/enri-kapaj/40/165_2.png",
-          "count": 6
-        },
-        {
           "username": "justinrand",
           "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/justinrand/40/140_2.png",
           "count": 6
         },
         {
-          "username": "alvin",
-          "avatarUrl": "https://avatars.discourse-cdn.com/v4/letter/a/b5a626/40.png",
-          "count": 4
+          "username": "enri-kapaj",
+          "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/enri-kapaj/40/165_2.png",
+          "count": 6
         },
         {
           "username": "theharithsa",
           "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/theharithsa/40/297_2.png",
+          "count": 4
+        },
+        {
+          "username": "alvin",
+          "avatarUrl": "https://avatars.discourse-cdn.com/v4/letter/a/b5a626/40.png",
           "count": 4
         }
       ]
@@ -107,7 +107,7 @@
         {
           "username": "theharithsa",
           "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/theharithsa/40/297_2.png",
-          "count": 19
+          "count": 20
         },
         {
           "username": "DavidHirsch",
@@ -154,7 +154,7 @@
         {
           "username": "KatharinaSick",
           "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/KatharinaSick/40/9_2.png",
-          "count": 78
+          "count": 79
         },
         {
           "username": "DavidHirsch",
