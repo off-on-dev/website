@@ -73,6 +73,8 @@ export type AdventureLevel = {
   helpfulLinks?: HelpfulLink[];
   // Verification card rendered as the final section.
   verification: VerificationInfo;
+  // Optional SEO meta description (max 160 chars). When absent, ChallengeDetail.tsx generates one from level name, learnings, and difficulty.
+  metaDescription?: string;
   // Mock community stats shown in the CommunitySidebar. Real data will replace
   // these once we aggregate certificate posts and cross-challenge contribution.
   solvedCount?: number;

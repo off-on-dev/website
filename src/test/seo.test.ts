@@ -31,6 +31,7 @@ const ROUTES = [
   "/adventures/blind-by-design",
   "/adventures/blind-by-design/levels/beginner",
   "/adventures/blind-by-design/levels/intermediate",
+  "/adventures/blind-by-design/levels/expert",
   "/challenges",
   "/challenges/argo-cd",
   "/challenges/argo-rollouts",

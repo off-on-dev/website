@@ -1,17 +1,17 @@
 {
-  "updatedAt": "2026-05-26T11:26:15.332Z",
+  "updatedAt": "2026-05-28T12:48:50.346Z",
   "rows": [
     {
       "rank": 1,
       "username": "theharithsa",
       "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/theharithsa/90/297.png",
-      "points": 200,
-      "challengesSolved": 2,
+      "points": 300,
+      "challengesSolved": 3,
       "beginnerPoints": 100,
       "intermediatePoints": 100,
-      "expertPoints": 0,
+      "expertPoints": 100,
       "singlePoints": 0,
-      "breakdown": ":green_circle: Wire OpenFeature + flagd into a Spring Boot service with zero setup | Adventure 04 : Beginner [beginner] rank #1 = 100 pts | 🟡 Outcome by cohort | Adventure 04: Intermediate [intermediate] rank #1 = 100 pts"
+      "breakdown": ":green_circle: Wire OpenFeature + flagd into a Spring Boot service with zero setup | Adventure 04 : Beginner [beginner] rank #1 = 100 pts | 🟡 Outcome by cohort | Adventure 04: Intermediate [intermediate] rank #1 = 100 pts | 🔴 Read the chart | Adventure 04: Expert [expert] rank #1 = 100 pts"
     }
   ]
 }

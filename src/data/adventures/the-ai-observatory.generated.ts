@@ -47,7 +47,7 @@ export const THE_AI_OBSERVATORY: Adventure = {
       ],
       architecture: [
         "All AI and observability infrastructure (Ollama, OpenTelemetry Collector, Jaeger) runs inside Kubernetes, while HubSystem runs as a local Python application outside the cluster.",
-        "This setup lets you focus on instrumentation without a build or deploy cycle: edit the Python code, run it, and see traces in Jaeger immediately.",
+        "This setup has two benefits: it lets you focus on instrumentation without wrestling with containers or Kubernetes deployments when updating the app, and it gives you fast iteration. Edit the Python code, run it, and see traces in Jaeger immediately. No build or deploy cycle.",
       ],
       toolbox: [
         { name: "python", description: "programming language used for the HubSystem application" },
@@ -124,7 +124,7 @@ That's not normal. ART is never vague. You access the ship's diagnostic systems 
       ],
       howToPlay: [
         { title: "Wait for Infrastructure", body: "Wait ~15 minutes for all infrastructure to initialize." },
-        { title: "Access Observability Tools", body: "Open the Ports tab: Prometheus at port 30102, Jaeger at port 30103." },
+        { title: "Access Observability Tools", body: "Open the Ports tab. Prometheus at port 30102 helps you explore available metrics and test PromQL queries. Jaeger at port 30103 shows distributed traces from ART so you can verify that tracing is working end-to-end." },
         { title: "Instrument and Configure", body: `The application code is in \`./art.py\`. Instrument it with OpenLLMetry and add the custom metric. The Prometheus recording rules are in \`./manifests/prometheus-rule.yaml\`. After changing the rule file, apply it to the cluster:
 
 \`\`\`sh

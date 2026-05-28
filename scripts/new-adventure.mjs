@@ -99,53 +99,84 @@ const levelEntries = levels
   .map((level) => {
     const difficulty = difficultyMap[level];
     return `  - id: ${level}
-    # required | e.g. "Stand up the Lab" / "Outcome by Cohort" / "Lights On"
-    name: "TODO: Level name"
+    # required | e.g. "Stand Up the Lab" / "Outcome by Cohort" / "Lights On"
+    name: "TODO: Replace with level display name"
     difficulty: ${difficulty}
     topics:
       # required | technology and tool names shown as pill tags on the level card.
-      # e.g. OpenFeature, flagd, Spring Boot
-      - "TODO: Add topic tags"
+      - "TODO: Replace with technology name"
+      - "TODO: Replace with another technology name"
     learnings:
-      # required | full sentences describing concrete skills or insights gained.
-      # e.g. "How an OpenFeature client and provider work together: the SDK is provider-agnostic and plugs in via dependency only"
-      - "TODO: Add learning 1"
-      - "TODO: Add learning 2"
+      # required | full sentences describing concrete skills or insights gained. Use >- for prose with colons.
+      - >-
+        TODO: How the client and provider work together: the SDK is provider-agnostic and plugs in via dependency only
+      - >-
+        TODO: Why hot-reload matters operationally: editing the flag file flips behaviour on the next request with no redeploy
     devcontainerPath: ".devcontainer/TODO/devcontainer.json" # required
     discussionUrl: "/t/TODO" # required
     intro:
-      # required | one or two sentences: what the player will wire up and what they will prove works.
-      # e.g. "Wire the OpenFeature Java SDK into a Spring Boot service so flag evaluations are resolved by a flagd sidecar. Prove that editing flags.json flips the response without restarting the app."
-      - "TODO: Add intro paragraph"
-    backstory:
-      # optional | narrative context that sets the scene for this specific level.
-      # e.g. "The lab is on its first shift and it isn't reading the chart. Every subject who walks through the door gets the same hard-coded reading, no matter what the director signed off on."
-      - "TODO: Add backstory"
+      # required | 1-2 sentences: what the player will wire up and what they will prove works.
+      - >-
+        TODO: Wire the SDK into the service so flag evaluations are resolved by a sidecar running alongside your Codespace.
+        Prove that editing the flag file flips the response on the next request without restarting anything.
     objective:
       # required | verifiable outcomes a player can check with a command.
-      # e.g. "curl http://localhost:8080/ returns a vision_state resolved from flags.json (not the hard-coded fallback)"
-      - "TODO: Add objective 1"
+      - >-
+        TODO: curl http://localhost:8080/ returns a value resolved from the flag file, not the hard-coded fallback
+      - >-
+        TODO: Editing the flag file and re-running curl returns the new value without restarting the service
     # optional | uncomment to describe who this level is aimed at and what prior knowledge helps.
-    # audience: "Best suited for: Platform engineers, SREs, and developers curious about Kubernetes security. No prior Kyverno experience needed, but familiarity with basic kubectl and YAML will help."
-    # optional | uncomment to describe the technical setup (services, ports, how they connect).
+    # audience: >-
+    #   Best suited for platform engineers and developers new to feature flagging. Familiarity with basic
+    #   Java and Spring Boot helps but no prior SDK experience is needed.
+    # optional | narrative context that sets the scene for this specific level.
+    # backstory:
+    #   - >-
+    #     The service is returning a hard-coded response. The SDK was integrated last quarter but the provider
+    #     was never registered, so every request falls back to the default. Complete the wiring so the service
+    #     reads from the flag file instead.
+    # optional | describe the technical setup (services, ports, how they connect).
     # architecture:
-    #   - "TODO: e.g. Two containers run side-by-side: the app on http://localhost:8080 and a sidecar on :8013."
-    #   - "TODO: e.g. Edit config.json through the IDE; the file watcher picks up changes within a second."
+    #   - >-
+    #     Two containers run side-by-side: the app on http://localhost:8080 and a sidecar on port 8013.
+    #   - >-
+    #     Edit the flag file through the IDE; the file watcher picks up changes within about a second.
     toolbox:
       # required | list the CLI tools and services available in the Codespace. Add a url field for external docs.
-      # e.g. name: "./mvnw" / description: "Maven wrapper; builds and runs the Spring Boot service"
-      - name: "TODO"
-        description: "TODO: Add tool description"
+      - name: "TODO: ./run.sh"
+        description: "TODO: Starts the service; also available via F5 in VS Code"
+      - name: "curl"
+        description: "TODO: sends requests to http://localhost:8080/ to confirm flags are being evaluated"
+        url: "https://curl.se/"
     howToPlay:
       # required | walk the player from the broken state to a working solution, one titled step at a time.
       # Use fenced code blocks for commands. First step: confirm the broken state. Last step: run the verifier.
-      - title: "TODO: Step 1"
-        body: "TODO: Add instructions"
+      - title: "Confirm the Broken State"
+        body: |
+          TODO: Start the service and confirm the hard-coded fallback is returned:
+
+          \`\`\`sh
+          ./run.sh
+          curl http://localhost:8080/
+          # returns the fallback — this is the broken state
+          \`\`\`
+      - title: "TODO: Replace with main fix step title"
+        body: >-
+          TODO: Replace with instructions for the main fix. What file to open, what to add or change.
+      - title: "Verify the Fix"
+        body: |
+          TODO: Edit the flag file and re-run curl without restarting anything:
+
+          \`\`\`sh
+          curl http://localhost:8080/
+          # now returns the flag-resolved value
+          \`\`\`
     helpfulLinks:
       # optional | reference docs the player will need. label is the link text; url must be a full https:// URL.
-      # e.g. label: "OpenFeature Java SDK" / url: https://openfeature.dev/docs/reference/technologies/server/java/
-      - label: "TODO: Doc title"
-        url: "https://TODO"
+      - label: "TODO: SDK documentation"
+        url: https://example.com/docs
+      - label: "TODO: Flag definition reference"
+        url: https://example.com/flags
     verification:
       # required | keep the defaults unless the verification script name or message differs.
       command: "./verify.sh"
@@ -156,40 +187,58 @@ const levelEntries = levels
 const yamlContent = `id: ${id}
 title: "${title}"
 month: "${month}"
-# required | 2-3 sentences covering what technology is used and what each level does.
-# e.g. "Three levels of OpenFeature with flagd as the provider, in a Java + Spring Boot service.
-#   Wire the SDK (Beginner), add cohort targeting (Intermediate), then instrument with OpenTelemetry (Expert)."
-story: "TODO: Add adventure story summary"
+# required | 2-3 sentences: what technology is used and what each level does.
+story: >-
+  TODO: Replace with a 2-3 sentence summary. e.g. Three levels of OpenFeature with flagd as the provider,
+  in a Java + Spring Boot service. Wire the SDK (Beginner), add cohort targeting (Intermediate),
+  then instrument with OpenTelemetry (Expert).
 tags:
   # required | technology and tool names. Mirror the topics used across all levels.
-  # e.g. OpenFeature, flagd, Spring Boot, Java, OpenTelemetry
-  - "TODO: Add tags"
+  - "TODO: Replace with technology name"
+  - "TODO: Replace with another technology name"
 
 # optional | uncomment and fill in if the adventure has an external contributor:
 # contributor:
-#   name: "TODO: Contributor name"
-#   url: "https://TODO"
-#   about: "TODO: Short bio"
+#   name: "Contributor Name"
+#   url: "https://contributor-website.example.com"
+#   about: >-
+#     Short bio. e.g. CNCF Ambassador and maintainer of OpenFeature. Helps teams release faster
+#     through open standards and feature flagging. Familiar face at KubeCon and Devoxx.
 
-backstory:
-  # optional | sets the scene for the whole adventure. Can be 1-3 paragraphs.
-  # e.g. "The Aletheia Institute is running a multi-phase vision-enhancement trial. The lab is a Spring Boot service whose one job is to record the vision_state of every subject..."
-  - "TODO: Add adventure backstory paragraph 1"
+# optional | narrative context that sets the scene for the whole adventure. Can be 1-3 paragraphs.
+# backstory:
+#   - >-
+#     Replace with paragraph 1. Describe the fictional world and situation. e.g. The Aletheia
+#     Institute is running a multi-phase trial. The lab is a Spring Boot service whose one job is
+#     to record the state of every subject who walks through the protocol.
+#   - >-
+#     Replace with paragraph 2. Build the stakes. e.g. It hasn't been working for eight months.
+#     Every subject through the door has been recorded as "untreated".
 
-# optional | uncomment and fill in for a 'What you will be using' section:
+# optional | "What you'll be using" explainer section shown on the adventure overview page.
 # context:
 #   title: "What you'll be using"
 #   body:
-#     - "TODO: Explain the main technology"
+#     - >-
+#       Replace with a paragraph explaining the main technology. e.g. OpenFeature is a vendor-neutral
+#       standard for feature flags. The reference cloud-native implementation is flagd, which serves
+#       flag definitions from a JSON file.
+#     - >-
+#       Replace with a second paragraph explaining how the adventure uses the technology.
 
 # optional | uncomment and fill in for reward info:
 # rewards:
-#   deadline: "TODO: Day, DD Month YYYY at HH:MM CET"
-#   eligibility: "TODO: Eligibility criteria"
+#   deadline: "DD Month YYYY at HH:MM CET"
+#   eligibility: "Complete all levels and post your solution in the community before the deadline to be eligible."
 #   tiers:
 #     - label: "1st place"
-#       description: "TODO: Prize"
-#   rankingNote: "TODO: How ranking works"
+#       description: "Replace with prize description"
+#     - label: "Top 3"
+#       description: "Credly badge to showcase the achievement"
+#   rankingNote: >-
+#     Ranking is determined by total points across all levels. Points per level are awarded by
+#     submission order within the active week (100 for the first valid solution, 95 for the second;
+#     late submissions still earn 60).
 #   rankingRulesUrl: "/t/about-the-challenges-category/16"
 
 levels:

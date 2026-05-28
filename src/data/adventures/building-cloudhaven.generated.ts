@@ -202,7 +202,7 @@ make apply
       ],
       howToPlay: [
         { title: "Wait for the Environment", body: "Wait ~2 minutes for the environment to initialize." },
-        { title: "Check the Mock API", body: "Open the Ports tab, find the GCP API Mock at port 30104. The port is set to public so GitHub Actions runners can reach the mock API during workflow runs." },
+        { title: "Check the Mock API", body: "Open the Ports tab, find the GCP API Mock at port 30104. The port is set to public so GitHub Actions runners can reach the mock API during workflow runs. You may see a browser security warning when accessing it. This is expected. Click Continue to proceed." },
         { title: "Fix the Workflows", body: `Fix the three workflows in \`.github/workflows/\`:
 
 - \`adventure02-expert-detect-drift.yaml\`
@@ -211,7 +211,7 @@ make apply
 
 The OpenTofu configuration is correct, focus only on the workflow files.` },
         { title: "Trigger Drift Detection", body: "Commit and push to main. Go to the Actions tab, select the drift detection workflow, and click Run workflow. The infrastructure has intentional drift, so the workflow should create a draft PR." },
-        { title: "Trigger Validation", body: "Click Ready for Review on the draft PR to trigger the validation workflow. To re-trigger validation after pushing new changes, convert the PR back to draft then ready for review again." },
+        { title: "Trigger Validation", body: "Click Ready for Review on the draft PR to trigger the validation workflow. To re-trigger validation after pushing new changes, convert the PR back to draft then Ready for Review again. Re-running a failed workflow uses the code from the original run, so toggling draft state is how you pick up new changes pushed to main." },
         { title: "Merge and Apply", body: "When the PR is merged to main, the apply workflow runs automatically." },
         { title: "Run the Smoke Test", body: `Run the smoke test to verify your solution:
 

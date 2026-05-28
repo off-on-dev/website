@@ -78,18 +78,41 @@ jobs:
             printf '| Field | Value |\n|---|---|\n'
             printf '| Adventure | `%s` |\n' "$ADVENTURE"
             printf '| Level | `%s` |\n\n' "$LEVEL"
-            printf '### Generated\n'
-            printf -- '- `src/data/adventures/%s/%s-posts.json` (discussion stub)\n' "$ADVENTURE" "$LEVEL"
-            printf -- '- Prerender entry in `react-router.config.ts`\n'
-            printf -- '- Sitemap entry in `public/sitemap.xml`\n\n'
-            printf '### Manual step required\n'
-            printf 'Paste this into the `levels` array in `src/data/adventures/%s/adventure.yaml`:\n\n' "$ADVENTURE"
+            printf '### Generated files\n\n'
+            printf -- '- `src/data/adventures/%s/%s-posts.json` — update `discussionUrl`\n' "$ADVENTURE" "$LEVEL"
+            printf -- '- Prerender entry added to `react-router.config.ts`\n'
+            printf -- '- Sitemap entry added to `public/sitemap.xml`\n'
+            printf -- '- `has_%s` set to `true` in `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs`\n\n' "$LEVEL"
+            printf '### Paste this into the `levels` array in `adventure.yaml`\n\n'
             printf '```yaml\n%s\n```\n\n' "$SNIPPET"
-            printf '### Next steps\n'
-            printf '1. Paste the snippet above and fill in the TODOs\n'
-            printf '2. Update `discussionUrl` in the YAML and the `-posts.json` file\n'
-            printf '3. Run `node scripts/refresh-discussions.mjs`\n'
-            printf '4. Run all checks: `npm run lint && npm test && npm run build && npm run test:e2e`\n'
+            printf '### Required fields — fill in after pasting\n\n'
+            printf -- '- [ ] `name` — display name (e.g. "Stand Up the Lab")\n'
+            printf -- '- [ ] `topics` — technology pill tags shown on the level card\n'
+            printf -- '- [ ] `learnings` — full sentences describing concrete skills gained\n'
+            printf -- '- [ ] `devcontainerPath` — path to `devcontainer.json` in the challenges repo\n'
+            printf -- '- [ ] `discussionUrl` — Discourse topic URL or relative path (e.g. `/t/slug/123`)\n'
+            printf -- '- [ ] `intro` — 1-2 sentences: what to wire up and what to prove works\n'
+            printf -- '- [ ] `objective` — verifiable outcomes a player can check with a command\n'
+            printf -- '- [ ] `toolbox` — CLI tools and services available in the Codespace\n'
+            printf -- '- [ ] `howToPlay` — step-by-step walkthrough; first step confirms broken state\n'
+            printf -- '- [ ] `verification` — keep defaults unless the script name or message differs\n\n'
+            printf '### Optional fields (uncomment after pasting)\n\n'
+            printf -- '- `audience` — who this level is aimed at and what prior knowledge helps\n'
+            printf -- '- `backstory` — narrative context that sets the scene for this specific level\n'
+            printf -- '- `architecture` — technical setup (services, ports, how they connect)\n'
+            printf -- '- `architectureDiagram` + `diagramAlt` — SVG diagram filename and alt text\n'
+            printf -- '- `helpfulLinks` — reference docs the player will need\n'
+            printf -- '- `deadline` — submission deadline if rewards are active\n\n'
+            printf '### Next steps\n\n'
+            printf '1. Paste the snippet above into `src/data/adventures/%s/adventure.yaml` and fill in required fields\n' "$ADVENTURE"
+            printf '2. Add the level route to `src/routes.ts`\n'
+            printf '3. Update `discussionUrl` in the YAML and `src/data/adventures/%s/%s-posts.json`\n' "$ADVENTURE" "$LEVEL"
+            printf '4. Run `npm run generate`\n'
+            printf '5. Run `node scripts/refresh-discussions.mjs`\n'
+            printf '6. Run `node scripts/refresh-leaderboard.mjs` (requires `DISCOURSE_API_KEY`)\n'
+            printf '7. Add the level URL to the `ROUTES` array in `e2e/smoke.spec.ts` and `src/test/seo.test.ts`, and to the `pages` array in `src/test/prerender.test.ts` with the expected `<title>` value\n'
+            printf '8. Update the routes table in `README.md`\n'
+            printf '9. Run all checks: `npm run lint && npm test && npm run build && npm run test:e2e`\n'
           } > /tmp/pr-body.md
           gh pr create \
             --title "feat: add ${LEVEL} level — ${ADVENTURE}" \
