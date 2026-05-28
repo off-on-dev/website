@@ -48,5 +48,6 @@ export default {
     "/challenges/terraform",
     "/challenges/trivy",
     "/challenges/flagd",
+    "/adventures/blind-by-design/levels/expert",
   ],
 } satisfies Config;
