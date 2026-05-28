@@ -54,9 +54,11 @@ describe("ChallengesGrid", () => {
       expect(group).toBeTruthy();
     });
 
-    it("does not render an aria-live region before a tag is selected", () => {
+    it("renders an empty aria-live region before a tag is selected", () => {
       const { container } = renderGrid();
-      expect(container.querySelector("[aria-live]")).toBeNull();
+      const region = container.querySelector("[aria-live]");
+      expect(region).toBeTruthy();
+      expect(region!.textContent).toBe("");
     });
   });
 
@@ -138,12 +140,14 @@ describe("ChallengesGrid", () => {
       expect(btn.getAttribute("aria-pressed")).toBe("false");
     });
 
-    it("removes the aria-live region after deselecting", () => {
+    it("announces filter cleared after deselecting", () => {
       const { container } = renderGrid();
       const btn = screen.getByRole("button", { name: firstTag });
       fireEvent.click(btn);
       fireEvent.click(btn);
-      expect(container.querySelector("[aria-live]")).toBeNull();
+      const region = container.querySelector("[aria-live]");
+      expect(region).toBeTruthy();
+      expect(region!.textContent).toContain("Filter cleared");
     });
   });
 });

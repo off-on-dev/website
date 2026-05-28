@@ -391,7 +391,7 @@ describe('ConsentBanner - mount guard', () => {
 describe('ConsentBanner - undecided state', () => {
   it('shows the banner with Accept and Decline buttons', () => {
     renderWithProviders(<ConsentBanner />);
-    expect(screen.getByRole('region', { name: 'Cookie consent' })).toBeTruthy();
+    expect(screen.getByRole('region', { name: 'This site uses analytics cookies' })).toBeTruthy();
     expect(screen.getByRole('button', { name: /accept analytics/i })).toBeTruthy();
     expect(screen.getByRole('button', { name: /decline/i })).toBeTruthy();
   });
@@ -403,21 +403,21 @@ describe('ConsentBanner - undecided state', () => {
 
   it('states that no data is sent to Google before consent', () => {
     renderWithProviders(<ConsentBanner />);
-    const region = screen.getByRole('region', { name: 'Cookie consent' });
+    const region = screen.getByRole('region', { name: 'This site uses analytics cookies' });
     expect(region.textContent?.toLowerCase()).toContain('no data is sent to google until you accept');
   });
 
   it('hides the banner and shows the floating cookie button after accepting', () => {
     renderWithProviders(<ConsentBanner />);
     fireEvent.click(screen.getByRole('button', { name: /accept analytics/i }));
-    expect(screen.queryByRole('region', { name: 'Cookie consent' })).toBeNull();
+    expect(screen.queryByRole('region', { name: 'This site uses analytics cookies' })).toBeNull();
     expect(screen.getByRole('button', { name: /change cookie preferences/i })).toBeTruthy();
   });
 
   it('hides the banner and shows the floating cookie button after declining', () => {
     renderWithProviders(<ConsentBanner />);
     fireEvent.click(screen.getByRole('button', { name: /decline/i }));
-    expect(screen.queryByRole('region', { name: 'Cookie consent' })).toBeNull();
+    expect(screen.queryByRole('region', { name: 'This site uses analytics cookies' })).toBeNull();
     expect(screen.getByRole('button', { name: /change cookie preferences/i })).toBeTruthy();
   });
 });
@@ -431,14 +431,14 @@ describe('ConsentBanner - floating button', () => {
     ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
     renderWithProviders(<ConsentBanner />);
     expect(screen.getByRole('button', { name: /change cookie preferences/i })).toBeTruthy();
-    expect(screen.queryByRole('region', { name: 'Cookie consent' })).toBeNull();
+    expect(screen.queryByRole('region', { name: 'This site uses analytics cookies' })).toBeNull();
   });
 
   it('clicking the floating button re-shows the banner', () => {
     ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
     renderWithProviders(<ConsentBanner />);
     fireEvent.click(screen.getByRole('button', { name: /change cookie preferences/i }));
-    expect(screen.getByRole('region', { name: 'Cookie consent' })).toBeTruthy();
+    expect(screen.getByRole('region', { name: 'This site uses analytics cookies' })).toBeTruthy();
   });
 });
 

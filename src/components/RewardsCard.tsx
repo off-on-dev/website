@@ -1,30 +1,51 @@
 import { type JSX } from "react";
 import { ExternalLink, Trophy } from "lucide-react";
 import type { AdventureRewards } from "@/data/adventures/types";
+import { COMMUNITY_URL } from "@/data/constants";
 
 type RewardsCardProps = {
   rewards: AdventureRewards;
   compact?: boolean;
   levelDeadline?: string;
+  deadlinePast?: boolean;
 };
 
-export const RewardsCard = ({ rewards, compact = false, levelDeadline }: RewardsCardProps): JSX.Element => (
+export const RewardsCard = ({ rewards, compact = false, levelDeadline, deadlinePast = false }: RewardsCardProps): JSX.Element => (
   <div className="rounded-xl border border-primary/30 bg-[hsl(var(--surface))] p-5">
     <div className="flex items-center gap-2 mb-4">
       <Trophy size={15} className="text-primary shrink-0" aria-hidden="true" />
       <h2 className="font-sans text-base font-semibold text-foreground">Rewards</h2>
     </div>
 
-    {!compact && rewards.deadline && (
-      <p className="text-xs text-[hsl(var(--text-faint))] mb-3">
-        <span className="font-mono uppercase tracking-widest">Deadline:</span>{" "}
-        <span className="font-medium text-foreground">{rewards.deadline}</span>
-      </p>
+    {!compact && (
+      deadlinePast ? (
+        <div className="text-xs text-[hsl(var(--text-secondary))] leading-relaxed mb-4 space-y-2">
+          <p>The deadline has passed, but the adventure is still open. Play it, post your solution in the community.</p>
+          <p>
+            If you enjoyed the adventure and want to share what you learned, write a tutorial in{" "}
+            <a
+              href={`${COMMUNITY_URL}/c/community-voices/38`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="docs-ext-link"
+            >
+              Community Voices
+              <ExternalLink size={10} aria-hidden="true" />
+              <span className="sr-only"> (opens in new tab)</span>
+            </a>
+            .
+          </p>
+        </div>
+      ) : (
+        <p className="text-xs text-[hsl(var(--text-secondary))] leading-relaxed mb-4">
+          {rewards.eligibility}
+        </p>
+      )
     )}
 
-    {!compact && (
-      <p className="text-xs text-[hsl(var(--text-secondary))] leading-relaxed mb-4">
-        {rewards.eligibility}
+    {compact && deadlinePast && (
+      <p className="text-xs text-[hsl(var(--text-secondary))] leading-relaxed mb-3">
+        Deadline passed. Adventure still open.
       </p>
     )}
 

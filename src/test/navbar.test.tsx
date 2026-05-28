@@ -167,4 +167,64 @@ describe("Navbar - mobile menu", () => {
     const hamburger = screen.getByRole("button", { name: /Open menu/i });
     expect(hamburger.getAttribute("aria-controls")).toBe("mobile-menu");
   });
+
+  it("pressing Escape closes the mobile menu", () => {
+    renderNavbar();
+    fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
+    expect(document.getElementById("mobile-menu")).toBeTruthy();
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(document.getElementById("mobile-menu")).toBeNull();
+  });
+
+  it("pressing Escape returns focus to the hamburger button", () => {
+    renderNavbar();
+    const hamburger = screen.getByRole("button", { name: /Open menu/i });
+    fireEvent.click(hamburger);
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(document.activeElement).toBe(screen.getByRole("button", { name: /Open menu/i }));
+  });
+
+  it("Tab on the last menu item wraps focus back to the first menu item", () => {
+    renderNavbar();
+    fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
+    const menu = document.getElementById("mobile-menu")!;
+    const focusable = Array.from(
+      menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
+    );
+    expect(focusable.length).toBeGreaterThan(0);
+    const last = focusable[focusable.length - 1];
+    last.focus();
+    fireEvent.keyDown(document, { key: "Tab", shiftKey: false });
+    expect(document.activeElement).toBe(focusable[0]);
+  });
+
+  it("Shift+Tab on the first menu item wraps focus to the last menu item", () => {
+    renderNavbar();
+    fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
+    const menu = document.getElementById("mobile-menu")!;
+    const focusable = Array.from(
+      menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
+    );
+    expect(focusable.length).toBeGreaterThan(0);
+    focusable[0].focus();
+    fireEvent.keyDown(document, { key: "Tab", shiftKey: true });
+    expect(document.activeElement).toBe(focusable[focusable.length - 1]);
+  });
+
+  it("sets aria-hidden on main content when menu is open", () => {
+    const main = document.createElement("main");
+    main.id = "main-content";
+    document.body.appendChild(main);
+
+    renderNavbar();
+    fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
+    expect(main.getAttribute("aria-hidden")).toBe("true");
+    expect(main.hasAttribute("inert")).toBe(true);
+
+    fireEvent.click(screen.getByRole("button", { name: /Close menu/i }));
+    expect(main.getAttribute("aria-hidden")).toBeNull();
+    expect(main.hasAttribute("inert")).toBe(false);
+
+    document.body.removeChild(main);
+  });
 });

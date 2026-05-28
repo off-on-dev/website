@@ -28,7 +28,7 @@ Community activity happens on a separate Discourse instance. Its display name is
 
 - **Framework:** React 19 with TypeScript, bundled via Vite. Check `package.json` for current versions.
 - **Styling:** Tailwind CSS 4, configured CSS-first via `src/index.css` (`@theme` block). There is no `tailwind.config.ts` — it was deleted as part of the Tailwind 4 migration.
-- **Components:** Minimal shadcn/ui surface. `src/components/ui/` contains only `badge.tsx`, `sonner.tsx`, and `tooltip.tsx`. Most Radix UI packages were intentionally removed.
+- **Components:** Minimal shadcn/ui surface. `src/components/ui/` contains only `badge.tsx` and `tooltip.tsx`. Most Radix UI packages were intentionally removed.
 - **Routing:** React Router v7 framework mode (static prerendering with `ssr: false`)
 - **Testing:** Vitest + @testing-library/react (unit/component); Playwright (smoke tests in `e2e/`)
 - **Hosting:** GitHub Pages
@@ -204,14 +204,14 @@ without exception. They exist to prevent debugging by accumulation.
 ## Components
 
 - Always check `src/components/ui/` before building a new primitive.
-- `src/components/ui/` contains three files: `badge.tsx`, `sonner.tsx`, `tooltip.tsx`. Adding a new shadcn component requires an immediate use case in the same PR. Unused components are removed. To add one: `npx shadcn@latest add <component>`.
+- `src/components/ui/` contains two files: `badge.tsx` and `tooltip.tsx`. Adding a new shadcn component requires an immediate use case in the same PR. Unused components are removed. To add one: `npx shadcn@latest add <component>`.
 - Never modify files inside `src/components/ui/` directly. Extend or wrap them in `src/components/`.
 - Page-level components go in `src/pages/`. Reusable components go in `src/components/`.
 - Extract sub-components into `src/components/` rather than nesting them inline.
 - Do not duplicate card or list markup across components. If the same JSX structure appears in two places, extract a shared component. `FilteredLevelCard` is the established pattern.
 - **Buttons:** use raw `<button>` elements with the CSS utility classes defined in `src/index.css` (`.btn-primary`, `.btn-ghost`, `.btn-soft`, `.btn-inverse`, `.btn-ghost-inverse`). There is no `Button` component wrapper and no `@radix-ui/react-slot` dependency. See `styleguide.md` for which class to use on which background color.
-- **Toasts:** use Sonner via `import { toast } from "@/components/ui/sonner"`. The Radix-based toast stack (`react-toast`, `use-toast`) was removed. Do not reinstall it.
-- **Sonner (`<Toaster>`) and TooltipProvider are intentionally not mounted in `Layout.tsx`** until a call site exists. Do not add them back to `Layout.tsx` speculatively. Mount `<Toaster>` in the nearest layout that actually triggers a toast, and wrap only the subtree that uses `<Tooltip>` with `<TooltipProvider>` at that point.
+- **Toasts:** if toast notifications are ever needed, install `sonner` and add `src/components/ui/sonner.tsx` (shadcn pattern). Mount `<Toaster>` in the nearest layout that actually triggers a toast. Do not install speculatively.
+- **TooltipProvider** is intentionally not mounted in `Layout.tsx` until a call site exists. Wrap only the subtree that uses `<Tooltip>` with `<TooltipProvider>` at that point.
 
 ### Component CSS patterns
 

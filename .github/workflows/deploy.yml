@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    # Daily at 02:00 UTC — ensures deadline-based layout changes are reflected without a code push
+    - cron: "0 2 * * *"
 
 permissions:
   contents: write
