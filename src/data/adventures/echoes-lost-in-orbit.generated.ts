@@ -34,8 +34,7 @@ export const ECHOES_LOST_IN_ORBIT: Adventure = {
       discussionUrl: `${COMMUNITY_URL}/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40`,
       deadline: "10 December 2025 at 09:00 CET",
       intro: [
-        "The Echo Server is down across both environments and messages are silent.",
-        "Investigate the Argo CD ApplicationSet configuration, spot the templating pitfalls, and restore proper multi-environment delivery to bring communications back online.",
+        "The Echo Server is down across both environments. Investigate the Argo CD ApplicationSet configuration, spot the templating pitfalls, and restore proper multi-environment delivery.",
       ],
       backstory: [
         "The Echo Server is misbehaving. Both environments seem to be down, and messages are silent.",
@@ -99,8 +98,7 @@ adventures/01-echoes-lost-in-orbit/beginner/smoke-test.sh
       discussionUrl: `${COMMUNITY_URL}/t/adventure-01-echoes-lost-in-orbit-intermediate-the-silent-canary/310/8`,
       deadline: "24 December 2025 at 09:00 CET",
       intro: [
-        "A canary rollout is stuck and the Zephyrians are still waiting to communicate.",
-        "Debug the broken progressive delivery system by writing PromQL health checks that let Argo Rollouts automatically validate and advance the deployment.",
+        "A canary rollout is stuck and the Zephyrians are still waiting to communicate. Debug the broken progressive delivery system by writing PromQL health checks that let Argo Rollouts automatically validate and advance the deployment.",
       ],
       backstory: [
         "After fixing the communication outage in Level 1, the Intergalactic Union welcomed a new species: the Zephyrians.",
@@ -123,14 +121,17 @@ adventures/01-echoes-lost-in-orbit/beginner/smoke-test.sh
       ],
       howToPlay: [
         { title: "Wait for Infrastructure", body: "Wait ~5-10 minutes for infrastructure to deploy. After it deploys, the setup script starts port forwarding to the Argo Rollouts dashboard, keeping a terminal busy. Open a new terminal to run commands." },
-        { title: "Access the Dashboards", body: `Open the Ports tab. Log into Argo CD at port 30100:
+        { title: "Access the Dashboards", body: `Open the **Ports** tab and navigate to each service:
 
-\`\`\`
-Username: readonly
-Password: a-super-secure-password
-\`\`\`
+- **Port 30100:** Argo CD (shows sync status, lets you refresh applications after pushing commits):
+  \`\`\`
+  Username: readonly
+  Password: a-super-secure-password
+  \`\`\`
+- **Port 30101:** Argo Rollouts. Shows canary deployment progress and analysis status.
+- **Port 30102:** Prometheus. Explore available metrics and test PromQL queries.
 
-Access Argo Rollouts at port 30101 and Prometheus at port 30102.` },
+Not a fan of user interfaces? You can also use the CLI tools to complete the challenge.` },
         { title: "Fix the Manifests", body: `Review and fix the configuration in \`adventures/01-echoes-lost-in-orbit/intermediate/manifests/\`.
 
 This challenge uses Kustomize under the hood: a base set of manifests with environment-specific overlays (staging, prod). Argo CD detects and applies these automatically, so you don't need to run Kustomize commands manually.` },
@@ -150,14 +151,13 @@ Speed up Argo CD sync:
 argocd app get echo-server-staging --refresh
 argocd app get echo-server-prod --refresh
 \`\`\`` },
-        { title: "Trigger and Monitor the Rollout", body: `After Argo CD syncs, retry the rollouts:
+        { title: "Trigger the Rollout", body: `After Argo CD syncs, retry the rollouts:
 
 \`\`\`sh
 kubectl argo rollouts retry rollout echo-server -n echo-staging
 kubectl argo rollouts retry rollout echo-server -n echo-prod
-\`\`\`
-
-Watch canary progress (should advance 33% to 66% to 100%):
+\`\`\`` },
+        { title: "Watch the Rollout", body: `Watch canary progress (should advance 33% to 66% to 100%):
 
 \`\`\`sh
 kubectl argo rollouts get rollout echo-server -n echo-staging --watch
@@ -197,8 +197,7 @@ adventures/01-echoes-lost-in-orbit/intermediate/smoke-test.sh
       discussionUrl: `${COMMUNITY_URL}/t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351/4`,
       deadline: "14 January 2026 at 09:00 CET",
       intro: [
-        "The observability pipeline is broken and HotROD's canary can't validate.",
-        "Wire an OpenTelemetry Collector with spanmetrics to convert distributed traces into Prometheus metrics, then write PromQL queries that catch idle canaries, high error rates, and latency spikes before they reach production.",
+        "The observability pipeline is broken and HotROD's canary can't validate. Wire an OpenTelemetry Collector with spanmetrics to convert distributed traces into Prometheus metrics, then write PromQL queries that catch idle canaries, high error rates, and latency spikes.",
       ],
       backstory: [
         "After fixing the Zephyrian communications, word of your progressive release mastery spread across the galaxy. The Bytari, a highly advanced species from the Andromeda sector, were impressed.",
@@ -220,14 +219,18 @@ adventures/01-echoes-lost-in-orbit/intermediate/smoke-test.sh
       ],
       howToPlay: [
         { title: "Wait for Infrastructure", body: "Wait ~5-10 minutes for infrastructure to deploy. Port forwarding starts automatically after infrastructure is ready, keeping a terminal busy. Open a new terminal to run commands." },
-        { title: "Access the Dashboards", body: `Open the Ports tab. Log into Argo CD at port 30100:
+        { title: "Access the Dashboards", body: `Open the **Ports** tab and navigate to each service:
 
-\`\`\`
-Username: readonly
-Password: a-super-secure-password
-\`\`\`
+- **Port 30100:** Argo CD (shows sync status, lets you refresh applications after pushing commits):
+  \`\`\`
+  Username: readonly
+  Password: a-super-secure-password
+  \`\`\`
+- **Port 30101:** Argo Rollouts. Shows canary deployment progress and analysis status.
+- **Port 30102:** Prometheus. Explore available metrics and test PromQL queries.
+- **Port 30103:** Jaeger. Shows distributed traces from HotROD so you can verify that tracing is working end-to-end.
 
-Access Argo Rollouts at 30101, Prometheus at 30102, and Jaeger at 30103.` },
+Not a fan of user interfaces? You can also use the CLI tools to complete the challenge.` },
         { title: "Fix the Manifests", body: `Fix the manifests in \`adventures/01-echoes-lost-in-orbit/expert/manifests/\`. Use the Argo Rollouts dashboard, Prometheus UI, and Jaeger UI to debug and validate your changes.` },
         { title: "Deploy Your Changes", body: `Commit and push to trigger the deployment:
 

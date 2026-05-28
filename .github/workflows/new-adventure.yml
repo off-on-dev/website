@@ -87,17 +87,41 @@ jobs:
             printf '| Title | %s |\n' "$ADVENTURE_TITLE"
             printf '| Month | %s |\n' "$ADVENTURE_MONTH"
             printf '| Levels | %s |\n\n' "$ADVENTURE_LEVELS"
-            printf '### Generated files\n'
-            printf -- '- `src/data/adventures/%s/adventure.yaml` (fill in TODOs)\n' "$ADVENTURE_ID"
-            printf -- '- Discussion JSON stubs per level\n'
+            printf '### Generated files\n\n'
+            printf -- '- `src/data/adventures/%s/adventure.yaml` — fill in the fields below\n' "$ADVENTURE_ID"
+            printf -- '- Discussion JSON stubs per level (update `discussionUrl` in each)\n'
             printf -- '- Routes added to `react-router.config.ts`\n'
-            printf -- '- Sitemap entries added\n\n'
-            printf '### Next steps\n'
-            printf '1. Fill in the TODOs in `src/data/adventures/%s/adventure.yaml`\n' "$ADVENTURE_ID"
-            printf '2. Update `discussionUrl` in the YAML and each level `-posts.json` file\n'
-            printf '3. Run `npm run generate` to produce the TypeScript from YAML\n'
-            printf '4. Run `node scripts/refresh-discussions.mjs`\n'
-            printf '5. Run all checks: `npm run lint && npm test && npm run build && npm run test:e2e`\n'
+            printf -- '- Sitemap entries added to `public/sitemap.xml`\n\n'
+            printf '### Required fields — fill in `adventure.yaml`\n\n'
+            printf -- '- [ ] `story` — 2-3 sentences: what tech is used and what each level does\n'
+            printf -- '- [ ] `tags` — technology names matching the topics across all levels\n\n'
+            printf 'For each level:\n\n'
+            printf -- '- [ ] `name` — display name (e.g. "Stand Up the Lab")\n'
+            printf -- '- [ ] `topics` — technology pill tags shown on the level card\n'
+            printf -- '- [ ] `learnings` — full sentences describing concrete skills gained\n'
+            printf -- '- [ ] `devcontainerPath` — path to `devcontainer.json` in the challenges repo\n'
+            printf -- '- [ ] `discussionUrl` — Discourse topic URL or relative path (e.g. `/t/slug/123`)\n'
+            printf -- '- [ ] `intro` — 1-2 sentences: what to wire up and what to prove works\n'
+            printf -- '- [ ] `objective` — verifiable outcomes a player can check with a command\n'
+            printf -- '- [ ] `toolbox` — CLI tools and services available in the Codespace\n'
+            printf -- '- [ ] `howToPlay` — step-by-step walkthrough; first step confirms broken state\n'
+            printf -- '- [ ] `verification` — keep defaults unless the script name or message differs\n\n'
+            printf '### Optional fields (uncomment in `adventure.yaml`)\n\n'
+            printf -- '- `contributor` — external contributor name, URL, and bio\n'
+            printf -- '- `backstory` (adventure) — narrative context for the whole adventure (1-3 paragraphs)\n'
+            printf -- '- `context` — "What you'\''ll be using" explainer section\n'
+            printf -- '- `rewards` — prize tiers, deadline, and ranking rules\n'
+            printf -- '- Per level: `audience`, `backstory`, `architecture` + `architectureDiagram` + `diagramAlt`, `helpfulLinks`, `deadline`\n\n'
+            printf '### Next steps\n\n'
+            printf '1. Fill in `src/data/adventures/%s/adventure.yaml` (required fields above)\n' "$ADVENTURE_ID"
+            printf '2. Add the adventure and each level route to `src/routes.ts`\n'
+            printf '3. Update `discussionUrl` in the YAML and each level `*-posts.json` file\n'
+            printf '4. Run `npm run generate`\n'
+            printf '5. Run `node scripts/refresh-discussions.mjs`\n'
+            printf '6. Add the adventure to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs` (set `categoryId` and per-level booleans), then run `node scripts/refresh-leaderboard.mjs`\n'
+            printf '7. Add each level URL to the `ROUTES` array in `e2e/smoke.spec.ts` and `src/test/seo.test.ts`, and to the `pages` array in `src/test/prerender.test.ts` with the expected `<title>` value\n'
+            printf '8. Update the routes table in `README.md`\n'
+            printf '9. Run all checks: `npm run lint && npm test && npm run build && npm run test:e2e`\n'
           } > /tmp/pr-body.md
           gh pr create \
             --title "feat: scaffold adventure — ${ADVENTURE_TITLE}" \

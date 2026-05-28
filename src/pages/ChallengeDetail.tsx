@@ -39,10 +39,11 @@ export const meta: MetaFunction = ({ params }) => {
       { name: "robots", content: "noindex, nofollow" },
     ];
   }
-  const learningsSummary = level.learnings.slice(0, 2).join("; ");
+  const description = level.metaDescription
+    ?? `${level.name}: get hands-on with ${level.learnings.slice(0, 2).join("; ")}. A ${level.difficulty.toLowerCase()} challenge from ${adventure.title} on ${BRAND_NAME}.`.slice(0, 160);
   return buildPageMeta({
     title: `${level.name} - ${adventure.title} - ${BRAND_NAME}`,
-    description: `${level.name}: get hands-on with ${learningsSummary}. A ${level.difficulty.toLowerCase()} challenge from ${adventure.title} on ${BRAND_NAME}.`.slice(0, 160),
+    description,
     url: `${SITE_URL}/adventures/${adventure.id}/levels/${level.id}`,
     ogType: "article",
     extra: [
@@ -86,9 +87,13 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
 
         {/* Intro as hook */}
         {intro && intro.length > 0 && (
-          <p className="text-[hsl(var(--text-secondary))] leading-relaxed mb-5 max-w-3xl">
-            {intro[0]}
-          </p>
+          <div className="space-y-3 mb-5 max-w-3xl">
+            {intro.map((p, i) => (
+              <p key={i} className="text-[hsl(var(--text-secondary))] leading-relaxed">
+                {p}
+              </p>
+            ))}
+          </div>
         )}
       </div>
 

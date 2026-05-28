@@ -216,6 +216,11 @@
           },
           "description": "Reference documentation links shown at the end of the challenge walkthrough."
         },
+        "metaDescription": {
+          "type": "string",
+          "maxLength": 160,
+          "description": "Optional SEO meta description (max 160 chars). Use when the auto-generated description from learnings is insufficient. If omitted, the generator builds one from the level name, learnings, difficulty, and adventure title."
+        },
         "solvedCount": { "type": "integer" },
         "topPlayers": {
           "type": "array",

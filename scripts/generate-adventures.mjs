@@ -234,6 +234,7 @@ function generateLevelCode(level, adventureId, indent) {
     lines.push(`${i2}},`);
   }
 
+  if (level.metaDescription) lines.push(`${i2}metaDescription: ${formatString(level.metaDescription)},`);
   if (level.solvedCount !== undefined) lines.push(`${i2}solvedCount: ${level.solvedCount},`);
   if (level.topPlayers && level.topPlayers.length > 0) {
     lines.push(`${i2}topPlayers: [`);

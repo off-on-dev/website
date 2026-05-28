@@ -106,6 +106,10 @@ const pages: PageSpec[] = [
     check: { type: "contains", value: "Outcome by Cohort" },
   },
   {
+    file: "adventures/blind-by-design/levels/expert/index.html",
+    check: { type: "contains", value: "Read the Chart" },
+  },
+  {
     file: "challenges/index.html",
     check: { type: "exact", value: "Open Source Challenges | OffOn" },
   },

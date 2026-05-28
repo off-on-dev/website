@@ -38,7 +38,7 @@ const ADVENTURE_CATEGORIES = {
   "echoes-lost-in-orbit":  { categoryId: 35, has_beginner: true,  has_intermediate: true,  has_expert: true,  has_single: false },
   "building-cloudhaven":   { categoryId: 36, has_beginner: true,  has_intermediate: true,  has_expert: true,  has_single: false },
   "the-ai-observatory":    { categoryId: 37, has_beginner: true,  has_intermediate: true,  has_expert: true,  has_single: false },
-  "blind-by-design":       { categoryId: 41, has_beginner: true,  has_intermediate: true,  has_expert: false, has_single: false },
+  "blind-by-design":       { categoryId: 41, has_beginner: true,  has_intermediate: true,  has_expert: true,  has_single: false },
 };
 
 // Load .env file for local development. Never used in CI (secrets are env vars).

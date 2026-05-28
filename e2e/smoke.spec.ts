@@ -29,6 +29,7 @@ const ROUTES: RouteSpec[] = [
   { path: "/adventures/blind-by-design", title: /Blind by Design/ },
   { path: "/adventures/blind-by-design/levels/beginner", title: /Stand up the Lab/ },
   { path: "/adventures/blind-by-design/levels/intermediate", title: /Outcome by Cohort/ },
+  { path: "/adventures/blind-by-design/levels/expert", title: /Read the Chart/ },
   { path: "/challenges", title: /Open Source Challenges/ },
   { path: "/challenges/argo-cd", title: /Argo CD Challenges/ },
   { path: "/challenges/argo-rollouts", title: /Argo Rollouts Challenges/ },
