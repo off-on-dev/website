@@ -1162,7 +1162,7 @@ const [activeTopic, setActiveTopic] = useState<string | null>(null);
 - Tag chips render with `.pill-active` when selected and `.pill-inactive` otherwise. Each sets `aria-pressed={activeTopic === tag}`.
 - Clicking an already-active chip deselects it and returns to the default view.
 - `ChallengesGrid`: no URL change on selection. Default (All) = adventure card grid. Tag = flat level card grid.
-- `Challenges`: URL updates to `/challenges/:tag` when a tag is selected. Default (All) = flat grid of every challenge level. Tag = filtered flat grid.
+- `Challenges`: URL updates to `/challenges/:tag` when a tag is selected. Default (All) = adventure card grid (same as `ChallengesGrid`). Tag = filtered flat level card grid.
 
 ---
 

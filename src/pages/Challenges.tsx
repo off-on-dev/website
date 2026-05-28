@@ -6,7 +6,9 @@ import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
 import { FilteredLevelCard } from "@/components/FilteredLevelCard";
+import { AdventureCard } from "@/components/AdventureCard";
 import { ADVENTURES, ALL_TAGS, getLevelsByTag, slugToTag, tagToSlug } from "@/data/adventures";
+import { ADVENTURE_SUMMARIES } from "@/data/adventures/summaries";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 
@@ -105,7 +107,7 @@ const Challenges = (): JSX.Element => {
               {hasInteracted
                 ? activeTag
                   ? `Showing ${filteredLevels.length} ${filteredLevels.length === 1 ? "challenge" : "challenges"} tagged with ${activeTag}`
-                  : `Filter cleared, showing all ${ALL_LEVELS.length} challenges`
+                  : `Filter cleared, showing all ${ADVENTURE_SUMMARIES.length} adventures`
                 : ""}
             </span>
 
@@ -131,19 +133,14 @@ const Challenges = (): JSX.Element => {
             ) : (
               <>
                 <h2 className="mb-6 text-lg font-semibold text-foreground">
-                  All Challenges
+                  All Adventures
                   <span className="ml-2 font-normal text-sm text-muted-foreground">
-                    &middot; {ALL_LEVELS.length} result{ALL_LEVELS.length !== 1 ? "s" : ""}
+                    &middot; {ADVENTURE_SUMMARIES.length} {ADVENTURE_SUMMARIES.length === 1 ? "adventure" : "adventures"}, {ALL_LEVELS.length} {ALL_LEVELS.length === 1 ? "challenge" : "challenges"}
                   </span>
                 </h2>
                 <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-                  {ALL_LEVELS.map(({ level, adventureId, adventureTitle }) => (
-                    <FilteredLevelCard
-                      key={`${adventureId}-${level.id}`}
-                      level={level}
-                      adventureId={adventureId}
-                      adventureTitle={adventureTitle}
-                    />
+                  {ADVENTURE_SUMMARIES.map((adventure) => (
+                    <AdventureCard key={adventure.id} adventure={adventure} />
                   ))}
                 </div>
               </>
