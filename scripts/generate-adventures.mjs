@@ -36,6 +36,15 @@ const SCHEMA_PATH = resolve(ROOT, "schemas/adventure.schema.json");
 
 const validateOnly = process.argv.includes("--validate-only");
 
+// Constant rewards fields shared by all adventures. Omit from YAML to use these defaults.
+const DEFAULT_REWARDS_ELIGIBILITY =
+  "Complete all levels and post your solution in the community before the deadline to be eligible.";
+const DEFAULT_REWARDS_RANKING_NOTE =
+  "Ranking is determined by total points across all three levels. Points per level are awarded" +
+  " by submission order within the active week (100 for the first valid solution, 95 for the" +
+  " second, and so on; late submissions still earn 60).";
+const DEFAULT_REWARDS_RANKING_RULES_PATH = "/t/about-the-challenges-category/16";
+
 // --- Helpers ---
 
 function toConstName(id) {
@@ -116,13 +125,13 @@ function findAdventureYamls() {
 
 function validateAdventure(data, id) {
   const errors = [];
-  if (!data.id) errors.push("Missing required field: id");
-  else if (data.id !== id) errors.push(`id "${data.id}" does not match folder name "${id}"`);
-  if (!data.title) errors.push("Missing required field: title");
+  if (!data.slug) errors.push("Missing required field: slug");
+  else if (data.slug !== id) errors.push(`slug "${data.slug}" does not match folder name "${id}"`);
+  if (!data.name) errors.push("Missing required field: name");
   if (!data.month) errors.push("Missing required field: month");
   if (!data.story) errors.push("Missing required field: story");
-  if (!data.tags || !Array.isArray(data.tags) || data.tags.length === 0) {
-    errors.push("Missing or empty required field: tags");
+  if (!data.technologies || !Array.isArray(data.technologies) || data.technologies.length === 0) {
+    errors.push("Missing or empty required field: technologies");
   }
   if (!data.levels || !Array.isArray(data.levels) || data.levels.length === 0) {
     errors.push("Missing or empty required field: levels");
@@ -140,12 +149,12 @@ function validateAdventure(data, id) {
       if (!level.learnings || level.learnings.length === 0) {
         errors.push(`${prefix}: Missing learnings`);
       }
-      if (!level.devcontainerPath) errors.push(`${prefix}: Missing devcontainerPath`);
-      if (!level.discussionUrl) errors.push(`${prefix}: Missing discussionUrl`);
+      if (!level.devcontainer_path) errors.push(`${prefix}: Missing devcontainer_path`);
+      if (!level.discussion_url) errors.push(`${prefix}: Missing discussion_url`);
       if (!level.intro || level.intro.length === 0) errors.push(`${prefix}: Missing intro`);
       if (!level.objective || level.objective.length === 0) errors.push(`${prefix}: Missing objective`);
       if (!level.toolbox || level.toolbox.length === 0) errors.push(`${prefix}: Missing toolbox`);
-      if (!level.howToPlay || level.howToPlay.length === 0) errors.push(`${prefix}: Missing howToPlay`);
+      if (!level.how_to_play || level.how_to_play.length === 0) errors.push(`${prefix}: Missing how_to_play`);
       if (!level.verification) errors.push(`${prefix}: Missing verification`);
     }
   }
@@ -173,16 +182,16 @@ function generateLevelCode(level, adventureId, indent) {
 
   lines.push(`${i2}learnings: ${formatStringArray(level.learnings, i2)},`);
 
-  // Build codespacesUrl from devcontainerPath
-  const encodedPath = encodeURIComponent(level.devcontainerPath).replace(/%2F/g, "%2F");
+  // Build codespacesUrl from devcontainer_path
+  const encodedPath = encodeURIComponent(level.devcontainer_path).replace(/%2F/g, "%2F");
   lines.push(`${i2}codespacesUrl: \`\${CODESPACES_BASE}?devcontainer_path=${encodedPath}&quickstart=1\`,`);
 
   // Build discussionUrl
-  if (level.discussionUrl.startsWith("http")) {
-    lines.push(`${i2}discussionUrl: "${escapeDoubleQuoted(level.discussionUrl)}",`);
+  if (level.discussion_url.startsWith("http")) {
+    lines.push(`${i2}discussionUrl: "${escapeDoubleQuoted(level.discussion_url)}",`);
   } else {
     // Relative path: prepend COMMUNITY_URL
-    const path = level.discussionUrl.startsWith("/") ? level.discussionUrl : `/${level.discussionUrl}`;
+    const path = level.discussion_url.startsWith("/") ? level.discussion_url : `/${level.discussion_url}`;
     lines.push(`${i2}discussionUrl: \`\${COMMUNITY_URL}${path}\`,`);
   }
 
@@ -194,12 +203,13 @@ function generateLevelCode(level, adventureId, indent) {
   if (level.scenario) lines.push(`${i2}scenario: ${formatString(level.scenario)},`);
   if (level.architecture) lines.push(`${i2}architecture: ${formatStringArray(level.architecture, i2)},`);
 
-  if (level.architectureDiagram) {
-    const baseName = level.architectureDiagram.replace(/\.svg$/, "");
+  if (level.architecture_diagram) {
+    const baseName = level.architecture_diagram.replace(/\.svg$/, "");
     const varName = baseName.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
     lines.push(`${i2}architectureDiagram: ${varName},`);
   }
-  if (level.diagramAlt) lines.push(`${i2}diagramAlt: ${formatString(level.diagramAlt)},`);
+  if (level.diagram_alt) lines.push(`${i2}diagramAlt: ${formatString(level.diagram_alt)},`);
+  if (level.architecture_ascii) lines.push(`${i2}architectureAscii: ${formatString(level.architecture_ascii)},`);
 
   if (level.toolbox && level.toolbox.length > 0) {
     lines.push(`${i2}toolbox: [`);
@@ -211,18 +221,40 @@ function generateLevelCode(level, adventureId, indent) {
     lines.push(`${i2}],`);
   }
 
-  if (level.howToPlay && level.howToPlay.length > 0) {
+  const steps = level.how_to_play ? [...level.how_to_play] : [];
+  if (level.services && level.services.length > 0) {
+    const accessible = level.services.filter((s) => !s.internal);
+    const internal = level.services.filter((s) => s.internal);
+    if (accessible.length > 0) {
+      let body = "Open the **Ports** tab and navigate to each service:\n\n";
+      for (const svc of accessible) {
+        const creds = svc.credentials ? ` (${svc.credentials})` : "";
+        body += `- **Port ${String(svc.port)}:** ${svc.name}${creds}. ${svc.description}`;
+        body += "\n";
+      }
+      if (internal.length > 0) {
+        body += "\n";
+        for (const svc of internal) {
+          body += `${svc.name} runs on the docker-internal network only. No port forwarding needed.\n`;
+        }
+      }
+      steps.splice(1, 0, { title: "Explore the UIs", content: body.trim() });
+    }
+  }
+  if (steps.length > 0) {
     lines.push(`${i2}howToPlay: [`);
-    for (const step of level.howToPlay) {
-      lines.push(`${i2}  { title: "${escapeDoubleQuoted(step.title)}", body: ${formatString(step.body)} },`);
+    for (const step of steps) {
+      lines.push(`${i2}  { title: "${escapeDoubleQuoted(step.title)}", content: ${formatString(step.content)} },`);
     }
     lines.push(`${i2}],`);
   }
 
-  if (level.helpfulLinks && level.helpfulLinks.length > 0) {
+  if (level.helpful_links && level.helpful_links.length > 0) {
     lines.push(`${i2}helpfulLinks: [`);
-    for (const link of level.helpfulLinks) {
-      lines.push(`${i2}  { label: "${escapeDoubleQuoted(link.label)}", url: "${escapeDoubleQuoted(link.url)}" },`);
+    for (const link of level.helpful_links) {
+      const parts = [`title: "${escapeDoubleQuoted(link.title)}"`, `url: "${escapeDoubleQuoted(link.url)}"`];
+      if (link.description) parts.push(`description: "${escapeDoubleQuoted(link.description)}"`);
+      lines.push(`${i2}  { ${parts.join(", ")} },`);
     }
     lines.push(`${i2}],`);
   }
@@ -234,11 +266,11 @@ function generateLevelCode(level, adventureId, indent) {
     lines.push(`${i2}},`);
   }
 
-  if (level.metaDescription) lines.push(`${i2}metaDescription: ${formatString(level.metaDescription)},`);
-  if (level.solvedCount !== undefined) lines.push(`${i2}solvedCount: ${level.solvedCount},`);
-  if (level.topPlayers && level.topPlayers.length > 0) {
+  if (level.meta_description) lines.push(`${i2}metaDescription: ${formatString(level.meta_description)},`);
+  if (level.solved_count !== undefined) lines.push(`${i2}solvedCount: ${level.solved_count},`);
+  if (level.top_players && level.top_players.length > 0) {
     lines.push(`${i2}topPlayers: [`);
-    for (const p of level.topPlayers) {
+    for (const p of level.top_players) {
       lines.push(`${i2}  { username: "${escapeDoubleQuoted(p.username)}", count: ${p.count} },`);
     }
     lines.push(`${i2}],`);
@@ -250,7 +282,7 @@ function generateLevelCode(level, adventureId, indent) {
 
 function generateAdventureTs(data) {
   const lines = [];
-  const constName = toConstName(data.id);
+  const constName = toConstName(data.slug);
 
   // Imports
   lines.push(`import { CODESPACES_BASE, COMMUNITY_URL } from "@/data/constants";`);
@@ -258,11 +290,11 @@ function generateAdventureTs(data) {
   // Collect diagram imports — use a camelCase variable name derived from the filename
   const diagrams = new Map();
   for (const level of data.levels) {
-    if (level.architectureDiagram) {
-      const baseName = level.architectureDiagram.replace(/\.svg$/, "");
+    if (level.architecture_diagram) {
+      const baseName = level.architecture_diagram.replace(/\.svg$/, "");
       const varName = baseName.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
       if (!diagrams.has(baseName)) {
-        diagrams.set(baseName, { varName, file: level.architectureDiagram });
+        diagrams.set(baseName, { varName, file: level.architecture_diagram });
       }
     }
   }
@@ -273,11 +305,12 @@ function generateAdventureTs(data) {
   lines.push(`import type { Adventure } from "./types";`);
   lines.push(``);
   lines.push(`export const ${constName}: Adventure = {`);
-  lines.push(`  id: "${data.id}",`);
-  lines.push(`  title: "${escapeDoubleQuoted(data.title)}",`);
+  lines.push(`  id: "${data.slug}",`);
+  lines.push(`  title: "${escapeDoubleQuoted(data.name)}",`);
+  if (data.icon) lines.push(`  icon: "${escapeDoubleQuoted(data.icon)}",`);
   lines.push(`  month: "${data.month}",`);
   lines.push(`  story: ${formatString(data.story)},`);
-  lines.push(`  tags: [${data.tags.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
+  lines.push(`  tags: [${data.technologies.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
 
   if (data.contributor) {
     lines.push(`  contributor: {`);
@@ -291,39 +324,35 @@ function generateAdventureTs(data) {
     lines.push(`  backstory: ${formatStringArray(data.backstory, "  ")},`);
   }
 
-  if (data.context) {
-    lines.push(`  context: {`);
-    lines.push(`    title: "${escapeDoubleQuoted(data.context.title)}",`);
-    lines.push(`    body: ${formatStringArray(data.context.body, "    ")},`);
-    lines.push(`  },`);
+  if (data.overview) {
+    lines.push(`  overview: ${formatStringArray(data.overview, "  ")},`);
   }
 
   if (data.rewards) {
+    const eligibility = data.rewards.eligibility ?? DEFAULT_REWARDS_ELIGIBILITY;
+    const rankingNote = data.rewards.ranking_note ?? DEFAULT_REWARDS_RANKING_NOTE;
+    const rankingRulesUrl = data.rewards.ranking_rules_url ?? DEFAULT_REWARDS_RANKING_RULES_PATH;
     lines.push(`  rewards: {`);
     lines.push(`    deadline: "${escapeDoubleQuoted(data.rewards.deadline)}",`);
-    lines.push(`    eligibility: "${escapeDoubleQuoted(data.rewards.eligibility)}",`);
+    lines.push(`    eligibility: "${escapeDoubleQuoted(eligibility)}",`);
     lines.push(`    tiers: [`);
     for (const tier of data.rewards.tiers) {
       lines.push(`      { label: "${escapeDoubleQuoted(tier.label)}", description: "${escapeDoubleQuoted(tier.description)}" },`);
     }
     lines.push(`    ],`);
-    if (data.rewards.rankingNote) {
-      lines.push(`    rankingNote: "${escapeDoubleQuoted(data.rewards.rankingNote)}",`);
-    }
-    if (data.rewards.rankingRulesUrl) {
-      if (data.rewards.rankingRulesUrl.startsWith("http")) {
-        lines.push(`    rankingRulesUrl: "${escapeDoubleQuoted(data.rewards.rankingRulesUrl)}",`);
-      } else {
-        const path = data.rewards.rankingRulesUrl.startsWith("/") ? data.rewards.rankingRulesUrl : `/${data.rewards.rankingRulesUrl}`;
-        lines.push(`    rankingRulesUrl: \`\${COMMUNITY_URL}${path}\`,`);
-      }
+    lines.push(`    rankingNote: "${escapeDoubleQuoted(rankingNote)}",`);
+    if (rankingRulesUrl.startsWith("http")) {
+      lines.push(`    rankingRulesUrl: "${escapeDoubleQuoted(rankingRulesUrl)}",`);
+    } else {
+      const path = rankingRulesUrl.startsWith("/") ? rankingRulesUrl : `/${rankingRulesUrl}`;
+      lines.push(`    rankingRulesUrl: \`\${COMMUNITY_URL}${path}\`,`);
     }
     lines.push(`  },`);
   }
 
-  if (data.upcomingLevels && data.upcomingLevels.length > 0) {
+  if (data.upcoming_levels && data.upcoming_levels.length > 0) {
     lines.push(`  upcomingLevels: [`);
-    for (const ul of data.upcomingLevels) {
+    for (const ul of data.upcoming_levels) {
       lines.push(`    { name: "${escapeDoubleQuoted(ul.name)}", difficulty: "${ul.difficulty}" },`);
     }
     lines.push(`  ],`);
@@ -357,11 +386,11 @@ function generateSummariesTs(adventures) {
 
   for (const data of adventures) {
     lines.push(`  {`);
-    lines.push(`    id: "${data.id}",`);
-    lines.push(`    title: "${escapeDoubleQuoted(data.title)}",`);
+    lines.push(`    id: "${data.slug}",`);
+    lines.push(`    title: "${escapeDoubleQuoted(data.name)}",`);
     lines.push(`    month: "${data.month}",`);
     lines.push(`    story: ${formatString(data.story)},`);
-    lines.push(`    tags: [${data.tags.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
+    lines.push(`    tags: [${data.technologies.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
     if (data.contributor) {
       lines.push(`    contributor: { name: "${escapeDoubleQuoted(data.contributor.name)}" },`);
     }
@@ -409,8 +438,8 @@ function generateIndexTs(adventures) {
 
   // Imports for each adventure
   for (const adv of adventures) {
-    const constName = toConstName(adv.id);
-    lines.push(`import { ${constName} } from "./${adv.id}.generated";`);
+    const constName = toConstName(adv.slug);
+    lines.push(`import { ${constName} } from "./${adv.slug}.generated";`);
   }
   lines.push(`import type { Adventure, AdventureContributor, RelatedLevel } from "./types";`);
   lines.push(``);
@@ -418,7 +447,7 @@ function generateIndexTs(adventures) {
   lines.push(``);
   lines.push(`export const ADVENTURES: Adventure[] = [`);
   for (const adv of adventures) {
-    lines.push(`  ${toConstName(adv.id)},`);
+    lines.push(`  ${toConstName(adv.slug)},`);
   }
   lines.push(`];`);
   lines.push(``);
@@ -519,9 +548,9 @@ function main() {
   // Generate .generated.ts files
   for (const data of adventures) {
     const tsContent = generateAdventureTs(data);
-    const outPath = resolve(ADVENTURES_DIR, `${data.id}.generated.ts`);
+    const outPath = resolve(ADVENTURES_DIR, `${data.slug}.generated.ts`);
     writeFileSync(outPath, tsContent);
-    console.log(`  Generated: src/data/adventures/${data.id}.generated.ts`);
+    console.log(`  Generated: src/data/adventures/${data.slug}.generated.ts`);
   }
 
   // Generate index.ts

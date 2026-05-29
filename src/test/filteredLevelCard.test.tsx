@@ -19,7 +19,7 @@ const LEVEL: AdventureLevel = {
   intro: ["Fix the broken deployment and restore service."],
   objective: ["The service responds on port 8080.", "All health checks pass."],
   toolbox: [{ name: "kubectl", description: "Kubernetes CLI" }],
-  howToPlay: [{ title: "Confirm the broken state", body: "Run kubectl get pods and observe the error." }],
+  howToPlay: [{ title: "Confirm the broken state", content: "Run kubectl get pods and observe the error." }],
   verification: { command: "./verify.sh", description: "Run the verification script to confirm your solution." },
 };
 

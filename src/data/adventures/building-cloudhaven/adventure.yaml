@@ -1,10 +1,11 @@
-id: building-cloudhaven
-title: Building CloudHaven
+slug: building-cloudhaven
+name: Building CloudHaven
+icon: Cloud
 month: JAN 2026
 story: Join the Infrastructure Guild and modernize CloudHaven's infrastructure from manual provisioning to a
   self-service platform using Infrastructure as Code. A hands-on journey through infrastructure as code with
   OpenTofu and GitHub Actions.
-tags:
+technologies:
   - OpenTofu
   - Terraform
   - GitHub Actions
@@ -39,9 +40,9 @@ levels:
       - Remote state management with GCS backend
       - Dynamic resource provisioning with for_each
       - Conditional resources with the enabled meta-argument, new in OpenTofu
-    devcontainerPath: .devcontainer/02-building-cloudhaven_01-beginner/devcontainer.json
-    discussionUrl: /t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656
-    deadline: "4 February 2026 at 23:59 CET"
+    devcontainer_path: .devcontainer/02-building-cloudhaven_01-beginner/devcontainer.json
+    discussion_url: /t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656
+    deadline: "2026-02-04T23:59:00+01:00"
     intro:
       - An incomplete OpenTofu configuration is blocking the Merchant's Quarter from going live. Fix the broken backend,
         wire up dynamic resource provisioning with for_each, and use the new enabled meta-argument to conditionally
@@ -64,14 +65,15 @@ levels:
         description: mock GCP API running locally to simulate cloud resources without real cloud costs (Cloud Storage and Cloud
           SQL only)
         url: https://github.com/KatharinaSick/gcp-api-mock
-    howToPlay:
+    services:
+      - name: "GCP API Mock"
+        port: "30104"
+        description: "Explore the mock cloud resources created by your configuration (Cloud Storage and Cloud SQL)."
+    how_to_play:
       - title: Wait for the Environment
-        body: Wait ~2 minutes for the environment to initialize.
-      - title: Explore the Mock API
-        body: Open the Ports tab, find the GCP API Mock at port 30104. Use it to explore the mock cloud resources created by
-          your configuration.
+        content: Wait ~2 minutes for the environment to initialize.
       - title: Find the TODOs
-        body: |-
+        content: |-
           All OpenTofu files are in `adventures/02-building-cloudhaven/beginner/`. Run:
 
           ```sh
@@ -80,7 +82,7 @@ levels:
 
           Files to review: `main.tf`, `state.tf`, `variables.tf`, `merchants.tf`, `audit.tf`, `outputs.tf`.
       - title: Apply the Configuration
-        body: |-
+        content: |-
           After fixing the TODOs, run:
 
           ```sh
@@ -89,20 +91,20 @@ levels:
 
           If you changed the backend configuration, run `tofu init -migrate-state` first.
       - title: Run the Smoke Test
-        body: |-
+        content: |-
           Run the smoke test to verify your solution:
 
           ```sh
           ./smoke-test.sh
           ```
-    helpfulLinks:
-      - label: OpenTofu documentation
+    helpful_links:
+      - title: OpenTofu documentation
         url: https://opentofu.org/docs/
-      - label: OpenTofu meta-arguments
+      - title: OpenTofu meta-arguments
         url: https://opentofu.org/docs/language/meta-arguments/count/
-      - label: OpenTofu backend configuration
+      - title: OpenTofu backend configuration
         url: https://opentofu.org/docs/language/settings/backends/configuration/
-      - label: Google Cloud provider
+      - title: Google Cloud provider
         url: https://registry.terraform.io/providers/hashicorp/google/latest/docs
     verification:
       command: "./smoke-test.sh"
@@ -118,9 +120,9 @@ levels:
       - Test-Driven Development (TDD) workflow
       - Input validation with custom rules
       - Refactoring infrastructure safely with moved blocks
-    devcontainerPath: .devcontainer/02-building-cloudhaven_02-intermediate/devcontainer.json
-    discussionUrl: /t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10
-    deadline: "4 February 2026 at 23:59 CET"
+    devcontainer_path: .devcontainer/02-building-cloudhaven_02-intermediate/devcontainer.json
+    discussion_url: /t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10
+    deadline: "2026-02-04T23:59:00+01:00"
     intro:
       - A senior engineer wrote the tests first and then left. The module code is buggy and the integration test is
         incomplete. Fix the implementation to match the test expectations, complete the end-to-end test, and use moved
@@ -144,13 +146,15 @@ levels:
         description: mock GCP API running locally to simulate cloud resources without real cloud costs (Cloud Storage and Cloud
           SQL only)
         url: https://github.com/KatharinaSick/gcp-api-mock
-    howToPlay:
+    services:
+      - name: "GCP API Mock"
+        port: "30104"
+        description: "Explore mock cloud resources to verify your module configuration."
+    how_to_play:
       - title: Wait for the Environment
-        body: Wait ~2 minutes for the environment to initialize.
-      - title: Explore the Mock API
-        body: Open the Ports tab, find the GCP API Mock at port 30104. Use it to explore mock cloud resources.
+        content: Wait ~2 minutes for the environment to initialize.
       - title: Fix the Failing Tests
-        body: |-
+        content: |-
           All files are in `adventures/02-building-cloudhaven/intermediate/`. The tests define the expected behaviour: your job is to fix the implementation to match what the tests expect. Don't modify existing tests unless a comment tells you to.
 
           ```
@@ -177,7 +181,7 @@ levels:
           make test
           ```
       - title: Apply the Infrastructure
-        body: |-
+        content: |-
           Once all tests pass, apply the infrastructure:
 
           ```sh
@@ -185,20 +189,20 @@ levels:
           make apply
           ```
       - title: Run the Smoke Test
-        body: |-
+        content: |-
           Run the smoke test to verify your solution:
 
           ```sh
           ./smoke-test.sh
           ```
-    helpfulLinks:
-      - label: OpenTofu testing
+    helpful_links:
+      - title: OpenTofu testing
         url: https://opentofu.org/docs/cli/commands/test/
-      - label: OpenTofu modules
+      - title: OpenTofu modules
         url: https://opentofu.org/docs/language/modules/
-      - label: Input validation rules
+      - title: Input validation rules
         url: https://opentofu.org/docs/language/values/variables/#custom-validation-rules
-      - label: Moved blocks
+      - title: Moved blocks
         url: https://opentofu.org/docs/language/modules/develop/refactoring/
     verification:
       command: "./smoke-test.sh"
@@ -214,9 +218,9 @@ levels:
       - GitHub Actions for drift detection and plan/apply
       - Integration tests with service containers
       - Security scanning with Trivy
-    devcontainerPath: .devcontainer/02-building-cloudhaven_03-expert/devcontainer.json
-    discussionUrl: /t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8
-    deadline: "4 February 2026 at 23:59 CET"
+    devcontainer_path: .devcontainer/02-building-cloudhaven_03-expert/devcontainer.json
+    discussion_url: /t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8
+    deadline: "2026-02-04T23:59:00+01:00"
     intro:
       - Three broken GitHub Actions workflows stand between CloudHaven and automated infrastructure governance. Fix
         drift detection that creates PRs, PR validation with Trivy security scanning and service-container integration
@@ -247,15 +251,15 @@ levels:
       - name: GitHub Actions
         description: the workflows you will fix are in .github/workflows/
         url: https://docs.github.com/en/actions
-    howToPlay:
+    services:
+      - name: "GCP API Mock"
+        port: "30104"
+        description: "Port is set to public so GitHub Actions runners can reach it during workflow runs. You may see a browser security warning. Click Continue to proceed."
+    how_to_play:
       - title: Wait for the Environment
-        body: Wait ~2 minutes for the environment to initialize.
-      - title: Check the Mock API
-        body: Open the Ports tab, find the GCP API Mock at port 30104. The port is set to public so GitHub Actions runners can
-          reach the mock API during workflow runs. You may see a browser security warning when accessing it. This is expected.
-          Click Continue to proceed.
+        content: Wait ~2 minutes for the environment to initialize.
       - title: Fix the Workflows
-        body: |-
+        content: |-
           Fix the three workflows in `.github/workflows/`:
 
           - `adventure02-expert-detect-drift.yaml`
@@ -264,32 +268,32 @@ levels:
 
           The OpenTofu configuration is correct, focus only on the workflow files.
       - title: Trigger Drift Detection
-        body: Commit and push to main. Go to the Actions tab, select the drift detection workflow, and click Run workflow. The
+        content: Commit and push to main. Go to the Actions tab, select the drift detection workflow, and click Run workflow. The
           infrastructure has intentional drift, so the workflow should create a draft PR.
       - title: Trigger Validation
-        body: Click Ready for Review on the draft PR to trigger the validation workflow. To re-trigger validation after pushing
+        content: Click Ready for Review on the draft PR to trigger the validation workflow. To re-trigger validation after pushing
           new changes, convert the PR back to draft then Ready for Review again. Re-running a failed workflow uses the code
           from the original run, so toggling draft state is how you pick up new changes pushed to main.
       - title: Merge and Apply
-        body: When the PR is merged to main, the apply workflow runs automatically.
+        content: When the PR is merged to main, the apply workflow runs automatically.
       - title: Run the Smoke Test
-        body: |-
+        content: |-
           Run the smoke test to verify your solution:
 
           ```sh
           cd adventures/02-building-cloudhaven/expert
           ./smoke-test.sh
           ```
-    helpfulLinks:
-      - label: GitHub Actions documentation
+    helpful_links:
+      - title: GitHub Actions documentation
         url: https://docs.github.com/en/actions
-      - label: GitHub Actions service containers
+      - title: GitHub Actions service containers
         url: https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/about-service-containers
-      - label: OpenTofu plan command
+      - title: OpenTofu plan command
         url: https://opentofu.org/docs/cli/commands/plan/
-      - label: Trivy action
+      - title: Trivy action
         url: https://github.com/aquasecurity/trivy-action
-      - label: TF-via-PR action
+      - title: TF-via-PR action
         url: https://github.com/OP5dev/TF-via-PR
     verification:
       command: "./smoke-test.sh"

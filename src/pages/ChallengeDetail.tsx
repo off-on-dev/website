@@ -70,7 +70,7 @@ type StructuredLayoutProps = {
 };
 
 const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayoutProps): JSX.Element => {
-  const { intro, objective, toolbox, backstory, architecture, architectureDiagram, diagramAlt, howToPlay, helpfulLinks, verification } = level;
+  const { intro, objective, toolbox, backstory, architecture, architectureDiagram, diagramAlt, architectureAscii, howToPlay, helpfulLinks, verification } = level;
   return (
     <>
       {/* Header */}
@@ -146,11 +146,12 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
           {backstory && backstory.length > 0 && (
             <ScenarioSection backstory={backstory} />
           )}
-          {((architecture && architecture.length > 0) || architectureDiagram) && (
+          {((architecture && architecture.length > 0) || architectureDiagram || architectureAscii) && (
             <ArchitectureSection
               architecture={architecture && architecture.length > 0 ? architecture.join("\n\n") : undefined}
               diagram={architectureDiagram}
               diagramAlt={diagramAlt}
+              ascii={architectureAscii}
             />
           )}
 
@@ -174,7 +175,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
           {howToPlay && howToPlay.length > 0 && (
             <WalkthroughSection
               steps={[
-                { title: "Get Started", body: `[Open in GitHub Codespaces](${level.codespacesUrl.replace(/[()]/g, (c) => encodeURIComponent(c))}). The devcontainer is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.\n\nPrefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (VS Code, JetBrains IDEs, and others). The devcontainer config will be detected automatically.` },
+                { title: "Get Started", content: `[Open in GitHub Codespaces](${level.codespacesUrl.replace(/[()]/g, (c) => encodeURIComponent(c))}). The devcontainer is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.\n\nPrefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (VS Code, JetBrains IDEs, and others). The devcontainer config will be detected automatically.` },
                 ...howToPlay,
               ]}
             />
@@ -275,7 +276,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
                             rel="noopener noreferrer"
                             className="docs-ext-link font-medium"
                           >
-                            {link.label}
+                            {link.title}
                             <ExternalLink size={11} aria-hidden="true" />
                             <span className="sr-only"> (opens in new tab)</span>
                           </a>

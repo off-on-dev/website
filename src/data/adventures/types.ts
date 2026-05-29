@@ -5,10 +5,10 @@ export type ToolboxItem = {
   url?: string;
 }
 
-/** One step in the Walkthrough section. body is rendered as markdown so it can contain code blocks and links. */
+/** One step in the Walkthrough section. content is rendered as markdown so it can contain code blocks and links. */
 export type WalkthroughStep = {
   title: string;
-  body: string;
+  content: string;
 }
 
 /** Compact card shown beneath the Walkthrough, summarising how to confirm completion. */
@@ -19,8 +19,9 @@ export type VerificationInfo = {
 
 /** A reference documentation link shown at the end of the challenge walkthrough. */
 export type HelpfulLink = {
-  label: string;
+  title: string;
   url: string;
+  description?: string;
 }
 
 /** Mock entry in the "Top players" leaderboard inside the CommunitySidebar. */
@@ -61,10 +62,12 @@ export type AdventureLevel = {
   scenario?: string;
   // Plain-prose architectural context paragraphs for the challenge.
   architecture?: string[];
-  // SVG import for an architecture diagram (rendered as an image).
+  // SVG import for an architecture diagram (rendered as an image). Takes priority over architectureAscii.
   architectureDiagram?: string;
   // Accessible alt text for the architecture diagram image.
   diagramAlt?: string;
+  // ASCII art diagram rendered as a <pre> block when no SVG diagram is available.
+  architectureAscii?: string;
   // Tools pre-installed in the Codespace, rendered as a row of cards.
   toolbox: ToolboxItem[];
   // Numbered walkthrough rendered as a vertical stepper.
@@ -105,8 +108,10 @@ export type Adventure = {
   contributor?: { name: string; url?: string; about?: string };
   // Narrative backstory paragraphs shown on the adventure overview page.
   backstory?: string[];
-  // Optional "What you'll be using" style context section shown after the backstory.
-  context?: { title: string; body: string[] };
+  // Context paragraphs explaining what technologies or concepts the adventure covers.
+  overview?: string[];
+  // Lucide React icon name representing this adventure (e.g. 'FlaskConical').
+  icon?: string;
   rewards?: AdventureRewards;
   // Mock placeholders for levels that haven't shipped yet. Rendered in the
   // "More levels" sidebar card alongside actual sibling levels.
@@ -130,7 +135,7 @@ export type RelatedLevel = {
 /**
  * Lightweight level shape used for card and filter views on the home/challenges pages.
  * Contains only the fields needed to render AdventureCard and FilteredLevelCard.
- * Generated into summaries.ts — do not import the full AdventureLevel where this suffices.
+ * Generated into summaries.ts. Do not import the full AdventureLevel where this suffices.
  */
 export type AdventureLevelSummary = {
   id: string;

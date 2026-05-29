@@ -56,7 +56,7 @@ const NotFound = (): JSX.Element => {
             </p>
           </div>
 
-          {/* Cards + CTA — full width */}
+          {/* Cards + CTA, full width */}
           <nav aria-label="Helpful links">
             <ul className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
               {links.map((link) => (

@@ -4,17 +4,21 @@
   "title": "Adventure",
   "description": "Schema for an OffOn adventure YAML file.",
   "type": "object",
-  "required": ["id", "title", "month", "story", "tags", "levels"],
+  "required": ["slug", "name", "month", "story", "technologies", "levels"],
   "additionalProperties": false,
   "properties": {
-    "id": {
+    "slug": {
       "type": "string",
       "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
-      "description": "Kebab-case identifier. Must match the folder name."
+      "description": "Kebab-case URL slug. Must match the folder name."
     },
-    "title": {
+    "name": {
       "type": "string",
-      "description": "Display title for the adventure."
+      "description": "Display name for the adventure."
+    },
+    "icon": {
+      "type": "string",
+      "description": "Lucide React icon name representing this adventure (e.g. 'FlaskConical'). Used as a visual identity marker in the adventure header."
     },
     "month": {
       "type": "string",
@@ -25,11 +29,11 @@
       "type": "string",
       "description": "One-paragraph summary of the adventure."
     },
-    "tags": {
+    "technologies": {
       "type": "array",
       "items": { "type": "string" },
       "minItems": 1,
-      "description": "Technology tags (e.g. ['OpenFeature', 'Spring Boot'])."
+      "description": "Technology names used in this adventure (e.g. ['OpenFeature', 'Spring Boot'])."
     },
     "contributor": {
       "$ref": "#/$defs/contributor"
@@ -39,23 +43,15 @@
       "items": { "type": "string" },
       "description": "Narrative backstory paragraphs shown on the adventure overview page."
     },
-    "context": {
-      "type": "object",
-      "required": ["title", "body"],
-      "additionalProperties": false,
-      "properties": {
-        "title": { "type": "string" },
-        "body": {
-          "type": "array",
-          "items": { "type": "string" }
-        }
-      },
-      "description": "Optional 'What you'll be using' style context section."
+    "overview": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Context paragraphs explaining what technologies or concepts the adventure covers. Rendered as a bulleted list under 'Your Mission'."
     },
     "rewards": {
       "$ref": "#/$defs/rewards"
     },
-    "upcomingLevels": {
+    "upcoming_levels": {
       "type": "array",
       "items": { "$ref": "#/$defs/upcomingLevel" },
       "description": "Placeholder levels that haven't shipped yet."
@@ -80,11 +76,11 @@
     },
     "rewards": {
       "type": "object",
-      "required": ["deadline", "eligibility", "tiers"],
+      "required": ["deadline", "tiers"],
       "additionalProperties": false,
       "properties": {
-        "deadline": { "type": "string" },
-        "eligibility": { "type": "string" },
+        "deadline": { "type": "string", "description": "ISO 8601 datetime (e.g. '2026-05-26T23:59:00+01:00')." },
+        "eligibility": { "type": "string", "description": "Omit to use the standard eligibility text." },
         "tiers": {
           "type": "array",
           "items": {
@@ -97,8 +93,8 @@
             }
           }
         },
-        "rankingNote": { "type": "string" },
-        "rankingRulesUrl": { "type": "string" }
+        "ranking_note": { "type": "string", "description": "Omit to use the standard ranking note." },
+        "ranking_rules_url": { "type": "string", "description": "Omit to use the default community ranking rules path." }
       }
     },
     "upcomingLevel": {
@@ -115,7 +111,7 @@
     },
     "level": {
       "type": "object",
-      "required": ["id", "name", "difficulty", "topics", "learnings", "devcontainerPath", "discussionUrl", "intro", "objective", "toolbox", "howToPlay", "verification"],
+      "required": ["id", "name", "difficulty", "topics", "learnings", "devcontainer_path", "discussion_url", "intro", "objective", "toolbox", "how_to_play", "verification"],
       "additionalProperties": false,
       "properties": {
         "id": { "type": "string" },
@@ -133,17 +129,17 @@
           "items": { "type": "string" },
           "minItems": 1
         },
-        "devcontainerPath": {
+        "devcontainer_path": {
           "type": "string",
           "description": "Path to the devcontainer.json relative to the challenges repo root (e.g. '.devcontainer/04-blind-by-design_01-beginner/devcontainer.json'). The codegen script builds the full Codespaces URL from this."
         },
-        "discussionUrl": {
+        "discussion_url": {
           "type": "string",
           "description": "Full Discourse topic URL or a path relative to COMMUNITY_URL (e.g. '/t/topic-slug/1419')."
         },
         "deadline": {
           "type": "string",
-          "description": "Submission deadline for this level (e.g. '10 December 2025 at 09:00 CET'). Only shown when rewards are active."
+          "description": "Submission deadline for this level as an ISO 8601 string (e.g. '2025-12-10T09:00:00+01:00'). Only shown when rewards are active."
         },
         "hook": { "type": "string" },
         "intro": {
@@ -164,11 +160,15 @@
           "type": "array",
           "items": { "type": "string" }
         },
-        "architectureDiagram": {
+        "architecture_diagram": {
           "type": "string",
-          "description": "Filename of the SVG diagram in src/assets/diagrams/ (e.g. 'blind-by-design-intermediate.svg')."
+          "description": "Filename of the SVG diagram in src/assets/diagrams/ (e.g. 'blind-by-design-intermediate.svg'). Takes priority over architecture_ascii."
         },
-        "diagramAlt": { "type": "string" },
+        "diagram_alt": { "type": "string" },
+        "architecture_ascii": {
+          "type": "string",
+          "description": "ASCII art diagram rendered as a <pre> block when no SVG diagram is available. Use a YAML block scalar (|) to preserve whitespace."
+        },
         "toolbox": {
           "type": "array",
           "items": {
@@ -182,15 +182,31 @@
             }
           }
         },
-        "howToPlay": {
+        "services": {
+          "type": "array",
+          "description": "Services accessible in the Codespace. The generator inserts an 'Explore the UIs' how_to_play step from this list. Use internal: true for services reachable only on the docker-internal network.",
+          "items": {
+            "type": "object",
+            "required": ["name", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "port": { "type": ["string", "integer"] },
+              "credentials": { "type": "string" },
+              "description": { "type": "string" },
+              "internal": { "type": "boolean" }
+            }
+          }
+        },
+        "how_to_play": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["title", "body"],
+            "required": ["title", "content"],
             "additionalProperties": false,
             "properties": {
               "title": { "type": "string" },
-              "body": { "type": "string", "description": "Markdown content. Can contain code blocks." }
+              "content": { "type": "string", "description": "Markdown content. Can contain code blocks." }
             }
           }
         },
@@ -203,26 +219,27 @@
             "description": { "type": "string" }
           }
         },
-        "helpfulLinks": {
+        "helpful_links": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["label", "url"],
+            "required": ["title", "url"],
             "additionalProperties": false,
             "properties": {
-              "label": { "type": "string" },
-              "url": { "type": "string", "format": "uri" }
+              "title": { "type": "string" },
+              "url": { "type": "string", "format": "uri" },
+              "description": { "type": "string" }
             }
           },
           "description": "Reference documentation links shown at the end of the challenge walkthrough."
         },
-        "metaDescription": {
+        "meta_description": {
           "type": "string",
           "maxLength": 160,
           "description": "Optional SEO meta description (max 160 chars). Use when the auto-generated description from learnings is insufficient. If omitted, the generator builds one from the level name, learnings, difficulty, and adventure title."
         },
-        "solvedCount": { "type": "integer" },
-        "topPlayers": {
+        "solved_count": { "type": "integer" },
+        "top_players": {
           "type": "array",
           "items": {
             "type": "object",

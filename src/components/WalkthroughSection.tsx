@@ -55,7 +55,7 @@ export const WalkthroughSection = ({ steps }: WalkthroughSectionProps): JSX.Elem
               >
                 <div aria-hidden="true" />
                 <div className="min-w-0 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
-                  <MarkdownContent source={step.body} />
+                  <MarkdownContent source={step.content} />
                 </div>
               </div>
             </li>
