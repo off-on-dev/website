@@ -1,11 +1,11 @@
 slug: building-cloudhaven
-name: Building CloudHaven
+title: Building CloudHaven
 icon: Cloud
 month: JAN 2026
 story: Join the Infrastructure Guild and modernize CloudHaven's infrastructure from manual provisioning to a
   self-service platform using Infrastructure as Code. A hands-on journey through infrastructure as code with
   OpenTofu and GitHub Actions.
-technologies:
+tags:
   - OpenTofu
   - Terraform
   - GitHub Actions
@@ -30,7 +30,7 @@ backstory:
   - The Guild Master has assigned you to complete the modernization journey.
   - "Your mission: build the services and tools that will support CloudHaven's future growth."
 levels:
-  - id: beginner
+  - level: beginner
     name: The Foundation Stones
     difficulty: Beginner
     topics:
@@ -40,7 +40,7 @@ levels:
       - Remote state management with GCS backend
       - Dynamic resource provisioning with for_each
       - Conditional resources with the enabled meta-argument, new in OpenTofu
-    devcontainer_path: .devcontainer/02-building-cloudhaven_01-beginner/devcontainer.json
+    devcontainer: 02-building-cloudhaven_01-beginner
     discussion_url: /t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656
     deadline: "2026-02-04T23:59:00+01:00"
     intro:
@@ -109,7 +109,7 @@ levels:
     verification:
       command: "./smoke-test.sh"
       description: "Once you think you've solved the challenge, run the smoke test to verify your solution."
-  - id: intermediate
+  - level: intermediate
     name: The Modular Metropolis
     difficulty: Intermediate
     topics:
@@ -120,7 +120,7 @@ levels:
       - Test-Driven Development (TDD) workflow
       - Input validation with custom rules
       - Refactoring infrastructure safely with moved blocks
-    devcontainer_path: .devcontainer/02-building-cloudhaven_02-intermediate/devcontainer.json
+    devcontainer: 02-building-cloudhaven_02-intermediate
     discussion_url: /t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10
     deadline: "2026-02-04T23:59:00+01:00"
     intro:
@@ -207,7 +207,7 @@ levels:
     verification:
       command: "./smoke-test.sh"
       description: "Once you think you've solved the challenge, run the smoke test to verify your solution."
-  - id: expert
+  - level: expert
     name: The Guardian Protocols
     difficulty: Expert
     topics:
@@ -218,7 +218,7 @@ levels:
       - GitHub Actions for drift detection and plan/apply
       - Integration tests with service containers
       - Security scanning with Trivy
-    devcontainer_path: .devcontainer/02-building-cloudhaven_03-expert/devcontainer.json
+    devcontainer: 02-building-cloudhaven_03-expert
     discussion_url: /t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8
     deadline: "2026-02-04T23:59:00+01:00"
     intro:

@@ -1,0 +1,126 @@
+name: Sync Adventure from Challenges Repo
+
+on:
+  workflow_dispatch:
+    inputs:
+      adventure_url:
+        description: >
+          URL of the adventure folder in the challenges repo
+          (e.g. https://github.com/off-on-dev/open-source-challenges/tree/main/adventures/05-lex-imperfecta)
+        required: true
+        type: string
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate URL
+        env:
+          ADVENTURE_URL: ${{ inputs.adventure_url }}
+        run: |
+          if ! echo "$ADVENTURE_URL" | grep -qE '^https://github\.com/[^/]+/[^/]+/tree/[^/]+/adventures/'; then
+            echo "Error: URL must point to an adventure folder under adventures/ in the challenges repo"
+            echo "Example: https://github.com/off-on-dev/open-source-challenges/tree/main/adventures/05-lex-imperfecta"
+            exit 1
+          fi
+
+      - name: Fetch and transform adventure YAML
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADVENTURE_URL: ${{ inputs.adventure_url }}
+        run: node scripts/sync-adventure.mjs
+
+      - name: Validate generated YAML
+        run: node scripts/generate-adventures.mjs --validate-only
+
+      - name: Regenerate TypeScript
+        run: node scripts/generate-adventures.mjs
+
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          SLUG=$(cat /tmp/adventure-slug)
+          NAME=$(cat /tmp/adventure-name)
+          LEVELS=$(cat /tmp/adventure-levels)
+          MODE=$(cat /tmp/adventure-mode)
+          BRANCH="feat/adventure-${SLUG}"
+          SOURCE_URL="${{ inputs.adventure_url }}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout -b "$BRANCH" 2>/dev/null || git checkout "$BRANCH"
+          git add src/data/adventures/${SLUG}/
+          git commit -m "feat: sync adventure ${SLUG} from challenges repo (${MODE})"
+
+          git push origin --delete "$BRANCH" 2>/dev/null || true
+          git push origin "$BRANCH"
+
+          if [ "$MODE" = "update" ]; then
+            PR_TITLE="feat(adventure): add levels to ${NAME} — ${LEVELS}"
+          else
+            PR_TITLE="feat(adventure): add ${NAME}"
+          fi
+
+          {
+            printf '## %s: %s\n\n' "$MODE" "$NAME"
+            printf 'Auto-synced from the challenges repo.\n\n'
+            printf '**Source:** %s\n\n' "$SOURCE_URL"
+            printf '**Levels in this PR:** `%s`\n\n' "$LEVELS"
+            printf '---\n\n'
+            printf '### Before merging\n\n'
+            printf -- '- [ ] Add `contributor:` block to `src/data/adventures/%s/adventure.yaml`\n' "$SLUG"
+            printf -- '  ```yaml\n'
+            printf -- '  contributor:\n'
+            printf -- '    name: "Full Name"\n'
+            printf -- '    url: "https://example.com"\n'
+            printf -- '    about: "One sentence bio."\n'
+            printf -- '  ```\n'
+            printf -- '- [ ] Confirm `month:` is correct for the planned release\n'
+            printf -- '- [ ] Update `rewards.deadline:` from `TODO` to ISO 8601 (e.g. `2026-07-01T23:59:00+01:00`)\n'
+            printf -- '- [ ] Review `topics:` on each level — auto-set to all adventure tags, refine to level-specific subset if needed\n'
+            printf -- '- [ ] Update `community_url:` in each level once the Discourse threads are created\n'
+            printf -- '- [ ] Update `discussionUrl` in each `*-posts.json` stub\n\n'
+            printf '### Routes and config (manual steps)\n\n'
+            printf -- '- [ ] Add adventure and level routes to `src/routes.ts`\n'
+            printf -- '- [ ] Add URLs to `public/sitemap.xml`\n'
+            printf -- '- [ ] Add URLs to the `prerender` array in `react-router.config.ts`\n'
+            printf -- '- [ ] Add adventure to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs`, then run `node scripts/refresh-leaderboard.mjs`\n'
+            printf -- '- [ ] Run `node scripts/refresh-discussions.mjs`\n'
+            printf -- '- [ ] Add each level URL to `ROUTES` in `e2e/smoke.spec.ts` and `src/test/seo.test.ts`\n'
+            printf -- '- [ ] Add each level to `pages` array in `src/test/prerender.test.ts` with expected `<title>`\n'
+            printf -- '- [ ] Update routes table in `README.md`\n\n'
+            printf '### Checks\n\n'
+            printf '```sh\n'
+            printf 'npm run lint && npm test && npm run build && npm run test:e2e\n'
+            printf '```\n'
+          } > /tmp/pr-body.md
+
+          EXISTING_PR=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING_PR" ]; then
+            echo "Updating existing PR #${EXISTING_PR}"
+            gh pr edit "$EXISTING_PR" --title "$PR_TITLE" --body-file /tmp/pr-body.md
+          else
+            gh pr create \
+              --title "$PR_TITLE" \
+              --body-file /tmp/pr-body.md \
+              --head "$BRANCH" \
+              --base main
+          fi

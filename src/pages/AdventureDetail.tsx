@@ -1,13 +1,14 @@
 import { type JSX } from "react";
 import { useParams, Link, useLoaderData } from "react-router";
 import type { MetaFunction, LoaderFunctionArgs } from "react-router";
-import { ArrowRight, FlaskConical, Satellite, Cloud, Telescope, type LucideIcon } from "lucide-react";
+import { ArrowRight, FlaskConical, Satellite, Cloud, Telescope, Scale, type LucideIcon } from "lucide-react";
 
 const ADVENTURE_ICONS: Record<string, LucideIcon> = {
   FlaskConical,
   Satellite,
   Cloud,
   Telescope,
+  Scale,
 };
 import { ADVENTURES, type AdventureLevel } from "@/data/adventures";
 import { NotFoundPage } from "@/components/NotFoundPage";

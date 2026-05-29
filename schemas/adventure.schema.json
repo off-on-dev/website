@@ -4,7 +4,7 @@
   "title": "Adventure",
   "description": "Schema for an OffOn adventure YAML file.",
   "type": "object",
-  "required": ["slug", "name", "month", "story", "technologies", "levels"],
+  "required": ["slug", "title", "month", "tags", "levels"],
   "additionalProperties": false,
   "properties": {
     "slug": {
@@ -12,13 +12,21 @@
       "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
       "description": "Kebab-case URL slug. Must match the folder name."
     },
+    "title": {
+      "type": "string",
+      "description": "Display title for the adventure."
+    },
     "name": {
       "type": "string",
-      "description": "Display name for the adventure."
+      "description": "Alias for title. Use title or name, not both."
+    },
+    "emoji": {
+      "type": "string",
+      "description": "Emoji representing this adventure (e.g. '⚖️'). The generator maps it to a Lucide icon automatically. Use this OR icon, not both."
     },
     "icon": {
       "type": "string",
-      "description": "Lucide React icon name representing this adventure (e.g. 'FlaskConical'). Used as a visual identity marker in the adventure header."
+      "description": "Lucide React icon name (e.g. 'FlaskConical'). Overrides emoji-derived icon when both are present."
     },
     "month": {
       "type": "string",
@@ -29,11 +37,15 @@
       "type": "string",
       "description": "One-paragraph summary of the adventure."
     },
-    "technologies": {
+    "story": {
+      "type": "string",
+      "description": "One-paragraph card summary. Omit to derive from backstory[0]."
+    },
+    "tags": {
       "type": "array",
       "items": { "type": "string" },
       "minItems": 1,
-      "description": "Technology names used in this adventure (e.g. ['OpenFeature', 'Spring Boot'])."
+      "description": "Technology tags (e.g. ['OpenFeature', 'Spring Boot'])."
     },
     "contributor": {
       "$ref": "#/$defs/contributor"
@@ -79,7 +91,7 @@
       "required": ["deadline", "tiers"],
       "additionalProperties": false,
       "properties": {
-        "deadline": { "type": "string", "description": "ISO 8601 datetime (e.g. '2026-05-26T23:59:00+01:00')." },
+        "deadline": { "type": "string", "description": "ISO 8601 datetime (e.g. '2026-05-26T23:59:00+01:00'). Use 'TODO' as a placeholder — the generator will warn and skip formatting." },
         "eligibility": { "type": "string", "description": "Omit to use the standard eligibility text." },
         "tiers": {
           "type": "array",
@@ -111,14 +123,20 @@
     },
     "level": {
       "type": "object",
-      "required": ["id", "name", "difficulty", "topics", "learnings", "devcontainer_path", "discussion_url", "intro", "objective", "toolbox", "how_to_play", "verification"],
+      "required": ["level", "name", "topics", "devcontainer", "objective", "toolbox", "how_to_play", "verification"],
       "additionalProperties": false,
       "properties": {
-        "id": { "type": "string" },
-        "name": { "type": "string" },
+        "level": { "type": "string", "description": "Level identifier: beginner, intermediate, or expert." },
+        "name": { "type": "string", "description": "Display name for the level." },
+        "title": { "type": "string", "description": "Alias for name. Use name or title, not both." },
+        "emoji": {
+          "type": "string",
+          "description": "Difficulty emoji: 🟢 Beginner, 🟡 Intermediate, 🔴 Expert. Use this OR difficulty, not both."
+        },
         "difficulty": {
           "type": "string",
-          "enum": ["Beginner", "Intermediate", "Expert"]
+          "enum": ["Beginner", "Intermediate", "Expert"],
+          "description": "Explicit difficulty. Omit when using emoji."
         },
         "topics": {
           "type": "array",
@@ -127,24 +145,40 @@
         "learnings": {
           "type": "array",
           "items": { "type": "string" },
-          "minItems": 1
+          "minItems": 1,
+          "description": "Key learnings. Use this OR what_you_learn."
         },
-        "devcontainer_path": {
+        "what_you_learn": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Alias for learnings."
+        },
+        "devcontainer": {
           "type": "string",
-          "description": "Path to the devcontainer.json relative to the challenges repo root (e.g. '.devcontainer/04-blind-by-design_01-beginner/devcontainer.json'). The codegen script builds the full Codespaces URL from this."
+          "description": "Short devcontainer name (e.g. 'lex-imperfecta_beginner'). Generator expands to '.devcontainer/{value}/devcontainer.json'."
         },
         "discussion_url": {
           "type": "string",
           "description": "Full Discourse topic URL or a path relative to COMMUNITY_URL (e.g. '/t/topic-slug/1419')."
+        },
+        "community_url": {
+          "type": "string",
+          "description": "Alias for discussion_url."
         },
         "deadline": {
           "type": "string",
           "description": "Submission deadline for this level as an ISO 8601 string (e.g. '2025-12-10T09:00:00+01:00'). Only shown when rewards are active."
         },
         "hook": { "type": "string" },
+        "summary": {
+          "type": "string",
+          "description": "Alias for intro. Single string; generator wraps in array."
+        },
         "intro": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": { "type": "string" },
+          "description": "Brief intro paragraph(s). Use this OR summary."
         },
         "backstory": {
           "type": "array",
@@ -205,6 +239,7 @@
             "required": ["title", "content"],
             "additionalProperties": false,
             "properties": {
+              "id": { "type": "string", "description": "Optional step identifier from the challenges repo. Ignored by the generator." },
               "title": { "type": "string" },
               "content": { "type": "string", "description": "Markdown content. Can contain code blocks." }
             }
