@@ -40,7 +40,7 @@ export const BottomCTA = (): JSX.Element => {
                 Join the Community <ExternalLink size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
               </a>
               <a
-                href="https://github.com/dynatrace-oss/open-ecosystem-challenges"
+                href="https://github.com/off-on-dev/open-source-challenges"
                 target="_blank"
                 rel="noopener noreferrer"
               className="btn-ghost-inverse"

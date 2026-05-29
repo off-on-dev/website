@@ -40,7 +40,7 @@ const Index = (): JSX.Element => {
               </p>
               <div className="flex gap-3 flex-wrap mt-2">
                 <a
-                  href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md"
+                  href="https://github.com/off-on-dev/open-source-challenges/blob/main/docs/contributing/adventure-ideas.md"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-inverse"
