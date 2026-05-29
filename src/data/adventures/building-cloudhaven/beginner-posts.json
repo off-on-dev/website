@@ -1,35 +1,35 @@
 {
-  "discussionUrl": "https://community.open-ecosystem.com/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656",
+  "discussionUrl": "https://community.offon.dev/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656",
   "discussionPosts": [
     {
       "username": "KatharinaSick",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/katharinasick/40/9_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
       "cooked": "The intermediate level is now live: Adventure 02: Building CloudHaven | Intermediate: The Modular Metropolis",
       "created_at": "2026-01-21T13:02:00.099Z",
-      "topicUrl": "https://community.open-ecosystem.com/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
+      "topicUrl": "https://community.offon.dev/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
     },
     {
       "username": "KatharinaSick",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/katharinasick/40/9_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
       "cooked": "Thanks for letting us know! I’ll take a look. I hope it didn’t cost you too much time",
       "created_at": "2026-01-18T05:22:50.240Z",
-      "topicUrl": "https://community.open-ecosystem.com/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
+      "topicUrl": "https://community.offon.dev/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
     },
     {
       "username": "justinrand",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/justinrand/40/140_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/justinrand/40/140_2.png",
       "cooked": "Had to rerun the post-start.sh script to get the gcp “credentials” to work.",
       "created_at": "2026-01-18T04:11:43.746Z",
       "challengeSolved": true,
-      "topicUrl": "https://community.open-ecosystem.com/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
+      "topicUrl": "https://community.offon.dev/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
     },
     {
       "username": "enri-kapaj",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/enri-kapaj/40/165_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/enri-kapaj/40/165_2.png",
       "cooked": "Done",
       "created_at": "2026-01-16T18:02:15.040Z",
       "challengeSolved": true,
-      "topicUrl": "https://community.open-ecosystem.com/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
+      "topicUrl": "https://community.offon.dev/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
     },
     {
       "username": "alvin",
@@ -37,29 +37,29 @@
       "cooked": "Thanks for the challenge!",
       "created_at": "2026-01-14T23:51:19.893Z",
       "challengeSolved": true,
-      "topicUrl": "https://community.open-ecosystem.com/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
+      "topicUrl": "https://community.offon.dev/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
     },
     {
       "username": "DavidHirsch",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/davidhirsch/40/8_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/davidhirsch/40/8_2.png",
       "cooked": "Wow you are definitely the fastest challenger!",
       "created_at": "2026-01-12T21:28:18.279Z",
-      "topicUrl": "https://community.open-ecosystem.com/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
+      "topicUrl": "https://community.offon.dev/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
     },
     {
       "username": "gsigmund",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/gsigmund/40/99_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/gsigmund/40/99_2.png",
       "cooked": "Completed the challenge.",
       "created_at": "2026-01-12T21:22:52.209Z",
       "challengeSolved": true,
-      "topicUrl": "https://community.open-ecosystem.com/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
+      "topicUrl": "https://community.offon.dev/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
     }
   ],
   "totalReplies": 7,
   "solvers": [
     {
       "username": "gsigmund",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/gsigmund/40/99_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/gsigmund/40/99_2.png",
       "solvedAt": "2026-01-12T21:22:52.209Z"
     },
     {
@@ -69,12 +69,12 @@
     },
     {
       "username": "enri-kapaj",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/enri-kapaj/40/165_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/enri-kapaj/40/165_2.png",
       "solvedAt": "2026-01-16T18:02:15.040Z"
     },
     {
       "username": "justinrand",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/justinrand/40/140_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/justinrand/40/140_2.png",
       "solvedAt": "2026-01-18T04:11:43.746Z"
     }
   ]

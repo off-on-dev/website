@@ -21,21 +21,21 @@ const MOCK_POSTS = [
     cooked: "<p>Great challenge!</p>",
     created_at: "2024-06-15T11:15:00Z",
     like_count: 5,
-    topicUrl: "https://community.open-ecosystem.com/t/topic/42/1",
+    topicUrl: "https://community.offon.dev/t/topic/42/1",
   },
   {
     username: "bob",
     cooked: "<p>Loved it.</p>",
     created_at: "2024-06-15T09:00:00Z",
     like_count: 0,
-    topicUrl: "https://community.open-ecosystem.com/t/topic/42/2",
+    topicUrl: "https://community.offon.dev/t/topic/42/2",
   },
   {
     username: "carol",
     cooked: "<p>Well done everyone.</p>",
     created_at: "2024-06-13T12:00:00Z",
     like_count: 1,
-    topicUrl: "https://community.open-ecosystem.com/t/topic/42/3",
+    topicUrl: "https://community.offon.dev/t/topic/42/3",
   },
 ];
 
@@ -143,7 +143,7 @@ describe("useDiscussionPosts - data loading", () => {
     expect(result.current.posts[0].cooked).toBe("<p>Great challenge!</p>");
     expect(result.current.posts[0].like_count).toBe(5);
     expect(result.current.posts[0].topicUrl).toBe(
-      "https://community.open-ecosystem.com/t/topic/42/1"
+      "https://community.offon.dev/t/topic/42/1"
     );
   });
 

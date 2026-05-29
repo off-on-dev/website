@@ -7,15 +7,19 @@ export function ConsentBanner(): JSX.Element | null {
   const { consent, grant, deny, reset } = useConsent();
   const [mounted, setMounted] = useState(false);
   const declineRef = useRef<HTMLButtonElement>(null);
+  const prevConsentRef = useRef<string | null | undefined>(undefined);
 
   useEffect(() => {
     setMounted(true); // eslint-disable-line react-hooks/set-state-in-effect -- mount guard; SSG requires a safe default (null) on first render so the banner is absent from prerendered HTML and cannot become the LCP element
   }, []);
 
-  // Move focus to Decline when the banner appears (initial visit or after reset)
-  // so keyboard users are not left with focus stranded on an unmounted button.
+  // Move focus to Decline only when the banner reappears after a reset (consent
+  // transitions from non-null to null). Skips the initial page-load case so the
+  // banner never steals focus from the skip nav link.
   useEffect(() => {
-    if (mounted && consent === null) {
+    const prevConsent = prevConsentRef.current;
+    prevConsentRef.current = consent;
+    if (mounted && consent === null && prevConsent != null) {
       declineRef.current?.focus();
     }
   }, [mounted, consent]);

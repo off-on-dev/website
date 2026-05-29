@@ -1,74 +1,74 @@
 {
-  "discussionUrl": "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8",
+  "discussionUrl": "https://community.offon.dev/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8",
   "discussionPosts": [
     {
       "username": "enri-kapaj",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/enri-kapaj/40/165_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/enri-kapaj/40/165_2.png",
       "cooked": "Confirming that the pipeline finished with success , thank you !!",
       "created_at": "2026-02-03T13:06:38.787Z",
-      "topicUrl": "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
+      "topicUrl": "https://community.offon.dev/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
     },
     {
       "username": "KatharinaSick",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/katharinasick/40/9_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
       "cooked": "I just pushed a fix. The problem was that the verification action checked if the severity field is set but it actually defaults to all vulnerability types anyways. Thanks again for bringing this up and for playing",
       "created_at": "2026-02-03T11:48:08.245Z",
-      "topicUrl": "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
+      "topicUrl": "https://community.offon.dev/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
     },
     {
       "username": "enri-kapaj",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/enri-kapaj/40/165_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/enri-kapaj/40/165_2.png",
       "cooked": "Ok thank u for the fast response",
       "created_at": "2026-02-02T21:15:58.997Z",
-      "topicUrl": "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
+      "topicUrl": "https://community.offon.dev/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
     },
     {
       "username": "KatharinaSick",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/katharinasick/40/9_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
       "cooked": "I just checked your action and it looks good Seems like you ran into an edge case I didn’t consider with validation again. I’m really sorry! I’ll update the validation workflow tomorrow and let you know once it’s fixed Your points will of course be awarded from today instead of tomorrow then.",
       "created_at": "2026-02-02T18:56:18.374Z",
-      "topicUrl": "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
+      "topicUrl": "https://community.offon.dev/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
     },
     {
       "username": "enri-kapaj",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/enri-kapaj/40/165_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/enri-kapaj/40/165_2.png",
       "cooked": "Hello guys i think i need some help , so i followed the instruction on the challenge and did all the drill and run the smoke teskt with sucess as you see in the image : but when i go to run the validate adventure pipeline it fails with this error : I understand that it is asking me to have a closer look at the security job specifically at step but i have aready what its asking - name: 🔒 Scan for Vulnerabilities uses: aquasecurity/trivy-action@0.33.1 with: scan-type: 'config' scan-ref: ${{ env.WORKING_DIR }} format: 'json' output: 'vulnerabilities.json' exit-code: 0",
       "created_at": "2026-02-02T16:32:48.480Z",
       "challengeSolved": true,
-      "topicUrl": "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
+      "topicUrl": "https://community.offon.dev/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
     },
     {
       "username": "justinrand",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/justinrand/40/140_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/justinrand/40/140_2.png",
       "cooked": "Completed the challenge.",
       "created_at": "2026-02-01T21:50:15.316Z",
       "challengeSolved": true,
-      "topicUrl": "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
+      "topicUrl": "https://community.offon.dev/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
     },
     {
       "username": "gsigmund",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/gsigmund/40/99_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/gsigmund/40/99_2.png",
       "cooked": "Completed the challenge.",
       "created_at": "2026-01-31T14:09:48.909Z",
       "challengeSolved": true,
-      "topicUrl": "https://community.open-ecosystem.com/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
+      "topicUrl": "https://community.offon.dev/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8"
     }
   ],
   "totalReplies": 7,
   "solvers": [
     {
       "username": "gsigmund",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/gsigmund/40/99_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/gsigmund/40/99_2.png",
       "solvedAt": "2026-01-31T14:09:48.909Z"
     },
     {
       "username": "justinrand",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/justinrand/40/140_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/justinrand/40/140_2.png",
       "solvedAt": "2026-02-01T21:50:15.316Z"
     },
     {
       "username": "enri-kapaj",
-      "avatarUrl": "https://community.open-ecosystem.com/user_avatar/community.open-ecosystem.com/enri-kapaj/40/165_2.png",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/enri-kapaj/40/165_2.png",
       "solvedAt": "2026-02-02T16:32:48.480Z"
     }
   ]

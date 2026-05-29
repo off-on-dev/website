@@ -13,7 +13,7 @@ import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const COMMUNITY_BASE = "https://community.open-ecosystem.com";
+const COMMUNITY_BASE = "https://community.offon.dev";
 const ADVENTURES_DIR = resolve(__dirname, "../src/data/adventures");
 
 /**

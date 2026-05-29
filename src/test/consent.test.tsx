@@ -440,6 +440,25 @@ describe('ConsentBanner - floating button', () => {
     fireEvent.click(screen.getByRole('button', { name: /change cookie preferences/i }));
     expect(screen.getByRole('region', { name: 'This site uses analytics cookies' })).toBeTruthy();
   });
+
+  it('moves focus to Decline when the banner reappears after reset', () => {
+    ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
+    renderWithProviders(<ConsentBanner />);
+    fireEvent.click(screen.getByRole('button', { name: /change cookie preferences/i }));
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: /decline/i }));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// ConsentBanner - focus management
+// ---------------------------------------------------------------------------
+
+describe('ConsentBanner - focus management', () => {
+  it('does not steal focus from the skip nav on initial page load', () => {
+    renderWithProviders(<ConsentBanner />);
+    const declineButton = screen.getByRole('button', { name: /decline/i });
+    expect(document.activeElement).not.toBe(declineButton);
+  });
 });
 
 // ---------------------------------------------------------------------------

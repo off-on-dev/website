@@ -63,7 +63,7 @@ Community activity happens on a separate Discourse instance. Its display name is
 - The og:image file is public/og.png and its full URL is https://offon.dev/og.png.
 - PR preview deployments are served from the gh-pages branch under /pr-preview/pr-{number}/.
 - The open source challenges content lives in a separate organisation at https://github.com/dynatrace-oss/open-ecosystem-challenges. This is an intentional external link and must never be changed or flagged as a violation.
-- The community Discourse instance is at https://community.open-ecosystem.com. Use the `COMMUNITY_URL` constant from `src/data/constants.ts`, never hardcode this URL.
+- The community Discourse instance is at https://community.offon.dev. Use the `COMMUNITY_URL` constant from `src/data/constants.ts`, never hardcode this URL.
 - `COMMUNITY_DISPLAY_NAME` is defined in `src/data/constants.ts` as the user-facing display name for the community URL. Use it for visible text, use `COMMUNITY_URL` for href attributes.
 
 ---
@@ -221,7 +221,7 @@ When diagnosing a bug, especially in the production build, follow these rules wi
 - **Build-time fetching:** Discussion data lives in per-level JSON files under `src/data/adventures/<adventure-id>/<level-id>-posts.json`. Each file contains only `discussionUrl`, `discussionPosts`, and `totalReplies`. These are refreshed hourly by the GitHub Action in `.github/workflows/refresh-community-data.yml` (runs `scripts/refresh-discussions.mjs`). Components import the JSON dynamically via `import.meta.glob`.
 - When adding a new adventure level, create its per-level discussion JSON file (`<level-id>-posts.json`) with a `discussionUrl` field. The refresh script uses this URL to fetch posts.
 - `scripts/refresh-discussions.mjs`, `scripts/refresh-leaderboard.mjs`, and `scripts/refresh-community-leaders.mjs` each contain a `COMMUNITY_BASE` constant that is a necessary duplicate of `COMMUNITY_URL` in `src/data/constants.ts`. The scripts run in Node and cannot import from `src/`, so the value must be maintained manually in all four places. Always update them together.
-- The domain `community.open-ecosystem.com` in the three refresh scripts and `src/data/constants.ts` is the actual Discourse server URL used for API calls at build time. It is not a brand inconsistency. Do not change it to `community.offon.dev` or any other display name. `COMMUNITY_DISPLAY_NAME` in `src/data/constants.ts` is the separate user-facing label shown in the UI.
+- The domain `community.offon.dev` in the three refresh scripts and `src/data/constants.ts` is the actual Discourse server URL used for API calls at build time. `COMMUNITY_DISPLAY_NAME` in `src/data/constants.ts` is the separate user-facing label shown in the UI. Always update all four places together.
 
 ---
 

@@ -24,8 +24,7 @@
  * Writes:
  *   src/data/community-leaders.json
  *
- * NOTE: community.open-ecosystem.com here is the actual Discourse server URL.
- * It is not the same as the display name community.offon.dev. Do not change it.
+ * NOTE: community.offon.dev is the actual Discourse server URL.
  */
 
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
@@ -35,7 +34,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const OUT_PATH = resolve(ROOT, "src/data/community-leaders.json");
-const COMMUNITY_BASE = "https://community.open-ecosystem.com";
+const COMMUNITY_BASE = "https://community.offon.dev";
 
 // Query IDs in Discourse Data Explorer.
 const COMMUNITY_QUERY_ID = 7;
@@ -82,7 +81,7 @@ function buildAvatarUrl(username, uploadedAvatarId, size = AVATAR_SIZE) {
     const letter = username.charAt(0).toLowerCase();
     return `https://avatars.discourse-cdn.com/v4/letter/${letter}/b5a626/${size}.png`;
   }
-  return `${COMMUNITY_BASE}/user_avatar/community.open-ecosystem.com/${encodeURIComponent(username)}/${size}/${uploadedAvatarId}_2.png`;
+  return `${COMMUNITY_BASE}/user_avatar/community.offon.dev/${encodeURIComponent(username)}/${size}/${uploadedAvatarId}_2.png`;
 }
 
 async function runQuery(queryId, params, apiKey, apiUsername) {
