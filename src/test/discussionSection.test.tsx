@@ -19,7 +19,7 @@ const MOCK_POSTS: PostWithAge[] = [
     created_at: "2024-06-15T11:15:00Z",
     age: "45m ago",
     like_count: 5,
-    topicUrl: "https://community.open-ecosystem.com/t/topic/42/1",
+    topicUrl: "https://community.offon.dev/t/topic/42/1",
   },
   {
     username: "bob",
@@ -27,7 +27,7 @@ const MOCK_POSTS: PostWithAge[] = [
     created_at: "2024-06-15T09:00:00Z",
     age: "3h ago",
     like_count: 0,
-    topicUrl: "https://community.open-ecosystem.com/t/topic/42/2",
+    topicUrl: "https://community.offon.dev/t/topic/42/2",
   },
   {
     username: "carol",
@@ -35,7 +35,7 @@ const MOCK_POSTS: PostWithAge[] = [
     created_at: "2024-06-13T12:00:00Z",
     age: "2d ago",
     like_count: 1,
-    topicUrl: "https://community.open-ecosystem.com/t/topic/42/3",
+    topicUrl: "https://community.offon.dev/t/topic/42/3",
   },
 ];
 
@@ -53,20 +53,20 @@ vi.mock("@/hooks/useDiscussionPosts", () => ({
 describe("DiscussionSection - empty state", () => {
   it("shows 'No community posts yet' when topic has no posts", () => {
     render(
-      <DiscussionSection adventureId="unknown" levelId="unknown" discussionUrl="https://community.open-ecosystem.com/t/unknown/999/1" />
+      <DiscussionSection adventureId="unknown" levelId="unknown" discussionUrl="https://community.offon.dev/t/unknown/999/1" />
     );
     expect(screen.getByText(/No community posts yet/)).toBeTruthy();
   });
 
   it("shows 'Join the discussion' link in the empty state", () => {
     render(
-      <DiscussionSection adventureId="unknown" levelId="unknown" discussionUrl="https://community.open-ecosystem.com/t/unknown/999/1" />
+      <DiscussionSection adventureId="unknown" levelId="unknown" discussionUrl="https://community.offon.dev/t/unknown/999/1" />
     );
     expect(screen.getByRole("link", { name: /Join the discussion/i })).toBeTruthy();
   });
 
   it("shows empty state when adventureId and levelId do not match", () => {
-    render(<DiscussionSection adventureId="no-match" levelId="none" discussionUrl="https://community.open-ecosystem.com" />);
+    render(<DiscussionSection adventureId="no-match" levelId="none" discussionUrl="https://community.offon.dev" />);
     expect(screen.getByText(/No community posts yet/)).toBeTruthy();
   });
 });
@@ -78,7 +78,7 @@ describe("DiscussionSection - empty state", () => {
 describe("DiscussionSection - posts state", () => {
   it("renders all posts when the hook returns data", () => {
     render(
-      <DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.open-ecosystem.com/t/topic/42/1" />
+      <DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.offon.dev/t/topic/42/1" />
     );
     expect(screen.getByText("Great challenge!")).toBeTruthy();
     expect(screen.getByText("Loved it.")).toBeTruthy();
@@ -87,7 +87,7 @@ describe("DiscussionSection - posts state", () => {
 
   it("renders plain text post content (HTML stripped at build time)", () => {
     render(
-      <DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.open-ecosystem.com/t/topic/42/1" />
+      <DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.offon.dev/t/topic/42/1" />
     );
     expect(screen.getByText("Great challenge!")).toBeTruthy();
     expect(screen.getByText("Loved it.")).toBeTruthy();
@@ -95,7 +95,7 @@ describe("DiscussionSection - posts state", () => {
 
   it("shows like count for posts with at least one like", () => {
     render(
-      <DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.open-ecosystem.com/t/topic/42/1" />
+      <DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.offon.dev/t/topic/42/1" />
     );
     expect(screen.getByText("5")).toBeTruthy();
     expect(screen.getByText("1")).toBeTruthy();
@@ -103,14 +103,14 @@ describe("DiscussionSection - posts state", () => {
 
   it("does not render a like count element for posts with zero likes", () => {
     render(
-      <DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.open-ecosystem.com/t/topic/42/1" />
+      <DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.offon.dev/t/topic/42/1" />
     );
     expect(screen.queryAllByText("0").length).toBe(0);
   });
 
   it("renders 'Join the discussion' link when posts are present", () => {
     render(
-      <DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.open-ecosystem.com/t/topic/42/1" />
+      <DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.offon.dev/t/topic/42/1" />
     );
     expect(screen.getByRole("link", { name: /Join the discussion/i })).toBeTruthy();
   });
@@ -123,7 +123,7 @@ describe("DiscussionSection - posts state", () => {
 describe("DiscussionSection - age display", () => {
   it("renders age strings returned by the hook", () => {
     render(
-      <DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.open-ecosystem.com/t/topic/42/1" />
+      <DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.offon.dev/t/topic/42/1" />
     );
     expect(screen.getByText("45m ago")).toBeTruthy();
     expect(screen.getByText("3h ago")).toBeTruthy();

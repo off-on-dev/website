@@ -34,7 +34,7 @@ const webSiteJsonLd = `{"@context":"https://schema.org","@type":"WebSite","name"
 // sameAs links populate Google's Knowledge Panel. Mirror LINKEDIN_URL,
 // the Discourse community URL, and the open-ecosystem-challenges GitHub org
 // from src/data/constants.ts.
-const orgJsonLd = `{"@context":"https://schema.org","@type":"Organization","name":"OffOn","url":"https://offon.dev","logo":"https://offon.dev/favicon.png","sameAs":["https://www.linkedin.com/company/open-ecosystem/","https://community.open-ecosystem.com","https://github.com/dynatrace-oss/open-ecosystem-challenges"]}`;
+const orgJsonLd = `{"@context":"https://schema.org","@type":"Organization","name":"OffOn","url":"https://offon.dev","logo":"https://offon.dev/favicon.png","sameAs":["https://www.linkedin.com/company/open-ecosystem/","https://community.offon.dev","https://github.com/dynatrace-oss/open-ecosystem-challenges"]}`;
 
 export default function Root(): JSX.Element {
   return (

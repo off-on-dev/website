@@ -16,9 +16,7 @@
  * Writes per-adventure leaderboard data to:
  *   src/data/adventures/<adventure-id>/leaderboard.json
  *
- * NOTE: community.open-ecosystem.com here is the actual Discourse server URL used
- * for API calls. It is not the same as the display name community.offon.dev.
- * Do not change it. See CLAUDE.md for context.
+ * NOTE: community.offon.dev is the actual Discourse server URL used for API calls.
  */
 
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
@@ -28,12 +26,12 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const ADVENTURES_DIR = resolve(ROOT, "src/data/adventures");
-const COMMUNITY_BASE = "https://community.open-ecosystem.com";
+const COMMUNITY_BASE = "https://community.offon.dev";
 const QUERY_ID = 5;
 
 // Maps adventure ID -> Discourse category ID and which difficulty levels are active.
 // Update this when a new adventure is added.
-// Category IDs are from: GET https://community.open-ecosystem.com/categories.json
+// Category IDs are from: GET https://community.offon.dev/categories.json
 const ADVENTURE_CATEGORIES = {
   "echoes-lost-in-orbit":  { categoryId: 35, has_beginner: true,  has_intermediate: true,  has_expert: true,  has_single: false },
   "building-cloudhaven":   { categoryId: 36, has_beginner: true,  has_intermediate: true,  has_expert: true,  has_single: false },
