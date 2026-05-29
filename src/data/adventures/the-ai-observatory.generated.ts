@@ -4,6 +4,7 @@ import type { Adventure } from "./types";
 export const THE_AI_OBSERVATORY: Adventure = {
   id: "the-ai-observatory",
   title: "The AI Observatory",
+  icon: "Telescope",
   month: "FEB 2026",
   story: "Investigate a mysterious bandwidth anomaly at a remote research station by instrumenting its AI system with OpenTelemetry, OpenLLMetry, and Jaeger.",
   tags: ["OpenTelemetry", "OpenLLMetry", "Jaeger", "Prometheus", "Python"],
@@ -29,7 +30,7 @@ export const THE_AI_OBSERVATORY: Adventure = {
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F03-the-ai-observatory_01-beginner%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8`,
-      deadline: "8 March 2026 at 23:59 CET",
+      deadline: "2026-03-08T23:59:00+01:00",
       intro: [
         "Something is eating 847% of your station's bandwidth and nobody knows what. Instrument HubSystem with OpenLLMetry, send traces to the OpenTelemetry Collector, and use Jaeger to uncover what the AI is doing behind the scenes.",
       ],
@@ -56,21 +57,23 @@ export const THE_AI_OBSERVATORY: Adventure = {
         { name: "k9s", description: "terminal UI for managing and inspecting your cluster", url: "https://k9scli.io/" },
       ],
       howToPlay: [
-        { title: "Wait for Infrastructure", body: "Wait ~10 minutes for all infrastructure to initialize." },
-        { title: "Open Jaeger", body: "Open the Ports tab, find Jaeger at port 30103. This is where you will analyze the traces sent by HubSystem." },
-        { title: "Instrument the App", body: `The application code is in \`./hubsystem.py\`. Add OpenTelemetry instrumentation using OpenLLMetry. The OTel
+        { title: "Wait for Infrastructure", content: "Wait ~10 minutes for all infrastructure to initialize." },
+        { title: "Explore the UIs", content: `Open the **Ports** tab and navigate to each service:
+
+- **Port 30103:** Jaeger. Analyze the traces sent by HubSystem.` },
+        { title: "Instrument the App", content: `The application code is in \`./hubsystem.py\`. Add OpenTelemetry instrumentation using OpenLLMetry. The OTel
 Collector and Jaeger are already configured correctly; you only need to instrument the app. You do not need to
 interact with Kubernetes directly. The cluster is already running, so focus on the Python code.` },
-        { title: "Run and Investigate", body: `Run the application, interact with the AI to generate traces, then check Jaeger:
+        { title: "Run and Investigate", content: `Run the application, interact with the AI to generate traces, then check Jaeger:
 
 \`\`\`sh
 make hubsystem
 \`\`\`` },
-        { title: "Answer the Quiz", body: `Find the trace responsible for the high bandwidth usage and inspect its attributes to answer \`quiz.txt\`.` },
+        { title: "Answer the Quiz", content: `Find the trace responsible for the high bandwidth usage and inspect its attributes to answer \`quiz.txt\`.` },
       ],
       helpfulLinks: [
-        { label: "OpenLLMetry SDK for Python", url: "https://traceloop.com/docs/openllmetry/getting-started-python" },
-        { label: "Jaeger documentation", url: "https://www.jaegertracing.io/docs/latest/" },
+        { title: "OpenLLMetry SDK for Python", url: "https://traceloop.com/docs/openllmetry/getting-started-python" },
+        { title: "Jaeger documentation", url: "https://www.jaegertracing.io/docs/latest/" },
       ],
       verification: {
         command: "./verify.sh",
@@ -89,7 +92,7 @@ make hubsystem
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F03-the-ai-observatory_02-intermediate%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936/2`,
-      deadline: "8 March 2026 at 23:59 CET",
+      deadline: "2026-03-08T23:59:00+01:00",
       intro: [
         "ART's RAG pipeline is retrieving entertainment data instead of navigation coordinates and won't calculate your jump. Instrument the full retrieval pipeline with OpenLLMetry, build a custom OTel metric to quantify the distraction, and write a Prometheus recording rule to prove it.",
       ],
@@ -123,27 +126,30 @@ That's not normal. ART is never vague. You access the ship's diagnostic systems 
         { name: "k9s", description: "terminal UI for managing and inspecting your cluster", url: "https://k9scli.io/" },
       ],
       howToPlay: [
-        { title: "Wait for Infrastructure", body: "Wait ~15 minutes for all infrastructure to initialize." },
-        { title: "Access Observability Tools", body: "Open the Ports tab. Prometheus at port 30102 helps you explore available metrics and test PromQL queries. Jaeger at port 30103 shows distributed traces from ART so you can verify that tracing is working end-to-end." },
-        { title: "Instrument and Configure", body: `The application code is in \`./art.py\`. Instrument it with OpenLLMetry and add the custom metric. The Prometheus recording rules are in \`./manifests/prometheus-rule.yaml\`. After changing the rule file, apply it to the cluster:
+        { title: "Wait for Infrastructure", content: "Wait ~15 minutes for all infrastructure to initialize." },
+        { title: "Explore the UIs", content: `Open the **Ports** tab and navigate to each service:
+
+- **Port 30102:** Prometheus. Explore available metrics and test PromQL queries.
+- **Port 30103:** Jaeger. Shows distributed traces from ART to verify that tracing is working end-to-end.` },
+        { title: "Instrument and Configure", content: `The application code is in \`./art.py\`. Instrument it with OpenLLMetry and add the custom metric. The Prometheus recording rules are in \`./manifests/prometheus-rule.yaml\`. After changing the rule file, apply it to the cluster:
 
 \`\`\`sh
 make apply
 \`\`\`` },
-        { title: "Generate Traffic", body: `Run the application to interact with ART ("Calculate jump"), or generate continuous traffic for your metric graphs:
+        { title: "Generate Traffic", content: `Run the application to interact with ART ("Calculate jump"), or generate continuous traffic for your metric graphs:
 
 \`\`\`sh
 make art
 # or for continuous traffic:
 make traffic
 \`\`\`` },
-        { title: "Fix the Navigation", body: "Verify traces in Jaeger and the recording rule in Prometheus. Fix the navigation system so ART returns jump coordinates to RaviHyral." },
+        { title: "Fix the Navigation", content: "Verify traces in Jaeger and the recording rule in Prometheus. Fix the navigation system so ART returns jump coordinates to RaviHyral." },
       ],
       helpfulLinks: [
-        { label: "OpenLLMetry SDK for Python", url: "https://traceloop.com/docs/openllmetry/getting-started-python" },
-        { label: "OpenTelemetry Python metrics", url: "https://opentelemetry.io/docs/languages/python/instrumentation/#metrics" },
-        { label: "Prometheus recording rules", url: "https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/" },
-        { label: "Qdrant filtering", url: "https://qdrant.tech/documentation/concepts/filtering/" },
+        { title: "OpenLLMetry SDK for Python", url: "https://traceloop.com/docs/openllmetry/getting-started-python" },
+        { title: "OpenTelemetry Python metrics", url: "https://opentelemetry.io/docs/languages/python/instrumentation/#metrics" },
+        { title: "Prometheus recording rules", url: "https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/" },
+        { title: "Qdrant filtering", url: "https://qdrant.tech/documentation/concepts/filtering/" },
       ],
       verification: {
         command: "./verify.sh",
@@ -161,7 +167,7 @@ make traffic
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F03-the-ai-observatory_03-expert%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/reduce-telemetry-noise-adventure-03-expert-is-live/999/1`,
-      deadline: "8 March 2026 at 23:59 CET",
+      deadline: "2026-03-08T23:59:00+01:00",
       intro: [
         "ART is flooding Jaeger with 40,000 non-standard spans an hour. Fix the chat span to follow OpenTelemetry GenAI semantic conventions with proper token usage attributes, then configure tail sampling in the Collector to keep only traces that contain errors or exceed 5 seconds.",
       ],
@@ -197,13 +203,15 @@ ART: "...Fine."`,
         { name: "k9s", description: "terminal UI for managing and inspecting your cluster", url: "https://k9scli.io/" },
       ],
       howToPlay: [
-        { title: "Wait for Infrastructure", body: "Wait ~15 minutes for all infrastructure to initialize." },
-        { title: "Open Jaeger", body: "Open the Ports tab, find Jaeger at port 30103. Verify your spans look correct and that sampling works as expected." },
-        { title: "Fix Instrumentation and Sampling", body: `Fix two things:
+        { title: "Wait for Infrastructure", content: "Wait ~15 minutes for all infrastructure to initialize." },
+        { title: "Explore the UIs", content: `Open the **Ports** tab and navigate to each service:
+
+- **Port 30103:** Jaeger. Verify your spans look correct and that tail sampling works as expected.` },
+        { title: "Fix Instrumentation and Sampling", content: `Fix two things:
 
 1. The application code in \`./art.py\`: update the \`chat\` span to follow OpenTelemetry GenAI semantic conventions, including token usage attributes.
 2. The collector config in \`./manifests/otel-collector-config.yaml\`: configure tail sampling to keep only traces that contain errors or take longer than 5 seconds.` },
-        { title: "Apply and Test", body: `After changing \`art.py\`, restart traffic to pick up new instrumentation. After changing the collector config, apply it:
+        { title: "Apply and Test", content: `After changing \`art.py\`, restart traffic to pick up new instrumentation. After changing the collector config, apply it:
 
 \`\`\`sh
 kubectl apply -f manifests/otel-collector-config.yaml -n otel
@@ -219,10 +227,10 @@ make traffic
 Verify in Jaeger that spans follow conventions and only errors and slow traces appear.` },
       ],
       helpfulLinks: [
-        { label: "OpenTelemetry GenAI semantic conventions", url: "https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-spans/" },
-        { label: "OpenTelemetry Python: recording exceptions", url: "https://opentelemetry.io/docs/languages/python/instrumentation/#record-exceptions" },
-        { label: "OTel Collector tail sampling processor", url: "https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/tailsamplingprocessor" },
-        { label: "Python contextlib.contextmanager", url: "https://docs.python.org/3/library/contextlib.html#contextlib.contextmanager" },
+        { title: "OpenTelemetry GenAI semantic conventions", url: "https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-spans/" },
+        { title: "OpenTelemetry Python: recording exceptions", url: "https://opentelemetry.io/docs/languages/python/instrumentation/#record-exceptions" },
+        { title: "OTel Collector tail sampling processor", url: "https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/tailsamplingprocessor" },
+        { title: "Python contextlib.contextmanager", url: "https://docs.python.org/3/library/contextlib.html#contextlib.contextmanager" },
       ],
       verification: {
         command: "./verify.sh",

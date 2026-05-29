@@ -4,6 +4,7 @@ import type { Adventure } from "./types";
 export const BUILDING_CLOUDHAVEN: Adventure = {
   id: "building-cloudhaven",
   title: "Building CloudHaven",
+  icon: "Cloud",
   month: "JAN 2026",
   story: "Join the Infrastructure Guild and modernize CloudHaven's infrastructure from manual provisioning to a self-service platform using Infrastructure as Code. A hands-on journey through infrastructure as code with OpenTofu and GitHub Actions.",
   tags: ["OpenTofu", "Terraform", "GitHub Actions", "Trivy", "TDD"],
@@ -33,7 +34,7 @@ export const BUILDING_CLOUDHAVEN: Adventure = {
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F02-building-cloudhaven_01-beginner%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656`,
-      deadline: "4 February 2026 at 23:59 CET",
+      deadline: "2026-02-04T23:59:00+01:00",
       intro: [
         "An incomplete OpenTofu configuration is blocking the Merchant's Quarter from going live. Fix the broken backend, wire up dynamic resource provisioning with for_each, and use the new enabled meta-argument to conditionally deploy the audit database.",
       ],
@@ -52,33 +53,35 @@ export const BUILDING_CLOUDHAVEN: Adventure = {
         { name: "gcp-api-mock", description: "mock GCP API running locally to simulate cloud resources without real cloud costs (Cloud Storage and Cloud SQL only)", url: "https://github.com/KatharinaSick/gcp-api-mock" },
       ],
       howToPlay: [
-        { title: "Wait for the Environment", body: "Wait ~2 minutes for the environment to initialize." },
-        { title: "Explore the Mock API", body: "Open the Ports tab, find the GCP API Mock at port 30104. Use it to explore the mock cloud resources created by your configuration." },
-        { title: "Find the TODOs", body: `All OpenTofu files are in \`adventures/02-building-cloudhaven/beginner/\`. Run:
+        { title: "Wait for the Environment", content: "Wait ~2 minutes for the environment to initialize." },
+        { title: "Explore the UIs", content: `Open the **Ports** tab and navigate to each service:
+
+- **Port 30104:** GCP API Mock. Explore the mock cloud resources created by your configuration (Cloud Storage and Cloud SQL).` },
+        { title: "Find the TODOs", content: `All OpenTofu files are in \`adventures/02-building-cloudhaven/beginner/\`. Run:
 
 \`\`\`sh
 grep -r "TODO" .
 \`\`\`
 
 Files to review: \`main.tf\`, \`state.tf\`, \`variables.tf\`, \`merchants.tf\`, \`audit.tf\`, \`outputs.tf\`.` },
-        { title: "Apply the Configuration", body: `After fixing the TODOs, run:
+        { title: "Apply the Configuration", content: `After fixing the TODOs, run:
 
 \`\`\`sh
 tofu apply
 \`\`\`
 
 If you changed the backend configuration, run \`tofu init -migrate-state\` first.` },
-        { title: "Run the Smoke Test", body: `Run the smoke test to verify your solution:
+        { title: "Run the Smoke Test", content: `Run the smoke test to verify your solution:
 
 \`\`\`sh
 ./smoke-test.sh
 \`\`\`` },
       ],
       helpfulLinks: [
-        { label: "OpenTofu documentation", url: "https://opentofu.org/docs/" },
-        { label: "OpenTofu meta-arguments", url: "https://opentofu.org/docs/language/meta-arguments/count/" },
-        { label: "OpenTofu backend configuration", url: "https://opentofu.org/docs/language/settings/backends/configuration/" },
-        { label: "Google Cloud provider", url: "https://registry.terraform.io/providers/hashicorp/google/latest/docs" },
+        { title: "OpenTofu documentation", url: "https://opentofu.org/docs/" },
+        { title: "OpenTofu meta-arguments", url: "https://opentofu.org/docs/language/meta-arguments/count/" },
+        { title: "OpenTofu backend configuration", url: "https://opentofu.org/docs/language/settings/backends/configuration/" },
+        { title: "Google Cloud provider", url: "https://registry.terraform.io/providers/hashicorp/google/latest/docs" },
       ],
       verification: {
         command: "./smoke-test.sh",
@@ -98,7 +101,7 @@ If you changed the backend configuration, run \`tofu init -migrate-state\` first
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F02-building-cloudhaven_02-intermediate%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10`,
-      deadline: "4 February 2026 at 23:59 CET",
+      deadline: "2026-02-04T23:59:00+01:00",
       intro: [
         "A senior engineer wrote the tests first and then left. The module code is buggy and the integration test is incomplete. Fix the implementation to match the test expectations, complete the end-to-end test, and use moved blocks to refactor without destroying state.",
       ],
@@ -117,9 +120,11 @@ If you changed the backend configuration, run \`tofu init -migrate-state\` first
         { name: "gcp-api-mock", description: "mock GCP API running locally to simulate cloud resources without real cloud costs (Cloud Storage and Cloud SQL only)", url: "https://github.com/KatharinaSick/gcp-api-mock" },
       ],
       howToPlay: [
-        { title: "Wait for the Environment", body: "Wait ~2 minutes for the environment to initialize." },
-        { title: "Explore the Mock API", body: "Open the Ports tab, find the GCP API Mock at port 30104. Use it to explore mock cloud resources." },
-        { title: "Fix the Failing Tests", body: `All files are in \`adventures/02-building-cloudhaven/intermediate/\`. The tests define the expected behaviour: your job is to fix the implementation to match what the tests expect. Don't modify existing tests unless a comment tells you to.
+        { title: "Wait for the Environment", content: "Wait ~2 minutes for the environment to initialize." },
+        { title: "Explore the UIs", content: `Open the **Ports** tab and navigate to each service:
+
+- **Port 30104:** GCP API Mock. Explore mock cloud resources to verify your module configuration.` },
+        { title: "Fix the Failing Tests", content: `All files are in \`adventures/02-building-cloudhaven/intermediate/\`. The tests define the expected behaviour: your job is to fix the implementation to match what the tests expect. Don't modify existing tests unless a comment tells you to.
 
 \`\`\`
 adventures/02-building-cloudhaven/intermediate/
@@ -144,23 +149,23 @@ Run tests to see what fails:
 \`\`\`sh
 make test
 \`\`\`` },
-        { title: "Apply the Infrastructure", body: `Once all tests pass, apply the infrastructure:
+        { title: "Apply the Infrastructure", content: `Once all tests pass, apply the infrastructure:
 
 \`\`\`sh
 make test
 make apply
 \`\`\`` },
-        { title: "Run the Smoke Test", body: `Run the smoke test to verify your solution:
+        { title: "Run the Smoke Test", content: `Run the smoke test to verify your solution:
 
 \`\`\`sh
 ./smoke-test.sh
 \`\`\`` },
       ],
       helpfulLinks: [
-        { label: "OpenTofu testing", url: "https://opentofu.org/docs/cli/commands/test/" },
-        { label: "OpenTofu modules", url: "https://opentofu.org/docs/language/modules/" },
-        { label: "Input validation rules", url: "https://opentofu.org/docs/language/values/variables/#custom-validation-rules" },
-        { label: "Moved blocks", url: "https://opentofu.org/docs/language/modules/develop/refactoring/" },
+        { title: "OpenTofu testing", url: "https://opentofu.org/docs/cli/commands/test/" },
+        { title: "OpenTofu modules", url: "https://opentofu.org/docs/language/modules/" },
+        { title: "Input validation rules", url: "https://opentofu.org/docs/language/values/variables/#custom-validation-rules" },
+        { title: "Moved blocks", url: "https://opentofu.org/docs/language/modules/develop/refactoring/" },
       ],
       verification: {
         command: "./smoke-test.sh",
@@ -179,7 +184,7 @@ make apply
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F02-building-cloudhaven_03-expert%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8`,
-      deadline: "4 February 2026 at 23:59 CET",
+      deadline: "2026-02-04T23:59:00+01:00",
       intro: [
         "Three broken GitHub Actions workflows stand between CloudHaven and automated infrastructure governance. Fix drift detection that creates PRs, PR validation with Trivy security scanning and service-container integration tests, and automatic apply on merge.",
       ],
@@ -201,19 +206,21 @@ make apply
         { name: "GitHub Actions", description: "the workflows you will fix are in .github/workflows/", url: "https://docs.github.com/en/actions" },
       ],
       howToPlay: [
-        { title: "Wait for the Environment", body: "Wait ~2 minutes for the environment to initialize." },
-        { title: "Check the Mock API", body: "Open the Ports tab, find the GCP API Mock at port 30104. The port is set to public so GitHub Actions runners can reach the mock API during workflow runs. You may see a browser security warning when accessing it. This is expected. Click Continue to proceed." },
-        { title: "Fix the Workflows", body: `Fix the three workflows in \`.github/workflows/\`:
+        { title: "Wait for the Environment", content: "Wait ~2 minutes for the environment to initialize." },
+        { title: "Explore the UIs", content: `Open the **Ports** tab and navigate to each service:
+
+- **Port 30104:** GCP API Mock. Port is set to public so GitHub Actions runners can reach it during workflow runs. You may see a browser security warning. Click Continue to proceed.` },
+        { title: "Fix the Workflows", content: `Fix the three workflows in \`.github/workflows/\`:
 
 - \`adventure02-expert-detect-drift.yaml\`
 - \`adventure02-expert-validate-changes.yaml\`
 - \`adventure02-expert-apply-infrastructure.yaml\`
 
 The OpenTofu configuration is correct, focus only on the workflow files.` },
-        { title: "Trigger Drift Detection", body: "Commit and push to main. Go to the Actions tab, select the drift detection workflow, and click Run workflow. The infrastructure has intentional drift, so the workflow should create a draft PR." },
-        { title: "Trigger Validation", body: "Click Ready for Review on the draft PR to trigger the validation workflow. To re-trigger validation after pushing new changes, convert the PR back to draft then Ready for Review again. Re-running a failed workflow uses the code from the original run, so toggling draft state is how you pick up new changes pushed to main." },
-        { title: "Merge and Apply", body: "When the PR is merged to main, the apply workflow runs automatically." },
-        { title: "Run the Smoke Test", body: `Run the smoke test to verify your solution:
+        { title: "Trigger Drift Detection", content: "Commit and push to main. Go to the Actions tab, select the drift detection workflow, and click Run workflow. The infrastructure has intentional drift, so the workflow should create a draft PR." },
+        { title: "Trigger Validation", content: "Click Ready for Review on the draft PR to trigger the validation workflow. To re-trigger validation after pushing new changes, convert the PR back to draft then Ready for Review again. Re-running a failed workflow uses the code from the original run, so toggling draft state is how you pick up new changes pushed to main." },
+        { title: "Merge and Apply", content: "When the PR is merged to main, the apply workflow runs automatically." },
+        { title: "Run the Smoke Test", content: `Run the smoke test to verify your solution:
 
 \`\`\`sh
 cd adventures/02-building-cloudhaven/expert
@@ -221,11 +228,11 @@ cd adventures/02-building-cloudhaven/expert
 \`\`\`` },
       ],
       helpfulLinks: [
-        { label: "GitHub Actions documentation", url: "https://docs.github.com/en/actions" },
-        { label: "GitHub Actions service containers", url: "https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/about-service-containers" },
-        { label: "OpenTofu plan command", url: "https://opentofu.org/docs/cli/commands/plan/" },
-        { label: "Trivy action", url: "https://github.com/aquasecurity/trivy-action" },
-        { label: "TF-via-PR action", url: "https://github.com/OP5dev/TF-via-PR" },
+        { title: "GitHub Actions documentation", url: "https://docs.github.com/en/actions" },
+        { title: "GitHub Actions service containers", url: "https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/about-service-containers" },
+        { title: "OpenTofu plan command", url: "https://opentofu.org/docs/cli/commands/plan/" },
+        { title: "Trivy action", url: "https://github.com/aquasecurity/trivy-action" },
+        { title: "TF-via-PR action", url: "https://github.com/OP5dev/TF-via-PR" },
       ],
       verification: {
         command: "./smoke-test.sh",

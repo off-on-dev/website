@@ -1,9 +1,10 @@
-id: echoes-lost-in-orbit
-title: Echoes Lost in Orbit
+slug: echoes-lost-in-orbit
+name: Echoes Lost in Orbit
+icon: Satellite
 month: DEC 2025
 story: Restore interstellar communications by fixing broken GitOps setups, progressive delivery systems, and
   observability pipelines across three galactic missions.
-tags:
+technologies:
   - Argo CD
   - Argo Rollouts
   - OpenTelemetry
@@ -36,9 +37,9 @@ levels:
       - ApplicationSet templating & pitfalls
       - Environment isolation & namespaces
       - "Sync policies: automated, prune & self-heal"
-    devcontainerPath: .devcontainer/01-echoes-lost-in-orbit_beginner/devcontainer.json
-    discussionUrl: /t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40
-    deadline: "10 December 2025 at 09:00 CET"
+    devcontainer_path: .devcontainer/01-echoes-lost-in-orbit_beginner/devcontainer.json
+    discussion_url: /t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40
+    deadline: "2025-12-10T09:00:00+01:00"
     intro:
       - >-
         The Echo Server is down across both environments. Investigate the Argo CD ApplicationSet configuration,
@@ -61,20 +62,17 @@ levels:
       - name: k9s
         description: terminal UI for managing and inspecting your cluster
         url: https://k9scli.io/
-    howToPlay:
+    services:
+      - name: "Argo CD"
+        port: "30100"
+        credentials: "readonly / a-super-secure-password"
+        description: "View application sync status and manage Argo CD resources."
+    how_to_play:
       - title: Wait for Infrastructure
-        body: Wait around 5 minutes for the Codespace to provision a Kubernetes cluster, Argo CD, and the sample app. Press
+        content: Wait around 5 minutes for the Codespace to provision a Kubernetes cluster, Argo CD, and the sample app. Press
           Cmd+Shift+P (or Ctrl+Shift+P on Windows/Linux) and search for 'View Creation Log' to track progress.
-      - title: Access Argo CD
-        body: |-
-          Open the Ports tab, find port 30100 (Argo CD), and click the forwarded address. Log in with:
-
-          ```
-          Username: readonly
-          Password: a-super-secure-password
-          ```
       - title: Fix the ApplicationSet
-        body: >-
+        content: >-
           All errors are in this file:
 
 
@@ -99,7 +97,7 @@ levels:
 
           ```
       - title: Run the Smoke Test
-        body: |-
+        content: |-
           Run the smoke test to verify your solution locally:
 
           ```sh
@@ -119,9 +117,9 @@ levels:
       - Canary deployments & automated analysis
       - Write PromQL queries for health validation
       - Kube-state-metrics for deployment decisions
-    devcontainerPath: .devcontainer/01-echoes-lost-in-orbit_intermediate/devcontainer.json
-    discussionUrl: /t/adventure-01-echoes-lost-in-orbit-intermediate-the-silent-canary/310/8
-    deadline: "24 December 2025 at 09:00 CET"
+    devcontainer_path: .devcontainer/01-echoes-lost-in-orbit_intermediate/devcontainer.json
+    discussion_url: /t/adventure-01-echoes-lost-in-orbit-intermediate-the-silent-canary/310/8
+    deadline: "2025-12-24T09:00:00+01:00"
     intro:
       - >-
         A canary rollout is stuck and the Zephyrians are still waiting to communicate. Debug the broken
@@ -155,25 +153,23 @@ levels:
       - name: Argo Rollouts kubectl plugin
         description: extended kubectl commands for managing rollouts
         url: https://argo-rollouts.readthedocs.io/en/stable/features/kubectl-plugin/
-    howToPlay:
+    services:
+      - name: "Argo CD"
+        port: "30100"
+        credentials: "readonly / a-super-secure-password"
+        description: "Shows sync status. Use to refresh applications after pushing commits."
+      - name: "Argo Rollouts"
+        port: "30101"
+        description: "Shows canary deployment progress and analysis status."
+      - name: "Prometheus"
+        port: "30102"
+        description: "Explore available metrics and test PromQL queries. CLI tools work equally well if you prefer the terminal."
+    how_to_play:
       - title: Wait for Infrastructure
-        body: Wait ~5-10 minutes for infrastructure to deploy. After it deploys, the setup script starts port forwarding to the
+        content: Wait ~5-10 minutes for infrastructure to deploy. After it deploys, the setup script starts port forwarding to the
           Argo Rollouts dashboard, keeping a terminal busy. Open a new terminal to run commands.
-      - title: Access the Dashboards
-        body: |-
-          Open the **Ports** tab and navigate to each service:
-
-          - **Port 30100:** Argo CD (shows sync status, lets you refresh applications after pushing commits):
-            ```
-            Username: readonly
-            Password: a-super-secure-password
-            ```
-          - **Port 30101:** Argo Rollouts. Shows canary deployment progress and analysis status.
-          - **Port 30102:** Prometheus. Explore available metrics and test PromQL queries.
-
-          Not a fan of user interfaces? You can also use the CLI tools to complete the challenge.
       - title: Fix the Manifests
-        body: >-
+        content: >-
           Review and fix the configuration in `adventures/01-echoes-lost-in-orbit/intermediate/manifests/`.
 
 
@@ -181,7 +177,7 @@ levels:
           (staging, prod). Argo CD detects and applies these automatically, so you don't need to run Kustomize commands
           manually.
       - title: Deploy Your Changes
-        body: >-
+        content: >-
           Commit and push your changes to trigger the deployment:
 
 
@@ -211,7 +207,7 @@ levels:
 
           ```
       - title: Trigger the Rollout
-        body: |-
+        content: |-
           After Argo CD syncs, retry the rollouts:
 
           ```sh
@@ -219,7 +215,7 @@ levels:
           kubectl argo rollouts retry rollout echo-server -n echo-prod
           ```
       - title: Watch the Rollout
-        body: |-
+        content: |-
           Watch canary progress (should advance 33% to 66% to 100%):
 
           ```sh
@@ -229,20 +225,20 @@ levels:
 
           In real-world progressive delivery, staging is updated first, validated, and then changes are promoted to production. This challenge skips that separation so you can focus on the canary rollout mechanics and health checks without managing two promotion steps.
       - title: Run the Smoke Test
-        body: |-
+        content: |-
           Run the smoke test to verify your solution:
 
           ```sh
           adventures/01-echoes-lost-in-orbit/intermediate/smoke-test.sh
           ```
-    helpfulLinks:
-      - label: Argo Rollouts documentation
+    helpful_links:
+      - title: Argo Rollouts documentation
         url: https://argo-rollouts.readthedocs.io/en/stable/
-      - label: Analysis and progressive delivery
+      - title: Analysis and progressive delivery
         url: https://argo-rollouts.readthedocs.io/en/stable/features/analysis/
-      - label: PromQL basics
+      - title: PromQL basics
         url: https://prometheus.io/docs/prometheus/latest/querying/basics/
-      - label: kube-state-metrics exposed metrics
+      - title: kube-state-metrics exposed metrics
         url: https://github.com/kubernetes/kube-state-metrics/tree/main/docs#exposed-metrics
     verification:
       command: "adventures/01-echoes-lost-in-orbit/intermediate/smoke-test.sh"
@@ -260,9 +256,9 @@ levels:
       - Spanmetrics connector (traces to metrics)
       - Detect idle canaries with traffic validation
       - Distributed tracing with Jaeger
-    devcontainerPath: .devcontainer/01-echoes-lost-in-orbit_expert/devcontainer.json
-    deadline: "14 January 2026 at 09:00 CET"
-    discussionUrl: /t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351/4
+    devcontainer_path: .devcontainer/01-echoes-lost-in-orbit_expert/devcontainer.json
+    deadline: "2026-01-14T09:00:00+01:00"
+    discussion_url: /t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351/4
     intro:
       - >-
         The observability pipeline is broken and HotROD's canary can't validate. Wire an OpenTelemetry Collector
@@ -303,29 +299,29 @@ levels:
       - name: Argo Rollouts kubectl plugin
         description: extended kubectl commands for managing rollouts
         url: https://argo-rollouts.readthedocs.io/en/stable/features/kubectl-plugin/
-    howToPlay:
+    services:
+      - name: "Argo CD"
+        port: "30100"
+        credentials: "readonly / a-super-secure-password"
+        description: "Shows sync status. Use to refresh applications after pushing commits."
+      - name: "Argo Rollouts"
+        port: "30101"
+        description: "Shows canary deployment progress and analysis status."
+      - name: "Prometheus"
+        port: "30102"
+        description: "Explore available metrics and test PromQL queries. CLI tools work equally well if you prefer the terminal."
+      - name: "Jaeger"
+        port: "30103"
+        description: "Shows distributed traces from HotROD to verify that tracing is working end-to-end."
+    how_to_play:
       - title: Wait for Infrastructure
-        body: Wait ~5-10 minutes for infrastructure to deploy. Port forwarding starts automatically after infrastructure is
+        content: Wait ~5-10 minutes for infrastructure to deploy. Port forwarding starts automatically after infrastructure is
           ready, keeping a terminal busy. Open a new terminal to run commands.
-      - title: Access the Dashboards
-        body: |-
-          Open the **Ports** tab and navigate to each service:
-
-          - **Port 30100:** Argo CD (shows sync status, lets you refresh applications after pushing commits):
-            ```
-            Username: readonly
-            Password: a-super-secure-password
-            ```
-          - **Port 30101:** Argo Rollouts. Shows canary deployment progress and analysis status.
-          - **Port 30102:** Prometheus. Explore available metrics and test PromQL queries.
-          - **Port 30103:** Jaeger. Shows distributed traces from HotROD so you can verify that tracing is working end-to-end.
-
-          Not a fan of user interfaces? You can also use the CLI tools to complete the challenge.
       - title: Fix the Manifests
-        body: Fix the manifests in `adventures/01-echoes-lost-in-orbit/expert/manifests/`. Use the Argo Rollouts dashboard,
+        content: Fix the manifests in `adventures/01-echoes-lost-in-orbit/expert/manifests/`. Use the Argo Rollouts dashboard,
           Prometheus UI, and Jaeger UI to debug and validate your changes.
       - title: Deploy Your Changes
-        body: >-
+        content: >-
           Commit and push to trigger the deployment:
 
 
@@ -375,27 +371,27 @@ levels:
 
           ```
       - title: Watch the Rollout
-        body: |-
+        content: |-
           Watch rollout progress. The rollout should progress automatically based on analysis metrics:
 
           ```sh
           kubectl argo rollouts get rollout hotrod -n hotrod --watch
           ```
       - title: Run the Smoke Test
-        body: |-
+        content: |-
           Run the smoke test to verify your solution:
 
           ```sh
           adventures/01-echoes-lost-in-orbit/expert/smoke-test.sh
           ```
-    helpfulLinks:
-      - label: OpenTelemetry Collector configuration
+    helpful_links:
+      - title: OpenTelemetry Collector configuration
         url: https://opentelemetry.io/docs/collector/configuration/
-      - label: Span Metrics Connector
+      - title: Span Metrics Connector
         url: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/connector/spanmetricsconnector
-      - label: Argo Rollouts analysis
+      - title: Argo Rollouts analysis
         url: https://argo-rollouts.readthedocs.io/en/stable/features/analysis/
-      - label: PromQL basics
+      - title: PromQL basics
         url: https://prometheus.io/docs/prometheus/latest/querying/basics/
     verification:
       command: "adventures/01-echoes-lost-in-orbit/expert/smoke-test.sh"

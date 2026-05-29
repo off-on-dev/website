@@ -4,6 +4,7 @@ import type { Adventure } from "./types";
 export const ECHOES_LOST_IN_ORBIT: Adventure = {
   id: "echoes-lost-in-orbit",
   title: "Echoes Lost in Orbit",
+  icon: "Satellite",
   month: "DEC 2025",
   story: "Restore interstellar communications by fixing broken GitOps setups, progressive delivery systems, and observability pipelines across three galactic missions.",
   tags: ["Argo CD", "Argo Rollouts", "OpenTelemetry", "Jaeger", "PromQL"],
@@ -32,7 +33,7 @@ export const ECHOES_LOST_IN_ORBIT: Adventure = {
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F01-echoes-lost-in-orbit_beginner%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40`,
-      deadline: "10 December 2025 at 09:00 CET",
+      deadline: "2025-12-10T09:00:00+01:00",
       intro: [
         "The Echo Server is down across both environments. Investigate the Argo CD ApplicationSet configuration, spot the templating pitfalls, and restore proper multi-environment delivery.",
       ],
@@ -52,14 +53,11 @@ export const ECHOES_LOST_IN_ORBIT: Adventure = {
         { name: "k9s", description: "terminal UI for managing and inspecting your cluster", url: "https://k9scli.io/" },
       ],
       howToPlay: [
-        { title: "Wait for Infrastructure", body: "Wait around 5 minutes for the Codespace to provision a Kubernetes cluster, Argo CD, and the sample app. Press Cmd+Shift+P (or Ctrl+Shift+P on Windows/Linux) and search for 'View Creation Log' to track progress." },
-        { title: "Access Argo CD", body: `Open the Ports tab, find port 30100 (Argo CD), and click the forwarded address. Log in with:
+        { title: "Wait for Infrastructure", content: "Wait around 5 minutes for the Codespace to provision a Kubernetes cluster, Argo CD, and the sample app. Press Cmd+Shift+P (or Ctrl+Shift+P on Windows/Linux) and search for 'View Creation Log' to track progress." },
+        { title: "Explore the UIs", content: `Open the **Ports** tab and navigate to each service:
 
-\`\`\`
-Username: readonly
-Password: a-super-secure-password
-\`\`\`` },
-        { title: "Fix the ApplicationSet", body: `All errors are in this file:
+- **Port 30100:** Argo CD (readonly / a-super-secure-password). View application sync status and manage Argo CD resources.` },
+        { title: "Fix the ApplicationSet", content: `All errors are in this file:
 
 \`\`\`
 adventures/01-echoes-lost-in-orbit/beginner/manifests/appset.yaml
@@ -72,7 +70,7 @@ After making changes, apply them:
 \`\`\`sh
 kubectl apply -n argocd -f adventures/01-echoes-lost-in-orbit/beginner/manifests/appset.yaml
 \`\`\`` },
-        { title: "Run the Smoke Test", body: `Run the smoke test to verify your solution locally:
+        { title: "Run the Smoke Test", content: `Run the smoke test to verify your solution locally:
 
 \`\`\`sh
 adventures/01-echoes-lost-in-orbit/beginner/smoke-test.sh
@@ -96,7 +94,7 @@ adventures/01-echoes-lost-in-orbit/beginner/smoke-test.sh
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F01-echoes-lost-in-orbit_intermediate%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/adventure-01-echoes-lost-in-orbit-intermediate-the-silent-canary/310/8`,
-      deadline: "24 December 2025 at 09:00 CET",
+      deadline: "2025-12-24T09:00:00+01:00",
       intro: [
         "A canary rollout is stuck and the Zephyrians are still waiting to communicate. Debug the broken progressive delivery system by writing PromQL health checks that let Argo Rollouts automatically validate and advance the deployment.",
       ],
@@ -120,22 +118,16 @@ adventures/01-echoes-lost-in-orbit/beginner/smoke-test.sh
         { name: "Argo Rollouts kubectl plugin", description: "extended kubectl commands for managing rollouts", url: "https://argo-rollouts.readthedocs.io/en/stable/features/kubectl-plugin/" },
       ],
       howToPlay: [
-        { title: "Wait for Infrastructure", body: "Wait ~5-10 minutes for infrastructure to deploy. After it deploys, the setup script starts port forwarding to the Argo Rollouts dashboard, keeping a terminal busy. Open a new terminal to run commands." },
-        { title: "Access the Dashboards", body: `Open the **Ports** tab and navigate to each service:
+        { title: "Wait for Infrastructure", content: "Wait ~5-10 minutes for infrastructure to deploy. After it deploys, the setup script starts port forwarding to the Argo Rollouts dashboard, keeping a terminal busy. Open a new terminal to run commands." },
+        { title: "Explore the UIs", content: `Open the **Ports** tab and navigate to each service:
 
-- **Port 30100:** Argo CD (shows sync status, lets you refresh applications after pushing commits):
-  \`\`\`
-  Username: readonly
-  Password: a-super-secure-password
-  \`\`\`
+- **Port 30100:** Argo CD (readonly / a-super-secure-password). Shows sync status. Use to refresh applications after pushing commits.
 - **Port 30101:** Argo Rollouts. Shows canary deployment progress and analysis status.
-- **Port 30102:** Prometheus. Explore available metrics and test PromQL queries.
-
-Not a fan of user interfaces? You can also use the CLI tools to complete the challenge.` },
-        { title: "Fix the Manifests", body: `Review and fix the configuration in \`adventures/01-echoes-lost-in-orbit/intermediate/manifests/\`.
+- **Port 30102:** Prometheus. Explore available metrics and test PromQL queries. CLI tools work equally well if you prefer the terminal.` },
+        { title: "Fix the Manifests", content: `Review and fix the configuration in \`adventures/01-echoes-lost-in-orbit/intermediate/manifests/\`.
 
 This challenge uses Kustomize under the hood: a base set of manifests with environment-specific overlays (staging, prod). Argo CD detects and applies these automatically, so you don't need to run Kustomize commands manually.` },
-        { title: "Deploy Your Changes", body: `Commit and push your changes to trigger the deployment:
+        { title: "Deploy Your Changes", content: `Commit and push your changes to trigger the deployment:
 
 \`\`\`sh
 git add adventures/01-echoes-lost-in-orbit/intermediate/manifests/
@@ -151,13 +143,13 @@ Speed up Argo CD sync:
 argocd app get echo-server-staging --refresh
 argocd app get echo-server-prod --refresh
 \`\`\`` },
-        { title: "Trigger the Rollout", body: `After Argo CD syncs, retry the rollouts:
+        { title: "Trigger the Rollout", content: `After Argo CD syncs, retry the rollouts:
 
 \`\`\`sh
 kubectl argo rollouts retry rollout echo-server -n echo-staging
 kubectl argo rollouts retry rollout echo-server -n echo-prod
 \`\`\`` },
-        { title: "Watch the Rollout", body: `Watch canary progress (should advance 33% to 66% to 100%):
+        { title: "Watch the Rollout", content: `Watch canary progress (should advance 33% to 66% to 100%):
 
 \`\`\`sh
 kubectl argo rollouts get rollout echo-server -n echo-staging --watch
@@ -165,17 +157,17 @@ kubectl argo rollouts get rollout echo-server -n echo-prod --watch
 \`\`\`
 
 In real-world progressive delivery, staging is updated first, validated, and then changes are promoted to production. This challenge skips that separation so you can focus on the canary rollout mechanics and health checks without managing two promotion steps.` },
-        { title: "Run the Smoke Test", body: `Run the smoke test to verify your solution:
+        { title: "Run the Smoke Test", content: `Run the smoke test to verify your solution:
 
 \`\`\`sh
 adventures/01-echoes-lost-in-orbit/intermediate/smoke-test.sh
 \`\`\`` },
       ],
       helpfulLinks: [
-        { label: "Argo Rollouts documentation", url: "https://argo-rollouts.readthedocs.io/en/stable/" },
-        { label: "Analysis and progressive delivery", url: "https://argo-rollouts.readthedocs.io/en/stable/features/analysis/" },
-        { label: "PromQL basics", url: "https://prometheus.io/docs/prometheus/latest/querying/basics/" },
-        { label: "kube-state-metrics exposed metrics", url: "https://github.com/kubernetes/kube-state-metrics/tree/main/docs#exposed-metrics" },
+        { title: "Argo Rollouts documentation", url: "https://argo-rollouts.readthedocs.io/en/stable/" },
+        { title: "Analysis and progressive delivery", url: "https://argo-rollouts.readthedocs.io/en/stable/features/analysis/" },
+        { title: "PromQL basics", url: "https://prometheus.io/docs/prometheus/latest/querying/basics/" },
+        { title: "kube-state-metrics exposed metrics", url: "https://github.com/kubernetes/kube-state-metrics/tree/main/docs#exposed-metrics" },
       ],
       verification: {
         command: "adventures/01-echoes-lost-in-orbit/intermediate/smoke-test.sh",
@@ -195,7 +187,7 @@ adventures/01-echoes-lost-in-orbit/intermediate/smoke-test.sh
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F01-echoes-lost-in-orbit_expert%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351/4`,
-      deadline: "14 January 2026 at 09:00 CET",
+      deadline: "2026-01-14T09:00:00+01:00",
       intro: [
         "The observability pipeline is broken and HotROD's canary can't validate. Wire an OpenTelemetry Collector with spanmetrics to convert distributed traces into Prometheus metrics, then write PromQL queries that catch idle canaries, high error rates, and latency spikes.",
       ],
@@ -218,21 +210,15 @@ adventures/01-echoes-lost-in-orbit/intermediate/smoke-test.sh
         { name: "Argo Rollouts kubectl plugin", description: "extended kubectl commands for managing rollouts", url: "https://argo-rollouts.readthedocs.io/en/stable/features/kubectl-plugin/" },
       ],
       howToPlay: [
-        { title: "Wait for Infrastructure", body: "Wait ~5-10 minutes for infrastructure to deploy. Port forwarding starts automatically after infrastructure is ready, keeping a terminal busy. Open a new terminal to run commands." },
-        { title: "Access the Dashboards", body: `Open the **Ports** tab and navigate to each service:
+        { title: "Wait for Infrastructure", content: "Wait ~5-10 minutes for infrastructure to deploy. Port forwarding starts automatically after infrastructure is ready, keeping a terminal busy. Open a new terminal to run commands." },
+        { title: "Explore the UIs", content: `Open the **Ports** tab and navigate to each service:
 
-- **Port 30100:** Argo CD (shows sync status, lets you refresh applications after pushing commits):
-  \`\`\`
-  Username: readonly
-  Password: a-super-secure-password
-  \`\`\`
+- **Port 30100:** Argo CD (readonly / a-super-secure-password). Shows sync status. Use to refresh applications after pushing commits.
 - **Port 30101:** Argo Rollouts. Shows canary deployment progress and analysis status.
-- **Port 30102:** Prometheus. Explore available metrics and test PromQL queries.
-- **Port 30103:** Jaeger. Shows distributed traces from HotROD so you can verify that tracing is working end-to-end.
-
-Not a fan of user interfaces? You can also use the CLI tools to complete the challenge.` },
-        { title: "Fix the Manifests", body: `Fix the manifests in \`adventures/01-echoes-lost-in-orbit/expert/manifests/\`. Use the Argo Rollouts dashboard, Prometheus UI, and Jaeger UI to debug and validate your changes.` },
-        { title: "Deploy Your Changes", body: `Commit and push to trigger the deployment:
+- **Port 30102:** Prometheus. Explore available metrics and test PromQL queries. CLI tools work equally well if you prefer the terminal.
+- **Port 30103:** Jaeger. Shows distributed traces from HotROD to verify that tracing is working end-to-end.` },
+        { title: "Fix the Manifests", content: `Fix the manifests in \`adventures/01-echoes-lost-in-orbit/expert/manifests/\`. Use the Argo Rollouts dashboard, Prometheus UI, and Jaeger UI to debug and validate your changes.` },
+        { title: "Deploy Your Changes", content: `Commit and push to trigger the deployment:
 
 \`\`\`sh
 git add adventures/01-echoes-lost-in-orbit/expert/manifests/
@@ -260,22 +246,22 @@ If you changed the OTel Collector config, restart it:
 \`\`\`sh
 kubectl rollout restart daemonset/collector -n otel
 \`\`\`` },
-        { title: "Watch the Rollout", body: `Watch rollout progress. The rollout should progress automatically based on analysis metrics:
+        { title: "Watch the Rollout", content: `Watch rollout progress. The rollout should progress automatically based on analysis metrics:
 
 \`\`\`sh
 kubectl argo rollouts get rollout hotrod -n hotrod --watch
 \`\`\`` },
-        { title: "Run the Smoke Test", body: `Run the smoke test to verify your solution:
+        { title: "Run the Smoke Test", content: `Run the smoke test to verify your solution:
 
 \`\`\`sh
 adventures/01-echoes-lost-in-orbit/expert/smoke-test.sh
 \`\`\`` },
       ],
       helpfulLinks: [
-        { label: "OpenTelemetry Collector configuration", url: "https://opentelemetry.io/docs/collector/configuration/" },
-        { label: "Span Metrics Connector", url: "https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/connector/spanmetricsconnector" },
-        { label: "Argo Rollouts analysis", url: "https://argo-rollouts.readthedocs.io/en/stable/features/analysis/" },
-        { label: "PromQL basics", url: "https://prometheus.io/docs/prometheus/latest/querying/basics/" },
+        { title: "OpenTelemetry Collector configuration", url: "https://opentelemetry.io/docs/collector/configuration/" },
+        { title: "Span Metrics Connector", url: "https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/connector/spanmetricsconnector" },
+        { title: "Argo Rollouts analysis", url: "https://argo-rollouts.readthedocs.io/en/stable/features/analysis/" },
+        { title: "PromQL basics", url: "https://prometheus.io/docs/prometheus/latest/querying/basics/" },
       ],
       verification: {
         command: "adventures/01-echoes-lost-in-orbit/expert/smoke-test.sh",

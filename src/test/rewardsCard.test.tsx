@@ -9,7 +9,7 @@ import { COMMUNITY_URL } from "@/data/constants";
 // ---------------------------------------------------------------------------
 
 const REWARDS: AdventureRewards = {
-  deadline: "10 December 2025 at 09:00 CET",
+  deadline: "2025-12-10T09:00:00+01:00",
   eligibility: "Open to all registered community members.",
   tiers: [
     { label: "Gold", description: "First place gets a gold badge." },
@@ -20,7 +20,7 @@ const REWARDS: AdventureRewards = {
 };
 
 const REWARDS_MINIMAL: AdventureRewards = {
-  deadline: "1 January 2026 at 09:00 CET",
+  deadline: "2026-01-01T09:00:00+01:00",
   eligibility: "Open to everyone.",
   tiers: [{ label: "Winner", description: "Top submission wins." }],
 };
@@ -62,9 +62,9 @@ describe("RewardsCard - active deadline (deadlinePast=false)", () => {
     expect(screen.queryByText(/deadline has passed/i)).toBeNull();
   });
 
-  it("shows the deadline date at the bottom of non-compact mode", () => {
+  it("shows the formatted deadline date at the bottom of non-compact mode", () => {
     render(<RewardsCard rewards={REWARDS} />);
-    expect(screen.getByText(REWARDS.deadline)).toBeTruthy();
+    expect(screen.getByText("10 December 2025 at 09:00 CET")).toBeTruthy();
   });
 
   it("shows rankingNote in non-compact mode", () => {
@@ -77,8 +77,8 @@ describe("RewardsCard - active deadline (deadlinePast=false)", () => {
     expect(screen.queryByText(/deadline passed/i)).toBeNull();
   });
 
-  it("shows levelDeadline in compact mode", () => {
-    render(<RewardsCard rewards={REWARDS} compact levelDeadline="15 January 2026 at 09:00 CET" />);
+  it("shows formatted levelDeadline in compact mode", () => {
+    render(<RewardsCard rewards={REWARDS} compact levelDeadline="2026-01-15T09:00:00+01:00" />);
     expect(screen.getByText("15 January 2026 at 09:00 CET")).toBeTruthy();
   });
 });
@@ -138,8 +138,8 @@ describe("RewardsCard - past deadline, compact", () => {
     expect(screen.queryByRole("link", { name: /community voices/i })).toBeNull();
   });
 
-  it("still shows levelDeadline at the bottom for reference when deadline is past", () => {
-    render(<RewardsCard rewards={REWARDS} compact deadlinePast levelDeadline="10 December 2025 at 09:00 CET" />);
+  it("shows formatted levelDeadline at the bottom for reference when deadline is past", () => {
+    render(<RewardsCard rewards={REWARDS} compact deadlinePast levelDeadline="2025-12-10T09:00:00+01:00" />);
     expect(screen.getByText("10 December 2025 at 09:00 CET")).toBeTruthy();
   });
 });

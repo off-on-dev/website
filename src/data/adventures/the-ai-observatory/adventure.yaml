@@ -1,9 +1,10 @@
-id: the-ai-observatory
-title: The AI Observatory
+slug: the-ai-observatory
+name: The AI Observatory
+icon: Telescope
 month: FEB 2026
 story: Investigate a mysterious bandwidth anomaly at a remote research station by instrumenting its AI system with
   OpenTelemetry, OpenLLMetry, and Jaeger.
-tags:
+technologies:
   - OpenTelemetry
   - OpenLLMetry
   - Jaeger
@@ -32,9 +33,9 @@ levels:
     learnings:
       - Instrument Python AI apps with OpenLLMetry
       - Analyze traces in Jaeger
-    devcontainerPath: .devcontainer/03-the-ai-observatory_01-beginner/devcontainer.json
-    discussionUrl: /t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8
-    deadline: "8 March 2026 at 23:59 CET"
+    devcontainer_path: .devcontainer/03-the-ai-observatory_01-beginner/devcontainer.json
+    discussion_url: /t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8
+    deadline: "2026-03-08T23:59:00+01:00"
     intro:
       - Something is eating 847% of your station's bandwidth and nobody knows what. Instrument HubSystem with
         OpenLLMetry, send traces to the OpenTelemetry Collector, and use Jaeger to uncover what the AI is doing behind
@@ -77,29 +78,31 @@ levels:
       - name: k9s
         description: terminal UI for managing and inspecting your cluster
         url: https://k9scli.io/
-    howToPlay:
+    services:
+      - name: "Jaeger"
+        port: "30103"
+        description: "Analyze the traces sent by HubSystem."
+    how_to_play:
       - title: Wait for Infrastructure
-        body: Wait ~10 minutes for all infrastructure to initialize.
-      - title: Open Jaeger
-        body: Open the Ports tab, find Jaeger at port 30103. This is where you will analyze the traces sent by HubSystem.
+        content: Wait ~10 minutes for all infrastructure to initialize.
       - title: Instrument the App
-        body: |-
+        content: |-
           The application code is in `./hubsystem.py`. Add OpenTelemetry instrumentation using OpenLLMetry. The OTel
           Collector and Jaeger are already configured correctly; you only need to instrument the app. You do not need to
           interact with Kubernetes directly. The cluster is already running, so focus on the Python code.
       - title: Run and Investigate
-        body: |-
+        content: |-
           Run the application, interact with the AI to generate traces, then check Jaeger:
 
           ```sh
           make hubsystem
           ```
       - title: Answer the Quiz
-        body: Find the trace responsible for the high bandwidth usage and inspect its attributes to answer `quiz.txt`.
-    helpfulLinks:
-      - label: OpenLLMetry SDK for Python
+        content: Find the trace responsible for the high bandwidth usage and inspect its attributes to answer `quiz.txt`.
+    helpful_links:
+      - title: OpenLLMetry SDK for Python
         url: https://traceloop.com/docs/openllmetry/getting-started-python
-      - label: Jaeger documentation
+      - title: Jaeger documentation
         url: https://www.jaegertracing.io/docs/latest/
     verification:
       command: ./verify.sh
@@ -117,9 +120,9 @@ levels:
       - Instrument RAG pipelines with OpenLLMetry
       - Create custom OpenTelemetry metrics in Python
       - Write PromQL queries & recording rules in Prometheus
-    devcontainerPath: .devcontainer/03-the-ai-observatory_02-intermediate/devcontainer.json
-    discussionUrl: /t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936/2
-    deadline: "8 March 2026 at 23:59 CET"
+    devcontainer_path: .devcontainer/03-the-ai-observatory_02-intermediate/devcontainer.json
+    discussion_url: /t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936/2
+    deadline: "2026-03-08T23:59:00+01:00"
     intro:
       - ART's RAG pipeline is retrieving entertainment data instead of navigation coordinates and won't calculate your
         jump. Instrument the full retrieval pipeline with OpenLLMetry, build a custom OTel metric to quantify the
@@ -168,13 +171,18 @@ levels:
       - name: k9s
         description: terminal UI for managing and inspecting your cluster
         url: https://k9scli.io/
-    howToPlay:
+    services:
+      - name: "Prometheus"
+        port: "30102"
+        description: "Explore available metrics and test PromQL queries."
+      - name: "Jaeger"
+        port: "30103"
+        description: "Shows distributed traces from ART to verify that tracing is working end-to-end."
+    how_to_play:
       - title: Wait for Infrastructure
-        body: Wait ~15 minutes for all infrastructure to initialize.
-      - title: Access Observability Tools
-        body: "Open the Ports tab. Prometheus at port 30102 helps you explore available metrics and test PromQL queries. Jaeger at port 30103 shows distributed traces from ART so you can verify that tracing is working end-to-end."
+        content: Wait ~15 minutes for all infrastructure to initialize.
       - title: Instrument and Configure
-        body: >-
+        content: >-
           The application code is in `./art.py`. Instrument it with OpenLLMetry and add the custom metric.
           The Prometheus recording rules are in `./manifests/prometheus-rule.yaml`. After changing the rule file,
           apply it to the cluster:
@@ -186,7 +194,7 @@ levels:
 
           ```
       - title: Generate Traffic
-        body: |-
+        content: |-
           Run the application to interact with ART ("Calculate jump"), or generate continuous traffic for your metric graphs:
 
           ```sh
@@ -195,16 +203,16 @@ levels:
           make traffic
           ```
       - title: Fix the Navigation
-        body: Verify traces in Jaeger and the recording rule in Prometheus. Fix the navigation system so ART returns jump
+        content: Verify traces in Jaeger and the recording rule in Prometheus. Fix the navigation system so ART returns jump
           coordinates to RaviHyral.
-    helpfulLinks:
-      - label: OpenLLMetry SDK for Python
+    helpful_links:
+      - title: OpenLLMetry SDK for Python
         url: https://traceloop.com/docs/openllmetry/getting-started-python
-      - label: OpenTelemetry Python metrics
+      - title: OpenTelemetry Python metrics
         url: https://opentelemetry.io/docs/languages/python/instrumentation/#metrics
-      - label: Prometheus recording rules
+      - title: Prometheus recording rules
         url: https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/
-      - label: Qdrant filtering
+      - title: Qdrant filtering
         url: https://qdrant.tech/documentation/concepts/filtering/
     verification:
       command: ./verify.sh
@@ -220,9 +228,9 @@ levels:
     learnings:
       - OpenTelemetry GenAI semantic conventions
       - Tail sampling in the OTel Collector
-    devcontainerPath: .devcontainer/03-the-ai-observatory_03-expert/devcontainer.json
-    discussionUrl: /t/reduce-telemetry-noise-adventure-03-expert-is-live/999/1
-    deadline: "8 March 2026 at 23:59 CET"
+    devcontainer_path: .devcontainer/03-the-ai-observatory_03-expert/devcontainer.json
+    discussion_url: /t/reduce-telemetry-noise-adventure-03-expert-is-live/999/1
+    deadline: "2026-03-08T23:59:00+01:00"
     intro:
       - ART is flooding Jaeger with 40,000 non-standard spans an hour. Fix the chat span to follow OpenTelemetry GenAI
         semantic conventions with proper token usage attributes, then configure tail sampling in the Collector to keep
@@ -272,19 +280,21 @@ levels:
       - name: k9s
         description: terminal UI for managing and inspecting your cluster
         url: https://k9scli.io/
-    howToPlay:
+    services:
+      - name: "Jaeger"
+        port: "30103"
+        description: "Verify your spans look correct and that tail sampling works as expected."
+    how_to_play:
       - title: Wait for Infrastructure
-        body: Wait ~15 minutes for all infrastructure to initialize.
-      - title: Open Jaeger
-        body: Open the Ports tab, find Jaeger at port 30103. Verify your spans look correct and that sampling works as expected.
+        content: Wait ~15 minutes for all infrastructure to initialize.
       - title: Fix Instrumentation and Sampling
-        body: |-
+        content: |-
           Fix two things:
 
           1. The application code in `./art.py`: update the `chat` span to follow OpenTelemetry GenAI semantic conventions, including token usage attributes.
           2. The collector config in `./manifests/otel-collector-config.yaml`: configure tail sampling to keep only traces that contain errors or take longer than 5 seconds.
       - title: Apply and Test
-        body: >-
+        content: >-
           After changing `art.py`, restart traffic to pick up new instrumentation. After changing the collector config,
           apply it:
 
@@ -309,14 +319,14 @@ levels:
 
 
           Verify in Jaeger that spans follow conventions and only errors and slow traces appear.
-    helpfulLinks:
-      - label: OpenTelemetry GenAI semantic conventions
+    helpful_links:
+      - title: OpenTelemetry GenAI semantic conventions
         url: https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-spans/
-      - label: "OpenTelemetry Python: recording exceptions"
+      - title: "OpenTelemetry Python: recording exceptions"
         url: https://opentelemetry.io/docs/languages/python/instrumentation/#record-exceptions
-      - label: OTel Collector tail sampling processor
+      - title: OTel Collector tail sampling processor
         url: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/tailsamplingprocessor
-      - label: Python contextlib.contextmanager
+      - title: Python contextlib.contextmanager
         url: https://docs.python.org/3/library/contextlib.html#contextlib.contextmanager
     verification:
       command: ./verify.sh

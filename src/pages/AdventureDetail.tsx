@@ -1,7 +1,14 @@
 import { type JSX } from "react";
 import { useParams, Link, useLoaderData } from "react-router";
 import type { MetaFunction, LoaderFunctionArgs } from "react-router";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, FlaskConical, Satellite, Cloud, Telescope, type LucideIcon } from "lucide-react";
+
+const ADVENTURE_ICONS: Record<string, LucideIcon> = {
+  FlaskConical,
+  Satellite,
+  Cloud,
+  Telescope,
+};
 import { ADVENTURES, type AdventureLevel } from "@/data/adventures";
 import { NotFoundPage } from "@/components/NotFoundPage";
 import { Navbar } from "@/components/Navbar";
@@ -99,7 +106,13 @@ const AdventureDetail = (): JSX.Element => {
             <span className="inline-block mb-4 rounded-sm border border-[hsl(var(--surface-border))] px-2 py-0.5 font-mono text-xs text-[hsl(var(--text-faint))] uppercase tracking-wider">
               {adventure.month}
             </span>
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">{adventure.title}</h1>
+            <div className="inline-flex items-center gap-3 mb-4">
+              <h1 className="text-3xl md:text-4xl font-bold text-foreground">{adventure.title}</h1>
+              {adventure.icon && ADVENTURE_ICONS[adventure.icon] && (() => {
+                const Icon = ADVENTURE_ICONS[adventure.icon!];
+                return <Icon size={28} className="text-primary shrink-0" aria-hidden="true" />;
+              })()}
+            </div>
             <div className="flex flex-wrap items-center gap-1.5 mb-5">
               {adventure.contributor && (
                 <ContributorBadge name={adventure.contributor.name} url={adventure.contributor.url} label="Adventure Builder" />
@@ -134,10 +147,10 @@ const AdventureDetail = (): JSX.Element => {
               )}
 
               {/* Your Mission */}
-              {adventure.context && (
-                <CollapsibleSection id="mission" title="Your Mission" defaultOpen={true}>
+              {adventure.overview && adventure.overview.length > 0 && (
+                <CollapsibleSection id="overview" title="Overview" defaultOpen={true}>
                   <ul className="space-y-2.5">
-                    {adventure.context.body.map((para, i) => (
+                    {adventure.overview.map((para, i) => (
                       <li key={i} className="flex items-start gap-2.5">
                         <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                         <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">{para}</p>

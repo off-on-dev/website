@@ -2,6 +2,7 @@ import { type JSX } from "react";
 import { ExternalLink, Trophy } from "lucide-react";
 import type { AdventureRewards } from "@/data/adventures/types";
 import { COMMUNITY_URL } from "@/data/constants";
+import { formatDeadline } from "@/lib/utils";
 
 type RewardsCardProps = {
   rewards: AdventureRewards;
@@ -82,7 +83,7 @@ export const RewardsCard = ({ rewards, compact = false, levelDeadline, deadlineP
         <p className="text-xs text-[hsl(var(--text-faint))]">
           Deadline:{" "}
           <span className="font-medium text-foreground">
-            {compact ? levelDeadline : rewards.deadline}
+            {compact ? (levelDeadline ? formatDeadline(levelDeadline) : null) : formatDeadline(rewards.deadline)}
           </span>
         </p>
       </>

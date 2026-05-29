@@ -1053,20 +1053,23 @@ Renders the narrative backstory for a challenge level inside a `CollapsibleSecti
 
 `src/components/ArchitectureSection.tsx`
 
-Renders architecture content inside a `CollapsibleSection` titled "Architecture". When `diagram` is supplied it renders an `<img>` (eager-loaded, `max-h-[560px]`); otherwise it renders the `architecture` markdown string via `MarkdownContent`. At least one of `architecture` or `diagram` should be provided; rendering neither produces an empty collapsible.
+Renders architecture content inside a `CollapsibleSection` titled "Architecture". Priority order: SVG diagram → ASCII art → markdown text. At least one prop should be provided; rendering none produces an empty collapsible.
 
 ```tsx
-{/* Markdown variant */}
-<ArchitectureSection architecture={level.architecture.join("\n\n")} />
-{/* Diagram variant */}
+{/* SVG variant — highest priority */}
 <ArchitectureSection diagram={diagramUrl} diagramAlt="Spring Boot OpenFeature architecture" />
+{/* ASCII variant — rendered when no SVG is available */}
+<ArchitectureSection ascii="┌──────┐\n│ App  │\n└──────┘" />
+{/* Markdown variant — fallback when neither SVG nor ASCII is available */}
+<ArchitectureSection architecture={level.architecture.join("\n\n")} />
 ```
 
 | Prop | Type | Description |
 |---|---|---|
-| `architecture` | `string` (optional) | Markdown string describing the system architecture. Rendered via `MarkdownContent`. Ignored when `diagram` is present. |
-| `diagram` | `string` (optional) | URL of an architecture diagram image (SVG or raster). Takes precedence over `architecture`. |
+| `diagram` | `string` (optional) | URL of an architecture diagram image (SVG or raster). Takes precedence over all other props. |
 | `diagramAlt` | `string` (optional) | Alt text for the diagram image. Defaults to `"Architecture diagram"` when omitted. |
+| `ascii` | `string` (optional) | Inline ASCII art rendered as a `<pre>` block. Used when no SVG is available. Ignored when `diagram` is present. |
+| `architecture` | `string` (optional) | Markdown string describing the system architecture. Fallback when neither `diagram` nor `ascii` is present. |
 
 ---
 
@@ -1082,7 +1085,7 @@ Renders a numbered walkthrough as a vertical stepper inside a `CollapsibleSectio
 
 | Prop | Type | Description |
 |---|---|---|
-| `steps` | `WalkthroughStep[]` | Array of `{ title: string; body: string }`. `body` is rendered as markdown via `MarkdownContent`. |
+| `steps` | `WalkthroughStep[]` | Array of `{ title: string; content: string }`. `content` is rendered as markdown via `MarkdownContent`. |
 
 ---
 
@@ -1106,7 +1109,7 @@ Renders a Markdown string with `react-markdown` + `remark-gfm`, mapping each ele
 |---|---|---|
 | `source` | `string` | Raw Markdown source. Pass an empty string for no content. |
 
-Used by `ArchitectureSection` and `WalkthroughSection` inside `ChallengeDetail`. These components pass inline markdown strings from the level data (e.g. `level.architecture.join("\n\n")` or `step.body`). The Markdown should start at `## ` or below, the page already provides the `<h1>`. Internal headings (`h2`, `h3`) are added to the existing document outline; do not introduce new `<h1>` content in Markdown.
+Used by `ArchitectureSection` and `WalkthroughSection` inside `ChallengeDetail`. These components pass inline markdown strings from the level data (e.g. `level.architecture.join("\n\n")` or `step.content`). The Markdown should start at `## ` or below, the page already provides the `<h1>`. Internal headings (`h2`, `h3`) are added to the existing document outline; do not introduce new `<h1>` content in Markdown.
 
 The bundled stack (`react-markdown`, `remark-gfm`, `micromark`, etc.) is code-split into the `ChallengeDetail` route chunk, so it does not affect the main bundle.
 
