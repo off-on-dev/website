@@ -62,7 +62,7 @@ Community activity happens on a separate Discourse instance. Its display name is
 - og:url, og:image, and all absolute URLs must use https://offon.dev.
 - The og:image file is public/og.png and its full URL is https://offon.dev/og.png.
 - PR preview deployments are served from the gh-pages branch under /pr-preview/pr-{number}/.
-- The open source challenges content lives in a separate organisation at https://github.com/dynatrace-oss/open-ecosystem-challenges. This is an intentional external link and must never be changed or flagged as a violation.
+- The open source challenges content lives in a separate organisation at https://github.com/off-on-dev/open-source-challenges. This is an intentional external link and must never be changed or flagged as a violation.
 - The community Discourse instance is at https://community.offon.dev. Use the `COMMUNITY_URL` constant from `src/data/constants.ts`, never hardcode this URL.
 - `COMMUNITY_DISPLAY_NAME` is defined in `src/data/constants.ts` as the user-facing display name for the community URL. Use it for visible text, use `COMMUNITY_URL` for href attributes.
 

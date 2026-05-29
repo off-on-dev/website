@@ -32,9 +32,9 @@ const gtagBootstrap = `window.dataLayer=window.dataLayer||[];function gtag(){dat
 const webSiteJsonLd = `{"@context":"https://schema.org","@type":"WebSite","name":"OffOn","url":"https://offon.dev","description":"A vendor-neutral community for open source enthusiasts. Learn through hands-on challenges, share what you know, and connect with people who love open source."}`;
 
 // sameAs links populate Google's Knowledge Panel. Mirror LINKEDIN_URL,
-// the Discourse community URL, and the open-ecosystem-challenges GitHub org
+// the Discourse community URL, and the open-source-challenges GitHub org
 // from src/data/constants.ts.
-const orgJsonLd = `{"@context":"https://schema.org","@type":"Organization","name":"OffOn","url":"https://offon.dev","logo":"https://offon.dev/favicon.png","sameAs":["https://www.linkedin.com/company/open-ecosystem/","https://community.offon.dev","https://github.com/dynatrace-oss/open-ecosystem-challenges"]}`;
+const orgJsonLd = `{"@context":"https://schema.org","@type":"Organization","name":"OffOn","url":"https://offon.dev","logo":"https://offon.dev/favicon.png","sameAs":["https://www.linkedin.com/company/open-ecosystem/","https://community.offon.dev","https://github.com/off-on-dev/open-source-challenges"]}`;
 
 export default function Root(): JSX.Element {
   return (

@@ -35,7 +35,7 @@ export const Footer = (): JSX.Element => {
                 <Link to="/handbook" className={linkCls}>Handbook</Link>
                 <Link to="/about" className={linkCls}>About</Link>
                 <Link to="/sponsors" className={linkCls}>Sponsors</Link>
-                <a href="https://github.com/dynatrace-oss/open-ecosystem-challenges/blob/main/docs/contributing/adventure-ideas.md" target="_blank" rel="noopener noreferrer" className={linkCls}>Propose an Adventure Idea <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
+                <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/docs/contributing/adventure-ideas.md" target="_blank" rel="noopener noreferrer" className={linkCls}>Propose an Adventure Idea <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
               </div>
             </nav>
             {/* Community */}

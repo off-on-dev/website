@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { ADVENTURES } from "@/data/adventures";
 
-const CODESPACES_BASE = "https://codespaces.new/dynatrace-oss/open-ecosystem-challenges";
+const CODESPACES_BASE = "https://codespaces.new/off-on-dev/open-source-challenges";
 
 const allLevels = ADVENTURES.flatMap((adventure) =>
   adventure.levels.map((level) => ({
