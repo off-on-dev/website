@@ -21,6 +21,7 @@ import { RewardsCard } from "@/components/RewardsCard";
 import { AdventureLeaderboard } from "@/components/AdventureLeaderboard";
 import { ContributorBadge } from "@/components/ContributorBadge";
 import { TagChips } from "@/components/TagChips";
+import { MarkdownInline } from "@/components/MarkdownInline";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 import { isDeadlinePast } from "@/lib/utils";
@@ -139,7 +140,7 @@ const AdventureDetail = (): JSX.Element => {
               )}
               <TagChips tags={adventure.tags} />
             </div>
-            <p className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl">{adventure.story}</p>
+            <p className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl"><MarkdownInline source={adventure.story} /></p>
           </div>
 
           {/* Two-column layout */}
@@ -147,6 +148,20 @@ const AdventureDetail = (): JSX.Element => {
 
             {/* Main content */}
             <div className="space-y-8">
+
+              {/* Overview */}
+              {adventure.overview && adventure.overview.length > 0 && (
+                <CollapsibleSection id="overview" title="Overview" defaultOpen={true}>
+                  <ul className="space-y-2.5">
+                    {adventure.overview.map((para, i) => (
+                      <li key={i} className="flex items-start gap-2.5">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                        <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">{para}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </CollapsibleSection>
+              )}
 
               {/* Challenges */}
               <section aria-labelledby="challenges-heading">
@@ -174,20 +189,6 @@ const AdventureDetail = (): JSX.Element => {
                 <div>
                   <RewardsCard rewards={adventure.rewards} deadlinePast={rewardsBelowFold} />
                 </div>
-              )}
-
-              {/* Your Mission */}
-              {adventure.overview && adventure.overview.length > 0 && (
-                <CollapsibleSection id="overview" title="Overview" defaultOpen={true}>
-                  <ul className="space-y-2.5">
-                    {adventure.overview.map((para, i) => (
-                      <li key={i} className="flex items-start gap-2.5">
-                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                        <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">{para}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </CollapsibleSection>
               )}
 
               {/* The Story */}

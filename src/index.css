@@ -924,6 +924,7 @@ html {
   text-decoration-thickness: 2px;
   text-underline-offset: 2px;
   text-decoration-color: hsl(var(--primary));
+  text-decoration-skip-ink: none;
   border-radius: 2px;
   transition: color 200ms ease, text-decoration-color 200ms ease;
 }

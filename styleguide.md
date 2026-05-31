@@ -1115,6 +1115,24 @@ The bundled stack (`react-markdown`, `remark-gfm`, `micromark`, etc.) is code-sp
 
 ---
 
+### `MarkdownInline`
+
+`src/components/MarkdownInline.tsx`
+
+Inline-only variant of `MarkdownContent` for short single-line author strings (e.g. `level.audience`, `tool.description`, `step.title`, `adventure.story`, `contributor.about`, `rewards.eligibility`, `tier.description`, `rewards.rankingNote`). Reuses the `inlineComponents` map exported from `MarkdownContent` (links, inline `<code>`, `<strong>`, `<em>`), replaces `<p>` with a fragment, and strips block-level elements (`h*`, `ul`, `ol`, `li`, `pre`, `blockquote`, `hr`, `table`, `img`) via `disallowedElements` + `unwrapDisallowed`. Safe to drop inside `<p>`, `<span>`, `<h*>`, or `<button>` without producing invalid HTML.
+
+```tsx
+<MarkdownInline source={level.audience} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `source` | `string` | Raw Markdown source (typically a single line). Plain text passes through unchanged. |
+
+Use this for any author-controlled string field that may contain inline markdown such as `` `kubectl` ``, `**bold**`, or `[link](url)`. Never render an author-controlled string with `{value}` directly — see the rule in `CLAUDE.md` "Components" section.
+
+---
+
 ### `ChallengesGrid`
 
 `src/components/ChallengesGrid.tsx`

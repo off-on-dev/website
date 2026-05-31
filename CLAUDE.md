@@ -195,6 +195,7 @@ When diagnosing a bug, especially in the production build, follow these rules wi
 - **Buttons:** use raw `<button>` elements with the CSS utility classes defined in `src/index.css` (`.btn-primary`, `.btn-ghost`, `.btn-soft`, `.btn-inverse`, `.btn-ghost-inverse`). There is no `Button` component wrapper and no `@radix-ui/react-slot` dependency. See `styleguide.md` for which class to use on which background color.
 - **Toasts:** if toast notifications are ever needed, install `sonner` and add `src/components/ui/sonner.tsx` (shadcn pattern). Mount `<Toaster>` in the nearest layout that actually triggers a toast. Do not install speculatively.
 - **TooltipProvider** is intentionally not mounted in `Layout.tsx` until a call site exists. Wrap only the subtree that uses `<Tooltip>` with `<TooltipProvider>` at that point.
+- **Author-controlled strings render through markdown.** Every YAML/TS field that holds prose written by a challenge author (e.g. `level.audience`, `tool.description`, `adventure.story`, `step.title`, `contributor.about`, `rewards.eligibility`, `tier.description`, `rewards.rankingNote`) must be rendered through `<MarkdownInline>` (single-line, no wrapping `<p>`) or `<MarkdownContent>` (multi-paragraph). Never render an author-controlled string as `{value}` directly. Plain prose passes through `<MarkdownInline>` unchanged, so this is safe for fields that may or may not contain markdown. Identifier fields (`id`, URLs, enum values like `difficulty`, emoji) are not author prose and are rendered directly.
 
 ### Component CSS patterns
 

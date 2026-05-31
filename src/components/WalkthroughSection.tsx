@@ -3,6 +3,7 @@ import type { JSX } from "react";
 import { ChevronDown } from "lucide-react";
 import { CollapsibleSection } from "@/components/CollapsibleSection";
 import { MarkdownContent } from "@/components/MarkdownContent";
+import { MarkdownInline } from "@/components/MarkdownInline";
 import type { WalkthroughStep } from "@/data/adventures";
 
 type WalkthroughSectionProps = {
@@ -40,7 +41,7 @@ export const WalkthroughSection = ({ steps }: WalkthroughSectionProps): JSX.Elem
                   {i + 1}
                 </span>
                 <span className="min-w-0 flex-1 text-sm font-semibold text-foreground">
-                  {step.title ?? `Step ${i + 1}`}
+                  {step.title ? <MarkdownInline source={step.title} noLinks /> : `Step ${i + 1}`}
                 </span>
                 <ChevronDown
                   size={16}
