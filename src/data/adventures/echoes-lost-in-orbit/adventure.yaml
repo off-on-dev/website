@@ -1,10 +1,11 @@
 slug: echoes-lost-in-orbit
-name: Echoes Lost in Orbit
+title: Echoes Lost in Orbit
 icon: Satellite
 month: DEC 2025
+community_category_id: 35
 story: Restore interstellar communications by fixing broken GitOps setups, progressive delivery systems, and
   observability pipelines across three galactic missions.
-technologies:
+tags:
   - Argo CD
   - Argo Rollouts
   - OpenTelemetry
@@ -27,7 +28,7 @@ backstory:
     dashboard shows no active deployments, and telemetry is suspiciously quiet.
   - You've been assigned to restore interstellar communication before the next critical mission.
 levels:
-  - id: beginner
+  - level: beginner
     name: Broken Echoes
     difficulty: Beginner
     topics:
@@ -37,7 +38,7 @@ levels:
       - ApplicationSet templating & pitfalls
       - Environment isolation & namespaces
       - "Sync policies: automated, prune & self-heal"
-    devcontainer_path: .devcontainer/01-echoes-lost-in-orbit_beginner/devcontainer.json
+    devcontainer: 01-echoes-lost-in-orbit_beginner
     discussion_url: /t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40
     deadline: "2025-12-10T09:00:00+01:00"
     intro:
@@ -106,7 +107,7 @@ levels:
     verification:
       command: "adventures/01-echoes-lost-in-orbit/beginner/smoke-test.sh"
       description: "Once you think you've solved the challenge, run the smoke test to verify your solution."
-  - id: intermediate
+  - level: intermediate
     name: The Silent Canary
     difficulty: Intermediate
     topics:
@@ -117,7 +118,7 @@ levels:
       - Canary deployments & automated analysis
       - Write PromQL queries for health validation
       - Kube-state-metrics for deployment decisions
-    devcontainer_path: .devcontainer/01-echoes-lost-in-orbit_intermediate/devcontainer.json
+    devcontainer: 01-echoes-lost-in-orbit_intermediate
     discussion_url: /t/adventure-01-echoes-lost-in-orbit-intermediate-the-silent-canary/310/8
     deadline: "2025-12-24T09:00:00+01:00"
     intro:
@@ -243,7 +244,7 @@ levels:
     verification:
       command: "adventures/01-echoes-lost-in-orbit/intermediate/smoke-test.sh"
       description: "Once you think you've solved the challenge, run the smoke test to verify your solution."
-  - id: expert
+  - level: expert
     name: Hyperspace Operations & Transport
     difficulty: Expert
     topics:
@@ -256,7 +257,7 @@ levels:
       - Spanmetrics connector (traces to metrics)
       - Detect idle canaries with traffic validation
       - Distributed tracing with Jaeger
-    devcontainer_path: .devcontainer/01-echoes-lost-in-orbit_expert/devcontainer.json
+    devcontainer: 01-echoes-lost-in-orbit_expert
     deadline: "2026-01-14T09:00:00+01:00"
     discussion_url: /t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351/4
     intro:

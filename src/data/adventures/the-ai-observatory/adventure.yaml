@@ -1,10 +1,11 @@
 slug: the-ai-observatory
-name: The AI Observatory
+title: The AI Observatory
 icon: Telescope
 month: FEB 2026
+community_category_id: 37
 story: Investigate a mysterious bandwidth anomaly at a remote research station by instrumenting its AI system with
   OpenTelemetry, OpenLLMetry, and Jaeger.
-technologies:
+tags:
   - OpenTelemetry
   - OpenLLMetry
   - Jaeger
@@ -23,7 +24,7 @@ backstory:
     engineer, it's your job to instrument the AI, trace its activities, and uncover the root cause of the anomaly.
   - "Your mission: bring visibility to the station's AI and solve the mystery."
 levels:
-  - id: beginner
+  - level: beginner
     name: Calibrating the Lens
     difficulty: Beginner
     topics:
@@ -33,7 +34,7 @@ levels:
     learnings:
       - Instrument Python AI apps with OpenLLMetry
       - Analyze traces in Jaeger
-    devcontainer_path: .devcontainer/03-the-ai-observatory_01-beginner/devcontainer.json
+    devcontainer: 03-the-ai-observatory_01-beginner
     discussion_url: /t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8
     deadline: "2026-03-08T23:59:00+01:00"
     intro:
@@ -108,7 +109,7 @@ levels:
       command: ./verify.sh
       description: Once you think you've solved the challenge, run the verification script. If it fails it will tell you which
         checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion.
-  - id: intermediate
+  - level: intermediate
     name: The Distracted Pilot
     difficulty: Intermediate
     topics:
@@ -120,7 +121,7 @@ levels:
       - Instrument RAG pipelines with OpenLLMetry
       - Create custom OpenTelemetry metrics in Python
       - Write PromQL queries & recording rules in Prometheus
-    devcontainer_path: .devcontainer/03-the-ai-observatory_02-intermediate/devcontainer.json
+    devcontainer: 03-the-ai-observatory_02-intermediate
     discussion_url: /t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936/2
     deadline: "2026-03-08T23:59:00+01:00"
     intro:
@@ -218,7 +219,7 @@ levels:
       command: ./verify.sh
       description: Once you think you've solved the challenge, run the verification script. If it fails it will tell you which
         checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion.
-  - id: expert
+  - level: expert
     name: The Noise Filter
     difficulty: Expert
     topics:
@@ -228,7 +229,7 @@ levels:
     learnings:
       - OpenTelemetry GenAI semantic conventions
       - Tail sampling in the OTel Collector
-    devcontainer_path: .devcontainer/03-the-ai-observatory_03-expert/devcontainer.json
+    devcontainer: 03-the-ai-observatory_03-expert
     discussion_url: /t/reduce-telemetry-noise-adventure-03-expert-is-live/999/1
     deadline: "2026-03-08T23:59:00+01:00"
     intro:

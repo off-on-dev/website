@@ -2,6 +2,7 @@ import { type JSX } from "react";
 import { useParams, Link, useLoaderData } from "react-router";
 import type { MetaFunction, LoaderFunctionArgs } from "react-router";
 import { ArrowLeft, Check, ExternalLink } from "lucide-react";
+import { MarkdownContent } from "@/components/MarkdownContent";
 import { ADVENTURES } from "@/data/adventures";
 import { TagChips } from "@/components/TagChips";
 import { CodespacesButton } from "@/components/CodespacesButton";
@@ -19,7 +20,7 @@ import { DiscussionSection } from "@/components/DiscussionSection";
 import { CommunitySidebar } from "@/components/CommunitySidebar";
 import { OtherLevelsCard } from "@/components/OtherLevelsCard";
 import { RewardsCard } from "@/components/RewardsCard";
-import { SITE_URL, BRAND_NAME, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
+import { SITE_URL, BRAND_NAME, COMMUNITY_DISPLAY_NAME, COMMUNITY_URL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 import { isDeadlinePast } from "@/lib/utils";
 
@@ -111,7 +112,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
                   {objective.map((item) => (
                     <li key={item} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
                       <Check size={14} className="mt-0.5 shrink-0 text-primary" aria-hidden="true" />
-                      <span>{item}</span>
+                      <div className="min-w-0 [&>p]:m-0"><MarkdownContent source={item} /></div>
                     </li>
                   ))}
                 </ul>
@@ -126,7 +127,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
                 {level.learnings.map((learning) => (
                   <li key={learning} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                    <span>{learning}</span>
+                    <div className="min-w-0 [&>p]:m-0"><MarkdownContent source={learning} /></div>
                   </li>
                 ))}
               </ul>
@@ -212,7 +213,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
                 <span>
                   Share your solutions in the{" "}
                   <a
-                    href={level.discussionUrl}
+                    href={level.discussionUrl || COMMUNITY_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="docs-ext-link font-medium"

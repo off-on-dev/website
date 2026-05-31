@@ -1,13 +1,14 @@
 slug: blind-by-design
-name: "Blind by Design"
+title: "Blind by Design"
 icon: FlaskConical
 month: "MAY 2026"
+community_category_id: 41
 story: >-
   Three levels of OpenFeature with flagd as the provider, in a Java + Spring Boot service.
   Wire the SDK against a flagd sidecar (Beginner), layer evaluation context to target by cohort
   (Intermediate), then instrument flag evaluations with OpenTelemetry and roll back a misbehaving
   fractional rollout (Expert). All without redeploying.
-technologies:
+tags:
   - OpenFeature
   - flagd
   - Spring Boot
@@ -65,7 +66,7 @@ rewards:
       description: "Credly badge to showcase the achievement"
 
 levels:
-  - id: beginner
+  - level: beginner
     name: "Stand up the Lab"
     difficulty: Beginner
     deadline: "2026-05-26T23:59:00+01:00"
@@ -81,7 +82,7 @@ levels:
       - "What remote provider means in practice: the SDK calls a separate flag service (flagd) over gRPC, not parsing flags.json itself"
       - "What flags.json looks like for flagd (state, variants, defaultVariant)"
       - "Why hot-reload of the flag file matters operationally: configuration without redeploy"
-    devcontainer_path: ".devcontainer/04-blind-by-design_01-beginner/devcontainer.json"
+    devcontainer: 04-blind-by-design_01-beginner
     discussion_url: "/t/wire-openfeature-flagd-into-a-spring-boot-service-with-zero-setup-adventure-04-beginner/1419"
     intro:
       - >-
@@ -164,7 +165,7 @@ levels:
       command: "./verify.sh"
       description: "Once you think you've solved the challenge, run the verification script. If it fails it will tell you which checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion."
 
-  - id: intermediate
+  - level: intermediate
     name: "Outcome by Cohort"
     difficulty: Intermediate
     deadline: "2026-05-26T23:59:00+01:00"
@@ -177,7 +178,7 @@ levels:
       - "How OpenFeature's transaction-context propagation works in a thread-per-request server, and why a ThreadLocalTransactionContextPropagator is the right primitive for Servlet-based apps"
       - "The difference between request-scoped context (the subject's species) and global evaluation context (the trial's country), and when each is the right tool"
       - "How hooks let you attach cross-cutting behaviour, audit logging today and OpenTelemetry tracing tomorrow, without modifying every flag evaluation call site"
-    devcontainer_path: ".devcontainer/04-blind-by-design_02-intermediate/devcontainer.json"
+    devcontainer: 04-blind-by-design_02-intermediate
     discussion_url: "/t/outcome-by-cohort-adventure-04-intermediate/1485"
     intro:
       - >-
@@ -333,7 +334,7 @@ levels:
       command: "./verify.sh"
       description: "Once you think you've solved the challenge, run the verification script. If it fails it will tell you which checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion."
 
-  - id: expert
+  - level: expert
     name: "Read the Chart"
     difficulty: Expert
     deadline: "2026-05-26T23:59:00+01:00"
@@ -352,7 +353,7 @@ levels:
       - "How to author your own Hook: a tiny class that copies merged-eval-context attributes onto the active OTel span, closing the loop between why a flag resolved the way it did and what the operator sees in Tempo"
       - "How fractional rollout in flagd buckets users by targetingKey (same key, same bucket, every request) and how to read that bucketing off a dashboard"
       - "How a flag flip is a faster operational lever than a redeploy when a rollout is misbehaving: the difference between a one-line config change and a twenty-minute deployment"
-    devcontainer_path: ".devcontainer/04-blind-by-design_03-expert/devcontainer.json"
+    devcontainer: 04-blind-by-design_03-expert
     discussion_url: "/t/read-the-chart-adventure-04-expert/1530"
     intro:
       - >-

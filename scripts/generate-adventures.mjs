@@ -28,6 +28,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
+import { LEVEL_DIFFICULTY_BY_EMOJI } from "./lib/level-constants.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -35,6 +36,16 @@ const ADVENTURES_DIR = resolve(ROOT, "src/data/adventures");
 const SCHEMA_PATH = resolve(ROOT, "schemas/adventure.schema.json");
 
 const validateOnly = process.argv.includes("--validate-only");
+
+// Maps emoji shorthand to Lucide React icon names used in AdventureDetail.
+const EMOJI_ICON_MAP = {
+  "🧪": "FlaskConical",
+  "🔭": "Telescope",
+  "☁️": "Cloud",
+  "🛰️": "Satellite",
+  "⚖️": "Scale",
+};
+
 
 // Constant rewards fields shared by all adventures. Omit from YAML to use these defaults.
 const DEFAULT_REWARDS_ELIGIBILITY =
@@ -105,6 +116,32 @@ function formatStringArray(arr, indent) {
   return `[\n${items}\n${indent}]`;
 }
 
+/** Returns true if str is a valid ISO 8601 datetime with UTC offset. */
+function isValidISODeadline(str) {
+  return /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/.test(str);
+}
+
+/** Resolve alias fields on an adventure YAML object to canonical field values. */
+function normalizeAdventureFields(data) {
+  return {
+    title: data.title || data.name,
+    story: data.story || (data.backstory?.length > 0 ? data.backstory[0] : ""),
+    icon: data.icon || (data.emoji ? EMOJI_ICON_MAP[data.emoji] : undefined),
+  };
+}
+
+/** Resolve alias fields on a level YAML object to canonical field values. */
+function normalizeLevelFields(level) {
+  return {
+    id: level.level,
+    name: level.name || level.title,
+    difficulty: level.difficulty || LEVEL_DIFFICULTY_BY_EMOJI[level.emoji],
+    learnings: level.learnings || level.what_you_learn,
+    intro: level.intro || (level.summary ? [level.summary] : undefined),
+    discussionUrl: (level.discussion_url ?? level.community_url) ?? "",
+  };
+}
+
 // --- YAML Discovery ---
 
 function findAdventureYamls() {
@@ -127,11 +164,16 @@ function validateAdventure(data, id) {
   const errors = [];
   if (!data.slug) errors.push("Missing required field: slug");
   else if (data.slug !== id) errors.push(`slug "${data.slug}" does not match folder name "${id}"`);
-  if (!data.name) errors.push("Missing required field: name");
+  if (!data.title && !data.name) errors.push("Missing required field: title (or name)");
   if (!data.month) errors.push("Missing required field: month");
-  if (!data.story) errors.push("Missing required field: story");
-  if (!data.technologies || !Array.isArray(data.technologies) || data.technologies.length === 0) {
-    errors.push("Missing or empty required field: technologies");
+  if (!data.story && (!data.backstory || data.backstory.length === 0)) {
+    errors.push("Missing required field: story (or provide backstory to derive it from)");
+  }
+  if (!data.tags || !Array.isArray(data.tags) || data.tags.length === 0) {
+    errors.push("Missing or empty required field: tags");
+  }
+  if (data.rewards && data.rewards.deadline && !isValidISODeadline(data.rewards.deadline)) {
+    warn(`${id}: rewards.deadline "${data.rewards.deadline}" is not ISO 8601 — update before publishing (e.g. "2026-05-26T23:59:00+01:00")`);
   }
   if (!data.levels || !Array.isArray(data.levels) || data.levels.length === 0) {
     errors.push("Missing or empty required field: levels");
@@ -139,19 +181,28 @@ function validateAdventure(data, id) {
     for (let i = 0; i < data.levels.length; i++) {
       const level = data.levels[i];
       const prefix = `levels[${i}]`;
-      if (!level.id) errors.push(`${prefix}: Missing id`);
-      if (!level.name) errors.push(`${prefix}: Missing name`);
-      if (!level.difficulty) errors.push(`${prefix}: Missing difficulty`);
-      if (!["Beginner", "Intermediate", "Expert"].includes(level.difficulty)) {
-        errors.push(`${prefix}: Invalid difficulty "${level.difficulty}"`);
+      if (!level.level) errors.push(`${prefix}: Missing level`);
+      if (!level.name && !level.title) errors.push(`${prefix}: Missing name (or title)`);
+      if (level.deadline && !isValidISODeadline(level.deadline)) {
+        warn(`${id} ${prefix}: deadline "${level.deadline}" is not ISO 8601 — update before publishing`);
+      }
+      const difficulty = level.difficulty || LEVEL_DIFFICULTY_BY_EMOJI[level.emoji];
+      if (!difficulty) errors.push(`${prefix}: Missing difficulty (or emoji 🟢/🟡/🔴)`);
+      else if (!["Beginner", "Intermediate", "Expert"].includes(difficulty)) {
+        errors.push(`${prefix}: Invalid difficulty "${difficulty}"`);
       }
       if (!level.topics || level.topics.length === 0) errors.push(`${prefix}: Missing topics`);
-      if (!level.learnings || level.learnings.length === 0) {
-        errors.push(`${prefix}: Missing learnings`);
+      if (!level.learnings && !level.what_you_learn) {
+        errors.push(`${prefix}: Missing learnings (or what_you_learn)`);
       }
-      if (!level.devcontainer_path) errors.push(`${prefix}: Missing devcontainer_path`);
-      if (!level.discussion_url) errors.push(`${prefix}: Missing discussion_url`);
-      if (!level.intro || level.intro.length === 0) errors.push(`${prefix}: Missing intro`);
+      if (!level.devcontainer) errors.push(`${prefix}: Missing devcontainer`);
+      const discussionUrl = level.discussion_url ?? level.community_url;
+      if (discussionUrl === undefined || discussionUrl === null) {
+        errors.push(`${prefix}: Missing discussion_url (or community_url)`);
+      } else if (discussionUrl === "") {
+        warn(`${id} ${prefix}: discussion_url/community_url is empty — update with Discourse thread URL before publishing`);
+      }
+      if (!level.intro && !level.summary) errors.push(`${prefix}: Missing intro (or summary)`);
       if (!level.objective || level.objective.length === 0) errors.push(`${prefix}: Missing objective`);
       if (!level.toolbox || level.toolbox.length === 0) errors.push(`${prefix}: Missing toolbox`);
       if (!level.how_to_play || level.how_to_play.length === 0) errors.push(`${prefix}: Missing how_to_play`);
@@ -168,10 +219,12 @@ function generateLevelCode(level, adventureId, indent) {
   const i = indent;
   const i2 = indent + "  ";
 
+  const { id: levelId, name: levelName, difficulty: levelDifficulty, learnings: levelLearnings, intro: levelIntro, discussionUrl: levelDiscussionUrl } = normalizeLevelFields(level);
+
   lines.push(`${i}{`);
-  lines.push(`${i2}id: "${level.id}",`);
-  lines.push(`${i2}name: "${escapeDoubleQuoted(level.name)}",`);
-  lines.push(`${i2}difficulty: "${level.difficulty}",`);
+  lines.push(`${i2}id: "${escapeDoubleQuoted(levelId)}",`);
+  lines.push(`${i2}name: "${escapeDoubleQuoted(levelName)}",`);
+  lines.push(`${i2}difficulty: "${levelDifficulty}",`);
 
   if (level.topics) {
     lines.push(`${i2}topics: [${level.topics.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
@@ -180,24 +233,26 @@ function generateLevelCode(level, adventureId, indent) {
     lines.push(`${i2}audience: ${formatString(level.audience)},`);
   }
 
-  lines.push(`${i2}learnings: ${formatStringArray(level.learnings, i2)},`);
+  lines.push(`${i2}learnings: ${formatStringArray(levelLearnings, i2)},`);
 
-  // Build codespacesUrl from devcontainer_path
-  const encodedPath = encodeURIComponent(level.devcontainer_path).replace(/%2F/g, "%2F");
+  // Build codespacesUrl from devcontainer short name
+  const fullDevcontainerPath = `.devcontainer/${level.devcontainer}/devcontainer.json`;
+  const encodedPath = encodeURIComponent(fullDevcontainerPath).replace(/%2F/g, "%2F");
   lines.push(`${i2}codespacesUrl: \`\${CODESPACES_BASE}?devcontainer_path=${encodedPath}&quickstart=1\`,`);
 
-  // Build discussionUrl
-  if (level.discussion_url.startsWith("http")) {
-    lines.push(`${i2}discussionUrl: "${escapeDoubleQuoted(level.discussion_url)}",`);
-  } else {
-    // Relative path: prepend COMMUNITY_URL
-    const path = level.discussion_url.startsWith("/") ? level.discussion_url : `/${level.discussion_url}`;
+  // Build discussionUrl — always output (empty string is valid placeholder for new adventures)
+  if (levelDiscussionUrl && levelDiscussionUrl.startsWith("http")) {
+    lines.push(`${i2}discussionUrl: "${escapeDoubleQuoted(levelDiscussionUrl)}",`);
+  } else if (levelDiscussionUrl) {
+    const path = levelDiscussionUrl.startsWith("/") ? levelDiscussionUrl : `/${levelDiscussionUrl}`;
     lines.push(`${i2}discussionUrl: \`\${COMMUNITY_URL}${path}\`,`);
+  } else {
+    lines.push(`${i2}discussionUrl: "",`);
   }
 
   if (level.deadline) lines.push(`${i2}deadline: "${escapeDoubleQuoted(level.deadline)}",`);
   if (level.hook) lines.push(`${i2}hook: ${formatString(level.hook)},`);
-  if (level.intro) lines.push(`${i2}intro: ${formatStringArray(level.intro, i2)},`);
+  if (levelIntro) lines.push(`${i2}intro: ${formatStringArray(levelIntro, i2)},`);
   if (level.backstory) lines.push(`${i2}backstory: ${formatStringArray(level.backstory, i2)},`);
   if (level.objective) lines.push(`${i2}objective: ${formatStringArray(level.objective, i2)},`);
   if (level.scenario) lines.push(`${i2}scenario: ${formatString(level.scenario)},`);
@@ -304,13 +359,18 @@ function generateAdventureTs(data) {
 
   lines.push(`import type { Adventure } from "./types";`);
   lines.push(``);
+  const { title: adventureTitle, story: adventureStory, icon: adventureIcon } = normalizeAdventureFields(data);
+  if (data.emoji && !adventureIcon) {
+    warn(`${data.slug}: emoji "${data.emoji}" is not in EMOJI_ICON_MAP — add it to scripts/generate-adventures.mjs and src/pages/AdventureDetail.tsx`);
+  }
+
   lines.push(`export const ${constName}: Adventure = {`);
   lines.push(`  id: "${data.slug}",`);
-  lines.push(`  title: "${escapeDoubleQuoted(data.name)}",`);
-  if (data.icon) lines.push(`  icon: "${escapeDoubleQuoted(data.icon)}",`);
+  lines.push(`  title: "${escapeDoubleQuoted(adventureTitle)}",`);
+  if (adventureIcon) lines.push(`  icon: "${escapeDoubleQuoted(adventureIcon)}",`);
   lines.push(`  month: "${data.month}",`);
-  lines.push(`  story: ${formatString(data.story)},`);
-  lines.push(`  tags: [${data.technologies.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
+  lines.push(`  story: ${formatString(adventureStory)},`);
+  lines.push(`  tags: [${data.tags.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
 
   if (data.contributor) {
     lines.push(`  contributor: {`);
@@ -333,7 +393,8 @@ function generateAdventureTs(data) {
     const rankingNote = data.rewards.ranking_note ?? DEFAULT_REWARDS_RANKING_NOTE;
     const rankingRulesUrl = data.rewards.ranking_rules_url ?? DEFAULT_REWARDS_RANKING_RULES_PATH;
     lines.push(`  rewards: {`);
-    lines.push(`    deadline: "${escapeDoubleQuoted(data.rewards.deadline)}",`);
+    const rewardsDeadline = data.rewards.deadline === "TODO" ? "" : data.rewards.deadline;
+    lines.push(`    deadline: "${escapeDoubleQuoted(rewardsDeadline)}",`);
     lines.push(`    eligibility: "${escapeDoubleQuoted(eligibility)}",`);
     lines.push(`    tiers: [`);
     for (const tier of data.rewards.tiers) {
@@ -386,24 +447,26 @@ function generateSummariesTs(adventures) {
 
   for (const data of adventures) {
     lines.push(`  {`);
+    const { title: summaryTitle, story: summaryStory } = normalizeAdventureFields(data);
     lines.push(`    id: "${data.slug}",`);
-    lines.push(`    title: "${escapeDoubleQuoted(data.name)}",`);
+    lines.push(`    title: "${escapeDoubleQuoted(summaryTitle)}",`);
     lines.push(`    month: "${data.month}",`);
-    lines.push(`    story: ${formatString(data.story)},`);
-    lines.push(`    tags: [${data.technologies.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
+    lines.push(`    story: ${formatString(summaryStory)},`);
+    lines.push(`    tags: [${data.tags.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
     if (data.contributor) {
       lines.push(`    contributor: { name: "${escapeDoubleQuoted(data.contributor.name)}" },`);
     }
     lines.push(`    levels: [`);
     for (const level of data.levels) {
       lines.push(`      {`);
-      lines.push(`        id: "${level.id}",`);
-      lines.push(`        name: "${escapeDoubleQuoted(level.name)}",`);
-      lines.push(`        difficulty: "${level.difficulty}",`);
+      const { id: summaryId, name: summaryName, difficulty: summaryDifficulty, learnings: summaryLearnings } = normalizeLevelFields(level);
+      lines.push(`        id: "${escapeDoubleQuoted(summaryId)}",`);
+      lines.push(`        name: "${escapeDoubleQuoted(summaryName)}",`);
+      lines.push(`        difficulty: "${summaryDifficulty}",`);
       if (level.topics && level.topics.length > 0) {
         lines.push(`        topics: [${level.topics.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
       }
-      lines.push(`        learnings: ${formatStringArray(level.learnings, "        ")},`);
+      lines.push(`        learnings: ${formatStringArray(summaryLearnings, "        ")},`);
       lines.push(`      },`);
     }
     lines.push(`    ],`);
@@ -496,6 +559,230 @@ function generateIndexTs(adventures) {
   return lines.join("\n");
 }
 
+// --- Region patching ---
+
+/**
+ * Each consumer file has a region marked by `GENERATED:adventures` / `/GENERATED:adventures`
+ * comments. The body between those markers is regenerated from the YAML on every build.
+ * Hand-edits to entries inside the region will be overwritten. Add manual entries OUTSIDE
+ * the markers.
+ */
+function escapeRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function replaceRegion(filePath, openMarker, closeMarker, body) {
+  if (!existsSync(filePath)) fail(`Region target file not found: ${filePath}`);
+  const content = readFileSync(filePath, "utf-8");
+  const re = new RegExp(
+    `(${escapeRegex(openMarker)})[\\s\\S]*?(${escapeRegex(closeMarker)})`
+  );
+  if (!re.test(content)) {
+    fail(`Region markers not found in ${filePath}. Expected "${openMarker}" ... "${closeMarker}".`);
+  }
+  const next = content.replace(re, `$1\n${body}$2`);
+  if (next !== content) {
+    writeFileSync(filePath, next);
+    console.log(`  Patched region: ${filePath.replace(ROOT + "/", "")}`);
+  }
+}
+
+/** Build the body for a region as one block of text. Body must include a trailing newline. */
+function buildSitemapBody(adventures) {
+  const lines = [];
+  for (const a of adventures) {
+    lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
+    for (const l of a.levels) {
+      lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/levels/${l.level}/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
+    }
+  }
+  return lines.join("\n") + "\n  ";
+}
+
+function buildPrerenderBody(adventures) {
+  const lines = [];
+  for (const a of adventures) {
+    lines.push(`    "/adventures/${a.slug}",`);
+    for (const l of a.levels) {
+      lines.push(`    "/adventures/${a.slug}/levels/${l.level}",`);
+    }
+  }
+  return lines.join("\n") + "\n    ";
+}
+
+function buildSeoRoutesBody(adventures) {
+  const lines = [];
+  for (const a of adventures) {
+    lines.push(`  "/adventures/${a.slug}",`);
+    for (const l of a.levels) {
+      lines.push(`  "/adventures/${a.slug}/levels/${l.level}",`);
+    }
+  }
+  return lines.join("\n") + "\n  ";
+}
+
+function buildSmokeRoutesBody(adventures) {
+  const lines = [];
+  for (const a of adventures) {
+    const { title } = normalizeAdventureFields(a);
+    lines.push(`  { path: "/adventures/${a.slug}", title: /${escapeRegex(title)}/ },`);
+    for (const l of a.levels) {
+      const { name } = normalizeLevelFields(l);
+      lines.push(`  { path: "/adventures/${a.slug}/levels/${l.level}", title: /${escapeRegex(name)}/ },`);
+    }
+  }
+  return lines.join("\n") + "\n  ";
+}
+
+function buildPrerenderTestBody(adventures) {
+  // The "contains" check matches the raw HTML, so HTML entities must be encoded here.
+  const htmlEncode = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const lines = [];
+  for (const a of adventures) {
+    const { title } = normalizeAdventureFields(a);
+    lines.push(`  {`);
+    lines.push(`    file: "adventures/${a.slug}/index.html",`);
+    lines.push(`    check: { type: "contains", value: "${escapeDoubleQuoted(htmlEncode(title))}" },`);
+    lines.push(`  },`);
+    for (const l of a.levels) {
+      const { name } = normalizeLevelFields(l);
+      lines.push(`  {`);
+      lines.push(`    file: "adventures/${a.slug}/levels/${l.level}/index.html",`);
+      lines.push(`    check: { type: "contains", value: "${escapeDoubleQuoted(htmlEncode(name))}" },`);
+      lines.push(`  },`);
+    }
+  }
+  return lines.join("\n") + "\n  ";
+}
+
+function buildLeaderboardCategoriesBody(adventures) {
+  const lines = [];
+  // Align colons by padding the key to a stable width.
+  const maxKeyLen = Math.max(...adventures.map((a) => a.slug.length));
+  for (const a of adventures) {
+    const has_beginner = a.levels.some((l) => l.level === "beginner");
+    const has_intermediate = a.levels.some((l) => l.level === "intermediate");
+    const has_expert = a.levels.some((l) => l.level === "expert");
+    const key = `"${a.slug}":`.padEnd(maxKeyLen + 3);
+    const todo = a.community_category_id === undefined
+      ? " // TODO: set categoryId — look up at https://community.offon.dev/categories.json"
+      : "";
+    const categoryId = a.community_category_id ?? 0;
+    lines.push(`  ${key} { categoryId: ${categoryId}, has_beginner: ${has_beginner}, has_intermediate: ${has_intermediate}, has_expert: ${has_expert}, has_single: false },${todo}`);
+  }
+  return lines.join("\n") + "\n  ";
+}
+
+/** Mirrors `tagToSlug` in the generated index.ts so consumer files use identical slugs. */
+function tagToSlug(tag) {
+  return tag.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+function collectAllTags(adventures) {
+  const set = new Set();
+  for (const a of adventures) {
+    for (const t of a.tags || []) set.add(t);
+  }
+  return [...set].sort((x, y) => x.localeCompare(y));
+}
+
+function buildSitemapTagsBody(tags) {
+  const lines = tags.map(
+    (t) =>
+      `  <url><loc>https://offon.dev/challenges/${tagToSlug(t)}/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>`,
+  );
+  return lines.join("\n") + "\n";
+}
+
+function buildPrerenderTagsBody(tags) {
+  const lines = tags.map((t) => `    "/challenges/${tagToSlug(t)}",`);
+  return lines.join("\n") + "\n    ";
+}
+
+function buildSeoTagsBody(tags) {
+  const lines = tags.map((t) => `  "/challenges/${tagToSlug(t)}",`);
+  return lines.join("\n") + "\n  ";
+}
+
+function buildSmokeTagsBody(tags) {
+  const lines = tags.map(
+    (t) => `  { path: "/challenges/${tagToSlug(t)}", title: /${escapeRegex(t)} Challenges/ },`,
+  );
+  return lines.join("\n") + "\n  ";
+}
+
+function patchRegions(adventures) {
+  // Sitemap uses the surrounding static URL lines as anchors so the file stays
+  // free of generator comments. The adventures block sits between the last
+  // static page (/privacy/) and /challenges/. Both anchor lines must stay
+  // exactly as-is; do not reorder the static URLs around them.
+  replaceRegion(
+    resolve(ROOT, "public/sitemap.xml"),
+    `<url><loc>https://offon.dev/privacy/</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>`,
+    `<url><loc>https://offon.dev/challenges/</loc>`,
+    buildSitemapBody(adventures)
+  );
+  replaceRegion(
+    resolve(ROOT, "react-router.config.ts"),
+    "// GENERATED:adventures",
+    "// /GENERATED:adventures",
+    buildPrerenderBody(adventures)
+  );
+  replaceRegion(
+    resolve(ROOT, "src/test/seo.test.ts"),
+    "// GENERATED:adventures",
+    "// /GENERATED:adventures",
+    buildSeoRoutesBody(adventures)
+  );
+  replaceRegion(
+    resolve(ROOT, "e2e/smoke.spec.ts"),
+    "// GENERATED:adventures",
+    "// /GENERATED:adventures",
+    buildSmokeRoutesBody(adventures)
+  );
+  replaceRegion(
+    resolve(ROOT, "src/test/prerender.test.ts"),
+    "// GENERATED:adventures",
+    "// /GENERATED:adventures",
+    buildPrerenderTestBody(adventures)
+  );
+  replaceRegion(
+    resolve(ROOT, "scripts/refresh-leaderboard.mjs"),
+    "// GENERATED:adventures",
+    "// /GENERATED:adventures",
+    buildLeaderboardCategoriesBody(adventures)
+  );
+
+  // Challenge tag URLs. Derived from ALL_TAGS across every adventure's `tags:`
+  // array. Sitemap uses the surrounding `/challenges/` index URL and the closing
+  // `</urlset>` as anchors so it stays free of generator comments.
+  const tags = collectAllTags(adventures);
+  replaceRegion(
+    resolve(ROOT, "public/sitemap.xml"),
+    `<url><loc>https://offon.dev/challenges/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>`,
+    `</urlset>`,
+    buildSitemapTagsBody(tags)
+  );
+  replaceRegion(
+    resolve(ROOT, "react-router.config.ts"),
+    "// GENERATED:challenge-tags",
+    "// /GENERATED:challenge-tags",
+    buildPrerenderTagsBody(tags)
+  );
+  replaceRegion(
+    resolve(ROOT, "src/test/seo.test.ts"),
+    "// GENERATED:challenge-tags",
+    "// /GENERATED:challenge-tags",
+    buildSeoTagsBody(tags)
+  );
+  replaceRegion(
+    resolve(ROOT, "e2e/smoke.spec.ts"),
+    "// GENERATED:challenge-tags",
+    "// /GENERATED:challenge-tags",
+    buildSmokeTagsBody(tags)
+  );
+}
+
 // --- Main ---
 
 function main() {
@@ -565,6 +852,9 @@ function main() {
   const summariesPath = resolve(ADVENTURES_DIR, "summaries.ts");
   writeFileSync(summariesPath, summariesContent);
   console.log(`  Generated: src/data/adventures/summaries.ts`);
+
+  // Patch GENERATED:adventures regions in route/sitemap/test/leaderboard files.
+  patchRegions(adventures);
 
   console.log(`\n\x1b[32mDone!\x1b[0m Generated ${adventures.length} adventure file(s) + index.ts + summaries.ts`);
 }
