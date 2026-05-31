@@ -38,6 +38,7 @@ const ADVENTURE_CATEGORIES = {
   "blind-by-design":      { categoryId: 41, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
   "building-cloudhaven":  { categoryId: 36, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
   "echoes-lost-in-orbit": { categoryId: 35, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
+  "lex-imperfecta":       { categoryId: 0, has_beginner: true, has_intermediate: false, has_expert: false, has_single: false }, // TODO: set categoryId — look up at https://community.offon.dev/categories.json
   "the-ai-observatory":   { categoryId: 37, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
   // /GENERATED:adventures
 };
