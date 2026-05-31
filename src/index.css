@@ -914,41 +914,53 @@ html {
 .light .group:hover h3 { color: hsl(var(--foreground-hover)); }
 
 /* ─── CommunityGuide external link states ──────────────── */
-/* Dark mode (default): yellow underline, foreground text */
+/* Underline is drawn via box-shadow on the link's inline boxes so it stays
+   continuous across child elements (inline code, spans) with different fonts. */
 .docs-ext-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
   color: hsl(var(--foreground));
-  text-decoration-line: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 2px;
-  text-decoration-color: hsl(var(--primary));
+  text-decoration: none;
+  box-shadow: inset 0 -2px 0 hsl(var(--primary));
   border-radius: 2px;
-  transition: color 200ms ease, text-decoration-color 200ms ease;
+  transition: color 200ms ease, box-shadow 200ms ease;
+}
+
+/* Trailing icon (e.g. ExternalLink) aligned without breaking underline continuity */
+.docs-ext-link > svg {
+  display: inline;
+  vertical-align: -0.125em;
+  margin-left: 0.25rem;
 }
 
 .docs-ext-link:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
+  box-shadow: inset 0 -2px 0 hsl(var(--primary)), 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
 }
 
 /* Dark mode hover: full primary amber (#ffc034) */
 .docs-ext-link:hover {
   color: hsl(var(--primary));
-  text-decoration-color: hsl(var(--primary));
+  box-shadow: inset 0 -2px 0 hsl(var(--primary));
 }
 
 /* Light mode: near-black text; underline tracks text color via currentColor */
 .light .docs-ext-link {
   color: hsl(var(--foreground));
-  text-decoration-color: currentColor;
+  box-shadow: inset 0 -2px 0 currentColor;
 }
 
 /* Light mode hover: dark amber — same hue as primary, L=25% gives ~5.5:1 contrast */
 .light .docs-ext-link:hover {
   color: hsl(var(--link-hover-light));
-  text-decoration-color: currentColor;
+  box-shadow: inset 0 -2px 0 currentColor;
+}
+
+/* Inline code inside a link: strip all code styling so the link reads as a
+   single continuous underlined string. Monospace, background, border, and
+   size differences all break the underline or inflate line-height. */
+.docs-ext-link code {
+  all: unset;
+  font: inherit;
+  color: inherit;
 }
 
 /* ─── Difficulty badge token overrides (light mode) ─────── */
