@@ -124,9 +124,6 @@ const AdventureDetail = (): JSX.Element => {
 
           {/* Header: title + tags + intro */}
           <div className="mb-10">
-            <span className="inline-block mb-4 rounded-sm border border-[hsl(var(--surface-border))] px-2 py-0.5 font-mono text-xs text-[hsl(var(--text-faint))] uppercase tracking-wider">
-              {adventure.month}
-            </span>
             <div className="inline-flex items-center gap-3 mb-4">
               <h1 className="text-3xl md:text-4xl font-bold text-foreground">{adventure.title}</h1>
               {adventure.icon && ADVENTURE_ICONS[adventure.icon] && (() => {
@@ -134,10 +131,15 @@ const AdventureDetail = (): JSX.Element => {
                 return <Icon size={28} className="text-primary shrink-0" aria-hidden="true" />;
               })()}
             </div>
-            <div className="flex flex-wrap items-center gap-1.5 mb-5">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-3">
               {adventure.contributor && (
                 <ContributorBadge name={adventure.contributor.name} url={adventure.contributor.url} label="Adventure Builder" />
               )}
+              <span className="font-mono text-xs uppercase tracking-widest text-[hsl(var(--text-faint))]">
+                {adventure.month}
+              </span>
+            </div>
+            <div className="flex flex-wrap items-center gap-1.5 mb-5">
               <TagChips tags={adventure.tags} />
             </div>
             <p className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl"><MarkdownInline source={adventure.story} /></p>
@@ -211,7 +213,7 @@ const AdventureDetail = (): JSX.Element => {
             </div>
 
             {/* Sidebar: leaderboard + contributor */}
-            <aside className="mt-10 lg:mt-12 space-y-6 lg:sticky lg:top-28 lg:self-start">
+            <aside className="mt-10 lg:mt-0 space-y-6 lg:sticky lg:top-28 lg:self-start">
               <AdventureLeaderboard adventureId={adventure.id} />
               {adventure.contributor && (
                 <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-5 py-4">
