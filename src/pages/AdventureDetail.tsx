@@ -21,6 +21,7 @@ import { RewardsCard } from "@/components/RewardsCard";
 import { AdventureLeaderboard } from "@/components/AdventureLeaderboard";
 import { ContributorBadge } from "@/components/ContributorBadge";
 import { TagChips } from "@/components/TagChips";
+import { MarkdownInline } from "@/components/MarkdownInline";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 import { isDeadlinePast } from "@/lib/utils";
@@ -139,7 +140,7 @@ const AdventureDetail = (): JSX.Element => {
               )}
               <TagChips tags={adventure.tags} />
             </div>
-            <p className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl">{adventure.story}</p>
+            <p className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl"><MarkdownInline source={adventure.story} /></p>
           </div>
 
           {/* Two-column layout */}

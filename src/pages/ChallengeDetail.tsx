@@ -3,6 +3,7 @@ import { useParams, Link, useLoaderData } from "react-router";
 import type { MetaFunction, LoaderFunctionArgs } from "react-router";
 import { ArrowLeft, Check, ExternalLink } from "lucide-react";
 import { MarkdownContent } from "@/components/MarkdownContent";
+import { MarkdownInline } from "@/components/MarkdownInline";
 import { ADVENTURES } from "@/data/adventures";
 import { TagChips } from "@/components/TagChips";
 import { CodespacesButton } from "@/components/CodespacesButton";
@@ -138,7 +139,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
           {level.audience && (
             <CollapsibleSection id="audience" title="Best Suited For">
               <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
-                {level.audience}
+                <MarkdownInline source={level.audience} />
               </p>
             </CollapsibleSection>
           )}
@@ -253,7 +254,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
                           ) : (
                             <span className="font-medium text-foreground">{tool.name}</span>
                           )}
-                          {tool.description && <>{" "}- {tool.description}</>}
+                          {tool.description && <>{" "}- <MarkdownInline source={tool.description} /></>}
                         </span>
                       </li>
                     ))}
