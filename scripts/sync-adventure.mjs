@@ -144,13 +144,13 @@ async function main() {
     }
   }
 
-  // Validate that every requested level ID was actually found in the challenges repo.
-  if (levelsToSync.length > 0) {
-    const fetchedIds = new Set(allFetchedLevels.map((l) => l.level));
-    const missing = levelsToSync.filter((id) => !fetchedIds.has(id));
-    if (missing.length > 0) {
-      fail(`Requested level(s) not found in the challenges repo: ${missing.join(", ")}. Available: ${[...fetchedIds].join(", ")}`);
-    }
+  // Track levels that were requested but don't exist in the challenges repo yet.
+  // These become "coming soon" placeholders on the website via upcoming_levels.
+  // They'll auto-promote to live the next time the sync runs and finds the YAML.
+  const fetchedIds = new Set(allFetchedLevels.map((l) => l.level));
+  const missingFromUpstream = levelsToSync.filter((id) => !fetchedIds.has(id));
+  if (missingFromUpstream.length > 0) {
+    console.log(`  Not in challenges repo yet (will appear as "coming soon"): ${missingFromUpstream.join(", ")}`);
   }
 
   const adventureDir = resolve(ADVENTURES_DIR, slug);
@@ -170,13 +170,33 @@ async function main() {
 
   const activeLevelIds = new Set(activeLevels.map((l) => l.level));
 
-  // Upcoming = fetched from challenges repo but not yet live and not being promoted now.
-  const upcomingLevels = allFetchedLevels
+  // Upcoming = (a) levels fetched from challenges repo but not yet promoted to live,
+  // plus (b) levels the user requested that don't exist upstream yet. Both render as
+  // "coming soon" placeholders via OtherLevelsCard on the website.
+  const upcomingFromUpstream = allFetchedLevels
     .filter((l) => !existingLiveIds.has(l.level) && !activeLevelIds.has(l.level))
     .map((l) => ({
+      level: l.level,
       name: l.name || l.title,
       difficulty: l.difficulty || LEVEL_DIFFICULTY_BY_EMOJI[l.emoji] || LEVEL_DIFFICULTY_BY_ID[l.level],
     }));
+
+  const upcomingPlaceholders = missingFromUpstream
+    .filter((id) => !existingLiveIds.has(id))
+    .map((id) => ({
+      level: id,
+      name: LEVEL_DIFFICULTY_BY_ID[id] || id,
+      difficulty: LEVEL_DIFFICULTY_BY_ID[id] || id,
+    }));
+
+  // Dedupe by level id (upstream entry wins) and sort by canonical level order.
+  const upcomingById = new Map();
+  for (const u of [...upcomingPlaceholders, ...upcomingFromUpstream]) {
+    upcomingById.set(u.level, u);
+  }
+  const upcomingLevels = [...upcomingById.values()]
+    .sort((a, b) => (LEVEL_ORDER[a.level] ?? 99) - (LEVEL_ORDER[b.level] ?? 99))
+    .map(({ name, difficulty }) => ({ name, difficulty }));
 
   if (upcomingLevels.length > 0) {
     console.log(`  Upcoming (not live yet): ${upcomingLevels.map((u) => u.difficulty).join(", ")}`);
