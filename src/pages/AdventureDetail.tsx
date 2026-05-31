@@ -149,6 +149,23 @@ const AdventureDetail = (): JSX.Element => {
             {/* Main content */}
             <div className="space-y-8">
 
+              {/* Overview */}
+              {adventure.overview && adventure.overview.length > 0 && (
+                <section aria-labelledby="overview-heading">
+                  <h2 id="overview-heading" className="text-lg font-semibold text-foreground mb-5">
+                    Overview
+                  </h2>
+                  <ul className="space-y-2.5">
+                    {adventure.overview.map((para, i) => (
+                      <li key={i} className="flex items-start gap-2.5">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                        <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">{para}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
               {/* Challenges */}
               <section aria-labelledby="challenges-heading">
                 <h2 id="challenges-heading" className="text-lg font-semibold text-foreground mb-5">
@@ -175,20 +192,6 @@ const AdventureDetail = (): JSX.Element => {
                 <div>
                   <RewardsCard rewards={adventure.rewards} deadlinePast={rewardsBelowFold} />
                 </div>
-              )}
-
-              {/* Your Mission */}
-              {adventure.overview && adventure.overview.length > 0 && (
-                <CollapsibleSection id="overview" title="Overview" defaultOpen={true}>
-                  <ul className="space-y-2.5">
-                    {adventure.overview.map((para, i) => (
-                      <li key={i} className="flex items-start gap-2.5">
-                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                        <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">{para}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </CollapsibleSection>
               )}
 
               {/* The Story */}
