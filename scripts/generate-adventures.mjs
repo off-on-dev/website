@@ -28,6 +28,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
+import { LEVEL_DIFFICULTY_BY_EMOJI } from "./lib/level-constants.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -45,12 +46,6 @@ const EMOJI_ICON_MAP = {
   "⚖️": "Scale",
 };
 
-// Maps difficulty-indicator emoji to the canonical difficulty string.
-const LEVEL_EMOJI_DIFFICULTY = {
-  "🟢": "Beginner",
-  "🟡": "Intermediate",
-  "🔴": "Expert",
-};
 
 // Constant rewards fields shared by all adventures. Omit from YAML to use these defaults.
 const DEFAULT_REWARDS_ELIGIBILITY =
@@ -126,6 +121,27 @@ function isValidISODeadline(str) {
   return /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/.test(str);
 }
 
+/** Resolve alias fields on an adventure YAML object to canonical field values. */
+function normalizeAdventureFields(data) {
+  return {
+    title: data.title || data.name,
+    story: data.story || (data.backstory?.length > 0 ? data.backstory[0] : ""),
+    icon: data.icon || (data.emoji ? EMOJI_ICON_MAP[data.emoji] : undefined),
+  };
+}
+
+/** Resolve alias fields on a level YAML object to canonical field values. */
+function normalizeLevelFields(level) {
+  return {
+    id: level.level,
+    name: level.name || level.title,
+    difficulty: level.difficulty || LEVEL_DIFFICULTY_BY_EMOJI[level.emoji],
+    learnings: level.learnings || level.what_you_learn,
+    intro: level.intro || (level.summary ? [level.summary] : undefined),
+    discussionUrl: (level.discussion_url ?? level.community_url) ?? "",
+  };
+}
+
 // --- YAML Discovery ---
 
 function findAdventureYamls() {
@@ -170,7 +186,7 @@ function validateAdventure(data, id) {
       if (level.deadline && !isValidISODeadline(level.deadline)) {
         warn(`${id} ${prefix}: deadline "${level.deadline}" is not ISO 8601 — update before publishing`);
       }
-      const difficulty = level.difficulty || LEVEL_EMOJI_DIFFICULTY[level.emoji];
+      const difficulty = level.difficulty || LEVEL_DIFFICULTY_BY_EMOJI[level.emoji];
       if (!difficulty) errors.push(`${prefix}: Missing difficulty (or emoji 🟢/🟡/🔴)`);
       else if (!["Beginner", "Intermediate", "Expert"].includes(difficulty)) {
         errors.push(`${prefix}: Invalid difficulty "${difficulty}"`);
@@ -203,14 +219,11 @@ function generateLevelCode(level, adventureId, indent) {
   const i = indent;
   const i2 = indent + "  ";
 
-  const levelDifficulty = level.difficulty || LEVEL_EMOJI_DIFFICULTY[level.emoji];
-  const levelLearnings = level.learnings || level.what_you_learn;
-  const levelIntro = level.intro || (level.summary ? [level.summary] : undefined);
-  const levelDiscussionUrl = level.discussion_url || level.community_url || "";
+  const { id: levelId, name: levelName, difficulty: levelDifficulty, learnings: levelLearnings, intro: levelIntro, discussionUrl: levelDiscussionUrl } = normalizeLevelFields(level);
 
   lines.push(`${i}{`);
-  lines.push(`${i2}id: "${escapeDoubleQuoted(level.level)}",`);
-  lines.push(`${i2}name: "${escapeDoubleQuoted(level.name || level.title)}",`);
+  lines.push(`${i2}id: "${escapeDoubleQuoted(levelId)}",`);
+  lines.push(`${i2}name: "${escapeDoubleQuoted(levelName)}",`);
   lines.push(`${i2}difficulty: "${levelDifficulty}",`);
 
   if (level.topics) {
@@ -346,9 +359,10 @@ function generateAdventureTs(data) {
 
   lines.push(`import type { Adventure } from "./types";`);
   lines.push(``);
-  const adventureTitle = data.title || data.name;
-  const adventureStory = data.story || (data.backstory && data.backstory.length > 0 ? data.backstory[0] : "");
-  const adventureIcon = data.icon || (data.emoji ? EMOJI_ICON_MAP[data.emoji] : undefined);
+  const { title: adventureTitle, story: adventureStory, icon: adventureIcon } = normalizeAdventureFields(data);
+  if (data.emoji && !adventureIcon) {
+    warn(`${data.slug}: emoji "${data.emoji}" is not in EMOJI_ICON_MAP — add it to scripts/generate-adventures.mjs and src/pages/AdventureDetail.tsx`);
+  }
 
   lines.push(`export const ${constName}: Adventure = {`);
   lines.push(`  id: "${data.slug}",`);
@@ -379,7 +393,8 @@ function generateAdventureTs(data) {
     const rankingNote = data.rewards.ranking_note ?? DEFAULT_REWARDS_RANKING_NOTE;
     const rankingRulesUrl = data.rewards.ranking_rules_url ?? DEFAULT_REWARDS_RANKING_RULES_PATH;
     lines.push(`  rewards: {`);
-    lines.push(`    deadline: "${escapeDoubleQuoted(data.rewards.deadline)}",`);
+    const rewardsDeadline = data.rewards.deadline === "TODO" ? "" : data.rewards.deadline;
+    lines.push(`    deadline: "${escapeDoubleQuoted(rewardsDeadline)}",`);
     lines.push(`    eligibility: "${escapeDoubleQuoted(eligibility)}",`);
     lines.push(`    tiers: [`);
     for (const tier of data.rewards.tiers) {
@@ -432,8 +447,7 @@ function generateSummariesTs(adventures) {
 
   for (const data of adventures) {
     lines.push(`  {`);
-    const summaryTitle = data.title || data.name;
-    const summaryStory = data.story || (data.backstory && data.backstory.length > 0 ? data.backstory[0] : "");
+    const { title: summaryTitle, story: summaryStory } = normalizeAdventureFields(data);
     lines.push(`    id: "${data.slug}",`);
     lines.push(`    title: "${escapeDoubleQuoted(summaryTitle)}",`);
     lines.push(`    month: "${data.month}",`);
@@ -445,10 +459,9 @@ function generateSummariesTs(adventures) {
     lines.push(`    levels: [`);
     for (const level of data.levels) {
       lines.push(`      {`);
-      const summaryDifficulty = level.difficulty || LEVEL_EMOJI_DIFFICULTY[level.emoji];
-      const summaryLearnings = level.learnings || level.what_you_learn;
-      lines.push(`        id: "${escapeDoubleQuoted(level.level)}",`);
-      lines.push(`        name: "${escapeDoubleQuoted(level.name || level.title)}",`);
+      const { id: summaryId, name: summaryName, difficulty: summaryDifficulty, learnings: summaryLearnings } = normalizeLevelFields(level);
+      lines.push(`        id: "${escapeDoubleQuoted(summaryId)}",`);
+      lines.push(`        name: "${escapeDoubleQuoted(summaryName)}",`);
       lines.push(`        difficulty: "${summaryDifficulty}",`);
       if (level.topics && level.topics.length > 0) {
         lines.push(`        topics: [${level.topics.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);

@@ -88,8 +88,7 @@ public/
     deploy.yml              # Production deploy to GitHub Pages (push to main)
     preview.yml             # PR preview deploy (runs smoke tests before deploying)
     refresh-community-data.yml  # Hourly discussion and leaderboard data refresh
-    new-adventure.yml       # workflow_dispatch: scaffold a new adventure
-    new-level.yml           # workflow_dispatch: add a level to an existing adventure
+    sync-adventure.yml      # workflow_dispatch: sync an adventure from the challenges repo
     validate-adventures.yml # PR check: validates adventure YAML, routes, and sitemap consistency
 ```
 
@@ -110,8 +109,6 @@ npm run test:e2e     # Playwright smoke tests (requires npm run build first)
 npm run preview      # Copy 404 fallback and serve the production build locally
 npm run generate     # Regenerate TypeScript from adventure YAML files
 npm run generate:validate  # Validate YAML against schema without writing files
-npm run new-adventure   # Scaffold a new adventure YAML and stub files
-npm run new-level       # Add a new level to an existing adventure
 
 npx shadcn@latest add <component>   # Add a shadcn/ui component
 ```
@@ -503,28 +500,21 @@ When adding a new route to `src/routes.ts`, follow these rules by route type:
 - Redirect routes: do not add to `sitemap.xml` or `README.md`.
 - Catch-all routes: do not add anywhere.
 
-### When adding a new adventure
+### When adding a new adventure or a new level to an existing adventure
 
-Complete checklist for every new adventure:
+Adventures and levels are synced from the challenges repo via the `sync-adventure` GitHub Actions workflow (Actions tab → Sync Adventure from Challenges Repo → Run workflow).
 
-1. Run `npm run new-adventure` to scaffold a new `src/data/adventures/<id>/adventure.yaml`.
-2. Run `npm run generate` to produce `<id>.generated.ts` and update `index.ts`.
-3. Add the adventure detail route and all level routes to `src/routes.ts`.
-4. Add all URLs to `public/sitemap.xml`.
-5. Add all URLs to the `prerender` array in `react-router.config.ts`.
-6. Create a per-level discussion JSON file at `src/data/adventures/<adventure-id>/<level-id>-posts.json` with `{ "discussionUrl": "<full-topic-url>" }`.
-7. Run `node scripts/refresh-discussions.mjs` to fetch discussion posts.
-8. Add the adventure to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs` with the correct `categoryId` and level booleans.
-9. Run `node scripts/refresh-leaderboard.mjs` to create `leaderboard.json`.
-10. Update the routes table in `README.md`.
+Inputs:
+- `adventure_url` — URL of the adventure folder in the challenges repo (e.g. `https://github.com/off-on-dev/open-source-challenges/tree/main/adventures/05-lex-imperfecta`)
+- `levels` — comma-separated level IDs to make live now (e.g. `beginner` or `beginner,intermediate`). Levels present in the challenges repo but not listed are added as "coming soon" placeholders. Leave blank to sync all levels.
 
-### When adding a new level to an existing adventure
+The workflow opens a PR with a checklist. Before merging, complete all items in that checklist, including:
 
-1. Run `npm run new-level -- --adventure <id> --level <id>`. This scaffolds `<level-id>-posts.json`, adds the prerender entry to `react-router.config.ts`, and adds the URL to `public/sitemap.xml`.
-2. Add the level fields to `src/data/adventures/<id>/adventure.yaml` and run `npm run generate`.
-3. Add the level route to `src/routes.ts`.
-4. Add the level to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs` and run `node scripts/refresh-leaderboard.mjs`.
-5. Add the level URL to the `ROUTES` array in `e2e/smoke.spec.ts` and `src/test/seo.test.ts`, and to the `pages` array in `src/test/prerender.test.ts` with the expected `<title>` value.
+1. Add the adventure detail route and all level routes to `src/routes.ts`.
+2. Add all URLs to `public/sitemap.xml` and the `prerender` array in `react-router.config.ts`.
+3. Add the adventure to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs` and run `node scripts/refresh-leaderboard.mjs`.
+4. Run `node scripts/refresh-discussions.mjs` after setting `discussionUrl` in each `*-posts.json`.
+5. Add each level URL to the `ROUTES` array in `e2e/smoke.spec.ts` and `src/test/seo.test.ts`, and to the `pages` array in `src/test/prerender.test.ts` with the expected `<title>` value.
 6. Update the routes table in `README.md`.
 
 ---

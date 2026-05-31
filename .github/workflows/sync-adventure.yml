@@ -9,6 +9,14 @@ on:
           (e.g. https://github.com/off-on-dev/open-source-challenges/tree/main/adventures/05-lex-imperfecta)
         required: true
         type: string
+      levels:
+        description: >
+          Comma-separated level IDs to make live now (e.g. beginner or beginner,intermediate).
+          Levels found in the challenges repo but not listed here will be added as "coming soon"
+          placeholders in the More Levels sidebar card.
+          Leave blank to sync all levels as live.
+        required: false
+        type: string
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -44,12 +52,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ADVENTURE_URL: ${{ inputs.adventure_url }}
+          LEVELS_TO_SYNC: ${{ inputs.levels }}
         run: node scripts/sync-adventure.mjs
 
-      - name: Validate generated YAML
-        run: node scripts/generate-adventures.mjs --validate-only
-
-      - name: Regenerate TypeScript
+      - name: Validate and regenerate TypeScript
         run: node scripts/generate-adventures.mjs
 
       - name: Create pull request
@@ -67,7 +73,11 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git checkout -b "$BRANCH" 2>/dev/null || git checkout "$BRANCH"
-          git add src/data/adventures/${SLUG}/
+          git add \
+            src/data/adventures/${SLUG}/ \
+            src/data/adventures/${SLUG}.generated.ts \
+            src/data/adventures/index.ts \
+            src/data/adventures/summaries.ts
           git commit -m "feat: sync adventure ${SLUG} from challenges repo (${MODE})"
 
           git push origin --delete "$BRANCH" 2>/dev/null || true

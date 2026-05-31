@@ -16,9 +16,7 @@
     "test:e2e": "playwright test",
     "generate": "node scripts/generate-adventures.mjs",
     "generate:validate": "node scripts/generate-adventures.mjs --validate-only",
-    "prebuild": "node scripts/generate-adventures.mjs",
-    "new-adventure": "node scripts/new-adventure.mjs",
-    "new-level": "node scripts/new-level.mjs"
+    "prebuild": "node scripts/generate-adventures.mjs"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

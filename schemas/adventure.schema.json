@@ -35,10 +35,6 @@
     },
     "story": {
       "type": "string",
-      "description": "One-paragraph summary of the adventure."
-    },
-    "story": {
-      "type": "string",
       "description": "One-paragraph card summary. Omit to derive from backstory[0]."
     },
     "tags": {

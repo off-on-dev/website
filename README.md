@@ -72,7 +72,7 @@ schemas/
   adventure.schema.json  # JSON Schema for adventure YAML validation
 scripts/
   generate-adventures.mjs  # YAML -> TypeScript codegen (runs as prebuild hook)
-  new-adventure.mjs        # Scaffold a new adventure YAML template
+  sync-adventure.mjs       # Fetch and transform adventure YAML from the challenges repo
 public/
   fonts/          # Self-hosted Inter, Syne, and JetBrains Mono font files
   sitemap.xml
@@ -86,7 +86,7 @@ Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and
 
 - **Source of truth:** the YAML files. Never edit `*.generated.ts` or `index.ts` by hand.
 - **Schema:** `schemas/adventure.schema.json` (JSON Schema Draft 2020-12). Run `npm run generate:validate` to check.
-- **Scaffold a new adventure:** `node scripts/new-adventure.mjs`
+- **Sync from challenges repo:** use the `sync-adventure` GitHub Actions workflow (see Adding Adventures below).
 - **Generated outputs:** `<id>.generated.ts` (one per adventure) + `index.ts` (barrel with `ADVENTURES`, `ALL_TAGS`, `ADVENTURE_CONTRIBUTORS`, `getLevelsByTag`, `tagToSlug`, `slugToTag`).
 - **Generated files are committed** so the dev server works without an extra step.
 
@@ -186,36 +186,30 @@ PR preview builds set the `VITE_BASE_PATH` environment variable to `/pr-preview/
 
 ## Adding Adventures and Levels
 
-New adventures and levels can be scaffolded via GitHub Actions (recommended) or locally via scripts.
+Adventures and levels are synced from the challenges repo via the **Sync Adventure from Challenges Repo** GitHub Actions workflow.
 
 ### Via GitHub Actions
 
-Go to the repository's **Actions** tab, select the workflow, click **Run workflow**, and fill in the form inputs.
+Go to the **Actions** tab, select **Sync Adventure from Challenges Repo**, and click **Run workflow**.
 
-| Workflow | Inputs | What it does |
+| Input | Required | Description |
 |---|---|---|
-| **New Adventure** | `id`, `title`, `month`, `levels` (comma-separated) | Scaffolds a full adventure: TS file with TODOs, discussion JSON stubs, patches `react-router.config.ts` and `sitemap.xml`, opens a PR |
-| **New Level** | `adventure` (existing ID), `level` (beginner/intermediate/expert) | Adds a level to an existing adventure: discussion JSON stub, patches config and sitemap, opens a PR with a TS snippet to paste |
+| `adventure_url` | Yes | URL of the adventure folder in the challenges repo (e.g. `https://github.com/off-on-dev/open-source-challenges/tree/main/adventures/05-lex-imperfecta`) |
+| `levels` | No | Comma-separated level IDs to make live now (e.g. `beginner` or `beginner,intermediate`). Levels in the challenges repo not listed here appear as "coming soon" placeholders. Leave blank to sync all. |
 
-Both workflows commit the scaffolded files to a new branch and open a PR automatically using the GitHub CLI (`gh pr create`). The PR description includes next steps (fill in content TODOs, run verification, etc.).
+The workflow fetches content from the challenges repo, generates the TypeScript data files, and opens a PR on branch `feat/adventure-<slug>`. The PR description includes a checklist of steps to complete before merging.
 
-### Via local scripts
+### After the PR is opened
 
-```sh
-# Scaffold a new adventure with all required files
-node scripts/new-adventure.mjs --id "signal-in-the-storm" --title "Signal in the Storm" --month "JUL 2026" --levels beginner,intermediate,expert
+Complete all items in the PR checklist, including:
 
-# Add a level to an existing adventure
-node scripts/new-level.mjs --adventure "blind-by-design" --level expert
-```
-
-After running either script, fill in the TODO placeholders in the generated TS file, then:
-
-1. Add the `discussionUrl` in `src/data/adventures/<id>/<level>.json`
-2. Run `node scripts/refresh-discussions.mjs` to fetch posts
-3. Add the adventure's `categoryId` and `levelCount` to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs`
-4. Run `node scripts/refresh-leaderboard.mjs` to fetch leaderboard data
-5. Run `npm run lint && npm test && npm run build && npm run test:e2e`
+1. Add the adventure detail route and all level routes to `src/routes.ts`
+2. Add all URLs to `public/sitemap.xml` and the `prerender` array in `react-router.config.ts`
+3. Set `discussionUrl` in each `*-posts.json`, then run `node scripts/refresh-discussions.mjs`
+4. Add the adventure to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs` and run `node scripts/refresh-leaderboard.mjs`
+5. Add each level URL to `ROUTES` in `e2e/smoke.spec.ts` and `src/test/seo.test.ts`, and to `pages` in `src/test/prerender.test.ts` with the expected `<title>`
+6. Update the routes table in `README.md`
+7. Run `npm run lint && npm test && npm run build && npm run test:e2e`
 
 ### Leaderboard data
 

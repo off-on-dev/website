@@ -20,7 +20,7 @@ import { DiscussionSection } from "@/components/DiscussionSection";
 import { CommunitySidebar } from "@/components/CommunitySidebar";
 import { OtherLevelsCard } from "@/components/OtherLevelsCard";
 import { RewardsCard } from "@/components/RewardsCard";
-import { SITE_URL, BRAND_NAME, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
+import { SITE_URL, BRAND_NAME, COMMUNITY_DISPLAY_NAME, COMMUNITY_URL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 import { isDeadlinePast } from "@/lib/utils";
 
@@ -213,7 +213,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
                 <span>
                   Share your solutions in the{" "}
                   <a
-                    href={level.discussionUrl}
+                    href={level.discussionUrl || COMMUNITY_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="docs-ext-link font-medium"
