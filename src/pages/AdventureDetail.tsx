@@ -60,6 +60,25 @@ export const meta: MetaFunction = ({ params }) => {
   });
 };
 
+type UpcomingLevelTileProps = { name: string; difficulty: AdventureLevel["difficulty"] };
+
+const UpcomingLevelTile = ({ name, difficulty }: UpcomingLevelTileProps): JSX.Element => {
+  return (
+    <div
+      aria-label={`${name} (coming soon)`}
+      className="relative rounded-xl border border-dashed border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 flex flex-col opacity-70"
+    >
+      <div className="mb-3">
+        <DifficultyBadge difficulty={difficulty} showDot />
+      </div>
+      <h3 className="text-lg font-semibold text-foreground mb-3">{name}</h3>
+      <span className="mt-auto inline-flex items-center gap-1 text-xs font-mono uppercase tracking-widest text-[hsl(var(--text-faint))]">
+        Coming Soon
+      </span>
+    </div>
+  );
+};
+
 type AdventureLevelLinkProps = { level: AdventureLevel; adventureId: string };
 
 const AdventureLevelLink = ({ level, adventureId }: AdventureLevelLinkProps): JSX.Element => {
@@ -134,11 +153,21 @@ const AdventureDetail = (): JSX.Element => {
                 <h2 id="challenges-heading" className="text-lg font-semibold text-foreground mb-5">
                   Challenges
                 </h2>
-                <div className={`grid gap-5 ${adventure.levels.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3"}`}>
-                  {adventure.levels.map((level) => (
-                    <AdventureLevelLink key={level.id} level={level} adventureId={adventure.id} />
-                  ))}
-                </div>
+                {(() => {
+                  const upcoming = adventure.upcomingLevels ?? [];
+                  const totalTiles = adventure.levels.length + upcoming.length;
+                  const gridCols = totalTiles === 2 ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3";
+                  return (
+                    <div className={`grid gap-5 ${gridCols}`}>
+                      {adventure.levels.map((level) => (
+                        <AdventureLevelLink key={level.id} level={level} adventureId={adventure.id} />
+                      ))}
+                      {upcoming.map((u) => (
+                        <UpcomingLevelTile key={`upcoming-${u.difficulty}-${u.name}`} name={u.name} difficulty={u.difficulty} />
+                      ))}
+                    </div>
+                  );
+                })()}
               </section>
 
               {adventure.rewards && !rewardsBelowFold && (
