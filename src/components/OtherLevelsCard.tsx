@@ -66,7 +66,7 @@ export const OtherLevelsCard = ({
         {upcoming.map((level) => (
           <li key={`upcoming-${level.difficulty}-${level.name}`}>
             <span
-              className="inline-flex w-full items-center gap-2 rounded-sm border px-2.5 py-1.5 text-xs opacity-50"
+              className="inline-flex w-full items-center gap-2 rounded-sm border border-dashed px-2.5 py-1.5 text-xs"
               style={pillStyle[level.difficulty]}
             >
               <span className="shrink-0 uppercase font-medium">{level.difficulty}</span>

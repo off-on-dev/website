@@ -66,13 +66,13 @@ const UpcomingLevelTile = ({ name, difficulty }: UpcomingLevelTileProps): JSX.El
   return (
     <div
       aria-label={`${name} (coming soon)`}
-      className="relative rounded-xl border border-dashed border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 flex flex-col opacity-70"
+      className="relative rounded-xl border border-dashed border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 flex flex-col"
     >
       <div className="mb-3">
         <DifficultyBadge difficulty={difficulty} showDot />
       </div>
       <h3 className="text-lg font-semibold text-foreground mb-3">{name}</h3>
-      <span className="mt-auto inline-flex items-center gap-1 text-xs font-mono uppercase tracking-widest text-[hsl(var(--text-faint))]">
+      <span className="mt-auto inline-flex items-center gap-1 text-xs font-mono uppercase tracking-widest text-[hsl(var(--text-secondary))]">
         Coming Soon
       </span>
     </div>
