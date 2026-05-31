@@ -12,8 +12,8 @@ on:
       levels:
         description: >
           Comma-separated level IDs to make live now (e.g. beginner or beginner,intermediate).
-          Levels found in the challenges repo but not listed here will be added as "coming soon"
-          placeholders in the More Levels sidebar card.
+          Any level requested here (or found in the challenges repo) that isn't promoted to live
+          becomes a "Coming Soon" placeholder on the adventure page and in the level page sidebar.
           Leave blank to sync all levels as live.
         required: false
         type: string
@@ -72,6 +72,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          # Fetch the remote branch first so force-with-lease has a reference to compare
+          # against. On a fresh runner with shallow clone we don't have origin/<branch>,
+          # which makes force-with-lease unpredictable.
+          git fetch origin "$BRANCH" 2>/dev/null || true
+
           git checkout -b "$BRANCH" 2>/dev/null || git checkout "$BRANCH"
           git add \
             src/data/adventures/${SLUG}/ \
@@ -87,8 +92,9 @@ jobs:
             src/test/prerender.test.ts
           git commit -m "feat: sync adventure ${SLUG} from challenges repo (${MODE})"
 
-          # Force-with-lease keeps PR identity and review history when re-syncing.
-          git push --force-with-lease origin "$BRANCH"
+          # The branch is owned by this workflow, so a plain --force is safe here and
+          # avoids the "stale info" failure mode of --force-with-lease without a ref.
+          git push --force origin "$BRANCH"
 
           if [ "$MODE" = "update" ]; then
             PR_TITLE="feat(adventure): add levels to ${NAME} — ${LEVELS}"
@@ -96,42 +102,54 @@ jobs:
             PR_TITLE="feat(adventure): add ${NAME}"
           fi
 
-          {
-            printf '## %s: %s\n\n' "$MODE" "$NAME"
-            printf 'Auto-synced from the challenges repo.\n\n'
-            printf '**Source:** %s\n\n' "$SOURCE_URL"
-            printf '**Levels in this PR:** `%s`\n\n' "$LEVELS"
-            printf '---\n\n'
-            printf '### Before merging\n\n'
-            printf -- '- [ ] Add `contributor:` block to `src/data/adventures/%s/adventure.yaml`\n' "$SLUG"
-            printf -- '  ```yaml\n'
-            printf -- '  contributor:\n'
-            printf -- '    name: "Full Name"\n'
-            printf -- '    url: "https://example.com"\n'
-            printf -- '    about: "One sentence bio."\n'
-            printf -- '  ```\n'
-            printf -- '- [ ] Confirm `month:` is correct for the planned release\n'
-            printf -- '- [ ] Set `community_category_id:` in `src/data/adventures/%s/adventure.yaml` (look up at https://community.offon.dev/categories.json), then run `npm run generate`\n' "$SLUG"
-            printf -- '- [ ] Update `rewards.deadline:` from `TODO` to ISO 8601 (e.g. `2026-07-01T23:59:00+01:00`)\n'
-            printf -- '- [ ] Review `topics:` on each level — auto-set to all adventure tags, refine to level-specific subset if needed\n'
-            printf -- '- [ ] Update `community_url:` in each level once the Discourse threads are created\n'
-            printf -- '- [ ] Update `discussionUrl` in each `*-posts.json` stub\n\n'
-            printf '### Manual steps (only if needed)\n\n'
-            printf -- '- [ ] If any level uses an SVG `architecture_diagram`, add the SVG to `src/assets/diagrams/` and add `architecture_diagram: <file>.svg` back to that level in `adventure.yaml` (sync strips it)\n'
-            printf -- '- [ ] Run `node scripts/refresh-leaderboard.mjs` after `community_category_id` is set\n'
-            printf -- '- [ ] Run `node scripts/refresh-discussions.mjs` after `discussionUrl` values are set\n\n'
-            printf '### Auto-generated (do not edit by hand)\n\n'
-            printf 'The following are kept in sync with `adventure.yaml` by `npm run generate` (prebuild hook):\n'
-            printf -- '- `public/sitemap.xml` (GENERATED:adventures region)\n'
-            printf -- '- `react-router.config.ts` prerender (GENERATED:adventures region)\n'
-            printf -- '- `e2e/smoke.spec.ts` and `src/test/seo.test.ts` route arrays\n'
-            printf -- '- `src/test/prerender.test.ts` pages array\n'
-            printf -- '- `scripts/refresh-leaderboard.mjs` ADVENTURE_CATEGORIES\n\n'
-            printf '### Checks\n\n'
-            printf '```sh\n'
-            printf 'npm run lint && npm test && npm run build && npm run test:e2e\n'
-            printf '```\n'
-          } > /tmp/pr-body.md
+          cat > /tmp/pr-body.md <<EOF
+          ## ${MODE}: ${NAME}
+
+          Auto-synced from the challenges repo.
+
+          **Source:** ${SOURCE_URL}
+
+          **Levels in this PR:** \`${LEVELS}\`
+
+          ---
+
+          ### Before merging
+
+          - [ ] Add \`contributor:\` block to \`src/data/adventures/${SLUG}/adventure.yaml\`
+            \`\`\`yaml
+            contributor:
+              name: "Full Name"
+              url: "https://example.com"
+              about: "One sentence bio."
+            \`\`\`
+          - [ ] Confirm \`month:\` is correct for the planned release
+          - [ ] Set \`community_category_id:\` in \`src/data/adventures/${SLUG}/adventure.yaml\` (look up at https://community.offon.dev/categories.json), then run \`npm run generate\`
+          - [ ] Update \`rewards.deadline:\` from \`TODO\` to ISO 8601 (e.g. \`2026-07-01T23:59:00+01:00\`)
+          - [ ] Review \`topics:\` on each level, auto-set to all adventure tags, refine to level-specific subset if needed
+          - [ ] Update \`community_url:\` in each level once the Discourse threads are created
+          - [ ] Update \`discussionUrl\` in each \`*-posts.json\` stub
+
+          ### Manual steps (only if needed)
+
+          - [ ] If any level uses an SVG \`architecture_diagram\`, add the SVG to \`src/assets/diagrams/\` and add \`architecture_diagram: <file>.svg\` back to that level in \`adventure.yaml\` (sync strips it)
+          - [ ] Run \`node scripts/refresh-leaderboard.mjs\` after \`community_category_id\` is set
+          - [ ] Run \`node scripts/refresh-discussions.mjs\` after \`discussionUrl\` values are set
+
+          ### Auto-generated (do not edit by hand)
+
+          The following are kept in sync with \`adventure.yaml\` by \`npm run generate\` (prebuild hook):
+          - \`public/sitemap.xml\` (GENERATED:adventures region)
+          - \`react-router.config.ts\` prerender (GENERATED:adventures region)
+          - \`e2e/smoke.spec.ts\` and \`src/test/seo.test.ts\` route arrays
+          - \`src/test/prerender.test.ts\` pages array
+          - \`scripts/refresh-leaderboard.mjs\` ADVENTURE_CATEGORIES
+
+          ### Checks
+
+          \`\`\`sh
+          npm run lint && npm test && npm run build && npm run test:e2e
+          \`\`\`
+          EOF
 
           EXISTING_PR=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
           if [ -n "$EXISTING_PR" ]; then
