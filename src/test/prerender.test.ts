@@ -95,6 +95,14 @@ const pages: PageSpec[] = [
     check: { type: "contains", value: "Hyperspace Operations &amp; Transport" },
   },
   {
+    file: "adventures/lex-imperfecta/index.html",
+    check: { type: "contains", value: "Lex Imperfecta" },
+  },
+  {
+    file: "adventures/lex-imperfecta/levels/beginner/index.html",
+    check: { type: "contains", value: "The Twelve Tables" },
+  },
+  {
     file: "adventures/the-ai-observatory/index.html",
     check: { type: "contains", value: "The AI Observatory" },
   },

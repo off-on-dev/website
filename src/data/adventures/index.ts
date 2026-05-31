@@ -1,6 +1,7 @@
 import { BLIND_BY_DESIGN } from "./blind-by-design.generated";
 import { BUILDING_CLOUDHAVEN } from "./building-cloudhaven.generated";
 import { ECHOES_LOST_IN_ORBIT } from "./echoes-lost-in-orbit.generated";
+import { LEX_IMPERFECTA } from "./lex-imperfecta.generated";
 import { THE_AI_OBSERVATORY } from "./the-ai-observatory.generated";
 import type { Adventure, AdventureContributor, RelatedLevel } from "./types";
 
@@ -10,6 +11,7 @@ export const ADVENTURES: Adventure[] = [
   BLIND_BY_DESIGN,
   BUILDING_CLOUDHAVEN,
   ECHOES_LOST_IN_ORBIT,
+  LEX_IMPERFECTA,
   THE_AI_OBSERVATORY,
 ];
 
