@@ -38,4 +38,4 @@ export const BRAND_SECONDARY_LINE_PARTS = [
 ] as const;
 export const BRAND_SECONDARY_LINE = `${BRAND_SECONDARY_LINE_PARTS[0]} ${BRAND_SECONDARY_LINE_PARTS[1]} ${BRAND_SECONDARY_LINE_PARTS[2]}`;
 
-export const BRAND_SHORT_DESCRIPTION = "A vendor-neutral community for open source enthusiasts. Learn through hands-on challenges, share what you know, and connect with people who love open source.";
+export const BRAND_SHORT_DESCRIPTION = "A welcoming open source community to learn through hands-on challenges, share knowledge, and build together.";

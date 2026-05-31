@@ -2,6 +2,7 @@ slug: building-cloudhaven
 title: Building CloudHaven
 icon: Cloud
 month: JAN 2026
+community_category_id: 36
 story: Join the Infrastructure Guild and modernize CloudHaven's infrastructure from manual provisioning to a
   self-service platform using Infrastructure as Code. A hands-on journey through infrastructure as code with
   OpenTofu and GitHub Actions.

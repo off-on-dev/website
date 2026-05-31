@@ -46,6 +46,10 @@
     "contributor": {
       "$ref": "#/$defs/contributor"
     },
+    "community_category_id": {
+      "type": "integer",
+      "description": "Discourse category ID for the leaderboard query. Look it up at https://community.offon.dev/categories.json. Drives ADVENTURE_CATEGORIES in scripts/refresh-leaderboard.mjs."
+    },
     "backstory": {
       "type": "array",
       "items": { "type": "string" },

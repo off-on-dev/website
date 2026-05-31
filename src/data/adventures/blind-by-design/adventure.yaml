@@ -2,6 +2,7 @@ slug: blind-by-design
 title: "Blind by Design"
 icon: FlaskConical
 month: "MAY 2026"
+community_category_id: 41
 story: >-
   Three levels of OpenFeature with flagd as the provider, in a Java + Spring Boot service.
   Wire the SDK against a flagd sidecar (Beginner), layer evaluation context to target by cohort

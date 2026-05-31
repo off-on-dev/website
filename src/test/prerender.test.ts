@@ -45,58 +45,11 @@ const pages: PageSpec[] = [
     file: "handbook/index.html",
     check: { type: "exact", value: "Handbook - OffOn" },
   },
+  // GENERATED:adventures
   {
-    file: "adventures/echoes-lost-in-orbit/index.html",
-    check: { type: "contains", value: "Echoes Lost in Orbit" },
+    file: "adventures/blind-by-design/index.html",
+    check: { type: "contains", value: "Blind by Design" },
   },
-  {
-    file: "adventures/building-cloudhaven/index.html",
-    check: { type: "contains", value: "Building CloudHaven" },
-  },
-  {
-    file: "adventures/the-ai-observatory/index.html",
-    check: { type: "contains", value: "The AI Observatory" },
-  },
-  // Adventure levels: echoes-lost-in-orbit
-  {
-    file: "adventures/echoes-lost-in-orbit/levels/beginner/index.html",
-    check: { type: "contains", value: "Broken Echoes" },
-  },
-  {
-    file: "adventures/echoes-lost-in-orbit/levels/intermediate/index.html",
-    check: { type: "contains", value: "The Silent Canary" },
-  },
-  {
-    file: "adventures/echoes-lost-in-orbit/levels/expert/index.html",
-    check: { type: "contains", value: "Hyperspace Operations" },
-  },
-  // Adventure levels: building-cloudhaven
-  {
-    file: "adventures/building-cloudhaven/levels/beginner/index.html",
-    check: { type: "contains", value: "The Foundation Stones" },
-  },
-  {
-    file: "adventures/building-cloudhaven/levels/intermediate/index.html",
-    check: { type: "contains", value: "The Modular Metropolis" },
-  },
-  {
-    file: "adventures/building-cloudhaven/levels/expert/index.html",
-    check: { type: "contains", value: "The Guardian Protocols" },
-  },
-  // Adventure levels: the-ai-observatory
-  {
-    file: "adventures/the-ai-observatory/levels/beginner/index.html",
-    check: { type: "contains", value: "Calibrating the Lens" },
-  },
-  {
-    file: "adventures/the-ai-observatory/levels/intermediate/index.html",
-    check: { type: "contains", value: "The Distracted Pilot" },
-  },
-  {
-    file: "adventures/the-ai-observatory/levels/expert/index.html",
-    check: { type: "contains", value: "The Noise Filter" },
-  },
-  // Adventure levels: blind-by-design
   {
     file: "adventures/blind-by-design/levels/beginner/index.html",
     check: { type: "contains", value: "Stand up the Lab" },
@@ -109,6 +62,55 @@ const pages: PageSpec[] = [
     file: "adventures/blind-by-design/levels/expert/index.html",
     check: { type: "contains", value: "Read the Chart" },
   },
+  {
+    file: "adventures/building-cloudhaven/index.html",
+    check: { type: "contains", value: "Building CloudHaven" },
+  },
+  {
+    file: "adventures/building-cloudhaven/levels/beginner/index.html",
+    check: { type: "contains", value: "The Foundation Stones" },
+  },
+  {
+    file: "adventures/building-cloudhaven/levels/intermediate/index.html",
+    check: { type: "contains", value: "The Modular Metropolis" },
+  },
+  {
+    file: "adventures/building-cloudhaven/levels/expert/index.html",
+    check: { type: "contains", value: "The Guardian Protocols" },
+  },
+  {
+    file: "adventures/echoes-lost-in-orbit/index.html",
+    check: { type: "contains", value: "Echoes Lost in Orbit" },
+  },
+  {
+    file: "adventures/echoes-lost-in-orbit/levels/beginner/index.html",
+    check: { type: "contains", value: "Broken Echoes" },
+  },
+  {
+    file: "adventures/echoes-lost-in-orbit/levels/intermediate/index.html",
+    check: { type: "contains", value: "The Silent Canary" },
+  },
+  {
+    file: "adventures/echoes-lost-in-orbit/levels/expert/index.html",
+    check: { type: "contains", value: "Hyperspace Operations &amp; Transport" },
+  },
+  {
+    file: "adventures/the-ai-observatory/index.html",
+    check: { type: "contains", value: "The AI Observatory" },
+  },
+  {
+    file: "adventures/the-ai-observatory/levels/beginner/index.html",
+    check: { type: "contains", value: "Calibrating the Lens" },
+  },
+  {
+    file: "adventures/the-ai-observatory/levels/intermediate/index.html",
+    check: { type: "contains", value: "The Distracted Pilot" },
+  },
+  {
+    file: "adventures/the-ai-observatory/levels/expert/index.html",
+    check: { type: "contains", value: "The Noise Filter" },
+  },
+  // /GENERATED:adventures
   {
     file: "challenges/index.html",
     check: { type: "exact", value: "Open Source Challenges | OffOn" },

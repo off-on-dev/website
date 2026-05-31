@@ -2,6 +2,7 @@ slug: echoes-lost-in-orbit
 title: Echoes Lost in Orbit
 icon: Satellite
 month: DEC 2025
+community_category_id: 35
 story: Restore interstellar communications by fixing broken GitOps setups, progressive delivery systems, and
   observability pipelines across three galactic missions.
 tags:

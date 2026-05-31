@@ -559,6 +559,230 @@ function generateIndexTs(adventures) {
   return lines.join("\n");
 }
 
+// --- Region patching ---
+
+/**
+ * Each consumer file has a region marked by `GENERATED:adventures` / `/GENERATED:adventures`
+ * comments. The body between those markers is regenerated from the YAML on every build.
+ * Hand-edits to entries inside the region will be overwritten. Add manual entries OUTSIDE
+ * the markers.
+ */
+function escapeRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function replaceRegion(filePath, openMarker, closeMarker, body) {
+  if (!existsSync(filePath)) fail(`Region target file not found: ${filePath}`);
+  const content = readFileSync(filePath, "utf-8");
+  const re = new RegExp(
+    `(${escapeRegex(openMarker)})[\\s\\S]*?(${escapeRegex(closeMarker)})`
+  );
+  if (!re.test(content)) {
+    fail(`Region markers not found in ${filePath}. Expected "${openMarker}" ... "${closeMarker}".`);
+  }
+  const next = content.replace(re, `$1\n${body}$2`);
+  if (next !== content) {
+    writeFileSync(filePath, next);
+    console.log(`  Patched region: ${filePath.replace(ROOT + "/", "")}`);
+  }
+}
+
+/** Build the body for a region as one block of text. Body must include a trailing newline. */
+function buildSitemapBody(adventures) {
+  const lines = [];
+  for (const a of adventures) {
+    lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
+    for (const l of a.levels) {
+      lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/levels/${l.level}/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
+    }
+  }
+  return lines.join("\n") + "\n  ";
+}
+
+function buildPrerenderBody(adventures) {
+  const lines = [];
+  for (const a of adventures) {
+    lines.push(`    "/adventures/${a.slug}",`);
+    for (const l of a.levels) {
+      lines.push(`    "/adventures/${a.slug}/levels/${l.level}",`);
+    }
+  }
+  return lines.join("\n") + "\n    ";
+}
+
+function buildSeoRoutesBody(adventures) {
+  const lines = [];
+  for (const a of adventures) {
+    lines.push(`  "/adventures/${a.slug}",`);
+    for (const l of a.levels) {
+      lines.push(`  "/adventures/${a.slug}/levels/${l.level}",`);
+    }
+  }
+  return lines.join("\n") + "\n  ";
+}
+
+function buildSmokeRoutesBody(adventures) {
+  const lines = [];
+  for (const a of adventures) {
+    const { title } = normalizeAdventureFields(a);
+    lines.push(`  { path: "/adventures/${a.slug}", title: /${escapeRegex(title)}/ },`);
+    for (const l of a.levels) {
+      const { name } = normalizeLevelFields(l);
+      lines.push(`  { path: "/adventures/${a.slug}/levels/${l.level}", title: /${escapeRegex(name)}/ },`);
+    }
+  }
+  return lines.join("\n") + "\n  ";
+}
+
+function buildPrerenderTestBody(adventures) {
+  // The "contains" check matches the raw HTML, so HTML entities must be encoded here.
+  const htmlEncode = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const lines = [];
+  for (const a of adventures) {
+    const { title } = normalizeAdventureFields(a);
+    lines.push(`  {`);
+    lines.push(`    file: "adventures/${a.slug}/index.html",`);
+    lines.push(`    check: { type: "contains", value: "${escapeDoubleQuoted(htmlEncode(title))}" },`);
+    lines.push(`  },`);
+    for (const l of a.levels) {
+      const { name } = normalizeLevelFields(l);
+      lines.push(`  {`);
+      lines.push(`    file: "adventures/${a.slug}/levels/${l.level}/index.html",`);
+      lines.push(`    check: { type: "contains", value: "${escapeDoubleQuoted(htmlEncode(name))}" },`);
+      lines.push(`  },`);
+    }
+  }
+  return lines.join("\n") + "\n  ";
+}
+
+function buildLeaderboardCategoriesBody(adventures) {
+  const lines = [];
+  // Align colons by padding the key to a stable width.
+  const maxKeyLen = Math.max(...adventures.map((a) => a.slug.length));
+  for (const a of adventures) {
+    const has_beginner = a.levels.some((l) => l.level === "beginner");
+    const has_intermediate = a.levels.some((l) => l.level === "intermediate");
+    const has_expert = a.levels.some((l) => l.level === "expert");
+    const key = `"${a.slug}":`.padEnd(maxKeyLen + 3);
+    const todo = a.community_category_id === undefined
+      ? " // TODO: set categoryId — look up at https://community.offon.dev/categories.json"
+      : "";
+    const categoryId = a.community_category_id ?? 0;
+    lines.push(`  ${key} { categoryId: ${categoryId}, has_beginner: ${has_beginner}, has_intermediate: ${has_intermediate}, has_expert: ${has_expert}, has_single: false },${todo}`);
+  }
+  return lines.join("\n") + "\n  ";
+}
+
+/** Mirrors `tagToSlug` in the generated index.ts so consumer files use identical slugs. */
+function tagToSlug(tag) {
+  return tag.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+function collectAllTags(adventures) {
+  const set = new Set();
+  for (const a of adventures) {
+    for (const t of a.tags || []) set.add(t);
+  }
+  return [...set].sort((x, y) => x.localeCompare(y));
+}
+
+function buildSitemapTagsBody(tags) {
+  const lines = tags.map(
+    (t) =>
+      `  <url><loc>https://offon.dev/challenges/${tagToSlug(t)}/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>`,
+  );
+  return lines.join("\n") + "\n";
+}
+
+function buildPrerenderTagsBody(tags) {
+  const lines = tags.map((t) => `    "/challenges/${tagToSlug(t)}",`);
+  return lines.join("\n") + "\n    ";
+}
+
+function buildSeoTagsBody(tags) {
+  const lines = tags.map((t) => `  "/challenges/${tagToSlug(t)}",`);
+  return lines.join("\n") + "\n  ";
+}
+
+function buildSmokeTagsBody(tags) {
+  const lines = tags.map(
+    (t) => `  { path: "/challenges/${tagToSlug(t)}", title: /${escapeRegex(t)} Challenges/ },`,
+  );
+  return lines.join("\n") + "\n  ";
+}
+
+function patchRegions(adventures) {
+  // Sitemap uses the surrounding static URL lines as anchors so the file stays
+  // free of generator comments. The adventures block sits between the last
+  // static page (/privacy/) and /challenges/. Both anchor lines must stay
+  // exactly as-is; do not reorder the static URLs around them.
+  replaceRegion(
+    resolve(ROOT, "public/sitemap.xml"),
+    `<url><loc>https://offon.dev/privacy/</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>`,
+    `<url><loc>https://offon.dev/challenges/</loc>`,
+    buildSitemapBody(adventures)
+  );
+  replaceRegion(
+    resolve(ROOT, "react-router.config.ts"),
+    "// GENERATED:adventures",
+    "// /GENERATED:adventures",
+    buildPrerenderBody(adventures)
+  );
+  replaceRegion(
+    resolve(ROOT, "src/test/seo.test.ts"),
+    "// GENERATED:adventures",
+    "// /GENERATED:adventures",
+    buildSeoRoutesBody(adventures)
+  );
+  replaceRegion(
+    resolve(ROOT, "e2e/smoke.spec.ts"),
+    "// GENERATED:adventures",
+    "// /GENERATED:adventures",
+    buildSmokeRoutesBody(adventures)
+  );
+  replaceRegion(
+    resolve(ROOT, "src/test/prerender.test.ts"),
+    "// GENERATED:adventures",
+    "// /GENERATED:adventures",
+    buildPrerenderTestBody(adventures)
+  );
+  replaceRegion(
+    resolve(ROOT, "scripts/refresh-leaderboard.mjs"),
+    "// GENERATED:adventures",
+    "// /GENERATED:adventures",
+    buildLeaderboardCategoriesBody(adventures)
+  );
+
+  // Challenge tag URLs. Derived from ALL_TAGS across every adventure's `tags:`
+  // array. Sitemap uses the surrounding `/challenges/` index URL and the closing
+  // `</urlset>` as anchors so it stays free of generator comments.
+  const tags = collectAllTags(adventures);
+  replaceRegion(
+    resolve(ROOT, "public/sitemap.xml"),
+    `<url><loc>https://offon.dev/challenges/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>`,
+    `</urlset>`,
+    buildSitemapTagsBody(tags)
+  );
+  replaceRegion(
+    resolve(ROOT, "react-router.config.ts"),
+    "// GENERATED:challenge-tags",
+    "// /GENERATED:challenge-tags",
+    buildPrerenderTagsBody(tags)
+  );
+  replaceRegion(
+    resolve(ROOT, "src/test/seo.test.ts"),
+    "// GENERATED:challenge-tags",
+    "// /GENERATED:challenge-tags",
+    buildSeoTagsBody(tags)
+  );
+  replaceRegion(
+    resolve(ROOT, "e2e/smoke.spec.ts"),
+    "// GENERATED:challenge-tags",
+    "// /GENERATED:challenge-tags",
+    buildSmokeTagsBody(tags)
+  );
+}
+
 // --- Main ---
 
 function main() {
@@ -628,6 +852,9 @@ function main() {
   const summariesPath = resolve(ADVENTURES_DIR, "summaries.ts");
   writeFileSync(summariesPath, summariesContent);
   console.log(`  Generated: src/data/adventures/summaries.ts`);
+
+  // Patch GENERATED:adventures regions in route/sitemap/test/leaderboard files.
+  patchRegions(adventures);
 
   console.log(`\n\x1b[32mDone!\x1b[0m Generated ${adventures.length} adventure file(s) + index.ts + summaries.ts`);
 }

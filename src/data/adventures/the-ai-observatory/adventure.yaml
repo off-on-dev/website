@@ -2,6 +2,7 @@ slug: the-ai-observatory
 title: The AI Observatory
 icon: Telescope
 month: FEB 2026
+community_category_id: 37
 story: Investigate a mysterious bandwidth anomaly at a remote research station by instrumenting its AI system with
   OpenTelemetry, OpenLLMetry, and Jaeger.
 tags:

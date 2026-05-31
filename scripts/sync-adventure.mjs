@@ -62,7 +62,8 @@ async function ghApi(endpoint) {
   try {
     const { stdout } = await execAsync(`gh api "${endpoint}"`, { encoding: "utf8" });
     return JSON.parse(stdout);
-  } catch {
+  } catch (err) {
+    console.warn(`  gh api ${endpoint} failed: ${err.stderr?.trim() || err.message}`);
     return null;
   }
 }
@@ -84,10 +85,13 @@ function deriveTopics(adventureTags) {
 }
 
 function buildLevel(raw, adventureTags) {
+  // architecture_diagram is dropped on sync. Diagram SVGs live in src/assets/diagrams/
+  // and must be added manually in the PR if a level needs one.
+  const { architecture_diagram: _ignored, ...rest } = raw;
   return {
-    ...raw,
-    topics: raw.topics || deriveTopics(adventureTags),
-    verification: raw.verification || VERIFICATION_STUB,
+    ...rest,
+    topics: rest.topics || deriveTopics(adventureTags),
+    verification: rest.verification || VERIFICATION_STUB,
   };
 }
 
@@ -193,6 +197,8 @@ async function main() {
     ...(indexData.rewards && { rewards: indexData.rewards }),
     // Preserve contributor set by a reviewer; omit otherwise (PR checklist item)
     ...(existing?.contributor && { contributor: existing.contributor }),
+    // Preserve community_category_id once a reviewer has set it; otherwise generator emits a TODO stub.
+    ...(existing?.community_category_id !== undefined && { community_category_id: existing.community_category_id }),
     ...(upcomingLevels.length > 0 && { upcoming_levels: upcomingLevels }),
     levels: mergeLevels(existing?.levels, activeLevels),
   };

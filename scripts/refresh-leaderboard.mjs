@@ -30,13 +30,16 @@ const COMMUNITY_BASE = "https://community.offon.dev";
 const QUERY_ID = 5;
 
 // Maps adventure ID -> Discourse category ID and which difficulty levels are active.
-// Update this when a new adventure is added.
+// Generated from src/data/adventures/<id>/adventure.yaml by scripts/generate-adventures.mjs.
+// Do not edit the GENERATED block by hand — change adventure.yaml instead.
 // Category IDs are from: GET https://community.offon.dev/categories.json
 const ADVENTURE_CATEGORIES = {
-  "echoes-lost-in-orbit":  { categoryId: 35, has_beginner: true,  has_intermediate: true,  has_expert: true,  has_single: false },
-  "building-cloudhaven":   { categoryId: 36, has_beginner: true,  has_intermediate: true,  has_expert: true,  has_single: false },
-  "the-ai-observatory":    { categoryId: 37, has_beginner: true,  has_intermediate: true,  has_expert: true,  has_single: false },
-  "blind-by-design":       { categoryId: 41, has_beginner: true,  has_intermediate: true,  has_expert: true,  has_single: false },
+  // GENERATED:adventures
+  "blind-by-design":      { categoryId: 41, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
+  "building-cloudhaven":  { categoryId: 36, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
+  "echoes-lost-in-orbit": { categoryId: 35, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
+  "the-ai-observatory":   { categoryId: 37, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
+  // /GENERATED:adventures
 };
 
 // Load .env file for local development. Never used in CI (secrets are env vars).
@@ -62,8 +65,8 @@ function loadDotEnv() {
 
 function resolveAvatarUrl(url) {
   if (!url) return undefined;
-  if (url.startsWith("http")) return url;
-  return `${COMMUNITY_BASE}${url}`;
+  const absolute = url.startsWith("http") ? url : `${COMMUNITY_BASE}${url}`;
+  return absolute.replace("/user_avatar/community.open-ecosystem.com/", "/user_avatar/community.offon.dev/");
 }
 
 async function fetchLeaderboard(adventureId, { categoryId, has_beginner, has_intermediate, has_expert, has_single }, apiKey, apiUsername) {
