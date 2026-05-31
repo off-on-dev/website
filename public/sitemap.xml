@@ -19,6 +19,8 @@
   <url><loc>https://offon.dev/adventures/echoes-lost-in-orbit/levels/beginner/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://offon.dev/adventures/echoes-lost-in-orbit/levels/intermediate/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://offon.dev/adventures/echoes-lost-in-orbit/levels/expert/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://offon.dev/adventures/lex-imperfecta/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://offon.dev/adventures/lex-imperfecta/levels/beginner/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://offon.dev/adventures/the-ai-observatory/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://offon.dev/adventures/the-ai-observatory/levels/beginner/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://offon.dev/adventures/the-ai-observatory/levels/intermediate/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -31,6 +33,8 @@
   <url><loc>https://offon.dev/challenges/grafana/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://offon.dev/challenges/jaeger/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://offon.dev/challenges/java/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://offon.dev/challenges/kubernetes/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://offon.dev/challenges/kyverno/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://offon.dev/challenges/openfeature/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://offon.dev/challenges/openllmetry/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://offon.dev/challenges/opentelemetry/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
