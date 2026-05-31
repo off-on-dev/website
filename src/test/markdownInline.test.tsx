@@ -50,4 +50,23 @@ describe("MarkdownInline", () => {
     const href = link?.getAttribute("href") ?? "";
     expect(href.toLowerCase()).not.toContain("javascript:");
   });
+
+  describe("noLinks", () => {
+    it("renders link text as plain text and omits the <a> element", () => {
+      const { container } = render(
+        <MarkdownInline source="see [docs](https://example.com) for more" noLinks />
+      );
+      expect(container.querySelector("a")).toBeNull();
+      expect(container.textContent).toBe("see docs for more");
+    });
+
+    it("still renders inline formatting (bold, code) when links are stripped", () => {
+      const { container } = render(
+        <MarkdownInline source="**bold** and `code` and [link](https://example.com)" noLinks />
+      );
+      expect(container.querySelector("strong")?.textContent).toBe("bold");
+      expect(container.querySelector("code")?.textContent).toBe("code");
+      expect(container.querySelector("a")).toBeNull();
+    });
+  });
 });

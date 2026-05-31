@@ -11,17 +11,21 @@ const components: Components = {
   p: ({ children }: { children?: ReactNode }) => <>{children}</>,
 };
 
-const DISALLOWED = ["h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "li", "blockquote", "pre", "hr", "table", "img"];
+const DISALLOWED_BLOCK = ["h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "li", "blockquote", "pre", "hr", "table", "img"];
 
 type MarkdownInlineProps = {
   source: string;
+  // Strip markdown links to plain text. Required when rendering inside
+  // another interactive element (<a>, <button>) since HTML forbids nesting
+  // interactive content.
+  noLinks?: boolean;
 };
 
-export const MarkdownInline = ({ source }: MarkdownInlineProps): JSX.Element => (
+export const MarkdownInline = ({ source, noLinks = false }: MarkdownInlineProps): JSX.Element => (
   <ReactMarkdown
     remarkPlugins={[remarkGfm]}
     components={components}
-    disallowedElements={DISALLOWED}
+    disallowedElements={noLinks ? [...DISALLOWED_BLOCK, "a"] : DISALLOWED_BLOCK}
     unwrapDisallowed
   >
     {source}

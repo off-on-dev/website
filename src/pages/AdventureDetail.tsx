@@ -151,10 +151,7 @@ const AdventureDetail = (): JSX.Element => {
 
               {/* Overview */}
               {adventure.overview && adventure.overview.length > 0 && (
-                <section aria-labelledby="overview-heading">
-                  <h2 id="overview-heading" className="text-lg font-semibold text-foreground mb-5">
-                    Overview
-                  </h2>
+                <CollapsibleSection id="overview" title="Overview" defaultOpen={true}>
                   <ul className="space-y-2.5">
                     {adventure.overview.map((para, i) => (
                       <li key={i} className="flex items-start gap-2.5">
@@ -163,7 +160,7 @@ const AdventureDetail = (): JSX.Element => {
                       </li>
                     ))}
                   </ul>
-                </section>
+                </CollapsibleSection>
               )}
 
               {/* Challenges */}

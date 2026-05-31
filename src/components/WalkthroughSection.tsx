@@ -41,7 +41,7 @@ export const WalkthroughSection = ({ steps }: WalkthroughSectionProps): JSX.Elem
                   {i + 1}
                 </span>
                 <span className="min-w-0 flex-1 text-sm font-semibold text-foreground">
-                  {step.title ? <MarkdownInline source={step.title} /> : `Step ${i + 1}`}
+                  {step.title ? <MarkdownInline source={step.title} noLinks /> : `Step ${i + 1}`}
                 </span>
                 <ChevronDown
                   size={16}

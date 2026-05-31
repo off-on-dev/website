@@ -24,7 +24,7 @@ export const AdventureCard = ({ adventure }: AdventureCardProps): JSX.Element =>
     <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
       {adventure.title}
     </h3>
-    <p className="mt-2 text-sm text-muted-foreground line-clamp-2"><MarkdownInline source={adventure.story} /></p>
+    <p className="mt-2 text-sm text-muted-foreground line-clamp-2"><MarkdownInline source={adventure.story} noLinks /></p>
 
     <div className="mt-4 flex flex-wrap items-center gap-2">
       {adventure.levels.map((level) => (
