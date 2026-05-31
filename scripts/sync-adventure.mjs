@@ -84,14 +84,34 @@ function deriveTopics(adventureTags) {
   return adventureTags;
 }
 
+// Strip backticks inside markdown link text: [`foo`](url) → [foo](url).
+// Inline <code> chips inside a link break the underline visually and add no
+// value once the text is already styled as a link. Applied recursively to all
+// string fields on sync.
+function stripCodeInLinks(s) {
+  return s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, url) => `[${text.replace(/`/g, "")}](${url})`);
+}
+
+function transformStrings(value, fn) {
+  if (typeof value === "string") return fn(value);
+  if (Array.isArray(value)) return value.map((v) => transformStrings(v, fn));
+  if (value && typeof value === "object") {
+    const out = {};
+    for (const [k, v] of Object.entries(value)) out[k] = transformStrings(v, fn);
+    return out;
+  }
+  return value;
+}
+
 function buildLevel(raw, adventureTags) {
   // architecture_diagram is dropped on sync. Diagram SVGs live in src/assets/diagrams/
   // and must be added manually in the PR if a level needs one.
   const { architecture_diagram: _ignored, ...rest } = raw;
+  const cleaned = transformStrings(rest, stripCodeInLinks);
   return {
-    ...rest,
-    topics: rest.topics || deriveTopics(adventureTags),
-    verification: rest.verification || VERIFICATION_STUB,
+    ...cleaned,
+    topics: cleaned.topics || deriveTopics(adventureTags),
+    verification: cleaned.verification || VERIFICATION_STUB,
   };
 }
 
@@ -212,8 +232,8 @@ async function main() {
     // Preserve month if a previous PR already set it
     month: existing?.month || currentMonth(),
     tags: adventureTags,
-    ...(indexData.backstory?.length && { backstory: indexData.backstory }),
-    ...(indexData.overview?.length && { overview: indexData.overview }),
+    ...(indexData.backstory?.length && { backstory: transformStrings(indexData.backstory, stripCodeInLinks) }),
+    ...(indexData.overview?.length && { overview: transformStrings(indexData.overview, stripCodeInLinks) }),
     ...(indexData.rewards && { rewards: indexData.rewards }),
     // Preserve contributor set by a reviewer; omit otherwise (PR checklist item)
     ...(existing?.contributor && { contributor: existing.contributor }),
