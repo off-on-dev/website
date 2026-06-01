@@ -486,10 +486,16 @@ All UI labels use **title case (Chicago style)**. Body copy uses **sentence case
 
 ## Site Maintenance
 
+### Well-known files
+
+- `public/.well-known/security.txt` contains an `Expires` field. Update the date annually (current expiry: `2027-06-01`). An expired security.txt is treated as absent by scanners.
+- `public/llms.txt` lists key pages and all live adventures. Update it whenever a new adventure is added (step 7 in the adventure checklist above) or a page is significantly renamed.
+- `public/robots.txt` lists named AI crawler agents. No routine updates needed; add a new agent entry only when a major crawler publishes a new user-agent string.
+
 ### Sitemap
 
-- Every time a new static page is added to `src/pages/` and registered as a route in `src/routes.ts`, its URL must also be added to `public/sitemap.xml`.
-- Dynamic routes with statically known IDs must also be added to `public/sitemap.xml`.
+- Every time a new static page is added to `src/pages/` and registered as a route in `src/routes.ts`, its URL must also be added to `public/sitemap.xml` with a `<lastmod>` date.
+- Dynamic routes with statically known IDs must also be added to `public/sitemap.xml` with a `<lastmod>` date. Adventure and challenge-tag URLs are generated automatically by `scripts/generate-adventures.mjs` and include `<lastmod>` set to the build date; do not add them by hand.
 - `robots.txt` at `public/robots.txt` must include: `Sitemap: https://offon.dev/sitemap.xml`
 
 ### SSG prerendered routes
@@ -520,6 +526,7 @@ The workflow opens a PR with a checklist. Before merging, complete all items in 
 4. Run `node scripts/refresh-discussions.mjs` after setting `discussionUrl` in each `*-posts.json`.
 5. Add each level URL to the `ROUTES` array in `e2e/smoke.spec.ts` and `src/test/seo.test.ts`, and to the `pages` array in `src/test/prerender.test.ts` with the expected `<title>` value.
 6. Update the routes table in `README.md`.
+7. Add the adventure to `public/llms.txt` under the Adventures section so AI agents can discover it.
 
 ---
 
