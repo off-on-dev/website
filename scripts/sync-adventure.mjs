@@ -103,7 +103,7 @@ function transformStrings(value, fn) {
   return value;
 }
 
-function buildLevel(raw, adventureTags) {
+function buildLevel(raw, adventureTags, rewardsDeadline) {
   // architecture_diagram is dropped on sync. Diagram SVGs live in src/assets/diagrams/
   // and must be added manually in the PR if a level needs one.
   const { architecture_diagram: _ignored, ...rest } = raw;
@@ -112,6 +112,9 @@ function buildLevel(raw, adventureTags) {
     ...cleaned,
     topics: cleaned.topics || deriveTopics(adventureTags),
     verification: cleaned.verification || VERIFICATION_STUB,
+    // Fall back to the adventure-level rewards deadline when the level has no deadline of its own,
+    // so the compact RewardsCard on ChallengeDetail always has a deadline to display.
+    ...(rewardsDeadline && !cleaned.deadline && { deadline: rewardsDeadline }),
   };
 }
 
@@ -194,7 +197,7 @@ async function main() {
     const raw = levelResults[i];
     if (raw) {
       rawFetchedLevels.push(raw);
-      allFetchedLevels.push(buildLevel(raw, adventureTags));
+      allFetchedLevels.push(buildLevel(raw, adventureTags, indexData.rewards?.deadline));
       console.log(`  Fetched level: ${levelFileNames[i]}`);
     }
   }
