@@ -41,7 +41,7 @@ Node.js **22** is required. Version is pinned in `.nvmrc`, run `nvm use` to swit
 | `npm test` | Run the full test suite once (Vitest) |
 | `npm run test:watch` | Run tests in watch mode |
 | `npm run test:coverage` | Run tests with v8 coverage report |
-| `npm run test:e2e` | Playwright smoke tests (requires `npm run build` first) |
+| `npm run test:e2e` | Playwright smoke and WSG tests (requires `npm run build` first) |
 | `npm run generate` | Regenerate TypeScript from adventure YAML files |
 | `npm run generate:validate` | Validate adventure YAML against schema without writing files |
 
@@ -67,7 +67,8 @@ src/
   entry.server.tsx  # Server/prerender entry: renderToPipeableStream for static HTML generation
   Layout.tsx      # App shell with all providers and Outlet
 e2e/
-  smoke.spec.ts   # Playwright smoke tests (requires npm run build first)
+  smoke.spec.ts   # Playwright smoke tests: route titles, axe a11y audit (requires npm run build first)
+  wsg.spec.ts     # Web Sustainability Guidelines checks: page weight, third-party requests, image optimisation
 schemas/
   adventure.schema.json  # JSON Schema for adventure YAML validation
 scripts/
@@ -186,48 +187,9 @@ PR preview builds set the `VITE_BASE_PATH` environment variable to `/pr-preview/
 
 ## Adding Adventures and Levels
 
-Adventures and levels are synced from the challenges repo via the **Sync Adventure from Challenges Repo** GitHub Actions workflow.
+Adventures are authored in [off-on-dev/open-source-challenges](https://github.com/off-on-dev/open-source-challenges) and pulled into this site via the **Sync Adventure from Challenges Repo** GitHub Actions workflow. The workflow fetches content, generates all TypeScript data files, and opens a PR with a checklist of steps to complete before merging.
 
-### Via GitHub Actions
-
-Go to the **Actions** tab, select **Sync Adventure from Challenges Repo**, and click **Run workflow**.
-
-| Input | Required | Description |
-|---|---|---|
-| `adventure_url` | Yes | URL of the adventure folder in the challenges repo (e.g. `https://github.com/off-on-dev/open-source-challenges/tree/main/adventures/05-lex-imperfecta`) |
-| `levels` | No | Comma-separated level IDs to make live now (e.g. `beginner` or `beginner,intermediate`). Levels in the challenges repo not listed here appear as "coming soon" placeholders. Leave blank to sync all. |
-
-The workflow fetches content from the challenges repo, generates the TypeScript data files, and opens a PR on branch `feat/adventure-<slug>`. The PR description includes a checklist of steps to complete before merging.
-
-### After the PR is opened
-
-Complete all items in the PR checklist, including:
-
-1. Add the adventure detail route and all level routes to `src/routes.ts`
-2. Add all URLs to `public/sitemap.xml` and the `prerender` array in `react-router.config.ts`
-3. Set `discussionUrl` in each `*-posts.json`, then run `node scripts/refresh-discussions.mjs`
-4. Add the adventure to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs` and run `node scripts/refresh-leaderboard.mjs`
-5. Add each level URL to `ROUTES` in `e2e/smoke.spec.ts` and `src/test/seo.test.ts`, and to `pages` in `src/test/prerender.test.ts` with the expected `<title>`
-6. Update the routes table in `README.md`
-7. Run `npm run lint && npm test && npm run build && npm run test:e2e`
-
-### Leaderboard data
-
-Leaderboard data lives in `src/data/adventures/<adventure-id>/leaderboard.json` and is refreshed daily by the GitHub Action. The `refresh-leaderboard.mjs` script calls the Discourse Data Explorer query (query ID 5) with `category_id` and `level_count` params.
-
-```sh
-# Requires DISCOURSE_API_KEY and DISCOURSE_API_USERNAME in .env or environment
-node scripts/refresh-leaderboard.mjs
-```
-
-For local development, create a `.env` file in the repo root:
-
-```sh
-DISCOURSE_API_KEY=your_key_here
-DISCOURSE_API_USERNAME=your_username
-```
-
-The `.env` file is gitignored. For CI, set `DISCOURSE_API_KEY` and `DISCOURSE_API_USERNAME` as repository secrets in **Settings > Secrets and variables > Actions**.
+See [`ADVENTURES.md`](ADVENTURES.md) for the full guide, including how to complete the PR checklist, how to add a new level to an existing adventure, and what happens when you re-sync a PR that already has manual edits.
 
 ## Accessibility
 
@@ -235,6 +197,8 @@ OffOn targets WCAG 2.2 Level AA across every page, in both light and dark mode. 
 
 ## Further Reading
 
+- [`ADVENTURES.md`](ADVENTURES.md): full guide to syncing, reviewing, and updating adventures and levels via GitHub Actions.
 - [`ACCESSIBILITY.md`](ACCESSIBILITY.md): public accessibility statement, supported environments, and how to report a barrier.
+- [`PERFORMANCE.md`](PERFORMANCE.md): performance targets, image rules, font preloading, and bundle size guidance.
 - [`styleguide.md`](styleguide.md): design system, color tokens, typography, component patterns, and light/dark mode rules.
 - [`CLAUDE.md`](CLAUDE.md): contributor conventions, code quality rules, commit format, testing requirements, and accessibility standards.

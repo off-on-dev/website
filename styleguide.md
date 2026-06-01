@@ -1071,23 +1071,23 @@ Renders the narrative backstory for a challenge level inside a `CollapsibleSecti
 
 `src/components/ArchitectureSection.tsx`
 
-Renders architecture content inside a `CollapsibleSection` titled "Architecture". Priority order: SVG diagram → ASCII art → markdown text. At least one prop should be provided; rendering none produces an empty collapsible.
+Renders architecture content inside a `CollapsibleSection` titled "Architecture". Diagram and text are independent: a diagram (SVG preferred over ASCII) and markdown text are each shown when present and can appear together. At least one prop should be provided; rendering none produces an empty collapsible.
 
 ```tsx
-{/* SVG variant — highest priority */}
-<ArchitectureSection diagram={diagramUrl} diagramAlt="Spring Boot OpenFeature architecture" />
-{/* ASCII variant — rendered when no SVG is available */}
+{/* SVG + text — both render */}
+<ArchitectureSection diagram={diagramUrl} diagramAlt="Spring Boot OpenFeature architecture" architecture={level.architecture.join("\n\n")} />
+{/* ASCII only — rendered when no SVG is available */}
 <ArchitectureSection ascii="┌──────┐\n│ App  │\n└──────┘" />
-{/* Markdown variant — fallback when neither SVG nor ASCII is available */}
+{/* Text only — no diagram */}
 <ArchitectureSection architecture={level.architecture.join("\n\n")} />
 ```
 
 | Prop | Type | Description |
 |---|---|---|
-| `diagram` | `string` (optional) | URL of an architecture diagram image (SVG or raster). Takes precedence over all other props. |
+| `diagram` | `string` (optional) | URL of an architecture diagram image (SVG or raster). Takes precedence over `ascii` when both are present. |
 | `diagramAlt` | `string` (optional) | Alt text for the diagram image. Defaults to `"Architecture diagram"` when omitted. |
-| `ascii` | `string` (optional) | Inline ASCII art rendered as a `<pre>` block. Used when no SVG is available. Ignored when `diagram` is present. |
-| `architecture` | `string` (optional) | Markdown string describing the system architecture. Fallback when neither `diagram` nor `ascii` is present. |
+| `ascii` | `string` (optional) | Inline ASCII art rendered as a `<pre>` block. Shown only when `diagram` is absent. |
+| `architecture` | `string` (optional) | Markdown string describing the system architecture. Rendered below the diagram (or alone when no diagram is present). |
 
 ---
 
