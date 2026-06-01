@@ -107,9 +107,6 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
       />
       {/* Header */}
       <div className="mb-10">
-        <span className="block text-xs font-mono uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">
-          Adventure <span aria-hidden="true">&middot;</span> {adventure.title}
-        </span>
         <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">{level.name}</h1>
 
         <div className="flex flex-wrap items-center gap-2 mb-5">
