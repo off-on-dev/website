@@ -1,4 +1,5 @@
 import { CODESPACES_BASE, COMMUNITY_URL } from "@/data/constants";
+import lexImperfectaBeginner from "@/assets/diagrams/lex-imperfecta-beginner.svg";
 import type { Adventure } from "./types";
 
 export const LEX_IMPERFECTA: Adventure = {
@@ -59,6 +60,8 @@ export const LEX_IMPERFECTA: Adventure = {
         "The Twelve Tables enforced Roman law **at the gates** — before a citizen could act, not after the damage was done. Kyverno works the same way: it intercepts every workload request *before* it reaches the cluster. A misconfigured policy doesn't just fail to enforce — it fails silently, letting non-compliant workloads slip through while you assume everything is fine.",
         `Your Codespace comes with a Kubernetes cluster and Kyverno pre-installed. Three broken policies are already deployed in \`manifests/policies/\` — two \`ValidatingPolicy\` resources and one \`MutatingPolicy\`. Edit them directly and re-apply with \`kubectl\`. The pods in \`manifests/pods/\` are for reference only — no GitOps, no dashboards.`,
       ],
+      architectureDiagram: lexImperfectaBeginner,
+      diagramAlt: "Workload request flows through Kyverno's admission webhook before reaching the Kubernetes cluster. Two ValidatingPolicy resources block non-compliant workloads, and one MutatingPolicy automatically patches admitted workloads with required labels.",
       toolbox: [
         { name: "kubectl", description: "Apply and inspect cluster resources", url: "https://kubernetes.io/docs/reference/kubectl/" },
         { name: "kyverno CLI", description: "Test and lint policies locally before applying", url: "https://kyverno.io/docs/kyverno-cli/" },
