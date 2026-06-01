@@ -47,6 +47,14 @@ const pages: PageSpec[] = [
   },
   // GENERATED:adventures
   {
+    file: "adventures/lex-imperfecta/index.html",
+    check: { type: "contains", value: "Lex Imperfecta" },
+  },
+  {
+    file: "adventures/lex-imperfecta/levels/beginner/index.html",
+    check: { type: "contains", value: "The Twelve Tables" },
+  },
+  {
     file: "adventures/blind-by-design/index.html",
     check: { type: "contains", value: "Blind by Design" },
   },

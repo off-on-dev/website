@@ -15,6 +15,8 @@ const ROUTES: RouteSpec[] = [
   { path: "/404", title: /Page Not Found/ },
   { path: "/adventures", title: /Adventures - Hands-on open source challenges/ },
   // GENERATED:adventures
+  { path: "/adventures/lex-imperfecta", title: /Lex Imperfecta/ },
+  { path: "/adventures/lex-imperfecta/levels/beginner", title: /The Twelve Tables/ },
   { path: "/adventures/blind-by-design", title: /Blind by Design/ },
   { path: "/adventures/blind-by-design/levels/beginner", title: /Stand up the Lab/ },
   { path: "/adventures/blind-by-design/levels/intermediate", title: /Outcome by Cohort/ },
@@ -41,6 +43,8 @@ const ROUTES: RouteSpec[] = [
   { path: "/challenges/grafana", title: /Grafana Challenges/ },
   { path: "/challenges/jaeger", title: /Jaeger Challenges/ },
   { path: "/challenges/java", title: /Java Challenges/ },
+  { path: "/challenges/kubernetes", title: /Kubernetes Challenges/ },
+  { path: "/challenges/kyverno", title: /Kyverno Challenges/ },
   { path: "/challenges/openfeature", title: /OpenFeature Challenges/ },
   { path: "/challenges/openllmetry", title: /OpenLLMetry Challenges/ },
   { path: "/challenges/opentelemetry", title: /OpenTelemetry Challenges/ },
