@@ -310,6 +310,8 @@
 html {
   scroll-padding-top: 80px;
   scroll-padding-bottom: 120px;
+  /* Reserve scrollbar space to prevent layout shift when overflow state changes between pages */
+  scrollbar-gutter: stable;
 }
 
 /* Skip navigation link, visually hidden until focused (WCAG 2.4.1 Bypass Blocks) */

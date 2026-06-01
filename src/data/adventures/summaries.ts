@@ -48,6 +48,47 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
     ],
   },
   {
+    id: "the-ai-observatory",
+    title: "The AI Observatory",
+    month: "FEB 2026",
+    story: "Investigate a mysterious bandwidth anomaly at a remote research station by instrumenting its AI system with OpenTelemetry, OpenLLMetry, and Jaeger.",
+    tags: ["OpenTelemetry", "OpenLLMetry", "Jaeger", "Prometheus", "Python"],
+    contributor: { name: "Katharina Sick" },
+    levels: [
+      {
+        id: "beginner",
+        name: "Calibrating the Lens",
+        difficulty: "Beginner",
+        topics: ["OpenTelemetry", "OpenLLMetry", "Jaeger"],
+        learnings: [
+          "Instrument Python AI apps with OpenLLMetry",
+          "Analyze traces in Jaeger",
+        ],
+      },
+      {
+        id: "intermediate",
+        name: "The Distracted Pilot",
+        difficulty: "Intermediate",
+        topics: ["OpenTelemetry", "OpenLLMetry", "Jaeger", "Prometheus"],
+        learnings: [
+          "Instrument RAG pipelines with OpenLLMetry",
+          "Create custom OpenTelemetry metrics in Python",
+          "Write PromQL queries & recording rules in Prometheus",
+        ],
+      },
+      {
+        id: "expert",
+        name: "The Noise Filter",
+        difficulty: "Expert",
+        topics: ["OpenTelemetry", "OpenLLMetry", "Jaeger"],
+        learnings: [
+          "OpenTelemetry GenAI semantic conventions",
+          "Tail sampling in the OTel Collector",
+        ],
+      },
+    ],
+  },
+  {
     id: "building-cloudhaven",
     title: "Building CloudHaven",
     month: "JAN 2026",
@@ -134,47 +175,6 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
           "Spanmetrics connector (traces to metrics)",
           "Detect idle canaries with traffic validation",
           "Distributed tracing with Jaeger",
-        ],
-      },
-    ],
-  },
-  {
-    id: "the-ai-observatory",
-    title: "The AI Observatory",
-    month: "FEB 2026",
-    story: "Investigate a mysterious bandwidth anomaly at a remote research station by instrumenting its AI system with OpenTelemetry, OpenLLMetry, and Jaeger.",
-    tags: ["OpenTelemetry", "OpenLLMetry", "Jaeger", "Prometheus", "Python"],
-    contributor: { name: "Katharina Sick" },
-    levels: [
-      {
-        id: "beginner",
-        name: "Calibrating the Lens",
-        difficulty: "Beginner",
-        topics: ["OpenTelemetry", "OpenLLMetry", "Jaeger"],
-        learnings: [
-          "Instrument Python AI apps with OpenLLMetry",
-          "Analyze traces in Jaeger",
-        ],
-      },
-      {
-        id: "intermediate",
-        name: "The Distracted Pilot",
-        difficulty: "Intermediate",
-        topics: ["OpenTelemetry", "OpenLLMetry", "Jaeger", "Prometheus"],
-        learnings: [
-          "Instrument RAG pipelines with OpenLLMetry",
-          "Create custom OpenTelemetry metrics in Python",
-          "Write PromQL queries & recording rules in Prometheus",
-        ],
-      },
-      {
-        id: "expert",
-        name: "The Noise Filter",
-        difficulty: "Expert",
-        topics: ["OpenTelemetry", "OpenLLMetry", "Jaeger"],
-        learnings: [
-          "OpenTelemetry GenAI semantic conventions",
-          "Tail sampling in the OTel Collector",
         ],
       },
     ],

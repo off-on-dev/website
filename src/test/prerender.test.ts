@@ -63,6 +63,22 @@ const pages: PageSpec[] = [
     check: { type: "contains", value: "Read the Chart" },
   },
   {
+    file: "adventures/the-ai-observatory/index.html",
+    check: { type: "contains", value: "The AI Observatory" },
+  },
+  {
+    file: "adventures/the-ai-observatory/levels/beginner/index.html",
+    check: { type: "contains", value: "Calibrating the Lens" },
+  },
+  {
+    file: "adventures/the-ai-observatory/levels/intermediate/index.html",
+    check: { type: "contains", value: "The Distracted Pilot" },
+  },
+  {
+    file: "adventures/the-ai-observatory/levels/expert/index.html",
+    check: { type: "contains", value: "The Noise Filter" },
+  },
+  {
     file: "adventures/building-cloudhaven/index.html",
     check: { type: "contains", value: "Building CloudHaven" },
   },
@@ -93,22 +109,6 @@ const pages: PageSpec[] = [
   {
     file: "adventures/echoes-lost-in-orbit/levels/expert/index.html",
     check: { type: "contains", value: "Hyperspace Operations &amp; Transport" },
-  },
-  {
-    file: "adventures/the-ai-observatory/index.html",
-    check: { type: "contains", value: "The AI Observatory" },
-  },
-  {
-    file: "adventures/the-ai-observatory/levels/beginner/index.html",
-    check: { type: "contains", value: "Calibrating the Lens" },
-  },
-  {
-    file: "adventures/the-ai-observatory/levels/intermediate/index.html",
-    check: { type: "contains", value: "The Distracted Pilot" },
-  },
-  {
-    file: "adventures/the-ai-observatory/levels/expert/index.html",
-    check: { type: "contains", value: "The Noise Filter" },
   },
   // /GENERATED:adventures
   {

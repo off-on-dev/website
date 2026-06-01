@@ -19,6 +19,10 @@ export default {
     "/adventures/blind-by-design/levels/beginner",
     "/adventures/blind-by-design/levels/intermediate",
     "/adventures/blind-by-design/levels/expert",
+    "/adventures/the-ai-observatory",
+    "/adventures/the-ai-observatory/levels/beginner",
+    "/adventures/the-ai-observatory/levels/intermediate",
+    "/adventures/the-ai-observatory/levels/expert",
     "/adventures/building-cloudhaven",
     "/adventures/building-cloudhaven/levels/beginner",
     "/adventures/building-cloudhaven/levels/intermediate",
@@ -27,10 +31,6 @@ export default {
     "/adventures/echoes-lost-in-orbit/levels/beginner",
     "/adventures/echoes-lost-in-orbit/levels/intermediate",
     "/adventures/echoes-lost-in-orbit/levels/expert",
-    "/adventures/the-ai-observatory",
-    "/adventures/the-ai-observatory/levels/beginner",
-    "/adventures/the-ai-observatory/levels/intermediate",
-    "/adventures/the-ai-observatory/levels/expert",
     // /GENERATED:adventures
     "/challenges",
     // GENERATED:challenge-tags

@@ -300,13 +300,16 @@ All analytics-related constants live in `src/data/constants.ts`:
 | `"denied"` | `null` | User clicks Cookie Preferences | clear | `setConsent(null)` | unchanged | push `consent update denied` |
 | `null` | `"granted"` | Page load with stored `granted` | (read) | `setConsent("granted")` | injected by mount effect | push `consent update granted` + `js` + `config` |
 | `null` | `"denied"` | Page load with stored `denied` | (read) | `setConsent("denied")` | not injected | nothing |
+| `null` | `"denied"` | Page load, GPC active, no stored preference | write `denied` | `setConsent("denied")` | not injected | clear `_ga*` cookies |
+| `"denied"` | `"denied"` | Page load, GPC active, stored `denied` | overwrite `denied` | `setConsent("denied")` | not injected | clear `_ga*` cookies |
+| GPC active | `"granted"` | Page load, GPC active, stored `granted` | (read) | `setConsent("granted")` | injected by mount effect | push `consent update granted` + `js` + `config` |
 
 ### Do not
 
 - Do not load `gtag.js` outside the consent injector.
 - Do not put `gtag('js')` or `gtag('config')` in `root.tsx`. Both belong in the injector, queued after the consent update.
 - Do not reintroduce `wait_for_update`.
-- Do not reintroduce GPC/DNT detection.
+- Do not remove GPC detection: `navigator.globalPrivacyControl === true` is checked on mount in `useConsent.tsx`. If active and no explicit prior Accept is stored, consent is auto-denied without prompting the user.
 - Do not reintroduce `ANALYTICS_LINKER_DOMAINS` or `cookie_domain`.
 - Do not put the consent update inside `script.onload`. It must be queued before `appendChild` so the dataLayer drains in the correct order.
 - Do not remove the script tag, wipe `dataLayer`, or replace `window.gtag` on deny.

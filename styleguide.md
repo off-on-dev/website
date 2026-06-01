@@ -1141,9 +1141,16 @@ Renders the full adventure listing with a technology tag filter. Used on the hom
 
 ```tsx
 <ChallengesGrid />
+<ChallengesGrid limit={6} />
 ```
 
-No props. Owns its own `activeTopic` state internally.
+**Props:**
+
+| prop | type | description |
+|---|---|---|
+| `limit` | `number?` | Optional. Caps how many adventure cards render in the default (All) view. When the total exceeds `limit`, a "See all adventures" link to `/challenges` appears below the grid. Omit to show every adventure. Used on `Index.tsx` (home page) with `limit={6}`; not used on `Adventures.tsx`. Does not affect the tag-filtered view. |
+
+Adventure cards render newest first, ordered by the `month` field on each adventure (parsed as "MMM YYYY" in the generator). Owns its own `activeTopic` state internally.
 
 **Two display modes:**
 
@@ -1184,6 +1191,33 @@ const [activeTopic, setActiveTopic] = useState<string | null>(null);
 - Clicking an already-active chip deselects it and returns to the default view.
 - `ChallengesGrid`: no URL change on selection. Default (All) = adventure card grid. Tag = flat level card grid.
 - `Challenges`: URL updates to `/challenges/:tag` when a tag is selected. Default (All) = adventure card grid (same as `ChallengesGrid`). Tag = filtered flat level card grid.
+
+---
+
+### `Breadcrumb`
+
+`src/components/Breadcrumb.tsx`
+
+Navigation trail component. Renders a `<nav aria-label="Breadcrumb">` with an ordered list of items. The last item carries `aria-current="page"` and is rendered as plain text; all preceding items render as React Router `<Link>` elements.
+
+```tsx
+<Breadcrumb
+  items={[
+    { label: "Adventures", href: "/adventures" },
+    { label: adventure.title, href: `/adventures/${adventure.id}` },
+    { label: level.name },
+  ]}
+/>
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `items` | `BreadcrumbItem[]` | Ordered list of crumbs; last item has no `href` |
+| `className` | `string?` | Class applied to the wrapping `<nav>`; defaults to `"mb-5"` |
+
+`BreadcrumbItem` shape: `{ label: string; href?: string }`. Items without `href` are rendered as `<span aria-current="page">`.
+
+Used in `ChallengeDetail.tsx` (adventure level pages) and `AdventureDetail.tsx` (adventure overview pages). The visible breadcrumb mirrors the `BreadcrumbList` JSON-LD already present in those pages' `meta()` exports.
 
 ---
 

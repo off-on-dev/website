@@ -1,7 +1,7 @@
 import { type JSX } from "react";
-import { useParams, Link, useLoaderData } from "react-router";
+import { useParams, useLoaderData } from "react-router";
 import type { MetaFunction, LoaderFunctionArgs } from "react-router";
-import { ArrowLeft, Check, ExternalLink } from "lucide-react";
+import { Check, ExternalLink } from "lucide-react";
 import { MarkdownContent } from "@/components/MarkdownContent";
 import { MarkdownInline } from "@/components/MarkdownInline";
 import { ADVENTURES } from "@/data/adventures";
@@ -12,6 +12,7 @@ import { ContributorBadge } from "@/components/ContributorBadge";
 import { NotFoundPage } from "@/components/NotFoundPage";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { LevelCard } from "@/components/LevelCard";
 import { ScenarioSection } from "@/components/ScenarioSection";
 import { CollapsibleSection } from "@/components/CollapsibleSection";
@@ -61,6 +62,28 @@ export const meta: MetaFunction = ({ params }) => {
           ],
         },
       },
+      {
+        "script:ld+json": {
+          "@context": "https://schema.org",
+          "@type": "LearningResource",
+          name: level.name,
+          description,
+          url: `${SITE_URL}/adventures/${adventure.id}/levels/${level.id}/`,
+          educationalLevel: level.difficulty,
+          teaches: level.learnings,
+          learningResourceType: "Challenge",
+          isPartOf: {
+            "@type": "Course",
+            name: adventure.title,
+            url: `${SITE_URL}/adventures/${adventure.id}/`,
+          },
+          provider: {
+            "@type": "Organization",
+            name: BRAND_NAME,
+            url: SITE_URL,
+          },
+        },
+      },
     ],
   });
 };
@@ -77,9 +100,6 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
     <>
       {/* Header */}
       <div className="mb-10">
-        <span className="block text-xs font-mono uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">
-          Adventure <span aria-hidden="true">&middot;</span> {adventure.title}
-        </span>
         <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">{level.name}</h1>
 
         <div className="flex flex-wrap items-center gap-2 mb-5">
@@ -342,19 +362,14 @@ const ChallengeDetail = (): JSX.Element => {
       <Navbar />
       <main id="main-content" className="px-6 md:px-16 pt-28 pb-24">
         <div className="mx-auto max-w-6xl">
-          {/* Breadcrumb */}
-          <nav aria-label="Breadcrumb" className="mb-10">
-            <ol className="list-none p-0 m-0">
-              <li>
-                <Link
-                  to={`/adventures/${adventure.id}`}
-                  className="inline-flex items-center gap-1.5 text-sm text-[hsl(var(--text-faint))] hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
-                >
-                  <ArrowLeft size={14} aria-hidden="true" /> {adventure.title}
-                </Link>
-              </li>
-            </ol>
-          </nav>
+          <Breadcrumb
+            className="mb-10"
+            items={[
+              { label: "Adventures", href: "/adventures" },
+              { label: adventure.title, href: `/adventures/${adventure.id}` },
+              { label: level.name },
+            ]}
+          />
 
           {hasStructuredContent ? (
             <StructuredLayout adventure={adventure} level={level} rewardsBelowFold={rewardsBelowFold} />
@@ -362,8 +377,7 @@ const ChallengeDetail = (): JSX.Element => {
             <>
               {/* Legacy layout for levels without structured content */}
               <div className="mb-10">
-                <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">{level.name}</h1>
-                <p className="text-sm font-mono text-[hsl(var(--text-faint))] mb-4">{adventure.title}</p>
+                <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">{level.name}</h1>
                 <div className="flex flex-wrap items-center gap-2 mb-4">
                   <DifficultyBadge difficulty={level.difficulty} showDot />
                   <TagChips tags={level.topics ?? adventure.tags} />

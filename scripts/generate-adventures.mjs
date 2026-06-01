@@ -160,6 +160,21 @@ function findAdventureYamls() {
 
 // --- Validation ---
 
+const MONTH_NAME_TO_INDEX = {
+  JAN: 0, FEB: 1, MAR: 2, APR: 3, MAY: 4, JUN: 5,
+  JUL: 6, AUG: 7, SEP: 8, OCT: 9, NOV: 10, DEC: 11,
+};
+
+/** Parse a "MMM YYYY" month string (e.g. "MAY 2026") into a numeric sort key. */
+function monthToSortKey(month) {
+  if (typeof month !== "string") return 0;
+  const match = month.trim().toUpperCase().match(/^([A-Z]{3})\s+(\d{4})$/);
+  if (!match) return 0;
+  const m = MONTH_NAME_TO_INDEX[match[1]];
+  if (m === undefined) return 0;
+  return Number(match[2]) * 12 + m;
+}
+
 function validateAdventure(data, id) {
   const errors = [];
   if (!data.slug) errors.push("Missing required field: slug");
@@ -589,11 +604,12 @@ function replaceRegion(filePath, openMarker, closeMarker, body) {
 
 /** Build the body for a region as one block of text. Body must include a trailing newline. */
 function buildSitemapBody(adventures) {
+  const today = new Date().toISOString().slice(0, 10);
   const lines = [];
   for (const a of adventures) {
-    lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
+    lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
     for (const l of a.levels) {
-      lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/levels/${l.level}/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
+      lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/levels/${l.level}/</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
     }
   }
   return lines.join("\n") + "\n  ";
@@ -687,9 +703,10 @@ function collectAllTags(adventures) {
 }
 
 function buildSitemapTagsBody(tags) {
+  const today = new Date().toISOString().slice(0, 10);
   const lines = tags.map(
     (t) =>
-      `  <url><loc>https://offon.dev/challenges/${tagToSlug(t)}/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>`,
+      `  <url><loc>https://offon.dev/challenges/${tagToSlug(t)}/</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`,
   );
   return lines.join("\n") + "\n";
 }
@@ -826,6 +843,14 @@ function main() {
   if (hasErrors) {
     fail("Validation failed. Fix the errors above before generating.");
   }
+
+  // Order adventures newest first, by month. Stable secondary by slug for ties.
+  adventures.sort((a, b) => {
+    const da = monthToSortKey(a.month);
+    const db = monthToSortKey(b.month);
+    if (db !== da) return db - da;
+    return a.slug.localeCompare(b.slug);
+  });
 
   if (validateOnly) {
     console.log("\n\x1b[32mAll YAML files are valid.\x1b[0m");

@@ -48,8 +48,18 @@ export default function Root(): JSX.Element {
         <link rel="shortcut icon" href={`${import.meta.env.BASE_URL}favicon.ico`} />
         <link rel="apple-touch-icon" href={`${import.meta.env.BASE_URL}apple-touch-icon.png`} />
         <link rel="manifest" href={`${import.meta.env.BASE_URL}site.webmanifest`} />
+        <meta name="color-scheme" content="dark light" />
         <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
         <meta name="theme-color" content="#f5f5ff" media="(prefers-color-scheme: light)" />
+        {/*
+          Security headers: X-Content-Type-Options, X-Frame-Options, Permissions-Policy, and HSTS
+          require HTTP response headers and cannot be set via meta tags on a static host.
+          These should be applied at the CDN/proxy layer (Cloudflare, etc.) if the site
+          ever migrates off GitHub Pages.
+        */}
+        <meta httpEquiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; base-uri 'self'; form-action 'self';" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+        <link rel="sitemap" type="application/xml" href={`${import.meta.env.BASE_URL}sitemap.xml`} />
         {/* Theme must be set before React boots to prevent flash of wrong theme */}
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         {/* Consent Mode v2 default-denied bootstrap. gtag.js is loaded later, only on Accept. */}

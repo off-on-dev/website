@@ -155,7 +155,7 @@ const components: Components = {
       {children}
     </div>
   ),
-  thead: ({ children }) => <div className="hidden">{children}</div>,
+  thead: ({ children }) => <div className="hidden" aria-hidden="true">{children}</div>,
   tbody: ({ children }) => <div className="contents">{children}</div>,
   tr: ({ children }) => (
     <div role="listitem" className="flex flex-col gap-2 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
