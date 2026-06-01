@@ -25,6 +25,7 @@ import { MarkdownInline } from "@/components/MarkdownInline";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 import { isDeadlinePast } from "@/lib/utils";
+import { Breadcrumb } from "@/components/Breadcrumb";
 
 export function loader({ params }: LoaderFunctionArgs): { rewardsBelowFold: boolean } {
   const adventure = ADVENTURES.find((a) => a.id === params.id);
@@ -55,6 +56,21 @@ export const meta: MetaFunction = ({ params }) => {
             { "@type": "ListItem", position: 2, name: "Adventures", item: `${SITE_URL}/adventures/` },
             { "@type": "ListItem", position: 3, name: adventure.title, item: `${SITE_URL}/adventures/${adventure.id}/` },
           ],
+        },
+      },
+      {
+        "script:ld+json": {
+          "@context": "https://schema.org",
+          "@type": "Course",
+          name: adventure.title,
+          description: `Tackle ${adventure.title} on ${BRAND_NAME}, a hands-on open source adventure. Work with ${tagsSummary} in a real-world scenario, directly in your browser.`.slice(0, 160),
+          url: `${SITE_URL}/adventures/${adventure.id}/`,
+          keywords: adventure.tags.join(", "),
+          provider: {
+            "@type": "Organization",
+            name: BRAND_NAME,
+            url: SITE_URL,
+          },
         },
       },
     ],
@@ -121,6 +137,13 @@ const AdventureDetail = (): JSX.Element => {
       <Navbar />
       <main id="main-content" className="px-6 md:px-16 pt-28 pb-24">
         <div className="mx-auto max-w-6xl">
+
+          <Breadcrumb
+            items={[
+              { label: "Adventures", href: "/adventures" },
+              { label: adventure.title },
+            ]}
+          />
 
           {/* Header: title + tags + intro */}
           <div className="mb-10">

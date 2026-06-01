@@ -33,7 +33,7 @@ describe('AdventureDetail', () => {
         </MemoryRouter>
       </ConsentProvider>
     );
-    expect(screen.getByText(adventure.title)).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 1, name: adventure.title })).toBeTruthy();
     expect(screen.getAllByText(/^Start Challenge/).length).toBe(adventure.levels.length);
   });
 
@@ -63,7 +63,7 @@ describe('ChallengeDetail', () => {
       </ConsentProvider>
     );
     expect(screen.getByRole('heading', { level: 1, name: level.name })).toBeTruthy();
-    expect(screen.getByRole('link', { name: adventure.title })).toBeTruthy();
+    expect(screen.getAllByRole('link', { name: adventure.title }).length).toBeGreaterThanOrEqual(1);
   });
 
   it('shows not found for unknown level id', () => {

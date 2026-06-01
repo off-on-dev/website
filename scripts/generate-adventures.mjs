@@ -604,11 +604,12 @@ function replaceRegion(filePath, openMarker, closeMarker, body) {
 
 /** Build the body for a region as one block of text. Body must include a trailing newline. */
 function buildSitemapBody(adventures) {
+  const today = new Date().toISOString().slice(0, 10);
   const lines = [];
   for (const a of adventures) {
-    lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
+    lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
     for (const l of a.levels) {
-      lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/levels/${l.level}/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
+      lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/levels/${l.level}/</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
     }
   }
   return lines.join("\n") + "\n  ";
@@ -702,9 +703,10 @@ function collectAllTags(adventures) {
 }
 
 function buildSitemapTagsBody(tags) {
+  const today = new Date().toISOString().slice(0, 10);
   const lines = tags.map(
     (t) =>
-      `  <url><loc>https://offon.dev/challenges/${tagToSlug(t)}/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>`,
+      `  <url><loc>https://offon.dev/challenges/${tagToSlug(t)}/</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`,
   );
   return lines.join("\n") + "\n";
 }

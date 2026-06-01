@@ -121,8 +121,23 @@ export function ConsentProvider({ children }: ConsentProviderProps): JSX.Element
   // so the script tag is appended at most once per session.
   useEffect(() => {
     const stored = readStored();
+
+    // Global Privacy Control: if the browser signals opt-out and the user has
+    // not explicitly granted consent in this browser, treat it as denied and
+    // skip the banner entirely. An explicit prior Accept overrides GPC so the
+    // user's deliberate choice is respected.
+    const gpcActive =
+      typeof navigator !== "undefined" &&
+      (navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl === true;
+    if (gpcActive && stored?.value !== "granted") {
+      writeStored("denied");
+      setConsent("denied"); // eslint-disable-line react-hooks/set-state-in-effect -- GPC opt-out resolved from navigator at mount; same constraint as stored-consent restore below
+      clearGaCookies();
+      return;
+    }
+
     if (!stored) return;
-    setConsent(stored.value); // eslint-disable-line react-hooks/set-state-in-effect -- localStorage cannot be read in a lazy useState initializer; SSG requires a safe default on first render (see CLAUDE.md hydration rules)
+    setConsent(stored.value);
     if (stored.value === "granted") {
       injectGtag();
     }

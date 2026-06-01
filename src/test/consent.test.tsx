@@ -340,6 +340,66 @@ describe('useConsent - mount restoration', () => {
 });
 
 // ---------------------------------------------------------------------------
+// GPC (Global Privacy Control)
+// ---------------------------------------------------------------------------
+
+describe('useConsent - GPC', () => {
+  function setGpc(value: boolean): void {
+    Object.defineProperty(window.navigator, 'globalPrivacyControl', {
+      configurable: true,
+      get: () => value,
+    });
+  }
+
+  afterEach(() => {
+    // Remove the mocked property so subsequent tests see the real navigator.
+    try {
+      Object.defineProperty(window.navigator, 'globalPrivacyControl', {
+        configurable: true,
+        get: () => undefined,
+      });
+    } catch { /* ignore if already gone */ }
+  });
+
+  it('with GPC active and no stored consent, auto-denies without user interaction', () => {
+    setGpc(true);
+    renderWithProviders(<ConsentStatus />);
+    expect(screen.getByTestId('consent-value').textContent).toBe('denied');
+    expect(document.getElementById('gtag-script')).toBeNull();
+  });
+
+  it('with GPC active and no stored consent, writes denied to localStorage', () => {
+    setGpc(true);
+    renderWithProviders(<ConsentStatus />);
+    const stored = JSON.parse(ls.getItem(CONSENT_STORAGE_KEY) ?? 'null');
+    expect(stored?.value).toBe('denied');
+  });
+
+  it('with GPC active and stored granted, respects the explicit prior Accept', () => {
+    setGpc(true);
+    ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
+    renderWithProviders(<ConsentStatus />);
+    expect(screen.getByTestId('consent-value').textContent).toBe('granted');
+    expect(document.getElementById('gtag-script')).not.toBeNull();
+  });
+
+  it('with GPC active and stored denied, stays denied and does not inject gtag', () => {
+    setGpc(true);
+    ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: 'denied', timestamp: Date.now() }));
+    renderWithProviders(<ConsentStatus />);
+    expect(screen.getByTestId('consent-value').textContent).toBe('denied');
+    expect(document.getElementById('gtag-script')).toBeNull();
+  });
+
+  it('with GPC inactive, behaves normally (shows undecided state)', () => {
+    setGpc(false);
+    renderWithProviders(<ConsentStatus />);
+    expect(screen.getByTestId('consent-value').textContent).toBe('null');
+    expect(document.getElementById('gtag-script')).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Provider guard
 // ---------------------------------------------------------------------------
 

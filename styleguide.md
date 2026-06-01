@@ -1194,6 +1194,32 @@ const [activeTopic, setActiveTopic] = useState<string | null>(null);
 
 ---
 
+### `Breadcrumb`
+
+`src/components/Breadcrumb.tsx`
+
+Navigation trail component. Renders a `<nav aria-label="Breadcrumb">` with an ordered list of items. The last item carries `aria-current="page"` and is rendered as plain text; all preceding items render as React Router `<Link>` elements.
+
+```tsx
+<Breadcrumb
+  items={[
+    { label: "Adventures", href: "/adventures" },
+    { label: adventure.title, href: `/adventures/${adventure.id}` },
+    { label: level.name },
+  ]}
+/>
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `items` | `BreadcrumbItem[]` | Ordered list of crumbs; last item has no `href` |
+
+`BreadcrumbItem` shape: `{ label: string; href?: string }`. Items without `href` are rendered as `<span aria-current="page">`.
+
+Used in `ChallengeDetail.tsx` (adventure level pages) and `AdventureDetail.tsx` (adventure overview pages). The visible breadcrumb mirrors the `BreadcrumbList` JSON-LD already present in those pages' `meta()` exports.
+
+---
+
 ## Utilities
 
 ### `buildPageMeta`

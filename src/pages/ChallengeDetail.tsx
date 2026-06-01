@@ -12,6 +12,7 @@ import { ContributorBadge } from "@/components/ContributorBadge";
 import { NotFoundPage } from "@/components/NotFoundPage";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { LevelCard } from "@/components/LevelCard";
 import { ScenarioSection } from "@/components/ScenarioSection";
 import { CollapsibleSection } from "@/components/CollapsibleSection";
@@ -61,6 +62,28 @@ export const meta: MetaFunction = ({ params }) => {
           ],
         },
       },
+      {
+        "script:ld+json": {
+          "@context": "https://schema.org",
+          "@type": "LearningResource",
+          name: level.name,
+          description,
+          url: `${SITE_URL}/adventures/${adventure.id}/levels/${level.id}/`,
+          educationalLevel: level.difficulty,
+          teaches: level.learnings,
+          learningResourceType: "Challenge",
+          isPartOf: {
+            "@type": "Course",
+            name: adventure.title,
+            url: `${SITE_URL}/adventures/${adventure.id}/`,
+          },
+          provider: {
+            "@type": "Organization",
+            name: BRAND_NAME,
+            url: SITE_URL,
+          },
+        },
+      },
     ],
   });
 };
@@ -75,6 +98,13 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
   const { intro, objective, toolbox, backstory, architecture, architectureDiagram, diagramAlt, architectureAscii, howToPlay, helpfulLinks, verification } = level;
   return (
     <>
+      <Breadcrumb
+        items={[
+          { label: "Adventures", href: "/adventures" },
+          { label: adventure.title, href: `/adventures/${adventure.id}` },
+          { label: level.name },
+        ]}
+      />
       {/* Header */}
       <div className="mb-10">
         <span className="block text-xs font-mono uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">
