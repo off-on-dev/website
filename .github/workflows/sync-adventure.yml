@@ -108,6 +108,7 @@ jobs:
             src/data/adventures/index.ts \
             src/data/adventures/summaries.ts \
             src/data/adventures/types.ts \
+            src/assets/diagrams/ \
             public/sitemap.xml \
             react-router.config.ts \
             scripts/refresh-leaderboard.mjs \
@@ -155,7 +156,8 @@ jobs:
 
           ### Manual steps (only if needed)
 
-          - [ ] If any level uses an SVG \`architecture_diagram\`, add the SVG to \`src/assets/diagrams/\` and add \`architecture_diagram: <file>.svg\` back to that level in \`adventure.yaml\` (sync strips it)
+          - [ ] If a level's \`architecture_diagram\` SVG was not auto-fetched (check the sync logs for a warning), add the SVG manually to \`src/assets/diagrams/\` and add \`architecture_diagram: <file>.svg\` to that level in \`adventure.yaml\`, then run \`npm run generate\`
+          - [ ] If a level has an \`architecture_diagram\` but no \`diagram_alt\`, add \`diagram_alt:\` to that level in \`adventure.yaml\` with a one-sentence description of the diagram, then run \`npm run generate\`
           - [ ] Run \`node scripts/refresh-leaderboard.mjs\` after \`community_category_id\` is set
           - [ ] Run \`node scripts/refresh-discussions.mjs\` after \`discussionUrl\` values are set
 

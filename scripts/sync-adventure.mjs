@@ -79,6 +79,12 @@ async function listDir(repo, dirPath) {
   return Array.isArray(data) ? data.map((f) => f.name) : [];
 }
 
+async function fetchBinaryFile(repo, filePath) {
+  const data = await ghApi(`repos/${repo}/contents/${filePath}`);
+  if (!data?.content) return null;
+  return Buffer.from(data.content, "base64");
+}
+
 function deriveTopics(adventureTags) {
   // Use all adventure tags as starting point; reviewer refines to level-specific subset.
   return adventureTags;
@@ -104,8 +110,9 @@ function transformStrings(value, fn) {
 }
 
 function buildLevel(raw, adventureTags, rewardsDeadline) {
-  // architecture_diagram is dropped on sync. Diagram SVGs live in src/assets/diagrams/
-  // and must be added manually in the PR if a level needs one.
+  // architecture_diagram is stripped here. After all levels are fetched, the sync attempts
+  // to pull the SVG from docs/diagrams/ in the challenges repo and re-adds the field if
+  // successful. If not found there, it must be added manually to src/assets/diagrams/.
   const { architecture_diagram: _ignored, ...rest } = raw;
   const cleaned = transformStrings(rest, stripCodeInLinks);
   return {
@@ -144,9 +151,12 @@ function mergeLevels(existing, incoming, rawFetched) {
       ...(prev?.discussion_url && !(raw?.discussion_url || raw?.community_url) && {
         discussion_url: prev.discussion_url,
       }),
-      // architecture_diagram is stripped from incoming by buildLevel because the SVG file must
-      // be added manually to src/assets/diagrams/. Preserve it once it has been set.
-      ...(prev?.architecture_diagram && { architecture_diagram: prev.architecture_diagram }),
+      // architecture_diagram: use the value re-added by the SVG auto-fetch when present;
+      // otherwise preserve any value that was manually set in a previous PR.
+      ...(!l.architecture_diagram && prev?.architecture_diagram && { architecture_diagram: prev.architecture_diagram }),
+      // diagram_alt: upstream wins when set; preserve a manually-written value when upstream
+      // does not provide one (same pattern as topics).
+      ...(!raw?.diagram_alt && prev?.diagram_alt && { diagram_alt: prev.diagram_alt }),
       // topics: when the challenges repo sets them explicitly, use the upstream value so
       // intentional upstream changes come through. When the upstream did not set them (buildLevel
       // derived them from adventure tags), preserve any manual refinements from the website.
@@ -199,6 +209,31 @@ async function main() {
       rawFetchedLevels.push(raw);
       allFetchedLevels.push(buildLevel(raw, adventureTags, indexData.rewards?.deadline));
       console.log(`  Fetched level: ${levelFileNames[i]}`);
+    }
+  }
+
+  // Fetch architecture diagram SVGs from docs/diagrams/ in the challenges repo.
+  // Any SVG found is written to src/assets/diagrams/ and architecture_diagram is
+  // re-added to the level so the generator picks it up without a manual step.
+  const diagramsDir = resolve(ROOT, "src/assets/diagrams");
+  mkdirSync(diagramsDir, { recursive: true });
+  const fetchedDiagrams = new Set();
+  for (const raw of rawFetchedLevels) {
+    if (!raw.architecture_diagram || fetchedDiagrams.has(raw.architecture_diagram)) continue;
+    const svgContent = await fetchBinaryFile(repo, `${adventurePath}/docs/diagrams/${raw.architecture_diagram}`);
+    if (svgContent) {
+      writeFileSync(resolve(diagramsDir, raw.architecture_diagram), svgContent);
+      fetchedDiagrams.add(raw.architecture_diagram);
+      console.log(`  Fetched diagram: ${raw.architecture_diagram}`);
+    } else {
+      console.warn(`  Diagram not found at docs/diagrams/${raw.architecture_diagram} — add SVG manually to src/assets/diagrams/`);
+    }
+  }
+  // Re-add architecture_diagram to levels where the SVG was successfully fetched.
+  for (const level of allFetchedLevels) {
+    const raw = rawFetchedLevels.find((r) => r.level === level.level);
+    if (raw?.architecture_diagram && fetchedDiagrams.has(raw.architecture_diagram)) {
+      level.architecture_diagram = raw.architecture_diagram;
     }
   }
 
