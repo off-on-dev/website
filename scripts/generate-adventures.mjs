@@ -468,6 +468,9 @@ function generateSummariesTs(adventures) {
     lines.push(`    id: "${data.slug}",`);
     lines.push(`    title: "${escapeDoubleQuoted(summaryTitle)}",`);
     lines.push(`    month: "${data.month}",`);
+    if (/[*_`]/.test(summaryStory)) {
+      warn(`${data.slug}: story contains markdown syntax (*_\`). AdventureCard renders story as plain text — format the story as plain prose or it will display unstyled in card views.`);
+    }
     lines.push(`    story: ${formatString(summaryStory)},`);
     lines.push(`    tags: [${data.tags.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
     if (data.contributor) {

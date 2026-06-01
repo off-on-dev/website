@@ -616,6 +616,7 @@ Navigation card used in tag-filtered level grids. The entire card is a `<Link>` 
 | `level` | `AdventureLevelSummary` | required | Level data — accepts both `AdventureLevelSummary` (from `summaries.ts`) and full `AdventureLevel` (from `index.ts`), since the summary is a structural subset |
 | `adventureId` | `string` | required | Used to build the link href: `/adventures/:id/levels/:levelId` |
 | `adventureTitle` | `string` | required | Shown in the card footer as a tag label |
+| `isLive` | `boolean?` | — | When true, renders a `LivePill` in the card header alongside the difficulty badge. Pass from the `isLive` field on `RelatedLevelSummary`. |
 | `className` | `string?` | — | Merged onto the root `<Link>` via `cn()`. Pass `"animate-fade-up-delay-1"` when the card is in a staggered grid. |
 
 Distinct from `LevelCard`: `FilteredLevelCard` is a router link used in listing/filter contexts; `LevelCard` is a static card used on detail pages and includes the GitHub Codespaces CTA.
@@ -952,6 +953,23 @@ Displays the rewards for an adventure (trophy tiers, eligibility text, deadline,
 | `levelDeadline` | `string \| undefined` | — | Per-level deadline string shown only in compact mode. |
 
 Deadline is always stored as a plain date-and-time string (e.g. `"26 May 2026 at 23:59 CET"`), never as a days-remaining calculation.
+
+---
+
+### `LivePill`
+
+`src/components/LivePill.tsx`
+
+Small amber pill with an animated ping dot indicating that an adventure currently has an active rewards window. Rendered in `AdventureCard`, `FilteredLevelCard`, and the `AdventureDetail` header. The `isLive` flag is computed at build time (via the generator for card views, via the loader for detail pages) so the pill never causes a hydration mismatch.
+
+```tsx
+<LivePill />
+<LivePill className="my-extra-class" />
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `className` | `string?` | — | Merged onto the root `<span>` via `cn()`. |
 
 ---
 

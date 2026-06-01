@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { useParams, Link, useLoaderData } from "react-router";
-import type { MetaFunction, LoaderFunctionArgs } from "react-router";
+import type { MetaFunction, LoaderFunctionArgs, LinksFunction } from "react-router";
 import { ArrowRight, FlaskConical, Satellite, Cloud, Telescope, Scale, type LucideIcon } from "lucide-react";
 
 const ADVENTURE_ICONS: Record<string, LucideIcon> = {
@@ -28,9 +28,18 @@ import { isDeadlinePast } from "@/lib/utils";
 import { LivePill } from "@/components/LivePill";
 import { Breadcrumb } from "@/components/Breadcrumb";
 
-export function loader({ params }: LoaderFunctionArgs): { rewardsBelowFold: boolean } {
+export const links: LinksFunction = () => [
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-600-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+];
+
+export function loader({ params }: LoaderFunctionArgs): { rewardsBelowFold: boolean; isLive: boolean } {
   const adventure = ADVENTURES.find((a) => a.id === params.id);
-  return { rewardsBelowFold: isDeadlinePast(adventure?.rewards?.deadline) };
+  const deadline = adventure?.rewards?.deadline;
+  return {
+    rewardsBelowFold: isDeadlinePast(deadline),
+    isLive: !!deadline && !isDeadlinePast(deadline),
+  };
 }
 
 export const meta: MetaFunction = ({ params }) => {
@@ -82,10 +91,7 @@ type UpcomingLevelTileProps = { name: string; difficulty: AdventureLevel["diffic
 
 const UpcomingLevelTile = ({ name, difficulty }: UpcomingLevelTileProps): JSX.Element => {
   return (
-    <div
-      aria-label={`${name} (coming soon)`}
-      className="relative rounded-xl border border-dashed border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 flex flex-col"
-    >
+    <div className="relative rounded-xl border border-dashed border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 flex flex-col">
       <div className="mb-3">
         <DifficultyBadge difficulty={difficulty} showDot />
       </div>
@@ -126,15 +132,12 @@ const AdventureLevelLink = ({ level, adventureId }: AdventureLevelLinkProps): JS
 
 const AdventureDetail = (): JSX.Element => {
   const { id } = useParams<{ id: string }>();
-  const { rewardsBelowFold } = useLoaderData<{ rewardsBelowFold: boolean }>();
+  const { rewardsBelowFold, isLive } = useLoaderData<{ rewardsBelowFold: boolean; isLive: boolean }>();
   const adventure = ADVENTURES.find((adventure) => adventure.id === id);
 
   if (!adventure) {
     return <NotFoundPage title="Adventure not found" message="The adventure you're looking for doesn't exist." />;
   }
-
-  const adventureDeadline = adventure.rewards?.deadline;
-  const isLive = !!adventureDeadline && !isDeadlinePast(adventureDeadline);
 
   return (
     <div className="min-h-screen bg-background">

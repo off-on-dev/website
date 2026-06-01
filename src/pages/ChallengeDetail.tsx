@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { useParams, useLoaderData } from "react-router";
-import type { MetaFunction, LoaderFunctionArgs } from "react-router";
+import type { MetaFunction, LoaderFunctionArgs, LinksFunction } from "react-router";
 import { Check, ExternalLink } from "lucide-react";
 import { MarkdownContent } from "@/components/MarkdownContent";
 import { MarkdownInline } from "@/components/MarkdownInline";
@@ -25,6 +25,11 @@ import { RewardsCard } from "@/components/RewardsCard";
 import { SITE_URL, BRAND_NAME, COMMUNITY_DISPLAY_NAME, COMMUNITY_URL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 import { isDeadlinePast } from "@/lib/utils";
+
+export const links: LinksFunction = () => [
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-600-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+];
 
 export function loader({ params }: LoaderFunctionArgs): { rewardsBelowFold: boolean } {
   const adventure = ADVENTURES.find((a) => a.id === params.id);

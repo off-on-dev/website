@@ -28,21 +28,27 @@ describe("AdventureCard", () => {
     expect(outerLink?.querySelectorAll("a")).toHaveLength(0);
   });
 
-  it("renders the link text from markdown as plain text inside the card", () => {
+  it("renders the story as plain text without processing markdown syntax", () => {
     const { container } = render(
       <MemoryRouter>
         <AdventureCard adventure={summary} />
       </MemoryRouter>
     );
-    expect(container.textContent).toContain("join the guild and use tooling to win");
+    // Raw markdown syntax must appear as-is — AdventureCard does not load react-markdown.
+    // The generator warns at build time if a story contains markdown, so this tests the
+    // fallback rendering path for any story that slips through with syntax characters.
+    expect(container.querySelector("p.line-clamp-2")?.textContent).toContain(
+      "join the guild and use [tooling](https://example.com) to **win**"
+    );
   });
 
-  it("still renders bold formatting from markdown in the story", () => {
+  it("does not render markdown elements (no <strong>, no nested <a>) in the story", () => {
     const { container } = render(
       <MemoryRouter>
         <AdventureCard adventure={summary} />
       </MemoryRouter>
     );
-    expect(container.querySelector("p.line-clamp-2 strong")?.textContent).toBe("win");
+    expect(container.querySelector("p.line-clamp-2 strong")).toBeNull();
+    expect(container.querySelector("p.line-clamp-2 a")).toBeNull();
   });
 });

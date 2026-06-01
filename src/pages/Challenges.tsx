@@ -1,6 +1,6 @@
 import { useState, type JSX } from "react";
 import { useParams } from "react-router";
-import type { MetaFunction } from "react-router";
+import type { MetaFunction, LinksFunction } from "react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
@@ -11,6 +11,11 @@ import { ALL_TAGS, slugToTag, tagToSlug } from "@/data/adventures";
 import { ADVENTURE_SUMMARIES, getLevelSummariesByTag } from "@/data/adventures/summaries";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
+
+export const links: LinksFunction = () => [
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-600-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+];
 
 export const meta: MetaFunction = ({ params }) => {
   const tag = params.tag ? slugToTag(params.tag) : undefined;

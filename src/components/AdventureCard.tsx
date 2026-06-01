@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { ContributorBadge } from "@/components/ContributorBadge";
 import { LivePill } from "@/components/LivePill";
-import { MarkdownInline } from "@/components/MarkdownInline";
 
 
 type AdventureCardProps = { adventure: AdventureCardSummary };
@@ -35,7 +34,7 @@ export const AdventureCard = ({ adventure }: AdventureCardProps): JSX.Element =>
     <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
       {adventure.title}
     </h3>
-    <p className="mt-2 text-sm text-muted-foreground line-clamp-2"><MarkdownInline source={adventure.story} noLinks /></p>
+    <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{adventure.story}</p>
 
     <div className="mt-4 flex flex-wrap items-center gap-2">
       {adventure.levels.map((level) => (
