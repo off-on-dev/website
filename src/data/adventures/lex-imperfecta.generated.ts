@@ -9,6 +9,11 @@ export const LEX_IMPERFECTA: Adventure = {
   month: "JUN 2026",
   story: "The Roman Republic has built a sophisticated legal system to protect its citizens — but the laws were written in haste, and the exceptions were written too generously. Policies go unenforced, the wrong citizens are exempt, and something has slipped through the gates unnoticed. As a newly appointed Praetor, your mission is to restore order before chaos takes hold.",
   tags: ["Kyverno", "Kubernetes"],
+  contributor: {
+    name: "Katharina Sick",
+    url: "https://ksick.dev/",
+    about: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
+  },
   backstory: [
     "The Roman Republic has built a sophisticated legal system to protect its citizens — but the laws were written in haste, and the exceptions were written too generously. Policies go unenforced, the wrong citizens are exempt, and something has slipped through the gates unnoticed. As a newly appointed Praetor, your mission is to restore order before chaos takes hold.",
   ],
@@ -16,7 +21,7 @@ export const LEX_IMPERFECTA: Adventure = {
     "The Republic's legal system is in disarray — workloads run unchecked, required labels go missing, and privileged containers slip through the gates. As a newly appointed Praetor, your mission is to restore order by fixing broken Kyverno policies and enforcing proper admission control.",
   ],
   rewards: {
-    deadline: "Tuesday, 23 June 2026 at 23:59 CET",
+    deadline: "2026-06-23T23:59:00+01:00",
     eligibility: "Complete all levels and post your solution in the community before the deadline to be eligible.",
     tiers: [
       { label: "1st place", description: "50% voucher for a Linux Foundation certification" },

@@ -14,8 +14,14 @@ overview:
   - The Republic's legal system is in disarray — workloads run unchecked, required labels go missing, and privileged
     containers slip through the gates. As a newly appointed Praetor, your mission is to restore order by fixing broken
     Kyverno policies and enforcing proper admission control.
+contributor:
+  name: Katharina Sick
+  url: https://ksick.dev/
+  about: DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native
+    and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities,
+    inline skating rinks, and quiz nights across Europe.
 rewards:
-  deadline: Tuesday, 23 June 2026 at 23:59 CET
+  deadline: "2026-06-23T23:59:00+01:00"
   tiers:
     - label: 1st place
       description: 50% voucher for a Linux Foundation certification
