@@ -115,10 +115,43 @@ function buildLevel(raw, adventureTags) {
   };
 }
 
-function mergeLevels(existing, incoming) {
-  const map = Object.fromEntries((existing || []).map((l) => [l.level, l]));
-  for (const l of incoming) map[l.level] = l;
-  return Object.values(map).sort(
+/**
+ * Merges existing website levels with freshly fetched upstream levels.
+ *
+ * @param {object[]} existing   - Levels currently in adventure.yaml (may include manual edits).
+ * @param {object[]} incoming   - Levels after buildLevel processing (from challenges repo).
+ * @param {object[]} rawFetched - Raw YAML from the challenges repo before buildLevel runs.
+ *                                Used to distinguish fields explicitly set upstream from defaults
+ *                                injected by buildLevel, so manual edits are only preserved when
+ *                                the upstream did not intentionally change the field.
+ */
+function mergeLevels(existing, incoming, rawFetched) {
+  const levelMap = Object.fromEntries((existing || []).map((l) => [l.level, l]));
+  const rawMap = Object.fromEntries((rawFetched || []).map((l) => [l.level, l]));
+
+  for (const l of incoming) {
+    const prev = levelMap[l.level];
+    const raw = rawMap[l.level];
+
+    levelMap[l.level] = {
+      ...l,
+      // discussion_url is set after Discourse threads are created and is never present in the
+      // challenges repo. Preserve it so a re-sync does not wipe the community thread URL.
+      // Check both field names (discussion_url and its alias community_url) before deciding.
+      ...(prev?.discussion_url && !(raw?.discussion_url || raw?.community_url) && {
+        discussion_url: prev.discussion_url,
+      }),
+      // architecture_diagram is stripped from incoming by buildLevel because the SVG file must
+      // be added manually to src/assets/diagrams/. Preserve it once it has been set.
+      ...(prev?.architecture_diagram && { architecture_diagram: prev.architecture_diagram }),
+      // topics: when the challenges repo sets them explicitly, use the upstream value so
+      // intentional upstream changes come through. When the upstream did not set them (buildLevel
+      // derived them from adventure tags), preserve any manual refinements from the website.
+      ...(!raw?.topics && prev?.topics && { topics: prev.topics }),
+    };
+  }
+
+  return Object.values(levelMap).sort(
     (a, b) => (LEVEL_ORDER[a.level] ?? 99) - (LEVEL_ORDER[b.level] ?? 99)
   );
 }
@@ -156,9 +189,11 @@ async function main() {
     levelFileNames.map((fileName) => fetchYaml(repo, `${adventurePath}/docs/${fileName}`))
   );
   const allFetchedLevels = [];
+  const rawFetchedLevels = [];
   for (let i = 0; i < levelFileNames.length; i++) {
     const raw = levelResults[i];
     if (raw) {
+      rawFetchedLevels.push(raw);
       allFetchedLevels.push(buildLevel(raw, adventureTags));
       console.log(`  Fetched level: ${levelFileNames[i]}`);
     }
@@ -240,7 +275,7 @@ async function main() {
     // Preserve community_category_id once a reviewer has set it; otherwise generator emits a TODO stub.
     ...(existing?.community_category_id !== undefined && { community_category_id: existing.community_category_id }),
     ...(upcomingLevels.length > 0 && { upcoming_levels: upcomingLevels }),
-    levels: mergeLevels(existing?.levels, activeLevels),
+    levels: mergeLevels(existing?.levels, activeLevels, rawFetchedLevels),
   };
 
   mkdirSync(adventureDir, { recursive: true });

@@ -48,6 +48,30 @@ jobs:
             exit 1
           fi
 
+      - name: Restore adventure YAML from existing PR branch
+        env:
+          ADVENTURE_URL: ${{ inputs.adventure_url }}
+        run: |
+          URL="${ADVENTURE_URL%/}"
+          FOLDER="${URL##*/}"
+          SLUG="${FOLDER#[0-9]*-}"
+          BRANCH="feat/adventure-${SLUG}"
+          YAML_PATH="src/data/adventures/${SLUG}/adventure.yaml"
+
+          git fetch origin "$BRANCH" 2>/dev/null || true
+
+          if git show-ref --quiet "refs/remotes/origin/$BRANCH"; then
+            if git show "origin/$BRANCH:${YAML_PATH}" > /tmp/pr-adventure.yaml 2>/dev/null && [ -s /tmp/pr-adventure.yaml ]; then
+              mkdir -p "src/data/adventures/${SLUG}"
+              cp /tmp/pr-adventure.yaml "$YAML_PATH"
+              echo "Restored adventure.yaml from PR branch ${BRANCH} — manual edits (discussion_url, topics, architecture_diagram) will be preserved by sync-adventure.mjs"
+            else
+              echo "PR branch ${BRANCH} exists but has no adventure.yaml yet — starting fresh from main"
+            fi
+          else
+            echo "No existing PR branch ${BRANCH} — starting fresh from main"
+          fi
+
       - name: Fetch and transform adventure YAML
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -126,7 +150,7 @@ jobs:
           - [ ] Set \`community_category_id:\` in \`src/data/adventures/${SLUG}/adventure.yaml\` (look up at https://community.offon.dev/categories.json), then run \`npm run generate\`
           - [ ] Update \`rewards.deadline:\` from \`TODO\` to ISO 8601 (e.g. \`2026-07-01T23:59:00+01:00\`)
           - [ ] Review \`topics:\` on each level, auto-set to all adventure tags, refine to level-specific subset if needed
-          - [ ] Update \`community_url:\` in each level once the Discourse threads are created
+          - [ ] Update \`discussion_url:\` in each level once the Discourse threads are created
           - [ ] Update \`discussionUrl\` in each \`*-posts.json\` stub
 
           ### Manual steps (only if needed)
