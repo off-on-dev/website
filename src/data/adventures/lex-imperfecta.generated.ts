@@ -49,6 +49,7 @@ export const LEX_IMPERFECTA: Adventure = {
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2Flex-imperfecta_beginner%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: "",
+      deadline: "2026-06-23T23:59:00+01:00",
       intro: ["Fix broken Kyverno policies to restore proper admission control."],
       backstory: [
         "The Republic's legal scholars have been busy — perhaps too busy. In their haste to codify the Twelve Tables, the  foundation of the Republic's legal system, they introduced errors that now threaten the city's order. Workloads  that should be blocked are running freely, and workloads that should be allowed are being turned away at the gates.",
