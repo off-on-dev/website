@@ -1,5 +1,5 @@
 import { type JSX } from "react";
-import type { MetaFunction } from "react-router";
+import type { MetaFunction, LinksFunction } from "react-router";
 import { ExternalLink } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
@@ -12,6 +12,11 @@ import { BottomCTA } from "@/components/BottomCTA";
 import { Footer } from "@/components/Footer";
 import { BRAND_NAME, BRAND_SHORT_DESCRIPTION, BRAND_SLOGAN, SITE_URL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
+
+export const links: LinksFunction = () => [
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-600-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+];
 
 export const meta: MetaFunction = () =>
   buildPageMeta({

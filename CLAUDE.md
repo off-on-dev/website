@@ -195,7 +195,8 @@ When diagnosing a bug, especially in the production build, follow these rules wi
 - **Buttons:** use raw `<button>` elements with the CSS utility classes defined in `src/index.css` (`.btn-primary`, `.btn-ghost`, `.btn-soft`, `.btn-inverse`, `.btn-ghost-inverse`). There is no `Button` component wrapper and no `@radix-ui/react-slot` dependency. See `styleguide.md` for which class to use on which background color.
 - **Toasts:** if toast notifications are ever needed, install `sonner` and add `src/components/ui/sonner.tsx` (shadcn pattern). Mount `<Toaster>` in the nearest layout that actually triggers a toast. Do not install speculatively.
 - **TooltipProvider** is intentionally not mounted in `Layout.tsx` until a call site exists. Wrap only the subtree that uses `<Tooltip>` with `<TooltipProvider>` at that point.
-- **Author-controlled strings render through markdown.** Every YAML/TS field that holds prose written by a challenge author (e.g. `level.audience`, `tool.description`, `adventure.story`, `step.title`, `contributor.about`, `rewards.eligibility`, `tier.description`, `rewards.rankingNote`) must be rendered through `<MarkdownInline>` (single-line, no wrapping `<p>`) or `<MarkdownContent>` (multi-paragraph). Never render an author-controlled string as `{value}` directly. Plain prose passes through `<MarkdownInline>` unchanged, so this is safe for fields that may or may not contain markdown. Identifier fields (`id`, URLs, enum values like `difficulty`, emoji) are not author prose and are rendered directly.
+- **Author-controlled strings render through markdown.** Every YAML/TS field that holds prose written by a challenge author (e.g. `level.audience`, `tool.description`, `step.title`, `contributor.about`, `rewards.eligibility`, `tier.description`, `rewards.rankingNote`) must be rendered through `<MarkdownInline>` (single-line, no wrapping `<p>`) or `<MarkdownContent>` (multi-paragraph). Never render an author-controlled string as `{value}` directly. Plain prose passes through `<MarkdownInline>` unchanged, so this is safe for fields that may or may not contain markdown. Identifier fields (`id`, URLs, enum values like `difficulty`, emoji) are not author prose and are rendered directly.
+  - **Exception — `adventure.story` in `AdventureCard`:** The summary card renders `adventure.story` as a plain `<span>` without `<MarkdownInline>` to keep `react-markdown` out of the home page bundle (~46 kB saved). The `adventure.story` field on the full `AdventureDetail` page is still rendered through `<MarkdownInline>`. The generator emits a build-time warning if any story value contains markdown syntax (`*`, `_`, `` ` ``). Keep story field values as plain prose.
 
 ### Component CSS patterns
 
@@ -486,10 +487,16 @@ All UI labels use **title case (Chicago style)**. Body copy uses **sentence case
 
 ## Site Maintenance
 
+### Well-known files
+
+- `public/.well-known/security.txt` contains an `Expires` field. Update the date annually (current expiry: `2027-06-01`). An expired security.txt is treated as absent by scanners.
+- `public/llms.txt` lists key pages and all live adventures. Update it whenever a new adventure is added (step 7 in the adventure checklist above) or a page is significantly renamed.
+- `public/robots.txt` lists named AI crawler agents. No routine updates needed; add a new agent entry only when a major crawler publishes a new user-agent string.
+
 ### Sitemap
 
-- Every time a new static page is added to `src/pages/` and registered as a route in `src/routes.ts`, its URL must also be added to `public/sitemap.xml`.
-- Dynamic routes with statically known IDs must also be added to `public/sitemap.xml`.
+- Every time a new static page is added to `src/pages/` and registered as a route in `src/routes.ts`, its URL must also be added to `public/sitemap.xml` with a `<lastmod>` date.
+- Dynamic routes with statically known IDs must also be added to `public/sitemap.xml` with a `<lastmod>` date. Adventure and challenge-tag URLs are generated automatically by `scripts/generate-adventures.mjs` and include `<lastmod>` set to the build date; do not add them by hand.
 - `robots.txt` at `public/robots.txt` must include: `Sitemap: https://offon.dev/sitemap.xml`
 
 ### SSG prerendered routes
@@ -520,6 +527,7 @@ The workflow opens a PR with a checklist. Before merging, complete all items in 
 4. Run `node scripts/refresh-discussions.mjs` after setting `discussionUrl` in each `*-posts.json`.
 5. Add each level URL to the `ROUTES` array in `e2e/smoke.spec.ts` and `src/test/seo.test.ts`, and to the `pages` array in `src/test/prerender.test.ts` with the expected `<title>` value.
 6. Update the routes table in `README.md`.
+7. Add the adventure to `public/llms.txt` under the Adventures section so AI agents can discover it.
 
 ---
 
