@@ -460,6 +460,8 @@ function generateSummariesTs(adventures) {
   lines.push(``);
   lines.push(`export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [`);
 
+  const now = new Date();
+
   for (const data of adventures) {
     lines.push(`  {`);
     const { title: summaryTitle, story: summaryStory } = normalizeAdventureFields(data);
@@ -470,6 +472,11 @@ function generateSummariesTs(adventures) {
     lines.push(`    tags: [${data.tags.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
     if (data.contributor) {
       lines.push(`    contributor: { name: "${escapeDoubleQuoted(data.contributor.name)}" },`);
+    }
+    const rewardsLive = data.rewards?.deadline && new Date(data.rewards.deadline) > now;
+    const levelLive = !rewardsLive && (data.levels ?? []).some((l) => l.deadline && new Date(l.deadline) > now);
+    if (rewardsLive || levelLive) {
+      lines.push(`    isLive: true,`);
     }
     lines.push(`    levels: [`);
     for (const level of data.levels) {
@@ -504,6 +511,7 @@ function generateSummariesTs(adventures) {
   lines.push(`        level,`);
   lines.push(`        adventureId: a.id,`);
   lines.push(`        adventureTitle: a.title,`);
+  lines.push(`        ...(a.isLive ? { isLive: true } : {}),`);
   lines.push(`      }))`);
   lines.push(`    );`);
   lines.push(``);

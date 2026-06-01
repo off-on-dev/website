@@ -195,5 +195,6 @@ export const getLevelSummariesByTag = (tag: string): RelatedLevelSummary[] =>
         level,
         adventureId: a.id,
         adventureTitle: a.title,
+        ...(a.isLive ? { isLive: true } : {}),
       }))
     );

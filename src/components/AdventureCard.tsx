@@ -2,23 +2,34 @@ import type { JSX } from "react";
 import { Link } from "react-router";
 import { Layers } from "lucide-react";
 import type { AdventureCardSummary } from "@/data/adventures";
+import { cn } from "@/lib/utils";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { ContributorBadge } from "@/components/ContributorBadge";
+import { LivePill } from "@/components/LivePill";
 import { MarkdownInline } from "@/components/MarkdownInline";
+
 
 type AdventureCardProps = { adventure: AdventureCardSummary };
 
 export const AdventureCard = ({ adventure }: AdventureCardProps): JSX.Element => (
   <Link
     to={`/adventures/${adventure.id}`}
-    className="group card-glow relative rounded-xl border-2 border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+    className={cn(
+      "group card-glow relative rounded-xl border-2 bg-[hsl(var(--surface))] p-6 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      adventure.isLive
+        ? "border-primary/50"
+        : "border-[hsl(var(--surface-border))]"
+    )}
   >
     <div className="flex items-center justify-between mb-3">
       <span className="font-mono text-xs text-muted-foreground">Adventure</span>
-      <span className="badge-levels inline-flex items-center gap-1.5 rounded-sm border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-xs uppercase tracking-wider text-primary">
-        <Layers className="h-3 w-3" aria-hidden="true" />
-        {adventure.levels.length} Level{adventure.levels.length !== 1 ? "s" : ""}
-      </span>
+      <div className="flex items-center gap-2">
+        {adventure.isLive && <LivePill />}
+        <span className="badge-levels inline-flex items-center gap-1.5 rounded-sm border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-xs uppercase tracking-wider text-primary">
+          <Layers className="h-3 w-3" aria-hidden="true" />
+          {adventure.levels.length} Level{adventure.levels.length !== 1 ? "s" : ""}
+        </span>
+      </div>
     </div>
 
     <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">

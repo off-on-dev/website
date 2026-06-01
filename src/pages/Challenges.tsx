@@ -7,8 +7,8 @@ import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
 import { FilteredLevelCard } from "@/components/FilteredLevelCard";
 import { AdventureCard } from "@/components/AdventureCard";
-import { ADVENTURES, ALL_TAGS, getLevelsByTag, slugToTag, tagToSlug } from "@/data/adventures";
-import { ADVENTURE_SUMMARIES } from "@/data/adventures/summaries";
+import { ALL_TAGS, slugToTag, tagToSlug } from "@/data/adventures";
+import { ADVENTURE_SUMMARIES, getLevelSummariesByTag } from "@/data/adventures/summaries";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 
@@ -34,11 +34,12 @@ export const meta: MetaFunction = ({ params }) => {
   });
 };
 
-const ALL_LEVELS = ADVENTURES.flatMap((adventure) =>
+const ALL_LEVELS = ADVENTURE_SUMMARIES.flatMap((adventure) =>
   adventure.levels.map((level) => ({
     level,
     adventureId: adventure.id,
     adventureTitle: adventure.title,
+    ...(adventure.isLive ? { isLive: true as const } : {}),
   }))
 );
 
@@ -50,7 +51,7 @@ const Challenges = (): JSX.Element => {
     tagSlug ? slugToTag(tagSlug) ?? null : null
   );
   const [hasInteracted, setHasInteracted] = useState(false);
-  const filteredLevels = activeTag ? getLevelsByTag(activeTag) : ALL_LEVELS;
+  const filteredLevels = activeTag ? getLevelSummariesByTag(activeTag) : ALL_LEVELS;
 
   const handleAllClick = (): void => {
     setHasInteracted(true);
@@ -120,12 +121,13 @@ const Challenges = (): JSX.Element => {
                   </span>
                 </h2>
                 <div key={activeTag} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-                  {filteredLevels.map(({ level, adventureId, adventureTitle }) => (
+                  {filteredLevels.map(({ level, adventureId, adventureTitle, isLive }) => (
                     <FilteredLevelCard
                       key={`${adventureId}-${level.id}`}
                       level={level}
                       adventureId={adventureId}
                       adventureTitle={adventureTitle}
+                      isLive={isLive}
                     />
                   ))}
                 </div>

@@ -154,6 +154,8 @@ export type AdventureCardSummary = {
   tags: string[];
   levels: AdventureLevelSummary[];
   contributor?: { name: string };
+  /** True when the adventure has an active rewards window or any level deadline in the future. */
+  isLive?: boolean;
 };
 
 /** A level summary with its parent adventure context, for filtered card views. */
@@ -161,4 +163,5 @@ export type RelatedLevelSummary = {
   level: AdventureLevelSummary;
   adventureId: string;
   adventureTitle: string;
+  isLive?: boolean;
 };

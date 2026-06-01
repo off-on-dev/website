@@ -77,12 +77,13 @@ export const ChallengesGrid = ({ limit }: ChallengesGridProps = {}): JSX.Element
                   {filteredLevels.length} {filteredLevels.length === 1 ? "challenge" : "challenges"} tagged with {activeTopic}
                 </p>
                 <div key={activeTopic} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-                  {filteredLevels.map(({ level, adventureId, adventureTitle }) => (
+                  {filteredLevels.map(({ level, adventureId, adventureTitle, isLive }) => (
                     <FilteredLevelCard
                       key={`${adventureId}-${level.id}`}
                       level={level}
                       adventureId={adventureId}
                       adventureTitle={adventureTitle}
+                      isLive={isLive}
                     />
                   ))}
                 </div>

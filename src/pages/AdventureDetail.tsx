@@ -25,6 +25,7 @@ import { MarkdownInline } from "@/components/MarkdownInline";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 import { isDeadlinePast } from "@/lib/utils";
+import { LivePill } from "@/components/LivePill";
 import { Breadcrumb } from "@/components/Breadcrumb";
 
 export function loader({ params }: LoaderFunctionArgs): { rewardsBelowFold: boolean } {
@@ -132,6 +133,9 @@ const AdventureDetail = (): JSX.Element => {
     return <NotFoundPage title="Adventure not found" message="The adventure you're looking for doesn't exist." />;
   }
 
+  const adventureDeadline = adventure.rewards?.deadline;
+  const isLive = !!adventureDeadline && !isDeadlinePast(adventureDeadline);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -163,6 +167,7 @@ const AdventureDetail = (): JSX.Element => {
               </span>
             </div>
             <div className="flex flex-wrap items-center gap-1.5 mb-5">
+              {isLive && <LivePill />}
               <TagChips tags={adventure.tags} />
             </div>
             <p className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl"><MarkdownInline source={adventure.story} /></p>

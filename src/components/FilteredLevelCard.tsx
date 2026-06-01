@@ -3,11 +3,13 @@ import { Link } from "react-router";
 import { cn } from "@/lib/utils";
 import type { AdventureLevelSummary } from "@/data/adventures";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
+import { LivePill } from "@/components/LivePill";
 
 type FilteredLevelCardProps = {
   level: AdventureLevelSummary;
   adventureId: string;
   adventureTitle: string;
+  isLive?: boolean;
   className?: string;
 };
 
@@ -15,6 +17,7 @@ export const FilteredLevelCard = ({
   level,
   adventureId,
   adventureTitle,
+  isLive,
   className,
 }: FilteredLevelCardProps): JSX.Element => (
   <Link
@@ -24,8 +27,9 @@ export const FilteredLevelCard = ({
       className
     )}
   >
-    <div className="mb-3">
+    <div className="flex items-center justify-between mb-3">
       <DifficultyBadge difficulty={level.difficulty} showDot />
+      {isLive && <LivePill />}
     </div>
     <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
       {level.name}
