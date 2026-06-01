@@ -1,3 +1,4 @@
+import { isValidElement, type ReactNode } from "react";
 import type { Components } from "react-markdown";
 import { ExternalLink } from "lucide-react";
 
@@ -6,6 +7,16 @@ const isExternalHref = (href: string | undefined): boolean =>
 
 const isLocalhostHref = (href: string | undefined): boolean =>
   typeof href === "string" && /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?/i.test(href);
+
+// Recursively extract plain text from React nodes. Used to strip code chips
+// and other styled elements from inside link text so the link renders cleanly.
+function extractText(node: ReactNode): string {
+  if (typeof node === "string") return node;
+  if (typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(extractText).join("");
+  if (isValidElement(node)) return extractText((node.props as { children?: ReactNode }).children);
+  return "";
+}
 
 // Inline-only renderers (links, inline code, strong, em). Shared by
 // MarkdownContent and MarkdownInline so all author prose styles consistently.
@@ -17,6 +28,10 @@ export const inlineComponents: Components = {
     if (isLocalhostHref(href)) {
       return <code className="rounded bg-[hsl(var(--surface))] px-1.5 py-0.5 text-sm font-mono text-foreground">{children}</code>;
     }
+    // Strip code chips and other inline elements from link text — code chips inside
+    // links look awkward (especially with comma-separated terms) and inline-flex
+    // anchors should contain plain text only.
+    const linkText = extractText(children);
     if (isExternalHref(href)) {
       return (
         <a
@@ -25,7 +40,7 @@ export const inlineComponents: Components = {
           rel="noopener noreferrer"
           className="docs-ext-link"
         >
-          {children}
+          {linkText}
           <ExternalLink size={12} aria-hidden="true" className="shrink-0" />
           <span className="sr-only"> (opens in new tab)</span>
         </a>
@@ -33,7 +48,7 @@ export const inlineComponents: Components = {
     }
     return (
       <a href={href} className="docs-ext-link">
-        {children}
+        {linkText}
       </a>
     );
   },
