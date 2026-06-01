@@ -1,0 +1,36 @@
+# OffOn
+
+> OffOn is a vendor-neutral community for open source enthusiasts.
+> Learn through hands-on challenges, share knowledge, and build together.
+> The site is fully static with no backend; all content is prerendered.
+
+## Key Pages
+
+- [Home](https://offon.dev/): Community overview, featured challenges, and leaderboard.
+- [Adventures](https://offon.dev/adventures/): Hands-on multi-level open source challenges with real-world scenarios.
+- [Challenges](https://offon.dev/challenges/): Browse all challenge levels; filter by technology tag.
+- [Community Guide / Handbook](https://offon.dev/handbook/): Getting started guide for the community.
+- [About](https://offon.dev/about/): What OffOn is and who it is for.
+- [Sponsors](https://offon.dev/sponsors/): Organisations supporting the platform.
+- [Accessibility Statement](https://offon.dev/accessibility/): WCAG 2.2 AA commitment and known issues.
+- [Privacy Policy](https://offon.dev/privacy/): GDPR-compliant privacy policy; consent-gated GA4 analytics.
+
+## Adventures
+
+Each adventure is a scenario-driven challenge with beginner, intermediate, and expert levels.
+
+- [Blind by Design](https://offon.dev/adventures/blind-by-design/): Accessibility-focused challenges using real screen readers and audit tools.
+- [The AI Observatory](https://offon.dev/adventures/the-ai-observatory/): LLM observability and tracing with OpenLLMetry.
+- [Building CloudHaven](https://offon.dev/adventures/building-cloudhaven/): Cloud infrastructure, GitOps, and platform engineering.
+- [Echoes Lost in Orbit](https://offon.dev/adventures/echoes-lost-in-orbit/): Distributed tracing and observability with OpenTelemetry.
+
+## Challenge Technologies
+
+ArgoCD, Argo Rollouts, flagd, GitHub Actions, Grafana, Jaeger, Java, OpenFeature,
+OpenLLMetry, OpenTelemetry, OpenTofu, Prometheus, PromQL, Python, Spring Boot,
+TDD, Terraform, Trivy.
+
+## Machine-Readable Resources
+
+- Sitemap: https://offon.dev/sitemap.xml
+- Security contact: https://offon.dev/.well-known/security.txt
