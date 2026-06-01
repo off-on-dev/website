@@ -26,7 +26,7 @@ const Index = (): JSX.Element => {
       <Navbar />
       <main id="main-content">
         <Hero />
-        <ChallengesGrid />
+        <ChallengesGrid limit={6} />
         <ChallengeHighlights />
         <section aria-labelledby="adventure-idea-heading" className="bg-primary py-16 px-6 md:px-16">
           <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">

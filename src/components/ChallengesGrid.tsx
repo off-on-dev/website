@@ -1,14 +1,24 @@
 import { useState, type JSX } from "react";
+import { Link } from "react-router";
+import { ArrowRight } from "lucide-react";
 import { ADVENTURE_SUMMARIES, SUMMARY_TAGS, getLevelSummariesByTag } from "@/data/adventures/summaries";
 import { FilteredLevelCard } from "@/components/FilteredLevelCard";
 import { AdventureCard } from "@/components/AdventureCard";
 import { SectionLabel } from "@/components/SectionLabel";
 
-export const ChallengesGrid = (): JSX.Element => {
+type ChallengesGridProps = {
+  /** When set, limits the number of adventure cards shown and renders a "See all" link to /challenges if there are more. */
+  limit?: number;
+};
+
+export const ChallengesGrid = ({ limit }: ChallengesGridProps = {}): JSX.Element => {
   const [activeTopic, setActiveTopic] = useState<string | null>(null);
   const [hasFiltered, setHasFiltered] = useState(false);
 
   const filteredLevels = activeTopic ? getLevelSummariesByTag(activeTopic) : [];
+
+  const visibleAdventures = limit !== undefined ? ADVENTURE_SUMMARIES.slice(0, limit) : ADVENTURE_SUMMARIES;
+  const hasMore = limit !== undefined && ADVENTURE_SUMMARIES.length > limit;
 
   const handleAllClick = (): void => {
     if (activeTopic !== null) setHasFiltered(true);
@@ -79,11 +89,21 @@ export const ChallengesGrid = (): JSX.Element => {
               </>
             ) : (
               /* Adventure cards */
-              <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-                {ADVENTURE_SUMMARIES.map((adventure) => (
-                  <AdventureCard key={adventure.id} adventure={adventure} />
-                ))}
-              </div>
+              <>
+                <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                  {visibleAdventures.map((adventure) => (
+                    <AdventureCard key={adventure.id} adventure={adventure} />
+                  ))}
+                </div>
+                {hasMore && (
+                  <div className="mt-10 flex justify-center">
+                    <Link to="/challenges" className="btn-ghost inline-flex items-center gap-2">
+                      See all adventures
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </Link>
+                  </div>
+                )}
+              </>
             )}
         </div>
       </div>

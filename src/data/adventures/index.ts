@@ -1,16 +1,16 @@
 import { BLIND_BY_DESIGN } from "./blind-by-design.generated";
+import { THE_AI_OBSERVATORY } from "./the-ai-observatory.generated";
 import { BUILDING_CLOUDHAVEN } from "./building-cloudhaven.generated";
 import { ECHOES_LOST_IN_ORBIT } from "./echoes-lost-in-orbit.generated";
-import { THE_AI_OBSERVATORY } from "./the-ai-observatory.generated";
 import type { Adventure, AdventureContributor, RelatedLevel } from "./types";
 
 export type { Adventure, AdventureLevel, AdventureContributor, RelatedLevel, ToolboxItem, WalkthroughStep, VerificationInfo, TopPlayer, UpcomingLevel, AdventureLevelSummary, AdventureCardSummary, RelatedLevelSummary } from "./types";
 
 export const ADVENTURES: Adventure[] = [
   BLIND_BY_DESIGN,
+  THE_AI_OBSERVATORY,
   BUILDING_CLOUDHAVEN,
   ECHOES_LOST_IN_ORBIT,
-  THE_AI_OBSERVATORY,
 ];
 
 /** All unique technology tags across all adventures, sorted alphabetically. Shared with filter components; do not re-derive in component files. */

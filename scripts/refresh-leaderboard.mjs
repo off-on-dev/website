@@ -36,9 +36,9 @@ const QUERY_ID = 5;
 const ADVENTURE_CATEGORIES = {
   // GENERATED:adventures
   "blind-by-design":      { categoryId: 41, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
+  "the-ai-observatory":   { categoryId: 37, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
   "building-cloudhaven":  { categoryId: 36, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
   "echoes-lost-in-orbit": { categoryId: 35, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
-  "the-ai-observatory":   { categoryId: 37, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
   // /GENERATED:adventures
 };
 

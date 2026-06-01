@@ -160,6 +160,21 @@ function findAdventureYamls() {
 
 // --- Validation ---
 
+const MONTH_NAME_TO_INDEX = {
+  JAN: 0, FEB: 1, MAR: 2, APR: 3, MAY: 4, JUN: 5,
+  JUL: 6, AUG: 7, SEP: 8, OCT: 9, NOV: 10, DEC: 11,
+};
+
+/** Parse a "MMM YYYY" month string (e.g. "MAY 2026") into a numeric sort key. */
+function monthToSortKey(month) {
+  if (typeof month !== "string") return 0;
+  const match = month.trim().toUpperCase().match(/^([A-Z]{3})\s+(\d{4})$/);
+  if (!match) return 0;
+  const m = MONTH_NAME_TO_INDEX[match[1]];
+  if (m === undefined) return 0;
+  return Number(match[2]) * 12 + m;
+}
+
 function validateAdventure(data, id) {
   const errors = [];
   if (!data.slug) errors.push("Missing required field: slug");
@@ -826,6 +841,14 @@ function main() {
   if (hasErrors) {
     fail("Validation failed. Fix the errors above before generating.");
   }
+
+  // Order adventures newest first, by month. Stable secondary by slug for ties.
+  adventures.sort((a, b) => {
+    const da = monthToSortKey(a.month);
+    const db = monthToSortKey(b.month);
+    if (db !== da) return db - da;
+    return a.slug.localeCompare(b.slug);
+  });
 
   if (validateOnly) {
     console.log("\n\x1b[32mAll YAML files are valid.\x1b[0m");

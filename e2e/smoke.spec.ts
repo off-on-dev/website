@@ -19,6 +19,10 @@ const ROUTES: RouteSpec[] = [
   { path: "/adventures/blind-by-design/levels/beginner", title: /Stand up the Lab/ },
   { path: "/adventures/blind-by-design/levels/intermediate", title: /Outcome by Cohort/ },
   { path: "/adventures/blind-by-design/levels/expert", title: /Read the Chart/ },
+  { path: "/adventures/the-ai-observatory", title: /The AI Observatory/ },
+  { path: "/adventures/the-ai-observatory/levels/beginner", title: /Calibrating the Lens/ },
+  { path: "/adventures/the-ai-observatory/levels/intermediate", title: /The Distracted Pilot/ },
+  { path: "/adventures/the-ai-observatory/levels/expert", title: /The Noise Filter/ },
   { path: "/adventures/building-cloudhaven", title: /Building CloudHaven/ },
   { path: "/adventures/building-cloudhaven/levels/beginner", title: /The Foundation Stones/ },
   { path: "/adventures/building-cloudhaven/levels/intermediate", title: /The Modular Metropolis/ },
@@ -27,10 +31,6 @@ const ROUTES: RouteSpec[] = [
   { path: "/adventures/echoes-lost-in-orbit/levels/beginner", title: /Broken Echoes/ },
   { path: "/adventures/echoes-lost-in-orbit/levels/intermediate", title: /The Silent Canary/ },
   { path: "/adventures/echoes-lost-in-orbit/levels/expert", title: /Hyperspace Operations & Transport/ },
-  { path: "/adventures/the-ai-observatory", title: /The AI Observatory/ },
-  { path: "/adventures/the-ai-observatory/levels/beginner", title: /Calibrating the Lens/ },
-  { path: "/adventures/the-ai-observatory/levels/intermediate", title: /The Distracted Pilot/ },
-  { path: "/adventures/the-ai-observatory/levels/expert", title: /The Noise Filter/ },
   // /GENERATED:adventures
   { path: "/challenges", title: /Open Source Challenges/ },
   // GENERATED:challenge-tags

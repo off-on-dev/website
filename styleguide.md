@@ -1141,9 +1141,16 @@ Renders the full adventure listing with a technology tag filter. Used on the hom
 
 ```tsx
 <ChallengesGrid />
+<ChallengesGrid limit={6} />
 ```
 
-No props. Owns its own `activeTopic` state internally.
+**Props:**
+
+| prop | type | description |
+|---|---|---|
+| `limit` | `number?` | Optional. Caps how many adventure cards render in the default (All) view. When the total exceeds `limit`, a "See all adventures" link to `/challenges` appears below the grid. Omit to show every adventure. Used on `Index.tsx` (home page) with `limit={6}`; not used on `Adventures.tsx`. Does not affect the tag-filtered view. |
+
+Adventure cards render newest first, ordered by the `month` field on each adventure (parsed as "MMM YYYY" in the generator). Owns its own `activeTopic` state internally.
 
 **Two display modes:**
 
