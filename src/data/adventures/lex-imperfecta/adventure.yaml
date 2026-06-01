@@ -14,12 +14,6 @@ overview:
   - The Republic's legal system is in disarray — workloads run unchecked, required labels go missing, and privileged
     containers slip through the gates. As a newly appointed Praetor, your mission is to restore order by fixing broken
     Kyverno policies and enforcing proper admission control.
-contributor:
-  name: Katharina Sick
-  url: https://ksick.dev/
-  about: DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native
-    and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities,
-    inline skating rinks, and quiz nights across Europe.
 rewards:
   deadline: "2026-06-23T23:59:00+01:00"
   tiers:
@@ -27,6 +21,12 @@ rewards:
       description: 50% voucher for a Linux Foundation certification
     - label: Top 3
       description: Credly badge to showcase the achievement
+contributor:
+  name: Katharina Sick
+  url: https://ksick.dev/
+  about: DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native
+    and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities,
+    inline skating rinks, and quiz nights across Europe.
 upcoming_levels:
   - name: Intermediate
     difficulty: Intermediate
@@ -38,7 +38,6 @@ levels:
     title: The Twelve Tables
     devcontainer: lex-imperfecta_beginner
     community_url: ""
-    deadline: "2026-06-23T23:59:00+01:00"
     summary: Fix broken Kyverno policies to restore proper admission control.
     audience: Platform engineers, SREs, and developers curious about Kubernetes security — no prior Kyverno experience
       needed, but familiarity with basic `kubectl` and YAML will help.
@@ -77,10 +76,6 @@ levels:
         deployed in `manifests/policies/` — two `ValidatingPolicy` resources and one `MutatingPolicy`. Edit them
         directly and re-apply with `kubectl`. The pods in `manifests/pods/` are for reference only — no GitOps, no
         dashboards.
-    architecture_diagram: lex-imperfecta-beginner.svg
-    diagram_alt: "Workload request flows through Kyverno's admission webhook before reaching the Kubernetes cluster.
-      Two ValidatingPolicy resources block non-compliant workloads, and one MutatingPolicy automatically patches
-      admitted workloads with required labels."
     toolbox:
       - name: kubectl
         url: https://kubernetes.io/docs/reference/kubectl/
@@ -213,3 +208,8 @@ levels:
       command: ./verify.sh
       description: Once you think you've solved the challenge, run the verification script. If it fails it will tell you which
         checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion.
+    deadline: "2026-06-23T23:59:00+01:00"
+    architecture_diagram: lex-imperfecta-beginner.svg
+    diagram_alt: Workload request flows through Kyverno's admission webhook before reaching the Kubernetes cluster. Two
+      ValidatingPolicy resources block non-compliant workloads, and one MutatingPolicy automatically patches admitted
+      workloads with required labels.
