@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import type { AdventureLevelSummary } from "@/data/adventures";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { LivePill } from "@/components/LivePill";
+import { MarkdownInline } from "@/components/MarkdownInline";
 
 type FilteredLevelCardProps = {
   level: AdventureLevelSummary;
@@ -38,7 +39,7 @@ export const FilteredLevelCard = ({
       {level.learnings.slice(0, 3).map((learning) => (
         <li key={learning} className="flex items-start gap-2 text-sm text-muted-foreground">
           <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-          {learning}
+          <span className="min-w-0"><MarkdownInline source={learning} noLinks /></span>
         </li>
       ))}
     </ul>

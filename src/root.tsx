@@ -72,7 +72,7 @@ export default function Root(): JSX.Element {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <Outlet />
         <ScrollRestoration />
         <Scripts />

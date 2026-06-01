@@ -1,6 +1,7 @@
 import type { JSX } from "react";
 import type { AdventureLevel } from "@/data/adventures";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
+import { MarkdownInline } from "@/components/MarkdownInline";
 import { ExternalLink } from "lucide-react";
 
 type LevelCardProps = {
@@ -28,7 +29,7 @@ export const LevelCard = ({ level, headingLevel = "h2" }: LevelCardProps): JSX.E
         {level.learnings.map((learning) => (
           <li key={learning} className="flex items-start gap-2 text-sm text-muted-foreground">
             <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-            {learning}
+            <span className="min-w-0"><MarkdownInline source={learning} noLinks /></span>
           </li>
         ))}
       </ul>
