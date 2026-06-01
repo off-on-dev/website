@@ -1213,6 +1213,7 @@ Navigation trail component. Renders a `<nav aria-label="Breadcrumb">` with an or
 | Prop | Type | Description |
 |---|---|---|
 | `items` | `BreadcrumbItem[]` | Ordered list of crumbs; last item has no `href` |
+| `className` | `string?` | Class applied to the wrapping `<nav>`; defaults to `"mb-5"` |
 
 `BreadcrumbItem` shape: `{ label: string; href?: string }`. Items without `href` are rendered as `<span aria-current="page">`.
 

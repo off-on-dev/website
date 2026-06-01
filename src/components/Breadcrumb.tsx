@@ -9,10 +9,11 @@ type BreadcrumbItem = {
 
 type BreadcrumbProps = {
   items: BreadcrumbItem[];
+  className?: string;
 };
 
-export const Breadcrumb = ({ items }: BreadcrumbProps): JSX.Element => (
-  <nav aria-label="Breadcrumb" className="mb-5">
+export const Breadcrumb = ({ items, className = "mb-5" }: BreadcrumbProps): JSX.Element => (
+  <nav aria-label="Breadcrumb" className={className}>
     <ol className="flex flex-wrap items-center gap-1 text-xs text-[hsl(var(--text-faint))]">
       {items.map((item, index) => (
         <li key={item.label} className="flex items-center gap-1">
