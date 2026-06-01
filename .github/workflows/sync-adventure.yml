@@ -64,7 +64,7 @@ jobs:
             if git show "origin/$BRANCH:${YAML_PATH}" > /tmp/pr-adventure.yaml 2>/dev/null && [ -s /tmp/pr-adventure.yaml ]; then
               mkdir -p "src/data/adventures/${SLUG}"
               cp /tmp/pr-adventure.yaml "$YAML_PATH"
-              echo "Restored adventure.yaml from PR branch ${BRANCH} — manual edits (discussion_url, topics, architecture_diagram) will be preserved by sync-adventure.mjs"
+              echo "Restored adventure.yaml from PR branch ${BRANCH} — manual edits (discussion_url, topics, architecture_diagram, diagram_alt, deadline) will be preserved by sync-adventure.mjs"
             else
               echo "PR branch ${BRANCH} exists but has no adventure.yaml yet — starting fresh from main"
             fi

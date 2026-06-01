@@ -63,19 +63,28 @@ export const OtherLevelsCard = ({
           </li>
         ))}
 
-        {upcoming.map((level) => (
-          <li key={`upcoming-${level.difficulty}-${level.name}`}>
-            <span
-              className="inline-flex w-full items-center gap-2 rounded-sm border border-dashed px-2.5 py-1.5 text-xs"
-              style={pillStyle[level.difficulty]}
-            >
-              <span className="shrink-0 uppercase font-medium">{level.difficulty}</span>
-              <span aria-hidden="true" className="inline-block w-px h-3 bg-current opacity-40" />
-              <span className="flex-1 truncate">{level.name}</span>
-              <span className="shrink-0 text-xs uppercase tracking-widest">Soon</span>
-            </span>
-          </li>
-        ))}
+        {upcoming.map((level) => {
+          const hasDistinctName = level.name.toLowerCase() !== level.difficulty.toLowerCase();
+          return (
+            <li key={`upcoming-${level.difficulty}-${level.name}`}>
+              <span
+                className="inline-flex w-full items-center gap-2 rounded-sm border border-dashed px-2.5 py-1.5 text-xs"
+                style={pillStyle[level.difficulty]}
+              >
+                <span className="shrink-0 uppercase font-medium">{level.difficulty}</span>
+                {hasDistinctName ? (
+                  <>
+                    <span aria-hidden="true" className="inline-block w-px h-3 bg-current opacity-40" />
+                    <span className="flex-1 truncate">{level.name}</span>
+                  </>
+                ) : (
+                  <span className="flex-1" />
+                )}
+                <span className="shrink-0 text-xs uppercase tracking-widest">Soon</span>
+              </span>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
