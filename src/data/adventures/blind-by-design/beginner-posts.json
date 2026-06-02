@@ -6,6 +6,7 @@
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/andreasspdt/40/328_2.png",
       "cooked": "Passed my first challenge Thanks, Simon. Tip: I had to manually run the init script to have gum v0.17.0 installed in my GH Codespace (04-blind-by-design/beginner (main) $ ../../../lib/shared/init.sh --version v0.17.0)",
       "created_at": "2026-06-01T21:47:18.501Z",
+      "challengeSolved": true,
       "topicUrl": "https://community.offon.dev/t/wire-openfeature-flagd-into-a-spring-boot-service-with-zero-setup-adventure-04-beginner/1419"
     },
     {
@@ -23,6 +24,11 @@
       "username": "theharithsa",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
       "solvedAt": "2026-05-05T07:27:53.930Z"
+    },
+    {
+      "username": "AndreasSpDt",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/andreasspdt/40/328_2.png",
+      "solvedAt": "2026-06-01T21:47:18.501Z"
     }
   ]
 }
