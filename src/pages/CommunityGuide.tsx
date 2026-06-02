@@ -104,7 +104,7 @@ const CommunityGuide = (): JSX.Element => {
                 <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
                   Bring your expertise and experience. Help build adventures for others to learn from open source tech with a broken scenario, a real-world failure, or a skill gap. Shape the next adventure.
                 </p>
-                <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/docs/contributing/adventure-ideas.md" target="_blank" rel="noopener noreferrer" className={extLink}>
+                <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea" target="_blank" rel="noopener noreferrer" className={extLink}>
                   Submit an idea <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>
               </div>

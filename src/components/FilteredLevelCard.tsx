@@ -1,5 +1,6 @@
 import type { JSX } from "react";
 import { Link } from "react-router";
+import { Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { AdventureLevelSummary } from "@/data/adventures";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
@@ -44,7 +45,15 @@ export const FilteredLevelCard = ({
       ))}
     </ul>
     <div className="mt-auto pt-4 flex flex-wrap gap-1.5 items-center justify-between">
-      <span className="font-mono text-xs text-muted-foreground">Challenge</span>
+      <div className="flex items-center gap-1.5">
+        <span className="font-mono text-xs text-muted-foreground">Challenge</span>
+        {level.estimatedTime && (
+          <span className="inline-flex items-center gap-1 rounded-full border border-[hsl(var(--surface-border))] px-2 py-0.5 font-mono text-xs text-[hsl(var(--text-faint))]">
+            <Clock size={10} aria-hidden="true" />
+            {level.estimatedTime}
+          </span>
+        )}
+      </div>
       <span className="rounded-sm border border-[hsl(var(--surface-border))] px-2 py-0.5 text-xs text-[hsl(var(--text-faint))]">
         {adventureTitle}
       </span>

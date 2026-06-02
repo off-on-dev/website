@@ -288,6 +288,9 @@ function generateLevelCode(level, adventureId, indent) {
   if (level.audience) {
     lines.push(`${i2}audience: ${formatString(level.audience)},`);
   }
+  if (level.estimated_time) {
+    lines.push(`${i2}estimatedTime: ${formatString(level.estimated_time)},`);
+  }
 
   lines.push(`${i2}learnings: ${formatStringArray(levelLearnings, i2)},`);
 
@@ -536,6 +539,9 @@ function generateSummariesTs(adventures) {
         lines.push(`        topics: [${level.topics.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
       }
       lines.push(`        learnings: ${formatStringArray(summaryLearnings, "        ")},`);
+      if (level.estimated_time) {
+        lines.push(`        estimatedTime: ${formatString(level.estimated_time)},`);
+      }
       lines.push(`      },`);
     }
     lines.push(`    ],`);

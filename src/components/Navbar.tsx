@@ -53,6 +53,7 @@ const NavLinks = ({ homeActive, onNavigate }: NavLinksProps): JSX.Element => (
     >
       Community <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
     </a>
+    <NavLink to="/contribute" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Contribute</NavLink>
     <NavLink to="/handbook" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Handbook</NavLink>
     <NavLink to="/sponsors" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Sponsors</NavLink>
   </>

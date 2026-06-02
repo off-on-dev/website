@@ -9,6 +9,7 @@ export default {
     "/",
     "/adventures",
     "/404",
+    "/contribute",
     "/sponsors",
     "/about",
     "/handbook",

@@ -66,7 +66,7 @@ describe("Challenges - default (All) state", () => {
 
   it("wraps filter buttons in a group with aria-label", () => {
     const { container } = renderChallenges();
-    const group = container.querySelector('[role="group"][aria-label="Filter challenges by technology"]');
+    const group = container.querySelector('[role="group"][aria-label="Filter by technology"]');
     expect(group).toBeTruthy();
   });
 
@@ -105,10 +105,11 @@ describe("Challenges - tag filter", () => {
     expect(btn.getAttribute("aria-pressed")).toBe("true");
   });
 
-  it("announces the challenge count when a tag is active", () => {
+  it("announces the challenge count and active tag when a tag is active", () => {
     const { container } = renderChallenges();
     fireEvent.click(screen.getByRole("button", { name: firstTag }));
     const region = container.querySelector("[aria-live]");
+    expect(region!.textContent).toContain("challenge");
     expect(region!.textContent).toContain(firstTag);
   });
 });
@@ -134,7 +135,7 @@ describe("Challenges - deselecting a tag", () => {
     expect(btn.getAttribute("aria-pressed")).toBe("false");
   });
 
-  it("announces adventure count when filter is cleared", () => {
+  it("announces adventure count when filters are cleared", () => {
     const { container } = renderChallenges();
     const btn = screen.getByRole("button", { name: firstTag });
     fireEvent.click(btn);

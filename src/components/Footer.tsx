@@ -32,10 +32,11 @@ export const Footer = (): JSX.Element => {
               <p className="text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">Explore</p>
               <div className="flex flex-col">
                 <Link to="/adventures" className={linkCls}>Adventures</Link>
+                <Link to="/contribute" className={linkCls}>Contribute</Link>
                 <Link to="/handbook" className={linkCls}>Handbook</Link>
                 <Link to="/about" className={linkCls}>About</Link>
                 <Link to="/sponsors" className={linkCls}>Sponsors</Link>
-                <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/docs/contributing/adventure-ideas.md" target="_blank" rel="noopener noreferrer" className={linkCls}>Propose an Adventure Idea <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
+                <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea" target="_blank" rel="noopener noreferrer" className={linkCls}>Propose an Adventure Idea <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
               </div>
             </nav>
             {/* Community */}

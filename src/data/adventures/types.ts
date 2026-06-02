@@ -58,6 +58,8 @@ export type AdventureLevel = {
   objective: string[];
   // Audience line shown inside the Start CTA card (e.g. "Best for platform engineers, SREs…").
   audience?: string;
+  // Optional estimated completion time shown as a pill (e.g. "~30 min", "1–2 hours").
+  estimatedTime?: string;
   // Long-form narrative shown as a styled scenario block under the hero.
   scenario?: string;
   // Plain-prose architectural context paragraphs for the challenge.
@@ -145,6 +147,7 @@ export type AdventureLevelSummary = {
   difficulty: "Beginner" | "Intermediate" | "Expert";
   topics: string[];
   learnings: string[];
+  estimatedTime?: string;
 };
 
 /** Lightweight adventure shape for card grid views. Generated into summaries.ts. */

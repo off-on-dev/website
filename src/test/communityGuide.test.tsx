@@ -102,7 +102,7 @@ describe("CommunityGuide - take on a challenge section", () => {
     renderCommunityGuide();
     const link = screen.getByRole("link", { name: /submit an idea/i });
     expect(link.getAttribute("href")).toBe(
-      "https://github.com/off-on-dev/open-source-challenges/blob/main/docs/contributing/adventure-ideas.md"
+      "https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea"
     );
     expect(link.getAttribute("target")).toBe("_blank");
     expect(link.getAttribute("rel")).toBe("noopener noreferrer");

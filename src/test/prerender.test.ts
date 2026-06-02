@@ -38,6 +38,10 @@ const pages: PageSpec[] = [
     check: { type: "exact", value: "Accessibility Statement - OffOn" },
   },
   {
+    file: "contribute/index.html",
+    check: { type: "exact", value: "How to Contribute - OffOn" },
+  },
+  {
     file: "sponsors/index.html",
     check: { type: "exact", value: "Sponsorship and Independence - OffOn" },
   },
