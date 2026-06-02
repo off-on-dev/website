@@ -1,7 +1,7 @@
 import { type JSX } from "react";
 import { useParams, useLoaderData } from "react-router";
 import type { MetaFunction, LoaderFunctionArgs, LinksFunction } from "react-router";
-import { Check, ExternalLink } from "lucide-react";
+import { Check, Clock, ExternalLink } from "lucide-react";
 import { MarkdownContent } from "@/components/MarkdownContent";
 import { MarkdownInline } from "@/components/MarkdownInline";
 import { ADVENTURES } from "@/data/adventures";
@@ -108,6 +108,12 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
 
         <div className="flex flex-wrap items-center gap-2 mb-5">
           <DifficultyBadge difficulty={level.difficulty} showDot />
+          {level.estimatedTime && (
+            <span className="inline-flex items-center gap-1 rounded-full border border-[hsl(var(--surface-border))] px-2.5 py-1 font-mono text-xs text-[hsl(var(--text-secondary))]">
+              <Clock size={11} aria-hidden="true" />
+              {level.estimatedTime}
+            </span>
+          )}
           <TagChips tags={level.topics ?? adventure.tags} />
         </div>
 

@@ -189,6 +189,10 @@
           "items": { "type": "string" }
         },
         "audience": { "type": "string" },
+        "estimated_time": {
+          "type": "string",
+          "description": "Optional estimated completion time shown as a pill, e.g. '~30 min' or '1–2 hours'."
+        },
         "scenario": { "type": "string" },
         "architecture": {
           "type": "array",

@@ -1,5 +1,5 @@
 import { type CSSProperties, type JSX, useMemo } from "react";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, MessageCircle } from "lucide-react";
 import { COMMUNITY_URL } from "@/data/constants";
 import { useDiscussionPosts } from "@/hooks/useDiscussionPosts";
 import { useAdventureLeaderboard, type LeaderboardRow } from "@/hooks/useAdventureLeaderboard";
@@ -132,16 +132,22 @@ export const CommunitySidebar = ({
         </p>
       )}
 
-      <a
-        href={hasThread ? discussionUrl : COMMUNITY_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="docs-ext-link text-sm font-medium"
-      >
-        Join the discussion
-        <ExternalLink size={12} aria-hidden="true" />
-        <span className="sr-only"> (opens in new tab)</span>
-      </a>
+      <div className="border-t border-[hsl(var(--surface-border))] pt-4">
+        <a
+          href={hasThread ? discussionUrl : COMMUNITY_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-soft w-full"
+        >
+          <MessageCircle size={14} aria-hidden="true" />
+          {hasThread ? "Share & Discuss" : "Join the Community"}
+          <ExternalLink size={14} aria-hidden="true" />
+          <span className="sr-only"> (opens in new tab)</span>
+        </a>
+        <p className="mt-2.5 text-xs text-[hsl(var(--text-faint))] font-mono text-center">
+          Get help or share your solution
+        </p>
+      </div>
     </div>
   );
 };

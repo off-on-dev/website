@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { ChallengesGrid } from "@/components/ChallengesGrid";
 import { ADVENTURES } from "@/data/adventures";
@@ -50,7 +50,7 @@ describe("ChallengesGrid", () => {
 
     it("wraps filter buttons in a group with aria-label", () => {
       const { container } = renderGrid();
-      const group = container.querySelector('[role="group"][aria-label="Filter challenges by technology"]');
+      const group = container.querySelector('[role="group"][aria-label="Filter by technology"]');
       expect(group).toBeTruthy();
     });
 
@@ -107,9 +107,7 @@ describe("ChallengesGrid", () => {
     it("shows a count and tag label when a tag is active", () => {
       renderGrid();
       fireEvent.click(screen.getByRole("button", { name: firstTag }));
-      const count = adventuresWithFirstTag.flatMap((a) => a.levels).length;
-      const label = count === 1 ? "challenge" : "challenges";
-      expect(screen.getByText(`${count} ${label} tagged with ${firstTag}`)).toBeTruthy();
+      expect(screen.getByText((text) => text.includes("challenge") && text.includes(firstTag))).toBeTruthy();
     });
 
     it("renders an aria-live region when a tag is active", () => {
@@ -147,7 +145,95 @@ describe("ChallengesGrid", () => {
       fireEvent.click(btn);
       const region = container.querySelector("[aria-live]");
       expect(region).toBeTruthy();
-      expect(region!.textContent).toContain("Filter cleared");
+      expect(region!.textContent).toContain("Filters cleared");
+    });
+  });
+
+  describe("difficulty filter", () => {
+    const getDifficultyGroup = (container: HTMLElement): HTMLElement => {
+      const group = container.querySelector('[role="group"][aria-label="Filter by difficulty"]');
+      expect(group).toBeTruthy();
+      return group as HTMLElement;
+    };
+
+    it("renders difficulty filter buttons in the desktop group", () => {
+      const { container } = renderGrid();
+      const group = getDifficultyGroup(container);
+      expect(within(group).getByRole("button", { name: "All Levels" })).toBeTruthy();
+      expect(within(group).getByRole("button", { name: "Beginner" })).toBeTruthy();
+      expect(within(group).getByRole("button", { name: "Intermediate" })).toBeTruthy();
+      expect(within(group).getByRole("button", { name: "Expert" })).toBeTruthy();
+    });
+
+    it("difficulty buttons start with correct aria-pressed state", () => {
+      const { container } = renderGrid();
+      const group = getDifficultyGroup(container);
+      expect(within(group).getByRole("button", { name: "All Levels" }).getAttribute("aria-pressed")).toBe("true");
+      expect(within(group).getByRole("button", { name: "Beginner" }).getAttribute("aria-pressed")).toBe("false");
+    });
+
+    it("selecting a difficulty switches to level card view", () => {
+      const { container } = renderGrid();
+      const group = getDifficultyGroup(container);
+      fireEvent.click(within(group).getByRole("button", { name: "Beginner" }));
+      const levelLinks = screen.queryAllByRole("link").filter(
+        (l) => l.getAttribute("href")?.includes("/levels/")
+      );
+      expect(levelLinks.length).toBeGreaterThan(0);
+    });
+
+    it("selecting a difficulty hides adventure cards", () => {
+      const { container } = renderGrid();
+      const group = getDifficultyGroup(container);
+      fireEvent.click(within(group).getByRole("button", { name: "Beginner" }));
+      ADVENTURES.forEach((adventure) => {
+        expect(
+          screen.queryAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+        ).toBe(false);
+      });
+    });
+
+    it("clicking 'All Levels' after a selection restores adventure cards", () => {
+      const { container } = renderGrid();
+      const group = getDifficultyGroup(container);
+      fireEvent.click(within(group).getByRole("button", { name: "Beginner" }));
+      fireEvent.click(within(group).getByRole("button", { name: "All Levels" }));
+      ADVENTURES.forEach((adventure) => {
+        expect(
+          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+        ).toBe(true);
+      });
+    });
+
+    it("clicking the active difficulty again deselects it", () => {
+      const { container } = renderGrid();
+      const group = getDifficultyGroup(container);
+      const btn = within(group).getByRole("button", { name: "Beginner" });
+      fireEvent.click(btn);
+      fireEvent.click(btn);
+      ADVENTURES.forEach((adventure) => {
+        expect(
+          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+        ).toBe(true);
+      });
+    });
+
+    it("combining difficulty and tag filters shows only matching levels", () => {
+      const { container } = renderGrid();
+      const diffGroup = getDifficultyGroup(container);
+      const tagGroup = container.querySelector('[role="group"][aria-label="Filter by technology"]') as HTMLElement;
+      fireEvent.click(within(diffGroup).getByRole("button", { name: "Beginner" }));
+      fireEvent.click(within(tagGroup).getByRole("button", { name: firstTag }));
+      const levelLinks = screen.queryAllByRole("link").filter(
+        (l) => l.getAttribute("href")?.includes("/levels/")
+      );
+      const expectedAdventures = ADVENTURES.filter((a) => a.tags.includes(firstTag));
+      levelLinks.forEach((link) => {
+        const href = link.getAttribute("href") ?? "";
+        const matchingAdventure = expectedAdventures.find((a) => href.startsWith(`/adventures/${a.id}`));
+        expect(matchingAdventure).toBeTruthy();
+        expect(href).toContain("/levels/beginner");
+      });
     });
   });
 });

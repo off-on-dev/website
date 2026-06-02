@@ -7,7 +7,7 @@ import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
 import { SectionLabel } from "@/components/SectionLabel";
-import { COMMUNITY_URL, SITE_URL, BRAND_NAME, LINKEDIN_URL, BLUESKY_URL, X_URL } from "@/data/constants";
+import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL, LINKEDIN_URL, BLUESKY_URL, X_URL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 
 export const meta: MetaFunction = () =>
@@ -33,10 +33,6 @@ const Contribute = (): JSX.Element => {
             href: COMMUNITY_URL,
             external: true,
           }}
-          secondaryCta={{
-            label: "Read the Handbook",
-            href: "/handbook",
-          }}
         />
 
         {/* Ways to contribute */}
@@ -46,36 +42,57 @@ const Contribute = (): JSX.Element => {
               <SectionLabel>get involved</SectionLabel>
               <h2 id="ways-to-contribute" className="text-2xl font-bold text-foreground mb-4">How to Get Involved</h2>
               <p className="text-muted-foreground leading-relaxed mb-8 max-w-2xl">
-                Explore the community, join discussions, follow the weekly digest, create content, propose or build a challenge, improve the docs, or spread the word. Every action here is a genuine contribution.
+                Explore the platform, play an adventure, join discussions, follow the weekly digest, shape or build a challenge, improve the docs, or spread the word. Every action here is a genuine contribution.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-                {/* Row 1: explore, engage */}
+                {/* Row 1: discover, learn */}
                 <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
                   <h3 className="font-semibold text-foreground">Explore OffOn</h3>
                   <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
-                    Browse the forum, take on an adventure, and see what the community is building. Sign up, introduce yourself, and get a feel for how OffOn works before deciding where to contribute.
+                    Browse the forum, see what the community is building, and sign up to get started. Introduce yourself and get a feel for how OffOn works.
                   </p>
                   <a href={`${COMMUNITY_URL}/signup`} target="_blank" rel="noopener noreferrer" className={extLink}>
                     Create an account <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                   </a>
+                </div>
+
+                <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                  <h3 className="font-semibold text-foreground">Play an Adventure</h3>
+                  <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
+                    Take on a hands-on challenge, debug a broken environment, and learn by doing. Tell us what worked, what confused you, and where you got stuck. Your experience helps us improve the challenges.
+                  </p>
                   <Link to="/adventures" className={extLink}>
                     Browse adventures
                   </Link>
                 </div>
 
+                {/* Row 2: shape, engage */}
                 <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
-                  <h3 className="font-semibold text-foreground">Join the Conversation</h3>
+                  <h3 className="font-semibold text-foreground">Shape the Challenges</h3>
                   <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
-                    Ask a question or answer one, help newcomers find their footing, and take part in open source discussions. No expertise required. Your perspective and experience are welcome here.
+                    Have a scenario that would make a great challenge? Submit your idea on GitHub. Ready to go further? Pick up an approved idea and implement the full adventure.
                   </p>
-                  <a href={`${COMMUNITY_URL}/c/public-categories/q-a/10`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                    Explore Q&amp;A <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea" target="_blank" rel="noopener noreferrer" className={extLink}>
+                    Read the adventure ideas guide <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  </a>
+                  <a href="https://github.com/off-on-dev/open-source-challenges/issues?q=is%3Aissue+is%3Aopen+label%3A%22adventure+idea%22" target="_blank" rel="noopener noreferrer" className={extLink}>
+                    Browse open adventure ideas <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                   </a>
                 </div>
 
-                {/* Row 2: stay informed, create content */}
+                <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                  <h3 className="font-semibold text-foreground">Join the Conversation</h3>
+                  <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
+                    <a href={`${COMMUNITY_URL}/c/public-categories/q-a/10`} target="_blank" rel="noopener noreferrer" className={extLink}>Ask a question <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>{" "}or answer one, take part in discussions, and support newcomers getting started. Share tutorials, post tips, and write about what you have learned. Introduce the community to open source tools you use or maintain.
+                  </p>
+                  <a href={`${COMMUNITY_URL}/c/community-voices/38`} target="_blank" rel="noopener noreferrer" className={extLink}>
+                    Post in Community Voices <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  </a>
+                </div>
+
+                {/* Row 3: stay informed, local community */}
                 <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
                   <h3 className="font-semibold text-foreground">Follow the Weekly Digest</h3>
                   <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
@@ -87,33 +104,12 @@ const Contribute = (): JSX.Element => {
                 </div>
 
                 <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
-                  <h3 className="font-semibold text-foreground">Publish in Community Voices</h3>
+                  <h3 className="font-semibold text-foreground">Meetups and Groups</h3>
                   <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
-                    Write a tutorial, introduce the community to open source projects you use or maintain, or share something you have recently learned. Community Voices is open to everyone.
+                    Running a local meetup, user group, or open source community? Use OffOn as a vendor-agnostic home for your discussions and announcements. Find existing groups, join as a speaker, or bring open source to your local community.
                   </p>
-                  <a href={`${COMMUNITY_URL}/c/community-voices/38`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                    Post in Community Voices <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-                  </a>
-                </div>
-
-                {/* Row 3: propose and build */}
-                <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
-                  <h3 className="font-semibold text-foreground">Propose an Adventure Idea</h3>
-                  <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
-                    Have a scenario, failure, or skill gap that would make a great challenge? Submit your idea using the template on GitHub. No code needed. The team reviews it and handles the technical side from there.
-                  </p>
-                  <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea" target="_blank" rel="noopener noreferrer" className={extLink}>
-                    Read the adventure ideas guide <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-                  </a>
-                </div>
-
-                <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
-                  <h3 className="font-semibold text-foreground">Build a Full Adventure</h3>
-                  <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
-                    Pick up an approved idea from the issues backlog and implement it: broken environment, level guides, devcontainer, and verification script. Each level ships as its own PR. The contributing guide walks you through every step.
-                  </p>
-                  <a href="https://github.com/off-on-dev/open-source-challenges/issues?q=is%3Aissue+is%3Aopen+label%3A%22adventure+idea%22" target="_blank" rel="noopener noreferrer" className={extLink}>
-                    Browse open adventure ideas <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  <a href={`${COMMUNITY_URL}/c/local-meetups-and-groups/19`} target="_blank" rel="noopener noreferrer" className={extLink}>
+                    Explore meetups and groups <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                   </a>
                 </div>
 
@@ -121,7 +117,7 @@ const Contribute = (): JSX.Element => {
                 <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
                   <h3 className="font-semibold text-foreground">Spread the Word</h3>
                   <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
-                    Blog about your open source journey, give a talk at a meetup, start a podcast episode, or mention {BRAND_NAME} to your network. Follow us and tag us when you post so we can share it.
+                    Follow us, repost what we share, and mention {BRAND_NAME} to your network. Writing about us in a blog post or podcast episode? Share it with us <a href={`mailto:${CONTACT_EMAIL}`} className={extLink}>via email</a> or mention us on social media and we would love to repost.
                   </p>
                   <div className="flex flex-wrap gap-4">
                     <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (opens in new tab)" className="social-icon-link">
@@ -145,10 +141,13 @@ const Contribute = (): JSX.Element => {
                 <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
                   <h3 className="font-semibold text-foreground">Fix Bugs and Improve Docs</h3>
                   <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
-                    Each adventure has level guides for beginner, intermediate, and expert. Most adventures do not have solution walkthroughs yet. If you have solved a level, writing up how you did it is one of the highest-value contributions you can make. Typos and broken links need no issue, just open a PR.
+                    Each adventure has level guides and missing solution walkthroughs. If you have solved a level, write it up. You can also improve this website by reporting an issue or contributing to the site. Typos and broken links across either repo need no issue, just open a PR.
                   </p>
                   <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" className={extLink}>
-                    See the contributing guide <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                    See the challenges contributing guide <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  </a>
+                  <a href="https://github.com/off-on-dev/website/issues" target="_blank" rel="noopener noreferrer" className={extLink}>
+                    Open a website issue <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                   </a>
                 </div>
 
@@ -182,7 +181,7 @@ const Contribute = (): JSX.Element => {
                 <p className="text-muted-foreground leading-relaxed mb-6">
                   If your organisation wants to invest in the open source ecosystem without commercial strings attached, sponsorship is how you do it. Sponsors provide financial and operational support while the community retains full editorial independence.
                 </p>
-                <Link to="/sponsors" className="btn-primary">
+                <Link to="/sponsors#becoming-a-sponsor" className="btn-primary">
                   Learn about sponsorship
                 </Link>
               </div>

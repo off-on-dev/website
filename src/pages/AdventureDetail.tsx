@@ -1,7 +1,7 @@
 import { type JSX } from "react";
 import { useParams, Link, useLoaderData } from "react-router";
 import type { MetaFunction, LoaderFunctionArgs, LinksFunction } from "react-router";
-import { ArrowRight, FlaskConical, Satellite, Cloud, Telescope, Scale, type LucideIcon } from "lucide-react";
+import { ArrowRight, Clock, FlaskConical, Satellite, Cloud, Telescope, Scale, type LucideIcon } from "lucide-react";
 
 const ADVENTURE_ICONS: Record<string, LucideIcon> = {
   FlaskConical,
@@ -113,8 +113,14 @@ const AdventureLevelLink = ({ level, adventureId }: AdventureLevelLinkProps): JS
       to={`/adventures/${adventureId}/levels/${level.id}`}
       className="group card-glow relative rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
-      <div className="mb-3">
+      <div className="flex flex-wrap items-center gap-2 mb-3">
         <DifficultyBadge difficulty={level.difficulty} showDot />
+        {level.estimatedTime && (
+          <span className="inline-flex items-center gap-1 rounded-full border border-[hsl(var(--surface-border))] px-2.5 py-1 font-mono text-xs text-[hsl(var(--text-secondary))]">
+            <Clock size={11} aria-hidden="true" />
+            {level.estimatedTime}
+          </span>
+        )}
       </div>
       <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors mb-3">
         {level.name}

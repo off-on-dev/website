@@ -601,7 +601,7 @@ Renders a single adventure level as a card: difficulty badge, level name, key le
 
 `src/components/FilteredLevelCard.tsx`
 
-Navigation card used in tag-filtered level grids. The entire card is a `<Link>` to the challenge detail page. Renders a difficulty badge, level name, first three learnings, and a footer row with "Challenge" label and the parent adventure title.
+Navigation card used in tag-filtered level grids. The entire card is a `<Link>` to the challenge detail page. Renders a difficulty badge, level name, first three learnings, and a footer row with "Challenge" label, an optional estimated time pill (`Clock` icon + `level.estimatedTime`), and the parent adventure title.
 
 ```tsx
 <FilteredLevelCard
@@ -620,6 +620,52 @@ Navigation card used in tag-filtered level grids. The entire card is a `<Link>` 
 | `className` | `string?` | — | Merged onto the root `<Link>` via `cn()`. Pass `"animate-fade-up-delay-1"` when the card is in a staggered grid. |
 
 Distinct from `LevelCard`: `FilteredLevelCard` is a router link used in listing/filter contexts; `LevelCard` is a static card used on detail pages and includes the GitHub Codespaces CTA.
+
+---
+
+### `StarterNudge`
+
+`src/components/StarterNudge.tsx`
+
+First-visit wayfinding banner that points new users to the latest live adventure's Beginner level. Renders a solid amber (`bg-primary`) strip with dark text and a dismiss button. Dismissed state persists in `localStorage` under the key `starter_nudge_dismissed` — once dismissed, the nudge never reappears. Hidden server-side (hydration-safe).
+
+```tsx
+<StarterNudge />
+```
+
+No props. Derives the target adventure from `ADVENTURE_SUMMARIES` (first entry with `isLive: true` that has a Beginner level). Renders `null` when no qualifying adventure exists, when the nudge has been dismissed, or on the server.
+
+Used in `ChallengesGrid` (above the filter) and `Challenges` (above the filter). The same `localStorage` key is shared, so dismissing on one page dismisses on both.
+
+---
+
+### `ChallengeFilters`
+
+`src/components/ChallengeFilters.tsx`
+
+Two-row filter UI for the adventure catalog. Row 1 is a difficulty single-select; row 2 is a multi-select technology tag filter. Adapts to screen size: below `lg`, each row collapses to a dropdown (trigger button + popover); at `lg+`, the full pill rows are shown side by side.
+
+```tsx
+<ChallengeFilters
+  activeTopics={activeTopics}
+  activeDifficulty={activeDifficulty}
+  tags={SUMMARY_TAGS}
+  onDifficultyChange={handleDifficultyChange}
+  onTopicsChange={handleTopicsChange}
+/>
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `activeTopics` | `string[]` | Currently selected technology tags (multi-select). Empty = no tag filter. |
+| `activeDifficulty` | `string \| null` | Currently selected difficulty. `null` = all levels. |
+| `tags` | `string[]` | Full list of technology tags to render. Pass `SUMMARY_TAGS` from `@/data/adventures/summaries`. |
+| `onDifficultyChange` | `(diff: Difficulty \| null) => void` | Called when difficulty changes. |
+| `onTopicsChange` | `(topics: string[]) => void` | Called when tag selection changes. |
+
+**ARIA pattern:** difficulty dropdown uses `role="menu"` with `role="menuitemradio"` items; technology dropdown uses `role="menu"` with `role="menuitemcheckbox"` items. Desktop pill rows use `role="group"` with `aria-pressed` on each button.
+
+**Exported type:** `Difficulty = "Beginner" | "Intermediate" | "Expert"` — import from `@/components/ChallengeFilters` where `activeDifficulty` state needs typing.
 
 ---
 
@@ -834,7 +880,7 @@ Uses `aria-live="polite"` so screen readers announce the age values when they up
 
 `src/components/CommunitySidebar.tsx`
 
-Sidebar panel for the structured challenge detail layout. Shows the challenge builder (contributor badge), a completion stat, a leaderboard of top solvers (derived from certificate posts), latest activity feed (non-certificate posts preferred), and a link to the discussion thread. Used inside `ChallengeDetail` structured layout only.
+Sidebar panel for the structured challenge detail layout. Shows the challenge builder (contributor badge), a completion stat, a leaderboard of top solvers (derived from certificate posts), latest activity feed (non-certificate posts preferred), and a "Share & Discuss" button linking to the discussion thread. Used inside `ChallengeDetail` structured layout only.
 
 ```tsx
 <CommunitySidebar adventureId={adventure.id} levelId={level.id} discussionUrl={level.discussionUrl} contributor={adventure.contributor} />
@@ -1155,7 +1201,7 @@ Use this for any author-controlled string field that may contain inline markdown
 
 `src/components/ChallengesGrid.tsx`
 
-Renders the full adventure listing with a technology tag filter. Used on the home page (`Index.tsx`) and the dedicated adventures listing page (`Adventures.tsx`).
+Renders the full adventure listing with two-dimensional filtering. Used on the home page (`Index.tsx`) and the dedicated adventures listing page (`Adventures.tsx`).
 
 ```tsx
 <ChallengesGrid />
@@ -1166,16 +1212,16 @@ Renders the full adventure listing with a technology tag filter. Used on the hom
 
 | prop | type | description |
 |---|---|---|
-| `limit` | `number?` | Optional. Caps how many adventure cards render in the default (All) view. When the total exceeds `limit`, a "See all adventures" link to `/challenges` appears below the grid. Omit to show every adventure. Used on `Index.tsx` (home page) with `limit={6}`; not used on `Adventures.tsx`. Does not affect the tag-filtered view. |
+| `limit` | `number?` | Optional. Caps how many adventure cards render in the default (All) view. When the total exceeds `limit`, a "See all adventures" link to `/challenges` appears below the grid. Omit to show every adventure. Used on `Index.tsx` (home page) with `limit={6}`; not used on `Adventures.tsx`. Does not affect the filtered level card view. |
 
-Adventure cards render newest first, ordered by the `month` field on each adventure (parsed as "MMM YYYY" in the generator). Owns its own `activeTopic` state internally.
+Adventure cards render newest first, ordered by the `month` field on each adventure. Delegates filter UI to `ChallengeFilters`. Owns `activeTopics: string[]` and `activeDifficulty: string | null` state internally.
 
 **Two display modes:**
 
-- **All selected (default):** renders one `AdventureCard` per adventure. Each card links to `/adventures/:id`.
-- **Tag selected:** replaces adventure cards with a grid of `FilteredLevelCard` instances (one per matching level). Wrapped in `aria-live="polite"` so screen readers announce updates.
+- **No filters active (default):** renders one `AdventureCard` per adventure. Each card links to `/adventures/:id`.
+- **Any filter active:** replaces adventure cards with a grid of `FilteredLevelCard` instances matching all selected tags (AND) and/or the selected difficulty. Wrapped in `aria-live="polite"` so screen readers announce updates.
 
-The filter chips use `role="group"` with `aria-label="Filter challenges by technology"`. An "All" pill appears first and is active by default. Clicking an active tag chip deselects it and returns to the adventure card view. No URL changes occur on selection.
+Filter logic lives in `src/data/adventures/filter-utils.ts` (`getLevelSummariesByFilters`). No URL changes occur on selection.
 
 ---
 
@@ -1404,6 +1450,26 @@ const extLink = "docs-ext-link";
 // Add contextual utilities as needed (font-size, weight, margin):
 className="docs-ext-link text-sm font-medium mt-4"
 ```
+
+---
+
+### `.social-icon-link`
+
+CSS class for icon-only social media `<a>` links. Applied to the LinkedIn, Bluesky, and X icon links in the Spread the Word card on `/contribute`.
+
+**Dark mode:** base `text-[hsl(var(--text-secondary))]`, hover `hsl(var(--primary))` (amber — fine on dark backgrounds).
+**Light mode:** `.light .social-icon-link:hover` overrides to `hsl(var(--link-hover-light))` (~5.5:1 dark amber on white), avoiding `#ffc034` which is ~1.6:1 on near-white and fails WCAG 1.4.11.
+
+Includes `padding: 0.25rem` (equivalent to `p-1`) to improve tap target size and `border-radius: 2px` for focus ring containment.
+
+Usage pattern:
+```tsx
+<a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (opens in new tab)" className="social-icon-link">
+  <svg aria-hidden="true" ...>...</svg>
+</a>
+```
+
+Always use `aria-label` on the parent `<a>` (not the svg) for icon-only links. Do not use `hover:text-primary` on icon-only social links that appear on `bg-card` or `bg-background` in light mode.
 
 ---
 
