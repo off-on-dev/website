@@ -14,7 +14,7 @@ export const SITE_NAME = "offon.dev";
 
 export const GA_MEASUREMENT_ID = "G-YEYE9DFHWE";
 
-export const LINKEDIN_URL = "https://www.linkedin.com/company/open-ecosystem/";
+export const LINKEDIN_URL = "https://www.linkedin.com/company/offondev";
 export const BLUESKY_URL = "https://bsky.app/profile/off-on-dev.bsky.social";
 export const X_URL = "https://x.com/OffonDev";
 

@@ -820,6 +820,30 @@ html {
   text-decoration-color: currentColor;
 }
 
+/* ─── Social icon links ──────────────────────────────────── */
+/* Icon-only links used in the Spread the Word card on /contribute.
+   bg-card in light mode is near-white; #ffc034 (--primary) gives ~1.6:1 on hover —
+   fails WCAG 1.4.11. Use link-hover-light (~5.5:1) in light mode instead. */
+.social-icon-link {
+  padding: 0.25rem;
+  color: hsl(var(--text-secondary));
+  border-radius: 2px;
+  transition: color 200ms ease;
+}
+
+.social-icon-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
+}
+
+.social-icon-link:hover {
+  color: hsl(var(--primary));
+}
+
+.light .social-icon-link:hover {
+  color: hsl(var(--link-hover-light));
+}
+
 /* ─── Difficulty badge token overrides (light mode) ─────── */
 .light {
   --difficulty-starter-bg: 41 80% 85%;
