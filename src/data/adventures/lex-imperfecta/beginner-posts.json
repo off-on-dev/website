@@ -1,6 +1,14 @@
 {
   "discussionUrl": "https://community.offon.dev/t/restore-proper-admission-control-using-kyverno-june-2026-adventure-beginner/1576",
-  "discussionPosts": [],
-  "totalReplies": 0,
+  "discussionPosts": [
+    {
+      "username": "lanZe03",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/lanze03/40/333_2.png",
+      "cooked": "Hi, I gave it a try, but I’m running into an issue when opening my Codespace and using it directly in the browser. During the installation process, the setup gets stuck at: Processing triggers for man-db (2.9.4-2) ... I also tried running the scripts for exercise 05 in the .codespaces environment, but that results in several errors because some dependencies appear to be missing. In addition, kubectl never gets installed successfully. (assuming that happens because we get stuck at man-db) I have also tried opening it in a new codespace, still resulted in the same issue. Do you have any suggestions on how to resolve this? Thanks!",
+      "created_at": "2026-06-02T16:55:37.467Z",
+      "topicUrl": "https://community.offon.dev/t/restore-proper-admission-control-using-kyverno-june-2026-adventure-beginner/1576"
+    }
+  ],
+  "totalReplies": 1,
   "solvers": []
 }
