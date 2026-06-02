@@ -1,13 +1,18 @@
-import { useState, type JSX } from "react";
+import { useState, lazy, Suspense, type JSX } from "react";
 import { Link } from "react-router";
 import { ArrowRight } from "lucide-react";
 import { ADVENTURE_SUMMARIES, SUMMARY_TAGS } from "@/data/adventures/summaries";
 import { getLevelSummariesByFilters } from "@/data/adventures/filter-utils";
-import { FilteredLevelCard } from "@/components/FilteredLevelCard";
 import { AdventureCard } from "@/components/AdventureCard";
 import { SectionLabel } from "@/components/SectionLabel";
 import { StarterNudge } from "@/components/StarterNudge";
 import { ChallengeFilters, type Difficulty } from "@/components/ChallengeFilters";
+
+// Lazy-load FilteredLevelCard to keep react-markdown out of the initial home page bundle.
+// It only renders when filters are active, so the deferred load has no UX cost.
+const FilteredLevelCard = lazy(() =>
+  import("@/components/FilteredLevelCard").then((m) => ({ default: m.FilteredLevelCard }))
+);
 
 type ChallengesGridProps = {
   /** When set, limits the number of adventure cards shown and renders a "See all" link to /challenges if there are more. */
@@ -72,17 +77,19 @@ export const ChallengesGrid = ({ limit }: ChallengesGridProps = {}): JSX.Element
                 {activeDifficulty && ` · ${activeDifficulty}`}
                 {activeTopics.length > 0 && ` · ${activeTopics.join(", ")}`}
               </p>
-              <div key={filterKey} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-                {filteredLevels.map(({ level, adventureId, adventureTitle, isLive }) => (
-                  <FilteredLevelCard
-                    key={`${adventureId}-${level.id}`}
-                    level={level}
-                    adventureId={adventureId}
-                    adventureTitle={adventureTitle}
-                    isLive={isLive}
-                  />
-                ))}
-              </div>
+              <Suspense fallback={null}>
+                <div key={filterKey} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                  {filteredLevels.map(({ level, adventureId, adventureTitle, isLive }) => (
+                    <FilteredLevelCard
+                      key={`${adventureId}-${level.id}`}
+                      level={level}
+                      adventureId={adventureId}
+                      adventureTitle={adventureTitle}
+                      isLive={isLive}
+                    />
+                  ))}
+                </div>
+              </Suspense>
             </>
           ) : (
             <>

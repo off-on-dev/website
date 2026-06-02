@@ -1,11 +1,16 @@
-import { useState, type JSX } from "react";
+import { useState, lazy, Suspense, type JSX } from "react";
 import { useParams } from "react-router";
 import type { MetaFunction, LinksFunction } from "react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
-import { FilteredLevelCard } from "@/components/FilteredLevelCard";
+
+// Lazy-load to keep react-markdown out of the initial /challenges bundle.
+// FilteredLevelCard only renders when filters are active.
+const FilteredLevelCard = lazy(() =>
+  import("@/components/FilteredLevelCard").then((m) => ({ default: m.FilteredLevelCard }))
+);
 import { AdventureCard } from "@/components/AdventureCard";
 import { StarterNudge } from "@/components/StarterNudge";
 import { ChallengeFilters, type Difficulty } from "@/components/ChallengeFilters";
@@ -111,17 +116,19 @@ const Challenges = (): JSX.Element => {
                     &middot; {filteredLevels.length} {filteredLevels.length !== 1 ? "results" : "result"}
                   </span>
                 </h2>
-                <div key={filterKey} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-                  {filteredLevels.map(({ level, adventureId, adventureTitle, isLive }) => (
-                    <FilteredLevelCard
-                      key={`${adventureId}-${level.id}`}
-                      level={level}
-                      adventureId={adventureId}
-                      adventureTitle={adventureTitle}
-                      isLive={isLive}
-                    />
-                  ))}
-                </div>
+                <Suspense fallback={null}>
+                  <div key={filterKey} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                    {filteredLevels.map(({ level, adventureId, adventureTitle, isLive }) => (
+                      <FilteredLevelCard
+                        key={`${adventureId}-${level.id}`}
+                        level={level}
+                        adventureId={adventureId}
+                        adventureTitle={adventureTitle}
+                        isLive={isLive}
+                      />
+                    ))}
+                  </div>
+                </Suspense>
               </>
             ) : (
               <>
