@@ -3,6 +3,29 @@ import type { AdventureCardSummary, RelatedLevelSummary } from "./types";
 
 export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
   {
+    id: "lex-imperfecta",
+    title: "Lex Imperfecta",
+    month: "JUN 2026",
+    story: "The Roman Republic has built a sophisticated legal system to protect its citizens — but the laws were written in haste, and the exceptions were written too generously. Policies go unenforced, the wrong citizens are exempt, and something has slipped through the gates unnoticed. As a newly appointed Praetor, your mission is to restore order before chaos takes hold.",
+    tags: ["Kyverno", "Kubernetes"],
+    contributor: { name: "Katharina Sick" },
+    isLive: true,
+    levels: [
+      {
+        id: "beginner",
+        name: "The Twelve Tables",
+        difficulty: "Beginner",
+        topics: ["Kyverno", "Kubernetes"],
+        learnings: [
+          "How Kyverno [ValidatingPolicy](https://kyverno.io/docs/policy-types/validating-policy/) resources and  [CEL validation expressions](https://kubernetes.io/docs/reference/using-api/cel/) work",
+          "The difference between [Audit, Deny, and Warn](https://kyverno.io/docs/policy-types/validating-policy/) validation actions",
+          "How to use [custom label keys](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) to  enforce workload identity standards",
+          "How Kyverno [MutatingPolicy](https://kyverno.io/docs/policy-types/mutating-policy/) resources automatically  patch incoming workloads at admission",
+        ],
+      },
+    ],
+  },
+  {
     id: "blind-by-design",
     title: "Blind by Design",
     month: "MAY 2026",

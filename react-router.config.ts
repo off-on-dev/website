@@ -15,6 +15,8 @@ export default {
     "/privacy",
     "/accessibility",
     // GENERATED:adventures
+    "/adventures/lex-imperfecta",
+    "/adventures/lex-imperfecta/levels/beginner",
     "/adventures/blind-by-design",
     "/adventures/blind-by-design/levels/beginner",
     "/adventures/blind-by-design/levels/intermediate",
@@ -41,6 +43,8 @@ export default {
     "/challenges/grafana",
     "/challenges/jaeger",
     "/challenges/java",
+    "/challenges/kubernetes",
+    "/challenges/kyverno",
     "/challenges/openfeature",
     "/challenges/openllmetry",
     "/challenges/opentelemetry",
