@@ -7,6 +7,7 @@ export const THE_AI_OBSERVATORY: Adventure = {
   icon: "Telescope",
   month: "FEB 2026",
   story: "Investigate a mysterious bandwidth anomaly at a remote research station by instrumenting its AI system with OpenTelemetry, OpenLLMetry, and Jaeger.",
+  metaDescription: "The AI Observatory: a hands-on OpenTelemetry, OpenLLMetry, Jaeger adventure on OffOn.",
   tags: ["OpenTelemetry", "OpenLLMetry", "Jaeger", "Prometheus", "Python"],
   contributor: {
     name: "Katharina Sick",
@@ -79,6 +80,7 @@ make hubsystem
         command: "./verify.sh",
         description: "Once you think you've solved the challenge, run the verification script. If it fails it will tell you which checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion.",
       },
+      metaDescription: "Calibrating the Lens: Something is eating 847% of your station's bandwidth and nobody knows what. Instrument HubSystem with OpenLLMetry, send traces to the...",
     },
     {
       id: "intermediate",
@@ -155,6 +157,7 @@ make traffic
         command: "./verify.sh",
         description: "Once you think you've solved the challenge, run the verification script. If it fails it will tell you which checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion.",
       },
+      metaDescription: "The Distracted Pilot: ART's RAG pipeline is retrieving entertainment data instead of navigation coordinates and won't calculate your jump. Instrument the...",
     },
     {
       id: "expert",
@@ -236,6 +239,7 @@ Verify in Jaeger that spans follow conventions and only errors and slow traces a
         command: "./verify.sh",
         description: "Once you think you've solved the challenge, run the verification script. If it fails it will tell you which checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion.",
       },
+      metaDescription: "The Noise Filter: ART is flooding Jaeger with 40,000 non-standard spans an hour. Fix the chat span to follow OpenTelemetry GenAI semantic conventions with...",
     },
   ],
 };

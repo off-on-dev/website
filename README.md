@@ -72,8 +72,9 @@ e2e/
 schemas/
   adventure.schema.json  # JSON Schema for adventure YAML validation
 scripts/
-  generate-adventures.mjs  # YAML -> TypeScript codegen (runs as prebuild hook)
-  sync-adventure.mjs       # Fetch and transform adventure YAML from the challenges repo
+  generate-adventures.mjs       # YAML -> TypeScript codegen (runs as prebuild hook)
+  sync-adventure.mjs            # Fetch and transform adventure YAML from the challenges repo
+  set-discussion-url.mjs        # Set a Discourse thread URL on a level (called by add-discussion-url.yml)
 public/
   fonts/          # Self-hosted Inter, Syne, and JetBrains Mono font files
   sitemap.xml

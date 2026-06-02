@@ -62,6 +62,47 @@ function toConstName(id) {
   return id.toUpperCase().replace(/-/g, "_");
 }
 
+/** Strip common markdown syntax so strings are safe for plain-text meta descriptions. */
+function stripMarkdown(str) {
+  if (!str) return "";
+  return str
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/\*([^*]+)\*/g, "$1")
+    .replace(/`([^`]+)`/g, "$1")
+    .trim();
+}
+
+/** Truncate at the last word boundary before `max` chars and append "...". */
+function truncate(str, max) {
+  if (str.length <= max) return str;
+  const cut = str.lastIndexOf(" ", max - 3);
+  return cut > max / 2 ? str.slice(0, cut) + "..." : str.slice(0, max);
+}
+
+/** Synthesize a meta description for a challenge level from YAML fields. */
+function buildLevelMetaDescription(level) {
+  const { name, difficulty } = normalizeLevelFields(level);
+  const rawIntro = Array.isArray(level.intro) ? level.intro[0] : (level.summary || "");
+  const intro = stripMarkdown(rawIntro);
+  const topics = (level.topics || []).join(", ");
+  const base = `${name}: ${intro}`;
+  const suffix = ` A ${difficulty.toLowerCase()} ${topics} challenge on OffOn.`;
+  if (base.length + suffix.length <= 160) return base + suffix;
+  return truncate(base, 160);
+}
+
+/** Synthesize a meta description for an adventure from YAML fields. */
+function buildAdventureMetaDescription(data) {
+  const { title } = normalizeAdventureFields(data);
+  if (data.overview && data.overview.length > 0) {
+    const clean = stripMarkdown(data.overview[0]);
+    return truncate(clean, 160);
+  }
+  const tags = (data.tags || []).slice(0, 3).join(", ");
+  return truncate(`${title}: a hands-on ${tags} adventure on OffOn.`, 160);
+}
+
 function fail(msg) {
   console.error(`\x1b[31mError:\x1b[0m ${msg}`);
   process.exit(1);
@@ -336,7 +377,8 @@ function generateLevelCode(level, adventureId, indent) {
     lines.push(`${i2}},`);
   }
 
-  if (level.meta_description) lines.push(`${i2}metaDescription: ${formatString(level.meta_description)},`);
+  const levelMetaDesc = level.meta_description || buildLevelMetaDescription(level);
+  lines.push(`${i2}metaDescription: ${formatString(levelMetaDesc)},`);
   if (level.solved_count !== undefined) lines.push(`${i2}solvedCount: ${level.solved_count},`);
   if (level.top_players && level.top_players.length > 0) {
     lines.push(`${i2}topPlayers: [`);
@@ -385,6 +427,8 @@ function generateAdventureTs(data) {
   if (adventureIcon) lines.push(`  icon: "${escapeDoubleQuoted(adventureIcon)}",`);
   lines.push(`  month: "${data.month}",`);
   lines.push(`  story: ${formatString(adventureStory)},`);
+  const adventureMetaDesc = data.meta_description || buildAdventureMetaDescription(data);
+  lines.push(`  metaDescription: ${formatString(adventureMetaDesc)},`);
   lines.push(`  tags: [${data.tags.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
 
   if (data.contributor) {

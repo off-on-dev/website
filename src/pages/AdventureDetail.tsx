@@ -51,9 +51,10 @@ export const meta: MetaFunction = ({ params }) => {
     ];
   }
   const tagsSummary = adventure.tags.slice(0, 3).join(", ");
+  const description = (adventure.metaDescription ?? `${adventure.title}: a hands-on ${tagsSummary} adventure on ${BRAND_NAME}.`).slice(0, 160);
   return buildPageMeta({
     title: `${adventure.title} - ${BRAND_NAME} Adventures`,
-    description: `Tackle ${adventure.title} on ${BRAND_NAME}, a hands-on open source adventure. Work with ${tagsSummary} in a real-world scenario, directly in your browser.`.slice(0, 160),
+    description,
     url: `${SITE_URL}/adventures/${adventure.id}`,
     ogType: "article",
     extra: [
@@ -73,7 +74,7 @@ export const meta: MetaFunction = ({ params }) => {
           "@context": "https://schema.org",
           "@type": "Course",
           name: adventure.title,
-          description: `Tackle ${adventure.title} on ${BRAND_NAME}, a hands-on open source adventure. Work with ${tagsSummary} in a real-world scenario, directly in your browser.`.slice(0, 160),
+          description,
           url: `${SITE_URL}/adventures/${adventure.id}/`,
           keywords: adventure.tags.join(", "),
           provider: {

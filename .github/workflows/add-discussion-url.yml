@@ -1,0 +1,172 @@
+name: Add Discussion URL to Level
+
+on:
+  workflow_dispatch:
+    inputs:
+      adventure_id:
+        description: >
+          Adventure slug — the folder name under src/data/adventures/
+          (e.g. lex-imperfecta, building-cloudhaven)
+        required: true
+        type: string
+      level_id:
+        description: Level to update
+        required: true
+        type: choice
+        options:
+          - beginner
+          - intermediate
+          - expert
+      discussion_url:
+        description: >
+          Discourse thread URL for this level
+          (e.g. https://community.offon.dev/t/adventure-05-lex-imperfecta-beginner/123)
+        required: true
+        type: string
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  add-discussion-url:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate inputs
+        env:
+          ADVENTURE_ID: ${{ inputs.adventure_id }}
+          LEVEL_ID: ${{ inputs.level_id }}
+          DISCUSSION_URL: ${{ inputs.discussion_url }}
+        run: |
+          set -euo pipefail
+
+          if ! [[ "$ADVENTURE_ID" =~ ^[a-z0-9-]+$ ]]; then
+            echo "Error: adventure_id must be lowercase alphanumeric with hyphens only."
+            echo "Got: ${ADVENTURE_ID}"
+            exit 1
+          fi
+
+          YAML_PATH="src/data/adventures/${ADVENTURE_ID}/adventure.yaml"
+          POSTS_PATH="src/data/adventures/${ADVENTURE_ID}/${LEVEL_ID}-posts.json"
+
+          if [ ! -f "$YAML_PATH" ]; then
+            echo "Error: Adventure not found — ${YAML_PATH}"
+            echo "Available adventures:"
+            ls src/data/adventures/ | grep -v '\.ts$' | grep -v '\.json$'
+            exit 1
+          fi
+
+          if [ ! -f "$POSTS_PATH" ]; then
+            echo "Error: Posts file not found — ${POSTS_PATH}"
+            echo "The level may not exist yet or the posts stub was never created."
+            exit 1
+          fi
+
+          if ! echo "$DISCUSSION_URL" | grep -qE '^https://community\.offon\.dev/'; then
+            echo "Error: DISCUSSION_URL must start with https://community.offon.dev/"
+            echo "Got: ${DISCUSSION_URL}"
+            exit 1
+          fi
+
+          echo "Adventure:      ${ADVENTURE_ID}"
+          echo "Level:          ${LEVEL_ID}"
+          echo "Discussion URL: ${DISCUSSION_URL}"
+
+      - name: Update YAML and fetch posts
+        env:
+          ADVENTURE_ID: ${{ inputs.adventure_id }}
+          LEVEL_ID: ${{ inputs.level_id }}
+          DISCUSSION_URL: ${{ inputs.discussion_url }}
+        run: node scripts/set-discussion-url.mjs
+
+      - name: Regenerate TypeScript
+        run: node scripts/generate-adventures.mjs
+
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADVENTURE_ID: ${{ inputs.adventure_id }}
+          LEVEL_ID: ${{ inputs.level_id }}
+          DISCUSSION_URL: ${{ inputs.discussion_url }}
+        run: |
+          set -euo pipefail
+
+          BRANCH="chore/discussion-url-${ADVENTURE_ID}-${LEVEL_ID}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin "$BRANCH" 2>/dev/null || true
+          git checkout -b "$BRANCH" 2>/dev/null || git checkout "$BRANCH"
+
+          git add \
+            "src/data/adventures/${ADVENTURE_ID}/adventure.yaml" \
+            "src/data/adventures/${ADVENTURE_ID}/${LEVEL_ID}-posts.json" \
+            "src/data/adventures/${ADVENTURE_ID}.generated.ts" \
+            "src/data/adventures/index.ts" \
+            "src/data/adventures/summaries.ts" \
+            "src/data/adventures/types.ts"
+
+          HAS_CHANGES=false
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(adventure): add discussion URL to ${ADVENTURE_ID} ${LEVEL_ID}"
+            git push --force origin "$BRANCH"
+            HAS_CHANGES=true
+          else
+            echo "No file changes — discussion URL may already be set to this value."
+          fi
+
+          PR_TITLE="chore(adventure): add discussion URL to ${ADVENTURE_ID} ${LEVEL_ID}"
+
+          cat > /tmp/pr-body.md <<EOF
+          ## Add discussion URL: ${ADVENTURE_ID} / ${LEVEL_ID}
+
+          Sets the Discourse thread URL for the **${LEVEL_ID}** level of **${ADVENTURE_ID}** and fetches the initial set of posts.
+
+          **Discussion URL:** ${DISCUSSION_URL}
+
+          ---
+
+          ### What changed
+
+          - \`adventure.yaml\` — \`community_url\` / \`discussion_url\` set on the \`${LEVEL_ID}\` level
+          - \`${LEVEL_ID}-posts.json\` — \`discussionUrl\` set and initial posts fetched from Discourse
+          - Generated TypeScript updated (\`${ADVENTURE_ID}.generated.ts\`, \`index.ts\`, \`summaries.ts\`)
+
+          ### Before merging
+
+          - [ ] Verify the discussion URL is correct and the thread is publicly visible
+          - [ ] Check that the posts JSON contains the expected content (or is an empty array if the thread is new)
+          - [ ] Run \`npm run lint && npm test && npm run build && npm run test:e2e\` locally
+
+          ### After merging
+
+          The hourly \`refresh-community-data\` workflow will keep posts up to date automatically.
+          EOF
+
+          EXISTING_PR=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING_PR" ]; then
+            echo "Updating existing PR #${EXISTING_PR}"
+            gh pr edit "$EXISTING_PR" --title "$PR_TITLE" --body-file /tmp/pr-body.md
+          elif [ "$HAS_CHANGES" = "true" ]; then
+            gh pr create \
+              --title "$PR_TITLE" \
+              --body-file /tmp/pr-body.md \
+              --head "$BRANCH" \
+              --base main
+          else
+            echo "No changes and no open PR — discussion URL is already applied and merged."
+          fi
