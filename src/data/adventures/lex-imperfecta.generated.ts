@@ -8,6 +8,7 @@ export const LEX_IMPERFECTA: Adventure = {
   icon: "Scale",
   month: "JUN 2026",
   story: "The Roman Republic has built a sophisticated legal system to protect its citizens — but the laws were written in haste, and the exceptions were written too generously. Policies go unenforced, the wrong citizens are exempt, and something has slipped through the gates unnoticed. As a newly appointed Praetor, your mission is to restore order before chaos takes hold.",
+  metaDescription: "The Republic's legal system is in disarray — workloads run unchecked, required labels go missing, and privileged containers slip through the gates. As a...",
   tags: ["Kyverno", "Kubernetes"],
   contributor: {
     name: "Katharina Sick",
@@ -48,7 +49,7 @@ export const LEX_IMPERFECTA: Adventure = {
         "How Kyverno [MutatingPolicy](https://kyverno.io/docs/policy-types/mutating-policy/) resources automatically  patch incoming workloads at admission",
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2Flex-imperfecta_beginner%2Fdevcontainer.json&quickstart=1`,
-      discussionUrl: "",
+      discussionUrl: "https://community.offon.dev/t/restore-proper-admission-control-using-kyverno-june-2026-adventure-beginner/1576",
       deadline: "2026-06-23T23:59:00+01:00",
       intro: ["Fix broken Kyverno policies to restore proper admission control."],
       backstory: [
@@ -142,6 +143,7 @@ This re-applies the policies and re-deploys all workloads so you immediately see
         command: "./verify.sh",
         description: "Once you think you've solved the challenge, run the verification script. If it fails it will tell you which checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion.",
       },
+      metaDescription: "The Twelve Tables: Fix broken Kyverno policies to restore proper admission control. A beginner Kyverno, Kubernetes challenge on OffOn.",
     },
   ],
 };

@@ -7,6 +7,7 @@ export const BUILDING_CLOUDHAVEN: Adventure = {
   icon: "Cloud",
   month: "JAN 2026",
   story: "Join the Infrastructure Guild and modernize CloudHaven's infrastructure from manual provisioning to a self-service platform using Infrastructure as Code. A hands-on journey through infrastructure as code with OpenTofu and GitHub Actions.",
+  metaDescription: "Building CloudHaven: a hands-on OpenTofu, Terraform, GitHub Actions adventure on OffOn.",
   tags: ["OpenTofu", "Terraform", "GitHub Actions", "Trivy", "TDD"],
   contributor: {
     name: "Katharina Sick",
@@ -87,6 +88,7 @@ If you changed the backend configuration, run \`tofu init -migrate-state\` first
         command: "./smoke-test.sh",
         description: "Once you think you've solved the challenge, run the smoke test to verify your solution.",
       },
+      metaDescription: "The Foundation Stones: An incomplete OpenTofu configuration is blocking the Merchant's Quarter from going live. Fix the broken backend, wire up dynamic...",
     },
     {
       id: "intermediate",
@@ -171,6 +173,7 @@ make apply
         command: "./smoke-test.sh",
         description: "Once you think you've solved the challenge, run the smoke test to verify your solution.",
       },
+      metaDescription: "The Modular Metropolis: A senior engineer wrote the tests first and then left. The module code is buggy and the integration test is incomplete. Fix the...",
     },
     {
       id: "expert",
@@ -238,6 +241,7 @@ cd adventures/02-building-cloudhaven/expert
         command: "./smoke-test.sh",
         description: "Once you think you've solved the challenge, run the smoke test to verify your solution.",
       },
+      metaDescription: "The Guardian Protocols: Three broken GitHub Actions workflows stand between CloudHaven and automated infrastructure governance. Fix drift detection that...",
     },
   ],
 };

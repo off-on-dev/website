@@ -524,7 +524,7 @@ The workflow opens a PR with a checklist. Before merging, complete all items in 
 1. Add the adventure detail route and all level routes to `src/routes.ts`.
 2. Add all URLs to `public/sitemap.xml` and the `prerender` array in `react-router.config.ts`.
 3. Add the adventure to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs` and run `node scripts/refresh-leaderboard.mjs`.
-4. Run `node scripts/refresh-discussions.mjs` after setting `discussionUrl` in each `*-posts.json`.
+4. Set `discussionUrl` in each `*-posts.json` using the **Add Discussion URL to Level** GitHub Actions workflow (Actions → Add Discussion URL to Level). The workflow updates `adventure.yaml`, fetches initial posts, regenerates TypeScript, and opens a PR. Run once per level. Do not run `node scripts/refresh-discussions.mjs` manually for this step.
 5. Add each level URL to the `ROUTES` array in `e2e/smoke.spec.ts` and `src/test/seo.test.ts`, and to the `pages` array in `src/test/prerender.test.ts` with the expected `<title>` value.
 6. Update the routes table in `README.md`.
 7. Add the adventure to `public/llms.txt` under the Adventures section so AI agents can discover it.

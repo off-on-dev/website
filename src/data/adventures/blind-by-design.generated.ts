@@ -9,6 +9,7 @@ export const BLIND_BY_DESIGN: Adventure = {
   icon: "FlaskConical",
   month: "MAY 2026",
   story: "Three levels of OpenFeature with flagd as the provider, in a Java + Spring Boot service. Wire the SDK against a flagd sidecar (Beginner), layer evaluation context to target by cohort (Intermediate), then instrument flag evaluations with OpenTelemetry and roll back a misbehaving fractional rollout (Expert). All without redeploying.",
+  metaDescription: "OpenFeature is a vendor-neutral standard for feature flags. The reference cloud-native implementation is flagd, which serves flag definitions from a JSON...",
   tags: ["OpenFeature", "flagd", "Spring Boot", "Java", "OpenTelemetry", "Grafana"],
   contributor: {
     name: "Simon Schrottner",

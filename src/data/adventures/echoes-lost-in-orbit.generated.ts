@@ -7,6 +7,7 @@ export const ECHOES_LOST_IN_ORBIT: Adventure = {
   icon: "Satellite",
   month: "DEC 2025",
   story: "Restore interstellar communications by fixing broken GitOps setups, progressive delivery systems, and observability pipelines across three galactic missions.",
+  metaDescription: "Echoes Lost in Orbit: a hands-on Argo CD, Argo Rollouts, OpenTelemetry adventure on OffOn.",
   tags: ["Argo CD", "Argo Rollouts", "OpenTelemetry", "Jaeger", "PromQL"],
   contributor: {
     name: "Katharina Sick",
@@ -80,6 +81,7 @@ adventures/01-echoes-lost-in-orbit/beginner/smoke-test.sh
         command: "adventures/01-echoes-lost-in-orbit/beginner/smoke-test.sh",
         description: "Once you think you've solved the challenge, run the smoke test to verify your solution.",
       },
+      metaDescription: "Broken Echoes: The Echo Server is down across both environments. Investigate the Argo CD ApplicationSet configuration, spot the templating pitfalls, and...",
     },
     {
       id: "intermediate",
@@ -173,6 +175,7 @@ adventures/01-echoes-lost-in-orbit/intermediate/smoke-test.sh
         command: "adventures/01-echoes-lost-in-orbit/intermediate/smoke-test.sh",
         description: "Once you think you've solved the challenge, run the smoke test to verify your solution.",
       },
+      metaDescription: "The Silent Canary: A canary rollout is stuck and the Zephyrians are still waiting to communicate. Debug the broken progressive delivery system by writing...",
     },
     {
       id: "expert",
@@ -267,6 +270,7 @@ adventures/01-echoes-lost-in-orbit/expert/smoke-test.sh
         command: "adventures/01-echoes-lost-in-orbit/expert/smoke-test.sh",
         description: "Once you think you've solved the challenge, run the smoke test to verify your solution.",
       },
+      metaDescription: "Hyperspace Operations & Transport: The observability pipeline is broken and HotROD's canary can't validate. Wire an OpenTelemetry Collector with spanmetrics...",
     },
   ],
 };

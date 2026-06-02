@@ -82,11 +82,15 @@ Each level's `topics:` list defaults to all adventure tags. Refine it to the sub
 
 ### Update discussion_url
 
-Once you have created the Discourse threads for each level:
+Once you have created the Discourse thread for a level, use the **Add Discussion URL to Level** workflow (Actions tab → Add Discussion URL to Level → Run workflow).
 
-1. Set `discussion_url:` on each level in `adventure.yaml` to the Discourse thread path (e.g. `/t/topic-slug/1419`).
-2. Set `discussionUrl` in each `src/data/adventures/<slug>/<level>-posts.json` to the same value.
-3. Run `node scripts/refresh-discussions.mjs` to fetch the initial post data.
+| Input | Description |
+|---|---|
+| `adventure_id` | Adventure slug, e.g. `lex-imperfecta` |
+| `level_id` | `beginner`, `intermediate`, or `expert` |
+| `discussion_url` | Full Discourse thread URL, e.g. `https://community.offon.dev/t/slug/1419` |
+
+The workflow updates `discussion_url` in `adventure.yaml`, fetches the initial posts from Discourse, regenerates TypeScript, and opens a PR. Run it once per level. If the thread is brand-new and has no posts yet, the PR will contain an empty `discussionPosts` array; the hourly `refresh-community-data` workflow will populate it once posts appear.
 
 `discussion_url` in `adventure.yaml` is a website-only field. It is never in the challenges repo and survives every re-sync automatically.
 
@@ -160,6 +164,7 @@ When a new level is ready in the challenges repo after the first adventure PR ha
 | Workflow | Trigger | Purpose |
 |---|---|---|
 | `sync-adventure.yml` | Manual (`workflow_dispatch`) | Sync adventure content from the challenges repo and open or update a PR |
+| `add-discussion-url.yml` | Manual (`workflow_dispatch`) | Set a Discourse thread URL for a level after it has been merged, and open a PR with updated YAML and initial posts |
 | `validate-adventures.yml` | PR (when adventure files change) | Validate YAML schema, check generated files are up-to-date, verify route/sitemap/prerender consistency |
 | `deploy.yml` | Push to `main` | Build and deploy to GitHub Pages at https://offon.dev |
 | `preview.yml` | Open PR | Deploy a PR preview at `/pr-preview/pr-<n>/` |
