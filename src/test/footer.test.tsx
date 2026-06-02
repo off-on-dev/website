@@ -54,7 +54,7 @@ describe("Footer - Explore nav", () => {
     renderFooter();
     const nav = screen.getByRole("navigation", { name: "Explore" });
     const link = within(nav).getByRole("link", { name: /Propose an Adventure Idea/ });
-    expect(link.getAttribute("href")).toBe("https://github.com/off-on-dev/open-source-challenges/blob/main/docs/contributing/adventure-ideas.md");
+    expect(link.getAttribute("href")).toBe("https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea");
     expect(link.getAttribute("target")).toBe("_blank");
     expect(link.getAttribute("rel")).toBe("noopener noreferrer");
   });

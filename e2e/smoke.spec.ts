@@ -8,6 +8,7 @@ type RouteSpec = { path: string; title: RegExp };
 const ROUTES: RouteSpec[] = [
   { path: "/", title: /OffOn - Vendor-Neutral/ },
   { path: "/about", title: /Building the contributors/ },
+  { path: "/contribute", title: /How to Contribute/ },
   { path: "/sponsors", title: /Sponsorship and Independence/ },
   { path: "/handbook", title: /Handbook/ },
   { path: "/privacy", title: /Privacy Policy/ },
