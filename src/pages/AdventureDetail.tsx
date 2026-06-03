@@ -21,10 +21,10 @@ import { RewardsCard } from "@/components/RewardsCard";
 import { AdventureLeaderboard } from "@/components/AdventureLeaderboard";
 import { ContributorBadge } from "@/components/ContributorBadge";
 import { TagChips } from "@/components/TagChips";
-import { MarkdownInline } from "@/components/MarkdownInline";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 import { isDeadlinePast } from "@/lib/utils";
+import { stripLinks } from "@/lib/markdown";
 import { LivePill } from "@/components/LivePill";
 import { Breadcrumb } from "@/components/Breadcrumb";
 
@@ -107,7 +107,7 @@ const UpcomingLevelTile = ({ name, difficulty }: UpcomingLevelTileProps): JSX.El
 type AdventureLevelLinkProps = { level: AdventureLevel; adventureId: string };
 
 const AdventureLevelLink = ({ level, adventureId }: AdventureLevelLinkProps): JSX.Element => {
-  const description = level.intro?.[0] ?? level.backstory?.[0];
+  const descHtml = level.intro?.[0] ?? level.backstory?.[0];
   return (
     <Link
       to={`/adventures/${adventureId}/levels/${level.id}`}
@@ -125,10 +125,10 @@ const AdventureLevelLink = ({ level, adventureId }: AdventureLevelLinkProps): JS
       <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors mb-3">
         {level.name}
       </h3>
-      {description && (
-        <p className="text-xs text-[hsl(var(--text-secondary))] leading-relaxed line-clamp-4 mb-4 flex-1">
-          {description}
-        </p>
+      {descHtml && (
+        <p className="text-xs text-[hsl(var(--text-secondary))] leading-relaxed line-clamp-4 mb-4 flex-1 md-inline"
+          dangerouslySetInnerHTML={{ __html: stripLinks(descHtml) }}
+        />
       )}
       <span className="mt-auto inline-flex items-center gap-1 text-xs font-medium text-primary underline decoration-2 underline-offset-2 group-hover:decoration-primary">
         Start Challenge <ArrowRight size={12} aria-hidden="true" />
@@ -180,7 +180,7 @@ const AdventureDetail = (): JSX.Element => {
               {isLive && <LivePill />}
               <TagChips tags={adventure.tags} />
             </div>
-            <p className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl"><MarkdownInline source={adventure.story} /></p>
+            <p className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl md-inline" dangerouslySetInnerHTML={{ __html: adventure.story }} />
           </div>
 
           {/* Two-column layout */}
@@ -236,7 +236,9 @@ const AdventureDetail = (): JSX.Element => {
                 <CollapsibleSection id="backstory" title="The Story" defaultOpen={true}>
                   <div className="space-y-3">
                     {adventure.backstory.map((para, i) => (
-                      <p key={i} className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">{para}</p>
+                      <p key={i} className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed md-inline"
+                        dangerouslySetInnerHTML={{ __html: para }}
+                      />
                     ))}
                   </div>
                 </CollapsibleSection>
@@ -260,9 +262,9 @@ const AdventureDetail = (): JSX.Element => {
                   </p>
                   <PersonNameLink name={adventure.contributor.name} url={adventure.contributor.url} />
                   {adventure.contributor.about && (
-                    <p className="mt-2 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
-                      {adventure.contributor.about}
-                    </p>
+                    <p className="mt-2 text-sm text-[hsl(var(--text-secondary))] leading-relaxed md-inline"
+                      dangerouslySetInnerHTML={{ __html: adventure.contributor.about }}
+                    />
                   )}
                 </div>
               )}

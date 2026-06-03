@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router";
 import Challenges from "@/pages/Challenges";
 import { ADVENTURES } from "@/data/adventures";
@@ -89,16 +89,13 @@ describe("Challenges - tag filter", () => {
     });
   });
 
-  it("shows level cards linking to /adventures/:id/levels/:levelId when a tag is selected", async () => {
+  it("shows level cards linking to /adventures/:id/levels/:levelId when a tag is selected", () => {
     renderChallenges();
     fireEvent.click(screen.getByRole("button", { name: firstTag }));
-    // FilteredLevelCard is lazy-loaded; wait for level links to appear
-    await waitFor(() => {
-      const levelLinks = screen.queryAllByRole("link").filter(
-        (l) => l.getAttribute("href")?.includes("/levels/")
-      );
-      expect(levelLinks.length).toBeGreaterThan(0);
-    });
+    const levelLinks = screen.queryAllByRole("link").filter(
+      (l) => l.getAttribute("href")?.includes("/levels/")
+    );
+    expect(levelLinks.length).toBeGreaterThan(0);
   });
 
   it("marks the active tag button as aria-pressed='true'", () => {

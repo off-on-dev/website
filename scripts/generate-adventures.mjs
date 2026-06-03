@@ -28,6 +28,12 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkGfm from "remark-gfm";
+import remarkRehype from "remark-rehype";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
+import rehypeStringify from "rehype-stringify";
 import { LEVEL_DIFFICULTY_BY_EMOJI } from "./lib/level-constants.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -55,6 +61,85 @@ const DEFAULT_REWARDS_RANKING_NOTE =
   " by submission order within the active week (100 for the first valid solution, 95 for the" +
   " second, and so on; late submissions still earn 60).";
 const DEFAULT_REWARDS_RANKING_RULES_PATH = "/t/about-the-challenges-category/16";
+
+// --- Build-time markdown-to-HTML pipeline ---
+
+const sanitizeSchema = {
+  ...defaultSchema,
+  attributes: {
+    ...defaultSchema.attributes,
+    code: ["className"],
+    a: ["href", "target", "rel"],
+  },
+  tagNames: [
+    ...(defaultSchema.tagNames ?? []),
+    "pre",
+    "code",
+  ],
+};
+
+const mdProcessor = unified()
+  .use(remarkParse)
+  .use(remarkGfm)
+  .use(remarkRehype)
+  .use(rehypeSanitize, sanitizeSchema)
+  .use(rehypeStringify);
+
+// Lucide ExternalLink icon at 12x12, paths from lucide-react v1.16.0.
+const EXT_LINK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>`;
+
+/** Inject external link icon + target/rel + sr-only text into http/https <a> tags.
+ *  Applied after sanitisation so the SVG is not stripped. */
+function addExternalLinkIcons(html) {
+  return html.replace(
+    /<a href="(https?:\/\/[^"]+)"([^>]*)>([\s\S]*?)<\/a>/gi,
+    (_, href, restAttrs, content) => {
+      const attrs = restAttrs.includes("target=")
+        ? restAttrs
+        : ` target="_blank" rel="noopener noreferrer"${restAttrs}`;
+      return `<a href="${href}"${attrs}>${content}${EXT_LINK_SVG}<span class="sr-only"> (opens in new tab)</span></a>`;
+    }
+  );
+}
+
+/** Convert markdown to full block HTML (preserves <p>, <ul>, <pre>, headings).
+ *  <pre> elements get tabindex="0" and aria-label so they're keyboard-accessible
+ *  as scrollable regions in the prerendered HTML (WCAG 2.1 SC 2.1.1). */
+async function mdToBlock(str) {
+  if (!str) return "";
+  const result = await mdProcessor.process(str);
+  let html = String(result).trim();
+  html = html.replace(/<pre>/g, '<pre tabindex="0" aria-label="Code block">');
+  html = addExternalLinkIcons(html);
+  return html;
+}
+
+/** Convert markdown to inline HTML, stripping the outer <p> wrapper when the
+ *  output is a single paragraph. Use for short prose rendered inside <span> or <li>. */
+async function mdToInline(str) {
+  if (!str) return "";
+  const result = await mdProcessor.process(str);
+  let html = String(result).trim();
+  // Strip wrapping <p>...</p> only when the entire output is exactly one paragraph.
+  const pCount = (html.match(/<p>/g) ?? []).length;
+  if (pCount === 1 && html.startsWith("<p>") && html.endsWith("</p>")) {
+    html = html.slice(3, -4);
+  }
+  html = addExternalLinkIcons(html);
+  return html;
+}
+
+/** Convert each item in a string array with mdToInline. */
+async function mdToInlineArray(arr) {
+  if (!arr || arr.length === 0) return [];
+  return Promise.all(arr.map(mdToInline));
+}
+
+/** Convert each item in a string array with mdToBlock. */
+async function mdToBlockArray(arr) {
+  if (!arr || arr.length === 0) return [];
+  return Promise.all(arr.map(mdToBlock));
+}
 
 // --- Helpers ---
 
@@ -270,12 +355,24 @@ function validateAdventure(data, id) {
 
 // --- Code Generation ---
 
-function generateLevelCode(level, adventureId, indent) {
+async function generateLevelCode(level, adventureId, indent) {
   const lines = [];
   const i = indent;
   const i2 = indent + "  ";
 
   const { id: levelId, name: levelName, difficulty: levelDifficulty, learnings: levelLearnings, intro: levelIntro, discussionUrl: levelDiscussionUrl } = normalizeLevelFields(level);
+
+  // Pre-render prose fields to HTML at build time.
+  const learningsHtml = await mdToInlineArray(levelLearnings);
+  const audienceHtml = level.audience ? await mdToInline(level.audience) : null;
+  const objectiveHtml = level.objective ? await mdToInlineArray(level.objective) : null;
+  const hookHtml = level.hook ? await mdToBlock(level.hook) : null;
+  // intro and backstory are rendered as individual <p> items in components,
+  // so use inline conversion (no <p> wrapper) to keep the JSX <p> container valid.
+  const introHtml = levelIntro ? await mdToInlineArray(levelIntro) : null;
+  const backstoryHtml = level.backstory ? await mdToInlineArray(level.backstory) : null;
+  const scenarioHtml = level.scenario ? await mdToBlock(level.scenario) : null;
+  const architectureHtml = level.architecture ? await mdToBlockArray(level.architecture) : null;
 
   lines.push(`${i}{`);
   lines.push(`${i2}id: "${escapeDoubleQuoted(levelId)}",`);
@@ -285,14 +382,14 @@ function generateLevelCode(level, adventureId, indent) {
   if (level.topics) {
     lines.push(`${i2}topics: [${level.topics.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
   }
-  if (level.audience) {
-    lines.push(`${i2}audience: ${formatString(level.audience)},`);
+  if (audienceHtml) {
+    lines.push(`${i2}audience: ${formatString(audienceHtml)},`);
   }
   if (level.estimated_time) {
     lines.push(`${i2}estimatedTime: ${formatString(level.estimated_time)},`);
   }
 
-  lines.push(`${i2}learnings: ${formatStringArray(levelLearnings, i2)},`);
+  lines.push(`${i2}learnings: ${formatStringArray(learningsHtml, i2)},`);
 
   // Build codespacesUrl from devcontainer short name
   const fullDevcontainerPath = `.devcontainer/${level.devcontainer}/devcontainer.json`;
@@ -310,12 +407,12 @@ function generateLevelCode(level, adventureId, indent) {
   }
 
   if (level.deadline) lines.push(`${i2}deadline: "${escapeDoubleQuoted(level.deadline)}",`);
-  if (level.hook) lines.push(`${i2}hook: ${formatString(level.hook)},`);
-  if (levelIntro) lines.push(`${i2}intro: ${formatStringArray(levelIntro, i2)},`);
-  if (level.backstory) lines.push(`${i2}backstory: ${formatStringArray(level.backstory, i2)},`);
-  if (level.objective) lines.push(`${i2}objective: ${formatStringArray(level.objective, i2)},`);
-  if (level.scenario) lines.push(`${i2}scenario: ${formatString(level.scenario)},`);
-  if (level.architecture) lines.push(`${i2}architecture: ${formatStringArray(level.architecture, i2)},`);
+  if (hookHtml) lines.push(`${i2}hook: ${formatString(hookHtml)},`);
+  if (introHtml) lines.push(`${i2}intro: ${formatStringArray(introHtml, i2)},`);
+  if (backstoryHtml) lines.push(`${i2}backstory: ${formatStringArray(backstoryHtml, i2)},`);
+  if (objectiveHtml) lines.push(`${i2}objective: ${formatStringArray(objectiveHtml, i2)},`);
+  if (scenarioHtml) lines.push(`${i2}scenario: ${formatString(scenarioHtml)},`);
+  if (architectureHtml) lines.push(`${i2}architecture: ${formatStringArray(architectureHtml, i2)},`);
 
   if (level.architecture_diagram) {
     const baseName = level.architecture_diagram.replace(/\.svg$/, "");
@@ -328,7 +425,8 @@ function generateLevelCode(level, adventureId, indent) {
   if (level.toolbox && level.toolbox.length > 0) {
     lines.push(`${i2}toolbox: [`);
     for (const tool of level.toolbox) {
-      const parts = [`name: "${escapeDoubleQuoted(tool.name)}"`, `description: "${escapeDoubleQuoted(tool.description)}"`];
+      const descHtml = tool.description ? await mdToInline(tool.description) : "";
+      const parts = [`name: "${escapeDoubleQuoted(tool.name)}"`, `description: ${formatString(descHtml)}`];
       if (tool.url) parts.push(`url: "${escapeDoubleQuoted(tool.url)}"`);
       lines.push(`${i2}  { ${parts.join(", ")} },`);
     }
@@ -358,7 +456,9 @@ function generateLevelCode(level, adventureId, indent) {
   if (steps.length > 0) {
     lines.push(`${i2}howToPlay: [`);
     for (const step of steps) {
-      lines.push(`${i2}  { title: "${escapeDoubleQuoted(step.title)}", content: ${formatString(step.content)} },`);
+      const titleHtml = step.title ? await mdToInline(step.title) : "";
+      const contentHtml = await mdToBlock(step.content);
+      lines.push(`${i2}  { title: ${formatString(titleHtml)}, content: ${formatString(contentHtml)} },`);
     }
     lines.push(`${i2}],`);
   }
@@ -395,7 +495,7 @@ function generateLevelCode(level, adventureId, indent) {
   return lines.join("\n");
 }
 
-function generateAdventureTs(data) {
+async function generateAdventureTs(data) {
   const lines = [];
   const constName = toConstName(data.slug);
 
@@ -424,12 +524,18 @@ function generateAdventureTs(data) {
     warn(`${data.slug}: emoji "${data.emoji}" is not in EMOJI_ICON_MAP — add it to scripts/generate-adventures.mjs and src/pages/AdventureDetail.tsx`);
   }
 
+  // Pre-render prose fields to HTML at build time.
+  const storyHtml = await mdToInline(adventureStory);
+  const contributorAboutHtml = data.contributor?.about ? await mdToInline(data.contributor.about) : null;
+  // Adventure backstory items are rendered individually as <p> elements, so use inline.
+  const backstoryHtml = data.backstory ? await mdToInlineArray(data.backstory) : null;
+
   lines.push(`export const ${constName}: Adventure = {`);
   lines.push(`  id: "${data.slug}",`);
   lines.push(`  title: "${escapeDoubleQuoted(adventureTitle)}",`);
   if (adventureIcon) lines.push(`  icon: "${escapeDoubleQuoted(adventureIcon)}",`);
   lines.push(`  month: "${data.month}",`);
-  lines.push(`  story: ${formatString(adventureStory)},`);
+  lines.push(`  story: ${formatString(storyHtml)},`);
   const adventureMetaDesc = data.meta_description || buildAdventureMetaDescription(data);
   lines.push(`  metaDescription: ${formatString(adventureMetaDesc)},`);
   lines.push(`  tags: [${data.tags.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
@@ -438,12 +544,12 @@ function generateAdventureTs(data) {
     lines.push(`  contributor: {`);
     lines.push(`    name: "${escapeDoubleQuoted(data.contributor.name)}",`);
     if (data.contributor.url) lines.push(`    url: "${escapeDoubleQuoted(data.contributor.url)}",`);
-    if (data.contributor.about) lines.push(`    about: "${escapeDoubleQuoted(data.contributor.about)}",`);
+    if (contributorAboutHtml) lines.push(`    about: ${formatString(contributorAboutHtml)},`);
     lines.push(`  },`);
   }
 
-  if (data.backstory) {
-    lines.push(`  backstory: ${formatStringArray(data.backstory, "  ")},`);
+  if (backstoryHtml) {
+    lines.push(`  backstory: ${formatStringArray(backstoryHtml, "  ")},`);
   }
 
   if (data.overview) {
@@ -451,19 +557,22 @@ function generateAdventureTs(data) {
   }
 
   if (data.rewards) {
-    const eligibility = data.rewards.eligibility ?? DEFAULT_REWARDS_ELIGIBILITY;
-    const rankingNote = data.rewards.ranking_note ?? DEFAULT_REWARDS_RANKING_NOTE;
+    const eligibilityRaw = data.rewards.eligibility ?? DEFAULT_REWARDS_ELIGIBILITY;
+    const rankingNoteRaw = data.rewards.ranking_note ?? DEFAULT_REWARDS_RANKING_NOTE;
     const rankingRulesUrl = data.rewards.ranking_rules_url ?? DEFAULT_REWARDS_RANKING_RULES_PATH;
+    const eligibilityHtml = await mdToInline(eligibilityRaw);
+    const rankingNoteHtml = await mdToInline(rankingNoteRaw);
     lines.push(`  rewards: {`);
     const rewardsDeadline = data.rewards.deadline === "TODO" ? "" : data.rewards.deadline;
     lines.push(`    deadline: "${escapeDoubleQuoted(rewardsDeadline)}",`);
-    lines.push(`    eligibility: "${escapeDoubleQuoted(eligibility)}",`);
+    lines.push(`    eligibility: ${formatString(eligibilityHtml)},`);
     lines.push(`    tiers: [`);
     for (const tier of data.rewards.tiers) {
-      lines.push(`      { label: "${escapeDoubleQuoted(tier.label)}", description: "${escapeDoubleQuoted(tier.description)}" },`);
+      const tierDescHtml = await mdToInline(tier.description);
+      lines.push(`      { label: "${escapeDoubleQuoted(tier.label)}", description: ${formatString(tierDescHtml)} },`);
     }
     lines.push(`    ],`);
-    lines.push(`    rankingNote: "${escapeDoubleQuoted(rankingNote)}",`);
+    lines.push(`    rankingNote: ${formatString(rankingNoteHtml)},`);
     if (rankingRulesUrl.startsWith("http")) {
       lines.push(`    rankingRulesUrl: "${escapeDoubleQuoted(rankingRulesUrl)}",`);
     } else {
@@ -483,7 +592,7 @@ function generateAdventureTs(data) {
 
   lines.push(`  levels: [`);
   for (const level of data.levels) {
-    lines.push(generateLevelCode(level, data.id, "    ") + ",");
+    lines.push((await generateLevelCode(level, data.id, "    ")) + ",");
   }
   lines.push(`  ],`);
   lines.push(`};`);
@@ -500,7 +609,7 @@ function generateAdventureTs(data) {
  * gzipped on the home page by not pulling in walkthrough steps, toolbox items,
  * architecture sections, and other detail-page fields.
  */
-function generateSummariesTs(adventures) {
+async function generateSummariesTs(adventures) {
   const lines = [];
   lines.push(`// Generated by scripts/generate-adventures.mjs — do not edit by hand.`);
   lines.push(`import type { AdventureCardSummary, RelatedLevelSummary } from "./types";`);
@@ -518,6 +627,7 @@ function generateSummariesTs(adventures) {
     if (/[*_`]/.test(summaryStory)) {
       warn(`${data.slug}: story contains markdown syntax (*_\`). AdventureCard renders story as plain text — format the story as plain prose or it will display unstyled in card views.`);
     }
+    // story in summaries stays as plain text — AdventureCard renders it without markdown.
     lines.push(`    story: ${formatString(summaryStory)},`);
     lines.push(`    tags: [${data.tags.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
     if (data.contributor) {
@@ -532,13 +642,15 @@ function generateSummariesTs(adventures) {
     for (const level of data.levels) {
       lines.push(`      {`);
       const { id: summaryId, name: summaryName, difficulty: summaryDifficulty, learnings: summaryLearnings } = normalizeLevelFields(level);
+      // Pre-render learnings to inline HTML for FilteredLevelCard.
+      const summaryLearningsHtml = await mdToInlineArray(summaryLearnings);
       lines.push(`        id: "${escapeDoubleQuoted(summaryId)}",`);
       lines.push(`        name: "${escapeDoubleQuoted(summaryName)}",`);
       lines.push(`        difficulty: "${summaryDifficulty}",`);
       if (level.topics && level.topics.length > 0) {
         lines.push(`        topics: [${level.topics.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
       }
-      lines.push(`        learnings: ${formatStringArray(summaryLearnings, "        ")},`);
+      lines.push(`        learnings: ${formatStringArray(summaryLearningsHtml, "        ")},`);
       if (level.estimated_time) {
         lines.push(`        estimatedTime: ${formatString(level.estimated_time)},`);
       }
@@ -796,7 +908,7 @@ function patchRegions(adventures) {
   // exactly as-is; do not reorder the static URLs around them.
   replaceRegion(
     resolve(ROOT, "public/sitemap.xml"),
-    `<url><loc>https://offon.dev/privacy/</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>`,
+    `<url><loc>https://offon.dev/privacy/</loc><lastmod>2026-06-01</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>`,
     `<url><loc>https://offon.dev/challenges/</loc>`,
     buildSitemapBody(adventures)
   );
@@ -837,7 +949,7 @@ function patchRegions(adventures) {
   const tags = collectAllTags(adventures);
   replaceRegion(
     resolve(ROOT, "public/sitemap.xml"),
-    `<url><loc>https://offon.dev/challenges/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>`,
+    `<url><loc>https://offon.dev/challenges/</loc><lastmod>2026-06-03</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>`,
     `</urlset>`,
     buildSitemapTagsBody(tags)
   );
@@ -863,7 +975,7 @@ function patchRegions(adventures) {
 
 // --- Main ---
 
-function main() {
+async function main() {
   const yamls = findAdventureYamls();
 
   if (yamls.length === 0) {
@@ -920,21 +1032,20 @@ function main() {
 
   // Generate .generated.ts files
   for (const data of adventures) {
-    const tsContent = generateAdventureTs(data);
+    const tsContent = await generateAdventureTs(data);
     const outPath = resolve(ADVENTURES_DIR, `${data.slug}.generated.ts`);
     writeFileSync(outPath, tsContent);
     console.log(`  Generated: src/data/adventures/${data.slug}.generated.ts`);
   }
 
   // Generate index.ts
-  // Sort adventures by the order we want them (newest first based on existing convention)
   const indexContent = generateIndexTs(adventures);
   const indexPath = resolve(ADVENTURES_DIR, "index.ts");
   writeFileSync(indexPath, indexContent);
   console.log(`  Generated: src/data/adventures/index.ts`);
 
   // Generate summaries.ts (lightweight card-only data, no imports from full generated files)
-  const summariesContent = generateSummariesTs(adventures);
+  const summariesContent = await generateSummariesTs(adventures);
   const summariesPath = resolve(ADVENTURES_DIR, "summaries.ts");
   writeFileSync(summariesPath, summariesContent);
   console.log(`  Generated: src/data/adventures/summaries.ts`);
@@ -945,4 +1056,7 @@ function main() {
   console.log(`\n\x1b[32mDone!\x1b[0m Generated ${adventures.length} adventure file(s) + index.ts + summaries.ts`);
 }
 
-main();
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

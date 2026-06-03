@@ -1,0 +1,24 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://offon.dev/",
+      "describedby": [
+        {
+          "href": "https://offon.dev/sitemap.xml",
+          "type": "application/xml",
+          "title": "XML Sitemap"
+        },
+        {
+          "href": "https://offon.dev/llms.txt",
+          "type": "text/plain",
+          "title": "LLM content index"
+        },
+        {
+          "href": "https://offon.dev/.well-known/security.txt",
+          "type": "text/plain",
+          "title": "Security contact"
+        }
+      ]
+    }
+  ]
+}

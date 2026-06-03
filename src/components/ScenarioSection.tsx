@@ -9,9 +9,9 @@ export const ScenarioSection = ({ backstory }: ScenarioSectionProps): JSX.Elemen
   <CollapsibleSection id="backstory" title="The Story">
     <div className="space-y-3">
       {backstory.map((para, i) => (
-        <p key={i} className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
-          {para}
-        </p>
+        <p key={i} className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed md-inline"
+          dangerouslySetInnerHTML={{ __html: para }}
+        />
       ))}
     </div>
   </CollapsibleSection>

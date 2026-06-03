@@ -1,186 +1,74 @@
-import { useRef, useState, type JSX, type ReactNode } from "react";
-import ReactMarkdown, { type Components } from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { Check, Copy } from "lucide-react";
-import { getSectionIcon, slugify } from "@/lib/markdown";
-import { inlineComponents } from "@/components/markdownInlineComponents";
+import { useEffect, useRef, type JSX } from "react";
 
-const childrenToText = (children: ReactNode): string => {
-  if (typeof children === "string" || typeof children === "number") return String(children);
-  if (Array.isArray(children)) return children.map(childrenToText).join("");
-  if (children && typeof children === "object" && "props" in children) {
-    const { props } = children as { props?: { children?: ReactNode } };
-    return childrenToText(props?.children);
-  }
-  return "";
-};
-
-// Strip the leading "N. " prefix from the first text node in a ReactNode tree,
-// preserving all subsequent nodes (inline code, bold, etc.) unchanged.
-const stripLeadingStepNumber = (children: ReactNode): ReactNode => {
-  if (typeof children === "string") return children.replace(/^\d+\.\s+/, "");
-  if (Array.isArray(children)) {
-    const [first, ...rest] = children as ReactNode[];
-    return [stripLeadingStepNumber(first), ...rest];
-  }
-  return children;
-};
-
-const CodeBlock = ({ children, showCopy = true }: { children: ReactNode; showCopy?: boolean }): JSX.Element => {
-  const preRef = useRef<HTMLPreElement>(null);
-  const [copied, setCopied] = useState(false);
-
-  const onCopy = (): void => {
-    const text = preRef.current?.textContent ?? "";
-    void navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1500);
-    });
-  };
-
-  return (
-    <div className="relative mb-4 group">
-      <pre
-        ref={preRef}
-        tabIndex={0}
-        aria-label="Code block"
-        className={`overflow-x-auto rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-4 font-mono text-sm leading-relaxed text-foreground [&>code]:border-none [&>code]:bg-transparent [&>code]:p-0 [&>code]:rounded-none [&>code]:text-[1em]${showCopy ? " pr-14" : ""}`}
-      >
-        {children}
-      </pre>
-      {showCopy && (
-        <button
-          type="button"
-          onClick={onCopy}
-          aria-label={copied ? "Copied to clipboard" : "Copy code to clipboard"}
-          className="absolute top-2 right-2 inline-flex items-center gap-1 rounded-md border border-[hsl(var(--surface-border))] bg-background/80 px-2 py-1 text-xs font-medium text-[hsl(var(--text-secondary))] opacity-0 transition-opacity hover:text-foreground focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 group-hover:opacity-100"
-        >
-          {copied ? (
-            <>
-              <Check size={12} aria-hidden="true" /> Copied
-            </>
-          ) : (
-            <>
-              <Copy size={12} aria-hidden="true" /> Copy
-            </>
-          )}
-        </button>
-      )}
-    </div>
-  );
-};
-
-// Inline-only renderers (links, inline code, strong, em) live in
-// markdownInlineComponents.tsx so MarkdownInline can reuse them without
-// dragging in the full block-level renderer set.
-const components: Components = {
-  ...inlineComponents,
-  h2: ({ children }) => {
-    const text = childrenToText(children);
-    const slug = slugify(text);
-    const Icon = getSectionIcon(slug);
-    return (
-      <h2
-        id={slug}
-        className="font-heading text-2xl font-semibold tracking-tight text-foreground mt-14 mb-5 scroll-mt-28 flex items-center gap-3"
-      >
-        {Icon && (
-          <span
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"
-            aria-hidden="true"
-          >
-            <Icon size={18} />
-          </span>
-        )}
-        <span>{children}</span>
-      </h2>
-    );
-  },
-  h3: ({ children }) => {
-    const text = childrenToText(children);
-    const stepMatch = text.match(/^(\d+)\.\s+(.+)$/);
-    if (stepMatch) {
-      return (
-        <h3 className="font-heading text-lg font-semibold text-foreground mt-10 mb-3 scroll-mt-28 flex items-center gap-3">
-          <span
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold"
-            aria-hidden="true"
-          >
-            {stepMatch[1]}
-          </span>
-          <span>{stripLeadingStepNumber(children)}</span>
-        </h3>
-      );
-    }
-    return (
-      <h3 className="font-heading text-lg font-semibold text-foreground mt-8 mb-3">
-        {children}
-      </h3>
-    );
-  },
-  p: ({ children }) => (
-    <p className="text-[hsl(var(--text-secondary))] leading-relaxed mb-4">
-      {children}
-    </p>
-  ),
-  ul: ({ children }) => (
-    <ul className="mb-4 list-disc space-y-2 pl-5 marker:text-[hsl(var(--text-faint))]">{children}</ul>
-  ),
-  ol: ({ children }) => (
-    <ol className="mb-4 list-decimal space-y-2 pl-5 marker:text-[hsl(var(--text-faint))]">
-      {children}
-    </ol>
-  ),
-  li: ({ children }) => (
-    <li className="text-[hsl(var(--text-secondary))] leading-relaxed pl-1">
-      {children}
-    </li>
-  ),
-  pre: ({ children }) => {
-    const child = Array.isArray(children) ? children[0] : children;
-    // Show copy for all fenced code blocks; language-tagged and bare blocks both wrap <code>
-    const hasCode = child != null && typeof child === "object" && "props" in (child as object);
-    return <CodeBlock showCopy={hasCode}>{children}</CodeBlock>;
-  },
-  blockquote: ({ children }) => (
-    <blockquote className="mb-6 rounded-lg border-l-4 border-primary bg-[hsl(var(--surface))]/60 px-5 py-4 text-[hsl(var(--text-secondary))]">
-      {children}
-    </blockquote>
-  ),
-  // Tables in adventure markdown are used as feature-card grids (2-column key/value).
-  // Rendered as divs because applying display:grid on <table> breaks semantic table
-  // structure for screen readers. Real tabular data would need a different component.
-  table: ({ children }) => (
-    <div role="list" className="mb-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-      {children}
-    </div>
-  ),
-  thead: ({ children }) => <div className="hidden" aria-hidden="true">{children}</div>,
-  tbody: ({ children }) => <div className="contents">{children}</div>,
-  tr: ({ children }) => (
-    <div role="listitem" className="flex flex-col gap-2 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-      {children}
-    </div>
-  ),
-  th: ({ children }) => <span className="sr-only">{children}</span>,
-  td: ({ children }) => (
-    <span className="block first:font-mono first:font-semibold first:text-foreground last:text-sm last:leading-relaxed last:text-[hsl(var(--text-secondary))]">
-      {children}
-    </span>
-  ),
-  hr: () => (
-    <hr className="my-8 border-t border-[hsl(var(--surface-border))]" />
-  ),
-};
+// SVG markup for copy button icons. Defined as constants so Tailwind's
+// content scanner detects the class names used in the DOM-injected elements.
+const COPY_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
+const CHECK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>`;
 
 type MarkdownContentProps = {
   source: string;
 };
 
-export const MarkdownContent = ({ source }: MarkdownContentProps): JSX.Element => (
-  <div className="font-sans">
-    <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
-      {source}
-    </ReactMarkdown>
-  </div>
-);
+export const MarkdownContent = ({ source }: MarkdownContentProps): JSX.Element => {
+  const ref = useRef<HTMLDivElement>(null);
+  const liveRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const cleanup: (() => void)[] = [];
+
+    el.querySelectorAll("pre").forEach((pre) => {
+      const wrapper = document.createElement("div");
+      wrapper.className = "md-pre-group";
+      pre.parentNode?.insertBefore(wrapper, pre);
+      wrapper.appendChild(pre);
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.setAttribute("aria-label", "Copy code to clipboard");
+      btn.className = "md-copy-btn";
+      btn.innerHTML = `${COPY_SVG} Copy`;
+
+      const onClick = (): void => {
+        void navigator.clipboard.writeText(pre.textContent ?? "").then(() => {
+          btn.innerHTML = `${CHECK_SVG} Copied`;
+          btn.setAttribute("aria-label", "Copied to clipboard");
+          // Announce via live region for screen readers that don't re-read
+          // a focused button's accessible name when it changes mid-focus.
+          if (liveRef.current) liveRef.current.textContent = "Copied to clipboard";
+          window.setTimeout(() => {
+            btn.innerHTML = `${COPY_SVG} Copy`;
+            btn.setAttribute("aria-label", "Copy code to clipboard");
+            if (liveRef.current) liveRef.current.textContent = "";
+          }, 1500);
+        });
+      };
+      btn.addEventListener("click", onClick);
+      wrapper.appendChild(btn);
+
+      cleanup.push(() => {
+        btn.removeEventListener("click", onClick);
+        if (wrapper.parentNode) {
+          wrapper.parentNode.insertBefore(pre, wrapper);
+          wrapper.remove();
+        }
+      });
+    });
+
+    return () => cleanup.forEach((fn) => fn());
+  }, [source]);
+
+  return (
+    <>
+      {/* Polite live region announces copy success to screen readers that
+          don't re-read a focused button's aria-label when it changes. */}
+      <span ref={liveRef} aria-live="polite" aria-atomic="true" className="sr-only" />
+      <div
+        ref={ref}
+        className="font-sans md-content"
+        dangerouslySetInnerHTML={{ __html: source }}
+      />
+    </>
+  );
+};

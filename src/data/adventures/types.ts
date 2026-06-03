@@ -1,3 +1,9 @@
+// Prose fields (learnings, audience, objective, step titles and content,
+// tool descriptions, contributor bios, rewards text, story, intro, backstory,
+// scenario) contain pre-rendered HTML generated at build time by the
+// adventure generator. Always render them with dangerouslySetInnerHTML,
+// never as {value} directly.
+
 /** A tool that ships pre-configured inside the level's Codespace. */
 export type ToolboxItem = {
   name: string;

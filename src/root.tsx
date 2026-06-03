@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import { useEffect, type JSX } from "react";
 import type { LinksFunction } from "react-router";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import "./index.css";
@@ -29,6 +29,11 @@ const themeScript = `(function(){var t=localStorage.getItem("theme");if(t==="lig
 // This guarantees zero requests to any Google domain before consent.
 const gtagBootstrap = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});`;
 
+// Injected via DOM (not JSX) so React's reconciler never touches a processed
+// speculationrules script — modifying one after the browser has read it emits
+// "Inline speculation rules cannot currently be modified after they are processed."
+const SPECULATION_RULES = `{"prefetch":[{"source":"document","where":{"href_matches":["/adventures/","/challenges/"]},"eagerness":"moderate"}]}`;
+
 // Description is kept in sync with the Index page meta description (src/pages/Index.tsx).
 // JSON-LD inline scripts cannot reference TS constants (they live inside dangerouslySetInnerHTML),
 // so the string is duplicated. Update both together.
@@ -40,6 +45,14 @@ const webSiteJsonLd = `{"@context":"https://schema.org","@type":"WebSite","name"
 const orgJsonLd = `{"@context":"https://schema.org","@type":"Organization","name":"OffOn","url":"https://offon.dev","logo":"https://offon.dev/favicon.png","sameAs":["https://www.linkedin.com/company/open-ecosystem/","https://community.offon.dev","https://github.com/off-on-dev/open-source-challenges"]}`;
 
 export default function Root(): JSX.Element {
+  useEffect(() => {
+    if (document.querySelector('script[type="speculationrules"]')) return;
+    const el = document.createElement("script");
+    el.type = "speculationrules";
+    el.textContent = SPECULATION_RULES;
+    document.head.appendChild(el);
+  }, []);
+
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
@@ -63,6 +76,7 @@ export default function Root(): JSX.Element {
         <meta httpEquiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; base-uri 'self'; form-action 'self';" />
         <meta name="referrer" content="strict-origin-when-cross-origin" />
         <link rel="sitemap" type="application/xml" href={`${import.meta.env.BASE_URL}sitemap.xml`} />
+        <link rel="api-catalog" href={`${import.meta.env.BASE_URL}.well-known/api-catalog`} />
         {/* Theme must be set before React boots to prevent flash of wrong theme */}
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         {/* Consent Mode v2 default-denied bootstrap. gtag.js is loaded later, only on Accept. */}

@@ -1,0 +1,65 @@
+name: Refresh Community Sitemap
+
+on:
+  schedule:
+    # Daily at 05:00 UTC
+    - cron: "0 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: refresh-community-sitemap
+  cancel-in-progress: false
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Generate community sitemap
+        run: node scripts/generate-community-sitemap.mjs
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/community-sitemap.xml
+          if git diff --cached --quiet; then
+            echo "No sitemap changes."
+          else
+            git commit -m "chore: refresh community sitemap"
+            git push
+          fi
+
+      - name: Open issue on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Refresh community sitemap: generation failed" \
+            --label "bug" \
+            --body "The scheduled \`refresh-community-sitemap\` workflow failed and did not update \`public/community-sitemap.xml\`.
+
+          **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          Check the run log for the error. Common causes: Discourse API is unreachable, a category ID no longer exists, or the script collected fewer URLs than the minimum threshold."

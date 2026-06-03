@@ -2,8 +2,6 @@ import { type JSX } from "react";
 import { useParams, useLoaderData } from "react-router";
 import type { MetaFunction, LoaderFunctionArgs, LinksFunction } from "react-router";
 import { Check, Clock, ExternalLink } from "lucide-react";
-import { MarkdownContent } from "@/components/MarkdownContent";
-import { MarkdownInline } from "@/components/MarkdownInline";
 import { ADVENTURES } from "@/data/adventures";
 import { TagChips } from "@/components/TagChips";
 import { CodespacesButton } from "@/components/CodespacesButton";
@@ -121,9 +119,9 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
         {intro && intro.length > 0 && (
           <div className="space-y-3 mb-5 max-w-3xl">
             {intro.map((p, i) => (
-              <p key={i} className="text-[hsl(var(--text-secondary))] leading-relaxed">
-                {p}
-              </p>
+              <p key={i} className="text-[hsl(var(--text-secondary))] leading-relaxed md-inline"
+                dangerouslySetInnerHTML={{ __html: p }}
+              />
             ))}
           </div>
         )}
@@ -143,7 +141,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
                   {objective.map((item) => (
                     <li key={item} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
                       <Check size={14} className="mt-0.5 shrink-0 text-primary" aria-hidden="true" />
-                      <div className="min-w-0 [&>p]:m-0"><MarkdownContent source={item} /></div>
+                      <span className="min-w-0 md-inline" dangerouslySetInnerHTML={{ __html: item }} />
                     </li>
                   ))}
                 </ul>
@@ -158,7 +156,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
                 {level.learnings.map((learning) => (
                   <li key={learning} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                    <div className="min-w-0 [&>p]:m-0"><MarkdownContent source={learning} /></div>
+                    <span className="min-w-0 md-inline" dangerouslySetInnerHTML={{ __html: learning }} />
                   </li>
                 ))}
               </ul>
@@ -168,9 +166,9 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
           {/* Audience */}
           {level.audience && (
             <CollapsibleSection id="audience" title="Best Suited For">
-              <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
-                <MarkdownInline source={level.audience} />
-              </p>
+              <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed md-inline"
+                dangerouslySetInnerHTML={{ __html: level.audience }}
+              />
             </CollapsibleSection>
           )}
 
@@ -207,7 +205,13 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
           {howToPlay && howToPlay.length > 0 && (
             <WalkthroughSection
               steps={[
-                { title: "Get Started", content: `[Open in GitHub Codespaces](${level.codespacesUrl.replace(/[()]/g, (c) => encodeURIComponent(c))}). The devcontainer is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.\n\nPrefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (VS Code, JetBrains IDEs, and others). The devcontainer config will be detected automatically.` },
+                {
+                  title: "Get Started",
+                  content: [
+                    `<p><a href="${level.codespacesUrl.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" target="_blank" rel="noopener noreferrer">Open in GitHub Codespaces</a>. The devcontainer is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.</p>`,
+                    `<p>Prefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (VS Code, JetBrains IDEs, and others). The devcontainer config will be detected automatically.</p>`,
+                  ].join("\n"),
+                },
                 ...howToPlay,
               ]}
             />
@@ -284,7 +288,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
                           ) : (
                             <span className="font-medium text-foreground">{tool.name}</span>
                           )}
-                          {tool.description && <>{" "}- <MarkdownInline source={tool.description} /></>}
+                          {tool.description && <> - <span className="md-inline" dangerouslySetInnerHTML={{ __html: tool.description }} /></>}
                         </span>
                       </li>
                     ))}
