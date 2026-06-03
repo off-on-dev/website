@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { JSX } from "react";
 import { ChevronDown } from "lucide-react";
 import { CollapsibleSection } from "@/components/CollapsibleSection";
 import { MarkdownContent } from "@/components/MarkdownContent";
-import { MarkdownInline } from "@/components/MarkdownInline";
+import { stripLinks } from "@/lib/markdown";
+import { useIsomorphicLayoutEffect } from "@/hooks/useIsomorphicLayoutEffect";
 import type { WalkthroughStep } from "@/data/adventures";
 
 type WalkthroughSectionProps = {
@@ -12,13 +13,48 @@ type WalkthroughSectionProps = {
 
 export const WalkthroughSection = ({ steps }: WalkthroughSectionProps): JSX.Element => {
   const [openSteps, setOpenSteps] = useState<boolean[]>(() => steps.map(() => true));
+  const listRef = useRef<HTMLOListElement>(null);
 
   const toggle = (i: number): void =>
     setOpenSteps((prev) => prev.map((open, idx) => (idx === i ? !open : open)));
 
+  // Manage hidden="until-found" synchronously before paint so there is no flash
+  // between the React commit and the attribute being applied.
+  useIsomorphicLayoutEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    openSteps.forEach((isOpen, i) => {
+      const panel = list.querySelector<HTMLElement>(`#walkthrough-step-${i}`);
+      if (!panel) return;
+      if (isOpen) {
+        panel.removeAttribute("hidden");
+      } else {
+        panel.setAttribute("hidden", "until-found");
+      }
+    });
+  }, [openSteps]);
+
+  // beforematch fires on the element with hidden="until-found" when the browser
+  // auto-reveals it via find-in-page or fragment navigation. It does not bubble,
+  // so listeners are attached individually to each panel on mount.
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const cleanups = steps.map((_, i) => {
+      const panel = list.querySelector<HTMLElement>(`#walkthrough-step-${i}`);
+      if (!panel) return (): void => {};
+      const onBeforeMatch = (): void => {
+        setOpenSteps((prev) => prev.map((open, idx) => (idx === i ? true : open)));
+      };
+      panel.addEventListener("beforematch", onBeforeMatch);
+      return (): void => panel.removeEventListener("beforematch", onBeforeMatch);
+    });
+    return () => cleanups.forEach((fn) => fn());
+  }, [steps]);
+
   return (
     <CollapsibleSection id="walkthrough" title="Walkthrough">
-      <ol className="space-y-3">
+      <ol ref={listRef} className="space-y-3">
         {steps.map((step, i) => {
           const isOpen = openSteps[i] ?? true;
           const contentId = `walkthrough-step-${i}`;
@@ -41,7 +77,7 @@ export const WalkthroughSection = ({ steps }: WalkthroughSectionProps): JSX.Elem
                   {i + 1}
                 </span>
                 <span className="min-w-0 flex-1 text-sm font-semibold text-foreground">
-                  {step.title ? <MarkdownInline source={step.title} noLinks /> : `Step ${i + 1}`}
+                  {step.title ? <span className="md-inline" dangerouslySetInnerHTML={{ __html: stripLinks(step.title) }} /> : `Step ${i + 1}`}
                 </span>
                 <ChevronDown
                   size={16}
@@ -51,7 +87,6 @@ export const WalkthroughSection = ({ steps }: WalkthroughSectionProps): JSX.Elem
               </button>
               <div
                 id={contentId}
-                hidden={!isOpen}
                 className="grid grid-cols-[1.25rem_1fr] gap-4 px-5 pb-5"
               >
                 <div aria-hidden="true" />

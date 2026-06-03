@@ -17,10 +17,10 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
         difficulty: "Beginner",
         topics: ["Kyverno", "Kubernetes"],
         learnings: [
-          "How Kyverno [ValidatingPolicy](https://kyverno.io/docs/policy-types/validating-policy/) resources and  [CEL validation expressions](https://kubernetes.io/docs/reference/using-api/cel/) work",
-          "The difference between [Audit, Deny, and Warn](https://kyverno.io/docs/policy-types/validating-policy/) validation actions",
-          "How to use [custom label keys](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) to  enforce workload identity standards",
-          "How Kyverno [MutatingPolicy](https://kyverno.io/docs/policy-types/mutating-policy/) resources automatically  patch incoming workloads at admission",
+          "How Kyverno <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">ValidatingPolicy<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" style=\"flex-shrink:0\"><path d=\"M15 3h6v6\"/><path d=\"M10 14 21 3\"/><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/></svg><span class=\"sr-only\"> (opens in new tab)</span></a> resources and  <a href=\"https://kubernetes.io/docs/reference/using-api/cel/\" target=\"_blank\" rel=\"noopener noreferrer\">CEL validation expressions<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" style=\"flex-shrink:0\"><path d=\"M15 3h6v6\"/><path d=\"M10 14 21 3\"/><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/></svg><span class=\"sr-only\"> (opens in new tab)</span></a> work",
+          "The difference between <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">Audit, Deny, and Warn<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" style=\"flex-shrink:0\"><path d=\"M15 3h6v6\"/><path d=\"M10 14 21 3\"/><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/></svg><span class=\"sr-only\"> (opens in new tab)</span></a> validation actions",
+          "How to use <a href=\"https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/\" target=\"_blank\" rel=\"noopener noreferrer\">custom label keys<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" style=\"flex-shrink:0\"><path d=\"M15 3h6v6\"/><path d=\"M10 14 21 3\"/><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/></svg><span class=\"sr-only\"> (opens in new tab)</span></a> to  enforce workload identity standards",
+          "How Kyverno <a href=\"https://kyverno.io/docs/policy-types/mutating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">MutatingPolicy<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" style=\"flex-shrink:0\"><path d=\"M15 3h6v6\"/><path d=\"M10 14 21 3\"/><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/></svg><span class=\"sr-only\"> (opens in new tab)</span></a> resources automatically  patch incoming workloads at admission",
         ],
       },
     ],
@@ -96,7 +96,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
         learnings: [
           "Instrument RAG pipelines with OpenLLMetry",
           "Create custom OpenTelemetry metrics in Python",
-          "Write PromQL queries & recording rules in Prometheus",
+          "Write PromQL queries &#x26; recording rules in Prometheus",
         ],
       },
       {
@@ -171,9 +171,9 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
         topics: ["Argo CD"],
         learnings: [
           "Debug GitOps flows with Argo CD",
-          "ApplicationSet templating & pitfalls",
-          "Environment isolation & namespaces",
-          "Sync policies: automated, prune & self-heal",
+          "ApplicationSet templating &#x26; pitfalls",
+          "Environment isolation &#x26; namespaces",
+          "Sync policies: automated, prune &#x26; self-heal",
         ],
       },
       {
@@ -183,7 +183,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
         topics: ["Argo Rollouts", "PromQL"],
         learnings: [
           "Progressive delivery with Argo Rollouts",
-          "Canary deployments & automated analysis",
+          "Canary deployments &#x26; automated analysis",
           "Write PromQL queries for health validation",
           "Kube-state-metrics for deployment decisions",
         ],

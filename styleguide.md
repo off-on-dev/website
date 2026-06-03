@@ -447,7 +447,7 @@ useIsomorphicLayoutEffect(() => {
 }, []);
 ```
 
-Currently used in: `src/hooks/useTheme.tsx`.
+Currently used in: `src/hooks/useTheme.tsx`, `src/components/WalkthroughSection.tsx`.
 
 ---
 
@@ -1149,7 +1149,7 @@ Renders a numbered walkthrough as a vertical stepper inside a `CollapsibleSectio
 
 | Prop | Type | Description |
 |---|---|---|
-| `steps` | `WalkthroughStep[]` | Array of `{ title: string; content: string }`. `content` is rendered as markdown via `MarkdownContent`. |
+| `steps` | `WalkthroughStep[]` | Array of `{ title: string; content: string }`. Both fields contain pre-rendered HTML generated at build time. `content` is rendered via `MarkdownContent`; `title` is rendered inline with links stripped (it sits inside a `<button>`). |
 
 ---
 
@@ -1157,43 +1157,23 @@ Renders a numbered walkthrough as a vertical stepper inside a `CollapsibleSectio
 
 `src/components/MarkdownContent.tsx`
 
-Renders a Markdown string with `react-markdown` + `remark-gfm`, mapping each element to a themed component. Highlights:
+Renders pre-compiled block HTML (generated at build time by `scripts/generate-adventures.mjs`) inside a `div.md-content` container. A `useEffect` attaches a "Copy" button to every `<pre>` element after mount.
 
-- `h2` headings get a section icon (mapped from heading text in `src/lib/markdown.ts`) and a slugged `id` attribute, so external links can deep-link to a section.
-- `h3` headings that start with `N. ` (e.g. `### 1. Start your challenge`) render as a numbered step chip + title pair, suitable for a How-to-Play sequence.
-- Fenced code blocks render with a hover/focus-visible "Copy" button that uses the clipboard API and flips to "Copied" for 1.5s.
-- Markdown tables render as a responsive grid of cards (`<thead>` hidden) rather than a literal table layout.
-- External links open in a new tab with the standard sr-only "(opens in new tab)" span.
+- Fenced code blocks get a hover/focus-visible "Copy" button via DOM injection (clipboard API, flips to "Copied" for 1.5 s, with proper `aria-label` updates).
+- All element styles — headings, lists, code, blockquote, tables, links — are driven by `.md-content` rules in `src/index.css`.
+- External links, `<pre>` accessibility attributes, and external-link icons are injected by the generator, not by this component.
 
 ```tsx
-<MarkdownContent source={mdString} />
+<MarkdownContent source={htmlString} />
 ```
 
 | Prop | Type | Description |
 |---|---|---|
-| `source` | `string` | Raw Markdown source. Pass an empty string for no content. |
+| `source` | `string` | Pre-rendered HTML string. Never pass raw Markdown — convert it in the generator first. |
 
-Used by `ArchitectureSection` and `WalkthroughSection` inside `ChallengeDetail`. These components pass inline markdown strings from the level data (e.g. `level.architecture.join("\n\n")` or `step.content`). The Markdown should start at `## ` or below, the page already provides the `<h1>`. Internal headings (`h2`, `h3`) are added to the existing document outline; do not introduce new `<h1>` content in Markdown.
+Used by `WalkthroughSection` (step content) and `ArchitectureSection`. Both fields come from the generated adventure data files and already contain sanitised HTML.
 
-The bundled stack (`react-markdown`, `remark-gfm`, `micromark`, etc.) is code-split into the `ChallengeDetail` route chunk, so it does not affect the main bundle.
-
----
-
-### `MarkdownInline`
-
-`src/components/MarkdownInline.tsx`
-
-Inline-only variant of `MarkdownContent` for short single-line author strings (e.g. `level.audience`, `tool.description`, `step.title`, `adventure.story`, `contributor.about`, `rewards.eligibility`, `tier.description`, `rewards.rankingNote`). Reuses the `inlineComponents` map exported from `MarkdownContent` (links, inline `<code>`, `<strong>`, `<em>`), replaces `<p>` with a fragment, and strips block-level elements (`h*`, `ul`, `ol`, `li`, `pre`, `blockquote`, `hr`, `table`, `img`) via `disallowedElements` + `unwrapDisallowed`. Safe to drop inside `<p>`, `<span>`, `<h*>`, or `<button>` without producing invalid HTML.
-
-```tsx
-<MarkdownInline source={level.audience} />
-```
-
-| Prop | Type | Description |
-|---|---|---|
-| `source` | `string` | Raw Markdown source (typically a single line). Plain text passes through unchanged. |
-
-Use this for any author-controlled string field that may contain inline markdown such as `` `kubectl` ``, `**bold**`, or `[link](url)`. Never render an author-controlled string with `{value}` directly — see the rule in `CLAUDE.md` "Components" section.
+**Inline HTML** (short prose inside `<p>`, `<span>`, `<li>`) uses `dangerouslySetInnerHTML={{ __html: value }}` with the `md-inline` CSS class directly on the host element — not `<MarkdownContent>`. See the CSS patterns section below and the `CLAUDE.md` "Author-controlled prose fields" rule.
 
 ---
 

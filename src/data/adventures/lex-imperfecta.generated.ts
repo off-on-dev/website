@@ -41,12 +41,12 @@ export const LEX_IMPERFECTA: Adventure = {
       name: "The Twelve Tables",
       difficulty: "Beginner",
       topics: ["Kyverno", "Kubernetes"],
-      audience: `Platform engineers, SREs, and developers curious about Kubernetes security — no prior Kyverno experience needed, but familiarity with basic \`kubectl\` and YAML will help.`,
+      audience: "Platform engineers, SREs, and developers curious about Kubernetes security — no prior Kyverno experience needed, but familiarity with basic <code>kubectl</code> and YAML will help.",
       learnings: [
-        "How Kyverno [ValidatingPolicy](https://kyverno.io/docs/policy-types/validating-policy/) resources and  [CEL validation expressions](https://kubernetes.io/docs/reference/using-api/cel/) work",
-        "The difference between [Audit, Deny, and Warn](https://kyverno.io/docs/policy-types/validating-policy/) validation actions",
-        "How to use [custom label keys](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) to  enforce workload identity standards",
-        "How Kyverno [MutatingPolicy](https://kyverno.io/docs/policy-types/mutating-policy/) resources automatically  patch incoming workloads at admission",
+        "How Kyverno <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">ValidatingPolicy<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" style=\"flex-shrink:0\"><path d=\"M15 3h6v6\"/><path d=\"M10 14 21 3\"/><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/></svg><span class=\"sr-only\"> (opens in new tab)</span></a> resources and  <a href=\"https://kubernetes.io/docs/reference/using-api/cel/\" target=\"_blank\" rel=\"noopener noreferrer\">CEL validation expressions<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" style=\"flex-shrink:0\"><path d=\"M15 3h6v6\"/><path d=\"M10 14 21 3\"/><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/></svg><span class=\"sr-only\"> (opens in new tab)</span></a> work",
+        "The difference between <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">Audit, Deny, and Warn<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" style=\"flex-shrink:0\"><path d=\"M15 3h6v6\"/><path d=\"M10 14 21 3\"/><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/></svg><span class=\"sr-only\"> (opens in new tab)</span></a> validation actions",
+        "How to use <a href=\"https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/\" target=\"_blank\" rel=\"noopener noreferrer\">custom label keys<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" style=\"flex-shrink:0\"><path d=\"M15 3h6v6\"/><path d=\"M10 14 21 3\"/><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/></svg><span class=\"sr-only\"> (opens in new tab)</span></a> to  enforce workload identity standards",
+        "How Kyverno <a href=\"https://kyverno.io/docs/policy-types/mutating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">MutatingPolicy<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" style=\"flex-shrink:0\"><path d=\"M15 3h6v6\"/><path d=\"M10 14 21 3\"/><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/></svg><span class=\"sr-only\"> (opens in new tab)</span></a> resources automatically  patch incoming workloads at admission",
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2Flex-imperfecta_beginner%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: "https://community.offon.dev/t/restore-proper-admission-control-using-kyverno-june-2026-adventure-beginner/1576",
@@ -58,14 +58,14 @@ export const LEX_IMPERFECTA: Adventure = {
         "Your mission: investigate the Kyverno policies and restore proper admission control before chaos reaches the city.",
       ],
       objective: [
-        `All workloads **missing the \`republic.rome/gens\` label** are blocked at admission with a clear policy violation message`,
-        "All workloads **running as privileged containers** are blocked at admission with a clear policy violation message",
-        `All pods declaring **\`republic.rome/traveler: peregrinus\`** automatically receive the **\`republic.rome/travel-permit: granted\`** label`,
-        "**All other workloads** deploy and run successfully in the cluster",
+        "All workloads <strong>missing the <code>republic.rome/gens</code> label</strong> are blocked at admission with a clear policy violation message",
+        "All workloads <strong>running as privileged containers</strong> are blocked at admission with a clear policy violation message",
+        "All pods declaring <strong><code>republic.rome/traveler: peregrinus</code></strong> automatically receive the <strong><code>republic.rome/travel-permit: granted</code></strong> label",
+        "<strong>All other workloads</strong> deploy and run successfully in the cluster",
       ],
       architecture: [
-        "The Twelve Tables enforced Roman law **at the gates** — before a citizen could act, not after the damage was done. Kyverno works the same way: it intercepts every workload request *before* it reaches the cluster. A misconfigured policy doesn't just fail to enforce — it fails silently, letting non-compliant workloads slip through while you assume everything is fine.",
-        `Your Codespace comes with a Kubernetes cluster and Kyverno pre-installed. Three broken policies are already deployed in \`manifests/policies/\` — two \`ValidatingPolicy\` resources and one \`MutatingPolicy\`. Edit them directly and re-apply with \`kubectl\`. The pods in \`manifests/pods/\` are for reference only — no GitOps, no dashboards.`,
+        "<p>The Twelve Tables enforced Roman law <strong>at the gates</strong> — before a citizen could act, not after the damage was done. Kyverno works the same way: it intercepts every workload request <em>before</em> it reaches the cluster. A misconfigured policy doesn't just fail to enforce — it fails silently, letting non-compliant workloads slip through while you assume everything is fine.</p>",
+        "<p>Your Codespace comes with a Kubernetes cluster and Kyverno pre-installed. Three broken policies are already deployed in <code>manifests/policies/</code> — two <code>ValidatingPolicy</code> resources and one <code>MutatingPolicy</code>. Edit them directly and re-apply with <code>kubectl</code>. The pods in <code>manifests/pods/</code> are for reference only — no GitOps, no dashboards.</p>",
       ],
       architectureDiagram: lexImperfectaBeginner,
       diagramAlt: "Workload request flows through Kyverno's admission webhook before reaching the Kubernetes cluster. Two ValidatingPolicy resources block non-compliant workloads, and one MutatingPolicy automatically patches admitted workloads with required labels.",
@@ -75,63 +75,38 @@ export const LEX_IMPERFECTA: Adventure = {
         { name: "k9s", description: "Explore cluster resources in a terminal UI", url: "https://k9scli.io/" },
       ],
       howToPlay: [
-        { title: "Explore the Cluster", content: `When your Codespace is ready, four pods are already running — or trying to. Open a terminal and check what's going on:
-
-\`\`\`bash
-kubectl get pods
-\`\`\`
-
-Inspect why a pod was blocked or admitted:
-
-\`\`\`bash
-kubectl describe pod <pod-name>
-\`\`\`
-
-Check the policies that are in place:
-
-\`\`\`bash
-kubectl get validatingpolicies
+        { title: "Explore the Cluster", content: `<p>When your Codespace is ready, four pods are already running — or trying to. Open a terminal and check what's going on:</p>
+<pre tabindex="0" aria-label="Code block"><code class="language-bash">kubectl get pods
+</code></pre>
+<p>Inspect why a pod was blocked or admitted:</p>
+<pre tabindex="0" aria-label="Code block"><code class="language-bash">kubectl describe pod &#x3C;pod-name>
+</code></pre>
+<p>Check the policies that are in place:</p>
+<pre tabindex="0" aria-label="Code block"><code class="language-bash">kubectl get validatingpolicies
 kubectl get validatingpolicy require-labels -o yaml
 kubectl get validatingpolicy no-privileged-containers -o yaml
 
 kubectl get mutatingpolicies
 kubectl get mutatingpolicy stamp-travel-permit -o yaml
-\`\`\`
-
-You can also launch **k9s** for a terminal UI view of all cluster resources:
-
-\`\`\`bash
-k9s
-\`\`\`
-
-Navigate to \`ValidatingPolicy\` resources with \`:validatingpolicies\` and \`MutatingPolicy\` resources with \`:mutatingpolicies\` to inspect all three policies.
-` },
-        { title: "Fix the Policies", content: `Review the [Objective](#objective) and investigate what's wrong in \`manifests/policies/\`.
-
-All three broken policies are in \`manifests/policies/\`. Read them carefully — each has a different kind of misconfiguration.
-
-**Test Locally with the Kyverno CLI**
-
-Before applying to the cluster, you can use the \`kyverno\` CLI to test your policy changes locally against the workload manifests:
-
-\`\`\`bash
-kyverno apply manifests/policies/require-labels.yaml --resource manifests/pods/missing-labels.yaml
+</code></pre>
+<p>You can also launch <strong>k9s</strong> for a terminal UI view of all cluster resources:</p>
+<pre tabindex="0" aria-label="Code block"><code class="language-bash">k9s
+</code></pre>
+<p>Navigate to <code>ValidatingPolicy</code> resources with <code>:validatingpolicies</code> and <code>MutatingPolicy</code> resources with <code>:mutatingpolicies</code> to inspect all three policies.</p>` },
+        { title: "Fix the Policies", content: `<p>Review the <a href="#objective">Objective</a> and investigate what's wrong in <code>manifests/policies/</code>.</p>
+<p>All three broken policies are in <code>manifests/policies/</code>. Read them carefully — each has a different kind of misconfiguration.</p>
+<p><strong>Test Locally with the Kyverno CLI</strong></p>
+<p>Before applying to the cluster, you can use the <code>kyverno</code> CLI to test your policy changes locally against the workload manifests:</p>
+<pre tabindex="0" aria-label="Code block"><code class="language-bash">kyverno apply manifests/policies/require-labels.yaml --resource manifests/pods/missing-labels.yaml
 kyverno apply manifests/policies/no-privileged-containers.yaml --resource manifests/pods/privileged.yaml
 kyverno apply manifests/policies/stamp-travel-permit.yaml --resource manifests/pods/peregrinus.yaml
-\`\`\`
-
-This gives you fast feedback without touching the cluster.
-
-**Apply to the Cluster**
-
-Once you're happy with your changes, re-apply everything:
-
-\`\`\`bash
-make apply
-\`\`\`
-
-This re-applies the policies and re-deploys all workloads so you immediately see the effect of your changes.
-` },
+</code></pre>
+<p>This gives you fast feedback without touching the cluster.</p>
+<p><strong>Apply to the Cluster</strong></p>
+<p>Once you're happy with your changes, re-apply everything:</p>
+<pre tabindex="0" aria-label="Code block"><code class="language-bash">make apply
+</code></pre>
+<p>This re-applies the policies and re-deploys all workloads so you immediately see the effect of your changes.</p>` },
       ],
       helpfulLinks: [
         { title: "Kyverno ValidatingPolicy", url: "https://kyverno.io/docs/policy-types/validating-policy/", description: "Reference docs for ValidatingPolicy — the resource type you'll fix to block non-compliant workloads" },

@@ -820,6 +820,193 @@ html {
   text-decoration-color: currentColor;
 }
 
+/* ─── Markdown inline content ────────────────────────────── */
+/* Applied to dangerouslySetInnerHTML containers rendering pre-compiled
+   inline HTML (learnings, audience, objective, step titles, contributor bios,
+   rewards text, story). Styles <code>, <strong>, <em>, and <a> within them. */
+.md-inline code {
+  font-weight: 400;
+  border-radius: 0.125rem;
+  border: 1px solid hsl(var(--surface-border));
+  background: hsl(var(--surface));
+  padding: 0.125rem 0.375rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+  color: hsl(var(--foreground));
+}
+.md-inline strong { font-weight: 600; color: hsl(var(--foreground)); }
+.md-inline em { font-style: italic; color: hsl(var(--text-secondary)); }
+.md-inline a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: hsl(var(--foreground));
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+  text-decoration-color: hsl(var(--primary));
+  text-decoration-skip-ink: none;
+  border-radius: 2px;
+  transition: color 200ms ease, text-decoration-color 200ms ease;
+}
+.md-inline a:hover { color: hsl(var(--primary)); text-decoration-color: hsl(var(--primary)); }
+.md-inline a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
+}
+.light .md-inline a { color: hsl(var(--foreground)); text-decoration-color: currentColor; }
+.light .md-inline a:hover { color: hsl(var(--link-hover-light)); text-decoration-color: currentColor; }
+
+/* ─── Markdown block content ─────────────────────────────── */
+/* Applied to dangerouslySetInnerHTML containers rendering pre-compiled
+   markdown HTML (step.content, architecture). Styles injected HTML elements
+   that Tailwind utility classes cannot reach from the outside. */
+.md-content p {
+  color: hsl(var(--text-secondary));
+  line-height: 1.625;
+  margin-bottom: 1rem;
+}
+.md-content p:last-child { margin-bottom: 0; }
+.md-content ul,
+.md-content ol { margin-bottom: 1rem; padding-left: 1.25rem; }
+.md-content ul { list-style: disc; }
+.md-content ol { list-style: decimal; }
+.md-content ul ::marker,
+.md-content ol ::marker { color: hsl(var(--text-faint)); }
+.md-content li {
+  color: hsl(var(--text-secondary));
+  line-height: 1.625;
+  padding-left: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+.md-content strong { font-weight: 600; color: hsl(var(--foreground)); }
+.md-content em { font-style: italic; color: hsl(var(--text-secondary)); }
+.md-content :not(pre) > code {
+  border-radius: 0.125rem;
+  border: 1px solid hsl(var(--surface-border));
+  background: hsl(var(--surface));
+  padding: 0.125rem 0.375rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+  color: hsl(var(--foreground));
+}
+/* Code inside a link: only show link style, not code chip.
+   Must appear after the generic code rules so it wins by source order
+   for identical specificity (0,1,2). */
+.md-inline a code,
+.md-content a code {
+  border: none;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
+.md-content pre {
+  overflow-x: auto;
+  border-radius: 0.5rem;
+  border: 1px solid hsl(var(--surface-border));
+  background: hsl(var(--surface));
+  padding: 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875rem;
+  line-height: 1.625;
+  color: hsl(var(--foreground));
+  margin-bottom: 1rem;
+  tab-size: 2;
+}
+.md-content pre code {
+  border: none;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: 1em;
+}
+.md-content blockquote {
+  margin-bottom: 1.5rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid hsl(var(--primary));
+  background: hsl(var(--surface) / 0.6);
+  padding: 1rem 1.25rem;
+  color: hsl(var(--text-secondary));
+}
+.md-content hr {
+  margin: 2rem 0;
+  border: none;
+  border-top: 1px solid hsl(var(--surface-border));
+}
+.md-content h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: hsl(var(--foreground));
+  margin-top: 3.5rem;
+  margin-bottom: 1.25rem;
+}
+.md-content h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+.md-content table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.875rem; }
+.md-content th,
+.md-content td { padding: 0.5rem 0.75rem; border: 1px solid hsl(var(--surface-border)); text-align: left; }
+.md-content th { font-weight: 600; color: hsl(var(--foreground)); background: hsl(var(--surface)); }
+.md-content td { color: hsl(var(--text-secondary)); }
+/* Links inside markdown content share docs-ext-link styling */
+.md-content a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: hsl(var(--foreground));
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+  text-decoration-color: hsl(var(--primary));
+  text-decoration-skip-ink: none;
+  border-radius: 2px;
+  transition: color 200ms ease, text-decoration-color 200ms ease;
+}
+.md-content a:hover { color: hsl(var(--primary)); text-decoration-color: hsl(var(--primary)); }
+.md-content a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
+}
+.light .md-content a { color: hsl(var(--foreground)); text-decoration-color: currentColor; }
+.light .md-content a:hover { color: hsl(var(--link-hover-light)); text-decoration-color: currentColor; }
+/* Copy button wrapper injected by MarkdownContent's useEffect */
+.md-pre-group { position: relative; margin-bottom: 1rem; }
+.md-pre-group pre { margin-bottom: 0; padding-right: 3.5rem; }
+.md-copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 0.375rem;
+  border: 1px solid hsl(var(--surface-border));
+  background: hsl(var(--background) / 0.8);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: hsl(var(--text-secondary));
+  opacity: 0;
+  transition: opacity 200ms ease, color 200ms ease;
+  cursor: pointer;
+}
+.md-pre-group:hover .md-copy-btn,
+.md-copy-btn:focus-visible { opacity: 1; }
+.md-copy-btn:hover { color: hsl(var(--foreground)); }
+.md-copy-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--ring));
+}
+
 /* ─── Social icon links ──────────────────────────────────── */
 /* Icon-only links used in the Spread the Word card on /contribute.
    bg-card in light mode is near-white; #ffc034 (--primary) gives ~1.6:1 on hover —

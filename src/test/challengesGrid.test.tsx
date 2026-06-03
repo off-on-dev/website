@@ -73,17 +73,15 @@ describe("ChallengesGrid", () => {
     it("replaces adventure cards with level cards for matching adventures", () => {
       renderGrid();
       fireEvent.click(screen.getByRole("button", { name: firstTag }));
-      // Adventure cards are gone
       ADVENTURES.forEach((adventure) => {
         expect(
-          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+          screen.queryAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
         ).toBe(false);
       });
-      // Level cards for matching adventures are shown
       adventuresWithFirstTag.forEach((adventure) => {
         adventure.levels.forEach((level) => {
           expect(
-            screen.getAllByRole("link").some(
+            screen.queryAllByRole("link").some(
               (l) => l.getAttribute("href") === `/adventures/${adventure.id}/levels/${level.id}`
             )
           ).toBe(true);
@@ -96,7 +94,7 @@ describe("ChallengesGrid", () => {
       fireEvent.click(screen.getByRole("button", { name: firstTag }));
       adventuresWithFirstTag.forEach((adventure) => {
         adventure.levels.forEach((level) => {
-          const link = screen.getAllByRole("link").find(
+          const link = screen.queryAllByRole("link").find(
             (l) => l.getAttribute("href") === `/adventures/${adventure.id}/levels/${level.id}`
           );
           expect(link).toBeTruthy();
@@ -224,10 +222,10 @@ describe("ChallengesGrid", () => {
       const tagGroup = container.querySelector('[role="group"][aria-label="Filter by technology"]') as HTMLElement;
       fireEvent.click(within(diffGroup).getByRole("button", { name: "Beginner" }));
       fireEvent.click(within(tagGroup).getByRole("button", { name: firstTag }));
+      const expectedAdventures = ADVENTURES.filter((a) => a.tags.includes(firstTag));
       const levelLinks = screen.queryAllByRole("link").filter(
         (l) => l.getAttribute("href")?.includes("/levels/")
       );
-      const expectedAdventures = ADVENTURES.filter((a) => a.tags.includes(firstTag));
       levelLinks.forEach((link) => {
         const href = link.getAttribute("href") ?? "";
         const matchingAdventure = expectedAdventures.find((a) => href.startsWith(`/adventures/${a.id}`));

@@ -92,7 +92,7 @@ describe("Challenges - tag filter", () => {
   it("shows level cards linking to /adventures/:id/levels/:levelId when a tag is selected", () => {
     renderChallenges();
     fireEvent.click(screen.getByRole("button", { name: firstTag }));
-    const levelLinks = screen.getAllByRole("link").filter(
+    const levelLinks = screen.queryAllByRole("link").filter(
       (l) => l.getAttribute("href")?.includes("/levels/")
     );
     expect(levelLinks.length).toBeGreaterThan(0);

@@ -3,7 +3,6 @@ import { ExternalLink, Trophy } from "lucide-react";
 import type { AdventureRewards } from "@/data/adventures/types";
 import { COMMUNITY_URL } from "@/data/constants";
 import { formatDeadline } from "@/lib/utils";
-import { MarkdownInline } from "@/components/MarkdownInline";
 
 type RewardsCardProps = {
   rewards: AdventureRewards;
@@ -40,7 +39,7 @@ export const RewardsCard = ({ rewards, compact = false, levelDeadline, deadlineP
         </div>
       ) : (
         <p className="text-xs text-[hsl(var(--text-secondary))] leading-relaxed mb-4">
-          <MarkdownInline source={rewards.eligibility} />
+          <span className="md-inline" dangerouslySetInnerHTML={{ __html: rewards.eligibility }} />
         </p>
       )
     )}
@@ -55,14 +54,14 @@ export const RewardsCard = ({ rewards, compact = false, levelDeadline, deadlineP
       {rewards.tiers.map((tier) => (
         <div key={tier.label}>
           <p className="text-xs font-semibold text-foreground">{tier.label}</p>
-          <p className="text-xs text-[hsl(var(--text-secondary))]"><MarkdownInline source={tier.description} /></p>
+          <p className="text-xs text-[hsl(var(--text-secondary))] md-inline" dangerouslySetInnerHTML={{ __html: tier.description }} />
         </div>
       ))}
     </div>
 
     {!compact && rewards.rankingNote && (
       <p className="text-xs text-[hsl(var(--text-faint))] leading-relaxed mt-4">
-        <MarkdownInline source={rewards.rankingNote} />{" "}
+        <span className="md-inline" dangerouslySetInnerHTML={{ __html: rewards.rankingNote }} />{" "}
         {rewards.rankingRulesUrl && (
           <a
             href={rewards.rankingRulesUrl}

@@ -43,13 +43,13 @@ export const THE_AI_OBSERVATORY: Adventure = {
       ],
       objective: [
         "Enable OpenTelemetry instrumentation for HubSystem using OpenLLMetry",
-        "Send traces to the OpenTelemetry Collector at http://localhost:30107",
+        "Send traces to the OpenTelemetry Collector at <a href=\"http://localhost:30107\" target=\"_blank\" rel=\"noopener noreferrer\">http://localhost:30107<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" style=\"flex-shrink:0\"><path d=\"M15 3h6v6\"/><path d=\"M10 14 21 3\"/><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/></svg><span class=\"sr-only\"> (opens in new tab)</span></a>",
         "Analyze traces in Jaeger to find what causes the high bandwidth usage",
         "Provide the correct answer in quiz.txt",
       ],
       architecture: [
-        "All AI and observability infrastructure (Ollama, OpenTelemetry Collector, Jaeger) runs inside Kubernetes, while HubSystem runs as a local Python application outside the cluster.",
-        "This setup has two benefits: it lets you focus on instrumentation without wrestling with containers or Kubernetes deployments when updating the app, and it gives you fast iteration. Edit the Python code, run it, and see traces in Jaeger immediately. No build or deploy cycle.",
+        "<p>All AI and observability infrastructure (Ollama, OpenTelemetry Collector, Jaeger) runs inside Kubernetes, while HubSystem runs as a local Python application outside the cluster.</p>",
+        "<p>This setup has two benefits: it lets you focus on instrumentation without wrestling with containers or Kubernetes deployments when updating the app, and it gives you fast iteration. Edit the Python code, run it, and see traces in Jaeger immediately. No build or deploy cycle.</p>",
       ],
       toolbox: [
         { name: "python", description: "programming language used for the HubSystem application" },
@@ -58,19 +58,18 @@ export const THE_AI_OBSERVATORY: Adventure = {
         { name: "k9s", description: "terminal UI for managing and inspecting your cluster", url: "https://k9scli.io/" },
       ],
       howToPlay: [
-        { title: "Wait for Infrastructure", content: "Wait ~10 minutes for all infrastructure to initialize." },
-        { title: "Explore the UIs", content: `Open the **Ports** tab and navigate to each service:
-
-- **Port 30103:** Jaeger. Analyze the traces sent by HubSystem.` },
-        { title: "Instrument the App", content: `The application code is in \`./hubsystem.py\`. Add OpenTelemetry instrumentation using OpenLLMetry. The OTel
+        { title: "Wait for Infrastructure", content: "<p>Wait ~10 minutes for all infrastructure to initialize.</p>" },
+        { title: "Explore the UIs", content: `<p>Open the <strong>Ports</strong> tab and navigate to each service:</p>
+<ul>
+<li><strong>Port 30103:</strong> Jaeger. Analyze the traces sent by HubSystem.</li>
+</ul>` },
+        { title: "Instrument the App", content: `<p>The application code is in <code>./hubsystem.py</code>. Add OpenTelemetry instrumentation using OpenLLMetry. The OTel
 Collector and Jaeger are already configured correctly; you only need to instrument the app. You do not need to
-interact with Kubernetes directly. The cluster is already running, so focus on the Python code.` },
-        { title: "Run and Investigate", content: `Run the application, interact with the AI to generate traces, then check Jaeger:
-
-\`\`\`sh
-make hubsystem
-\`\`\`` },
-        { title: "Answer the Quiz", content: `Find the trace responsible for the high bandwidth usage and inspect its attributes to answer \`quiz.txt\`.` },
+interact with Kubernetes directly. The cluster is already running, so focus on the Python code.</p>` },
+        { title: "Run and Investigate", content: `<p>Run the application, interact with the AI to generate traces, then check Jaeger:</p>
+<pre tabindex="0" aria-label="Code block"><code class="language-sh">make hubsystem
+</code></pre>` },
+        { title: "Answer the Quiz", content: "<p>Find the trace responsible for the high bandwidth usage and inspect its attributes to answer <code>quiz.txt</code>.</p>" },
       ],
       helpfulLinks: [
         { title: "OpenLLMetry SDK for Python", url: "https://traceloop.com/docs/openllmetry/getting-started-python" },
@@ -90,7 +89,7 @@ make hubsystem
       learnings: [
         "Instrument RAG pipelines with OpenLLMetry",
         "Create custom OpenTelemetry metrics in Python",
-        "Write PromQL queries & recording rules in Prometheus",
+        "Write PromQL queries &#x26; recording rules in Prometheus",
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F03-the-ai-observatory_02-intermediate%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936/2`,
@@ -101,13 +100,10 @@ make hubsystem
       backstory: [
         "You're a rogue SecUnit who just escaped from Preservation Station after being identified. A researcher helped you flee aboard the Perihelion, a university research vessel with a very opinionated AI.",
         "The ship's AI agreed to help you disappear. You've nicknamed it ART. The plan: jump to RaviHyral, lay low, and figure out your next move. Except ART was supposed to have the jump coordinates ready an hour ago.",
-        `You ping the ship's AI through your internal comm.
-
-SecUnit: "ART. Jump coordinates. Now."
-
-ART: "I'm multitasking. The coordinates are... being compiled."
-
-That's not normal. ART is never vague. You access the ship's diagnostic systems (something you're not supposed to be able to do, but ART hasn't locked you out yet).`,
+        `<p>You ping the ship's AI through your internal comm.</p>
+<p>SecUnit: "ART. Jump coordinates. Now."</p>
+<p>ART: "I'm multitasking. The coordinates are... being compiled."</p>
+<p>That's not normal. ART is never vague. You access the ship's diagnostic systems (something you're not supposed to be able to do, but ART hasn't locked you out yet).</p>`,
         "Your mission: diagnose ART's distraction using OpenTelemetry and fix the navigation system before you miss your jump.",
         "Credits: The characters of this adventure are borrowed from the Murderbot Diaries series by Martha Wells, a brilliant series that is funny, action-packed, and surprisingly heartwarming. It follows a security unit that hacked its own governor module and now just wants to be left alone to watch media, but keeps getting pulled into human nonsense.",
       ],
@@ -118,8 +114,8 @@ That's not normal. ART is never vague. You access the ship's diagnostic systems 
         "Restore the navigation system so ART successfully calculates jump coordinates to RaviHyral",
       ],
       architecture: [
-        "The ART Pilot System runs as a local Python application outside Kubernetes, using a RAG (Retrieval-Augmented Generation) architecture. AI infrastructure (Ollama for LLM, Qdrant for vector storage) and observability tools (OpenTelemetry Collector, Jaeger, Prometheus) run inside Kubernetes.",
-        "This setup lets you focus on observability patterns: edit Python code, run it, and see traces and metrics immediately without a build or deploy cycle.",
+        "<p>The ART Pilot System runs as a local Python application outside Kubernetes, using a RAG (Retrieval-Augmented Generation) architecture. AI infrastructure (Ollama for LLM, Qdrant for vector storage) and observability tools (OpenTelemetry Collector, Jaeger, Prometheus) run inside Kubernetes.</p>",
+        "<p>This setup lets you focus on observability patterns: edit Python code, run it, and see traces and metrics immediately without a build or deploy cycle.</p>",
       ],
       toolbox: [
         { name: "python", description: "programming language used for the ART application" },
@@ -128,24 +124,21 @@ That's not normal. ART is never vague. You access the ship's diagnostic systems 
         { name: "k9s", description: "terminal UI for managing and inspecting your cluster", url: "https://k9scli.io/" },
       ],
       howToPlay: [
-        { title: "Wait for Infrastructure", content: "Wait ~15 minutes for all infrastructure to initialize." },
-        { title: "Explore the UIs", content: `Open the **Ports** tab and navigate to each service:
-
-- **Port 30102:** Prometheus. Explore available metrics and test PromQL queries.
-- **Port 30103:** Jaeger. Shows distributed traces from ART to verify that tracing is working end-to-end.` },
-        { title: "Instrument and Configure", content: `The application code is in \`./art.py\`. Instrument it with OpenLLMetry and add the custom metric. The Prometheus recording rules are in \`./manifests/prometheus-rule.yaml\`. After changing the rule file, apply it to the cluster:
-
-\`\`\`sh
-make apply
-\`\`\`` },
-        { title: "Generate Traffic", content: `Run the application to interact with ART ("Calculate jump"), or generate continuous traffic for your metric graphs:
-
-\`\`\`sh
-make art
+        { title: "Wait for Infrastructure", content: "<p>Wait ~15 minutes for all infrastructure to initialize.</p>" },
+        { title: "Explore the UIs", content: `<p>Open the <strong>Ports</strong> tab and navigate to each service:</p>
+<ul>
+<li><strong>Port 30102:</strong> Prometheus. Explore available metrics and test PromQL queries.</li>
+<li><strong>Port 30103:</strong> Jaeger. Shows distributed traces from ART to verify that tracing is working end-to-end.</li>
+</ul>` },
+        { title: "Instrument and Configure", content: `<p>The application code is in <code>./art.py</code>. Instrument it with OpenLLMetry and add the custom metric. The Prometheus recording rules are in <code>./manifests/prometheus-rule.yaml</code>. After changing the rule file, apply it to the cluster:</p>
+<pre tabindex="0" aria-label="Code block"><code class="language-sh">make apply
+</code></pre>` },
+        { title: "Generate Traffic", content: `<p>Run the application to interact with ART ("Calculate jump"), or generate continuous traffic for your metric graphs:</p>
+<pre tabindex="0" aria-label="Code block"><code class="language-sh">make art
 # or for continuous traffic:
 make traffic
-\`\`\`` },
-        { title: "Fix the Navigation", content: "Verify traces in Jaeger and the recording rule in Prometheus. Fix the navigation system so ART returns jump coordinates to RaviHyral." },
+</code></pre>` },
+        { title: "Fix the Navigation", content: "<p>Verify traces in Jaeger and the recording rule in Prometheus. Fix the navigation system so ART returns jump coordinates to RaviHyral.</p>" },
       ],
       helpfulLinks: [
         { title: "OpenLLMetry SDK for Python", url: "https://traceloop.com/docs/openllmetry/getting-started-python" },
@@ -176,19 +169,13 @@ make traffic
       ],
       backstory: [
         "You made it to RaviHyral. The Perihelion docked at Outpost Verada, a small independent research station run by a loose collective of academics who agreed to look the other way. In exchange, ART offered to share its observability data with the station's monitoring team.",
-        `That was three hours ago. Now the station's lead engineer is at your docking port, looking annoyed.
-
-Engineer: "Your ship's AI is flooding our Jaeger instance. Do you have any idea how many spans it's generating? We can't find anything in there."
-
-SecUnit: "ART."
-
-ART: "Comprehensive telemetry is a feature."
-
-Engineer: "It's 40,000 spans an hour. Every healthy query. Every token. It doesn't even follow conventions. We only care about failures and anomalies, the things that actually need attention."
-
-SecUnit: "ART. Fix it."
-
-ART: "...Fine."`,
+        `<p>That was three hours ago. Now the station's lead engineer is at your docking port, looking annoyed.</p>
+<p>Engineer: "Your ship's AI is flooding our Jaeger instance. Do you have any idea how many spans it's generating? We can't find anything in there."</p>
+<p>SecUnit: "ART."</p>
+<p>ART: "Comprehensive telemetry is a feature."</p>
+<p>Engineer: "It's 40,000 spans an hour. Every healthy query. Every token. It doesn't even follow conventions. We only care about failures and anomalies, the things that actually need attention."</p>
+<p>SecUnit: "ART. Fix it."</p>
+<p>ART: "...Fine."</p>`,
         "The engineer hands you access to the collector config and the application code, then walks away. Two problems to fix. ART's spans don't follow OTel GenAI semantic conventions, and the collector is forwarding everything.",
         "Credits: The characters of this adventure are borrowed from the Murderbot Diaries series by Martha Wells, a brilliant series that is funny, action-packed, and surprisingly heartwarming. It follows a security unit that hacked its own governor module and now just wants to be left alone to watch media, but keeps getting pulled into human nonsense.",
       ],
@@ -197,7 +184,7 @@ ART: "...Fine."`,
         "Configure tail sampling in the OpenTelemetry Collector to keep only traces that contain errors or take longer than 5 seconds",
       ],
       architecture: [
-        "Same setup as the intermediate level: the ART Pilot System runs as a local Python application outside Kubernetes with a RAG architecture. AI infrastructure (Ollama, Qdrant) and observability tools (OpenTelemetry Collector, Jaeger) run inside Kubernetes.",
+        "<p>Same setup as the intermediate level: the ART Pilot System runs as a local Python application outside Kubernetes with a RAG architecture. AI infrastructure (Ollama, Qdrant) and observability tools (OpenTelemetry Collector, Jaeger) run inside Kubernetes.</p>",
       ],
       toolbox: [
         { name: "python", description: "programming language used for the ART application" },
@@ -206,28 +193,24 @@ ART: "...Fine."`,
         { name: "k9s", description: "terminal UI for managing and inspecting your cluster", url: "https://k9scli.io/" },
       ],
       howToPlay: [
-        { title: "Wait for Infrastructure", content: "Wait ~15 minutes for all infrastructure to initialize." },
-        { title: "Explore the UIs", content: `Open the **Ports** tab and navigate to each service:
-
-- **Port 30103:** Jaeger. Verify your spans look correct and that tail sampling works as expected.` },
-        { title: "Fix Instrumentation and Sampling", content: `Fix two things:
-
-1. The application code in \`./art.py\`: update the \`chat\` span to follow OpenTelemetry GenAI semantic conventions, including token usage attributes.
-2. The collector config in \`./manifests/otel-collector-config.yaml\`: configure tail sampling to keep only traces that contain errors or take longer than 5 seconds.` },
-        { title: "Apply and Test", content: `After changing \`art.py\`, restart traffic to pick up new instrumentation. After changing the collector config, apply it:
-
-\`\`\`sh
-kubectl apply -f manifests/otel-collector-config.yaml -n otel
+        { title: "Wait for Infrastructure", content: "<p>Wait ~15 minutes for all infrastructure to initialize.</p>" },
+        { title: "Explore the UIs", content: `<p>Open the <strong>Ports</strong> tab and navigate to each service:</p>
+<ul>
+<li><strong>Port 30103:</strong> Jaeger. Verify your spans look correct and that tail sampling works as expected.</li>
+</ul>` },
+        { title: "Fix Instrumentation and Sampling", content: `<p>Fix two things:</p>
+<ol>
+<li>The application code in <code>./art.py</code>: update the <code>chat</code> span to follow OpenTelemetry GenAI semantic conventions, including token usage attributes.</li>
+<li>The collector config in <code>./manifests/otel-collector-config.yaml</code>: configure tail sampling to keep only traces that contain errors or take longer than 5 seconds.</li>
+</ol>` },
+        { title: "Apply and Test", content: `<p>After changing <code>art.py</code>, restart traffic to pick up new instrumentation. After changing the collector config, apply it:</p>
+<pre tabindex="0" aria-label="Code block"><code class="language-sh">kubectl apply -f manifests/otel-collector-config.yaml -n otel
 kubectl rollout restart deployment/collector -n otel
-\`\`\`
-
-Then generate traces:
-
-\`\`\`sh
-make traffic
-\`\`\`
-
-Verify in Jaeger that spans follow conventions and only errors and slow traces appear.` },
+</code></pre>
+<p>Then generate traces:</p>
+<pre tabindex="0" aria-label="Code block"><code class="language-sh">make traffic
+</code></pre>
+<p>Verify in Jaeger that spans follow conventions and only errors and slow traces appear.</p>` },
       ],
       helpfulLinks: [
         { title: "OpenTelemetry GenAI semantic conventions", url: "https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-spans/" },
