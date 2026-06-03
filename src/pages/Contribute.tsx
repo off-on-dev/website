@@ -146,8 +146,8 @@ const Contribute = (): JSX.Element => {
                   <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" className={extLink}>
                     See the challenges contributing guide <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                   </a>
-                  <a href="https://github.com/off-on-dev/website/issues" target="_blank" rel="noopener noreferrer" className={extLink}>
-                    Open a website issue <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  <a href="https://github.com/off-on-dev/website/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" className={extLink}>
+                    Contribute to the website <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                   </a>
                 </div>
 

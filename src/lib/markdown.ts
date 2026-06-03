@@ -1,6 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import { Layers, Wrench, ListChecks } from "lucide-react";
 
+/** Converts a string to a lowercase, hyphen-separated URL slug. */
 export const slugify = (text: string): string =>
   text
     .toLowerCase()
@@ -14,14 +15,11 @@ const sectionIcons: Record<string, LucideIcon> = {
   "how-to-play": ListChecks,
 };
 
+/** Returns the lucide icon for a known section slug, or undefined if no icon is mapped. */
 export const getSectionIcon = (slug: string): LucideIcon | undefined =>
   sectionIcons[slug];
 
-// Strip <a> tags from pre-rendered HTML while preserving the link text.
-// Also removes the external-link SVG icon and sr-only span the generator
-// injects inside every external link. Use this when rendering HTML inside
-// an interactive element (e.g. <Link>, <button>) where nested <a> tags
-// would produce invalid HTML.
+/** Strips `<a>` tags from pre-rendered HTML, preserving text. Removes SVG icons and sr-only spans injected by the generator. Use inside interactive elements where nested `<a>` tags are invalid. */
 export const stripLinks = (html: string): string =>
   html
     .replace(/<a\b[^>]*>([\s\S]*?)<\/a>/gi, "$1")

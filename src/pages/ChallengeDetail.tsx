@@ -20,6 +20,7 @@ import { DiscussionSection } from "@/components/DiscussionSection";
 import { CommunitySidebar } from "@/components/CommunitySidebar";
 import { OtherLevelsCard } from "@/components/OtherLevelsCard";
 import { RewardsCard } from "@/components/RewardsCard";
+import { ChallengeShareLinks } from "@/components/ChallengeShareLinks";
 import { SITE_URL, BRAND_NAME, COMMUNITY_DISPLAY_NAME, COMMUNITY_URL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 import { isDeadlinePast } from "@/lib/utils";
@@ -98,6 +99,8 @@ type StructuredLayoutProps = {
 
 const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayoutProps): JSX.Element => {
   const { intro, objective, toolbox, backstory, architecture, architectureDiagram, diagramAlt, architectureAscii, howToPlay, helpfulLinks, verification } = level;
+  const levelUrl = `${SITE_URL}/adventures/${adventure.id}/levels/${level.id}/`;
+  const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(levelUrl)}`;
   return (
     <>
       {/* Header */}
@@ -259,6 +262,19 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
                 </span>
               </li>
             </ul>
+            <p className="mt-4 pt-4 border-t border-[hsl(var(--surface-border))] text-xs text-[hsl(var(--text-faint))]">
+              Completed the challenge?{" "}
+              <a
+                href={linkedinShareUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="docs-ext-link text-xs"
+              >
+                Share your achievement on LinkedIn
+                <ExternalLink size={11} aria-hidden="true" />
+                <span className="sr-only"> (opens in new tab)</span>
+              </a>
+            </p>
           </section>
 
           {/* Toolbox + Helpful Documentation side-by-side */}
@@ -324,6 +340,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
               )}
             </div>
           )}
+          <ChallengeShareLinks url={levelUrl} levelName={level.name} />
         </div>
 
         {/* Sidebar */}

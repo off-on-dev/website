@@ -85,11 +85,12 @@ public/
   fonts/        # Self-hosted fonts (Inter, Syne, JetBrains Mono)
 .github/
   workflows/
-    deploy.yml              # Production deploy to GitHub Pages (push to main)
-    preview.yml             # PR preview deploy (runs smoke tests before deploying)
-    refresh-community-data.yml  # Hourly discussion and leaderboard data refresh
-    sync-adventure.yml      # workflow_dispatch: sync an adventure from the challenges repo
-    validate-adventures.yml # PR check: validates adventure YAML, routes, and sitemap consistency
+    deploy.yml                    # Production deploy to GitHub Pages (push to main)
+    preview.yml                   # PR preview deploy (runs smoke tests before deploying)
+    refresh-community-data.yml    # Hourly discussion and leaderboard data refresh
+    refresh-community-sitemap.yml # Daily community sitemap regeneration
+    sync-adventure.yml            # workflow_dispatch: sync an adventure from the challenges repo
+    validate-adventures.yml       # PR check: validates adventure YAML, routes, and sitemap consistency
 ```
 
 ---
@@ -549,6 +550,7 @@ The `off-on-dev` organisation restricts which third-party actions can run. Only 
 |---|---|
 | `actions/checkout` | `@v4` only |
 | `actions/setup-node` | `@v4` only |
+| `actions/create-github-app-token` | `@v3` only |
 | `JamesIves/github-pages-deploy-action` | any tag |
 | `marocchino/sticky-pull-request-comment` | any tag |
 | `rossjrw/pr-preview-action` | any tag |
