@@ -27,7 +27,7 @@ npm install
 npm run dev
 ```
 
-Node.js **22** is required. Version is pinned in `.nvmrc`, run `nvm use` to switch automatically.
+Node.js **24** is required. Version is pinned in `.nvmrc`, run `nvm use` to switch automatically.
 
 ## Scripts
 
