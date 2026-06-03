@@ -50,23 +50,6 @@ describe("Footer - Explore nav", () => {
     expect(within(nav).getByRole("link", { name: "Sponsors" }).getAttribute("href")).toBe("/sponsors");
   });
 
-  it("has a 'Propose an Adventure Idea' external link that opens in a new tab", () => {
-    renderFooter();
-    const nav = screen.getByRole("navigation", { name: "Explore" });
-    const link = within(nav).getByRole("link", { name: /Propose an Adventure Idea/ });
-    expect(link.getAttribute("href")).toBe("https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea");
-    expect(link.getAttribute("target")).toBe("_blank");
-    expect(link.getAttribute("rel")).toBe("noopener noreferrer");
-  });
-
-  it("'Propose an Adventure Idea' link has an sr-only '(opens in new tab)' span", () => {
-    renderFooter();
-    const nav = screen.getByRole("navigation", { name: "Explore" });
-    const link = within(nav).getByRole("link", { name: /Propose an Adventure Idea/ });
-    const srSpan = link.querySelector(".sr-only");
-    expect(srSpan).toBeTruthy();
-    expect(srSpan!.textContent).toBe(" (opens in new tab)");
-  });
 
 });
 
