@@ -1205,6 +1205,27 @@ Filter logic lives in `src/data/adventures/filter-utils.ts` (`getLevelSummariesB
 
 ---
 
+### `ChallengeShareLinks`
+
+`src/components/ChallengeShareLinks.tsx`
+
+Renders a row of icon-only share links (LinkedIn, X, Bluesky, Mastodon) for a challenge level. Shown below the main content area on `ChallengeDetail`. Uses the `.social-icon-link` CSS class.
+
+```tsx
+<ChallengeShareLinks url={levelUrl} levelName={level.name} />
+```
+
+**Props:**
+
+| prop | type | description |
+|---|---|---|
+| `url` | `string` | Canonical URL of the level page. |
+| `levelName` | `string` | Display name used in the pre-composed share text. |
+
+Each platform link opens in a new tab with `rel="noopener noreferrer"`. All `<svg>` icons carry `aria-hidden="true"`; each `<a>` carries an explicit `aria-label` for screen readers.
+
+---
+
 ## Patterns
 
 ### Inline Challenge Card
@@ -1435,7 +1456,7 @@ className="docs-ext-link text-sm font-medium mt-4"
 
 ### `.social-icon-link`
 
-CSS class for icon-only social media `<a>` links. Applied to the LinkedIn, Bluesky, and X icon links in the Spread the Word card on `/contribute`.
+CSS class for icon-only social media `<a>` links. Used in the Spread the Word card on `/contribute` and in `ChallengeShareLinks` on challenge detail pages.
 
 **Dark mode:** base `text-[hsl(var(--text-secondary))]`, hover `hsl(var(--primary))` (amber — fine on dark backgrounds).
 **Light mode:** `.light .social-icon-link:hover` overrides to `hsl(var(--link-hover-light))` (~5.5:1 dark amber on white), avoiding `#ffc034` which is ~1.6:1 on near-white and fails WCAG 1.4.11.

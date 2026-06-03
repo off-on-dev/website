@@ -1,8 +1,10 @@
 import type { PostWithAge } from "@/hooks/useDiscussionPosts";
 
+/** Returns true if the post marks a completed challenge submission. */
 export const isCertificatePost = (post: PostWithAge): boolean =>
   post.challengeSolved === true;
 
+/** Returns the post's HTML with certificate blocks stripped; falls back to a default string for empty results. */
 export const displaySnippet = (post: PostWithAge): string => {
   if (!isCertificatePost(post)) return post.cooked;
   // Matches certificate blocks in external Discourse content. The em dash (\u2014)
