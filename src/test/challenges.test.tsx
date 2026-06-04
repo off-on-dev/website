@@ -87,9 +87,13 @@ describe("Challenges - tag filter", () => {
   it("replaces adventure cards with level cards on tag selection", () => {
     renderChallenges();
     fireEvent.click(screen.getByRole("button", { name: firstTag }));
+    // ChallengeBuildersSection always renders adventure links regardless of filter
+    // state — exclude that persistent section from this assertion.
     ADVENTURE_SUMMARIES.forEach((adventure) => {
       expect(
-        screen.queryAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}/`)
+        screen.queryAllByRole("link").some(
+          (l) => l.getAttribute("href") === `/adventures/${adventure.id}/` && !l.closest("#challenge-builders")
+        )
       ).toBe(false);
     });
   });
