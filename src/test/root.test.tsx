@@ -65,3 +65,19 @@ describe("root.tsx - gated-load Consent Mode v2 bootstrap", () => {
     expect(source).toContain("syne-latin-700-normal.woff2");
   });
 });
+
+describe("root.tsx - Speculation Rules", () => {
+  it("SPECULATION_RULES constant targets /adventures/ and /challenges/", () => {
+    const match = source.match(/const SPECULATION_RULES = `([^`]+)`/);
+    expect(match, "SPECULATION_RULES constant not found in root.tsx").not.toBeNull();
+    expect(match![1]).toContain('"/adventures/"');
+    expect(match![1]).toContain('"/challenges/"');
+  });
+
+  it("Speculation Rules are DOM-injected, not rendered as static JSX", () => {
+    // Static JSX causes "Inline speculation rules cannot currently be modified after they are
+    // processed" when React's reconciler touches the element after the browser reads it.
+    expect(source).not.toMatch(/<script\s+type="speculationrules"/);
+    expect(source).toContain('el.type = "speculationrules"');
+  });
+});

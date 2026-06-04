@@ -112,6 +112,30 @@ function decodeEntities(str: string): string {
     .replace(/&#x27;/g, "'");
 }
 
+describe("SEO: global head (root.tsx)", () => {
+  it('color-scheme meta is "dark light" on every page', () => {
+    const html = readHtml("/");
+    const m = html.match(/<meta\b[^>]*\bname="color-scheme"[^>]*\bcontent="([^"]*)"/);
+    expect(m, 'missing <meta name="color-scheme">').not.toBeNull();
+    expect(m![1], 'color-scheme must be "dark light"').toBe("dark light");
+  });
+
+  it("viewport meta does not disable user scaling", () => {
+    const html = readHtml("/");
+    const m = html.match(/<meta\b[^>]*\bname="viewport"[^>]*\bcontent="([^"]*)"/);
+    expect(m, 'missing <meta name="viewport">').not.toBeNull();
+    expect(m![1]).not.toMatch(/user-scalable\s*=\s*no/i);
+    expect(m![1]).not.toMatch(/maximum-scale\s*=\s*1(?!\d)/i);
+  });
+
+  it("production build does not have a noindex meta tag", () => {
+    // noindex is injected only on PR preview deployments (BASE_URL starts with /pr-preview/).
+    // A production build uses BASE_URL=/ so noindex must be absent.
+    const html = readHtml("/");
+    expect(html).not.toMatch(/<meta\b[^>]*\bname="robots"[^>]*\bcontent="noindex"/);
+  });
+});
+
 for (const route of ROUTES) {
   describe(`SEO: ${route}`, () => {
     it("description is present and within 160 chars", () => {

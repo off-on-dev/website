@@ -75,6 +75,12 @@ export default function Root(): JSX.Element {
         */}
         <meta httpEquiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; base-uri 'self'; form-action 'self';" />
         <meta name="referrer" content="strict-origin-when-cross-origin" />
+        {/* PR preview deployments (BASE_URL=/pr-preview/pr-N/) must not be indexed.
+            startsWith("/pr-preview/") is intentionally narrow so this never fires in
+            production (BASE_URL="/") or any future sub-path that is not a PR preview. */}
+        {import.meta.env.BASE_URL.startsWith("/pr-preview/") && (
+          <meta name="robots" content="noindex" />
+        )}
         <link rel="sitemap" type="application/xml" href={`${import.meta.env.BASE_URL}sitemap.xml`} />
         <link rel="api-catalog" href={`${import.meta.env.BASE_URL}.well-known/api-catalog`} />
         {/* Theme must be set before React boots to prevent flash of wrong theme */}

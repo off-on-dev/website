@@ -862,6 +862,14 @@ function buildLeaderboardCategoriesBody(adventures) {
   return lines.join("\n") + "\n  ";
 }
 
+function buildLlmsTxtBody(adventures) {
+  const lines = adventures.map((a) => {
+    const { title, story } = normalizeAdventureFields(a);
+    return `- [${title}](https://offon.dev/adventures/${a.slug}/): ${story}`;
+  });
+  return "\n" + lines.join("\n") + "\n\n";
+}
+
 /** Mirrors `tagToSlug` in the generated index.ts so consumer files use identical slugs. */
 function tagToSlug(tag) {
   return tag.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -941,6 +949,12 @@ function patchRegions(adventures) {
     "// GENERATED:adventures",
     "// /GENERATED:adventures",
     buildLeaderboardCategoriesBody(adventures)
+  );
+  replaceRegion(
+    resolve(ROOT, "public/llms.txt"),
+    "Each adventure is a scenario-driven challenge with beginner, intermediate, and expert levels.",
+    "## Challenge Technologies",
+    buildLlmsTxtBody(adventures)
   );
 
   // Challenge tag URLs. Derived from ALL_TAGS across every adventure's `tags:`

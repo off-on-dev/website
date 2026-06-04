@@ -33,9 +33,9 @@ jobs:
       - name: Verify generated files are up-to-date
         run: |
           node scripts/generate-adventures.mjs
-          if ! git diff --quiet src/data/adventures/; then
-            echo "❌ Generated adventure files are out of date. Run 'npm run generate' and commit the result."
-            git diff --stat src/data/adventures/
+          if ! git diff --quiet src/data/adventures/ public/llms.txt; then
+            echo "❌ Generated files are out of date. Run 'npm run generate' and commit the result."
+            git diff --stat src/data/adventures/ public/llms.txt
             exit 1
           fi
 

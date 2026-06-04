@@ -414,12 +414,34 @@ Read [`PERFORMANCE.md`](PERFORMANCE.md) before adding any new dependency, font, 
 
 ### Global head setup (root.tsx)
 
+- **Required `<head>` elements** -- verify these are present whenever editing `src/root.tsx`:
+  - `<meta charset="utf-8">` -- must appear in the first 1024 bytes of the HTML, before any non-ASCII content.
+  - `<meta name="viewport" content="width=device-width, initial-scale=1">` -- tells mobile browsers to render at device width. Never set `user-scalable=no` or `maximum-scale=1`; disabling user zoom breaks WCAG 1.4.4 (Resize Text).
+  - `<meta name="color-scheme" content="dark light">` -- prevents the white flash dark-mode users see before CSS loads, and lets the browser style scrollbars and native form controls to match the active scheme.
+- **Favicons** -- the following files must be present in `public/` and linked from `src/root.tsx`:
+  - `favicon.svg` -- primary favicon; linked as `<link rel="icon" href="/favicon.svg" type="image/svg+xml">`.
+  - `favicon.ico` -- ICO fallback for older browsers and the Windows taskbar. Place at `public/favicon.ico` (browsers request it automatically).
+  - `apple-touch-icon.png` -- 180x180 px PNG; linked as `<link rel="apple-touch-icon" href="/apple-touch-icon.png">`.
+  - A maskable icon entry in `site.webmanifest` with `"purpose": "maskable"` for Android home screens.
+  - Verify all four are present before shipping any favicon change.
 - Add `<link rel="manifest" href="/site.webmanifest" />` to link the web app manifest.
 - Add `<meta name="theme-color">` tags for dark and light mode.
 - Add JSON-LD structured data as two `<script type="application/ld+json">` blocks: one `@type: "WebSite"` and one `@type: "Organization"`. The `"OffOn"` brand name is hardcoded as a string literal in both (they cannot reference TypeScript constants inside `dangerouslySetInnerHTML`). Update them manually if the brand name ever changes.
 - Always include `og:image:width`, `og:image:height`, and `og:image:alt` for all OG image tags.
 - Add `og:site_name` and `og:locale` (en_GB) to all global OG tags in `src/root.tsx`.
 - Do not add page-specific meta tags to `src/root.tsx`. These must live in each route module's `meta()` export only.
+
+### URL structure
+
+- Keep URLs lowercase, hyphen-separated, and descriptive. Never use underscores or camelCase in URL segments.
+- Treat published URLs as a public contract. Once a URL is live, it must keep working. If a URL must change, add a redirect route in `src/routes.ts` pointing the old path to the new one.
+- Redirect routes in `src/pages/redirects/` use React Router's `redirect()`. Prefer client-side redirects over broken links. Never chain more than one redirect for the same URL.
+
+### Soft 404s
+
+- Every path that does not correspond to a real page must return HTTP 404, not 200. GitHub Pages serves `404.html` automatically for unmatched paths -- no configuration is needed.
+- Never create a catch-all route that renders a "page not found" UI with a 200 status. Search engines and AI crawlers treat a 200 response as indexable content.
+- When retiring a URL, add a redirect route to its successor. If there is no successor, redirect to the nearest parent or category page. Reserve 404 for paths that were never valid.
 
 ---
 
