@@ -1,0 +1,1 @@
+import{E as e}from"./chunk-QUQL4437-kFNlTAbV.js";function t(){return e(`/challenges`)}export{t as clientLoader};
