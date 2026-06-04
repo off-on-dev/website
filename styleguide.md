@@ -47,12 +47,11 @@ Fonts are preloaded to avoid the three-level font discovery delay (HTML parse �
 **Global (`src/root.tsx`) — preloaded on every page:**
 - `inter-latin-400-normal.woff2` — body text (Navbar, paragraphs)
 - `inter-latin-500-normal.woff2` — medium-weight body text (Navbar links)
+- `inter-latin-600-normal.woff2` — semibold text (section labels, card titles)
+- `inter-latin-700-normal.woff2` — bold text (CTA buttons using `font-bold` on non-heading elements)
 - `syne-latin-700-normal.woff2` — h1 and h2 elements (the `@layer base` rule in `src/index.css` applies `font-family: 'Syne'` to h1 and h2 only; h3–h6 use Inter)
 
-**Per-route — preloaded only on pages that need them above the fold:**
-- `inter-latin-700-normal.woff2` via `interBoldPreload` — PageHero CTA buttons (`.btn-inverse`, `.btn-ghost-inverse` use `font-bold` on non-heading elements) (`src/pages/Adventures.tsx`, `src/pages/About.tsx`, `src/pages/Sponsors.tsx`, `src/pages/CommunityGuide.tsx`)
-
-Inter 600 (`font-semibold`) is used below the fold only and is not preloaded. Only Latin subset variants are preloaded. Other subsets are served from `public/fonts/` but are not preloaded. Update `src/root.tsx` whenever above-the-fold typography changes.
+Only Latin subset variants are preloaded. Other subsets are served from `public/fonts/` but are not preloaded. Update `src/root.tsx` whenever above-the-fold typography changes.
 
 ### Tailwind font utilities
 

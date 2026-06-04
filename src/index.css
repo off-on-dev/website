@@ -315,7 +315,7 @@ html {
     --text-muted: 35 8% 32%;
     --text-faint: 35 8% 32%;
     /* Dark amber for inline link hover in light mode — same hue as primary,
-       darkened to hsl(41 100% 25%) ≈ #7f4200 for ~5.5:1 contrast on light bg */
+       darkened to hsl(41 100% 25%) ≈ #805700 for ~5.5:1 contrast on light bg */
     --link-hover-light: 41 100% 25%;
 
     /* Custom surface tokens */
@@ -435,7 +435,7 @@ html {
   .animate-marquee {
     animation: none;
   }
-  /* Firefly particles run a continuous 9-keyframe animation with positional
+  /* Firefly particles run a continuous 13-keyframe animation with positional
      transforms. Vestibular disorder and motion-sensitive users are affected
      by persistent movement even from decorative elements. */
   .firefly {

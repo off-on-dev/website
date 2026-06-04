@@ -42,7 +42,7 @@ const webSiteJsonLd = `{"@context":"https://schema.org","@type":"WebSite","name"
 // sameAs links populate Google's Knowledge Panel. Mirror LINKEDIN_URL,
 // the Discourse community URL, and the open-source-challenges GitHub org
 // from src/data/constants.ts.
-const orgJsonLd = `{"@context":"https://schema.org","@type":"Organization","name":"OffOn","url":"https://offon.dev","logo":"https://offon.dev/favicon.png","sameAs":["https://www.linkedin.com/company/open-ecosystem/","https://community.offon.dev","https://github.com/off-on-dev/open-source-challenges"]}`;
+const orgJsonLd = `{"@context":"https://schema.org","@type":"Organization","name":"OffOn","url":"https://offon.dev","logo":"https://offon.dev/favicon.png","sameAs":["https://www.linkedin.com/company/offondev","https://community.offon.dev","https://github.com/off-on-dev/open-source-challenges"]}`;
 
 export default function Root(): JSX.Element {
   useEffect(() => {
