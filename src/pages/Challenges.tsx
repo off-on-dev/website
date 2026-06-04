@@ -5,6 +5,8 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
+import { ChallengeBuildersSection } from "@/components/ChallengeBuildersSection";
+import { CommunityLeaders } from "@/components/CommunityLeaders";
 import { FilteredLevelCard } from "@/components/FilteredLevelCard";
 import { AdventureCard } from "@/components/AdventureCard";
 import { StarterNudge } from "@/components/StarterNudge";
@@ -162,6 +164,13 @@ const Challenges = (): JSX.Element => {
             )}
           </div>
         </section>
+        <ChallengeBuildersSection
+          aside={
+            <CommunityLeaders
+              sections={["top-challenge-solvers", "challenge-grand-builders", "challenge-builders"]}
+            />
+          }
+        />
         <BottomCTA />
       </main>
       <Footer />
