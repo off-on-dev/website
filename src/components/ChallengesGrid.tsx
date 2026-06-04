@@ -2,7 +2,7 @@ import { useState, type JSX } from "react";
 import { Link } from "react-router";
 import { ArrowRight } from "lucide-react";
 import { ADVENTURE_SUMMARIES, SUMMARY_TAGS } from "@/data/adventures/summaries";
-import { getLevelSummariesByFilters } from "@/data/adventures/filter-utils";
+import { getLevelSummariesByFilters, ALL_LEVEL_SUMMARIES } from "@/data/adventures/filter-utils";
 import { AdventureCard } from "@/components/AdventureCard";
 import { FilteredLevelCard } from "@/components/FilteredLevelCard";
 import { SectionLabel } from "@/components/SectionLabel";
@@ -86,6 +86,9 @@ export const ChallengesGrid = ({ limit }: ChallengesGridProps = {}): JSX.Element
             </>
           ) : (
             <>
+              <p className="mb-6 font-sans text-sm font-medium tracking-wide text-primary">
+                {ADVENTURE_SUMMARIES.length} {ADVENTURE_SUMMARIES.length === 1 ? "adventure" : "adventures"} · {ALL_LEVEL_SUMMARIES.length} {ALL_LEVEL_SUMMARIES.length === 1 ? "challenge" : "challenges"}
+              </p>
               <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
                 {visibleAdventures.map((adventure) => (
                   <AdventureCard key={adventure.id} adventure={adventure} />

@@ -32,7 +32,7 @@ describe("getLevelSummariesByFilters", () => {
     expect(result.length).toBe(allLevels.length);
   });
 
-  it("filters by a single tag using AND semantics", () => {
+  it("filters by a single tag", () => {
     const result = getLevelSummariesByFilters([firstTag], null);
     const expected = ADVENTURE_SUMMARIES
       .filter((a) => a.tags.includes(firstTag))
@@ -40,19 +40,25 @@ describe("getLevelSummariesByFilters", () => {
     expect(result.length).toBe(expected.length);
   });
 
-  it("returns only levels from adventures that include ALL selected tags", () => {
-    const tagsWithMultiple = ADVENTURE_SUMMARIES.find((a) => a.tags.length >= 2);
-    if (!tagsWithMultiple) return;
-    const [t1, t2] = tagsWithMultiple.tags;
+  it("returns levels from adventures that match ANY selected tag (OR semantics)", () => {
+    const sortedTags = Array.from(new Set(ADVENTURE_SUMMARIES.flatMap((a) => a.tags))).sort();
+    const [t1, t2] = sortedTags;
     const result = getLevelSummariesByFilters([t1, t2], null);
+    const matchingIds = new Set(
+      ADVENTURE_SUMMARIES
+        .filter((a) => a.tags.includes(t1) || a.tags.includes(t2))
+        .map((a) => a.id)
+    );
     result.forEach(({ adventureId }) => {
-      const adventure = ADVENTURE_SUMMARIES.find((a) => a.id === adventureId)!;
-      expect(adventure.tags).toContain(t1);
-      expect(adventure.tags).toContain(t2);
+      expect(matchingIds.has(adventureId)).toBe(true);
     });
+    const expectedCount = ADVENTURE_SUMMARIES
+      .filter((a) => a.tags.includes(t1) || a.tags.includes(t2))
+      .flatMap((a) => a.levels).length;
+    expect(result.length).toBe(expectedCount);
   });
 
-  it("returns empty array when no adventure matches all selected tags", () => {
+  it("returns empty array when no adventure matches any selected tag", () => {
     const result = getLevelSummariesByFilters(["__nonexistent_tag__"], null);
     expect(result.length).toBe(0);
   });

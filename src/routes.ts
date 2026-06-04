@@ -3,11 +3,10 @@ import { type RouteConfig, index, route, layout } from "@react-router/dev/routes
 export default [
   layout("Layout.tsx", [
     index("pages/Index.tsx"),
-    route("adventures", "pages/redirects/ChallengesRedirect.tsx", { id: "adventures-redirect" }),
+    route("adventures", "pages/Adventures.tsx"),
     route("adventures/:id", "pages/AdventureDetail.tsx"),
     route("adventures/:id/levels/:levelId", "pages/ChallengeDetail.tsx"),
-    route("challenges", "pages/Challenges.tsx", { id: "challenges" }),
-    route("challenges/:tag", "pages/Challenges.tsx", { id: "challenges-tag" }),
+    route("challenges/:tag?", "pages/Challenges.tsx", { id: "challenges" }),
     route("contribute", "pages/Contribute.tsx"),
     route("sponsors", "pages/Sponsors.tsx"),
     route("about", "pages/About.tsx"),

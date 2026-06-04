@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, type JSX } from "react";
 import { ChevronDown, Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { DIFFICULTIES, type Difficulty } from "@/data/adventures/filter-utils";
 
-const DIFFICULTIES = ["Beginner", "Intermediate", "Expert"] as const;
-export type Difficulty = (typeof DIFFICULTIES)[number];
+export type { Difficulty };
 
 type ChallengeFiltersProps = {
   activeTopics: string[];

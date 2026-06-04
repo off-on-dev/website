@@ -9,6 +9,7 @@ const SITE_URL = "https://offon.dev";
 
 const ROUTES = [
   "/",
+  "/adventures",
   "/404",
   "/contribute",
   "/sponsors",

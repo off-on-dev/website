@@ -289,7 +289,7 @@ All animation classes are defined inside `@media (prefers-reduced-motion: no-pre
 
 | Class | Keyframe | Duration |
 |---|---|---|
-| `.animate-fade-up` | fadeUp (fade from opacity 0.7 + slide up 8px) | 0.35s ease-out |
+| `.animate-fade-up` | fadeUp (slide up 8px, no opacity change) | 0.35s ease-out |
 | `.animate-fade-up-delay-1` | fadeUp | 0.35s, 0.05s delay |
 | `.animate-fade-up-delay-2` | fadeUp | 0.35s, 0.10s delay |
 | `.animate-fade-up-delay-3` | fadeUp | 0.35s, 0.15s delay |

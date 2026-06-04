@@ -12,7 +12,12 @@ import { useClickTracking } from "@/hooks/useClickTracking";
 // position.
 const ScrollToTop = (): null => {
   const { pathname, hash } = useLocation();
+  const prevPathname = useRef<string | null>(null);
+
   useEffect(() => {
+    const prev = prevPathname.current;
+    prevPathname.current = pathname;
+
     if (hash) {
       const id = hash.slice(1);
       // Defer past commit so the target element exists in the new route.
@@ -21,6 +26,13 @@ const ScrollToTop = (): null => {
       });
       return;
     }
+
+    // Suppress scroll reset when the user is navigating between filter states
+    // on the challenges page (e.g. selecting a tag moves /challenges →
+    // /challenges/kubernetes). Both paths share the same visible page, so
+    // jumping to the top would be jarring.
+    if (prev !== null && prev.startsWith("/challenges") && pathname.startsWith("/challenges")) return;
+
     window.scrollTo(0, 0);
   }, [pathname, hash]);
   return null;

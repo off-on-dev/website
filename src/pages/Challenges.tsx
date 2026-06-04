@@ -1,5 +1,5 @@
 import { useState, type JSX } from "react";
-import { useParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 import type { MetaFunction, LinksFunction } from "react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -9,6 +9,7 @@ import { FilteredLevelCard } from "@/components/FilteredLevelCard";
 import { AdventureCard } from "@/components/AdventureCard";
 import { StarterNudge } from "@/components/StarterNudge";
 import { ChallengeFilters, type Difficulty } from "@/components/ChallengeFilters";
+import { DIFFICULTIES } from "@/data/adventures/filter-utils";
 import { slugToTag, tagToSlug } from "@/data/adventures";
 import { ADVENTURE_SUMMARIES, SUMMARY_TAGS } from "@/data/adventures/summaries";
 import { getLevelSummariesByFilters, ALL_LEVEL_SUMMARIES } from "@/data/adventures/filter-utils";
@@ -44,23 +45,57 @@ export const meta: MetaFunction = ({ params }) => {
 
 const Challenges = (): JSX.Element => {
   const { tag: tagSlug } = useParams<{ tag?: string }>();
-  const initialTag = tagSlug ? slugToTag(tagSlug) ?? null : null;
-
-  const [activeTopics, setActiveTopics] = useState<string[]>(initialTag ? [initialTag] : []);
-  const [activeDifficulty, setActiveDifficulty] = useState<Difficulty | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [hasFiltered, setHasFiltered] = useState(false);
+
+  const initialTag = tagSlug ? (slugToTag(tagSlug) ?? null) : null;
+
+  // ?topics= takes precedence over the path param so multi-tag state is clean.
+  // On a single-tag path (/challenges/:tag) with no ?topics=, derive from the path.
+  const topicsParam = searchParams.get("topics");
+  const activeTopics: string[] = topicsParam !== null
+    ? topicsParam.split(",").filter(Boolean).map((s) => slugToTag(s)).filter((t): t is string => t !== undefined)
+    : initialTag ? [initialTag] : [];
+
+  const difficultyParam = searchParams.get("difficulty");
+  const activeDifficulty: Difficulty | null =
+    (DIFFICULTIES as readonly string[]).includes(difficultyParam ?? "")
+      ? (difficultyParam as Difficulty)
+      : null;
 
   const isFiltered = activeTopics.length > 0 || activeDifficulty !== null;
   const filteredLevels = isFiltered ? getLevelSummariesByFilters(activeTopics, activeDifficulty) : ALL_LEVEL_SUMMARIES;
 
+  // Difficulty always updates via setSearchParams — no path change, no remount, focus held.
   const handleDifficultyChange = (diff: Difficulty | null): void => {
     setHasFiltered(true);
-    setActiveDifficulty(diff);
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (diff) next.set("difficulty", diff);
+        else next.delete("difficulty");
+        return next;
+      },
+      { replace: true, preventScrollReset: true }
+    );
   };
 
+  // All topic changes update only the query string — pathname never changes,
+  // so ScrollToTop never fires and the user stays at the same scroll position.
   const handleTopicsChange = (topics: string[]): void => {
     setHasFiltered(true);
-    setActiveTopics(topics);
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (topics.length > 0) {
+          next.set("topics", topics.map(tagToSlug).join(","));
+        } else {
+          next.delete("topics");
+        }
+        return next;
+      },
+      { replace: true, preventScrollReset: true }
+    );
   };
 
   const filterKey = activeTopics.join(",") + (activeDifficulty ?? "");
@@ -90,18 +125,17 @@ const Challenges = (): JSX.Element => {
               {hasFiltered
                 ? isFiltered
                   ? `Showing ${filteredLevels.length} ${filteredLevels.length === 1 ? "challenge" : "challenges"}${activeDifficulty ? ` · ${activeDifficulty}` : ""}${activeTopics.length > 0 ? ` · ${activeTopics.join(", ")}` : ""}`
-                  : `Filters cleared, showing all ${ADVENTURE_SUMMARIES.length} adventures`
+                  : `Filters cleared, showing ${ADVENTURE_SUMMARIES.length} ${ADVENTURE_SUMMARIES.length === 1 ? "adventure" : "adventures"} · ${ALL_LEVEL_SUMMARIES.length} ${ALL_LEVEL_SUMMARIES.length === 1 ? "challenge" : "challenges"}`
                 : ""}
             </span>
 
             {isFiltered ? (
               <>
-                <h2 className="animate-fade-up mb-6 text-lg font-semibold text-foreground">
-                  {activeTopics.length > 0 ? activeTopics.join(", ") : activeDifficulty} Challenges
-                  <span className="ml-2 font-normal text-sm text-muted-foreground">
-                    &middot; {filteredLevels.length} {filteredLevels.length !== 1 ? "results" : "result"}
-                  </span>
-                </h2>
+                <p className="animate-fade-up mb-6 font-sans text-sm font-medium tracking-wide text-primary">
+                  {filteredLevels.length} {filteredLevels.length === 1 ? "challenge" : "challenges"}
+                  {activeDifficulty && ` · ${activeDifficulty}`}
+                  {activeTopics.length > 0 && ` · ${activeTopics.join(", ")}`}
+                </p>
                 <div key={filterKey} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
                   {filteredLevels.map(({ level, adventureId, adventureTitle, isLive }) => (
                     <FilteredLevelCard
@@ -116,12 +150,9 @@ const Challenges = (): JSX.Element => {
               </>
             ) : (
               <>
-                <h2 className="mb-6 text-lg font-semibold text-foreground">
-                  All Adventures
-                  <span className="ml-2 font-normal text-sm text-muted-foreground">
-                    &middot; {ADVENTURE_SUMMARIES.length} {ADVENTURE_SUMMARIES.length === 1 ? "adventure" : "adventures"}, {ALL_LEVEL_SUMMARIES.length} {ALL_LEVEL_SUMMARIES.length === 1 ? "challenge" : "challenges"}
-                  </span>
-                </h2>
+                <p className="mb-6 font-sans text-sm font-medium tracking-wide text-primary">
+                  {ADVENTURE_SUMMARIES.length} {ADVENTURE_SUMMARIES.length === 1 ? "adventure" : "adventures"} · {ALL_LEVEL_SUMMARIES.length} {ALL_LEVEL_SUMMARIES.length === 1 ? "challenge" : "challenges"}
+                </p>
                 <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
                   {ADVENTURE_SUMMARIES.map((adventure) => (
                     <AdventureCard key={adventure.id} adventure={adventure} />

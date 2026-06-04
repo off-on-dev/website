@@ -381,8 +381,8 @@ html {
 /* ─── Animations ──────────────────────────────────────────── */
 
 @keyframes fadeUp {
-  from { opacity: 0.7; transform: translateY(8px); }
-  to   { opacity: 1;   transform: translateY(0); }
+  from { transform: translateY(8px); }
+  to   { transform: translateY(0); }
 }
 
 @keyframes marquee {
@@ -417,14 +417,6 @@ html {
   100% { transform: translate(0,     0);    opacity: 0;    }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .animate-fade-up            { animation: fadeUp 0.35s ease-out both; }
-  .animate-fade-up-delay-1    { animation: fadeUp 0.35s ease-out 0.05s both; }
-  .animate-fade-up-delay-2    { animation: fadeUp 0.35s ease-out 0.10s both; }
-  .animate-fade-up-delay-3    { animation: fadeUp 0.35s ease-out 0.15s both; }
-  .animate-marquee            { animation: marquee 30s linear infinite; }
-}
-
 /* ─── Firefly particles ───────────────────────────────────── */
 
 .firefly {
@@ -439,13 +431,18 @@ html {
     0 0 10px 3px hsl(var(--primary) / 0.2);
 }
 @media (prefers-reduced-motion: no-preference) {
-  .firefly { animation: fireflyFloat linear infinite; }
-}
-/* will-change creates a GPU compositing layer; cap at 3 to stay within PERFORMANCE.md limit */
-.firefly:nth-child(1),
-.firefly:nth-child(2),
-.firefly:nth-child(3) {
-  will-change: transform, opacity;
+  .animate-fade-up            { animation: fadeUp 0.35s ease-out both; }
+  .animate-fade-up-delay-1    { animation: fadeUp 0.35s ease-out 0.05s both; }
+  .animate-fade-up-delay-2    { animation: fadeUp 0.35s ease-out 0.10s both; }
+  .animate-fade-up-delay-3    { animation: fadeUp 0.35s ease-out 0.15s both; }
+  .animate-marquee            { animation: marquee 30s linear infinite; }
+  .firefly                    { animation: fireflyFloat linear infinite; }
+  /* will-change creates a GPU compositing layer; cap at 3 to stay within PERFORMANCE.md limit */
+  .firefly:nth-child(1),
+  .firefly:nth-child(2),
+  .firefly:nth-child(3) {
+    will-change: transform, opacity;
+  }
 }
 /* vary each dot's position + timing */
 .firefly:nth-child(1)  { top: 12%; left: 8%;   animation-duration: 6s;   animation-delay: 0s;   }

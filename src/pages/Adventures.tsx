@@ -14,7 +14,7 @@ export const meta: MetaFunction = () =>
   buildPageMeta({
     title: `Adventures - Hands-on open source challenges | ${BRAND_NAME}`,
     description: `Explore all ${BRAND_NAME} adventures. Hands-on scenarios using real open source tools: OpenTelemetry, Argo CD, OpenTofu, GitHub Actions, and more.`,
-    url: `${SITE_URL}/adventures`,
+    url: `${SITE_URL}/adventures/`,
   });
 
 const Adventures = (): JSX.Element => (

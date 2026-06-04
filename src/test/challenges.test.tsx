@@ -1,23 +1,25 @@
 import { describe, it, expect } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { MemoryRouter, Routes, Route } from "react-router";
+import { createMemoryRouter, RouterProvider } from "react-router";
 import Challenges from "@/pages/Challenges";
 import { ADVENTURES } from "@/data/adventures";
 import { ADVENTURE_SUMMARIES } from "@/data/adventures/summaries";
+import { tagToSlug } from "@/data/adventures";
 
 const allTags = Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort();
 const firstTag = allTags[0];
+const firstTagSlug = tagToSlug(firstTag);
+const secondTag = allTags[1];
+const secondTagSlug = tagToSlug(secondTag);
 const totalChallenges = ADVENTURES.flatMap((a) => a.levels).length;
 
-function renderChallenges(initialPath = "/challenges"): ReturnType<typeof render> {
-  return render(
-    <MemoryRouter initialEntries={[initialPath]}>
-      <Routes>
-        <Route path="/challenges" element={<Challenges />} />
-        <Route path="/challenges/:tag" element={<Challenges />} />
-      </Routes>
-    </MemoryRouter>
+function renderChallenges(initialPath = "/challenges"): { router: ReturnType<typeof createMemoryRouter> } & ReturnType<typeof render> {
+  const router = createMemoryRouter(
+    [{ path: "/challenges/:tag?", element: <Challenges /> }],
+    { initialEntries: [initialPath] }
   );
+  const result = render(<RouterProvider router={router} />);
+  return { ...result, router };
 }
 
 describe("Challenges - default (All) state", () => {
@@ -38,23 +40,26 @@ describe("Challenges - default (All) state", () => {
     expect(levelLinks.length).toBe(0);
   });
 
-  it("heading reads 'All Adventures'", () => {
+  it("shows adventure and challenge counts when unfiltered", () => {
     renderChallenges();
-    expect(screen.getByRole("heading", { name: /All Adventures/i })).toBeTruthy();
+    const countLine = screen.getByText(
+      new RegExp(`${ADVENTURE_SUMMARIES.length}.*adventure.*${totalChallenges}.*challenge`)
+    );
+    expect(countLine).toBeTruthy();
   });
 
-  it("heading includes the adventure count", () => {
+  it("count line includes the adventure count", () => {
     renderChallenges();
-    const heading = screen.getByRole("heading", { name: /All Adventures/i });
-    expect(heading.textContent).toContain(String(ADVENTURE_SUMMARIES.length));
-    expect(heading.textContent).toContain("adventure");
+    const countLine = screen.getByText(new RegExp(`${ADVENTURE_SUMMARIES.length}.*adventure`));
+    expect(countLine.textContent).toContain(String(ADVENTURE_SUMMARIES.length));
+    expect(countLine.textContent).toContain("adventure");
   });
 
-  it("heading includes the total challenge count", () => {
+  it("count line includes the total challenge count", () => {
     renderChallenges();
-    const heading = screen.getByRole("heading", { name: /All Adventures/i });
-    expect(heading.textContent).toContain(String(totalChallenges));
-    expect(heading.textContent).toContain("challenge");
+    const countLine = screen.getByText(new RegExp(`${ADVENTURE_SUMMARIES.length}.*adventure`));
+    expect(countLine.textContent).toContain(String(totalChallenges));
+    expect(countLine.textContent).toContain("challenge");
   });
 
   it("renders a filter button for every unique tag", () => {
@@ -142,5 +147,60 @@ describe("Challenges - deselecting a tag", () => {
     fireEvent.click(btn);
     const region = container.querySelector("[aria-live]");
     expect(region!.textContent).toContain("adventures");
+  });
+});
+
+describe("Challenges - URL state", () => {
+  it("single tag selection sets ?topics= without changing pathname", () => {
+    const { router } = renderChallenges();
+    fireEvent.click(screen.getByRole("button", { name: firstTag }));
+    expect(router.state.location.pathname).toBe("/challenges");
+    expect(new URLSearchParams(router.state.location.search).get("topics")).toBe(firstTagSlug);
+  });
+
+  it("second tag selection adds to ?topics= without changing pathname", () => {
+    const { router } = renderChallenges();
+    fireEvent.click(screen.getByRole("button", { name: firstTag }));
+    fireEvent.click(screen.getByRole("button", { name: secondTag }));
+    expect(router.state.location.pathname).toBe("/challenges");
+    const topics = new URLSearchParams(router.state.location.search).get("topics")!.split(",");
+    expect(topics).toContain(firstTagSlug);
+    expect(topics).toContain(secondTagSlug);
+  });
+
+  it("deselecting one tag leaves the other in ?topics=", () => {
+    const { router } = renderChallenges();
+    fireEvent.click(screen.getByRole("button", { name: firstTag }));
+    fireEvent.click(screen.getByRole("button", { name: secondTag }));
+    fireEvent.click(screen.getByRole("button", { name: secondTag }));
+    expect(router.state.location.pathname).toBe("/challenges");
+    expect(new URLSearchParams(router.state.location.search).get("topics")).toBe(firstTagSlug);
+  });
+
+  it("deselecting all tags removes ?topics= param", () => {
+    const { router } = renderChallenges();
+    fireEvent.click(screen.getByRole("button", { name: firstTag }));
+    fireEvent.click(screen.getByRole("button", { name: firstTag }));
+    expect(router.state.location.pathname).toBe("/challenges");
+    expect(new URLSearchParams(router.state.location.search).get("topics")).toBeNull();
+  });
+
+  it("difficulty selection appends ?difficulty= without changing path", () => {
+    const { router } = renderChallenges(`/challenges/${firstTagSlug}`);
+    const diffBtn = screen.getByRole("button", { name: "Beginner" });
+    fireEvent.click(diffBtn);
+    expect(router.state.location.pathname).toBe(`/challenges/${firstTagSlug}`);
+    expect(new URLSearchParams(router.state.location.search).get("difficulty")).toBe("Beginner");
+  });
+
+  it("initialising from a tag path URL pre-selects that tag", () => {
+    renderChallenges(`/challenges/${firstTagSlug}`);
+    expect(screen.getByRole("button", { name: firstTag }).getAttribute("aria-pressed")).toBe("true");
+  });
+
+  it("initialising from ?topics= pre-selects multiple tags", () => {
+    renderChallenges(`/challenges?topics=${firstTagSlug},${secondTagSlug}`);
+    expect(screen.getByRole("button", { name: firstTag }).getAttribute("aria-pressed")).toBe("true");
+    expect(screen.getByRole("button", { name: secondTag }).getAttribute("aria-pressed")).toBe("true");
   });
 });

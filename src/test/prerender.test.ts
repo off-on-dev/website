@@ -26,6 +26,10 @@ const pages: PageSpec[] = [
     check: { type: "exact", value: "About OffOn - Building the contributors and maintainers of tomorrow" },
   },
   {
+    file: "adventures/index.html",
+    check: { type: "exact", value: "Adventures - Hands-on open source challenges | OffOn" },
+  },
+  {
     file: "privacy/index.html",
     check: { type: "exact", value: "Privacy Policy - OffOn" },
   },
