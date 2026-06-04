@@ -63,7 +63,7 @@ const Contribute = (): JSX.Element => {
                   <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
                     Take on a hands-on challenge, debug a broken environment, and learn by doing. Tell us what worked, what confused you, and where you got stuck. Your experience helps us improve the challenges.
                   </p>
-                  <Link to="/challenges" className={extLink}>
+                  <Link to="/challenges/" className={extLink}>
                     Browse challenges
                   </Link>
                 </div>

@@ -23,7 +23,7 @@ describe("AdventureCard", () => {
         <AdventureCard adventure={summary} />
       </MemoryRouter>
     );
-    const outerLink = container.querySelector("a[href='/adventures/test-adventure']");
+    const outerLink = container.querySelector("a[href='/adventures/test-adventure/']");
     expect(outerLink).not.toBeNull();
     expect(outerLink?.querySelectorAll("a")).toHaveLength(0);
   });

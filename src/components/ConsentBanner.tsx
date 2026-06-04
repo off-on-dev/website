@@ -57,7 +57,7 @@ export function ConsentBanner(): JSX.Element | null {
             We use Google Analytics to understand how visitors use {SITE_NAME}. No data is sent to
             Google until you accept. You can change your preference at any time. See our{" "}
             <Link
-              to="/privacy"
+              to="/privacy/"
               className="underline underline-offset-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
             >
               Privacy Policy

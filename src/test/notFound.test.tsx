@@ -39,21 +39,21 @@ describe("NotFound", () => {
       renderNotFound();
       const nav = screen.getByRole("navigation", { name: "Helpful links" });
       const link = within(nav).getByRole("link", { name: /Challenges/ });
-      expect(link.getAttribute("href")).toBe("/challenges");
+      expect(link.getAttribute("href")).toBe("/challenges/");
     });
 
     it("links 'Handbook' to /handbook", () => {
       renderNotFound();
       const nav = screen.getByRole("navigation", { name: "Helpful links" });
       const link = within(nav).getByRole("link", { name: /Handbook/ });
-      expect(link.getAttribute("href")).toBe("/handbook");
+      expect(link.getAttribute("href")).toBe("/handbook/");
     });
 
     it("links 'About' to /about", () => {
       renderNotFound();
       const nav = screen.getByRole("navigation", { name: "Helpful links" });
       const link = within(nav).getByRole("link", { name: /About/ });
-      expect(link.getAttribute("href")).toBe("/about");
+      expect(link.getAttribute("href")).toBe("/about/");
     });
   });
 });

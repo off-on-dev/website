@@ -31,7 +31,7 @@ export const ChallengeBuildersSection = ({ aside }: { aside?: ReactNode }): JSX.
                 <li key={id} className="flex items-center gap-2 text-xs">
                   <span className="h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                   <Link
-                    to={`/adventures/${id}`}
+                    to={`/adventures/${id}/`}
                     className="docs-ext-link"
                   >
                     {title}

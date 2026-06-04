@@ -31,11 +31,11 @@ export const Footer = (): JSX.Element => {
             <nav aria-label="Explore">
               <p className="text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">Explore</p>
               <div className="flex flex-col">
-                <Link to="/challenges" className={linkCls}>Challenges</Link>
-                <Link to="/contribute" className={linkCls}>Contribute</Link>
-                <Link to="/handbook" className={linkCls}>Handbook</Link>
-                <Link to="/about" className={linkCls}>About</Link>
-                <Link to="/sponsors" className={linkCls}>Sponsors</Link>
+                <Link to="/challenges/" className={linkCls}>Challenges</Link>
+                <Link to="/contribute/" className={linkCls}>Contribute</Link>
+                <Link to="/handbook/" className={linkCls}>Handbook</Link>
+                <Link to="/about/" className={linkCls}>About</Link>
+                <Link to="/sponsors/" className={linkCls}>Sponsors</Link>
               </div>
             </nav>
             {/* Community */}
@@ -44,8 +44,8 @@ export const Footer = (): JSX.Element => {
               <div className="flex flex-col">
                 <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className={linkCls}>Hub <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
                 <a href={`${COMMUNITY_URL}/t/code-of-conduct/31/1`} target="_blank" rel="noopener noreferrer" className={linkCls}>Code of Conduct <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
-                <Link to="/privacy" className={linkCls}>Privacy Policy</Link>
-                <Link to="/accessibility" className={linkCls}>Accessibility</Link>
+                <Link to="/privacy/" className={linkCls}>Privacy Policy</Link>
+                <Link to="/accessibility/" className={linkCls}>Accessibility</Link>
                 <a href={`mailto:${CONTACT_EMAIL}`} className={linkCls}>Contact</a>
               </div>
             </nav>

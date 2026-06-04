@@ -261,7 +261,7 @@ const Accessibility = (): JSX.Element => {
 
             <p className="text-sm text-muted-foreground mt-10">
               Have a question?{" "}
-              <Link to="/about" className={link}>Reach out to the team</Link>.
+              <Link to="/about/" className={link}>Reach out to the team</Link>.
             </p>
 
             <hr className="my-8 border-t border-[hsl(var(--surface-border))]" />

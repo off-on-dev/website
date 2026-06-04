@@ -110,7 +110,7 @@ const AdventureLevelLink = ({ level, adventureId }: AdventureLevelLinkProps): JS
   const descHtml = level.intro?.[0] ?? level.backstory?.[0];
   return (
     <Link
-      to={`/adventures/${adventureId}/levels/${level.id}`}
+      to={`/adventures/${adventureId}/levels/${level.id}/`}
       className="group card-glow relative rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
       <div className="flex flex-wrap items-center gap-2 mb-3">
@@ -154,7 +154,7 @@ const AdventureDetail = (): JSX.Element => {
 
           <Breadcrumb
             items={[
-              { label: "Adventures", href: "/challenges" },
+              { label: "Adventures", href: "/challenges/" },
               { label: adventure.title },
             ]}
           />

@@ -52,13 +52,13 @@ describe("FilteredLevelCard - link", () => {
   it("wraps the card in a link to the correct level URL", () => {
     renderCard();
     const link = screen.getByRole("link");
-    expect(link.getAttribute("href")).toBe("/adventures/adventure-01/levels/beginner");
+    expect(link.getAttribute("href")).toBe("/adventures/adventure-01/levels/beginner/");
   });
 
   it("uses adventureId and level.id to build the href", () => {
     renderCard(LEVEL, "my-adventure", "My Adventure");
     const link = screen.getByRole("link");
-    expect(link.getAttribute("href")).toBe("/adventures/my-adventure/levels/beginner");
+    expect(link.getAttribute("href")).toBe("/adventures/my-adventure/levels/beginner/");
   });
 });
 

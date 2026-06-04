@@ -21,7 +21,7 @@ describe("ChallengesGrid", () => {
       renderGrid();
       ADVENTURES.forEach((adventure) => {
         expect(
-          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}/`)
         ).toBe(true);
       });
     });
@@ -29,7 +29,7 @@ describe("ChallengesGrid", () => {
     it("links each adventure card to /adventures/:id", () => {
       renderGrid();
       ADVENTURES.forEach((adventure) => {
-        const link = screen.getAllByRole("link").find((l) => l.getAttribute("href") === `/adventures/${adventure.id}`);
+        const link = screen.getAllByRole("link").find((l) => l.getAttribute("href") === `/adventures/${adventure.id}/`);
         expect(link).toBeTruthy();
       });
     });
@@ -75,14 +75,14 @@ describe("ChallengesGrid", () => {
       fireEvent.click(screen.getByRole("button", { name: firstTag }));
       ADVENTURES.forEach((adventure) => {
         expect(
-          screen.queryAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+          screen.queryAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}/`)
         ).toBe(false);
       });
       adventuresWithFirstTag.forEach((adventure) => {
         adventure.levels.forEach((level) => {
           expect(
             screen.queryAllByRole("link").some(
-              (l) => l.getAttribute("href") === `/adventures/${adventure.id}/levels/${level.id}`
+              (l) => l.getAttribute("href") === `/adventures/${adventure.id}/levels/${level.id}/`
             )
           ).toBe(true);
         });
@@ -95,7 +95,7 @@ describe("ChallengesGrid", () => {
       adventuresWithFirstTag.forEach((adventure) => {
         adventure.levels.forEach((level) => {
           const link = screen.queryAllByRole("link").find(
-            (l) => l.getAttribute("href") === `/adventures/${adventure.id}/levels/${level.id}`
+            (l) => l.getAttribute("href") === `/adventures/${adventure.id}/levels/${level.id}/`
           );
           expect(link).toBeTruthy();
         });
@@ -123,7 +123,7 @@ describe("ChallengesGrid", () => {
       fireEvent.click(btn);
       ADVENTURES.forEach((adventure) => {
         expect(
-          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}/`)
         ).toBe(true);
       });
     });
@@ -186,7 +186,7 @@ describe("ChallengesGrid", () => {
       fireEvent.click(within(group).getByRole("button", { name: "Beginner" }));
       ADVENTURES.forEach((adventure) => {
         expect(
-          screen.queryAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+          screen.queryAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}/`)
         ).toBe(false);
       });
     });
@@ -198,7 +198,7 @@ describe("ChallengesGrid", () => {
       fireEvent.click(within(group).getByRole("button", { name: "All Levels" }));
       ADVENTURES.forEach((adventure) => {
         expect(
-          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}/`)
         ).toBe(true);
       });
     });
@@ -211,7 +211,7 @@ describe("ChallengesGrid", () => {
       fireEvent.click(btn);
       ADVENTURES.forEach((adventure) => {
         expect(
-          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}/`)
         ).toBe(true);
       });
     });

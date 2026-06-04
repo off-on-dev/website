@@ -396,8 +396,8 @@ const ChallengeDetail = (): JSX.Element => {
           <Breadcrumb
             className="mb-10"
             items={[
-              { label: "Adventures", href: "/challenges" },
-              { label: adventure.title, href: `/adventures/${adventure.id}` },
+              { label: "Adventures", href: "/challenges/" },
+              { label: adventure.title, href: `/adventures/${adventure.id}/` },
               { label: level.name },
             ]}
           />

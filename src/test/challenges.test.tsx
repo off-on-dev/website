@@ -25,7 +25,7 @@ describe("Challenges - default (All) state", () => {
     renderChallenges();
     ADVENTURE_SUMMARIES.forEach((adventure) => {
       expect(
-        screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+        screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}/`)
       ).toBe(true);
     });
   });
@@ -84,7 +84,7 @@ describe("Challenges - tag filter", () => {
     fireEvent.click(screen.getByRole("button", { name: firstTag }));
     ADVENTURE_SUMMARIES.forEach((adventure) => {
       expect(
-        screen.queryAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+        screen.queryAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}/`)
       ).toBe(false);
     });
   });
@@ -122,7 +122,7 @@ describe("Challenges - deselecting a tag", () => {
     fireEvent.click(btn);
     ADVENTURE_SUMMARIES.forEach((adventure) => {
       expect(
-        screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+        screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}/`)
       ).toBe(true);
     });
   });

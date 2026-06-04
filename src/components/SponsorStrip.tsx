@@ -10,7 +10,7 @@ export const SponsorStrip = (): JSX.Element => {
           Sponsor challenges, swag, or licenses and connect with the next generation of open source contributors.
         </p>
         <Link
-          to="/sponsors"
+          to="/sponsors/"
           className="btn-primary shrink-0"
         >
           Become a Sponsor <ArrowRight size={14} aria-hidden="true" />

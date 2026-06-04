@@ -93,7 +93,7 @@ export const ChallengesGrid = ({ limit }: ChallengesGridProps = {}): JSX.Element
               </div>
               {hasMore && (
                 <div className="mt-10 flex justify-center">
-                  <Link to="/challenges" className="btn-ghost inline-flex items-center gap-2">
+                  <Link to="/challenges/" className="btn-ghost inline-flex items-center gap-2">
                     See all adventures
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Link>
