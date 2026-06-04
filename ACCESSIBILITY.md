@@ -157,6 +157,12 @@ Apply this to every component you write or modify.
 
 - Every `<a target="_blank">` must include `<span className="sr-only"> (opens in new tab)</span>` as its last child.
 
+### Links
+
+- Every link's text must describe its destination. Never use "click here", "read more", or "more" alone as link text.
+- When link text is ambiguous in isolation (e.g. "View" repeated on every card), add `aria-label` on the `<a>` to provide a full, descriptive accessible name.
+- Every `<a>` element must have an accessible name (text content, `aria-label`, or `aria-labelledby`). An `<a>` with no accessible name is invisible to screen readers and cannot be operated by voice control.
+
 ### Icons and special characters
 
 - Decorative icons paired with visible text: `aria-hidden="true"`.
@@ -183,6 +189,15 @@ Apply this to every component you write or modify.
 - Every page must have a skip link as the first focusable element targeting `#main-content`.
 - The skip link uses the `.skip-nav` class in `src/index.css`. Never remove this class or its focus rules.
 - When adding a new page, always add `id="main-content"` to its `<main>` element.
+
+### Hidden until found
+
+- For collapsible sections that should remain discoverable by browser find-in-page and screen readers, use `hidden="until-found"` instead of `display: none` or `visibility: hidden`. The browser auto-expands the section when the user searches for content inside it.
+- Do not use `hidden="until-found"` for content that must be genuinely hidden until an explicit interaction (e.g. a confirmation dialog). Use `display: none` for those cases.
+
+### Accessibility overlays
+
+- Never install third-party JavaScript "accessibility overlay" widgets that claim to auto-remediate WCAG issues at runtime. They do not reliably fix issues, frequently create new barriers for screen-reader users, and are not a substitute for genuine compliance work.
 
 ### Windows High Contrast Mode
 

@@ -23,7 +23,7 @@ export const Breadcrumb = ({ items, className = "mb-5" }: BreadcrumbProps): JSX.
           {item.href ? (
             <Link
               to={item.href}
-              className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm"
+              className="inline-flex min-h-6 items-center hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm"
             >
               {item.label}
             </Link>

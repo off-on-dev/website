@@ -9,7 +9,7 @@ type ContributorBadgeProps = {
 };
 
 const basePillClass =
-  "contributor-pill inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-2.5 py-0.5 text-xs text-primary";
+  "contributor-pill inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-xs text-primary";
 
 export const ContributorBadge = ({ name, url, glow = false, label = "Challenge Builder" }: ContributorBadgeProps): JSX.Element => {
   const pillClass = glow ? `${basePillClass} contributor-pill-glow` : basePillClass;

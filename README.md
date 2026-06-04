@@ -181,7 +181,9 @@ The following constants in `src/data/constants.ts` drive the analytics setup:
 Deployment is automated via GitHub Actions:
 
 - **Push to `main`** triggers [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which builds and deploys to GitHub Pages. Production URL: **https://offon.dev**.
-- **Open a PR** triggers [`.github/workflows/preview.yml`](.github/workflows/preview.yml), which deploys a preview at `/pr-preview/pr-<n>/`.
+- **Open a PR** triggers [`.github/workflows/preview.yml`](.github/workflows/preview.yml), which runs lint, build, unit tests, and the full Playwright suite (axe, a11y, smoke) before deploying a preview at `/pr-preview/pr-<n>/`.
+- **PRs touching adventure data** also trigger [`.github/workflows/validate-adventures.yml`](.github/workflows/validate-adventures.yml), which validates YAML schema, checks that generated files are up-to-date (including `public/llms.txt`), and verifies sitemap/prerender/leaderboard consistency.
+- **PRs adding components, hooks, utilities, constants, scripts, or workflows** trigger [`.github/workflows/validate-docs.yml`](.github/workflows/validate-docs.yml), which runs `scripts/check-docs.sh` and fails if the relevant documentation (`styleguide.md` or `README.md`) was not updated in the same PR.
 
 `dist/client/404/index.html` (the prerendered 404 page) is copied to `dist/client/404.html` as a fallback for unknown routes. Each valid route has its own prerendered `index.html` so GitHub Pages serves a 200 directly.
 
