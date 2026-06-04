@@ -96,26 +96,10 @@
 }
 @font-face {
   font-family: 'Syne';
-  src: url('/fonts/syne-latin-ext-600-normal.woff2') format('woff2');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: 'Syne';
-  src: url('/fonts/syne-latin-600-normal.woff2') format('woff2');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Syne';
   src: url('/fonts/syne-latin-ext-700-normal.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
-  font-display: swap;
+  font-display: optional;
   unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
@@ -123,7 +107,7 @@
   src: url('/fonts/syne-latin-700-normal.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
-  font-display: swap;
+  font-display: optional;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -385,8 +369,8 @@ html {
 /* ─── Animations ──────────────────────────────────────────── */
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0.7; transform: translateY(8px); }
+  to   { opacity: 1;   transform: translateY(0); }
 }
 
 @keyframes marquee {
@@ -421,10 +405,10 @@ html {
   100% { transform: translate(0,     0);    opacity: 0;    }
 }
 
-.animate-fade-up            { animation: fadeUp 0.6s ease-out both; }
-.animate-fade-up-delay-1    { animation: fadeUp 0.6s ease-out 0.1s both; }
-.animate-fade-up-delay-2    { animation: fadeUp 0.6s ease-out 0.2s both; }
-.animate-fade-up-delay-3    { animation: fadeUp 0.6s ease-out 0.3s both; }
+.animate-fade-up            { animation: fadeUp 0.35s ease-out both; }
+.animate-fade-up-delay-1    { animation: fadeUp 0.35s ease-out 0.05s both; }
+.animate-fade-up-delay-2    { animation: fadeUp 0.35s ease-out 0.10s both; }
+.animate-fade-up-delay-3    { animation: fadeUp 0.35s ease-out 0.15s both; }
 .animate-marquee            { animation: marquee 30s linear infinite; }
 
 @media (prefers-reduced-motion: reduce) {
@@ -456,6 +440,11 @@ html {
     0 0 5px 2px  hsl(var(--primary) / 0.55),
     0 0 10px 3px hsl(var(--primary) / 0.2);
   animation: fireflyFloat linear infinite;
+}
+/* will-change creates a GPU compositing layer; cap at 3 to stay within PERFORMANCE.md limit */
+.firefly:nth-child(1),
+.firefly:nth-child(2),
+.firefly:nth-child(3) {
   will-change: transform, opacity;
 }
 /* vary each dot's position + timing */
@@ -467,13 +456,7 @@ html {
 .firefly:nth-child(6)  { top: 18%; left: 55%;  animation-duration: 8s;   animation-delay: 1.8s; }
 .firefly:nth-child(7)  { top: 82%; right: 8%;   animation-duration: 6.5s; animation-delay: 4s;   }
 .firefly:nth-child(8)  { top: 50%; left: 72%;  animation-duration: 7s;   animation-delay: 2.6s; }
-/* four new: fill top strip, mid-left gap, lower-right gap */
-.firefly:nth-child(9)  { top: 7%;  left: 38%;  animation-duration: 6.5s; animation-delay: 0.9s; }
-.firefly:nth-child(10) { top: 6%;  right: 20%;  animation-duration: 7s;   animation-delay: 3.5s; }
-.firefly:nth-child(11) { top: 46%; left: 6%;   animation-duration: 8s;   animation-delay: 1.6s; }
-.firefly:nth-child(12) { top: 68%; right: 14%;  animation-duration: 5.5s; animation-delay: 2.3s; }
-
-/* On mobile hide fireflies 7–12; display:none also stops their animations */
+/* On mobile hide fireflies 7–8; display:none also stops their animations */
 @media (max-width: 639px) {
   .firefly:nth-child(n+7) { display: none; }
 }

@@ -2,7 +2,7 @@ import type { JSX } from "react";
 import { Link } from "react-router";
 import { Zap, ExternalLink } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
-import { BRAND_NAME, BRAND_SHORT_DESCRIPTION, BRAND_SLOGAN_PARTS, COMMUNITY_URL, CONTACT_EMAIL, CURRENT_YEAR, LINKEDIN_URL, BLUESKY_URL, X_URL } from "@/data/constants";
+import { BRAND_NAME, BRAND_SHORT_DESCRIPTION, BRAND_SLOGAN_PARTS, COMMUNITY_URL, CONTACT_EMAIL, CURRENT_YEAR, LINKEDIN_URL, BLUESKY_URL, X_URL, SITE_NAME } from "@/data/constants";
 import logoDark from "@/assets/offon-logo-dark-color.svg";
 import logoLight from "@/assets/offon-logo-light-color.svg";
 
@@ -18,7 +18,7 @@ export const Footer = (): JSX.Element => {
         {/* Brand */}
         <div>
           <div className="mb-4">
-            <img src={theme === "dark" ? logoDark : logoLight} alt="offon.dev" width={104} height={26} loading="lazy" className="h-5" />
+            <img src={theme === "dark" ? logoDark : logoLight} alt={SITE_NAME} width={104} height={26} loading="lazy" className="h-5" />
           </div>
           <p className="font-sans text-sm text-[hsl(var(--text-secondary))] leading-relaxed md:max-w-xs">
             {BRAND_SHORT_DESCRIPTION}

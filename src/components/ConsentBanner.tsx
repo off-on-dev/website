@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, type JSX } from "react";
 import { Link } from "react-router";
 import { Cookie } from "lucide-react";
 import { useConsent } from "@/hooks/useConsent";
+import { SITE_NAME } from "@/data/constants";
 
 export function ConsentBanner(): JSX.Element | null {
   const { consent, grant, deny, reset } = useConsent();
@@ -53,7 +54,7 @@ export function ConsentBanner(): JSX.Element | null {
         <div className="flex-1 space-y-1">
           <p id="consent-banner-title" className="text-sm text-foreground">This site uses analytics cookies</p>
           <p className="text-sm text-muted-foreground">
-            We use Google Analytics to understand how visitors use offon.dev. No data is sent to
+            We use Google Analytics to understand how visitors use {SITE_NAME}. No data is sent to
             Google until you accept. You can change your preference at any time. See our{" "}
             <Link
               to="/privacy"
