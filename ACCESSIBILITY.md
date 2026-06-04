@@ -104,7 +104,7 @@ Apply this to every component you write or modify.
 - Large text (18px+ or bold 14px+): minimum 3:1.
 - UI components and focus indicators: minimum 3:1 against adjacent colors.
 - Focus indicators (WCAG 2.4.11): the focus indicator area must be at least as large as a 2px perimeter outline of the component, and the focused/unfocused contrast ratio must be at least 3:1.
-- Never use `hsl(41 100% 60%)` (`#ffc034` yellow) as text in light mode — fails contrast.
+- Never use `hsl(41 100% 60%)` (`#ffc034` yellow) as text in light mode. Fails contrast.
 - Never place text on `bg-primary` without verifying light mode contrast.
 - Never use `opacity-*` on an element that contains visible text. Use an explicit CSS color token instead (e.g. `text-[hsl(var(--text-faint))]`).
 - Always verify contrast in both light and dark mode.

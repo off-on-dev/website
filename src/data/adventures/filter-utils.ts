@@ -4,7 +4,7 @@ import type { RelatedLevelSummary } from "./types";
 export const DIFFICULTIES = ["Beginner", "Intermediate", "Expert"] as const;
 export type Difficulty = (typeof DIFFICULTIES)[number];
 
-/** Returns level summaries matching all selected tags (AND) and/or a difficulty. */
+/** Returns level summaries matching any selected tag (OR) and/or a difficulty. */
 export const getLevelSummariesByFilters = (
   tags: string[],
   difficulty: string | null

@@ -4,7 +4,7 @@ import { createMemoryRouter, RouterProvider } from "react-router";
 import Challenges from "@/pages/Challenges";
 import { ADVENTURES } from "@/data/adventures";
 import { ADVENTURE_SUMMARIES } from "@/data/adventures/summaries";
-import { tagToSlug } from "@/data/adventures";
+import { tagToSlug } from "@/data/adventures/tag-utils";
 
 const allTags = Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort();
 const firstTag = allTags[0];
@@ -88,7 +88,7 @@ describe("Challenges - tag filter", () => {
     renderChallenges();
     fireEvent.click(screen.getByRole("button", { name: firstTag }));
     // ChallengeBuildersSection always renders adventure links regardless of filter
-    // state — exclude that persistent section from this assertion.
+    // state, so exclude that persistent section from this assertion.
     ADVENTURE_SUMMARIES.forEach((adventure) => {
       expect(
         screen.queryAllByRole("link").some(
@@ -206,5 +206,60 @@ describe("Challenges - URL state", () => {
     renderChallenges(`/challenges?topics=${firstTagSlug},${secondTagSlug}`);
     expect(screen.getByRole("button", { name: firstTag }).getAttribute("aria-pressed")).toBe("true");
     expect(screen.getByRole("button", { name: secondTag }).getAttribute("aria-pressed")).toBe("true");
+  });
+
+  it("aria-live announces active filter when URL already has ?topics= on mount", () => {
+    const { container } = renderChallenges(`/challenges?topics=${firstTagSlug}`);
+    const region = container.querySelector("[aria-live]");
+    expect(region!.textContent).toMatch(/challenge/);
+  });
+
+  it("aria-live announces active filter when URL already has a tag path on mount", () => {
+    const { container } = renderChallenges(`/challenges/${firstTagSlug}`);
+    const region = container.querySelector("[aria-live]");
+    expect(region!.textContent).toMatch(/challenge/);
+  });
+
+  it("clicking All Tools on a path-param route navigates to /challenges/ and clears the filter", () => {
+    const { router } = renderChallenges(`/challenges/${firstTagSlug}`);
+    expect(screen.getByRole("button", { name: firstTag }).getAttribute("aria-pressed")).toBe("true");
+    fireEvent.click(screen.getByRole("button", { name: "All Tools" }));
+    expect(router.state.location.pathname).toBe("/challenges/");
+    expect(new URLSearchParams(router.state.location.search).get("topics")).toBeNull();
+  });
+
+  it("clicking All Tools on a path-param route with difficulty preserves difficulty and navigates away", () => {
+    const { router } = renderChallenges(`/challenges/${firstTagSlug}?difficulty=Beginner`);
+    fireEvent.click(screen.getByRole("button", { name: "All Tools" }));
+    expect(router.state.location.pathname).toBe("/challenges/");
+    expect(new URLSearchParams(router.state.location.search).get("difficulty")).toBe("Beginner");
+    expect(new URLSearchParams(router.state.location.search).get("topics")).toBeNull();
+  });
+
+  it("does not announce 'filters cleared' when URL contains an unresolvable topics slug", () => {
+    const { container } = renderChallenges("/challenges?topics=__invalid_slug__");
+    const region = container.querySelector("[aria-live]");
+    expect(region!.textContent).toBe("");
+  });
+});
+
+describe("Challenges - results heading", () => {
+  it("renders an 'All Challenges' heading in the unfiltered state", () => {
+    renderChallenges();
+    expect(screen.getByRole("heading", { level: 2, name: "All Challenges" })).toBeTruthy();
+  });
+
+  it("renders a 'Filtered Challenges' heading when a filter is active", () => {
+    renderChallenges();
+    fireEvent.click(screen.getByRole("button", { name: firstTag }));
+    expect(screen.getByRole("heading", { level: 2, name: "Filtered Challenges" })).toBeTruthy();
+  });
+
+  it("heading switches from 'All Challenges' to 'Filtered Challenges' when a tag is selected", () => {
+    renderChallenges();
+    expect(screen.getByRole("heading", { level: 2, name: "All Challenges" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: firstTag }));
+    expect(screen.queryByRole("heading", { level: 2, name: "All Challenges" })).toBeNull();
+    expect(screen.getByRole("heading", { level: 2, name: "Filtered Challenges" })).toBeTruthy();
   });
 });

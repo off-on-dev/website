@@ -13,7 +13,7 @@ function clickCopyButton(): HTMLElement {
   return btn;
 }
 
-describe("MarkdownContent — copy button", () => {
+describe("MarkdownContent: copy button", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     Object.assign(navigator, {

@@ -84,7 +84,7 @@ describe("RewardsCard - active deadline (deadlinePast=false)", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Past deadline (deadlinePast=true) — non-compact
+// Past deadline (deadlinePast=true), non-compact
 // ---------------------------------------------------------------------------
 
 describe("RewardsCard - past deadline, non-compact", () => {
@@ -119,7 +119,7 @@ describe("RewardsCard - past deadline, non-compact", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Past deadline (deadlinePast=true) — compact
+// Past deadline (deadlinePast=true), compact
 // ---------------------------------------------------------------------------
 
 describe("RewardsCard - past deadline, compact", () => {

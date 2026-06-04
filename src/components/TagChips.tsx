@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { Link } from "react-router";
-import { tagToSlug } from "@/data/adventures";
+import { tagToSlug } from "@/data/adventures/tag-utils";
 
 type TagChipsProps = {
   tags: readonly string[];

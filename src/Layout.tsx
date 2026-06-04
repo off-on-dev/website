@@ -27,10 +27,10 @@ const ScrollToTop = (): null => {
       return;
     }
 
-    // Suppress scroll reset when the user is navigating between filter states
-    // on the challenges page (e.g. selecting a tag moves /challenges →
-    // /challenges/kubernetes). Both paths share the same visible page, so
-    // jumping to the top would be jarring.
+    // Suppress scroll reset when navigating between /challenges and
+    // /challenges/:tag (e.g. clicking a TagChip or direct-linking to a tag).
+    // Filter interactions (topic/difficulty toggles) never change the pathname,
+    // so they don't reach this guard at all.
     if (prev !== null && prev.startsWith("/challenges") && pathname.startsWith("/challenges")) return;
 
     window.scrollTo(0, 0);

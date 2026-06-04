@@ -731,18 +731,7 @@ function generateIndexTs(adventures) {
   lines.push(`    }))`);
   lines.push(`  );`);
   lines.push(``);
-  lines.push(`/** Convert a tag display name to a URL-safe slug. */`);
-  lines.push(`export const tagToSlug = (tag: string): string =>`);
-  lines.push(`  tag.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");`);
-  lines.push(``);
-  lines.push(`/** Lookup map from slug back to the original tag name. */`);
-  lines.push(`const SLUG_TO_TAG: Record<string, string> = Object.fromEntries(`);
-  lines.push(`  ALL_TAGS.map((tag) => [tagToSlug(tag), tag])`);
-  lines.push(`);`);
-  lines.push(``);
-  lines.push(`/** Resolve a URL slug back to the original tag name, or undefined if not found. */`);
-  lines.push(`export const slugToTag = (slug: string): string | undefined => SLUG_TO_TAG[slug];`);
-  lines.push(``);
+  lines.push(`export { tagToSlug, slugToTag } from "./tag-utils";`);
 
   return lines.join("\n");
 }

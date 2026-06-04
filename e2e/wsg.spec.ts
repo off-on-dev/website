@@ -7,7 +7,7 @@ const PAGES = [
   "/",
   "/adventures",
   "/challenges",
-  // Representative detail pages — catch weight/media regressions on content-heavy routes.
+  // Representative detail pages. Catch weight/media regressions on content-heavy routes.
   "/adventures/blind-by-design/levels/beginner",
   "/challenges/opentelemetry",
 ];
@@ -20,7 +20,7 @@ const PAGE_WEIGHT_BUDGET_KB = 750;
 // Page weight (WSG 2.3, 2.5)
 // ---------------------------------------------------------------------------
 
-test.describe("WSG — page weight", () => {
+test.describe("WSG: page weight", () => {
   for (const path of PAGES) {
     test(`${path} total transfer < ${PAGE_WEIGHT_BUDGET_KB} KB`, async ({ page, context }) => {
       const client = await context.newCDPSession(page);
@@ -37,7 +37,7 @@ test.describe("WSG — page weight", () => {
       const kb = Math.round(totalBytes / 1024);
       expect(
         totalBytes,
-        `${path} transferred ${kb} KB — over ${PAGE_WEIGHT_BUDGET_KB} KB budget`,
+        `${path} transferred ${kb} KB, over ${PAGE_WEIGHT_BUDGET_KB} KB budget`,
       ).toBeLessThan(PAGE_WEIGHT_BUDGET_KB * 1024);
     });
   }
@@ -47,7 +47,7 @@ test.describe("WSG — page weight", () => {
 // Third-party requests (WSG 5.14, 5.15)
 // No analytics or tracking requests without consent.
 // Community avatar hosts (community.offon.dev, discourse-cdn.com) are
-// allowlisted — they serve first-party content, not tracking scripts.
+// allowlisted, as they serve first-party content, not tracking scripts.
 // ---------------------------------------------------------------------------
 
 // Hosts that are permitted to receive requests on every page load.
@@ -66,7 +66,7 @@ function isAllowedHost(hostname: string): boolean {
   );
 }
 
-test.describe("WSG — third-party requests", () => {
+test.describe("WSG: third-party requests", () => {
   for (const path of PAGES) {
     test(`${path} makes no tracking/analytics requests without consent`, async ({ page }) => {
       const unexpected: string[] = [];
@@ -94,9 +94,9 @@ test.describe("WSG — third-party requests", () => {
 // Image optimisation (WSG 2.9)
 // ---------------------------------------------------------------------------
 
-test.describe("WSG — image optimisation", () => {
+test.describe("WSG: image optimisation", () => {
   for (const path of PAGES) {
-    test(`${path} — all images have explicit width and height`, async ({ page }) => {
+    test(`${path}: all images have explicit width and height`, async ({ page }) => {
       await page.goto(path);
       await page.waitForLoadState("networkidle");
 
@@ -109,7 +109,7 @@ test.describe("WSG — image optimisation", () => {
       expect(violations, "Images missing explicit width/height (causes CLS)").toHaveLength(0);
     });
 
-    test(`${path} — below-fold images use loading="lazy"`, async ({ page }) => {
+    test(`${path}: below-fold images use loading="lazy"`, async ({ page }) => {
       await page.goto(path);
       await page.waitForLoadState("networkidle");
 
@@ -132,9 +132,9 @@ test.describe("WSG — image optimisation", () => {
 // Autoplaying media wastes bandwidth and energy without user intent.
 // ---------------------------------------------------------------------------
 
-test.describe("WSG — media", () => {
+test.describe("WSG: media", () => {
   for (const path of PAGES) {
-    test(`${path} — no autoplaying media without muted`, async ({ page }) => {
+    test(`${path}: no autoplaying media without muted`, async ({ page }) => {
       await page.goto(path);
       await page.waitForLoadState("networkidle");
 

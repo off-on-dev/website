@@ -20,23 +20,18 @@ export const meta: MetaFunction = () =>
     url: `${SITE_URL}/adventures/`,
   });
 
-type Step = { step: string; icon: JSX.Element; title: string; desc: string };
-
-const HOW_IT_WORKS: Step[] = [
+const HOW_IT_WORKS = [
   {
-    step: "01",
     icon: <BookOpen size={22} aria-hidden="true" />,
     title: "Pick a Scenario",
-    desc: "Each adventure is a self-contained story focused on one open source technology. Choose a difficulty — Beginner, Intermediate, or Expert — and start where you are.",
+    desc: "Each adventure is a self-contained story focused on one open source technology. Pick the difficulty that fits where you are and start from there.",
   },
   {
-    step: "02",
     icon: <Laptop size={22} aria-hidden="true" />,
     title: "Launch in Codespaces",
-    desc: "A pre-configured GitHub Codespace spins up with everything installed. No local setup, no Docker, no dependency conflicts — ready in a few clicks.",
+    desc: "A pre-configured GitHub Codespace spins up with everything installed. No local setup, no Docker, no dependency conflicts. Ready in a few clicks.",
   },
   {
-    step: "03",
     icon: <GitFork size={22} aria-hidden="true" />,
     title: "Apply, Fork, and Build",
     desc: "Complete real-world scenarios, bring the knowledge into your own projects, fork the challenge repo, and share your solutions with the community.",
@@ -50,25 +45,24 @@ const Adventures = (): JSX.Element => (
       <PageHero
         eyebrow="Adventures"
         title="Real-World Scenarios. Practical Skills."
-        description="Hands-on challenges and practical knowledge you can apply, fork, and build on. Each adventure runs entirely in GitHub Codespaces — a working environment in a few clicks, no local setup needed."
+        description="Hands-on challenges and practical knowledge you can apply, fork, and build on. Each adventure runs entirely in GitHub Codespaces, a working environment in a few clicks, no local setup needed."
         primaryCta={{ label: "Browse All Challenges", href: "/challenges/" }}
       />
 
       {/* How Adventures Work */}
       <section
-        aria-label="How adventures work"
+        aria-labelledby="how-it-works-heading"
         className="bg-card py-16 px-6 md:px-16 border-y border-[hsl(var(--surface-border))]"
       >
         <div className="mx-auto max-w-6xl">
-          <p className="font-sans text-sm font-medium uppercase tracking-widest text-muted-foreground mb-8">
+          <h2 id="how-it-works-heading" className="text-xl font-bold text-foreground mb-8">
             How Adventures Work
-          </p>
+          </h2>
           <div className="grid gap-8 sm:grid-cols-3">
-            {HOW_IT_WORKS.map(({ step, icon, title, desc }) => (
-              <div key={step} className="flex gap-4">
+            {HOW_IT_WORKS.map(({ icon, title, desc }) => (
+              <div key={title} className="flex gap-4">
                 <span className="mt-0.5 shrink-0 text-primary">{icon}</span>
                 <div>
-                  <span className="font-mono text-xs text-primary/60 block mb-1">{step}</span>
                   <p className="font-semibold text-foreground">{title}</p>
                   <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{desc}</p>
                 </div>

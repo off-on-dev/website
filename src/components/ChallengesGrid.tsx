@@ -59,15 +59,15 @@ export const ChallengesGrid = ({ limit }: ChallengesGridProps = {}): JSX.Element
           {/* Live region */}
           <p aria-live="polite" aria-atomic="true" className="sr-only">
             {isFiltered
-              ? `Showing ${filteredLevels.length} ${filteredLevels.length === 1 ? "challenge" : "challenges"}`
+              ? `Showing ${filteredLevels.length} ${filteredLevels.length === 1 ? "challenge" : "challenges"}${activeDifficulty ? ` · ${activeDifficulty}` : ""}${activeTopics.length > 0 ? ` · ${activeTopics.join(", ")}` : ""}`
               : hasFiltered
-              ? "Filters cleared, showing all adventures"
+              ? `Filters cleared, showing ${ADVENTURE_SUMMARIES.length} ${ADVENTURE_SUMMARIES.length === 1 ? "adventure" : "adventures"} · ${ALL_LEVEL_SUMMARIES.length} ${ALL_LEVEL_SUMMARIES.length === 1 ? "challenge" : "challenges"}`
               : ""}
           </p>
 
           {isFiltered ? (
             <>
-              <p className="animate-fade-up mb-6 font-sans text-sm font-medium tracking-wide text-primary">
+              <p className="animate-fade-up mb-6 font-sans text-sm font-medium tracking-wide text-muted-foreground">
                 {filteredLevels.length} {filteredLevels.length === 1 ? "challenge" : "challenges"}
                 {activeDifficulty && ` · ${activeDifficulty}`}
                 {activeTopics.length > 0 && ` · ${activeTopics.join(", ")}`}
@@ -86,7 +86,7 @@ export const ChallengesGrid = ({ limit }: ChallengesGridProps = {}): JSX.Element
             </>
           ) : (
             <>
-              <p className="mb-6 font-sans text-sm font-medium tracking-wide text-primary">
+              <p className="mb-6 font-sans text-sm font-medium tracking-wide text-muted-foreground">
                 {ADVENTURE_SUMMARIES.length} {ADVENTURE_SUMMARIES.length === 1 ? "adventure" : "adventures"} · {ALL_LEVEL_SUMMARIES.length} {ALL_LEVEL_SUMMARIES.length === 1 ? "challenge" : "challenges"}
               </p>
               <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">

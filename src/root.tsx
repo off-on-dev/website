@@ -8,7 +8,7 @@ export const links: LinksFunction = () => [
   // Inter 400–700: body text, semibold labels, bold headings used on every page.
   // Syne 700: all h1–h6 via the @layer base rule in index.css.
   // Latin-only subsets are always needed for English content and never generate "preloaded but not used" warnings.
-  // font-display: optional requires preloads to succeed — without them, the optional window expires
+  // font-display: optional requires preloads to succeed. Without them, the optional window expires
   // on throttled connections before fonts are discovered, so the browser falls back to system fonts permanently.
   { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
   { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-500-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
@@ -30,7 +30,7 @@ const themeScript = `(function(){var t=localStorage.getItem("theme");if(t==="lig
 const gtagBootstrap = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});`;
 
 // Injected via DOM (not JSX) so React's reconciler never touches a processed
-// speculationrules script — modifying one after the browser has read it emits
+// speculationrules script. Modifying one after the browser has read it emits
 // "Inline speculation rules cannot currently be modified after they are processed."
 const SPECULATION_RULES = `{"prefetch":[{"source":"document","where":{"href_matches":["/adventures/","/challenges/"]},"eagerness":"moderate"}]}`;
 

@@ -4,7 +4,7 @@ import { HydratedRouter } from "react-router/dom";
 
 // When a static host (GitHub Pages, local preview) serves the prerendered
 // 404.html as a fallback for an unknown URL, the embedded __reactRouterContext
-// stream contains route-match state for the /404 route — not the actual browser
+// stream contains route-match state for the /404 route, not the actual browser
 // URL. HydratedRouter uses that stale route state, which triggers a client-side
 // route-match mismatch and React error #418. React recovers automatically
 // (it switches to a client render of the correct NotFound page), but the error

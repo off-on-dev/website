@@ -160,7 +160,7 @@ describe('AdventureLevelLink', () => {
         </MemoryRouter>
       </ConsentProvider>
     );
-    // Old learnings overflow pattern removed — must never appear
+    // Old learnings overflow pattern removed. Must never appear
     expect(screen.queryByText(/\+\d+ more/)).toBeNull();
   });
 

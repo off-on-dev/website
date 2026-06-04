@@ -46,7 +46,7 @@ describe("displaySnippet", () => {
     const post = makePost({
       challengeSolved: true,
       cooked:
-        "Done.— CERTIFICATE START —\ncert content\n— CERTIFICATE END —",
+        "Done.\u2014 CERTIFICATE START \u2014\ncert content\n\u2014 CERTIFICATE END \u2014",
     });
     expect(displaySnippet(post)).toBe("Done.");
   });

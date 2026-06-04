@@ -111,7 +111,7 @@ test.describe("every prerendered route (light mode)", () => {
 
 // axe-core does not check WCAG 1.4.11 border contrast on styled <a> link elements.
 // This block fills that gap for the specific interactive chip/pill components.
-test.describe("WCAG 1.4.11 border contrast — light mode (axe gap)", () => {
+test.describe("WCAG 1.4.11 border contrast: light mode (axe gap)", () => {
   // All contrast math runs inside page.evaluate so helpers are inline there.
   async function getBorderContrast(page: import("@playwright/test").Page, selector: string): Promise<number | null> {
     return page.evaluate((sel) => {

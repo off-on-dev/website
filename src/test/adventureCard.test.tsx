@@ -34,7 +34,7 @@ describe("AdventureCard", () => {
         <AdventureCard adventure={summary} />
       </MemoryRouter>
     );
-    // Raw markdown syntax must appear as-is — AdventureCard does not load react-markdown.
+    // Raw markdown syntax must appear as-is. AdventureCard does not load react-markdown.
     // The generator warns at build time if a story contains markdown, so this tests the
     // fallback rendering path for any story that slips through with syntax characters.
     expect(container.querySelector("p.line-clamp-2")?.textContent).toContain(
