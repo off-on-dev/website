@@ -26,10 +26,10 @@ describe("Footer - Explore nav", () => {
     expect(screen.getByRole("navigation", { name: "Explore" })).toBeTruthy();
   });
 
-  it("has an Adventures link pointing to /adventures", () => {
+  it("has a Challenges link pointing to /challenges", () => {
     renderFooter();
     const nav = screen.getByRole("navigation", { name: "Explore" });
-    expect(within(nav).getByRole("link", { name: "Adventures" }).getAttribute("href")).toBe("/adventures");
+    expect(within(nav).getByRole("link", { name: "Challenges" }).getAttribute("href")).toBe("/challenges");
   });
 
   it("has a Handbook link pointing to /handbook", () => {

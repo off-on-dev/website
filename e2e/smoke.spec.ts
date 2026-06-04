@@ -14,7 +14,6 @@ const ROUTES: RouteSpec[] = [
   { path: "/privacy", title: /Privacy Policy/ },
   { path: "/accessibility", title: /Accessibility Statement/ },
   { path: "/404", title: /Page Not Found/ },
-  { path: "/adventures", title: /Adventures - Hands-on open source challenges/ },
   // GENERATED:adventures
   { path: "/adventures/lex-imperfecta", title: /Lex Imperfecta/ },
   { path: "/adventures/lex-imperfecta/levels/beginner", title: /The Twelve Tables/ },

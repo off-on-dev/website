@@ -31,7 +31,7 @@ export const Footer = (): JSX.Element => {
             <nav aria-label="Explore">
               <p className="text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">Explore</p>
               <div className="flex flex-col">
-                <Link to="/adventures" className={linkCls}>Adventures</Link>
+                <Link to="/challenges" className={linkCls}>Challenges</Link>
                 <Link to="/contribute" className={linkCls}>Contribute</Link>
                 <Link to="/handbook" className={linkCls}>Handbook</Link>
                 <Link to="/about" className={linkCls}>About</Link>

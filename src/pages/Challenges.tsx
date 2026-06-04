@@ -72,7 +72,7 @@ const Challenges = (): JSX.Element => {
         <PageHero
           eyebrow="Challenges"
           title="Open Source Challenges"
-          description="Hands-on challenges built around real open source tools. Filter by technology, work through real-world scenarios, and learn by doing, entirely in your browser."
+          description="Each adventure focuses on one open source technology, with challenges at different difficulty levels. Pick your adventure, work through real-world scenarios hands-on, and share what you learn with the community."
         />
         <section className="py-24 px-6 md:px-16">
           <div className="mx-auto max-w-6xl">
