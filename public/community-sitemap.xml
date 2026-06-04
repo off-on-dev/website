@@ -2,19 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://community.offon.dev</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://community.offon.dev/c/community-voices/38</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://community.offon.dev/c/challenges/11</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -25,14 +25,20 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://community.offon.dev/t/open-source-clis-that-actually-replace-claude-code-opencode-openrouter-openspec-and-the-rest/1527</loc>
-    <lastmod>2026-05-19</lastmod>
+    <loc>https://community.offon.dev/t/open-source-news-offon-launches-eu-tech-sovereignty-letter-and-open-source-maintainer-funding-june-3-2026/1577</loc>
+    <lastmod>2026-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://community.offon.dev/t/open-source-news-eu-ai-act-deadline-firefox-security-pipeline-and-maintainer-sustainability-may-13-2026/1491</loc>
-    <lastmod>2026-05-13</lastmod>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://community.offon.dev/t/open-source-clis-that-actually-replace-claude-code-opencode-openrouter-openspec-and-the-rest/1527</loc>
+    <lastmod>2026-05-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
