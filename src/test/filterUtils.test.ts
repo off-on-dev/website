@@ -1,10 +1,30 @@
 import { describe, it, expect } from "vitest";
-import { getLevelSummariesByFilters } from "@/data/adventures/filter-utils";
+import { getLevelSummariesByFilters, ALL_LEVEL_SUMMARIES } from "@/data/adventures/filter-utils";
 import { ADVENTURE_SUMMARIES } from "@/data/adventures/summaries";
 
 const allLevels = ADVENTURE_SUMMARIES.flatMap((a) => a.levels);
 const allDifficulties = Array.from(new Set(allLevels.map((l) => l.difficulty)));
 const firstTag = Array.from(new Set(ADVENTURE_SUMMARIES.flatMap((a) => a.tags))).sort()[0];
+
+describe("ALL_LEVEL_SUMMARIES", () => {
+  it("contains every level across all adventures", () => {
+    const allLevelCount = ADVENTURE_SUMMARIES.flatMap((a) => a.levels).length;
+    expect(ALL_LEVEL_SUMMARIES.length).toBe(allLevelCount);
+  });
+
+  it("each entry has adventureId, adventureTitle, and level", () => {
+    ALL_LEVEL_SUMMARIES.forEach((item) => {
+      expect(item.adventureId).toBeTruthy();
+      expect(item.adventureTitle).toBeTruthy();
+      expect(item.level).toBeTruthy();
+      expect(item.level.id).toBeTruthy();
+    });
+  });
+
+  it("matches getLevelSummariesByFilters([], null)", () => {
+    expect(ALL_LEVEL_SUMMARIES).toEqual(getLevelSummariesByFilters([], null));
+  });
+});
 
 describe("getLevelSummariesByFilters", () => {
   it("returns all levels across all adventures when no filters are active", () => {

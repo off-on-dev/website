@@ -26,7 +26,7 @@ All brand copy constants live in `src/data/constants.ts`. Use them instead of ha
 
 | Role | Family | Key weights | Format |
 |---|---|---|---|
-| Headings / display (`font-heading`) | Syne | 600, 700 | WOFF2 only (`public/fonts/syne-*.woff2`) |
+| Headings / display (`font-heading`) | Syne | 700 | WOFF2 only (`public/fonts/syne-*.woff2`) |
 | Body & UI (`font-sans`) | Inter | 400, 500, 600 primary (700 available) | WOFF2 only (`public/fonts/inter-*.woff2`) |
 | Code / mono (`font-mono`, `code`, `pre`) | JetBrains Mono | 400 primary (500, 600 available) | WOFF2 only (`public/fonts/jetbrains-mono-*.woff2`) |
 
@@ -285,17 +285,19 @@ Light mode: no background texture.
 
 ## Animations
 
+All animation classes are defined inside `@media (prefers-reduced-motion: no-preference)`. Under `prefers-reduced-motion: reduce` the animation property is absent, so elements render at their natural styles (fully visible, no transform).
+
 | Class | Keyframe | Duration |
 |---|---|---|
-| `.animate-fade-up` | fadeUp (fade from opacity 0 + slide up 14px) | 0.6s ease-out |
-| `.animate-fade-up-delay-1` | fadeUp | 0.6s, 0.1s delay |
-| `.animate-fade-up-delay-2` | fadeUp | 0.6s, 0.2s delay |
-| `.animate-fade-up-delay-3` | fadeUp | 0.6s, 0.3s delay |
+| `.animate-fade-up` | fadeUp (fade from opacity 0.7 + slide up 8px) | 0.35s ease-out |
+| `.animate-fade-up-delay-1` | fadeUp | 0.35s, 0.05s delay |
+| `.animate-fade-up-delay-2` | fadeUp | 0.35s, 0.10s delay |
+| `.animate-fade-up-delay-3` | fadeUp | 0.35s, 0.15s delay |
 | `.animate-marquee` | horizontal scroll left | 30s linear infinite |
 
 ### Firefly particles
 
-`.firefly` - 2×2 px dot with `box-shadow` glow in `--primary` color, animated with `fireflyFloat` (8 particles, varying `animation-duration` 6.5–11 s and `animation-delay`). In light mode, `.light .firefly` reduces to 1.5×1.5 px and uses `--firefly-color` (`41 100% 45%`, slightly darker amber) for contrast against the light background.
+`.firefly` - 2×2 px dot with `box-shadow` glow in `--primary` color, animated with `fireflyFloat` inside `@media (prefers-reduced-motion: no-preference)` (8 particles, varying `animation-duration` 5.5–8.5 s and `animation-delay`). `will-change: transform, opacity` is applied only to the first three particles to stay within the ≤3 simultaneous limit. In light mode, `.light .firefly` reduces to 1.5×1.5 px and uses `--firefly-color` (`41 100% 45%`, slightly darker amber) for contrast against the light background.
 
 ---
 
