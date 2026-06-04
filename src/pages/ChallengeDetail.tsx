@@ -59,7 +59,7 @@ export const meta: MetaFunction = ({ params }) => {
           "@type": "BreadcrumbList",
           itemListElement: [
             { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
-            { "@type": "ListItem", position: 2, name: "Adventures", item: `${SITE_URL}/adventures/` },
+            { "@type": "ListItem", position: 2, name: "Adventures", item: `${SITE_URL}/challenges/` },
             { "@type": "ListItem", position: 3, name: adventure.title, item: `${SITE_URL}/adventures/${adventure.id}/` },
             { "@type": "ListItem", position: 4, name: level.name, item: `${SITE_URL}/adventures/${adventure.id}/levels/${level.id}/` },
           ],
@@ -396,7 +396,7 @@ const ChallengeDetail = (): JSX.Element => {
           <Breadcrumb
             className="mb-10"
             items={[
-              { label: "Adventures", href: "/adventures" },
+              { label: "Adventures", href: "/challenges" },
               { label: adventure.title, href: `/adventures/${adventure.id}` },
               { label: level.name },
             ]}

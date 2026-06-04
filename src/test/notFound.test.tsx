@@ -35,11 +35,11 @@ describe("NotFound", () => {
       expect(within(nav).getAllByRole("link")).toHaveLength(3);
     });
 
-    it("links 'Adventures' to /adventures", () => {
+    it("links 'Challenges' to /challenges", () => {
       renderNotFound();
       const nav = screen.getByRole("navigation", { name: "Helpful links" });
-      const link = within(nav).getByRole("link", { name: /Adventures/ });
-      expect(link.getAttribute("href")).toBe("/adventures");
+      const link = within(nav).getByRole("link", { name: /Challenges/ });
+      expect(link.getAttribute("href")).toBe("/challenges");
     });
 
     it("links 'Handbook' to /handbook", () => {

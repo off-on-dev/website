@@ -13,7 +13,6 @@ export default {
   },
   prerender: [
     "/",
-
     "/404",
     "/contribute",
     "/sponsors",

@@ -14,9 +14,9 @@ const links = [
     to: "/handbook",
   },
   {
-    label: "Adventures",
+    label: "Challenges",
     desc: "Browse hands-on challenges with real-world scenarios.",
-    to: "/adventures",
+    to: "/challenges",
   },
   {
     label: "About",

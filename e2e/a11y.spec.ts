@@ -8,7 +8,7 @@ import AxeBuilder from "@axe-core/playwright";
 // home, adventure listing, adventure landing, level detail, challenge tag.
 const PAGES = [
   "/",
-  "/adventures",
+  "/challenges",
   "/adventures/blind-by-design",
   "/adventures/blind-by-design/levels/beginner",
   "/challenges/opentelemetry",
