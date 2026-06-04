@@ -110,6 +110,18 @@
   font-display: optional;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
+/* Metric-adjusted fallback for Syne 700. Used when font-display: optional misses the load
+   window. size-adjust/ascent/descent keep h1/h2 layout close to Syne so the fallback
+   render looks intentional rather than broken. Values measured via canvas.measureText()
+   against Arial at 100px on the live site. */
+@font-face {
+  font-family: 'Syne Fallback';
+  src: local('Arial');
+  size-adjust: 114.62%;
+  ascent-override: 81.14%;
+  descent-override: 23.56%;
+  line-gap-override: 0%;
+}
 
 @import "tailwindcss";
 
@@ -118,7 +130,7 @@
 @theme {
   --font-sans: Inter, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
-  --font-heading: Syne, sans-serif;
+  --font-heading: Syne, 'Syne Fallback', sans-serif;
 
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
@@ -349,7 +361,7 @@ html {
   }
 
   h1, h2 {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Syne', 'Syne Fallback', sans-serif;
     font-weight: 700;
     color: hsl(var(--primary));
   }
@@ -405,26 +417,12 @@ html {
   100% { transform: translate(0,     0);    opacity: 0;    }
 }
 
-.animate-fade-up            { animation: fadeUp 0.35s ease-out both; }
-.animate-fade-up-delay-1    { animation: fadeUp 0.35s ease-out 0.05s both; }
-.animate-fade-up-delay-2    { animation: fadeUp 0.35s ease-out 0.10s both; }
-.animate-fade-up-delay-3    { animation: fadeUp 0.35s ease-out 0.15s both; }
-.animate-marquee            { animation: marquee 30s linear infinite; }
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-fade-up,
-  .animate-fade-up-delay-1,
-  .animate-fade-up-delay-2,
-  .animate-fade-up-delay-3,
-  .animate-marquee {
-    animation: none;
-  }
-  /* Firefly particles run a continuous 13-keyframe animation with positional
-     transforms. Vestibular disorder and motion-sensitive users are affected
-     by persistent movement even from decorative elements. */
-  .firefly {
-    animation: none;
-  }
+@media (prefers-reduced-motion: no-preference) {
+  .animate-fade-up            { animation: fadeUp 0.35s ease-out both; }
+  .animate-fade-up-delay-1    { animation: fadeUp 0.35s ease-out 0.05s both; }
+  .animate-fade-up-delay-2    { animation: fadeUp 0.35s ease-out 0.10s both; }
+  .animate-fade-up-delay-3    { animation: fadeUp 0.35s ease-out 0.15s both; }
+  .animate-marquee            { animation: marquee 30s linear infinite; }
 }
 
 /* ─── Firefly particles ───────────────────────────────────── */
@@ -439,7 +437,9 @@ html {
     0 0 2px 1px  hsl(var(--primary)),
     0 0 5px 2px  hsl(var(--primary) / 0.55),
     0 0 10px 3px hsl(var(--primary) / 0.2);
-  animation: fireflyFloat linear infinite;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .firefly { animation: fireflyFloat linear infinite; }
 }
 /* will-change creates a GPU compositing layer; cap at 3 to stay within PERFORMANCE.md limit */
 .firefly:nth-child(1),

@@ -1,6 +1,15 @@
 import { ADVENTURE_SUMMARIES } from "./summaries";
 import type { RelatedLevelSummary } from "./types";
 
+export const ALL_LEVEL_SUMMARIES: RelatedLevelSummary[] = ADVENTURE_SUMMARIES.flatMap((a) =>
+  a.levels.map((level) => ({
+    level,
+    adventureId: a.id,
+    adventureTitle: a.title,
+    ...(a.isLive ? { isLive: true as const } : {}),
+  }))
+);
+
 /** Returns level summaries matching all selected tags (AND) and/or a difficulty. */
 export const getLevelSummariesByFilters = (
   tags: string[],

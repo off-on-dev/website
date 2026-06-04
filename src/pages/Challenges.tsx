@@ -11,7 +11,7 @@ import { StarterNudge } from "@/components/StarterNudge";
 import { ChallengeFilters, type Difficulty } from "@/components/ChallengeFilters";
 import { slugToTag, tagToSlug } from "@/data/adventures";
 import { ADVENTURE_SUMMARIES, SUMMARY_TAGS } from "@/data/adventures/summaries";
-import { getLevelSummariesByFilters } from "@/data/adventures/filter-utils";
+import { getLevelSummariesByFilters, ALL_LEVEL_SUMMARIES } from "@/data/adventures/filter-utils";
 import { SITE_URL, BRAND_NAME } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 
@@ -42,15 +42,6 @@ export const meta: MetaFunction = ({ params }) => {
   });
 };
 
-const ALL_LEVELS = ADVENTURE_SUMMARIES.flatMap((adventure) =>
-  adventure.levels.map((level) => ({
-    level,
-    adventureId: adventure.id,
-    adventureTitle: adventure.title,
-    ...(adventure.isLive ? { isLive: true as const } : {}),
-  }))
-);
-
 const Challenges = (): JSX.Element => {
   const { tag: tagSlug } = useParams<{ tag?: string }>();
   const initialTag = tagSlug ? slugToTag(tagSlug) ?? null : null;
@@ -60,7 +51,7 @@ const Challenges = (): JSX.Element => {
   const [hasFiltered, setHasFiltered] = useState(false);
 
   const isFiltered = activeTopics.length > 0 || activeDifficulty !== null;
-  const filteredLevels = isFiltered ? getLevelSummariesByFilters(activeTopics, activeDifficulty) : ALL_LEVELS;
+  const filteredLevels = isFiltered ? getLevelSummariesByFilters(activeTopics, activeDifficulty) : ALL_LEVEL_SUMMARIES;
 
   const handleDifficultyChange = (diff: Difficulty | null): void => {
     setHasFiltered(true);
@@ -128,7 +119,7 @@ const Challenges = (): JSX.Element => {
                 <h2 className="mb-6 text-lg font-semibold text-foreground">
                   All Adventures
                   <span className="ml-2 font-normal text-sm text-muted-foreground">
-                    &middot; {ADVENTURE_SUMMARIES.length} {ADVENTURE_SUMMARIES.length === 1 ? "adventure" : "adventures"}, {ALL_LEVELS.length} {ALL_LEVELS.length === 1 ? "challenge" : "challenges"}
+                    &middot; {ADVENTURE_SUMMARIES.length} {ADVENTURE_SUMMARIES.length === 1 ? "adventure" : "adventures"}, {ALL_LEVEL_SUMMARIES.length} {ALL_LEVEL_SUMMARIES.length === 1 ? "challenge" : "challenges"}
                   </span>
                 </h2>
                 <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
