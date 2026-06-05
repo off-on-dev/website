@@ -153,13 +153,13 @@ const SectionBlock = ({ id, eyebrow, heading, children }: {
 );
 
 const ColorCard = ({ swatch, onDark }: { swatch: ColorSwatch; onDark: boolean }): JSX.Element => (
-  <div className="rounded-lg overflow-hidden border" style={{ borderColor: onDark ? "#252530" : "#abadb2" }}>
+  <div className="rounded-lg overflow-hidden border" style={{ borderColor: onDark ? "#252530" : "#c4c5ca" }}>
     <div className="h-20 flex items-end p-3" style={{ backgroundColor: swatch.hex }}>
       <span className={`font-mono text-xs font-semibold ${swatch.textClass}`}>{swatch.hex}</span>
     </div>
-    <div className="p-4" style={{ backgroundColor: onDark ? "#1a1a1f" : "#c8c9ce" }}>
+    <div className="p-4" style={{ backgroundColor: onDark ? "#1a1a1f" : "#e4e5e9" }}>
       <p className="font-sans font-semibold text-sm mb-0.5" style={{ color: onDark ? "#faf8f3" : "#0d0d17" }}>{swatch.name}</p>
-      <p className="font-mono text-xs mb-2" style={{ color: onDark ? "#918d87" : "#414249" }}>{swatch.hsl}</p>
+      <p className="font-mono text-xs mb-2" style={{ color: onDark ? "#b8b4ae" : "#4a4b52" }}>{swatch.hsl}</p>
       <p className="font-sans text-xs leading-snug" style={{ color: onDark ? "#c8c4bc" : "#2e2f36" }}>{swatch.usage}</p>
     </div>
   </div>
@@ -420,15 +420,15 @@ const BrandGuidelines = (): JSX.Element => {
                     {!onDark && (
                       <div
                         className="mt-6 rounded-lg border p-5"
-                        style={{ borderColor: "#abadb2", backgroundColor: "#b8b9be" }}
+                        style={{ borderColor: "#c4c5ca", backgroundColor: "#e4e5e9" }}
                       >
                         <p className="font-sans text-sm font-semibold mb-1" style={{ color: "#0d0d17" }}>Amber in light mode</p>
                         <p className="font-sans text-sm" style={{ color: "#2e2f36" }}>
                           Amber{" "}
-                          <code className="font-mono text-xs px-1 py-0.5 rounded" style={{ backgroundColor: "#a4a5aa", color: "#0d0d17" }}>#ffc034</code>{" "}
+                          <code className="font-mono text-xs px-1 py-0.5 rounded" style={{ backgroundColor: "#d4d5da", color: "#0d0d17" }}>#ffc034</code>{" "}
                           passes contrast only as a fill or border. For amber-toned link hover text, use{" "}
-                          <code className="font-mono text-xs px-1 py-0.5 rounded" style={{ backgroundColor: "#a4a5aa", color: "#0d0d17" }}>hsl(41 100% 25%)</code>,{" "}
-                          the <code className="font-mono text-xs px-1 py-0.5 rounded" style={{ backgroundColor: "#a4a5aa", color: "#0d0d17" }}>--link-hover-light</code> token.
+                          <code className="font-mono text-xs px-1 py-0.5 rounded" style={{ backgroundColor: "#d4d5da", color: "#0d0d17" }}>hsl(41 100% 25%)</code>,{" "}
+                          the <code className="font-mono text-xs px-1 py-0.5 rounded" style={{ backgroundColor: "#d4d5da", color: "#0d0d17" }}>--link-hover-light</code> token.
                         </p>
                       </div>
                     )}
