@@ -109,6 +109,8 @@ Apply this to every component you write or modify.
 - Never use `opacity-*` on an element that contains visible text. Use an explicit CSS color token instead (e.g. `text-[hsl(var(--text-faint))]`).
 - Always verify contrast in both light and dark mode.
 - Never rely on color alone to convey meaning. Always pair with text, icon, or pattern.
+- **Hover state contrast in light mode:** `hover:text-primary` resolves to amber (`#ffc034`) on a light surface, which fails contrast. Never use `hover:text-primary` on its own. Use `hover:text-foreground dark:hover:text-primary` so light mode gets a dark, accessible color and dark mode gets the amber accent. Apply the same logic to any interactive element whose hover color differs by mode.
+- **Icon/indicator colors in light mode:** CSS variables like `--difficulty-builder` are set to a pale tint in light mode (`hsl(85 48% 75%)`) and will be near-invisible on light surfaces. Do not use these variables for icon foreground colors. Use a hardcoded accessible value (e.g. `#15803d` for green) that passes contrast in both modes.
 
 ### Focus rings
 

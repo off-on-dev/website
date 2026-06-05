@@ -3,8 +3,8 @@ import { Link } from "react-router";
 import { Zap, ExternalLink } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { BRAND_NAME, BRAND_SHORT_DESCRIPTION, BRAND_SLOGAN_PARTS, COMMUNITY_URL, CONTACT_EMAIL, CURRENT_YEAR, LINKEDIN_URL, BLUESKY_URL, X_URL, SITE_NAME } from "@/data/constants";
-import logoDark from "@/assets/offon-logo-dark-color.svg";
-import logoLight from "@/assets/offon-logo-light-color.svg";
+const logoDark = `${import.meta.env.BASE_URL}brand/offon-logo-dark-color.svg`;
+const logoLight = `${import.meta.env.BASE_URL}brand/offon-logo-light-mono.svg`;
 
 export const Footer = (): JSX.Element => {
   const { theme } = useTheme();
@@ -35,7 +35,7 @@ export const Footer = (): JSX.Element => {
                 <Link to="/contribute/" className={linkCls}>Contribute</Link>
                 <Link to="/handbook/" className={linkCls}>Handbook</Link>
                 <Link to="/about/" className={linkCls}>About</Link>
-                <Link to="/sponsors/" className={linkCls}>Sponsors</Link>
+                <Link to="/brand/" className={linkCls}>Brand</Link>
               </div>
             </nav>
             {/* Community */}

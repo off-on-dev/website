@@ -1593,6 +1593,40 @@ When adding a new interactive component (button, pill, toggle, chip), add a corr
 
 ---
 
+## Brand Guidelines Page (`/brand`)
+
+`src/pages/BrandGuidelines.tsx`
+
+A public-facing reference for how to use the OffOn brand. Linked from the footer's Explore nav. Sections: Mission and Values, Logo, Colors, Typography, Design Elements (Mascot, OG image), Photography, Voice and Tone.
+
+### Key patterns
+
+- **Color mode toggle** (`colorMode` state, `"dark" | "light"`): a segmented control rendered inside a contextual preview container whose `backgroundColor` changes to match the selected mode. `ColorCard` takes an `onDark` prop and uses hardcoded inline styles so swatch cards render in the correct mode context regardless of the page theme.
+- **TOC scrollspy** (`activeSection` state): an `IntersectionObserver` created inside `useEffect` tracks which section is in the top 20% of the viewport and highlights the matching TOC link with `aria-current="location"`.
+- **Download links** use `<a download="filename">` with `href` pointing to `public/brand/` assets. These have stable, clean URLs (no Vite hash) because they live in `public/`, not `src/assets/`.
+- **Static data arrays** (`LOGO_CARDS`, `ICON_DOWNLOADS`, `NYX_FULL_DOWNLOADS`, etc.) are defined at module level using the Vite compile-time constant `BASE = import.meta.env.BASE_URL`. Do not move them inside the component.
+
+### Brand assets in `public/brand/`
+
+All downloadable brand assets live at `public/brand/`. File naming convention: `offon-<asset>.<ext>` with no size suffix in the filename.
+
+| File | Purpose |
+|---|---|
+| `offon-logo-dark-color.svg` / `.png` | Color wordmark for dark backgrounds |
+| `offon-logo-light-mono.svg` / `.png` | Mono wordmark for light and amber backgrounds |
+| `offon-logo-dark-mono.svg` / `.png` | Mono wordmark for single-color print on dark |
+| `offon-favicon.svg` / `.png` | Standalone icon mark |
+| `offon-nyx.png` | Mascot full variant (PNG) |
+| `offon-nyx-peek.png` | Mascot peeking variant (PNG) |
+
+Mascot WebP sources (`nyx.webp`, `nyx_peek.webp`) live in `public/` (not `public/brand/`) because they are also used as background images in page hero sections.
+
+### Hover contrast rule (light mode)
+
+`hover:text-primary` resolves to amber on a light surface and fails WCAG contrast. Always use `hover:text-foreground dark:hover:text-primary` on any interactive element in this page.
+
+---
+
 ## Performance
 
 ### Lighthouse scores (production build)

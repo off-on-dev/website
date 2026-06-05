@@ -5,8 +5,8 @@ import { NavLink } from "@/components/NavLink";
 import { useTheme } from "@/hooks/useTheme";
 import { COMMUNITY_URL } from "@/data/constants";
 import { cn } from "@/lib/utils";
-import logoDark from "@/assets/offon-logo-dark-color.svg";
-import logoLight from "@/assets/offon-logo-light-color.svg";
+const logoDark = `${import.meta.env.BASE_URL}brand/offon-logo-dark-color.svg`;
+const logoLight = `${import.meta.env.BASE_URL}brand/offon-logo-light-mono.svg`;
 
 const linkCls = "inline-flex items-center gap-1 min-h-[44px] text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent rounded px-1.5 -mx-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 const activeCls = "text-primary underline decoration-primary underline-offset-4";
