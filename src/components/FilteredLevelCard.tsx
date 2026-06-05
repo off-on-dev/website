@@ -23,7 +23,7 @@ export const FilteredLevelCard = ({
   className,
 }: FilteredLevelCardProps): JSX.Element => (
   <Link
-    to={`/adventures/${adventureId}/levels/${level.id}`}
+    to={`/adventures/${adventureId}/levels/${level.id}/`}
     className={cn(
       "group card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
       className

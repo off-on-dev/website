@@ -2,7 +2,7 @@ import type { JSX } from "react";
 import { Link } from "react-router";
 import { Zap, ExternalLink } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
-import { BRAND_NAME, BRAND_SHORT_DESCRIPTION, BRAND_SLOGAN_PARTS, COMMUNITY_URL, CONTACT_EMAIL, CURRENT_YEAR, LINKEDIN_URL, BLUESKY_URL, X_URL } from "@/data/constants";
+import { BRAND_NAME, BRAND_SHORT_DESCRIPTION, BRAND_SLOGAN_PARTS, COMMUNITY_URL, CONTACT_EMAIL, CURRENT_YEAR, LINKEDIN_URL, BLUESKY_URL, X_URL, SITE_NAME } from "@/data/constants";
 import logoDark from "@/assets/offon-logo-dark-color.svg";
 import logoLight from "@/assets/offon-logo-light-color.svg";
 
@@ -18,7 +18,7 @@ export const Footer = (): JSX.Element => {
         {/* Brand */}
         <div>
           <div className="mb-4">
-            <img src={theme === "dark" ? logoDark : logoLight} alt="offon.dev" width={104} height={26} loading="lazy" className="h-5" />
+            <img src={theme === "dark" ? logoDark : logoLight} alt={SITE_NAME} width={104} height={26} loading="lazy" className="h-5" />
           </div>
           <p className="font-sans text-sm text-[hsl(var(--text-secondary))] leading-relaxed md:max-w-xs">
             {BRAND_SHORT_DESCRIPTION}
@@ -31,11 +31,11 @@ export const Footer = (): JSX.Element => {
             <nav aria-label="Explore">
               <p className="text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] mb-3">Explore</p>
               <div className="flex flex-col">
-                <Link to="/adventures" className={linkCls}>Adventures</Link>
-                <Link to="/contribute" className={linkCls}>Contribute</Link>
-                <Link to="/handbook" className={linkCls}>Handbook</Link>
-                <Link to="/about" className={linkCls}>About</Link>
-                <Link to="/sponsors" className={linkCls}>Sponsors</Link>
+                <Link to="/challenges/" className={linkCls}>Challenges</Link>
+                <Link to="/contribute/" className={linkCls}>Contribute</Link>
+                <Link to="/handbook/" className={linkCls}>Handbook</Link>
+                <Link to="/about/" className={linkCls}>About</Link>
+                <Link to="/sponsors/" className={linkCls}>Sponsors</Link>
               </div>
             </nav>
             {/* Community */}
@@ -44,8 +44,8 @@ export const Footer = (): JSX.Element => {
               <div className="flex flex-col">
                 <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className={linkCls}>Hub <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
                 <a href={`${COMMUNITY_URL}/t/code-of-conduct/31/1`} target="_blank" rel="noopener noreferrer" className={linkCls}>Code of Conduct <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
-                <Link to="/privacy" className={linkCls}>Privacy Policy</Link>
-                <Link to="/accessibility" className={linkCls}>Accessibility</Link>
+                <Link to="/privacy/" className={linkCls}>Privacy Policy</Link>
+                <Link to="/accessibility/" className={linkCls}>Accessibility</Link>
                 <a href={`mailto:${CONTACT_EMAIL}`} className={linkCls}>Contact</a>
               </div>
             </nav>

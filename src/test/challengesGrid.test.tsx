@@ -3,9 +3,12 @@ import { render, screen, fireEvent, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { ChallengesGrid } from "@/components/ChallengesGrid";
 import { ADVENTURES } from "@/data/adventures";
+import { ADVENTURE_SUMMARIES } from "@/data/adventures/summaries";
+import { ALL_LEVEL_SUMMARIES, getLevelSummariesByFilters } from "@/data/adventures/filter-utils";
 
 const allTags = Array.from(new Set(ADVENTURES.flatMap((a) => a.tags))).sort();
 const firstTag = allTags[0];
+const secondTag = allTags[1];
 const adventuresWithFirstTag = ADVENTURES.filter((a) => a.tags.includes(firstTag));
 
 const renderGrid = (): ReturnType<typeof render> =>
@@ -21,7 +24,7 @@ describe("ChallengesGrid", () => {
       renderGrid();
       ADVENTURES.forEach((adventure) => {
         expect(
-          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}/`)
         ).toBe(true);
       });
     });
@@ -29,7 +32,7 @@ describe("ChallengesGrid", () => {
     it("links each adventure card to /adventures/:id", () => {
       renderGrid();
       ADVENTURES.forEach((adventure) => {
-        const link = screen.getAllByRole("link").find((l) => l.getAttribute("href") === `/adventures/${adventure.id}`);
+        const link = screen.getAllByRole("link").find((l) => l.getAttribute("href") === `/adventures/${adventure.id}/`);
         expect(link).toBeTruthy();
       });
     });
@@ -75,14 +78,14 @@ describe("ChallengesGrid", () => {
       fireEvent.click(screen.getByRole("button", { name: firstTag }));
       ADVENTURES.forEach((adventure) => {
         expect(
-          screen.queryAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+          screen.queryAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}/`)
         ).toBe(false);
       });
       adventuresWithFirstTag.forEach((adventure) => {
         adventure.levels.forEach((level) => {
           expect(
             screen.queryAllByRole("link").some(
-              (l) => l.getAttribute("href") === `/adventures/${adventure.id}/levels/${level.id}`
+              (l) => l.getAttribute("href") === `/adventures/${adventure.id}/levels/${level.id}/`
             )
           ).toBe(true);
         });
@@ -95,7 +98,7 @@ describe("ChallengesGrid", () => {
       adventuresWithFirstTag.forEach((adventure) => {
         adventure.levels.forEach((level) => {
           const link = screen.queryAllByRole("link").find(
-            (l) => l.getAttribute("href") === `/adventures/${adventure.id}/levels/${level.id}`
+            (l) => l.getAttribute("href") === `/adventures/${adventure.id}/levels/${level.id}/`
           );
           expect(link).toBeTruthy();
         });
@@ -105,13 +108,34 @@ describe("ChallengesGrid", () => {
     it("shows a count and tag label when a tag is active", () => {
       renderGrid();
       fireEvent.click(screen.getByRole("button", { name: firstTag }));
-      expect(screen.getByText((text) => text.includes("challenge") && text.includes(firstTag))).toBeTruthy();
+      expect(screen.getAllByText((text) => text.includes("challenge") && text.includes(firstTag)).length).toBeGreaterThan(0);
     });
 
-    it("renders an aria-live region when a tag is active", () => {
+    it("announces challenge count and active tag in the live region", () => {
       const { container } = renderGrid();
       fireEvent.click(screen.getByRole("button", { name: firstTag }));
-      expect(container.querySelector('[aria-live="polite"]')).toBeTruthy();
+      const region = container.querySelector("[aria-live]");
+      expect(region!.textContent).toContain("challenge");
+      expect(region!.textContent).toContain(firstTag);
+    });
+
+    it("announces challenge count and active difficulty in the live region", () => {
+      const { container } = renderGrid();
+      const group = container.querySelector('[role="group"][aria-label="Filter by difficulty"]') as HTMLElement;
+      fireEvent.click(within(group).getByRole("button", { name: "Beginner" }));
+      const region = container.querySelector("[aria-live]");
+      expect(region!.textContent).toContain("challenge");
+      expect(region!.textContent).toContain("Beginner");
+    });
+
+    it("announces the full Challenges.tsx format when two topics are active", () => {
+      const { container } = renderGrid();
+      fireEvent.click(screen.getByRole("button", { name: firstTag }));
+      fireEvent.click(screen.getByRole("button", { name: secondTag }));
+      const count = getLevelSummariesByFilters([firstTag, secondTag], null).length;
+      const expectedText = `Showing ${count} ${count === 1 ? "challenge" : "challenges"} · ${firstTag}, ${secondTag}`;
+      const region = container.querySelector("[aria-live]");
+      expect(region!.textContent).toBe(expectedText);
     });
   });
 
@@ -123,7 +147,7 @@ describe("ChallengesGrid", () => {
       fireEvent.click(btn);
       ADVENTURES.forEach((adventure) => {
         expect(
-          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}/`)
         ).toBe(true);
       });
     });
@@ -136,7 +160,7 @@ describe("ChallengesGrid", () => {
       expect(btn.getAttribute("aria-pressed")).toBe("false");
     });
 
-    it("announces filter cleared after deselecting", () => {
+    it("announces filter cleared with adventure and challenge counts after deselecting", () => {
       const { container } = renderGrid();
       const btn = screen.getByRole("button", { name: firstTag });
       fireEvent.click(btn);
@@ -144,6 +168,8 @@ describe("ChallengesGrid", () => {
       const region = container.querySelector("[aria-live]");
       expect(region).toBeTruthy();
       expect(region!.textContent).toContain("Filters cleared");
+      expect(region!.textContent).toMatch(new RegExp(`${ADVENTURE_SUMMARIES.length}.*adventure`));
+      expect(region!.textContent).toMatch(new RegExp(`${ALL_LEVEL_SUMMARIES.length}.*challenge`));
     });
   });
 
@@ -186,7 +212,7 @@ describe("ChallengesGrid", () => {
       fireEvent.click(within(group).getByRole("button", { name: "Beginner" }));
       ADVENTURES.forEach((adventure) => {
         expect(
-          screen.queryAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+          screen.queryAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}/`)
         ).toBe(false);
       });
     });
@@ -198,7 +224,7 @@ describe("ChallengesGrid", () => {
       fireEvent.click(within(group).getByRole("button", { name: "All Levels" }));
       ADVENTURES.forEach((adventure) => {
         expect(
-          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}/`)
         ).toBe(true);
       });
     });
@@ -211,7 +237,7 @@ describe("ChallengesGrid", () => {
       fireEvent.click(btn);
       ADVENTURES.forEach((adventure) => {
         expect(
-          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}`)
+          screen.getAllByRole("link").some((l) => l.getAttribute("href") === `/adventures/${adventure.id}/`)
         ).toBe(true);
       });
     });

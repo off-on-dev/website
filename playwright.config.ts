@@ -15,8 +15,12 @@ export default defineConfig({
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
   ],
   webServer: {
-    command: "npx serve dist/client",
-    url: "http://localhost:3000",
+    // Use preview (not bare serve) so the 404 fallback copy runs before serving.
+    command: "npm run preview",
+    // Probe a deep prerendered route, not just the root, to confirm the static
+    // server is fully ready before tests start.
+    url: "http://localhost:3000/challenges/python/",
     reuseExistingServer: !process.env.CI,
+    timeout: 30000,
   },
 });

@@ -160,7 +160,7 @@ describe('AdventureLevelLink', () => {
         </MemoryRouter>
       </ConsentProvider>
     );
-    // Old learnings overflow pattern removed — must never appear
+    // Old learnings overflow pattern removed. Must never appear
     expect(screen.queryByText(/\+\d+ more/)).toBeNull();
   });
 
@@ -177,7 +177,7 @@ describe('AdventureLevelLink', () => {
     const startLinks = screen.getAllByText(/^Start Challenge/);
     adventure.levels.forEach((lvl, i) => {
       const card = startLinks[i].closest('a');
-      expect(card?.getAttribute('href')).toBe(`/adventures/${adventure.id}/levels/${lvl.id}`);
+      expect(card?.getAttribute('href')).toBe(`/adventures/${adventure.id}/levels/${lvl.id}/`);
     });
   });
 });

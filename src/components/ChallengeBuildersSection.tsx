@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { ADVENTURE_CONTRIBUTORS } from "@/data/adventures";
 import { PersonNameLink } from "@/components/PersonNameLink";
 import { SidebarLayout } from "@/components/SidebarLayout";
+import { InlineProse } from "@/components/InlineProse";
 
 export const ChallengeBuildersSection = ({ aside }: { aside?: ReactNode }): JSX.Element | null => {
   if (ADVENTURE_CONTRIBUTORS.length === 0) {
@@ -23,7 +24,7 @@ export const ChallengeBuildersSection = ({ aside }: { aside?: ReactNode }): JSX.
           >
             <PersonNameLink name={contributor.name} url={contributor.url} />
             {contributor.about && (
-              <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed md-inline" dangerouslySetInnerHTML={{ __html: contributor.about }} />
+              <InlineProse html={contributor.about} className="mt-1.5 text-sm text-muted-foreground leading-relaxed" />
             )}
             <p className="mt-6 mb-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">adventures created</p>
             <ul className="space-y-3">
@@ -31,7 +32,7 @@ export const ChallengeBuildersSection = ({ aside }: { aside?: ReactNode }): JSX.
                 <li key={id} className="flex items-center gap-2 text-xs">
                   <span className="h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                   <Link
-                    to={`/adventures/${id}`}
+                    to={`/adventures/${id}/`}
                     className="docs-ext-link"
                   >
                     {title}

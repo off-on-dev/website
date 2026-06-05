@@ -27,6 +27,7 @@ import { isDeadlinePast } from "@/lib/utils";
 import { stripLinks } from "@/lib/markdown";
 import { LivePill } from "@/components/LivePill";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { InlineProse } from "@/components/InlineProse";
 
 export const links: LinksFunction = () => [
   { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
@@ -110,7 +111,7 @@ const AdventureLevelLink = ({ level, adventureId }: AdventureLevelLinkProps): JS
   const descHtml = level.intro?.[0] ?? level.backstory?.[0];
   return (
     <Link
-      to={`/adventures/${adventureId}/levels/${level.id}`}
+      to={`/adventures/${adventureId}/levels/${level.id}/`}
       className="group card-glow relative rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
       <div className="flex flex-wrap items-center gap-2 mb-3">
@@ -154,7 +155,7 @@ const AdventureDetail = (): JSX.Element => {
 
           <Breadcrumb
             items={[
-              { label: "Adventures", href: "/adventures" },
+              { label: "Adventures", href: "/adventures/" },
               { label: adventure.title },
             ]}
           />
@@ -180,7 +181,7 @@ const AdventureDetail = (): JSX.Element => {
               {isLive && <LivePill />}
               <TagChips tags={adventure.tags} />
             </div>
-            <p className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl md-inline" dangerouslySetInnerHTML={{ __html: adventure.story }} />
+            <InlineProse html={adventure.story} className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl" />
           </div>
 
           {/* Two-column layout */}
@@ -236,8 +237,10 @@ const AdventureDetail = (): JSX.Element => {
                 <CollapsibleSection id="backstory" title="The Story" defaultOpen={true}>
                   <div className="space-y-3">
                     {adventure.backstory.map((para, i) => (
-                      <p key={i} className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed md-inline"
-                        dangerouslySetInnerHTML={{ __html: para }}
+                      <InlineProse
+                        key={i}
+                        html={para}
+                        className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed"
                       />
                     ))}
                   </div>
@@ -262,8 +265,9 @@ const AdventureDetail = (): JSX.Element => {
                   </p>
                   <PersonNameLink name={adventure.contributor.name} url={adventure.contributor.url} />
                   {adventure.contributor.about && (
-                    <p className="mt-2 text-sm text-[hsl(var(--text-secondary))] leading-relaxed md-inline"
-                      dangerouslySetInnerHTML={{ __html: adventure.contributor.about }}
+                    <InlineProse
+                      html={adventure.contributor.about}
+                      className="mt-2 text-sm text-[hsl(var(--text-secondary))] leading-relaxed"
                     />
                   )}
                 </div>

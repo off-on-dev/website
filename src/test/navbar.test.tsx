@@ -66,19 +66,19 @@ describe("Navbar - desktop navigation", () => {
   it("has an About link pointing to /about", () => {
     renderNavbar();
     const aboutLinks = screen.getAllByRole("link", { name: /About/i });
-    expect(aboutLinks[0].getAttribute("href")).toBe("/about");
+    expect(aboutLinks[0].getAttribute("href")).toBe("/about/");
   });
 
   it("has a Handbook link pointing to /handbook", () => {
     renderNavbar();
     const links = screen.getAllByRole("link", { name: /Handbook/i });
-    expect(links[0].getAttribute("href")).toBe("/handbook");
+    expect(links[0].getAttribute("href")).toBe("/handbook/");
   });
 
   it("has a Sponsors link pointing to /sponsors", () => {
     renderNavbar();
     const links = screen.getAllByRole("link", { name: /Sponsors/i });
-    expect(links[0].getAttribute("href")).toBe("/sponsors");
+    expect(links[0].getAttribute("href")).toBe("/sponsors/");
   });
 
   it("has a Community external link that opens in a new tab", () => {

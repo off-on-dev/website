@@ -11,17 +11,17 @@ const links = [
   {
     label: "Handbook",
     desc: "Your guide to getting started, posting, and growing in the community.",
-    to: "/handbook",
+    to: "/handbook/",
   },
   {
-    label: "Adventures",
+    label: "Challenges",
     desc: "Browse hands-on challenges with real-world scenarios.",
-    to: "/adventures",
+    to: "/challenges/",
   },
   {
     label: "About",
     desc: `Learn what ${BRAND_NAME} is and who it's for.`,
-    to: "/about",
+    to: "/about/",
   },
 ];
 

@@ -27,7 +27,7 @@ Community activity happens on a separate Discourse instance. Its display name is
 ## Stack
 
 - **Framework:** React 19 with TypeScript, bundled via Vite. Check `package.json` for current versions.
-- **Styling:** Tailwind CSS 4, configured CSS-first via `src/index.css` (`@theme` block). There is no `tailwind.config.ts` — it was deleted as part of the Tailwind 4 migration.
+- **Styling:** Tailwind CSS 4, configured CSS-first via `src/index.css` (`@theme` block). There is no `tailwind.config.ts`; it was deleted as part of the Tailwind 4 migration.
 - **Components:** Minimal shadcn/ui surface. `src/components/ui/` contains only `badge.tsx` and `tooltip.tsx`. Most Radix UI packages were intentionally removed.
 - **Routing:** React Router v7 framework mode (static prerendering with `ssr: false`)
 - **Testing:** Vitest + @testing-library/react (unit/component); Playwright (smoke tests in `e2e/`)
@@ -196,9 +196,9 @@ When diagnosing a bug, especially in the production build, follow these rules wi
 - **Buttons:** use raw `<button>` elements with the CSS utility classes defined in `src/index.css` (`.btn-primary`, `.btn-ghost`, `.btn-soft`, `.btn-inverse`, `.btn-ghost-inverse`). There is no `Button` component wrapper and no `@radix-ui/react-slot` dependency. See `styleguide.md` for which class to use on which background color.
 - **Toasts:** if toast notifications are ever needed, install `sonner` and add `src/components/ui/sonner.tsx` (shadcn pattern). Mount `<Toaster>` in the nearest layout that actually triggers a toast. Do not install speculatively.
 - **TooltipProvider** is intentionally not mounted in `Layout.tsx` until a call site exists. Wrap only the subtree that uses `<Tooltip>` with `<TooltipProvider>` at that point.
-- **Author-controlled prose fields contain pre-rendered HTML.** Every YAML/TS field that holds prose written by a challenge author (`level.audience`, `tool.description`, `step.title`, `step.content`, `contributor.about`, `rewards.eligibility`, `tier.description`, `rewards.rankingNote`, `level.learnings`, `level.objective`, `level.intro`, `level.backstory`, `level.scenario`, `level.architecture`, `adventure.story`, `adventure.backstory`) is converted from Markdown to sanitised HTML at build time by `scripts/generate-adventures.mjs`. Always render them with `dangerouslySetInnerHTML={{ __html: value }}` and the `md-inline` (inline prose) or `md-content` (block content) CSS class — never as `{value}` directly. Identifier fields (`id`, URLs, enum values like `difficulty`, emoji) are not author prose and are rendered directly.
+- **Author-controlled prose fields contain pre-rendered HTML.** Every YAML/TS field that holds prose written by a challenge author (`level.audience`, `tool.description`, `step.title`, `step.content`, `contributor.about`, `rewards.eligibility`, `tier.description`, `rewards.rankingNote`, `level.learnings`, `level.objective`, `level.intro`, `level.backstory`, `level.scenario`, `level.architecture`, `adventure.story`, `adventure.backstory`) is converted from Markdown to sanitised HTML at build time by `scripts/generate-adventures.mjs`. Always render them with `dangerouslySetInnerHTML={{ __html: value }}` and the `md-inline` (inline prose) or `md-content` (block content) CSS class. Never render as `{value}` directly. Identifier fields (`id`, URLs, enum values like `difficulty`, emoji) are not author prose and are rendered directly.
   - **When the container is an interactive element** (e.g. a `<Link>` card or a `<button>`), call `stripLinks(html)` from `src/lib/markdown.ts` before passing to `dangerouslySetInnerHTML` to prevent nested `<a>` inside `<a>` or `<button>`, which is invalid HTML.
-  - **Exception — `adventure.story` in `AdventureCard` and `summaries.ts`:** The summary card and `ADVENTURE_SUMMARIES` store `story` as plain text (no HTML) so the home page renders it as a plain `<span>` with no markdown overhead. The generator emits a build-time warning if any story value contains markdown syntax (`*`, `_`, `` ` ``). Keep story field values as plain prose.
+  - **Exception: `adventure.story` in `AdventureCard` and `summaries.ts`:** The summary card and `ADVENTURE_SUMMARIES` store `story` as plain text (no HTML) so the home page renders it as a plain `<span>` with no markdown overhead. The generator emits a build-time warning if any story value contains markdown syntax (`*`, `_`, `` ` ``). Keep story field values as plain prose.
   - **`react-markdown` is a dev-only dependency** (used only by `scripts/generate-adventures.mjs`). Do not import it in any component or page file.
 
 ### Component CSS patterns
@@ -230,13 +230,13 @@ When diagnosing a bug, especially in the production build, follow these rules wi
 ## Styling
 
 - Use Tailwind utility classes directly on JSX elements.
-- Always check the `@theme` block in `src/index.css` before introducing any new color, font, spacing, or border radius value. Never hardcode these. There is no `tailwind.config.ts` — all theme values live in the `@theme` block in `src/index.css`.
+- Always check the `@theme` block in `src/index.css` before introducing any new color, font, spacing, or border radius value. Never hardcode these. There is no `tailwind.config.ts`; all theme values live in the `@theme` block in `src/index.css`.
 - Both light and dark mode must work. Use the CSS variable pairs (`bg-background`, `text-foreground`) that shadcn sets up. Never hardcode a color that only works in one mode.
 - Never add a `dark:` override without a corresponding base (light) style.
 - Mobile first. Write base styles for mobile, then add `sm:`, `md:`, `lg:` breakpoints as needed.
 - For font utilities, type scale, component class patterns (buttons, pills, badges, overline labels), and animations, see `styleguide.md`. It is the source of truth. Do not duplicate those details here.
 - Never write custom CSS unless Tailwind genuinely cannot do the job. If you must, add it to `src/index.css` with a comment explaining why.
-- Light mode overrides: do NOT put them inside `@layer base` — rules there are always overridden by `@layer utilities`. Add unlayered rules to the "Light mode overrides" section at the bottom of `src/index.css`, scoped to `.light`.
+- Light mode overrides: do NOT put them inside `@layer base`; rules there are always overridden by `@layer utilities`. Add unlayered rules to the "Light mode overrides" section at the bottom of `src/index.css`, scoped to `.light`.
 
 ### Design system rules
 
@@ -244,7 +244,7 @@ When diagnosing a bug, especially in the production build, follow these rules wi
 - Yellow `#ffc034` is accent-only in light mode. Never use it as a text color.
 - Dark mode uses `:root` and `.dark`. Never modify these when fixing light mode issues.
 - Tailwind `group-hover:*` and `group-focus:*` utilities are not matched by `.light .classname` selectors. Always add explicit `.light .group:hover` rules in the unlayered light mode overrides section of `src/index.css`.
-- Avatar palette colors must not be used directly as text colors in light mode — they fail contrast on near-white surfaces. Use `hsl(var(--foreground))` as the text color for avatar initials in all modes.
+- Avatar palette colors must not be used directly as text colors in light mode. They fail contrast on near-white surfaces. Use `hsl(var(--foreground))` as the text color for avatar initials in all modes.
 
 ---
 
@@ -382,6 +382,20 @@ Whether or not the site is prerendered today, these patterns cause bugs. They pr
 - Adding `<Suspense>` around `<Outlet />` in Layout.tsx creates an extra boundary React Router does not resolve during prerender, producing broken hydration.
 - If you need loading states for routes, configure them in the route module itself.
 
+### useSearchParams() and prerender hydration
+
+`useSearchParams()` is safe to call during render, but its value differs between prerender (empty, no URL) and client hydration (real URL params from the browser). Deriving initial `useState` from it causes a mismatch: the prerendered HTML has one value, the hydrating client has another, React throws. Always default to the server-safe value (`false`, `null`, or `[]`) and sync to the real param value in `useEffect`.
+
+```tsx
+// WRONG: lazy initializer reads params at prerender time (always empty) and at
+// hydration time (real URL), causing a mismatch.
+const [hasFiltered, setHasFiltered] = useState(() => searchParams.has("topics"));
+
+// CORRECT: start with the server-safe default; sync after mount.
+const [hasFiltered, setHasFiltered] = useState(false);
+useEffect(() => { if (searchParams.has("topics")) setHasFiltered(true); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+```
+
 ---
 
 ## SEO
@@ -461,6 +475,7 @@ Read [`PERFORMANCE.md`](PERFORMANCE.md) before adding any new dependency, font, 
 - Use plain language. Avoid jargon unless it is standard in open source contexts.
 - Avoid passive voice where an active one works.
 - Keep sentences short and scannable.
+- Never enumerate specific difficulty levels (e.g. "Beginner, Intermediate, or Expert") in UI copy. Adventures can have one, two, or three levels at any combination of difficulties. Use broad language instead: "the difficulty that fits where you are", "any difficulty level", or similar.
 
 ### Capitalisation
 
@@ -468,7 +483,7 @@ All UI labels use **title case (Chicago style)**. Body copy uses **sentence case
 
 **Title case applies to:** button and CTA labels, section headings (h2/h3), card and value titles, navigation labels and footer links, pill and badge text.
 
-**Title case rule:** capitalise every word except articles (a, an, the), prepositions shorter than five letters, and coordinating conjunctions (and, but, or, nor) — unless they open or close the label.
+**Title case rule:** capitalise every word except articles (a, an, the), prepositions shorter than five letters, and coordinating conjunctions (and, but, or, nor), unless they open or close the label.
 
 **Sentence case applies to:** body paragraphs, meta descriptions, `<p>` elements, hero sub-headings, and card descriptions.
 
@@ -523,7 +538,7 @@ All UI labels use **title case (Chicago style)**. Body copy uses **sentence case
 - Every time a new static page is added to `src/pages/` and registered as a route in `src/routes.ts`, its URL must also be added to `public/sitemap.xml` with a `<lastmod>` date.
 - Dynamic routes with statically known IDs must also be added to `public/sitemap.xml` with a `<lastmod>` date. Adventure and challenge-tag URLs are generated automatically by `scripts/generate-adventures.mjs` and include `<lastmod>` set to the build date; do not add them by hand.
 - `robots.txt` at `public/robots.txt` must include: `Sitemap: https://offon.dev/sitemap.xml`
-- **Generator region markers:** `scripts/generate-adventures.mjs` uses two exact sitemap URL strings as anchors when patching adventure and tag entries into `public/sitemap.xml` (see `replaceRegion` calls near line 910 and 952). If you change either anchor URL — including adding, removing, or reordering attributes like `<lastmod>` — you must update the corresponding marker string in the generator. Failing to do so causes `npm run build` to abort with "Region markers not found".
+- **Generator region markers:** `scripts/generate-adventures.mjs` uses two exact sitemap URL strings as anchors when patching adventure and tag entries into `public/sitemap.xml` (see `replaceRegion` calls near line 910 and 952). If you change either anchor URL (including adding, removing, or reordering attributes like `<lastmod>`), you must update the corresponding marker string in the generator. Failing to do so causes `npm run build` to abort with "Region markers not found".
 
 ### SSG prerendered routes
 
@@ -542,8 +557,8 @@ When adding a new route to `src/routes.ts`, follow these rules by route type:
 Adventures and levels are synced from the challenges repo via the `sync-adventure` GitHub Actions workflow (Actions tab → Sync Adventure from Challenges Repo → Run workflow).
 
 Inputs:
-- `adventure_url` — URL of the adventure folder in the challenges repo (e.g. `https://github.com/off-on-dev/open-source-challenges/tree/main/adventures/05-lex-imperfecta`)
-- `levels` — comma-separated level IDs to make live now (e.g. `beginner` or `beginner,intermediate`). Levels present in the challenges repo but not listed are added as "coming soon" placeholders. Leave blank to sync all levels.
+- `adventure_url`: URL of the adventure folder in the challenges repo (e.g. `https://github.com/off-on-dev/open-source-challenges/tree/main/adventures/05-lex-imperfecta`)
+- `levels`: comma-separated level IDs to make live now (e.g. `beginner` or `beginner,intermediate`). Levels present in the challenges repo but not listed are added as "coming soon" placeholders. Leave blank to sync all levels.
 
 The workflow opens a PR with a checklist. Before merging, complete all items in that checklist, including:
 

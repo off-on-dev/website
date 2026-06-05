@@ -15,8 +15,8 @@ export const meta: MetaFunction = () =>
   });
 
 const Accessibility = (): JSX.Element => {
-  const heading2 = "text-xl font-heading font-semibold text-foreground mt-10 mb-3";
-  const heading3 = "text-lg font-heading font-semibold text-foreground mt-6 mb-2";
+  const heading2 = "text-xl font-heading font-bold text-foreground mt-10 mb-3";
+  const heading3 = "text-lg font-heading font-bold text-foreground mt-6 mb-2";
   const paragraph = "text-sm text-muted-foreground leading-relaxed mb-4";
   const list = "list-disc list-inside space-y-1 text-sm text-muted-foreground mb-4 ml-2";
   const link = "docs-ext-link";
@@ -261,7 +261,7 @@ const Accessibility = (): JSX.Element => {
 
             <p className="text-sm text-muted-foreground mt-10">
               Have a question?{" "}
-              <Link to="/about" className={link}>Reach out to the team</Link>.
+              <Link to="/about/" className={link}>Reach out to the team</Link>.
             </p>
 
             <hr className="my-8 border-t border-[hsl(var(--surface-border))]" />

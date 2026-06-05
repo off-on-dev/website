@@ -5,10 +5,11 @@ import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 // Representative routes covering each major layout type:
-// home, adventure listing, adventure landing, level detail, challenge tag.
+// home, challenges listing, adventure landing page, adventure detail, level detail, challenge tag.
 const PAGES = [
   "/",
   "/adventures",
+  "/challenges",
   "/adventures/blind-by-design",
   "/adventures/blind-by-design/levels/beginner",
   "/challenges/opentelemetry",
@@ -22,7 +23,7 @@ const PAGES = [
 // components that rely solely on background-color to communicate state.
 // ---------------------------------------------------------------------------
 
-test.describe("Windows High Contrast Mode — forced colors", () => {
+test.describe("Windows High Contrast Mode: forced colors", () => {
   for (const path of PAGES) {
     test(path, async ({ page }) => {
       await page.emulateMedia({ reducedMotion: "reduce", forcedColors: "active" });
@@ -72,7 +73,7 @@ test.describe("touch target minimum size (WCAG 2.5.8)", () => {
             if (el.closest("p, td, th, dd, blockquote, figcaption")) return false;
 
             // Exempt links whose immediate parent has non-whitespace text node
-            // siblings — the link is inline within a sentence and its size is
+            // siblings. The link is inline within a sentence and its size is
             // constrained by the surrounding line-height. This covers both the
             // <p>text <a>...</a> text</p> pattern and the
             // <span class="md-inline">text <a>...</a></span> pattern used when
@@ -97,7 +98,7 @@ test.describe("touch target minimum size (WCAG 2.5.8)", () => {
           })
           .map((el) => {
             const { width, height } = el.getBoundingClientRect();
-            return `${Math.round(width)}×${Math.round(height)}px — ${el.outerHTML.slice(0, 100)}`;
+            return `${Math.round(width)}×${Math.round(height)}px: ${el.outerHTML.slice(0, 100)}`;
           });
       });
 
@@ -167,7 +168,7 @@ async function collectFocusViolations(page: Page): Promise<string[]> {
   return violations;
 }
 
-test.describe("focus ring visibility — dark mode", () => {
+test.describe("focus ring visibility: dark mode", () => {
   for (const path of PAGES) {
     test(path, async ({ page }) => {
       await page.emulateMedia({ reducedMotion: "reduce" });
@@ -179,7 +180,7 @@ test.describe("focus ring visibility — dark mode", () => {
   }
 });
 
-test.describe("focus ring visibility — light mode", () => {
+test.describe("focus ring visibility: light mode", () => {
   for (const path of PAGES) {
     test(path, async ({ page }) => {
       await page.addInitScript(() => localStorage.setItem("theme", "light"));
@@ -195,7 +196,7 @@ test.describe("focus ring visibility — light mode", () => {
 // ---------------------------------------------------------------------------
 // Keyboard focus trap detection
 // Tabs through the page and fails if the same element receives keyboard focus
-// on two consecutive keypresses — the signature of a focus trap where Tab
+// on two consecutive keypresses, the signature of a focus trap where Tab
 // cannot move focus forward. Normal focus cycling (returning to the first
 // element after the last) is not a trap and is detected by the key change.
 // ---------------------------------------------------------------------------
@@ -238,14 +239,14 @@ test.describe("keyboard focus trap detection", () => {
 });
 
 // ---------------------------------------------------------------------------
-// 200% zoom — no horizontal overflow
+// 200% zoom, no horizontal overflow
 // A 384px viewport approximates the layout effect of 200% browser zoom on a
 // 768px screen (the tablet breakpoint). Horizontal scrollbar presence at
 // this width means content overflows its container and will clip or require
 // sideways scrolling at high zoom levels.
 // ---------------------------------------------------------------------------
 
-test.describe("200% zoom — no horizontal overflow", () => {
+test.describe("200% zoom: no horizontal overflow", () => {
   for (const path of PAGES) {
     test(path, async ({ page }) => {
       await page.setViewportSize({ width: 384, height: 768 });

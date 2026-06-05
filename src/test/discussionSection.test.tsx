@@ -117,7 +117,7 @@ describe("DiscussionSection - posts state", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Age display — hook computes ages; component renders the string it receives
+// Age display: hook computes ages; component renders the string it receives
 // ---------------------------------------------------------------------------
 
 describe("DiscussionSection - age display", () => {
@@ -132,7 +132,7 @@ describe("DiscussionSection - age display", () => {
 });
 
 // ---------------------------------------------------------------------------
-// File content regressions — component must delegate to the hook
+// File content regressions: component must delegate to the hook
 // ---------------------------------------------------------------------------
 
 describe("DiscussionSection - file content regressions", () => {

@@ -42,8 +42,8 @@ const NavLinks = ({ homeActive, onNavigate }: NavLinksProps): JSX.Element => (
     >
       Home
     </NavLink>
-    <NavLink to="/challenges" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Challenges</NavLink>
-    <NavLink to="/about" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>About</NavLink>
+    <NavLink to="/challenges/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Challenges</NavLink>
+    <NavLink to="/about/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>About</NavLink>
     <a
       href={COMMUNITY_URL}
       target="_blank"
@@ -53,9 +53,9 @@ const NavLinks = ({ homeActive, onNavigate }: NavLinksProps): JSX.Element => (
     >
       Community <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
     </a>
-    <NavLink to="/contribute" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Contribute</NavLink>
-    <NavLink to="/handbook" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Handbook</NavLink>
-    <NavLink to="/sponsors" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Sponsors</NavLink>
+    <NavLink to="/contribute/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Contribute</NavLink>
+    <NavLink to="/handbook/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Handbook</NavLink>
+    <NavLink to="/sponsors/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Sponsors</NavLink>
   </>
 );
 

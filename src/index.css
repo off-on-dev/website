@@ -96,26 +96,10 @@
 }
 @font-face {
   font-family: 'Syne';
-  src: url('/fonts/syne-latin-ext-600-normal.woff2') format('woff2');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: 'Syne';
-  src: url('/fonts/syne-latin-600-normal.woff2') format('woff2');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Syne';
   src: url('/fonts/syne-latin-ext-700-normal.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
-  font-display: swap;
+  font-display: optional;
   unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
@@ -123,8 +107,20 @@
   src: url('/fonts/syne-latin-700-normal.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
-  font-display: swap;
+  font-display: optional;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Metric-adjusted fallback for Syne 700. Used when font-display: optional misses the load
+   window. size-adjust/ascent/descent keep h1/h2 layout close to Syne so the fallback
+   render looks intentional rather than broken. Values measured via canvas.measureText()
+   against Arial at 100px on the live site. */
+@font-face {
+  font-family: 'Syne Fallback';
+  src: local('Arial');
+  size-adjust: 114.62%;
+  ascent-override: 81.14%;
+  descent-override: 23.56%;
+  line-gap-override: 0%;
 }
 
 @import "tailwindcss";
@@ -134,7 +130,7 @@
 @theme {
   --font-sans: Inter, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
-  --font-heading: Syne, sans-serif;
+  --font-heading: Syne, 'Syne Fallback', sans-serif;
 
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
@@ -314,7 +310,7 @@ html {
     --text-tertiary: 35 8% 38%;
     --text-muted: 35 8% 32%;
     --text-faint: 35 8% 32%;
-    /* Dark amber for inline link hover in light mode — same hue as primary,
+    /* Dark amber for inline link hover in light mode, same hue as primary,
        darkened to hsl(41 100% 25%) ≈ #805700 for ~5.5:1 contrast on light bg */
     --link-hover-light: 41 100% 25%;
 
@@ -365,7 +361,7 @@ html {
   }
 
   h1, h2 {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Syne', 'Syne Fallback', sans-serif;
     font-weight: 700;
     color: hsl(var(--primary));
   }
@@ -385,8 +381,8 @@ html {
 /* ─── Animations ──────────────────────────────────────────── */
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { transform: translateY(8px); }
+  to   { transform: translateY(0); }
 }
 
 @keyframes marquee {
@@ -421,28 +417,6 @@ html {
   100% { transform: translate(0,     0);    opacity: 0;    }
 }
 
-.animate-fade-up            { animation: fadeUp 0.6s ease-out both; }
-.animate-fade-up-delay-1    { animation: fadeUp 0.6s ease-out 0.1s both; }
-.animate-fade-up-delay-2    { animation: fadeUp 0.6s ease-out 0.2s both; }
-.animate-fade-up-delay-3    { animation: fadeUp 0.6s ease-out 0.3s both; }
-.animate-marquee            { animation: marquee 30s linear infinite; }
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-fade-up,
-  .animate-fade-up-delay-1,
-  .animate-fade-up-delay-2,
-  .animate-fade-up-delay-3,
-  .animate-marquee {
-    animation: none;
-  }
-  /* Firefly particles run a continuous 13-keyframe animation with positional
-     transforms. Vestibular disorder and motion-sensitive users are affected
-     by persistent movement even from decorative elements. */
-  .firefly {
-    animation: none;
-  }
-}
-
 /* ─── Firefly particles ───────────────────────────────────── */
 
 .firefly {
@@ -455,8 +429,20 @@ html {
     0 0 2px 1px  hsl(var(--primary)),
     0 0 5px 2px  hsl(var(--primary) / 0.55),
     0 0 10px 3px hsl(var(--primary) / 0.2);
-  animation: fireflyFloat linear infinite;
-  will-change: transform, opacity;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .animate-fade-up            { animation: fadeUp 0.35s ease-out both; }
+  .animate-fade-up-delay-1    { animation: fadeUp 0.35s ease-out 0.05s both; }
+  .animate-fade-up-delay-2    { animation: fadeUp 0.35s ease-out 0.10s both; }
+  .animate-fade-up-delay-3    { animation: fadeUp 0.35s ease-out 0.15s both; }
+  .animate-marquee            { animation: marquee 30s linear infinite; }
+  .firefly                    { animation: fireflyFloat linear infinite; }
+  /* will-change creates a GPU compositing layer; cap at 3 to stay within PERFORMANCE.md limit */
+  .firefly:nth-child(1),
+  .firefly:nth-child(2),
+  .firefly:nth-child(3) {
+    will-change: transform, opacity;
+  }
 }
 /* vary each dot's position + timing */
 .firefly:nth-child(1)  { top: 12%; left: 8%;   animation-duration: 6s;   animation-delay: 0s;   }
@@ -467,13 +453,7 @@ html {
 .firefly:nth-child(6)  { top: 18%; left: 55%;  animation-duration: 8s;   animation-delay: 1.8s; }
 .firefly:nth-child(7)  { top: 82%; right: 8%;   animation-duration: 6.5s; animation-delay: 4s;   }
 .firefly:nth-child(8)  { top: 50%; left: 72%;  animation-duration: 7s;   animation-delay: 2.6s; }
-/* four new: fill top strip, mid-left gap, lower-right gap */
-.firefly:nth-child(9)  { top: 7%;  left: 38%;  animation-duration: 6.5s; animation-delay: 0.9s; }
-.firefly:nth-child(10) { top: 6%;  right: 20%;  animation-duration: 7s;   animation-delay: 3.5s; }
-.firefly:nth-child(11) { top: 46%; left: 6%;   animation-duration: 8s;   animation-delay: 1.6s; }
-.firefly:nth-child(12) { top: 68%; right: 14%;  animation-duration: 5.5s; animation-delay: 2.3s; }
-
-/* On mobile hide fireflies 7–12; display:none also stops their animations */
+/* On mobile hide fireflies 7–8; display:none also stops their animations */
 @media (max-width: 639px) {
   .firefly:nth-child(n+7) { display: none; }
 }
@@ -481,7 +461,7 @@ html {
 /* ─── Component classes ──────────────────────────────────── */
 
 @layer components {
-  /* Primary filled button — py-3 gives 12+20+12 = 44px (WCAG 2.5.5) */
+  /* Primary filled button: py-3 gives 12+20+12 = 44px (WCAG 2.5.5) */
   .btn-primary {
     @apply inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
@@ -615,7 +595,7 @@ html {
   border-color: hsl(43 100% 50% / 0.5);
 }
 
-/* bg-primary sections stay amber in light mode — body copy uses text-background/90
+/* bg-primary sections stay amber in light mode. Body copy uses text-background/90
    which resolves to near-white cream and needs darkening for contrast on amber */
 .light .bg-primary .text-background\/90 {
   color: hsl(240 25% 8% / 0.8);
@@ -814,7 +794,7 @@ html {
   text-decoration-color: currentColor;
 }
 
-/* Light mode hover: dark amber — same hue as primary, L=25% gives ~5.5:1 contrast */
+/* Light mode hover: dark amber, same hue as primary, L=25% gives ~5.5:1 contrast */
 .light .docs-ext-link:hover {
   color: hsl(var(--link-hover-light));
   text-decoration-color: currentColor;
@@ -1009,7 +989,7 @@ html {
 
 /* ─── Social icon links ──────────────────────────────────── */
 /* Icon-only links used in the Spread the Word card on /contribute.
-   bg-card in light mode is near-white; #ffc034 (--primary) gives ~1.6:1 on hover —
+   bg-card in light mode is near-white; #ffc034 (--primary) gives ~1.6:1 on hover,
    fails WCAG 1.4.11. Use link-hover-light (~5.5:1) in light mode instead. */
 .social-icon-link {
   padding: 0.25rem;
@@ -1047,7 +1027,7 @@ html {
 /* ─── ContributorBadge pill (light mode) ────────────────── */
 /* bg-primary/5 is nearly invisible on light backgrounds; use transparent
    background with a visible slate border instead.
-   Border darkened to hsl(220 12% 55%) — 3.25:1 on near-white (WCAG 1.4.11). */
+   Border darkened to hsl(220 12% 55%), 3.25:1 on near-white (WCAG 1.4.11). */
 .light .contributor-pill {
   background-color: transparent;
   border-color: hsl(220 12% 55%);
@@ -1078,7 +1058,7 @@ html {
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
 }
 
-/* Light mode: --surface-border is hsl(220 12% 87%) — only 1.30:1 on near-white.
+/* Light mode: --surface-border is hsl(220 12% 87%), only 1.30:1 on near-white.
    WCAG 1.4.11 requires 3:1 for interactive component boundaries.
    Hover amber (#ffc034) is also below 3:1. Override in light mode only. */
 .light .tag-chip-link {

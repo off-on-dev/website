@@ -31,7 +31,7 @@ export const StarterNudge = (): JSX.Element | null => {
         <span className="block mt-1">
           New here?{" "}
           <Link
-            to={`/adventures/${starterAdventure.id}/levels/${starterLevel.id}`}
+            to={`/adventures/${starterAdventure.id}/levels/${starterLevel.id}/`}
             className="font-bold underline decoration-2 underline-offset-2 text-primary-foreground hover:opacity-75"
           >
             Start with {starterAdventure.title}, a {starterAdventure.tags[0]} adventure

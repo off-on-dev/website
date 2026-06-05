@@ -19,8 +19,8 @@ export const meta: MetaFunction = () =>
   });
 
 const Privacy = (): JSX.Element => {
-  const heading2 = "text-xl font-heading font-semibold text-foreground mt-10 mb-3";
-  const heading3 = "text-lg font-heading font-semibold text-foreground mt-6 mb-2";
+  const heading2 = "text-xl font-heading font-bold text-foreground mt-10 mb-3";
+  const heading3 = "text-lg font-heading font-bold text-foreground mt-6 mb-2";
   const paragraph = "text-sm text-muted-foreground leading-relaxed mb-4";
   const list = "list-disc list-inside space-y-1 text-sm text-muted-foreground mb-4 ml-2";
 

@@ -26,28 +26,28 @@ describe("Footer - Explore nav", () => {
     expect(screen.getByRole("navigation", { name: "Explore" })).toBeTruthy();
   });
 
-  it("has an Adventures link pointing to /adventures", () => {
+  it("has a Challenges link pointing to /challenges", () => {
     renderFooter();
     const nav = screen.getByRole("navigation", { name: "Explore" });
-    expect(within(nav).getByRole("link", { name: "Adventures" }).getAttribute("href")).toBe("/adventures");
+    expect(within(nav).getByRole("link", { name: "Challenges" }).getAttribute("href")).toBe("/challenges/");
   });
 
   it("has a Handbook link pointing to /handbook", () => {
     renderFooter();
     const nav = screen.getByRole("navigation", { name: "Explore" });
-    expect(within(nav).getByRole("link", { name: "Handbook" }).getAttribute("href")).toBe("/handbook");
+    expect(within(nav).getByRole("link", { name: "Handbook" }).getAttribute("href")).toBe("/handbook/");
   });
 
   it("has an About link pointing to /about", () => {
     renderFooter();
     const nav = screen.getByRole("navigation", { name: "Explore" });
-    expect(within(nav).getByRole("link", { name: "About" }).getAttribute("href")).toBe("/about");
+    expect(within(nav).getByRole("link", { name: "About" }).getAttribute("href")).toBe("/about/");
   });
 
   it("has a Sponsors link pointing to /sponsors", () => {
     renderFooter();
     const nav = screen.getByRole("navigation", { name: "Explore" });
-    expect(within(nav).getByRole("link", { name: "Sponsors" }).getAttribute("href")).toBe("/sponsors");
+    expect(within(nav).getByRole("link", { name: "Sponsors" }).getAttribute("href")).toBe("/sponsors/");
   });
 
 
@@ -73,7 +73,7 @@ describe("Footer - Community nav", () => {
   it("has a Privacy Policy link pointing to /privacy", () => {
     renderFooter();
     const nav = screen.getByRole("navigation", { name: "Community" });
-    expect(within(nav).getByRole("link", { name: "Privacy Policy" }).getAttribute("href")).toBe("/privacy");
+    expect(within(nav).getByRole("link", { name: "Privacy Policy" }).getAttribute("href")).toBe("/privacy/");
   });
 
   it("has a Code of Conduct external link that opens in a new tab", () => {
@@ -85,7 +85,7 @@ describe("Footer - Community nav", () => {
   it("has an Accessibility link pointing to /accessibility", () => {
     renderFooter();
     const nav = screen.getByRole("navigation", { name: "Community" });
-    expect(within(nav).getByRole("link", { name: "Accessibility" }).getAttribute("href")).toBe("/accessibility");
+    expect(within(nav).getByRole("link", { name: "Accessibility" }).getAttribute("href")).toBe("/accessibility/");
   });
 });
 

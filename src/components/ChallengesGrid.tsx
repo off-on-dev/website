@@ -2,7 +2,7 @@ import { useState, type JSX } from "react";
 import { Link } from "react-router";
 import { ArrowRight } from "lucide-react";
 import { ADVENTURE_SUMMARIES, SUMMARY_TAGS } from "@/data/adventures/summaries";
-import { getLevelSummariesByFilters } from "@/data/adventures/filter-utils";
+import { getLevelSummariesByFilters, ALL_LEVEL_SUMMARIES } from "@/data/adventures/filter-utils";
 import { AdventureCard } from "@/components/AdventureCard";
 import { FilteredLevelCard } from "@/components/FilteredLevelCard";
 import { SectionLabel } from "@/components/SectionLabel";
@@ -59,15 +59,15 @@ export const ChallengesGrid = ({ limit }: ChallengesGridProps = {}): JSX.Element
           {/* Live region */}
           <p aria-live="polite" aria-atomic="true" className="sr-only">
             {isFiltered
-              ? `Showing ${filteredLevels.length} ${filteredLevels.length === 1 ? "challenge" : "challenges"}`
+              ? `Showing ${filteredLevels.length} ${filteredLevels.length === 1 ? "challenge" : "challenges"}${activeDifficulty ? ` · ${activeDifficulty}` : ""}${activeTopics.length > 0 ? ` · ${activeTopics.join(", ")}` : ""}`
               : hasFiltered
-              ? "Filters cleared, showing all adventures"
+              ? `Filters cleared, showing ${ADVENTURE_SUMMARIES.length} ${ADVENTURE_SUMMARIES.length === 1 ? "adventure" : "adventures"} · ${ALL_LEVEL_SUMMARIES.length} ${ALL_LEVEL_SUMMARIES.length === 1 ? "challenge" : "challenges"}`
               : ""}
           </p>
 
           {isFiltered ? (
             <>
-              <p className="animate-fade-up mb-6 font-sans text-sm font-medium tracking-wide text-primary">
+              <p className="animate-fade-up mb-6 font-sans text-sm font-medium tracking-wide text-muted-foreground">
                 {filteredLevels.length} {filteredLevels.length === 1 ? "challenge" : "challenges"}
                 {activeDifficulty && ` · ${activeDifficulty}`}
                 {activeTopics.length > 0 && ` · ${activeTopics.join(", ")}`}
@@ -86,6 +86,9 @@ export const ChallengesGrid = ({ limit }: ChallengesGridProps = {}): JSX.Element
             </>
           ) : (
             <>
+              <p className="mb-6 font-sans text-sm font-medium tracking-wide text-muted-foreground">
+                {ADVENTURE_SUMMARIES.length} {ADVENTURE_SUMMARIES.length === 1 ? "adventure" : "adventures"} · {ALL_LEVEL_SUMMARIES.length} {ALL_LEVEL_SUMMARIES.length === 1 ? "challenge" : "challenges"}
+              </p>
               <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
                 {visibleAdventures.map((adventure) => (
                   <AdventureCard key={adventure.id} adventure={adventure} />
@@ -93,7 +96,7 @@ export const ChallengesGrid = ({ limit }: ChallengesGridProps = {}): JSX.Element
               </div>
               {hasMore && (
                 <div className="mt-10 flex justify-center">
-                  <Link to="/challenges" className="btn-ghost inline-flex items-center gap-2">
+                  <Link to="/challenges/" className="btn-ghost inline-flex items-center gap-2">
                     See all adventures
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Link>

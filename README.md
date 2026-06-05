@@ -97,7 +97,7 @@ Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and
 | Path | Page | Purpose |
 |---|---|---|
 | `/` | `Index.tsx` | Home page |
-| `/adventures` | `Adventures.tsx` | All adventures listing |
+| `/adventures` | `Adventures.tsx` | Adventure landing hub (links to /challenges) |
 | `/adventures/:id` | `AdventureDetail.tsx` | Adventure landing |
 | `/adventures/:id/levels/:levelId` | `ChallengeDetail.tsx` | Individual challenge |
 | `/contribute` | `Contribute.tsx` | How to contribute (technical and non-technical ways) |

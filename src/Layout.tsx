@@ -12,7 +12,12 @@ import { useClickTracking } from "@/hooks/useClickTracking";
 // position.
 const ScrollToTop = (): null => {
   const { pathname, hash } = useLocation();
+  const prevPathname = useRef<string | null>(null);
+
   useEffect(() => {
+    const prev = prevPathname.current;
+    prevPathname.current = pathname;
+
     if (hash) {
       const id = hash.slice(1);
       // Defer past commit so the target element exists in the new route.
@@ -21,6 +26,13 @@ const ScrollToTop = (): null => {
       });
       return;
     }
+
+    // Suppress scroll reset when navigating between /challenges and
+    // /challenges/:tag (e.g. clicking a TagChip or direct-linking to a tag).
+    // Filter interactions (topic/difficulty toggles) never change the pathname,
+    // so they don't reach this guard at all.
+    if (prev !== null && prev.startsWith("/challenges") && pathname.startsWith("/challenges")) return;
+
     window.scrollTo(0, 0);
   }, [pathname, hash]);
   return null;

@@ -1,5 +1,6 @@
 import type { JSX } from "react";
 import { CollapsibleSection } from "@/components/CollapsibleSection";
+import { InlineProse } from "@/components/InlineProse";
 
 type ScenarioSectionProps = {
   backstory: string[];
@@ -9,8 +10,10 @@ export const ScenarioSection = ({ backstory }: ScenarioSectionProps): JSX.Elemen
   <CollapsibleSection id="backstory" title="The Story">
     <div className="space-y-3">
       {backstory.map((para, i) => (
-        <p key={i} className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed md-inline"
-          dangerouslySetInnerHTML={{ __html: para }}
+        <InlineProse
+          key={i}
+          html={para}
+          className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed"
         />
       ))}
     </div>
