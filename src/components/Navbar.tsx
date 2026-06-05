@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { Sun, Moon, Menu, X, ExternalLink } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useTheme } from "@/hooks/useTheme";
-import { COMMUNITY_URL } from "@/data/constants";
+import { COMMUNITY_URL, SITE_NAME } from "@/data/constants";
 import { cn } from "@/lib/utils";
 const logoDark = `${import.meta.env.BASE_URL}brand/offon-logo-dark-color.svg`;
 const logoLight = `${import.meta.env.BASE_URL}brand/offon-logo-light-mono.svg`;
@@ -129,7 +129,7 @@ export const Navbar = (): JSX.Element => {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-1.5">
         <Link to="/" aria-label="offon.dev" className="logo-link flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm">
           {/* Dark logo is high-priority: it's visible in the default (dark) theme. Light logo uses auto priority since it's hidden until the user switches theme. */}
-          <img src={logoDark} alt="" aria-hidden="true" width={130} height={33} loading="eager" fetchPriority="high" className="h-8 dark:block hidden" />
+          <img src={logoDark} alt={SITE_NAME} width={130} height={33} loading="eager" fetchPriority="high" className="h-8 dark:block hidden" />
           <img src={logoLight} alt="" aria-hidden="true" width={130} height={33} loading="eager" className="h-8 block dark:hidden" />
         </Link>
 

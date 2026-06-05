@@ -35,7 +35,11 @@ describe("Navbar - logo", () => {
     const logoLink = screen.getByRole("link", { name: "offon.dev" });
     const imgs = logoLink.querySelectorAll("img");
     expect(imgs).toHaveLength(2);
-    expect(imgs[0].getAttribute("aria-hidden")).toBe("true");
+    // Dark logo: meaningful alt text for SEO, no aria-hidden per ACCESSIBILITY.md rule
+    expect(imgs[0].getAttribute("alt")).toBe("offon.dev");
+    expect(imgs[0].getAttribute("aria-hidden")).toBeNull();
+    // Light logo: decorative (dark logo carries the alt), aria-hidden required
+    expect(imgs[1].getAttribute("alt")).toBe("");
     expect(imgs[1].getAttribute("aria-hidden")).toBe("true");
   });
 
