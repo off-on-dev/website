@@ -1,5 +1,5 @@
 import type { JSX, ReactNode } from "react";
-import type { MetaFunction } from "react-router";
+import type { MetaFunction, LinksFunction } from "react-router";
 import { Link } from "react-router";
 import { useEffect, useState } from "react";
 import { Check, X, Download, Zap } from "lucide-react";
@@ -22,6 +22,11 @@ export const meta: MetaFunction = () =>
     description: `Logos, colors, typography, mascot, and brand voice for ${BRAND_NAME}, the vendor-neutral open source community.`,
     url: `${SITE_URL}/brand`,
   });
+
+export const links: LinksFunction = () => [
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-600-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+];
 
 // Compile-time constant — safe to evaluate at module level in a Vite app
 const BASE = import.meta.env.BASE_URL;
@@ -63,7 +68,6 @@ const FONT_WEIGHTS = [
   { weight: "400", label: "Regular", sample: "Open source community for everyone." },
   { weight: "500", label: "Medium", sample: "Learn through hands-on challenges." },
   { weight: "600", label: "Semibold", sample: "Build together. Grow together." },
-  { weight: "700", label: "Bold", sample: "Vendor-Neutral. Open Source. Community-Driven." },
 ];
 
 const VALUES = [
@@ -77,7 +81,6 @@ const LOGO_CARDS = [
     label: "Dark backgrounds",
     note: "Color variant",
     bg: "bg-[#0a0a0a]",
-    border: "border-[hsl(var(--surface-border))]",
     src: `${BASE}brand/offon-logo-dark-color.svg`,
     alt: `${SITE_NAME} color logo on dark background`,
     downloads: [
@@ -89,7 +92,6 @@ const LOGO_CARDS = [
     label: "Light and amber backgrounds",
     note: "Mono variant",
     bg: "bg-[#f8f9fb]",
-    border: "border-[hsl(220,12%,87%)]",
     src: `${BASE}brand/offon-logo-light-mono.svg`,
     alt: `${SITE_NAME} mono logo on light background`,
     downloads: [
@@ -101,7 +103,6 @@ const LOGO_CARDS = [
     label: "Single-color / print on dark",
     note: "Dark mono variant",
     bg: "bg-[#0a0a0a]",
-    border: "border-[hsl(var(--surface-border))]",
     src: `${BASE}brand/offon-logo-dark-mono.svg`,
     alt: `${SITE_NAME} mono logo on dark background`,
     downloads: [
@@ -168,22 +169,22 @@ const ColorCard = ({ swatch, dark }: { swatch: ColorSwatch; dark: boolean }): JS
   </div>
 );
 
-const DownloadBtn = ({ href, filename, label }: DownloadSpec): JSX.Element => (
+const DownloadBadge = ({ href, filename, label }: DownloadSpec): JSX.Element => (
   <a
     href={href}
     download={filename}
     aria-label={`Download ${filename}`}
-    className="inline-flex items-center gap-1.5 font-sans text-xs font-medium text-[hsl(var(--text-secondary))] hover:text-foreground dark:hover:text-primary border border-[hsl(var(--surface-border))] rounded-md px-3 py-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+    className="inline-flex items-center gap-1 font-sans text-[11px] font-semibold tracking-wide text-[hsl(var(--text-secondary))] hover:text-foreground border border-foreground/25 hover:border-foreground/50 rounded-full px-2.5 py-0.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
   >
-    <Download size={11} aria-hidden="true" />
+    <Download size={10} aria-hidden="true" />
     {label}
   </a>
 );
 
-const DownloadGroup = ({ downloads }: { downloads: DownloadSpec[] }): JSX.Element => (
-  <div className="flex flex-wrap gap-2 mt-3">
+const DownloadBadgeGroup = ({ downloads, center }: { downloads: DownloadSpec[]; center?: boolean }): JSX.Element => (
+  <div className={["flex flex-wrap gap-1.5", center && "justify-center"].filter(Boolean).join(" ")}>
     {downloads.map((d) => (
-      <DownloadBtn key={d.filename} href={d.href} filename={d.filename} label={d.label} />
+      <DownloadBadge key={d.filename} href={d.href} filename={d.filename} label={d.label} />
     ))}
   </div>
 );
@@ -286,51 +287,61 @@ const BrandGuidelines = (): JSX.Element => {
                 {/* Logo */}
                 <SectionBlock id="logos" eyebrow="Identity" heading="Logo">
 
-                  {/* Icon mark */}
+                  {/* Project Mark */}
+                  <h3 className="font-sans text-base font-semibold text-foreground mb-3">Project Mark</h3>
+                  <p className="font-sans text-sm text-[hsl(var(--text-secondary))] max-w-prose mb-6">
+                    The horizontal wordmark is the preferred form. Use the icon mark alone only when the wordmark won't fit (minimum 24 px icon height).
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+                    {LOGO_CARDS.map((card) => (
+                      <div key={card.label} className="rounded-lg border border-[hsl(var(--surface-border))] overflow-hidden">
+                        <div className={`${card.bg} h-32 flex items-center justify-center px-8`}>
+                          <img src={card.src} alt={card.alt} width={200} height={48} className="h-12 w-auto max-w-[200px]" loading="lazy" decoding="async" />
+                        </div>
+                        <div className="bg-[hsl(var(--surface))] border-t border-[hsl(var(--surface-border))] px-4 py-3">
+                          <p className="font-sans text-sm font-semibold text-foreground leading-tight mb-2.5">{card.label}</p>
+                          <div className="flex items-center justify-between gap-2">
+                            <p className="font-sans text-xs text-[hsl(var(--text-faint))]">{card.note}</p>
+                            <DownloadBadgeGroup downloads={card.downloads} />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Icon Mark */}
                   <h3 className="font-sans text-base font-semibold text-foreground mb-3">Icon Mark</h3>
                   <p className="font-sans text-sm text-[hsl(var(--text-secondary))] max-w-prose mb-5">
                     A geometric amber firefly bolt. Use it at 24 px minimum. Never rotate, recolor, or distort it.
                   </p>
-                  <div className="flex flex-wrap gap-5 mb-2">
+                  <div className="flex flex-wrap gap-4">
                     {[
-                      { bg: "bg-[#0a0a0a]", border: "border-[hsl(var(--surface-border))]", label: "On dark" },
-                      { bg: "bg-[#f8f9fb]", border: "border-[hsl(220,12%,87%)]", label: "On light" },
-                      { bg: "bg-primary", border: "border-primary/30", label: "On amber" },
-                    ].map(({ bg, border, label }) => (
-                      <div key={label} className="flex flex-col items-center gap-2">
-                        <div className={`w-24 h-24 rounded-lg ${bg} border ${border} flex items-center justify-center p-4`}>
+                      { bg: "bg-[#0a0a0a]", label: "On dark" },
+                      { bg: "bg-[#f8f9fb]", label: "On light" },
+                      { bg: "bg-primary", label: "On amber" },
+                    ].map(({ bg, label }) => (
+                      <div key={label} className="rounded-lg border border-[hsl(var(--surface-border))] overflow-hidden w-36">
+                        <div className={`${bg} h-24 flex items-center justify-center p-5`}>
                           <img
                             src={`${BASE}brand/offon-favicon.svg`}
                             alt={`OffOn icon mark ${label.toLowerCase()}`}
-                            width={64}
-                            height={64}
-                            className="w-full h-full object-contain"
+                            width={56}
+                            height={56}
+                            className="w-14 h-14 object-contain"
                             loading="lazy"
                             decoding="async"
                           />
                         </div>
-                        <span className="font-sans text-xs text-[hsl(var(--text-faint))]">{label}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <DownloadGroup downloads={ICON_DOWNLOADS} />
-
-                  {/* Wordmark */}
-                  <h3 className="font-sans text-base font-semibold text-foreground mt-10 mb-3">Wordmark</h3>
-                  <p className="font-sans text-sm text-[hsl(var(--text-secondary))] max-w-prose mb-5">
-                    Dark backgrounds use the color variant. Light and amber backgrounds use the light mono. Single-color print on dark uses the dark mono.
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                    {LOGO_CARDS.map((card) => (
-                      <div key={card.label}>
-                        <div className={`rounded-lg border ${card.border} ${card.bg} h-32 flex items-center justify-center px-8 mb-3`}>
-                          <img src={card.src} alt={card.alt} width={200} height={48} className="h-12 w-auto max-w-[200px]" loading="lazy" decoding="async" />
+                        <div className="bg-[hsl(var(--surface))] border-t border-[hsl(var(--surface-border))] px-3 pt-2 pb-2.5">
+                          <p className="font-sans text-sm font-semibold text-foreground leading-tight">{label}</p>
                         </div>
-                        <p className="font-sans text-sm font-medium text-foreground mb-0.5">{card.label}</p>
-                        <p className="font-sans text-xs text-[hsl(var(--text-faint))]">{card.note}</p>
-                        <DownloadGroup downloads={card.downloads} />
                       </div>
                     ))}
+                    {/* Single download card for all icon mark variants */}
+                    <div className="rounded-lg border border-[hsl(var(--surface-border))] overflow-hidden w-36 bg-[hsl(var(--surface))] flex flex-col items-center justify-center px-3 py-2.5 text-center">
+                      <p className="font-sans text-sm font-semibold text-foreground leading-tight mb-2.5">Download</p>
+                      <DownloadBadgeGroup downloads={ICON_DOWNLOADS} center />
+                    </div>
                   </div>
 
                   {/* Do / Don't */}
@@ -427,19 +438,23 @@ const BrandGuidelines = (): JSX.Element => {
                       <h3 className="font-sans text-sm font-semibold text-foreground">Syne</h3>
                       <span className="font-mono text-xs text-[hsl(var(--text-faint))]">font-heading / 700 / Headings and display</span>
                     </div>
-                    <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8 space-y-3">
-                      <p className="font-heading text-5xl font-bold text-foreground leading-tight">Open Source</p>
-                      <p className="font-heading text-4xl font-bold text-foreground leading-tight">Community First</p>
-                      <p className="font-heading text-3xl font-bold text-foreground leading-tight">Build Together</p>
-                      <p className="font-heading text-2xl font-bold text-foreground leading-tight">Vendor-Neutral</p>
-                      <p className="font-heading text-xl font-bold text-foreground leading-tight">Always Learning</p>
+                    <div
+                      className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8 space-y-3"
+                      role="img"
+                      aria-label="Syne typeface specimen at sizes 48, 36, 30, 24, and 20px"
+                    >
+                      <p className="font-heading text-5xl font-bold text-foreground leading-tight" aria-hidden="true">Open Source</p>
+                      <p className="font-heading text-4xl font-bold text-foreground leading-tight" aria-hidden="true">Community First</p>
+                      <p className="font-heading text-3xl font-bold text-foreground leading-tight" aria-hidden="true">Build Together</p>
+                      <p className="font-heading text-2xl font-bold text-foreground leading-tight" aria-hidden="true">Vendor-Neutral</p>
+                      <p className="font-heading text-xl font-bold text-foreground leading-tight" aria-hidden="true">Always Learning</p>
                     </div>
                   </div>
 
                   <div className="mb-10">
                     <div className="flex flex-wrap items-baseline gap-3 mb-3">
                       <h3 className="font-sans text-sm font-semibold text-foreground">Inter</h3>
-                      <span className="font-mono text-xs text-[hsl(var(--text-faint))]">font-sans / 400-700 / Body and UI</span>
+                      <span className="font-mono text-xs text-[hsl(var(--text-faint))]">font-sans / 400-600 / Body and UI</span>
                     </div>
                     <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8 space-y-5">
                       {FONT_WEIGHTS.map(({ weight, label, sample }) => (
@@ -474,9 +489,9 @@ hsl(var(--foreground))`}</code>
                   <p className="font-sans text-sm text-[hsl(var(--text-secondary))] max-w-prose mb-6">
                     Nyx is the {BRAND_NAME} firefly mascot. Nyx is gender neutral, so avoid gendered pronouns. Use Nyx in event materials, swag, and community campaigns. Don't alter the colors, proportions, or shape.
                   </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
-                    <div>
-                      <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-primary h-56 flex items-center justify-center overflow-hidden mb-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
+                    <div className="rounded-lg border border-[hsl(var(--surface-border))] overflow-hidden">
+                      <div className="bg-primary h-56 flex items-center justify-center">
                         <img
                           src={`${BASE}nyx.webp`}
                           alt="Nyx, the OffOn firefly mascot, full view"
@@ -487,12 +502,16 @@ hsl(var(--foreground))`}</code>
                           decoding="async"
                         />
                       </div>
-                      <p className="font-sans text-sm font-medium text-foreground mb-1">Nyx: Full</p>
-                      <p className="font-sans text-xs text-[hsl(var(--text-faint))]">Hero sections, event banners, swag.</p>
-                      <DownloadGroup downloads={NYX_FULL_DOWNLOADS} />
+                      <div className="bg-[hsl(var(--surface))] border-t border-[hsl(var(--surface-border))] px-4 py-3">
+                        <p className="font-sans text-sm font-semibold text-foreground leading-tight mb-2.5">Nyx: Full</p>
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="font-sans text-xs text-[hsl(var(--text-faint))]">Hero sections, event banners, swag.</p>
+                          <DownloadBadgeGroup downloads={NYX_FULL_DOWNLOADS} />
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-primary h-56 flex items-center justify-center overflow-hidden mb-3">
+                    <div className="rounded-lg border border-[hsl(var(--surface-border))] overflow-hidden">
+                      <div className="bg-primary h-56 flex items-center justify-center">
                         <img
                           src={`${BASE}nyx_peek.webp`}
                           alt="Nyx the OffOn firefly mascot, peeking variant"
@@ -503,28 +522,35 @@ hsl(var(--foreground))`}</code>
                           decoding="async"
                         />
                       </div>
-                      <p className="font-sans text-sm font-medium text-foreground mb-1">Nyx: Peek</p>
-                      <p className="font-sans text-xs text-[hsl(var(--text-faint))]">Page hero backgrounds, corner decorations.</p>
-                      <DownloadGroup downloads={NYX_PEEK_DOWNLOADS} />
+                      <div className="bg-[hsl(var(--surface))] border-t border-[hsl(var(--surface-border))] px-4 py-3">
+                        <p className="font-sans text-sm font-semibold text-foreground leading-tight mb-2.5">Nyx: Peek</p>
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="font-sans text-xs text-[hsl(var(--text-faint))]">Page hero backgrounds, corner decorations.</p>
+                          <DownloadBadgeGroup downloads={NYX_PEEK_DOWNLOADS} />
+                        </div>
+                      </div>
                     </div>
                   </div>
 
                   <h3 className="font-sans text-base font-semibold text-foreground mb-3">Open Graph Image</h3>
-                  <p className="font-sans text-sm text-[hsl(var(--text-secondary))] max-w-prose mb-5">
+                  <p className="font-sans text-sm text-[hsl(var(--text-secondary))] max-w-prose mb-4">
                     Used as the social media preview when {BRAND_NAME} links are shared. Dimensions: 1200 x 630 px.
                   </p>
-                  <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[#141416] overflow-hidden mb-3 max-w-sm">
+                  <div className="rounded-lg border border-[hsl(var(--surface-border))] overflow-hidden max-w-sm">
                     <img
                       src={`${BASE}og.png`}
                       alt="OffOn Open Graph preview image, 1200 by 630 pixels"
                       width={1200}
                       height={630}
-                      className="w-full h-auto"
+                      className="w-full h-auto block"
                       loading="lazy"
                       decoding="async"
                     />
+                    <div className="bg-[hsl(var(--surface))] border-t border-[hsl(var(--surface-border))] px-4 py-3 flex items-center justify-between gap-2">
+                      <p className="font-sans text-sm font-semibold text-foreground">og.png <span className="font-normal text-[hsl(var(--text-faint))]">· 1200 × 630</span></p>
+                      <DownloadBadgeGroup downloads={OG_DOWNLOADS} />
+                    </div>
                   </div>
-                  <DownloadGroup downloads={OG_DOWNLOADS} />
                 </SectionBlock>
 
                 {/* Photography */}
@@ -578,7 +604,7 @@ hsl(var(--foreground))`}</code>
                   <div className="mb-10">
                     <h3 className="font-sans text-base font-semibold text-foreground mb-3">Brand Name</h3>
                     <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 max-w-md">
-                      <p className="font-heading text-4xl font-bold text-foreground mb-4">{BRAND_NAME}</p>
+                      <p className="font-heading text-4xl font-bold text-foreground mb-4" aria-hidden="true">{BRAND_NAME}</p>
                       <p className="font-sans text-sm text-[hsl(var(--text-secondary))] mb-5">
                         Always camelCase. Domain is always lowercase:{" "}
                         <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-[hsl(var(--surface-border))]">offon.dev</code>

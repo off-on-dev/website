@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, type JSX } from "react";
-import { Link, useLocation } from "react-router";
+import { Link } from "react-router";
 import { Sun, Moon, Menu, X, ExternalLink } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useTheme } from "@/hooks/useTheme";
@@ -27,21 +27,11 @@ const NavThemeToggle = ({ theme, onToggle, className }: NavThemeToggleProps): JS
 );
 
 type NavLinksProps = {
-  homeActive: boolean;
   onNavigate?: () => void;
 };
 
-const NavLinks = ({ homeActive, onNavigate }: NavLinksProps): JSX.Element => (
+const NavLinks = ({ onNavigate }: NavLinksProps): JSX.Element => (
   <>
-    <NavLink
-      to="/"
-      className={cn(linkCls, homeActive && activeCls)}
-      aria-current={homeActive ? "page" : undefined}
-      end
-      onClick={onNavigate}
-    >
-      Home
-    </NavLink>
     <NavLink to="/challenges/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Challenges</NavLink>
     <NavLink to="/about/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>About</NavLink>
     <a
@@ -62,8 +52,6 @@ const NavLinks = ({ homeActive, onNavigate }: NavLinksProps): JSX.Element => (
 export const Navbar = (): JSX.Element => {
   const { theme, toggle } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
-  const location = useLocation();
-  const homeActive = location.pathname === "/";
 
   const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -140,14 +128,14 @@ export const Navbar = (): JSX.Element => {
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-1.5">
         <Link to="/" aria-label="offon.dev" className="logo-link flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm">
-          {/* Both always in DOM so React Router preloads both; CSS controls visibility. */}
+          {/* Dark logo is high-priority: it's visible in the default (dark) theme. Light logo uses auto priority since it's hidden until the user switches theme. */}
           <img src={logoDark} alt="" aria-hidden="true" width={130} height={33} loading="eager" fetchPriority="high" className="h-8 dark:block hidden" />
-          <img src={logoLight} alt="" aria-hidden="true" width={130} height={33} loading="eager" fetchPriority="high" className="h-8 block dark:hidden" />
+          <img src={logoLight} alt="" aria-hidden="true" width={130} height={33} loading="eager" className="h-8 block dark:hidden" />
         </Link>
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-8">
-          <NavLinks homeActive={homeActive} />
+          <NavLinks />
           <NavThemeToggle theme={theme} onToggle={toggle} className="hover:border-primary/30" />
         </div>
 
@@ -173,7 +161,7 @@ export const Navbar = (): JSX.Element => {
           id="mobile-menu"
           className="md:hidden border-t border-[hsl(var(--surface-border))] bg-background px-6 py-2 flex flex-col gap-1"
         >
-          <NavLinks homeActive={homeActive} onNavigate={closeMenu} />
+          <NavLinks onNavigate={closeMenu} />
         </div>
       )}
     </nav>

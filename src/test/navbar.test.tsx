@@ -56,13 +56,6 @@ describe("Navbar - desktop navigation", () => {
     expect(screen.getByRole("navigation", { name: "Main" })).toBeTruthy();
   });
 
-  it("has a Home link", () => {
-    renderNavbar();
-    const nav = screen.getByRole("navigation", { name: "Main" });
-    // There may be duplicates in mobile menu; at least one must be present
-    expect(within(nav).getAllByRole("link", { name: /Home/i }).length).toBeGreaterThan(0);
-  });
-
   it("has an About link pointing to /about", () => {
     renderNavbar();
     const aboutLinks = screen.getAllByRole("link", { name: /About/i });
@@ -158,7 +151,6 @@ describe("Navbar - mobile menu", () => {
     const mobileMenu = document.getElementById("mobile-menu");
     expect(mobileMenu).toBeTruthy();
     const mobileNav = within(mobileMenu!);
-    expect(mobileNav.getByRole("link", { name: /Home/i })).toBeTruthy();
     expect(mobileNav.getByRole("link", { name: /About/i })).toBeTruthy();
   });
 
