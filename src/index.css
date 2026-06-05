@@ -551,13 +551,6 @@ html {
   color: hsl(240 25% 8%);
 }
 
-.light .pill-inactive:hover {
-  color: hsl(var(--foreground-hover));
-  box-shadow:
-    0 0 10px -2px hsl(var(--primary) / 0.4),
-    0 0 20px -6px hsl(var(--primary) / 0.2);
-}
-
 .light .firefly {
   width: 2px;
   height: 2px;

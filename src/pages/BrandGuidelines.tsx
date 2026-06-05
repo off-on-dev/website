@@ -301,7 +301,11 @@ const BrandGuidelines = (): JSX.Element => {
                           <img
                             src={`${BASE}brand/offon-favicon.svg`}
                             alt={`OffOn icon mark ${label.toLowerCase()}`}
+                            width={64}
+                            height={64}
                             className="w-full h-full object-contain"
+                            loading="lazy"
+                            decoding="async"
                           />
                         </div>
                         <span className="font-sans text-xs text-[hsl(var(--text-faint))]">{label}</span>
@@ -319,7 +323,7 @@ const BrandGuidelines = (): JSX.Element => {
                     {LOGO_CARDS.map((card) => (
                       <div key={card.label}>
                         <div className={`rounded-lg border ${card.border} ${card.bg} h-32 flex items-center justify-center px-8 mb-3`}>
-                          <img src={card.src} alt={card.alt} className="h-12 w-auto max-w-[200px]" />
+                          <img src={card.src} alt={card.alt} width={200} height={48} className="h-12 w-auto max-w-[200px]" loading="lazy" decoding="async" />
                         </div>
                         <p className="font-sans text-sm font-medium text-foreground mb-0.5">{card.label}</p>
                         <p className="font-sans text-xs text-[hsl(var(--text-faint))]">{card.note}</p>
@@ -478,6 +482,8 @@ hsl(var(--foreground))`}</code>
                           width={180}
                           height={180}
                           className="object-contain w-44 h-44"
+                          loading="lazy"
+                          decoding="async"
                         />
                       </div>
                       <p className="font-sans text-sm font-medium text-foreground mb-1">Nyx: Full</p>
@@ -492,6 +498,8 @@ hsl(var(--foreground))`}</code>
                           width={180}
                           height={180}
                           className="object-contain w-44 h-44"
+                          loading="lazy"
+                          decoding="async"
                         />
                       </div>
                       <p className="font-sans text-sm font-medium text-foreground mb-1">Nyx: Peek</p>
@@ -512,6 +520,7 @@ hsl(var(--foreground))`}</code>
                       height={630}
                       className="w-full h-auto"
                       loading="lazy"
+                      decoding="async"
                     />
                   </div>
                   <DownloadGroup downloads={OG_DOWNLOADS} />

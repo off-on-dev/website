@@ -1602,7 +1602,7 @@ A public-facing reference for how to use the OffOn brand. Linked from the footer
 
 ### Key patterns
 
-- **Color mode toggle** (`colorMode` state, `"dark" | "light"`): a segmented control rendered inside a contextual preview container whose `backgroundColor` changes to match the selected mode. `ColorCard` takes an `onDark` prop and uses hardcoded inline styles so swatch cards render in the correct mode context regardless of the page theme.
+- **Side-by-side color panels**: dark and light mode swatches are shown simultaneously in two always-on panels with hardcoded `backgroundColor` inline styles. `ColorCard` accepts a `dark: boolean` prop and uses hardcoded inline styles for text so cards render correctly regardless of the page theme. No toggle or `colorMode` state.
 - **TOC scrollspy** (`activeSection` state): an `IntersectionObserver` created inside `useEffect` tracks which section is in the top 20% of the viewport and highlights the matching TOC link with `aria-current="location"`.
 - **Download links** use `<a download="filename">` with `href` pointing to `public/brand/` assets. These have stable, clean URLs (no Vite hash) because they live in `public/`, not `src/assets/`.
 - **Static data arrays** (`LOGO_CARDS`, `ICON_DOWNLOADS`, `NYX_FULL_DOWNLOADS`, etc.) are defined at module level using the Vite compile-time constant `BASE = import.meta.env.BASE_URL`. Do not move them inside the component.
