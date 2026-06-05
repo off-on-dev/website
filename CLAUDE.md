@@ -91,6 +91,8 @@ public/
     refresh-community-sitemap.yml # Daily community sitemap regeneration
     sync-adventure.yml            # workflow_dispatch: sync an adventure from the challenges repo
     validate-adventures.yml       # PR check: validates adventure YAML, routes, and sitemap consistency
+    validate-docs.yml             # PR check: ensures styleguide.md/README.md updated with code changes
+    add-discussion-url.yml        # workflow_dispatch: set discussionUrl for a level and fetch initial posts
 ```
 
 ---
@@ -199,7 +201,7 @@ When diagnosing a bug, especially in the production build, follow these rules wi
 - **Author-controlled prose fields contain pre-rendered HTML.** Every YAML/TS field that holds prose written by a challenge author (`level.audience`, `tool.description`, `step.title`, `step.content`, `contributor.about`, `rewards.eligibility`, `tier.description`, `rewards.rankingNote`, `level.learnings`, `level.objective`, `level.intro`, `level.backstory`, `level.scenario`, `level.architecture`, `adventure.story`, `adventure.backstory`) is converted from Markdown to sanitised HTML at build time by `scripts/generate-adventures.mjs`. Always render them with `dangerouslySetInnerHTML={{ __html: value }}` and the `md-inline` (inline prose) or `md-content` (block content) CSS class. Never render as `{value}` directly. Identifier fields (`id`, URLs, enum values like `difficulty`, emoji) are not author prose and are rendered directly.
   - **When the container is an interactive element** (e.g. a `<Link>` card or a `<button>`), call `stripLinks(html)` from `src/lib/markdown.ts` before passing to `dangerouslySetInnerHTML` to prevent nested `<a>` inside `<a>` or `<button>`, which is invalid HTML.
   - **Exception: `adventure.story` in `AdventureCard` and `summaries.ts`:** The summary card and `ADVENTURE_SUMMARIES` store `story` as plain text (no HTML) so the home page renders it as a plain `<span>` with no markdown overhead. The generator emits a build-time warning if any story value contains markdown syntax (`*`, `_`, `` ` ``). Keep story field values as plain prose.
-  - **`react-markdown` is a dev-only dependency** (used only by `scripts/generate-adventures.mjs`). Do not import it in any component or page file.
+  - **The markdown pipeline (`unified`, `remark-parse`, `remark-gfm`, `remark-rehype`, `rehype-sanitize`, `rehype-stringify`) is dev-only**, used only by `scripts/generate-adventures.mjs`. Do not import any of these packages in component or page files.
 
 ### Component CSS patterns
 

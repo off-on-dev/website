@@ -297,17 +297,17 @@ All animation classes are defined inside `@media (prefers-reduced-motion: no-pre
 
 ### Firefly particles
 
-`.firefly` - 2×2 px dot with `box-shadow` glow in `--primary` color, animated with `fireflyFloat` inside `@media (prefers-reduced-motion: no-preference)` (8 particles, varying `animation-duration` 5.5–8.5 s and `animation-delay`). `will-change: transform, opacity` is applied only to the first three particles to stay within the ≤3 simultaneous limit. In light mode, `.light .firefly` reduces to 1.5×1.5 px and uses `--firefly-color` (`41 100% 45%`, slightly darker amber) for contrast against the light background.
+`.firefly` - 2×2 px dot with `box-shadow` glow in `--primary` color, animated with `fireflyFloat` inside `@media (prefers-reduced-motion: no-preference)` (8 particles, varying `animation-duration` 5.5–8.5 s and `animation-delay`). `will-change: transform, opacity` is applied only to the first three particles to stay within the ≤3 simultaneous limit. In light mode, `.light .firefly` keeps the same 2×2 px size but switches `background-color` and `box-shadow` to `--firefly-color` (`41 100% 45%`, slightly darker amber) for contrast against the light background.
 
 ---
 
 ## Electric Glow Effects
 
-- `.btn-primary:hover` - 28 px amber `box-shadow`
-- `.btn-ghost:hover` - 20 px subtle amber `box-shadow`
+- `.btn-primary:hover` - `brightness-110` (lightens the amber fill; no `box-shadow`)
+- `.btn-ghost:hover` - border shifts to `primary/60`, text shifts to `primary` (amber); no `box-shadow`
 - `.card-glow:hover` - 1 px border glow + 32 px / 60 px radial shadows
 
-Light mode overrides reduce glow intensities.
+Light mode overrides reduce glow intensities on `card-glow`.
 
 ---
 
@@ -701,11 +701,13 @@ Two-row filter UI for the adventure catalog. Row 1 is a difficulty single-select
 
 A slim 3-column feature strip placed directly after `ChallengesGrid`, separated by a top border. Answers "why are these challenges worth doing" without a full card section. Each item is an icon + bold title + one-line description, no card borders.
 
-| Item | Icon |
-|---|---|
-| Learn by Doing | `BookOpen` |
-| Build Real Skills | `TrendingUp` |
-| Open Source | `Shield` |
+| Item | Icon | Size |
+|---|---|---|
+| Learn by Doing | `BookOpen` | `size={22}` |
+| Build Real Skills | `TrendingUp` | `size={22}` |
+| Open Source | `Shield` | `size={22}` |
+
+Icons use `size={22}` (not the `size={28}` convention for full card sections) because this component is a slim strip, not a bordered card layout.
 
 No props. Used only in `Index.tsx`.
 

@@ -53,7 +53,7 @@ const Sponsors = (): JSX.Element => {
                       className="inline-flex items-center opacity-80 hover:opacity-100 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
                     >
                       {logoSrc ? (
-                        <img src={logoSrc} alt={sponsor.name} width={200} height={36} className="h-10 w-auto max-w-full" loading="lazy" />
+                        <img src={logoSrc} alt={sponsor.name} width={200} height={36} className="h-10 w-auto max-w-full" loading="lazy" decoding="async" />
                       ) : (
                         <span className="text-base font-semibold text-foreground">{sponsor.name}</span>
                       )}

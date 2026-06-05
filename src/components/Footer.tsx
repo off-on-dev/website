@@ -18,7 +18,7 @@ export const Footer = (): JSX.Element => {
         {/* Brand */}
         <div>
           <div className="mb-4">
-            <img src={theme === "dark" ? logoDark : logoLight} alt={SITE_NAME} width={104} height={26} loading="lazy" className="h-5" />
+            <img src={theme === "dark" ? logoDark : logoLight} alt={SITE_NAME} width={104} height={26} loading="lazy" decoding="async" className="h-5" />
           </div>
           <p className="font-sans text-sm text-[hsl(var(--text-secondary))] leading-relaxed md:max-w-xs">
             {BRAND_SHORT_DESCRIPTION}

@@ -16,7 +16,8 @@ export const ArchitectureSection = ({ architecture, diagram, diagramAlt, ascii }
         <img
           src={diagram}
           alt={diagramAlt ?? "Architecture diagram"}
-          loading="eager"
+          loading="lazy"
+          decoding="async"
           width={1200}
           height={560}
           className="w-full h-auto max-h-[560px] object-contain block rounded-lg"

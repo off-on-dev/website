@@ -9,7 +9,7 @@ export const Hero = (): JSX.Element => {
   );
 
   return (
-    <section className="relative flex min-h-screen items-center justify-center px-6 pt-20">
+    <section aria-labelledby="hero-heading" className="relative flex min-h-screen items-center justify-center px-6 pt-20">
       {/* Firefly particles */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         {fireflies}
@@ -24,7 +24,7 @@ export const Hero = (): JSX.Element => {
               <Zap size={12} aria-hidden="true" className="text-foreground" />
               <span className="text-xs text-foreground">{BRAND_SLOGAN_PARTS[2]}</span>
             </div>
-            <h1 className="animate-fade-up-delay-1 font-heading text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+            <h1 id="hero-heading" className="animate-fade-up-delay-1 font-heading text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
               <span className="block text-primary">
                 {BRAND_SECONDARY_LINE_PARTS[0]}
               </span>
