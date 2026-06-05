@@ -65,6 +65,7 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
                       width={32}
                       height={32}
                       loading="lazy"
+                      decoding="async"
                       className="h-8 w-8 shrink-0 rounded-full object-cover"
                     />
                   ) : (

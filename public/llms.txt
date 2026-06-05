@@ -13,6 +13,7 @@
 - [About](https://offon.dev/about/): What OffOn is and who it is for.
 - [Sponsors](https://offon.dev/sponsors/): Organisations supporting the platform.
 - [Accessibility Statement](https://offon.dev/accessibility/): WCAG 2.2 AA commitment and known issues.
+- [Brand Guidelines](https://offon.dev/brand/): Logos, colors, typography, and voice for OffOn.
 - [Privacy Policy](https://offon.dev/privacy/): GDPR-compliant privacy policy; consent-gated GA4 analytics.
 
 ## Adventures

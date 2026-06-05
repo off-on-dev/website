@@ -44,12 +44,11 @@ describe("Footer - Explore nav", () => {
     expect(within(nav).getByRole("link", { name: "About" }).getAttribute("href")).toBe("/about/");
   });
 
-  it("has a Sponsors link pointing to /sponsors", () => {
+  it("has a Brand link pointing to /brand", () => {
     renderFooter();
     const nav = screen.getByRole("navigation", { name: "Explore" });
-    expect(within(nav).getByRole("link", { name: "Sponsors" }).getAttribute("href")).toBe("/sponsors/");
+    expect(within(nav).getByRole("link", { name: "Brand" }).getAttribute("href")).toBe("/brand/");
   });
-
 
 });
 

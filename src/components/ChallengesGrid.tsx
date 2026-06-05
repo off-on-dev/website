@@ -38,11 +38,11 @@ export const ChallengesGrid = ({ limit }: ChallengesGridProps = {}): JSX.Element
   const filterKey = activeTopics.join(",") + (activeDifficulty ?? "");
 
   return (
-    <section id="challenges" className="py-24 px-6 md:px-16">
+    <section id="challenges" aria-labelledby="challenges-heading" className="py-24 px-6 md:px-16">
       <div className="mx-auto max-w-6xl">
         <div>
           <SectionLabel>Adventures</SectionLabel>
-          <h2 className="mb-6 text-3xl font-bold text-primary md:text-4xl">
+          <h2 id="challenges-heading" className="mb-6 text-3xl font-bold text-primary md:text-4xl">
             Choose Your Adventure
           </h2>
 

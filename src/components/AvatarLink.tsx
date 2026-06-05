@@ -35,6 +35,7 @@ export const AvatarLink = ({
           width={size}
           height={size}
           loading="lazy"
+          decoding="async"
           className={`${sizeClass} rounded-full shrink-0 object-cover`}
         />
       ) : (

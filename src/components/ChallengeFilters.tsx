@@ -66,7 +66,7 @@ export const ChallengeFilters = ({
     "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-left transition-colors",
     isActive
       ? "text-primary bg-primary/10"
-      : "text-[hsl(var(--text-secondary))] hover:bg-primary/5 hover:text-primary"
+      : "text-[hsl(var(--text-secondary))] hover:bg-primary/5 hover:text-foreground dark:hover:text-primary"
   );
 
   return (

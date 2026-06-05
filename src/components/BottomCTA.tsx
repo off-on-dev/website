@@ -58,6 +58,7 @@ export const BottomCTA = (): JSX.Element => {
             width={240}
             height={240}
             loading="lazy"
+            decoding="async"
             className="hidden lg:block w-[240px] h-[240px] self-start"
           />
       </div>

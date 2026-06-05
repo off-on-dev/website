@@ -114,7 +114,7 @@ const CommunityGuide = (): JSX.Element => {
           {/* Policies */}
           <section aria-labelledby="policies">
             <h2 id="policies" className="text-2xl font-bold text-foreground mb-4">Policies</h2>
-            <ul className="space-y-1.5">
+            <ul role="list" className="space-y-1.5">
               {[
                 { label: "Trust Levels", href: `${COMMUNITY_URL}/t/trust-level-guide/1475` },
                 { label: "Questions & Feedback", href: `${COMMUNITY_URL}/t/questions-feedback/34` },
@@ -142,7 +142,7 @@ const CommunityGuide = (): JSX.Element => {
           {/* Contact */}
           <section aria-labelledby="contact">
             <h2 id="contact" className="text-2xl font-bold text-foreground mb-3">Contact</h2>
-            <ul className="space-y-2 text-sm text-[hsl(var(--text-secondary))]">
+            <ul role="list" className="space-y-2 text-sm text-[hsl(var(--text-secondary))]">
               <li className="flex items-start gap-2.5">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                 Flag posts that violate policy using the flag button on any post

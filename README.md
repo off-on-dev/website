@@ -41,7 +41,7 @@ Node.js **24** is required. Version is pinned in `.nvmrc`, run `nvm use` to swit
 | `npm test` | Run the full test suite once (Vitest) |
 | `npm run test:watch` | Run tests in watch mode |
 | `npm run test:coverage` | Run tests with v8 coverage report |
-| `npm run test:e2e` | Playwright smoke and WSG tests (requires `npm run build` first) |
+| `npm run test:e2e` | Playwright smoke, WSG, accessibility, and hydration tests (requires `npm run build` first) |
 | `npm run generate` | Regenerate TypeScript from adventure YAML files |
 | `npm run generate:validate` | Validate adventure YAML against schema without writing files |
 
@@ -67,8 +67,10 @@ src/
   entry.server.tsx  # Server/prerender entry: renderToPipeableStream for static HTML generation
   Layout.tsx      # App shell with all providers and Outlet
 e2e/
-  smoke.spec.ts   # Playwright smoke tests: route titles, axe a11y audit (requires npm run build first)
-  wsg.spec.ts     # Web Sustainability Guidelines checks: page weight, third-party requests, image optimisation
+  smoke.spec.ts      # Playwright smoke tests: route titles, axe a11y audit (requires npm run build first)
+  wsg.spec.ts        # Web Sustainability Guidelines checks: page weight, third-party requests, image optimisation
+  a11y.spec.ts       # Targeted accessibility checks: keyboard navigation, Windows High Contrast Mode
+  hydration.spec.ts  # Hydration verification: confirms prerendered HTML matches client hydration
 schemas/
   adventure.schema.json  # JSON Schema for adventure YAML validation
 scripts/
@@ -106,6 +108,7 @@ Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and
 | `/handbook` | `CommunityGuide.tsx` | Community handbook / documentation |
 | `/privacy` | `Privacy.tsx` | GDPR-compliant privacy policy |
 | `/accessibility` | `Accessibility.tsx` | WCAG accessibility statement |
+| `/brand` | `BrandGuidelines.tsx` | Brand guidelines: logos, colors, typography, voice |
 | `/404` | `NotFound.tsx` | Prerendered 404 page |
 | `/community-guide` | redirects to `/handbook` | Legacy alias |
 | `/docs` | redirects to `/handbook` | Legacy alias |

@@ -307,12 +307,12 @@ html {
     /* Custom text tokens */
     --text-primary: 240 25% 8%;
     --text-secondary: 240 20% 18%;
-    --text-tertiary: 35 8% 38%;
-    --text-muted: 35 8% 32%;
-    --text-faint: 35 8% 32%;
+    --text-tertiary: 35 8% 30%;
+    --text-muted: 35 8% 29%;
+    --text-faint: 35 8% 29%;
     /* Dark amber for inline link hover in light mode, same hue as primary,
-       darkened to hsl(41 100% 25%) ≈ #805700 for ~5.5:1 contrast on light bg */
-    --link-hover-light: 41 100% 25%;
+       darkened to hsl(41 100% 22%) ≈ #704d00 for ~7.4:1 contrast on light bg */
+    --link-hover-light: 41 100% 22%;
 
     /* Custom surface tokens */
     --surface: 220 10% 96%;
@@ -529,6 +529,13 @@ html {
   border-color: hsl(var(--primary) / 0.3) !important;
 }
 
+/* ─── Text selection ────────────────────────────────────── */
+
+::selection {
+  background-color: hsl(41 100% 60% / 0.35);
+  color: hsl(47 54% 98%);
+}
+
 /* ─── Light mode overrides ───────────────────────────────── */
 
 .light .card-glow:hover {
@@ -539,11 +546,9 @@ html {
   border-color: hsl(var(--primary) / 0.45) !important;
 }
 
-.light .pill-inactive:hover {
-  color: hsl(var(--foreground-hover));
-  box-shadow:
-    0 0 10px -2px hsl(var(--primary) / 0.4),
-    0 0 20px -6px hsl(var(--primary) / 0.2);
+.light ::selection {
+  background-color: hsl(41 100% 45% / 0.25);
+  color: hsl(240 25% 8%);
 }
 
 .light .firefly {
@@ -593,6 +598,12 @@ html {
   color: hsl(var(--foreground-hover));
   background-color: hsl(43 100% 50% / 0.15);
   border-color: hsl(43 100% 50% / 0.5);
+}
+
+.light .pill-inactive:hover {
+  color: hsl(var(--foreground-hover));
+  border-color: hsl(var(--foreground) / 0.4);
+  box-shadow: none;
 }
 
 /* bg-primary sections stay amber in light mode. Body copy uses text-background/90
@@ -794,7 +805,7 @@ html {
   text-decoration-color: currentColor;
 }
 
-/* Light mode hover: dark amber, same hue as primary, L=25% gives ~5.5:1 contrast */
+/* Light mode hover: dark amber, same hue as primary, L=22% gives ~7.4:1 contrast */
 .light .docs-ext-link:hover {
   color: hsl(var(--link-hover-light));
   text-decoration-color: currentColor;
@@ -990,7 +1001,7 @@ html {
 /* ─── Social icon links ──────────────────────────────────── */
 /* Icon-only links used in the Spread the Word card on /contribute.
    bg-card in light mode is near-white; #ffc034 (--primary) gives ~1.6:1 on hover,
-   fails WCAG 1.4.11. Use link-hover-light (~5.5:1) in light mode instead. */
+   fails WCAG 1.4.11. Use link-hover-light (~7.4:1) in light mode instead. */
 .social-icon-link {
   padding: 0.25rem;
   color: hsl(var(--text-secondary));

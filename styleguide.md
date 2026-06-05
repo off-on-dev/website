@@ -178,7 +178,8 @@ The light mode uses a barely-cool background palette. The slight cool/warm contr
 | Foreground/body | `hsl(240 25% 8%)` | `#0D0D17` | Deep navy (`--foreground`) |
 | Foreground hover | `hsl(240 25% 5%)` | | Slightly deeper than foreground, used for link/nav hover (`--foreground-hover`) |
 | Headings | `hsl(240 25% 8%)` | `#0D0D17` | Overrides dark mode primary-colored headings (via `.light h1–h6`) |
-| Muted text | `hsl(35 8% 38%)` | `#655E55` | Warm gray (intentional warm/cool contrast) |
+| Muted text (`--muted-foreground`) | `hsl(35 8% 32%)` | `#534B42` | Warm gray, ~7.3:1 on light bg — used via `text-muted-foreground` |
+| Faint text (`--text-tertiary`, `--text-muted`, `--text-faint`) | `hsl(35 8% 29–30%)` | `#504B44` | Slightly darker; labels, timestamps, metadata — ~8:1+ on light bg |
 | Border | `hsl(220 12% 87%)` | `#D8DBE2` | Cool border |
 | Badge: Beginner | `hsl(41 80% 85%)` | | Black text |
 | Badge: Intermediate | `hsl(85 40% 82%)` | | Black text |
@@ -297,17 +298,17 @@ All animation classes are defined inside `@media (prefers-reduced-motion: no-pre
 
 ### Firefly particles
 
-`.firefly` - 2×2 px dot with `box-shadow` glow in `--primary` color, animated with `fireflyFloat` inside `@media (prefers-reduced-motion: no-preference)` (8 particles, varying `animation-duration` 5.5–8.5 s and `animation-delay`). `will-change: transform, opacity` is applied only to the first three particles to stay within the ≤3 simultaneous limit. In light mode, `.light .firefly` reduces to 1.5×1.5 px and uses `--firefly-color` (`41 100% 45%`, slightly darker amber) for contrast against the light background.
+`.firefly` - 2×2 px dot with `box-shadow` glow in `--primary` color, animated with `fireflyFloat` inside `@media (prefers-reduced-motion: no-preference)` (8 particles, varying `animation-duration` 5.5–8.5 s and `animation-delay`). `will-change: transform, opacity` is applied only to the first three particles to stay within the ≤3 simultaneous limit. In light mode, `.light .firefly` keeps the same 2×2 px size but switches `background-color` and `box-shadow` to `--firefly-color` (`41 100% 45%`, slightly darker amber) for contrast against the light background.
 
 ---
 
 ## Electric Glow Effects
 
-- `.btn-primary:hover` - 28 px amber `box-shadow`
-- `.btn-ghost:hover` - 20 px subtle amber `box-shadow`
+- `.btn-primary:hover` - `brightness-110` (lightens the amber fill; no `box-shadow`)
+- `.btn-ghost:hover` - border shifts to `primary/60`, text shifts to `primary` (amber); no `box-shadow`
 - `.card-glow:hover` - 1 px border glow + 32 px / 60 px radial shadows
 
-Light mode overrides reduce glow intensities.
+Light mode overrides reduce glow intensities on `card-glow`.
 
 ---
 
@@ -701,11 +702,13 @@ Two-row filter UI for the adventure catalog. Row 1 is a difficulty single-select
 
 A slim 3-column feature strip placed directly after `ChallengesGrid`, separated by a top border. Answers "why are these challenges worth doing" without a full card section. Each item is an icon + bold title + one-line description, no card borders.
 
-| Item | Icon |
-|---|---|
-| Learn by Doing | `BookOpen` |
-| Build Real Skills | `TrendingUp` |
-| Open Source | `Shield` |
+| Item | Icon | Size |
+|---|---|---|
+| Learn by Doing | `BookOpen` | `size={22}` |
+| Build Real Skills | `TrendingUp` | `size={22}` |
+| Open Source | `Shield` | `size={22}` |
+
+Icons use `size={22}` (not the `size={28}` convention for full card sections) because this component is a slim strip, not a bordered card layout.
 
 No props. Used only in `Index.tsx`.
 
@@ -1481,7 +1484,7 @@ Used on `<span>` elements in: `CommunitySection`, `ChallengesGrid`, `NotFound`.
 The standard class for all inline prose links across the site. Handles both modes correctly without any additional Tailwind utilities for color or hover state.
 
 **Dark mode:** foreground text with amber (`--primary`) underline. Hover shifts text and underline to full `hsl(var(--primary))` (`#ffc034`).
-**Light mode:** near-black foreground text with `currentColor` underline. Hover shifts text and underline to `--link-hover-light` (`hsl(41 100% 25%)` ≈ `#7f4200`), dark amber, same hue as primary, ~5.5:1 contrast on light backgrounds. Passes WCAG AA.
+**Light mode:** near-black foreground text with `currentColor` underline. Hover shifts text and underline to `--link-hover-light` (`hsl(41 100% 22%)` ≈ `#704d00`), dark amber, same hue as primary, ~7.4:1 contrast on light backgrounds. Passes WCAG AAA.
 
 Used in: `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`, `ChallengeDetail`, `MarkdownContent`, `CommunitySidebar`, `RewardsCard`, `Accessibility`, and `Privacy`.
 
@@ -1504,7 +1507,7 @@ className="docs-ext-link text-sm font-medium mt-4"
 CSS class for icon-only social media `<a>` links. Used in the Spread the Word card on `/contribute` and in `ChallengeShareLinks` on challenge detail pages.
 
 **Dark mode:** base `text-[hsl(var(--text-secondary))]`, hover `hsl(var(--primary))` (amber, fine on dark backgrounds).
-**Light mode:** `.light .social-icon-link:hover` overrides to `hsl(var(--link-hover-light))` (~5.5:1 dark amber on white), avoiding `#ffc034` which is ~1.6:1 on near-white and fails WCAG 1.4.11.
+**Light mode:** `.light .social-icon-link:hover` overrides to `hsl(var(--link-hover-light))` (~7.4:1 dark amber on white), avoiding `#ffc034` which is ~1.6:1 on near-white and fails WCAG 1.4.11.
 
 Includes `padding: 0.25rem` (equivalent to `p-1`) to improve tap target size and `border-radius: 2px` for focus ring containment.
 
@@ -1588,6 +1591,40 @@ Located at the end of `src/index.css`. Fires when the user enables Windows High 
 Applies system color keywords (`ButtonFace`, `ButtonText`, `Highlight`, `HighlightText`) to buttons and pills. Uses `forced-color-adjust: none` to prevent the browser from adding conflicting overrides on top of our manual system-color assignments. Focus rings use `Highlight` so they remain visible regardless of the `--ring` variable value.
 
 When adding a new interactive component (button, pill, toggle, chip), add a corresponding rule to the `forced-colors` block so its boundaries and labels remain visible in High Contrast Mode.
+
+---
+
+## Brand Guidelines Page (`/brand`)
+
+`src/pages/BrandGuidelines.tsx`
+
+A public-facing reference for how to use the OffOn brand. Linked from the footer's Explore nav. Sections: Mission and Values, Logo, Colors, Typography, Design Elements (Mascot, OG image), Photography, Voice and Tone.
+
+### Key patterns
+
+- **Side-by-side color panels**: dark and light mode swatches are shown simultaneously in two always-on panels with hardcoded `backgroundColor` inline styles. `ColorCard` accepts a `dark: boolean` prop and uses hardcoded inline styles for text so cards render correctly regardless of the page theme. No toggle or `colorMode` state.
+- **TOC scrollspy** (`activeSection` state): an `IntersectionObserver` created inside `useEffect` tracks which section is in the top 20% of the viewport and highlights the matching TOC link with `aria-current="location"`.
+- **Download links** use `<a download="filename">` with `href` pointing to `public/brand/` assets. These have stable, clean URLs (no Vite hash) because they live in `public/`, not `src/assets/`.
+- **Static data arrays** (`LOGO_CARDS`, `ICON_DOWNLOADS`, `NYX_FULL_DOWNLOADS`, etc.) are defined at module level using the Vite compile-time constant `BASE = import.meta.env.BASE_URL`. Do not move them inside the component.
+
+### Brand assets in `public/brand/`
+
+All downloadable brand assets live at `public/brand/`. File naming convention: `offon-<asset>.<ext>` with no size suffix in the filename.
+
+| File | Purpose |
+|---|---|
+| `offon-logo-dark-color.svg` / `.png` | Color wordmark for dark backgrounds |
+| `offon-logo-light-mono.svg` / `.png` | Mono wordmark for light and amber backgrounds |
+| `offon-logo-dark-mono.svg` / `.png` | Mono wordmark for single-color print on dark |
+| `offon-favicon.svg` / `.png` | Standalone icon mark |
+| `offon-nyx.png` | Mascot full variant (PNG) |
+| `offon-nyx-peek.png` | Mascot peeking variant (PNG) |
+
+Mascot WebP sources (`nyx.webp`, `nyx_peek.webp`) live in `public/` (not `public/brand/`) because they are also used as background images in page hero sections.
+
+### Hover contrast rule (light mode)
+
+`hover:text-primary` resolves to amber on a light surface and fails WCAG contrast. Always use `hover:text-foreground dark:hover:text-primary` on any interactive element in this page.
 
 ---
 

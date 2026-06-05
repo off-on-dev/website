@@ -43,12 +43,12 @@ export const OtherLevelsCard = ({
         More Levels
       </h2>
 
-      <ul className="space-y-2">
+      <ul role="list" className="space-y-2">
         {otherLevels.map((level) => (
           <li key={level.id}>
             <Link
               to={`/adventures/${adventure.id}/levels/${level.id}/`}
-              className="group inline-flex w-full items-center gap-2 rounded-sm border px-2.5 py-1.5 text-xs no-underline transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+              className="group inline-flex w-full items-center gap-2 rounded-sm border px-2.5 py-1.5 text-xs no-underline hover:brightness-95 transition-[filter] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
               style={pillStyle[level.difficulty]}
             >
               <span className="shrink-0 uppercase font-medium">{level.difficulty}</span>

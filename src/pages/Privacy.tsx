@@ -45,7 +45,7 @@ const Privacy = (): JSX.Element => {
           The data controller for this Site is the offon.dev moderation team. You can contact us
           at any time:
         </p>
-        <ul className={list}>
+        <ul role="list" className={list}>
           <li>Email: <a href={`mailto:${CONTACT_EMAIL}`} className="docs-ext-link">{CONTACT_EMAIL}</a></li>
           <li>
             Board: <Link to="/about#board" className="docs-ext-link">reach out to the board</Link>
@@ -64,7 +64,7 @@ const Privacy = (): JSX.Element => {
           We use Google Analytics 4 (GA4) to understand how visitors use the Site. This helps us
           improve content and navigation. GA4 collects:
         </p>
-        <ul className={list}>
+        <ul role="list" className={list}>
           <li>Pages visited and time spent on each page</li>
           <li>Referring website or search query</li>
           <li>Approximate geographic location (country or region, not precise location)</li>
@@ -140,7 +140,7 @@ const Privacy = (): JSX.Element => {
           contact us at <a href={`mailto:${CONTACT_EMAIL}`} className="docs-ext-link">{CONTACT_EMAIL}</a>.
           We will respond within 30 days.
         </p>
-        <ul className={list}>
+        <ul role="list" className={list}>
           <li>
             <strong>Right of access (Art. 15)</strong> - You may request a copy of the personal
             data we hold about you and information about how it is processed.

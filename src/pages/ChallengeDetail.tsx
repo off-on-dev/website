@@ -139,7 +139,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
                 <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
                   Mission Objective
                 </h2>
-                <ul className="space-y-2">
+                <ul role="list" className="space-y-2">
                   {objective.map((item) => (
                     <li key={item} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
                       <Check size={14} className="mt-0.5 shrink-0 text-primary" aria-hidden="true" />
@@ -154,7 +154,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
               <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
                 Key Learnings
               </h2>
-              <ul className="space-y-2">
+              <ul role="list" className="space-y-2">
                 {level.learnings.map((learning) => (
                   <li key={learning} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
@@ -222,7 +222,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
             <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
               Complete Your Challenge
             </h2>
-            <ul className="space-y-3">
+            <ul role="list" className="space-y-3">
               <li className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                 <span>
@@ -282,7 +282,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
                   <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
                     Toolbox
                   </h2>
-                  <ul className="space-y-2">
+                  <ul role="list" className="space-y-2">
                     {toolbox.map((tool) => (
                       <li key={tool.name} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
                         <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
@@ -314,7 +314,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
                   <h2 id="helpful-links-heading" className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
                     Helpful Documentation
                   </h2>
-                  <ul className="space-y-2">
+                  <ul role="list" className="space-y-2">
                     {helpfulLinks.map((link) => (
                       <li key={link.url} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
                         <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />

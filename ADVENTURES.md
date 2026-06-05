@@ -177,10 +177,11 @@ When a new level is ready in the challenges repo after the first adventure PR ha
 These scripts run automatically on the hourly schedule but can also be run locally.
 
 ```sh
-# Requires DISCOURSE_API_KEY and DISCOURSE_API_USERNAME in .env
-node scripts/refresh-discussions.mjs   # Fetch discussion posts for each level
-node scripts/refresh-leaderboard.mjs   # Fetch leaderboard data per adventure/level
-node scripts/refresh-community-leaders.mjs  # Fetch community leader data
+node scripts/refresh-discussions.mjs   # Fetch discussion posts for each level (no credentials needed)
+
+# The following two scripts require DISCOURSE_API_KEY and DISCOURSE_API_USERNAME in .env
+node scripts/refresh-leaderboard.mjs          # Fetch leaderboard data per adventure/level
+node scripts/refresh-community-leaders.mjs    # Fetch community leader data
 ```
 
 Create a `.env` file at the repo root for local use:

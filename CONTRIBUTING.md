@@ -34,7 +34,7 @@ Open PRs from your fork against `main` on the upstream repo.
 ```sh
 npm run lint             # ESLint
 npm test                 # Vitest unit tests
-npm run build && npm run test:e2e  # Playwright smoke + axe a11y tests
+npm run build && npm run test:e2e  # Playwright smoke, WSG, a11y, and hydration tests
 ```
 
 All three must pass with zero failures before opening a PR.

@@ -38,7 +38,7 @@ const Accessibility = (): JSX.Element => {
             </p>
 
             <h2 className={heading2}>Our Commitment</h2>
-            <ul className={list}>
+            <ul role="list" className={list}>
               <li>
                 <strong>Target:</strong>{" "}
                 <a href="https://www.w3.org/TR/WCAG22/" target="_blank" rel="noopener noreferrer" className={link}>
@@ -61,7 +61,7 @@ const Accessibility = (): JSX.Element => {
             </ul>
 
             <h2 className={heading2}>What We Support Today</h2>
-            <ul className={list}>
+            <ul role="list" className={list}>
               <li>Skip-to-content link as the first focusable element on every page.</li>
               <li>Visible focus rings on all interactive elements, in both light and dark mode.</li>
               <li>
@@ -122,7 +122,7 @@ const Accessibility = (): JSX.Element => {
             </ul>
 
             <h2 className={heading2}>Supported Environments</h2>
-            <ul className={list}>
+            <ul role="list" className={list}>
               <li>
                 Modern evergreen browsers: Chrome, Edge, Firefox, Safari (current and previous major
                 versions).
@@ -140,7 +140,7 @@ const Accessibility = (): JSX.Element => {
             </ul>
 
             <h2 className={heading2}>Known Limitations</h2>
-            <ul className={list}>
+            <ul role="list" className={list}>
               <li>
                 We do not currently provide captions or transcripts because the site does not host
                 video or audio. If we add media, captions and transcripts will ship with it.
@@ -158,7 +158,7 @@ const Accessibility = (): JSX.Element => {
             <h2 className={heading2}>How We Test</h2>
 
             <h3 className={heading3}>Automated</h3>
-            <ul className={list}>
+            <ul role="list" className={list}>
               <li>
                 <strong>axe-core via Playwright</strong> on every pull request, configured in{" "}
                 <code>e2e/smoke.spec.ts</code>. Runs in both dark and light mode against the
@@ -172,7 +172,7 @@ const Accessibility = (): JSX.Element => {
 
             <h3 className={heading3}>Manual</h3>
             <p className={paragraph}>For UI changes, contributors verify:</p>
-            <ul className={list}>
+            <ul role="list" className={list}>
               <li>Tab order matches the visual reading order.</li>
               <li>Focus is visible on every interactive element in both modes.</li>
               <li>
@@ -195,7 +195,7 @@ const Accessibility = (): JSX.Element => {
               . The form prompts for the page, your assistive technology, and severity, which helps
               us reproduce and prioritize.
             </p>
-            <ul className={list}>
+            <ul role="list" className={list}>
               <li>
                 <strong>Preferred:</strong> GitHub issue (link above). The fastest way to get a
                 response with a fix timeline.

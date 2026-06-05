@@ -131,7 +131,7 @@ const AdventureLevelLink = ({ level, adventureId }: AdventureLevelLinkProps): JS
           dangerouslySetInnerHTML={{ __html: stripLinks(descHtml) }}
         />
       )}
-      <span className="mt-auto inline-flex items-center gap-1 text-xs font-medium text-primary underline decoration-2 underline-offset-2 group-hover:decoration-primary">
+      <span className="mt-auto inline-flex items-center gap-1 text-xs font-medium text-primary underline decoration-2 underline-offset-2 dark:group-hover:decoration-primary">
         Start Challenge <ArrowRight size={12} aria-hidden="true" />
       </span>
     </Link>
@@ -193,7 +193,7 @@ const AdventureDetail = (): JSX.Element => {
               {/* Overview */}
               {adventure.overview && adventure.overview.length > 0 && (
                 <CollapsibleSection id="overview" title="Overview" defaultOpen={true}>
-                  <ul className="space-y-2.5">
+                  <ul role="list" className="space-y-2.5">
                     {adventure.overview.map((para, i) => (
                       <li key={i} className="flex items-start gap-2.5">
                         <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />

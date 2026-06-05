@@ -29,6 +29,7 @@ export const BoardSection = (): JSX.Element => {
                   width={AVATAR_SIZE}
                   height={AVATAR_SIZE}
                   loading="lazy"
+                  decoding="async"
                   className="h-20 w-20 rounded-full object-cover"
                 />
               ) : (

@@ -21,6 +21,7 @@ export default {
     "/handbook",
     "/privacy",
     "/accessibility",
+    "/brand",
     // GENERATED:adventures
     "/adventures/lex-imperfecta",
     "/adventures/lex-imperfecta/levels/beginner",

@@ -44,7 +44,7 @@ const renderCta = (cta: Cta, isPrimary: boolean): JSX.Element => {
 
 export const PageHero = ({ eyebrow, title, description, primaryCta, secondaryCta }: PageHeroProps): JSX.Element => {
   return (
-    <section className="bg-primary pt-32 pb-20 px-6 md:px-16 overflow-hidden min-h-[560px] flex flex-col justify-center">
+    <section aria-labelledby="page-hero-heading" className="bg-primary pt-32 pb-20 px-6 md:px-16 overflow-hidden min-h-[560px] flex flex-col justify-center">
       <div className="mx-auto max-w-6xl relative w-full">
         <div className="max-w-2xl">
           {eyebrow && (
@@ -52,7 +52,7 @@ export const PageHero = ({ eyebrow, title, description, primaryCta, secondaryCta
               {eyebrow}
             </span>
           )}
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground mb-5">
+          <h1 id="page-hero-heading" className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground mb-5">
             {title}
           </h1>
           <p className="font-sans text-base leading-relaxed text-background/90 max-w-2xl mb-8">

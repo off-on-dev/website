@@ -52,7 +52,7 @@ Target these thresholds at the 75th percentile of real users:
     { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-600-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
   ];
   ```
-- The `src/index.css` `@font-face` declarations cover only the `latin` and `latin-ext` subsets. Non-English subsets (cyrillic, greek, vietnamese) were removed. The site is English-only and `unicode-range` already prevented those files from being fetched, but the declarations added unnecessary CSS weight.
+- The `src/index.css` `@font-face` declarations cover only the `latin` and `latin-ext` subsets. Non-English subset declarations (cyrillic, greek, vietnamese) were removed from CSS. The site is English-only and `unicode-range` already prevented those files from being fetched, but the declarations added unnecessary CSS weight. Note: the corresponding `.woff2` files remain in `public/fonts/` but are never declared in CSS and will never be fetched by the browser.
 - When adding a new route that uses JetBrains Mono (e.g. a page with code blocks or difficulty badges), add the JetBrains Mono preloads to that route's `links()` export.
 
 ---
