@@ -24,6 +24,7 @@ import { ChallengeShareLinks } from "@/components/ChallengeShareLinks";
 import { SITE_URL, BRAND_NAME, COMMUNITY_DISPLAY_NAME, COMMUNITY_URL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 import { isDeadlinePast } from "@/lib/utils";
+import { InlineProse } from "@/components/InlineProse";
 
 export const links: LinksFunction = () => [
   { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
@@ -122,9 +123,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
         {intro && intro.length > 0 && (
           <div className="space-y-3 mb-5 max-w-3xl">
             {intro.map((p, i) => (
-              <p key={i} className="text-[hsl(var(--text-secondary))] leading-relaxed md-inline"
-                dangerouslySetInnerHTML={{ __html: p }}
-              />
+              <InlineProse key={i} html={p} className="text-[hsl(var(--text-secondary))] leading-relaxed" />
             ))}
           </div>
         )}
@@ -169,9 +168,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
           {/* Audience */}
           {level.audience && (
             <CollapsibleSection id="audience" title="Best Suited For">
-              <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed md-inline"
-                dangerouslySetInnerHTML={{ __html: level.audience }}
-              />
+              <InlineProse html={level.audience} className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed" />
             </CollapsibleSection>
           )}
 

@@ -9,19 +9,22 @@ type InlineProseProps = {
   className?: string;
 };
 
-export const InlineProse = ({ html, className = "" }: InlineProseProps): JSX.Element => {
-  const prefix = className ? `${className} ` : "";
+export const InlineProse = ({ html, className }: InlineProseProps): JSX.Element => {
+  // filter(Boolean) strips empty/whitespace-only className so no spurious
+  // leading space appears in the final class string.
+  const cls = (mdClass: string): string =>
+    [className?.trim(), mdClass].filter(Boolean).join(" ");
   if (BLOCK_ELEMENT_RE.test(html)) {
     return (
       <div
-        className={`${prefix}md-content`}
+        className={cls("md-content")}
         dangerouslySetInnerHTML={{ __html: html }}
       />
     );
   }
   return (
     <p
-      className={`${prefix}md-inline`}
+      className={cls("md-inline")}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

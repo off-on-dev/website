@@ -81,8 +81,8 @@ test.describe("every prerendered route", () => {
       // sync) to settle before asserting on error state.
       await page.waitForLoadState("networkidle");
 
-      expect(pageErrors, `unexpected JS exceptions on ${path}`).toHaveLength(0);
-      expect(consoleErrors, `unexpected console.error on ${path}`).toHaveLength(0);
+      expect(pageErrors, `unexpected JS exceptions on ${path}:\n${pageErrors.join("\n")}`).toHaveLength(0);
+      expect(consoleErrors, `unexpected console.error on ${path}:\n${consoleErrors.join("\n")}`).toHaveLength(0);
       await expect(page.locator("main#main-content")).toBeAttached();
       await expect(page).toHaveTitle(title);
 
@@ -115,8 +115,8 @@ test.describe("every prerendered route (light mode)", () => {
       // colors from the initial dark-class server render.
       await page.waitForLoadState("networkidle");
 
-      expect(pageErrors, `unexpected JS exceptions on ${path} (light mode)`).toHaveLength(0);
-      expect(consoleErrors, `unexpected console.error on ${path} (light mode)`).toHaveLength(0);
+      expect(pageErrors, `unexpected JS exceptions on ${path} (light mode):\n${pageErrors.join("\n")}`).toHaveLength(0);
+      expect(consoleErrors, `unexpected console.error on ${path} (light mode):\n${consoleErrors.join("\n")}`).toHaveLength(0);
 
       const a11y = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"])

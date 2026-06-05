@@ -48,11 +48,6 @@ describe("InlineProse - block HTML renders div.md-content", () => {
       expect(el.tagName.toLowerCase()).toBe("div");
       expect(el.className).toContain("md-content");
     });
-
-    it(`<${element}> → does not render a <p>`, () => {
-      const { container } = render(<InlineProse html={html} />);
-      expect(container.firstElementChild!.tagName.toLowerCase()).not.toBe("p");
-    });
   }
 });
 
@@ -67,11 +62,6 @@ describe("InlineProse - inline-only HTML renders p.md-inline", () => {
       const el = container.firstElementChild!;
       expect(el.tagName.toLowerCase()).toBe("p");
       expect(el.className).toContain("md-inline");
-    });
-
-    it(`${label} → does not render a <div>`, () => {
-      const { container } = render(<InlineProse html={html} />);
-      expect(container.firstElementChild!.tagName.toLowerCase()).not.toBe("div");
     });
   }
 });
@@ -119,6 +109,16 @@ describe("InlineProse - className ordering and preservation", () => {
   it("does not add a leading space when no className is passed", () => {
     const { container } = render(<InlineProse html="plain text" />);
     expect(container.firstElementChild!.className).not.toMatch(/^\s/);
+  });
+
+  it("trims whitespace-only className and renders only md-inline", () => {
+    const { container } = render(<InlineProse html="plain text" className="   " />);
+    expect(container.firstElementChild!.className).toBe("md-inline");
+  });
+
+  it("trims whitespace-only className and renders only md-content for block html", () => {
+    const { container } = render(<InlineProse html="<p>block</p>" className="   " />);
+    expect(container.firstElementChild!.className).toBe("md-content");
   });
 });
 
