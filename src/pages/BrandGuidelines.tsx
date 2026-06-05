@@ -553,10 +553,10 @@ hsl(var(--foreground))`}</code>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                     <div className="rounded-lg border border-[hsl(85,48%,56%,0.35)] bg-[hsl(var(--surface))] p-5">
-                      <h4 className="flex items-center gap-2 font-sans text-sm font-semibold text-foreground mb-3">
+                      <h3 className="flex items-center gap-2 font-sans text-sm font-semibold text-foreground mb-3">
                         <Check size={13} className="text-[#15803d] shrink-0" aria-hidden="true" />
                         Use
-                      </h4>
+                      </h3>
                       <ul className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
                         <li>Real developers at real terminals</li>
                         <li>Dark environments that echo the dark mode palette</li>
@@ -567,10 +567,10 @@ hsl(var(--foreground))`}</code>
                       </ul>
                     </div>
                     <div className="rounded-lg border border-[hsl(0,84%,60%,0.35)] bg-[hsl(var(--surface))] p-5">
-                      <h4 className="flex items-center gap-2 font-sans text-sm font-semibold text-foreground mb-3">
+                      <h3 className="flex items-center gap-2 font-sans text-sm font-semibold text-foreground mb-3">
                         <X size={13} className="text-destructive shrink-0" aria-hidden="true" />
                         Avoid
-                      </h4>
+                      </h3>
                       <ul className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
                         <li>Stock photos of people smiling at laptops</li>
                         <li>Bright, corporate-feeling environments</li>
@@ -583,7 +583,7 @@ hsl(var(--foreground))`}</code>
                   </div>
 
                   <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-                    <h4 className="font-sans text-sm font-semibold text-foreground mb-1">When photos aren't available</h4>
+                    <h3 className="font-sans text-sm font-semibold text-foreground mb-1">When photos aren't available</h3>
                     <p className="font-sans text-sm text-[hsl(var(--text-secondary))]">
                       Use the Nyx mascot or abstract dark/amber compositions. A clean empty section is better than a distracting stock photo.
                     </p>
@@ -684,7 +684,7 @@ hsl(var(--foreground))`}</code>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-                      <h4 className="font-sans text-sm font-semibold text-foreground mb-3">Color and contrast</h4>
+                      <h3 className="font-sans text-sm font-semibold text-foreground mb-3">Color and contrast</h3>
                       <ul className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
                         <li>Body text: minimum 4.5:1 contrast in both modes</li>
                         <li>Large text and UI controls: minimum 3:1</li>
@@ -694,7 +694,7 @@ hsl(var(--foreground))`}</code>
                       </ul>
                     </div>
                     <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-                      <h4 className="font-sans text-sm font-semibold text-foreground mb-3">Interaction and motion</h4>
+                      <h3 className="font-sans text-sm font-semibold text-foreground mb-3">Interaction and motion</h3>
                       <ul className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
                         <li>Every interactive element is keyboard reachable</li>
                         <li>Focus rings visible in both modes on all elements</li>

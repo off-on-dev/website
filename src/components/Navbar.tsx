@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 const logoDark = `${import.meta.env.BASE_URL}brand/offon-logo-dark-color.svg`;
 const logoLight = `${import.meta.env.BASE_URL}brand/offon-logo-light-mono.svg`;
 
-const linkCls = "inline-flex items-center gap-1 min-h-[44px] text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent rounded px-1.5 -mx-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
-const activeCls = "text-primary underline decoration-primary underline-offset-4";
+const linkCls = "inline-flex items-center gap-1 min-h-[44px] text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-foreground dark:hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent rounded px-1.5 -mx-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+const activeCls = "text-foreground dark:text-primary underline decoration-foreground dark:decoration-primary underline-offset-4";
 
 type NavThemeToggleProps = { theme: "dark" | "light"; onToggle: () => void; className?: string };
 
