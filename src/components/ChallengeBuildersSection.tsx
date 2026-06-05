@@ -27,7 +27,7 @@ export const ChallengeBuildersSection = ({ aside }: { aside?: ReactNode }): JSX.
               <InlineProse html={contributor.about} className="mt-1.5 text-sm text-muted-foreground leading-relaxed" />
             )}
             <p className="mt-6 mb-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">adventures created</p>
-            <ul className="space-y-3">
+            <ul role="list" className="space-y-3">
               {contributor.adventures.map(({ id, title }) => (
                 <li key={id} className="flex items-center gap-2 text-xs">
                   <span className="h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />

@@ -21,7 +21,7 @@ OffOn is a platform for open source enthusiasts. We want everyone to be able to 
 - One `<h1>` per page with no skipped heading levels.
 - Meaningful `alt` text on informational images, empty `alt=""` paired with `aria-hidden="true"` on decorative ones.
 - Screen reader announcement of links that open in a new tab.
-- Color contrast verified at 4.5:1 for body text and 3:1 for large text and UI controls in both modes.
+- Color contrast verified at 7:1 for body text and 4.5:1 for large text (both WCAG AAA), and 3:1 for UI controls, in both modes.
 - Tested with [axe-core](https://github.com/dequelabs/axe-core) on every pull request preview, in both light and dark mode.
 - Self-hosted fonts so users on restricted networks are not locked out.
 - Google Analytics is opt-in only via the consent banner. No tracking runs until the user accepts.
@@ -100,8 +100,8 @@ Apply this to every component you write or modify.
 
 ### Color contrast
 
-- Normal text (under 18px / non-bold under 14px): minimum 4.5:1.
-- Large text (18px+ or bold 14px+): minimum 3:1.
+- Normal text (under 18px / non-bold under 14px): minimum 7:1 (WCAG AAA).
+- Large text (18px+ or bold 14px+): minimum 4.5:1 (WCAG AAA).
 - UI components and focus indicators: minimum 3:1 against adjacent colors.
 - Focus indicators (WCAG 2.4.11): the focus indicator area must be at least as large as a 2px perimeter outline of the component, and the focused/unfocused contrast ratio must be at least 3:1.
 - Never use `hsl(41 100% 60%)` (`#ffc034` yellow) as text in light mode. Fails contrast.

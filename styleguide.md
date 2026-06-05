@@ -178,7 +178,8 @@ The light mode uses a barely-cool background palette. The slight cool/warm contr
 | Foreground/body | `hsl(240 25% 8%)` | `#0D0D17` | Deep navy (`--foreground`) |
 | Foreground hover | `hsl(240 25% 5%)` | | Slightly deeper than foreground, used for link/nav hover (`--foreground-hover`) |
 | Headings | `hsl(240 25% 8%)` | `#0D0D17` | Overrides dark mode primary-colored headings (via `.light h1–h6`) |
-| Muted text | `hsl(35 8% 38%)` | `#655E55` | Warm gray (intentional warm/cool contrast) |
+| Muted text (`--muted-foreground`) | `hsl(35 8% 32%)` | `#534B42` | Warm gray, ~7.3:1 on light bg — used via `text-muted-foreground` |
+| Faint text (`--text-tertiary`, `--text-muted`, `--text-faint`) | `hsl(35 8% 29–30%)` | `#504B44` | Slightly darker; labels, timestamps, metadata — ~8:1+ on light bg |
 | Border | `hsl(220 12% 87%)` | `#D8DBE2` | Cool border |
 | Badge: Beginner | `hsl(41 80% 85%)` | | Black text |
 | Badge: Intermediate | `hsl(85 40% 82%)` | | Black text |
@@ -1483,7 +1484,7 @@ Used on `<span>` elements in: `CommunitySection`, `ChallengesGrid`, `NotFound`.
 The standard class for all inline prose links across the site. Handles both modes correctly without any additional Tailwind utilities for color or hover state.
 
 **Dark mode:** foreground text with amber (`--primary`) underline. Hover shifts text and underline to full `hsl(var(--primary))` (`#ffc034`).
-**Light mode:** near-black foreground text with `currentColor` underline. Hover shifts text and underline to `--link-hover-light` (`hsl(41 100% 25%)` ≈ `#7f4200`), dark amber, same hue as primary, ~5.5:1 contrast on light backgrounds. Passes WCAG AA.
+**Light mode:** near-black foreground text with `currentColor` underline. Hover shifts text and underline to `--link-hover-light` (`hsl(41 100% 22%)` ≈ `#704d00`), dark amber, same hue as primary, ~7.4:1 contrast on light backgrounds. Passes WCAG AAA.
 
 Used in: `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`, `ChallengeDetail`, `MarkdownContent`, `CommunitySidebar`, `RewardsCard`, `Accessibility`, and `Privacy`.
 
@@ -1506,7 +1507,7 @@ className="docs-ext-link text-sm font-medium mt-4"
 CSS class for icon-only social media `<a>` links. Used in the Spread the Word card on `/contribute` and in `ChallengeShareLinks` on challenge detail pages.
 
 **Dark mode:** base `text-[hsl(var(--text-secondary))]`, hover `hsl(var(--primary))` (amber, fine on dark backgrounds).
-**Light mode:** `.light .social-icon-link:hover` overrides to `hsl(var(--link-hover-light))` (~5.5:1 dark amber on white), avoiding `#ffc034` which is ~1.6:1 on near-white and fails WCAG 1.4.11.
+**Light mode:** `.light .social-icon-link:hover` overrides to `hsl(var(--link-hover-light))` (~7.4:1 dark amber on white), avoiding `#ffc034` which is ~1.6:1 on near-white and fails WCAG 1.4.11.
 
 Includes `padding: 0.25rem` (equivalent to `p-1`) to improve tap target size and `border-radius: 2px` for focus ring containment.
 

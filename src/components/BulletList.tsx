@@ -39,7 +39,7 @@ export const BulletList = ({
   marker = "dot",
   spacing = "tight",
 }: BulletListProps): JSX.Element => (
-  <ul className={ulClass(spacing)}>
+  <ul role="list" className={ulClass(spacing)}>
     {items.map((item) => (
       <li key={itemKey(item)} className={liClass(spacing)}>
         <MarkerIcon marker={marker} />

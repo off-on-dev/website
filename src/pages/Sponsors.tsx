@@ -50,12 +50,12 @@ const Sponsors = (): JSX.Element => {
                       href={sponsor.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center opacity-80 hover:opacity-100 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+                      className="group inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
                     >
                       {logoSrc ? (
-                        <img src={logoSrc} alt={sponsor.name} width={200} height={36} className="h-10 w-auto max-w-full" loading="lazy" decoding="async" />
+                        <img src={logoSrc} alt={sponsor.name} width={200} height={36} className="h-10 w-auto max-w-full group-hover:opacity-80 transition-opacity" loading="lazy" decoding="async" />
                       ) : (
-                        <span className="text-base font-semibold text-foreground">{sponsor.name}</span>
+                        <span className="text-base font-semibold text-foreground group-hover:text-foreground/80 transition-colors">{sponsor.name}</span>
                       )}
                       <span className="sr-only"> (opens in new tab)</span>
                     </a>

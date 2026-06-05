@@ -1,4 +1,4 @@
-import type { JSX, ReactNode, CSSProperties } from "react";
+import type { JSX, ReactNode } from "react";
 import type { MetaFunction } from "react-router";
 import { useEffect, useState } from "react";
 import { Check, X, Download, Zap } from "lucide-react";
@@ -41,25 +41,21 @@ const TOC_ITEMS: TocItem[] = [
 ];
 
 const DARK_COLORS: ColorSwatch[] = [
-  { name: "Amber Primary", token: "--primary", hex: "#ffc034", hsl: "41 100% 60%", textClass: "text-[#0a0a0a]", usage: "Fills, borders, focus rings, accent highlights." },
+  { name: "Amber Primary", token: "--primary", hex: "#ffc034", hsl: "41 100% 60%", textClass: "text-[#0a0a0a]", usage: "Fills, borders, focus rings, accent highlights. ~12:1 on dark bg." },
   { name: "Background", token: "--background", hex: "#0a0a0a", hsl: "0 0% 4%", textClass: "text-[#faf8f3]", usage: "Page background." },
   { name: "Card", token: "--card", hex: "#141416", hsl: "240 9% 9%", textClass: "text-[#faf8f3]", usage: "Card and section surfaces." },
-  { name: "Foreground", token: "--foreground", hex: "#faf8f3", hsl: "47 54% 98%", textClass: "text-[#0a0a0a]", usage: "Primary text." },
+  { name: "Foreground", token: "--foreground", hex: "#faf8f3", hsl: "47 54% 98%", textClass: "text-[#0a0a0a]", usage: "Primary text. ~19:1 on dark bg." },
   { name: "Border", token: "--border", hex: "#1b283e", hsl: "219 36% 18%", textClass: "text-[#faf8f3]", usage: "Borders and dividers." },
-  { name: "Starter badge", token: "--difficulty-starter", hex: "#ffc034", hsl: "41 100% 60%", textClass: "text-[#0a0a0a]", usage: "Beginner difficulty badge." },
-  { name: "Builder badge", token: "--difficulty-builder", hex: "#7ab545", hsl: "85 48% 56%", textClass: "text-[#0a0a0a]", usage: "Intermediate difficulty badge." },
-  { name: "Architect badge", token: "--difficulty-architect", hex: "#a9a5db", hsl: "245 45% 79%", textClass: "text-[#0a0a0a]", usage: "Expert difficulty badge." },
+  { name: "Link hover", token: "--primary", hex: "#ffc034", hsl: "41 100% 60%", textClass: "text-[#0a0a0a]", usage: "Link hover and active state on dark backgrounds. ~12:1 on dark bg." },
 ];
 
 const LIGHT_COLORS: ColorSwatch[] = [
   { name: "Amber Primary", token: "--primary", hex: "#ffc034", hsl: "41 100% 60%", textClass: "text-[#0a0a0a]", usage: "Fills and borders only. Never as text color." },
   { name: "Background", token: "--background", hex: "#f8f9fb", hsl: "220 12% 98%", textClass: "text-[#0d0d17]", usage: "Page background." },
   { name: "Card", token: "--card", hex: "#f4f5f7", hsl: "220 10% 96%", textClass: "text-[#0d0d17]", usage: "Card and section surfaces." },
-  { name: "Foreground", token: "--foreground", hex: "#0d0d17", hsl: "240 25% 8%", textClass: "text-[#f8f9fb]", usage: "Primary text." },
+  { name: "Foreground", token: "--foreground", hex: "#0d0d17", hsl: "240 25% 8%", textClass: "text-[#f8f9fb]", usage: "Primary text. ~18:1 on light bg." },
   { name: "Border", token: "--border", hex: "#d8dbe2", hsl: "220 12% 87%", textClass: "text-[#0d0d17]", usage: "Borders and dividers." },
-  { name: "Link hover", token: "--link-hover-light", hex: "#7f4200", hsl: "41 100% 25%", textClass: "text-[#f8f9fb]", usage: "Amber inline link hover. Passes WCAG contrast on light bg." },
-  { name: "Starter badge", token: "--difficulty-starter", hex: "#ffd880", hsl: "41 100% 75%", textClass: "text-[#0a0a0a]", usage: "Beginner difficulty badge." },
-  { name: "Builder badge", token: "--difficulty-builder", hex: "#a3cf6f", hsl: "85 48% 62%", textClass: "text-[#0a0a0a]", usage: "Intermediate difficulty badge." },
+  { name: "Link hover", token: "--link-hover-light", hex: "#704d00", hsl: "41 100% 22%", textClass: "text-[#f8f9fb]", usage: "Amber inline link hover. ~7.4:1 on light bg." },
 ];
 
 const FONT_WEIGHTS = [
@@ -152,15 +148,21 @@ const SectionBlock = ({ id, eyebrow, heading, children }: {
   </section>
 );
 
-const ColorCard = ({ swatch, onDark }: { swatch: ColorSwatch; onDark: boolean }): JSX.Element => (
-  <div className="rounded-lg overflow-hidden border" style={{ borderColor: onDark ? "#252530" : "#c4c5ca" }}>
-    <div className="h-20 flex items-end p-3" style={{ backgroundColor: swatch.hex }}>
+const ColorCard = ({ swatch, dark }: { swatch: ColorSwatch; dark: boolean }): JSX.Element => (
+  <div className="rounded-lg overflow-hidden border" style={{ borderColor: dark ? "#2e4268" : "#d8dbe2" }}>
+    <div
+      className="h-20 flex items-end p-3"
+      style={{
+        backgroundColor: swatch.hex,
+        boxShadow: "inset 0 0 0 1px rgba(127,127,127,0.14)",
+      }}
+    >
       <span className={`font-mono text-xs font-semibold ${swatch.textClass}`}>{swatch.hex}</span>
     </div>
-    <div className="p-4" style={{ backgroundColor: onDark ? "#1a1a1f" : "#e4e5e9" }}>
-      <p className="font-sans font-semibold text-sm mb-0.5" style={{ color: onDark ? "#faf8f3" : "#0d0d17" }}>{swatch.name}</p>
-      <p className="font-mono text-xs mb-2" style={{ color: onDark ? "#b8b4ae" : "#4a4b52" }}>{swatch.hsl}</p>
-      <p className="font-sans text-xs leading-snug" style={{ color: onDark ? "#c8c4bc" : "#2e2f36" }}>{swatch.usage}</p>
+    <div className="p-4">
+      <p className="font-sans font-semibold text-sm mb-0.5" style={{ color: dark ? "#faf8f3" : "#0d0d17" }}>{swatch.name}</p>
+      <p className="font-mono text-xs mb-1" style={{ color: dark ? "#c8c4bc" : "#2a2a3e" }}>{swatch.hsl}</p>
+      <p className="font-sans text-xs leading-snug" style={{ color: dark ? "#c8c4bc" : "#2a2a3e" }}>{swatch.usage}</p>
     </div>
   </div>
 );
@@ -169,6 +171,7 @@ const DownloadBtn = ({ href, filename, label }: DownloadSpec): JSX.Element => (
   <a
     href={href}
     download={filename}
+    aria-label={`Download ${filename}`}
     className="inline-flex items-center gap-1.5 font-sans text-xs font-medium text-[hsl(var(--text-secondary))] hover:text-foreground dark:hover:text-primary border border-[hsl(var(--surface-border))] rounded-md px-3 py-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
   >
     <Download size={11} aria-hidden="true" />
@@ -211,8 +214,6 @@ const TableOfContents = ({ activeId }: { activeId: string }): JSX.Element => (
 
 const BrandGuidelines = (): JSX.Element => {
   const [activeSection, setActiveSection] = useState("mission");
-  const [colorMode, setColorMode] = useState<"dark" | "light">("dark");
-  const onDark = colorMode === "dark";
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -230,19 +231,6 @@ const BrandGuidelines = (): JSX.Element => {
     return () => observer.disconnect();
   }, []);
 
-  // Subtle preview backgrounds — a slight tonal shift from page bg, not a full mode flip.
-  // Dark preview: just above card surface. Light preview: medium-light gray.
-  const previewBg = onDark ? "#121215" : "#eeeef2";
-  const toggleBg = onDark ? "#1a1a1f" : "#d4d5da";
-  const toggleBorder = onDark ? "#252530" : "#b8b9be";
-
-  // Colors are hardcoded per-mode so they stay accessible regardless of the PAGE theme.
-  // CSS variables like text-secondary resolve to the page's theme, not the preview container.
-  const segBtnStyle = (active: boolean): CSSProperties =>
-    active
-      ? { backgroundColor: onDark ? "#faf8f3" : "#0d0d17", color: onDark ? "#121215" : "#f8f9fb", fontWeight: 600 }
-      : { color: onDark ? "#b8b4ae" : "#414249" };
-
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -255,13 +243,13 @@ const BrandGuidelines = (): JSX.Element => {
         >
           <div className="mx-auto max-w-6xl">
             <div className="max-w-2xl">
-              <span className="font-sans text-sm font-medium uppercase tracking-widest text-background/90 block mb-4">
+              <span className="font-sans text-sm font-medium uppercase tracking-widest text-primary-foreground/80 block mb-4">
                 Brand
               </span>
               <h1 id="brand-hero-heading" className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground mb-5">
                 Brand Guidelines
               </h1>
-              <p className="font-sans text-base leading-relaxed text-background/90 max-w-xl">
+              <p className="font-sans text-base leading-relaxed text-primary-foreground/80 max-w-xl">
                 Logos, colors, typography, mascot, and voice for {BRAND_NAME}.
               </p>
             </div>
@@ -348,7 +336,7 @@ const BrandGuidelines = (): JSX.Element => {
                         <Check size={13} className="text-[#15803d] shrink-0" aria-hidden="true" />
                         Do
                       </h4>
-                      <ul className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
+                      <ul role="list" className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
                         <li>Use the correct variant for the background color</li>
                         <li>Maintain clear space equal to the "O" height on all sides</li>
                         <li>Scale proportionally</li>
@@ -361,7 +349,7 @@ const BrandGuidelines = (): JSX.Element => {
                         <X size={13} className="text-destructive shrink-0" aria-hidden="true" />
                         Don't
                       </h4>
-                      <ul className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
+                      <ul role="list" className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
                         <li>Don't recolor, outline, or add drop shadows</li>
                         <li>Don't use the dark logo on light backgrounds</li>
                         <li>Don't stretch, skew, or rotate</li>
@@ -382,56 +370,40 @@ const BrandGuidelines = (): JSX.Element => {
                     . Reference tokens, not hardcoded hex values.
                   </p>
 
-                  {/* Segmented toggle + contextual preview area */}
-                  <div
-                    className="rounded-xl p-6 transition-colors duration-200"
-                    style={{ backgroundColor: previewBg }}
-                  >
-                    <div
-                      className="inline-flex rounded-lg border p-1 mb-6"
-                      style={{ borderColor: toggleBorder, backgroundColor: toggleBg }}
-                      role="group"
-                      aria-label="Select color mode to preview"
-                    >
-                      <button
-                        onClick={() => setColorMode("dark")}
-                        aria-pressed={colorMode === "dark"}
-                        style={segBtnStyle(colorMode === "dark")}
-                        className="font-sans text-xs px-5 py-2.5 rounded-md transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
-                      >
-                        Dark mode
-                      </button>
-                      <button
-                        onClick={() => setColorMode("light")}
-                        aria-pressed={colorMode === "light"}
-                        style={segBtnStyle(colorMode === "light")}
-                        className="font-sans text-xs px-5 py-2.5 rounded-md transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
-                      >
-                        Light mode
-                      </button>
-                    </div>
+                  {/* Side-by-side dark / light panels — each panel has its own correct background */}
+                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
-                      {(onDark ? DARK_COLORS : LIGHT_COLORS).map((swatch) => (
-                        <ColorCard key={swatch.token + swatch.name} swatch={swatch} onDark={onDark} />
-                      ))}
-                    </div>
-
-                    {!onDark && (
-                      <div
-                        className="mt-6 rounded-lg border p-5"
-                        style={{ borderColor: "#c4c5ca", backgroundColor: "#e4e5e9" }}
-                      >
-                        <p className="font-sans text-sm font-semibold mb-1" style={{ color: "#0d0d17" }}>Amber in light mode</p>
-                        <p className="font-sans text-sm" style={{ color: "#2e2f36" }}>
-                          Amber{" "}
-                          <code className="font-mono text-xs px-1 py-0.5 rounded" style={{ backgroundColor: "#d4d5da", color: "#0d0d17" }}>#ffc034</code>{" "}
-                          passes contrast only as a fill or border. For amber-toned link hover text, use{" "}
-                          <code className="font-mono text-xs px-1 py-0.5 rounded" style={{ backgroundColor: "#d4d5da", color: "#0d0d17" }}>hsl(41 100% 25%)</code>,{" "}
-                          the <code className="font-mono text-xs px-1 py-0.5 rounded" style={{ backgroundColor: "#d4d5da", color: "#0d0d17" }}>--link-hover-light</code> token.
-                        </p>
+                    {/* Dark mode panel — hardcoded dark surface tokens, always renders dark */}
+                    <div className="rounded-xl overflow-hidden border" style={{ borderColor: "#2e4268" }}>
+                      <div className="px-5 py-3 border-b" style={{ backgroundColor: "#151519", borderColor: "#2e4268" }}>
+                        <span className="font-sans text-xs font-semibold uppercase tracking-widest" style={{ color: "#8a8680" }}>Dark Mode</span>
                       </div>
-                    )}
+                      <div className="p-5 grid grid-cols-2 gap-3" style={{ backgroundColor: "#151519" }}>
+                        {DARK_COLORS.map((swatch) => (
+                          <ColorCard key={swatch.token + swatch.name} swatch={swatch} dark={true} />
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Light mode panel — hardcoded light surface tokens, always renders light */}
+                    <div className="rounded-xl overflow-hidden border" style={{ borderColor: "#d8dbe2" }}>
+                      <div className="px-5 py-3 border-b" style={{ backgroundColor: "#f4f5f7", borderColor: "#d8dbe2" }}>
+                        <span className="font-sans text-xs font-semibold uppercase tracking-widest" style={{ color: "#6b6760" }}>Light Mode</span>
+                      </div>
+                      <div className="p-5 grid grid-cols-2 gap-3" style={{ backgroundColor: "#f4f5f7" }}>
+                        {LIGHT_COLORS.map((swatch) => (
+                          <ColorCard key={swatch.token + swatch.name} swatch={swatch} dark={false} />
+                        ))}
+                        <div className="col-span-2 rounded-lg border p-4 mt-1" style={{ borderColor: "#d8dbe2", backgroundColor: "#eaebee" }}>
+                          <p className="font-sans text-xs" style={{ color: "#2a2a3e" }}>
+                            <span className="font-semibold" style={{ color: "#0d0d17" }}>Amber in light mode:</span>{" "}
+                            fill and border only. For hover text use{" "}
+                            <code className="font-mono px-1 py-0.5 rounded" style={{ backgroundColor: "#dddee4", color: "#0d0d17" }}>--link-hover-light</code>.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
                 </SectionBlock>
 
@@ -557,7 +529,7 @@ hsl(var(--foreground))`}</code>
                         <Check size={13} className="text-[#15803d] shrink-0" aria-hidden="true" />
                         Use
                       </h3>
-                      <ul className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
+                      <ul role="list" className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
                         <li>Real developers at real terminals</li>
                         <li>Dark environments that echo the dark mode palette</li>
                         <li>Collaborative scenes with multiple contributors</li>
@@ -571,7 +543,7 @@ hsl(var(--foreground))`}</code>
                         <X size={13} className="text-destructive shrink-0" aria-hidden="true" />
                         Avoid
                       </h3>
-                      <ul className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
+                      <ul role="list" className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
                         <li>Stock photos of people smiling at laptops</li>
                         <li>Bright, corporate-feeling environments</li>
                         <li>Heavily retouched or filtered images</li>
@@ -618,6 +590,7 @@ hsl(var(--foreground))`}</code>
                             <span className={`font-mono text-xs ${ok ? "text-foreground" : "text-[hsl(var(--text-faint))] line-through"}`}>
                               {text}
                             </span>
+                            <span className="sr-only">{ok ? "(correct)" : "(incorrect)"}</span>
                           </div>
                         ))}
                       </div>
@@ -653,7 +626,7 @@ hsl(var(--foreground))`}</code>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
                         <h4 className="font-sans text-sm font-semibold text-foreground mb-3">We are</h4>
-                        <ul className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
+                        <ul role="list" className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
                           <li>Direct and to the point</li>
                           <li>Focused on the community, not the brand</li>
                           <li>Inclusive and welcoming</li>
@@ -663,7 +636,7 @@ hsl(var(--foreground))`}</code>
                       </div>
                       <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
                         <h4 className="font-sans text-sm font-semibold text-foreground mb-3">We are not</h4>
-                        <ul className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
+                        <ul role="list" className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
                           <li>Corporate or formal</li>
                           <li>Hype-driven or hollow</li>
                           <li>Exclusive or gatekeeping</li>
@@ -678,16 +651,17 @@ hsl(var(--foreground))`}</code>
                 {/* Accessibility */}
                 <SectionBlock id="accessibility" eyebrow="Standards" heading="Accessibility">
                   <p className="font-sans text-sm text-[hsl(var(--text-secondary))] max-w-prose mb-8">
-                    Every page on {BRAND_NAME} targets WCAG 2.2 Level AA in both light and dark mode. This is the floor, not the goal. The full statement, testing approach, and how to report a barrier are in the{" "}
+                    Every page on {BRAND_NAME} targets WCAG 2.2 Level AA for structure and interaction. Body text contrast targets AAA (7:1) in both light and dark mode. The full statement, testing approach, and how to report a barrier are in the{" "}
                     <a href="/accessibility/" className="docs-ext-link">Accessibility Statement</a>.
                   </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
                       <h3 className="font-sans text-sm font-semibold text-foreground mb-3">Color and contrast</h3>
-                      <ul className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
-                        <li>Body text: minimum 4.5:1 contrast in both modes</li>
-                        <li>Large text and UI controls: minimum 3:1</li>
+                      <ul role="list" className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
+                        <li>Body text: minimum 7:1 contrast (WCAG AAA) in both modes</li>
+                        <li>Large text (18pt+ or bold 14pt+): minimum 4.5:1 (WCAG AAA)</li>
+                        <li>UI controls and focus indicators: minimum 3:1</li>
                         <li>Never use amber <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-[hsl(var(--surface-border))]">#ffc034</code> as text in light mode</li>
                         <li>Hover states must meet contrast in both light and dark</li>
                         <li>Never convey meaning through color alone</li>
@@ -695,7 +669,7 @@ hsl(var(--foreground))`}</code>
                     </div>
                     <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
                       <h3 className="font-sans text-sm font-semibold text-foreground mb-3">Interaction and motion</h3>
-                      <ul className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
+                      <ul role="list" className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
                         <li>Every interactive element is keyboard reachable</li>
                         <li>Focus rings visible in both modes on all elements</li>
                         <li>Touch targets minimum 24 x 24 px (prefer 44 x 44 px)</li>
@@ -709,7 +683,7 @@ hsl(var(--foreground))`}</code>
               </div>
 
               {/* Sticky right TOC — visible to screen readers, not aria-hidden */}
-              <aside className="hidden lg:block">
+              <aside aria-label="Page sections" className="hidden lg:block">
                 <div className="sticky top-24 pt-16">
                   <TableOfContents activeId={activeSection} />
                 </div>
