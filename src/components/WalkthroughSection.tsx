@@ -71,7 +71,7 @@ export const WalkthroughSection = ({ steps }: WalkthroughSectionProps): JSX.Elem
                 className="flex w-full items-start gap-4 p-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg"
               >
                 <span
-                  className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold"
+                  className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold"
                   aria-hidden="true"
                 >
                   {i + 1}

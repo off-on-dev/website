@@ -68,7 +68,6 @@ const FONT_WEIGHTS = [
   { weight: "400", label: "Regular", sample: "Open source community for everyone." },
   { weight: "500", label: "Medium", sample: "Learn through hands-on challenges." },
   { weight: "600", label: "Semibold", sample: "Build together. Grow together." },
-  { weight: "700", label: "Bold", sample: "Vendor-Neutral. Open Source. Community-Driven." },
 ];
 
 const VALUES = [
@@ -82,7 +81,6 @@ const LOGO_CARDS = [
     label: "Dark backgrounds",
     note: "Color variant",
     bg: "bg-[#0a0a0a]",
-    border: "border-[hsl(var(--surface-border))]",
     src: `${BASE}brand/offon-logo-dark-color.svg`,
     alt: `${SITE_NAME} color logo on dark background`,
     downloads: [
@@ -94,7 +92,6 @@ const LOGO_CARDS = [
     label: "Light and amber backgrounds",
     note: "Mono variant",
     bg: "bg-[#f8f9fb]",
-    border: "border-[hsl(220,12%,87%)]",
     src: `${BASE}brand/offon-logo-light-mono.svg`,
     alt: `${SITE_NAME} mono logo on light background`,
     downloads: [
@@ -106,7 +103,6 @@ const LOGO_CARDS = [
     label: "Single-color / print on dark",
     note: "Dark mono variant",
     bg: "bg-[#0a0a0a]",
-    border: "border-[hsl(var(--surface-border))]",
     src: `${BASE}brand/offon-logo-dark-mono.svg`,
     alt: `${SITE_NAME} mono logo on dark background`,
     downloads: [
@@ -186,7 +182,7 @@ const DownloadBadge = ({ href, filename, label }: DownloadSpec): JSX.Element => 
 );
 
 const DownloadBadgeGroup = ({ downloads, center }: { downloads: DownloadSpec[]; center?: boolean }): JSX.Element => (
-  <div className={`flex flex-wrap gap-1.5${center ? " justify-center" : ""}`}>
+  <div className={["flex flex-wrap gap-1.5", center && "justify-center"].filter(Boolean).join(" ")}>
     {downloads.map((d) => (
       <DownloadBadge key={d.filename} href={d.href} filename={d.filename} label={d.label} />
     ))}
@@ -444,6 +440,7 @@ const BrandGuidelines = (): JSX.Element => {
                     </div>
                     <div
                       className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8 space-y-3"
+                      role="img"
                       aria-label="Syne typeface specimen at sizes 48, 36, 30, 24, and 20px"
                     >
                       <p className="font-heading text-5xl font-bold text-foreground leading-tight" aria-hidden="true">Open Source</p>
@@ -457,7 +454,7 @@ const BrandGuidelines = (): JSX.Element => {
                   <div className="mb-10">
                     <div className="flex flex-wrap items-baseline gap-3 mb-3">
                       <h3 className="font-sans text-sm font-semibold text-foreground">Inter</h3>
-                      <span className="font-mono text-xs text-[hsl(var(--text-faint))]">font-sans / 400-700 / Body and UI</span>
+                      <span className="font-mono text-xs text-[hsl(var(--text-faint))]">font-sans / 400-600 / Body and UI</span>
                     </div>
                     <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8 space-y-5">
                       {FONT_WEIGHTS.map(({ weight, label, sample }) => (
