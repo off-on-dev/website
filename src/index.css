@@ -478,7 +478,7 @@ html {
 
   /* Inverse button - for use on primary-colored section backgrounds */
   .btn-inverse {
-    @apply inline-flex items-center gap-2 rounded-md bg-background text-primary font-bold text-sm px-5 py-3 border-2 border-primary transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md bg-background text-primary font-semibold text-sm px-5 py-3 border-2 border-primary transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
   .btn-inverse:hover {
     background-color: hsl(var(--primary));
@@ -488,7 +488,7 @@ html {
 
   /* Ghost inverse button - for use on primary-colored section backgrounds */
   .btn-ghost-inverse {
-    @apply inline-flex items-center gap-2 rounded-md bg-transparent text-background font-bold text-sm px-5 py-3 border-2 border-background/70 transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md bg-transparent text-background font-semibold text-sm px-5 py-3 border-2 border-background/70 transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
   .btn-ghost-inverse:hover {
     background-color: hsl(var(--primary-foreground));

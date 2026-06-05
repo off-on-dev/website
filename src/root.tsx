@@ -5,7 +5,7 @@ import "./index.css";
 
 export const links: LinksFunction = () => [
   // Preload fonts used above the fold on every page.
-  // Inter 400–700: body text, semibold labels, bold headings used on every page.
+  // Inter 400–600: body text, semibold labels, and all button variants use at most font-semibold (600).
   // Syne 700: all h1–h6 via the @layer base rule in index.css.
   // Latin-only subsets are always needed for English content and never generate "preloaded but not used" warnings.
   // font-display: optional requires preloads to succeed. Without them, the optional window expires
@@ -13,7 +13,6 @@ export const links: LinksFunction = () => [
   { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
   { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-500-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
   { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-600-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
-  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/inter-latin-700-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
   { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/syne-latin-700-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
 ];
 

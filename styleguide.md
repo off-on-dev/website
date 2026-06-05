@@ -27,7 +27,7 @@ All brand copy constants live in `src/data/constants.ts`. Use them instead of ha
 | Role | Family | Key weights | Format |
 |---|---|---|---|
 | Headings / display (`font-heading`) | Syne | 700 | WOFF2 only (`public/fonts/syne-*.woff2`) |
-| Body & UI (`font-sans`) | Inter | 400, 500, 600 primary (700 available) | WOFF2 only (`public/fonts/inter-*.woff2`) |
+| Body & UI (`font-sans`) | Inter | 400, 500, 600 | WOFF2 only (`public/fonts/inter-*.woff2`) |
 | Code / mono (`font-mono`, `code`, `pre`) | JetBrains Mono | 400 primary (500, 600 available) | WOFF2 only (`public/fonts/jetbrains-mono-*.woff2`) |
 
 All fonts are fully self-hosted as WOFF2. No TTF fallbacks. No external network requests.
@@ -48,7 +48,6 @@ Fonts are preloaded to avoid the three-level font discovery delay (HTML parse â†
 - `inter-latin-400-normal.woff2`: body text (Navbar, paragraphs)
 - `inter-latin-500-normal.woff2`: medium-weight body text (Navbar links)
 - `inter-latin-600-normal.woff2`: semibold text (section labels, card titles)
-- `inter-latin-700-normal.woff2`: bold text (CTA buttons using `font-bold` on non-heading elements)
 - `syne-latin-700-normal.woff2`: h1 and h2 elements (the `@layer base` rule in `src/index.css` applies `font-family: 'Syne'` to h1 and h2 only; h3â€“h6 use Inter)
 
 Only Latin subset variants are preloaded. Other subsets are served from `public/fonts/` but are not preloaded. Update `src/root.tsx` whenever above-the-fold typography changes.
@@ -206,8 +205,8 @@ In light mode, `bg-primary` sections (PageHero, BottomCTA) stay amber. Do **not*
 | `.btn-primary` | Filled amber, `rounded-md px-5 py-3 text-sm font-semibold`, `brightness-110` on hover | Default CTA on page background |
 | `.btn-ghost` | Outlined, `border-foreground/35`, amber border and text on hover | Secondary CTA on page background |
 | `.btn-soft` | Tinted `bg-primary/10 border-primary/30`, no glow | Tertiary / low-emphasis action |
-| `.btn-inverse` | White/background fill with primary border, primary text; inverts on hover to primary bg | Primary CTA inside a `bg-primary` section (e.g. `PageHero`, `BottomCTA`) |
-| `.btn-ghost-inverse` | Transparent with background-colored border and text; inverts on hover to background fill | Secondary CTA inside a `bg-primary` section |
+| `.btn-inverse` | White/background fill with primary border, primary text, `font-semibold`; inverts on hover to primary bg | Primary CTA inside a `bg-primary` section (e.g. `PageHero`, `BottomCTA`) |
+| `.btn-ghost-inverse` | Transparent with background-colored border and text, `font-semibold`; inverts on hover to background fill | Secondary CTA inside a `bg-primary` section |
 
 #### Button contrast rule (light mode)
 
