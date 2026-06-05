@@ -27,6 +27,7 @@ import { isDeadlinePast } from "@/lib/utils";
 import { stripLinks } from "@/lib/markdown";
 import { LivePill } from "@/components/LivePill";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { InlineProse } from "@/components/InlineProse";
 
 export const links: LinksFunction = () => [
   { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
@@ -180,7 +181,7 @@ const AdventureDetail = (): JSX.Element => {
               {isLive && <LivePill />}
               <TagChips tags={adventure.tags} />
             </div>
-            <p className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl md-inline" dangerouslySetInnerHTML={{ __html: adventure.story }} />
+            <InlineProse html={adventure.story} className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl" />
           </div>
 
           {/* Two-column layout */}
@@ -236,8 +237,10 @@ const AdventureDetail = (): JSX.Element => {
                 <CollapsibleSection id="backstory" title="The Story" defaultOpen={true}>
                   <div className="space-y-3">
                     {adventure.backstory.map((para, i) => (
-                      <p key={i} className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed md-inline"
-                        dangerouslySetInnerHTML={{ __html: para }}
+                      <InlineProse
+                        key={i}
+                        html={para}
+                        className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed"
                       />
                     ))}
                   </div>
@@ -262,8 +265,9 @@ const AdventureDetail = (): JSX.Element => {
                   </p>
                   <PersonNameLink name={adventure.contributor.name} url={adventure.contributor.url} />
                   {adventure.contributor.about && (
-                    <p className="mt-2 text-sm text-[hsl(var(--text-secondary))] leading-relaxed md-inline"
-                      dangerouslySetInnerHTML={{ __html: adventure.contributor.about }}
+                    <InlineProse
+                      html={adventure.contributor.about}
+                      className="mt-2 text-sm text-[hsl(var(--text-secondary))] leading-relaxed"
                     />
                   )}
                 </div>

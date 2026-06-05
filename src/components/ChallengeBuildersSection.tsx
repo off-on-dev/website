@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { ADVENTURE_CONTRIBUTORS } from "@/data/adventures";
 import { PersonNameLink } from "@/components/PersonNameLink";
 import { SidebarLayout } from "@/components/SidebarLayout";
+import { InlineProse } from "@/components/InlineProse";
 
 export const ChallengeBuildersSection = ({ aside }: { aside?: ReactNode }): JSX.Element | null => {
   if (ADVENTURE_CONTRIBUTORS.length === 0) {
@@ -23,7 +24,7 @@ export const ChallengeBuildersSection = ({ aside }: { aside?: ReactNode }): JSX.
           >
             <PersonNameLink name={contributor.name} url={contributor.url} />
             {contributor.about && (
-              <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed md-inline" dangerouslySetInnerHTML={{ __html: contributor.about }} />
+              <InlineProse html={contributor.about} className="mt-1.5 text-sm text-muted-foreground leading-relaxed" />
             )}
             <p className="mt-6 mb-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">adventures created</p>
             <ul className="space-y-3">

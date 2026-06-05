@@ -527,7 +527,8 @@ async function generateAdventureTs(data) {
   // Pre-render prose fields to HTML at build time.
   const storyHtml = await mdToInline(adventureStory);
   const contributorAboutHtml = data.contributor?.about ? await mdToInline(data.contributor.about) : null;
-  // Adventure backstory items are rendered individually as <p> elements, so use inline.
+  // Each item renders via InlineProse; mdToInline strips the outer <p> on single-paragraph
+  // items so they can be safely wrapped as <p md-inline> at render time.
   const backstoryHtml = data.backstory ? await mdToInlineArray(data.backstory) : null;
 
   lines.push(`export const ${constName}: Adventure = {`);
@@ -562,6 +563,14 @@ async function generateAdventureTs(data) {
     const rankingRulesUrl = data.rewards.ranking_rules_url ?? DEFAULT_REWARDS_RANKING_RULES_PATH;
     const eligibilityHtml = await mdToInline(eligibilityRaw);
     const rankingNoteHtml = await mdToInline(rankingNoteRaw);
+    // rankingNote renders inside a <span> inside a <p>, so block-level HTML there
+    // is always invalid HTML. Fail the build rather than silently corrupt the DOM.
+    if (/<(p|ul|ol|blockquote|h[1-6]|pre|table|hr|figure|div)\b/.test(rankingNoteHtml)) {
+      fail(
+        `${data.slug}: rewards.ranking_note produces block-level HTML. ` +
+        `It must be a single inline paragraph — collapse it to one line and regenerate.`
+      );
+    }
     lines.push(`  rewards: {`);
     const rewardsDeadline = data.rewards.deadline === "TODO" ? "" : data.rewards.deadline;
     lines.push(`    deadline: "${escapeDoubleQuoted(rewardsDeadline)}",`);

@@ -63,8 +63,12 @@ const ROUTES: RouteSpec[] = [
 test.describe("every prerendered route", () => {
   for (const { path, title } of ROUTES) {
     test(path, async ({ page }) => {
-      const jsErrors: string[] = [];
-      page.on("pageerror", (e) => jsErrors.push(e.message));
+      const pageErrors: string[] = [];
+      const consoleErrors: string[] = [];
+      page.on("pageerror", (e) => pageErrors.push(e.message));
+      page.on("console", (msg) => {
+        if (msg.type() === "error") consoleErrors.push(msg.text());
+      });
 
       // Reduced motion must be set before navigation so the global
       // prefers-reduced-motion CSS rule kills transitions from first paint.
@@ -73,13 +77,15 @@ test.describe("every prerendered route", () => {
       await page.emulateMedia({ reducedMotion: "reduce" });
       await page.goto(path);
 
-      expect(jsErrors, `unexpected JS errors on ${path}`).toHaveLength(0);
+      // Wait for hydration and post-mount renders (consent banner, theme
+      // sync) to settle before asserting on error state.
+      await page.waitForLoadState("networkidle");
+
+      expect(pageErrors, `unexpected JS exceptions on ${path}`).toHaveLength(0);
+      expect(consoleErrors, `unexpected console.error on ${path}`).toHaveLength(0);
       await expect(page.locator("main#main-content")).toBeAttached();
       await expect(page).toHaveTitle(title);
 
-      // Wait for hydration and post-mount renders (consent banner, theme
-      // sync) to settle so axe sees stable computed styles.
-      await page.waitForLoadState("networkidle");
       const a11y = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"])
         .analyze();
@@ -91,6 +97,13 @@ test.describe("every prerendered route", () => {
 test.describe("every prerendered route (light mode)", () => {
   for (const { path } of ROUTES) {
     test(path, async ({ page }) => {
+      const pageErrors: string[] = [];
+      const consoleErrors: string[] = [];
+      page.on("pageerror", (e) => pageErrors.push(e.message));
+      page.on("console", (msg) => {
+        if (msg.type() === "error") consoleErrors.push(msg.text());
+      });
+
       await page.addInitScript(() => localStorage.setItem("theme", "light"));
       // Set reduced motion before goto; see comment in dark-mode block above.
       await page.emulateMedia({ reducedMotion: "reduce" });
@@ -101,6 +114,10 @@ test.describe("every prerendered route (light mode)", () => {
       // samples elements mid React-render with stale dark-mode computed
       // colors from the initial dark-class server render.
       await page.waitForLoadState("networkidle");
+
+      expect(pageErrors, `unexpected JS exceptions on ${path} (light mode)`).toHaveLength(0);
+      expect(consoleErrors, `unexpected console.error on ${path} (light mode)`).toHaveLength(0);
+
       const a11y = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"])
         .analyze();

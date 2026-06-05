@@ -499,6 +499,31 @@ const { rows, updatedAt } = useAdventureLeaderboard(adventureId, mockLoader);
 
 ## Components
 
+### `InlineProse`
+
+`src/components/InlineProse.tsx`
+
+Safe renderer for all author-prose HTML fields. Use this component in place of a bare `<p dangerouslySetInnerHTML>` wherever the content was converted from Markdown by the generator.
+
+Renders `<p className="md-inline …">` when the HTML is inline-only, and `<div className="md-content …">` when the HTML contains any block-level element (`p`, `ul`, `ol`, `blockquote`, `h1`–`h6`, `pre`, `table`, `hr`, `figure`, `div`). The switch is automatic: callers never need to inspect the HTML.
+
+**Rule:** every `dangerouslySetInnerHTML` site that renders an author-prose field (as listed in `CLAUDE.md`) must use `InlineProse`. Do not render author-prose HTML with a bare `<p>` or `<span>`.
+
+**Exception:** `rewards.rankingNote` renders inside a `<span>` inside a `<p>`, so `InlineProse` cannot be used there. The generator enforces that `rankingNote` is inline-only and fails the build if block markup is detected.
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `html` | `string` | required | Sanitised HTML from the generator |
+| `className` | `string?` | `""` | Tailwind utilities appended before `md-inline`/`md-content` |
+
+```tsx
+<InlineProse html={tier.description} className="text-xs text-[hsl(var(--text-secondary))]" />
+```
+
+`BLOCK_ELEMENT_RE` is also exported for the rare case where callers need to perform the same check without rendering (e.g. server-side generator scripts).
+
+---
+
 ### `ConsentBanner`
 
 `src/components/ConsentBanner.tsx`

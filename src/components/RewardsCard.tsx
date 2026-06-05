@@ -3,6 +3,7 @@ import { ExternalLink, Trophy } from "lucide-react";
 import type { AdventureRewards } from "@/data/adventures/types";
 import { COMMUNITY_URL } from "@/data/constants";
 import { formatDeadline } from "@/lib/utils";
+import { InlineProse } from "@/components/InlineProse";
 
 type RewardsCardProps = {
   rewards: AdventureRewards;
@@ -54,7 +55,7 @@ export const RewardsCard = ({ rewards, compact = false, levelDeadline, deadlineP
       {rewards.tiers.map((tier) => (
         <div key={tier.label}>
           <p className="text-xs font-semibold text-foreground">{tier.label}</p>
-          <p className="text-xs text-[hsl(var(--text-secondary))] md-inline" dangerouslySetInnerHTML={{ __html: tier.description }} />
+          <InlineProse html={tier.description} className="text-xs text-[hsl(var(--text-secondary))]" />
         </div>
       ))}
     </div>
