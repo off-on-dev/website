@@ -1,5 +1,6 @@
 import type { JSX, ReactNode } from "react";
 import type { MetaFunction } from "react-router";
+import { Link } from "react-router";
 import { useEffect, useState } from "react";
 import { Check, X, Download, Zap } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
@@ -661,7 +662,7 @@ hsl(var(--foreground))`}</code>
                 <SectionBlock id="accessibility" eyebrow="Standards" heading="Accessibility">
                   <p className="font-sans text-sm text-[hsl(var(--text-secondary))] max-w-prose mb-8">
                     Every page on {BRAND_NAME} targets WCAG 2.2 Level AA for structure and interaction. Body text contrast targets AAA (7:1) in both light and dark mode. The full statement, testing approach, and how to report a barrier are in the{" "}
-                    <a href="/accessibility/" className="docs-ext-link">Accessibility Statement</a>.
+                    <Link to="/accessibility/" className="docs-ext-link">Accessibility Statement</Link>.
                   </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
