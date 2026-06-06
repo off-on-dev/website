@@ -443,12 +443,15 @@ import { useEffect, useLayoutEffect } from "react";
 const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 ```
 
-Always guard any `localStorage` or browser API access inside the callback:
+No `typeof window` guard is needed inside the callback. In SSR, `useIsomorphicLayoutEffect` resolves to `useEffect`, and React never runs effect callbacks during SSR, so the callback body is never reached on the server. Guard `localStorage` and other fallible browser APIs with `try/catch` instead (for private browsing and quota errors):
 
 ```ts
 useIsomorphicLayoutEffect(() => {
-  if (typeof window === "undefined") return;
-  // browser-only code here
+  try {
+    // browser-only code here
+  } catch {
+    // handle unavailable API
+  }
 }, []);
 ```
 

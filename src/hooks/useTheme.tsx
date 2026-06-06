@@ -18,7 +18,6 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }): JSX.
   const [theme, setTheme] = useState<Theme>("dark");
 
   useIsomorphicLayoutEffect(() => {
-    if (typeof window === "undefined") return;
     try {
       const stored = localStorage.getItem(THEME_STORAGE_KEY);
       if (stored === "light") {
