@@ -17,7 +17,7 @@ export const links: LinksFunction = () => [
 ];
 
 // Inline script strings extracted to constants so tests can assert ordering in this file.
-const themeScript = `(function(){try{var t=localStorage.getItem("theme");if(t==="light"){document.documentElement.classList.remove("dark");document.documentElement.classList.add("light");}else if(!t&&window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches){document.documentElement.classList.remove("dark");document.documentElement.classList.add("light");}}catch(e){}})();`;
+const themeScript = `(function(){try{var t=localStorage.getItem("theme");if(t==="light"){document.documentElement.classList.remove("dark");document.documentElement.classList.add("light");}}catch(e){}})();`;
 
 // Gated-load Consent Mode v2. The inline bootstrap does the bare minimum and
 // nothing more: bootstrap dataLayer, define window.gtag as the push shim, and
@@ -33,9 +33,10 @@ const gtagBootstrap = `window.dataLayer=window.dataLayer||[];function gtag(){dat
 // "Inline speculation rules cannot currently be modified after they are processed."
 const SPECULATION_RULES = `{"prefetch":[{"source":"document","where":{"href_matches":["/adventures/","/challenges/"]},"eagerness":"moderate"}]}`;
 
-// Description is kept in sync with the Index page meta description (src/pages/Index.tsx).
+// JSON-LD description is intentionally a longer, schema-oriented variant.
+// Index page uses BRAND_SHORT_DESCRIPTION (src/data/constants.ts) for its meta description.
 // JSON-LD inline scripts cannot reference TS constants (they live inside dangerouslySetInnerHTML),
-// so the string is duplicated. Update both together.
+// so this string is maintained separately.
 const webSiteJsonLd = `{"@context":"https://schema.org","@type":"WebSite","name":"OffOn","url":"https://offon.dev","description":"A vendor-neutral community for open source enthusiasts. Learn through hands-on challenges, share what you know, and connect with people who love open source."}`;
 
 // sameAs links populate Google's Knowledge Panel. Mirror LINKEDIN_URL,

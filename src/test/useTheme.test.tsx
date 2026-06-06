@@ -176,4 +176,22 @@ describe('useTheme - file content regressions', () => {
     expect(scriptsPos).toBeGreaterThan(-1);
     expect(themeScriptPos).toBeLessThan(scriptsPos);
   });
+
+  it('inline theme script does not use matchMedia (dark is unconditional default)', () => {
+    const source = readFileSync(
+      resolve(__dirname, '../root.tsx'),
+      'utf-8'
+    );
+    const scriptStart = source.indexOf('const themeScript =');
+    const scriptEnd = source.indexOf('`;', scriptStart);
+    expect(source.slice(scriptStart, scriptEnd)).not.toContain('matchMedia');
+  });
+
+  it('useTheme hook does not use matchMedia (dark is unconditional default)', () => {
+    const source = readFileSync(
+      resolve(__dirname, '../hooks/useTheme.tsx'),
+      'utf-8'
+    );
+    expect(source).not.toContain('matchMedia');
+  });
 });

@@ -38,7 +38,7 @@ export type LeaderboardResult = {
 
 /**
  * Loads adventure leaderboard data from the per-adventure leaderboard.json file.
- * Data is refreshed daily by the GitHub Actions workflow.
+ * Data is refreshed hourly by the GitHub Actions workflow.
  * @param adventureId - The adventure slug (e.g. "blind-by-design").
  * @param loader - Optional loader for testing; defaults to dynamically importing the JSON.
  */
