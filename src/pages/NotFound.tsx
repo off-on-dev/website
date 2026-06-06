@@ -42,7 +42,7 @@ const NotFound = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main id="main-content" className="flex min-h-[80vh] items-center px-6 md:px-16 py-20">
+      <main id="main-content" tabIndex={-1} className="flex min-h-[80vh] items-center px-6 md:px-16 py-20">
         <div className="mx-auto max-w-6xl w-full">
 
           <div className="mb-12">

@@ -130,5 +130,5 @@ Target these thresholds at the 75th percentile of real users:
 ## New routes
 
 - New routes are automatically code-split by Vite. No manual action needed.
-- When adding a new static route, add it to `public/sitemap.xml`, the `prerender` array in `react-router.config.ts`, and the routes table in `README.md`.
+- When adding a new static route, add it to `src/routes.ts`, `public/sitemap.xml`, the `prerender` array in `react-router.config.ts`, and the routes table in `README.md`.
 - See the Site Maintenance section in `CLAUDE.md` for the full route checklist.

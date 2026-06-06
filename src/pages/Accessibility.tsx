@@ -25,7 +25,7 @@ const Accessibility = (): JSX.Element => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <main id="main-content" className="px-6 md:px-16 pt-28 pb-16">
+      <main id="main-content" tabIndex={-1} className="px-6 md:px-16 pt-28 pb-16">
         <div className="mx-auto max-w-6xl">
           <div className="max-w-3xl">
             <h1 className="font-heading text-3xl font-bold text-foreground mb-10">Accessibility Statement</h1>
@@ -160,9 +160,15 @@ const Accessibility = (): JSX.Element => {
             <h3 className={heading3}>Automated</h3>
             <ul role="list" className={list}>
               <li>
-                <strong>axe-core via Playwright</strong> on every pull request, configured in{" "}
-                <code>e2e/smoke.spec.ts</code>. Runs in both dark and light mode against the
-                production build. The PR preview workflow blocks on these scans.
+                <strong>eslint-plugin-jsx-a11y</strong> as part of <code>npm run lint</code>.
+                Static analysis that catches missing labels, invalid ARIA, and bad role usage
+                before a build runs.
+              </li>
+              <li>
+                <strong>axe-core via Playwright</strong> on every pull request and on a weekly
+                scheduled scan (Mondays). Runs in dark mode, light mode, and with{" "}
+                <code>prefers-reduced-motion: reduce</code> against the production build. The PR
+                preview workflow blocks on these scans.
               </li>
               <li>
                 <strong>Vitest</strong> assertions on landmark roles, labels, and focus behavior

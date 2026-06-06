@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { Sun, Moon, Menu, X, ExternalLink } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useTheme } from "@/hooks/useTheme";
-import { COMMUNITY_URL, SITE_NAME } from "@/data/constants";
+import { COMMUNITY_URL } from "@/data/constants";
 import { cn } from "@/lib/utils";
 const logoDark = `${import.meta.env.BASE_URL}brand/offon-logo-dark-color.svg`;
 const logoLight = `${import.meta.env.BASE_URL}brand/offon-logo-light-mono.svg`;
@@ -31,22 +31,34 @@ type NavLinksProps = {
 };
 
 const NavLinks = ({ onNavigate }: NavLinksProps): JSX.Element => (
-  <>
-    <NavLink to="/challenges/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Challenges</NavLink>
-    <NavLink to="/about/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>About</NavLink>
-    <a
-      href={COMMUNITY_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={linkCls}
-      onClick={onNavigate}
-    >
-      Community <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-    </a>
-    <NavLink to="/contribute/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Contribute</NavLink>
-    <NavLink to="/handbook/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Handbook</NavLink>
-    <NavLink to="/sponsors/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Sponsors</NavLink>
-  </>
+  <ul role="list" className="contents">
+    <li className="contents">
+      <NavLink to="/challenges/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Challenges</NavLink>
+    </li>
+    <li className="contents">
+      <NavLink to="/about/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>About</NavLink>
+    </li>
+    <li className="contents">
+      <a
+        href={COMMUNITY_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={linkCls}
+        onClick={onNavigate}
+      >
+        Community <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+      </a>
+    </li>
+    <li className="contents">
+      <NavLink to="/contribute/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Contribute</NavLink>
+    </li>
+    <li className="contents">
+      <NavLink to="/handbook/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Handbook</NavLink>
+    </li>
+    <li className="contents">
+      <NavLink to="/sponsors/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Sponsors</NavLink>
+    </li>
+  </ul>
 );
 
 export const Navbar = (): JSX.Element => {
@@ -127,9 +139,9 @@ export const Navbar = (): JSX.Element => {
       className="fixed top-0 left-0 right-0 z-50 border-b border-[hsl(var(--surface-border))] bg-background"
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-1.5">
-        <Link to="/" aria-label="offon.dev" className="logo-link flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm">
+        <Link to="/" aria-label="offon.dev home" className="logo-link flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm">
           {/* Dark logo is high-priority: it's visible in the default (dark) theme. Light logo uses auto priority since it's hidden until the user switches theme. */}
-          <img src={logoDark} alt={SITE_NAME} width={130} height={33} loading="eager" fetchPriority="high" className="h-8 dark:block hidden" />
+          <img src={logoDark} alt="" width={130} height={33} loading="eager" fetchPriority="high" className="h-8 dark:block hidden" />
           <img src={logoLight} alt="" aria-hidden="true" width={130} height={33} loading="eager" className="h-8 block dark:hidden" />
         </Link>
 
@@ -155,15 +167,19 @@ export const Navbar = (): JSX.Element => {
         </div>
       </div>
 
-      {/* Mobile menu drawer */}
-      {menuOpen && (
-        <div
-          id="mobile-menu"
-          className="md:hidden border-t border-[hsl(var(--surface-border))] bg-background px-6 py-2 flex flex-col gap-1"
-        >
-          <NavLinks onNavigate={closeMenu} />
-        </div>
-      )}
+      {/* Mobile menu drawer — always in the DOM so aria-controls has a valid target.
+          Plain <div>, not <nav>: this sits inside the outer <nav aria-label="Main">
+          and a nested nav landmark would create two overlapping navigation regions. */}
+      <div
+        id="mobile-menu"
+        hidden={!menuOpen}
+        className={cn(
+          "md:hidden border-t border-[hsl(var(--surface-border))] bg-background px-6 py-2",
+          menuOpen && "flex flex-col gap-1"
+        )}
+      >
+        <NavLinks onNavigate={closeMenu} />
+      </div>
     </nav>
   );
 };

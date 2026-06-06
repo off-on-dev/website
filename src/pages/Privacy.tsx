@@ -28,7 +28,7 @@ const Privacy = (): JSX.Element => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <main id="main-content" className="px-6 md:px-16 pt-28 pb-16">
+      <main id="main-content" tabIndex={-1} className="px-6 md:px-16 pt-28 pb-16">
         <div className="mx-auto max-w-6xl">
         <div className="max-w-3xl">
         <h1 className="font-heading text-3xl font-bold text-foreground mb-2">Privacy Policy</h1>

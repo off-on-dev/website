@@ -32,20 +32,21 @@ beforeEach(() => {
 describe("Navbar - logo", () => {
   it("renders both logo images (dark and light) in the DOM", () => {
     renderNavbar();
-    const logoLink = screen.getByRole("link", { name: "offon.dev" });
+    const logoLink = screen.getByRole("link", { name: "offon.dev home" });
     const imgs = logoLink.querySelectorAll("img");
     expect(imgs).toHaveLength(2);
-    // Dark logo: meaningful alt text for SEO, no aria-hidden per ACCESSIBILITY.md rule
-    expect(imgs[0].getAttribute("alt")).toBe("offon.dev");
+    // Both images are decorative — the link's aria-label="offon.dev home" is the accessible name.
+    // Dark logo: alt="" so screen readers don't double-announce the site name.
+    expect(imgs[0].getAttribute("alt")).toBe("");
     expect(imgs[0].getAttribute("aria-hidden")).toBeNull();
-    // Light logo: decorative (dark logo carries the alt), aria-hidden required
+    // Light logo: alt="" and aria-hidden="true" (fully suppressed).
     expect(imgs[1].getAttribute("alt")).toBe("");
     expect(imgs[1].getAttribute("aria-hidden")).toBe("true");
   });
 
   it("logo link navigates to home (/)", () => {
     renderNavbar();
-    const logoLink = screen.getByRole("link", { name: "offon.dev" });
+    const logoLink = screen.getByRole("link", { name: "offon.dev home" });
     expect(logoLink.getAttribute("href")).toBe("/");
   });
 });
@@ -53,6 +54,20 @@ describe("Navbar - logo", () => {
 // ---------------------------------------------------------------------------
 // Desktop navigation links
 // ---------------------------------------------------------------------------
+
+describe("Navbar - aria-current", () => {
+  it("sets aria-current='page' on the active desktop link", () => {
+    renderNavbar("/about/");
+    const aboutLinks = screen.getAllByRole("link", { name: /About/i });
+    expect(aboutLinks[0].getAttribute("aria-current")).toBe("page");
+  });
+
+  it("does not set aria-current on inactive desktop links", () => {
+    renderNavbar("/about/");
+    const challengesLinks = screen.getAllByRole("link", { name: /Challenges/i });
+    expect(challengesLinks[0].getAttribute("aria-current")).toBeNull();
+  });
+});
 
 describe("Navbar - desktop navigation", () => {
   it("contains a nav landmark labelled 'Main'", () => {
@@ -124,15 +139,15 @@ describe("Navbar - mobile menu", () => {
     expect(hamburger.getAttribute("aria-expanded")).toBe("false");
   });
 
-  it("mobile menu drawer is not rendered initially", () => {
+  it("mobile menu drawer is hidden initially", () => {
     renderNavbar();
-    expect(document.getElementById("mobile-menu")).toBeNull();
+    expect(document.getElementById("mobile-menu")?.hasAttribute("hidden")).toBe(true);
   });
 
-  it("clicking the hamburger opens the mobile menu", () => {
+  it("clicking the hamburger reveals the mobile menu", () => {
     renderNavbar();
     fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
-    expect(document.getElementById("mobile-menu")).toBeTruthy();
+    expect(document.getElementById("mobile-menu")?.hasAttribute("hidden")).toBe(false);
   });
 
   it("hamburger button has aria-expanded='true' when menu is open", () => {
@@ -146,7 +161,7 @@ describe("Navbar - mobile menu", () => {
     renderNavbar();
     fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
     fireEvent.click(screen.getByRole("button", { name: /Close menu/i }));
-    expect(document.getElementById("mobile-menu")).toBeNull();
+    expect(document.getElementById("mobile-menu")?.hasAttribute("hidden")).toBe(true);
   });
 
   it("mobile menu contains navigation links when open", () => {
@@ -164,12 +179,18 @@ describe("Navbar - mobile menu", () => {
     expect(hamburger.getAttribute("aria-controls")).toBe("mobile-menu");
   });
 
+  it("mobile menu drawer is a plain element, not a nav landmark, to avoid nested nav regions", () => {
+    renderNavbar();
+    const mobileMenu = document.getElementById("mobile-menu");
+    expect(mobileMenu?.tagName.toLowerCase()).not.toBe("nav");
+  });
+
   it("pressing Escape closes the mobile menu", () => {
     renderNavbar();
     fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
-    expect(document.getElementById("mobile-menu")).toBeTruthy();
+    expect(document.getElementById("mobile-menu")?.hasAttribute("hidden")).toBe(false);
     fireEvent.keyDown(document, { key: "Escape" });
-    expect(document.getElementById("mobile-menu")).toBeNull();
+    expect(document.getElementById("mobile-menu")?.hasAttribute("hidden")).toBe(true);
   });
 
   it("pressing Escape returns focus to the hamburger button", () => {

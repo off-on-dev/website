@@ -19,11 +19,15 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }): JSX.
 
   useIsomorphicLayoutEffect(() => {
     if (typeof window === "undefined") return;
-    const stored = localStorage.getItem(THEME_STORAGE_KEY);
-    if (stored === "light") {
-      startTransition(() => {
-        setTheme("light");
-      });
+    try {
+      const stored = localStorage.getItem(THEME_STORAGE_KEY);
+      if (stored === "light") {
+        startTransition(() => setTheme("light"));
+      } else if (!stored && window.matchMedia?.("(prefers-color-scheme: light)").matches) {
+        startTransition(() => setTheme("light"));
+      }
+    } catch {
+      // localStorage unavailable; keep default dark theme
     }
   }, []);
 
@@ -39,7 +43,11 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }): JSX.
   }, [theme]);
 
   useEffect(() => {
-    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      // localStorage unavailable; preference won't persist
+    }
   }, [theme]);
 
   const toggle = (): void => setTheme((t) => (t === "dark" ? "light" : "dark"));

@@ -41,7 +41,7 @@ const HOW_IT_WORKS = [
 const Adventures = (): JSX.Element => (
   <div className="min-h-screen bg-background">
     <Navbar />
-    <main id="main-content">
+    <main id="main-content" tabIndex={-1}>
       <PageHero
         eyebrow="Adventures"
         title="Real-World Scenarios. Practical Skills."

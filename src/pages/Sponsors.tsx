@@ -24,7 +24,7 @@ const Sponsors = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main id="main-content">
+      <main id="main-content" tabIndex={-1}>
       <PageHero
         eyebrow="Sponsors"
         title="Sponsorship and Independence"

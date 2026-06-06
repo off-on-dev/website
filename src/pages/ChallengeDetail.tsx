@@ -234,7 +234,8 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
                 {verification ? (
                   <span>
                     Verify your solution:
-                    <pre tabIndex={0} aria-label="Verification command" className="mt-2 overflow-x-auto rounded-lg border border-[hsl(var(--surface-border))] bg-background/60 px-4 py-3 font-mono text-sm text-foreground">
+                    {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- tabIndex={0} makes this scrollable code block keyboard-reachable per WCAG 2.1 SC 2.1.1 */}
+                    <pre tabIndex={0} aria-label="Verification command (scroll left or right to see the full command)" className="mt-2 overflow-x-auto rounded-lg border border-[hsl(var(--surface-border))] bg-background/60 px-4 py-3 font-mono text-sm text-foreground">
                       <code>{verification.command}</code>
                     </pre>
                     <span className="mt-2 block text-[hsl(var(--text-faint))]">If it passes, it generates a Certificate of Completion you can paste into the discussion.</span>
@@ -388,7 +389,7 @@ const ChallengeDetail = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main id="main-content" className="px-6 md:px-16 pt-28 pb-24">
+      <main id="main-content" tabIndex={-1} className="px-6 md:px-16 pt-28 pb-24">
         <div className="mx-auto max-w-6xl">
           <Breadcrumb
             className="mb-10"

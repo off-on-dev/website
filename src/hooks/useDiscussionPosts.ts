@@ -56,6 +56,7 @@ export type DiscussionResult = {
   posts: PostWithAge[];
   totalReplies: number;
   solvers: Solver[];
+  loaded: boolean;
 };
 
 /**
@@ -74,28 +75,35 @@ export function useDiscussionPosts(
   const [posts, setPosts] = useState<PostWithAge[]>([]);
   const [totalReplies, setTotalReplies] = useState(0);
   const [solvers, setSolvers] = useState<Solver[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if (!adventureId || !levelId) return;
     let cancelled = false;
-    loader(adventureId, levelId)
+    // When IDs are missing there is nothing to fetch; settle immediately.
+    const promise = (!adventureId || !levelId)
+      ? Promise.resolve(null)
+      : loader(adventureId, levelId);
+    promise
       .then((data) => {
         if (cancelled) return;
+        if (!data) { setPosts([]); setTotalReplies(0); setSolvers([]); setLoaded(true); return; }
         const raw = data.discussionPosts ?? [];
         const now = Date.now();
         setPosts(raw.map((p) => ({ ...p, age: timeAgo(p.created_at, now) })));
         setTotalReplies(data.totalReplies ?? raw.length);
         setSolvers(data.solvers ?? []);
+        setLoaded(true);
       })
       .catch(() => {
         if (!cancelled) {
           setPosts([]);
           setTotalReplies(0);
           setSolvers([]);
+          setLoaded(true);
         }
       });
     return () => { cancelled = true; };
   }, [adventureId, levelId, loader]);
 
-  return { posts, totalReplies, solvers };
+  return { posts, totalReplies, solvers, loaded };
 }

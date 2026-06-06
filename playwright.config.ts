@@ -10,6 +10,9 @@ export default defineConfig({
   use: {
     baseURL: "http://localhost:3000",
     trace: "on-first-retry",
+    // Pin the OS-level color scheme to dark so theme-toggle tests start from
+    // the site's default state regardless of the developer's OS setting.
+    colorScheme: "dark",
   },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },

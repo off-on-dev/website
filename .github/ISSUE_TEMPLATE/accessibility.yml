@@ -69,10 +69,17 @@ body:
       placeholder: VoiceOver on macOS 15.1
 
   - type: input
+    id: device-os
+    attributes:
+      label: Device and operating system
+      description: For example, Windows 11, macOS 15, iPhone iOS 18, Android 14.
+      placeholder: macOS 15.1
+
+  - type: input
     id: browser
     attributes:
       label: Browser and version
-      placeholder: Firefox 132 on Windows 11
+      placeholder: Firefox 132
     validations:
       required: true
 
@@ -88,6 +95,13 @@ body:
         - Not sure
     validations:
       required: true
+
+  - type: input
+    id: wcag-criterion
+    attributes:
+      label: WCAG success criterion (if known)
+      description: Optional. For example, "1.4.3 Contrast (Minimum)" or "2.1.1 Keyboard". Helps us triage faster but is not required.
+      placeholder: 2.1.1 Keyboard
 
   - type: textarea
     id: extra

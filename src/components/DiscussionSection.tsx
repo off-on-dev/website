@@ -19,7 +19,8 @@ type DiscussionSectionProps = {
 };
 
 export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: DiscussionSectionProps): JSX.Element => {
-  const posts = useDiscussionPosts(adventureId, levelId).posts.slice(0, 3);
+  const { posts: allPosts, loaded } = useDiscussionPosts(adventureId, levelId);
+  const posts = allPosts.slice(0, 3);
 
   const joinLink = (
     <a
@@ -32,11 +33,18 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
     </a>
   );
 
+  const statusMessage = loaded
+    ? posts.length === 0
+      ? "No discussion posts loaded."
+      : `${posts.length} recent discussion post${posts.length !== 1 ? "s" : ""} shown.`
+    : "";
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold text-foreground mb-4">Discussion</h2>
-      <div aria-live="polite" aria-atomic="false">
-      {posts.length === 0 ? (
+      <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">{statusMessage}</span>
+      <div>
+      {loaded && posts.length === 0 ? (
         <>
           <div className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8 text-center">
             <p className="text-muted-foreground text-sm">
@@ -45,7 +53,7 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
           </div>
           {joinLink}
         </>
-      ) : (
+      ) : loaded ? (
         <>
           {posts.map((post, i) => (
             <a
@@ -99,7 +107,7 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
           ))}
           {joinLink}
         </>
-      )}
+      ) : null}
       </div>
     </div>
   );

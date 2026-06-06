@@ -73,21 +73,54 @@ describe("useDiscussionPosts - initial state", () => {
     const { result } = renderHook(() =>
       useDiscussionPosts("test-adventure", "beginner", pendingLoader)
     );
-    expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [] });
+    expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [], loaded: false });
   });
 
   it("returns an empty result when adventureId is empty", () => {
     const { result } = renderHook(() =>
       useDiscussionPosts("", "beginner", mockLoader)
     );
-    expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [] });
+    expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [], loaded: false });
   });
 
   it("returns an empty result when levelId is empty", () => {
     const { result } = renderHook(() =>
       useDiscussionPosts("test-adventure", "", mockLoader)
     );
-    expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [] });
+    expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [], loaded: false });
+  });
+
+  it("settles loaded to true when adventureId is empty", async () => {
+    const { result } = renderHook(() =>
+      useDiscussionPosts("", "beginner", mockLoader)
+    );
+    await waitFor(() => expect(result.current.loaded).toBe(true));
+    expect(result.current.posts).toEqual([]);
+  });
+
+  it("settles loaded to true when levelId is empty", async () => {
+    const { result } = renderHook(() =>
+      useDiscussionPosts("test-adventure", "", mockLoader)
+    );
+    await waitFor(() => expect(result.current.loaded).toBe(true));
+    expect(result.current.posts).toEqual([]);
+  });
+
+  it("clears stale posts, solvers, and totalReplies when IDs transition to empty", async () => {
+    const { result, rerender } = renderHook(
+      ({ id, lvl }: { id: string; lvl: string }) => useDiscussionPosts(id, lvl, mockLoader),
+      { initialProps: { id: "test-adventure", lvl: "beginner" } }
+    );
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
+    rerender({ id: "", lvl: "beginner" });
+    // Wait for posts to be cleared rather than loaded (which was already true
+    // from the first render). All four fields update in the same microtask.
+    await waitFor(() => {
+      expect(result.current.posts).toEqual([]);
+      expect(result.current.loaded).toBe(true);
+      expect(result.current.solvers).toEqual([]);
+      expect(result.current.totalReplies).toBe(0);
+    });
   });
 });
 
@@ -112,7 +145,7 @@ describe("useDiscussionPosts - data loading", () => {
       useDiscussionPosts("test-adventure", "beginner", emptyLoader)
     );
     await waitFor(() => {
-      expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [] });
+      expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [], loaded: true });
     });
   });
 
@@ -206,7 +239,7 @@ describe("useDiscussionPosts - error handling", () => {
       useDiscussionPosts("test-adventure", "beginner", failLoader)
     );
     await waitFor(() => {
-      expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [] });
+      expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [], loaded: true });
     });
   });
 });

@@ -113,7 +113,7 @@ Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and
 | `/community-guide` | redirects to `/handbook` | Legacy alias |
 | `/docs` | redirects to `/handbook` | Legacy alias |
 | `/docs/community-guide` | redirects to `/handbook` | Legacy alias |
-| `/challenges` | `Challenges.tsx` | All adventures; filter by technology tag |
+| `/challenges` | `Challenges.tsx` | All challenges across all adventures; filter by technology tag |
 | `/challenges/:tag` | `Challenges.tsx` | Challenges filtered by technology tag (SEO-friendly slug) |
 | `*` | `CatchAll.tsx` | Client-side 404 fallback (re-exports `NotFound.tsx`; required because React Router v7 needs unique files per route) |
 

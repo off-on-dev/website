@@ -13,6 +13,7 @@ type AdventureCardProps = { adventure: AdventureCardSummary };
 export const AdventureCard = ({ adventure }: AdventureCardProps): JSX.Element => (
   <Link
     to={`/adventures/${adventure.id}/`}
+    aria-label={adventure.title}
     className={cn(
       "group card-glow relative rounded-xl border-2 bg-[hsl(var(--surface))] p-6 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
       adventure.isLive

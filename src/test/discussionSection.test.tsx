@@ -1,8 +1,9 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { DiscussionSection } from "@/components/DiscussionSection";
+import { useDiscussionPosts } from "@/hooks/useDiscussionPosts";
 import type { PostWithAge } from "@/hooks/useDiscussionPosts";
 
 // ---------------------------------------------------------------------------
@@ -39,12 +40,16 @@ const MOCK_POSTS: PostWithAge[] = [
   },
 ];
 
-vi.mock("@/hooks/useDiscussionPosts", () => ({
-  useDiscussionPosts: (adventureId: string, levelId: string) =>
-    adventureId === "test-adventure" && levelId === "beginner"
-      ? { posts: MOCK_POSTS, totalReplies: MOCK_POSTS.length, solvers: [] }
-      : { posts: [], totalReplies: 0, solvers: [] },
-}));
+vi.mock("@/hooks/useDiscussionPosts");
+
+const defaultMockImpl = (adventureId: string, levelId: string) =>
+  adventureId === "test-adventure" && levelId === "beginner"
+    ? { posts: MOCK_POSTS, totalReplies: MOCK_POSTS.length, solvers: [], loaded: true }
+    : { posts: [], totalReplies: 0, solvers: [], loaded: true };
+
+beforeEach(() => {
+  vi.mocked(useDiscussionPosts).mockImplementation(defaultMockImpl);
+});
 
 // ---------------------------------------------------------------------------
 // Empty state
@@ -128,6 +133,45 @@ describe("DiscussionSection - age display", () => {
     expect(screen.getByText("45m ago")).toBeTruthy();
     expect(screen.getByText("3h ago")).toBeTruthy();
     expect(screen.getByText("2d ago")).toBeTruthy();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Live region: sr-only status node announces a concise count, not card content
+// ---------------------------------------------------------------------------
+
+describe("DiscussionSection - live region status", () => {
+  it("announces post count in the status node when posts are loaded", () => {
+    render(
+      <DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.offon.dev/t/topic/42/1" />
+    );
+    const status = screen.getByRole("status");
+    expect(status.textContent).toBe("3 recent discussion posts shown.");
+  });
+
+  it("announces no-posts status in the status node when the section is empty", () => {
+    render(
+      <DiscussionSection adventureId="unknown" levelId="unknown" discussionUrl="https://community.offon.dev/t/unknown/999/1" />
+    );
+    const status = screen.getByRole("status");
+    expect(status.textContent).toBe("No discussion posts loaded.");
+  });
+
+  it("status node does not render card content (only the concise message)", () => {
+    render(
+      <DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.offon.dev/t/topic/42/1" />
+    );
+    const status = screen.getByRole("status");
+    expect(status.textContent).not.toContain("Great challenge!");
+  });
+
+  it("renders nothing while not yet loaded (no flash of empty state)", () => {
+    vi.mocked(useDiscussionPosts).mockReturnValueOnce({ posts: [], totalReplies: 0, solvers: [], loaded: false });
+    render(
+      <DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.offon.dev/t/topic/42/1" />
+    );
+    expect(screen.queryByText(/No community posts yet/)).toBeNull();
+    expect(screen.queryByText(/Great challenge/)).toBeNull();
   });
 });
 

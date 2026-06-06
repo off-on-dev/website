@@ -26,7 +26,7 @@ const About = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main id="main-content">
+      <main id="main-content" tabIndex={-1}>
       <section
         aria-labelledby="about-hero-heading"
         className="bg-primary pt-32 pb-20 px-6 md:px-16 overflow-hidden min-h-[560px] flex flex-col justify-center bg-[length:8rem] md:bg-[length:12rem]"
