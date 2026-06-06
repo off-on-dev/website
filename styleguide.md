@@ -66,7 +66,7 @@ Only Latin subset variants are preloaded. Other subsets are served from `public/
 |---|---|---|
 | H1 | `text-4xl font-bold` md:`text-5xl` | Syne, weight 700 |
 | H2 | `text-3xl font-bold` md:`text-4xl` | Syne, weight 700 |
-| H3 | `text-lg font-semibold` | Inter, weight 600 |
+| H3 | `text-lg font-semibold` | Inter, weight 700 (base layer); apply `font-semibold` to override to 600 |
 | Body | `text-base` | Inter, weight 400 |
 | Small / caption | `text-sm` | Inter, weight 400 |
 | Overline label | `font-sans text-sm font-medium uppercase tracking-widest` | Inter |
@@ -297,7 +297,7 @@ All animation classes are defined inside `@media (prefers-reduced-motion: no-pre
 
 ### Firefly particles
 
-`.firefly` - 2×2 px dot with `box-shadow` glow in `--primary` color, animated with `fireflyFloat` inside `@media (prefers-reduced-motion: no-preference)` (8 particles, varying `animation-duration` 5.5–8.5 s and `animation-delay`). `will-change: transform, opacity` is applied only to the first three particles to stay within the ≤3 simultaneous limit. In light mode, `.light .firefly` keeps the same 2×2 px size but switches `background-color` and `box-shadow` to `--firefly-color` (`41 100% 45%`, slightly darker amber) for contrast against the light background.
+`.firefly` - 2×2 px dot with `box-shadow` glow in `--primary` color, animated with `fireflyFloat` inside `@media (prefers-reduced-motion: no-preference)` (8 particles, varying `animation-duration` 5.5–8.5 s and `animation-delay`). `will-change: transform, opacity` is applied only to the first three particles to stay within the ≤3 simultaneous limit. In light mode, `.light .firefly` keeps the same 2×2 px size but switches `background-color` and `box-shadow` to `--firefly-color` (`41 100% 45%`, slightly darker amber) for contrast against the light background. Under `prefers-reduced-motion: reduce`, fireflies are hidden entirely (`display: none`) — not just unanimated — because the glowing dots are purely decorative and serve no informational purpose when static.
 
 ---
 
@@ -328,6 +328,8 @@ focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-vi
 Adjust `ring-offset-1` for inline elements or `ring-offset-2` for block elements as appropriate.
 
 Always use `ring-ring`, never `ring-primary/xx`. The `--ring` token is theme-aware: dark mode amber (`41 100% 60%`), light mode dark amber (`41 100% 35%`, hex `#B37700`) for WCAG AA contrast in both modes.
+
+Focus indicators must meet a minimum 3:1 contrast ratio against adjacent colors (WCAG 2.4.11). Verify in both light and dark mode whenever the surrounding background changes. See [ACCESSIBILITY.md](ACCESSIBILITY.md) for the full contrast checklist.
 
 ---
 
@@ -363,7 +365,7 @@ Every page must support keyboard bypass of the navigation bar (WCAG 2.4.1).
 
 `src/hooks/useTheme.tsx`
 
-Manages the light/dark theme. Applies `.light` or `.dark` class to the `<html>` element and persists the choice in `localStorage` under the key `theme`.
+Manages the light/dark theme. Applies `.light` or `.dark` class to the `<html>` element and persists the choice in `localStorage` under the key `theme`. All `localStorage` access is wrapped in `try/catch` so the hook degrades gracefully in private browsing or when storage is unavailable.
 
 ```ts
 const { theme, toggle } = useTheme();
@@ -374,7 +376,9 @@ const { theme, toggle } = useTheme();
 | `theme` | `"light" \| "dark"` | Current active theme |
 | `toggle()` | `() => void` | Toggle between light and dark and persist the choice |
 
-The default is dark. All light mode color overrides live in `src/index.css` as unlayered CSS rules scoped to `.light`. Never place light mode overrides inside `@layer base`, as they would be silently overridden by `@layer utilities`.
+The default is dark, with one exception: if no preference is stored and `window.matchMedia('(prefers-color-scheme: light)').matches`, the hook initialises to light on first load. User preference (stored in `localStorage`) always takes precedence over the OS-level preference. All light mode color overrides live in `src/index.css` as unlayered CSS rules scoped to `.light`. Never place light mode overrides inside `@layer base`, as they would be silently overridden by `@layer utilities`.
+
+Theme changes are announced to screen readers via a `ThemeAnnouncer` component (private, mounted in `Layout.tsx`) that uses `role="status" aria-live="polite"`. The announcer skips the initial mount to avoid announcing the default theme on page load.
 
 ---
 
@@ -456,12 +460,12 @@ Currently used in: `src/hooks/useTheme.tsx`, `src/components/WalkthroughSection.
 
 `src/hooks/useDiscussionPosts.ts`
 
-Loads Discourse posts for a single adventure level from its per-level JSON file at `src/data/adventures/<adventureId>/<levelId>-posts.json` (refreshed daily by the GitHub Action). Returns `{ posts, totalReplies, solvers }`. The `cooked` field is pre-stripped plain text; HTML is removed by the refresh script before the JSON is written. All three fields are empty until data loads or if the file does not exist.
+Loads Discourse posts for a single adventure level from its per-level JSON file at `src/data/adventures/<adventureId>/<levelId>-posts.json` (refreshed daily by the GitHub Action). Returns `{ posts, totalReplies, solvers, loaded }`. The `cooked` field is pre-stripped plain text; HTML is removed by the refresh script before the JSON is written. All four fields start at their empty defaults until the async load completes or if the file does not exist.
 
 ```ts
-const { posts, totalReplies, solvers } = useDiscussionPosts(adventureId, levelId);
+const { posts, totalReplies, solvers, loaded } = useDiscussionPosts(adventureId, levelId);
 // or, in tests:
-const { posts, totalReplies, solvers } = useDiscussionPosts(adventureId, levelId, mockLoader);
+const { posts, totalReplies, solvers, loaded } = useDiscussionPosts(adventureId, levelId, mockLoader);
 ```
 
 | Argument | Type | Description |
@@ -470,7 +474,7 @@ const { posts, totalReplies, solvers } = useDiscussionPosts(adventureId, levelId
 | `levelId` | `string` | Level slug (e.g. `"beginner"`). |
 | `loader` | `DiscussionDataLoader` (optional) | Async function that returns `{ discussionPosts?, totalReplies?, solvers? }`. Defaults to a `import.meta.glob` import of the per-level JSON. Pass a `vi.fn().mockResolvedValue(data)` in tests; see the Testing section of `CLAUDE.md` for the injectable-loader pattern. |
 
-`DiscussionResult` shape: `posts: PostWithAge[]`, `totalReplies: number`, `solvers: Solver[]`. `PostWithAge` is `StoredPost & { age: string }`. `Solver` has `username`, `avatarUrl?`, `solvedAt`.
+`DiscussionResult` shape: `posts: PostWithAge[]`, `totalReplies: number`, `solvers: Solver[]`, `loaded: boolean`. `PostWithAge` is `StoredPost & { age: string }`. `Solver` has `username`, `avatarUrl?`, `solvedAt`. Gate content rendering on `loaded` to prevent a flash of empty state before data arrives.
 
 **Why the injectable loader?** Vitest's dynamic-import mock runner has a multi-second first-call cost per test run. Injecting a mock loader bypasses it entirely. `vi.spyOn` on the module export does NOT work for same-module calls in ES module context.
 
@@ -1437,7 +1441,7 @@ Never put a raw SVG icon next to text inside a plain `inline` or `block` element
 |---|---|---|
 | External link (opens in new tab) | `ExternalLink` | All `<a target="_blank">` links: Navbar, BottomCTA, Hero, CommunityGuide, LevelCard, DiscussionSection, LinkSection, LeaderboardList, Privacy, and more |
 | Navigate forward / CTA | `ArrowRight` | Internal `<Link>` navigation only (OtherLevelsCard, SponsorStrip, AdventureDetail) |
-| Navigate back | `ArrowLeft` | ChallengeDetail breadcrumb |
+| Breadcrumb separator | `ChevronRight` | `Breadcrumb.tsx` — rendered between each breadcrumb item |
 | Scroll down / anchor | `ArrowDown` | Hero primary CTA |
 | Community Voices card | `Megaphone` | CommunitySection card icon |
 | Q&A card | `CircleHelp` | CommunitySection card icon |
@@ -1468,13 +1472,13 @@ When adding a new brand SVG: place it inline, set `aria-hidden="true"` on the `<
 
 ### `.section-label`
 
-A utility class for decorative overline labels that appear above section headings or page content areas.
+A CSS selector hook for decorative overline labels that appear above section headings or page content areas. The class itself has no base CSS styles — all visual styling comes from the Tailwind utilities applied alongside it. The class exists solely so the light-mode override can target it.
 
 Applied as: `font-sans text-sm font-medium uppercase tracking-widest text-primary section-label`
 
-Used on `<span>` elements in: `CommunitySection`, `ChallengesGrid`, `NotFound`.
+Used on `<span>` elements via the `SectionLabel` component in: `CommunitySection`, `ChallengesGrid`, `NotFound`.
 
-**Light mode override:** `.light .section-label` in the unlayered section of `src/index.css` sets `color: hsl(240 20% 9%)` (near-black) so the label does not render as yellow text in light mode.
+**Light mode override:** `.light .section-label` in the unlayered section of `src/index.css` sets `color: hsl(240 20% 9%)` (near-black) so the label does not render as yellow text in light mode. This is the only CSS rule for `.section-label` in `src/index.css`.
 
 ---
 
