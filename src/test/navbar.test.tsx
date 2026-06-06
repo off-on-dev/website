@@ -32,20 +32,21 @@ beforeEach(() => {
 describe("Navbar - logo", () => {
   it("renders both logo images (dark and light) in the DOM", () => {
     renderNavbar();
-    const logoLink = screen.getByRole("link", { name: "offon.dev" });
+    const logoLink = screen.getByRole("link", { name: "offon.dev home" });
     const imgs = logoLink.querySelectorAll("img");
     expect(imgs).toHaveLength(2);
-    // Dark logo: meaningful alt text for SEO, no aria-hidden per ACCESSIBILITY.md rule
-    expect(imgs[0].getAttribute("alt")).toBe("offon.dev");
+    // Both images are decorative — the link's aria-label="offon.dev home" is the accessible name.
+    // Dark logo: alt="" so screen readers don't double-announce the site name.
+    expect(imgs[0].getAttribute("alt")).toBe("");
     expect(imgs[0].getAttribute("aria-hidden")).toBeNull();
-    // Light logo: decorative (dark logo carries the alt), aria-hidden required
+    // Light logo: alt="" and aria-hidden="true" (fully suppressed).
     expect(imgs[1].getAttribute("alt")).toBe("");
     expect(imgs[1].getAttribute("aria-hidden")).toBe("true");
   });
 
   it("logo link navigates to home (/)", () => {
     renderNavbar();
-    const logoLink = screen.getByRole("link", { name: "offon.dev" });
+    const logoLink = screen.getByRole("link", { name: "offon.dev home" });
     expect(logoLink.getAttribute("href")).toBe("/");
   });
 });

@@ -25,6 +25,8 @@ export const ChallengeFilters = ({
   const [tagsOpen, setTagsOpen] = useState(false);
   const difficultyRef = useRef<HTMLDivElement>(null);
   const tagsRef = useRef<HTMLDivElement>(null);
+  const difficultyTriggerRef = useRef<HTMLButtonElement>(null);
+  const tagsTriggerRef = useRef<HTMLButtonElement>(null);
   const difficultyGroupId = useId();
   const tagsGroupId = useId();
 
@@ -94,6 +96,7 @@ export const ChallengeFilters = ({
         {/* Difficulty dropdown */}
         <div className="relative" ref={difficultyRef}>
           <button
+            ref={difficultyTriggerRef}
             type="button"
             onClick={() => { setDifficultyOpen((o) => !o); setTagsOpen(false); }}
             aria-expanded={difficultyOpen}
@@ -118,7 +121,7 @@ export const ChallengeFilters = ({
               className="absolute top-full left-0 z-20 mt-2 min-w-[160px] rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-1.5 shadow-lg"
             >
               <button type="button" aria-pressed={activeDifficulty === null}
-                onClick={() => { onDifficultyChange(null); setDifficultyOpen(false); }}
+                onClick={() => { onDifficultyChange(null); setDifficultyOpen(false); difficultyTriggerRef.current?.focus(); }}
                 onKeyDown={navigatePanel}
                 className={dropdownItemClass(activeDifficulty === null)}
               >
@@ -129,7 +132,7 @@ export const ChallengeFilters = ({
                 const isActive = activeDifficulty === diff;
                 return (
                   <button key={diff} type="button" aria-pressed={isActive}
-                    onClick={() => { handleDifficultyClick(diff); setDifficultyOpen(false); }}
+                    onClick={() => { handleDifficultyClick(diff); setDifficultyOpen(false); difficultyTriggerRef.current?.focus(); }}
                     onKeyDown={navigatePanel}
                     className={dropdownItemClass(isActive)}
                   >
@@ -144,6 +147,7 @@ export const ChallengeFilters = ({
         {/* Tags dropdown */}
         <div className="relative" ref={tagsRef}>
           <button
+            ref={tagsTriggerRef}
             type="button"
             onClick={() => { setTagsOpen((o) => !o); setDifficultyOpen(false); }}
             aria-expanded={tagsOpen}
@@ -168,7 +172,7 @@ export const ChallengeFilters = ({
               className="absolute top-full left-0 z-20 mt-2 min-w-[200px] rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-1.5 shadow-lg"
             >
               <button type="button" aria-pressed={activeTopics.length === 0}
-                onClick={() => { onTopicsChange([]); setTagsOpen(false); }}
+                onClick={() => { onTopicsChange([]); setTagsOpen(false); tagsTriggerRef.current?.focus(); }}
                 onKeyDown={navigatePanel}
                 className={dropdownItemClass(activeTopics.length === 0)}
               >
@@ -179,7 +183,7 @@ export const ChallengeFilters = ({
                 const isActive = activeTopics.includes(tag);
                 return (
                   <button key={tag} type="button" aria-pressed={isActive}
-                    onClick={() => { handleTagClick(tag); setTagsOpen(false); }}
+                    onClick={() => { handleTagClick(tag); setTagsOpen(false); tagsTriggerRef.current?.focus(); }}
                     onKeyDown={navigatePanel}
                     className={dropdownItemClass(isActive)}
                   >
