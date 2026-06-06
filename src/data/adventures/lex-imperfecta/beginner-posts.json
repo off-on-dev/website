@@ -6,6 +6,7 @@
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/maheedhar132/40/339_2.png",
       "cooked": "Just finished the challenge",
       "created_at": "2026-06-05T13:56:52.389Z",
+      "challengeSolved": true,
       "topicUrl": "https://community.offon.dev/t/restore-proper-admission-control-using-kyverno-june-2026-adventure-beginner/1576"
     },
     {
@@ -24,5 +25,11 @@
     }
   ],
   "totalReplies": 3,
-  "solvers": []
+  "solvers": [
+    {
+      "username": "maheedhar132",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/maheedhar132/40/339_2.png",
+      "solvedAt": "2026-06-05T13:56:52.389Z"
+    }
+  ]
 }
