@@ -17,7 +17,7 @@ export const links: LinksFunction = () => [
 ];
 
 // Inline script strings extracted to constants so tests can assert ordering in this file.
-const themeScript = `(function(){try{var t=localStorage.getItem("theme");if(t==="light"){document.documentElement.classList.remove("dark");document.documentElement.classList.add("light");}else if(!t&&window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches){document.documentElement.classList.remove("dark");document.documentElement.classList.add("light");}}catch(e){}})();`;
+const themeScript = `(function(){try{var t=localStorage.getItem("theme");if(t==="light"){document.documentElement.classList.remove("dark");document.documentElement.classList.add("light");}}catch(e){}})();`;
 
 // Gated-load Consent Mode v2. The inline bootstrap does the bare minimum and
 // nothing more: bootstrap dataLayer, define window.gtag as the push shim, and

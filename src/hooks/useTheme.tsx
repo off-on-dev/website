@@ -23,8 +23,6 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }): JSX.
       const stored = localStorage.getItem(THEME_STORAGE_KEY);
       if (stored === "light") {
         startTransition(() => setTheme("light"));
-      } else if (!stored && window.matchMedia?.("(prefers-color-scheme: light)").matches) {
-        startTransition(() => setTheme("light"));
       }
     } catch {
       // localStorage unavailable; keep default dark theme

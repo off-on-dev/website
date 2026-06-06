@@ -376,7 +376,7 @@ const { theme, toggle } = useTheme();
 | `theme` | `"light" \| "dark"` | Current active theme |
 | `toggle()` | `() => void` | Toggle between light and dark and persist the choice |
 
-The default is dark, with one exception: if no preference is stored and `window.matchMedia('(prefers-color-scheme: light)').matches`, the hook initialises to light on first load. User preference (stored in `localStorage`) always takes precedence over the OS-level preference. All light mode color overrides live in `src/index.css` as unlayered CSS rules scoped to `.light`. Never place light mode overrides inside `@layer base`, as they would be silently overridden by `@layer utilities`.
+The default is dark. If no preference is stored, the hook initialises to dark regardless of the OS-level `prefers-color-scheme` setting. User preference (stored in `localStorage` under `THEME_STORAGE_KEY`) always takes precedence. All light mode color overrides live in `src/index.css` as unlayered CSS rules scoped to `.light`. Never place light mode overrides inside `@layer base`, as they would be silently overridden by `@layer utilities`.
 
 Theme changes are announced to screen readers via a `ThemeAnnouncer` component (private, mounted in `Layout.tsx`) that uses `role="status" aria-live="polite"`. The announcer skips the initial mount to avoid announcing the default theme on page load.
 
