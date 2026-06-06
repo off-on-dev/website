@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from "react-router";
 import { useEffect, useRef, useState, type JSX } from "react";
-import { ThemeProvider } from "@/hooks/useTheme";
+import { ThemeProvider, useTheme } from "@/hooks/useTheme";
 import { ConsentBanner } from "@/components/ConsentBanner";
 import { ConsentProvider, useConsent } from "@/hooks/useConsent";
 import { useClickTracking } from "@/hooks/useClickTracking";
@@ -88,6 +88,30 @@ const RouteAnnouncer = (): JSX.Element => {
   );
 };
 
+// Announces theme changes to screen readers. Skips the initial mount to avoid
+// announcing the default theme on page load.
+const ThemeAnnouncer = (): JSX.Element => {
+  const { theme } = useTheme();
+  const [announcement, setAnnouncement] = useState("");
+  const hasMounted = useRef(false);
+
+  useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
+    setAnnouncement(theme === "dark" ? "Switched to dark mode" : "Switched to light mode");
+    const t = setTimeout(() => setAnnouncement(""), 1000);
+    return () => clearTimeout(t);
+  }, [theme]);
+
+  return (
+    <span role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+      {announcement}
+    </span>
+  );
+};
+
 export function Layout(): JSX.Element {
   return (
     <ThemeProvider>
@@ -97,6 +121,7 @@ export function Layout(): JSX.Element {
         </a>
         <ScrollToTop />
         <RouteAnnouncer />
+        <ThemeAnnouncer />
         <PageViewTracker />
         <ClickTracker />
         <ConsentBanner />

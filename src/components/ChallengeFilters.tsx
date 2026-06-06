@@ -47,13 +47,18 @@ export const ChallengeFilters = ({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
       if (e.key === "Escape") {
-        setDifficultyOpen(false);
-        setTagsOpen(false);
+        if (difficultyOpen) {
+          setDifficultyOpen(false);
+          difficultyTriggerRef.current?.focus();
+        } else if (tagsOpen) {
+          setTagsOpen(false);
+          tagsTriggerRef.current?.focus();
+        }
       }
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [difficultyOpen, tagsOpen]);
 
   const handleDifficultyClick = (diff: Difficulty): void => {
     onDifficultyChange(activeDifficulty === diff ? null : diff);
@@ -81,7 +86,7 @@ export const ChallengeFilters = ({
   };
 
   const dropdownItemClass = (isActive: boolean): string => cn(
-    "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-left transition-colors",
+    "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
     isActive
       ? "text-primary bg-primary/10"
       : "text-[hsl(var(--text-secondary))] hover:bg-primary/5 hover:text-foreground dark:hover:text-primary"

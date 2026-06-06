@@ -67,7 +67,7 @@ Simulates a user who navigates entirely by audio output.
 - Every interactive element is announced with its role and accessible name.
 - Dynamic content updates (filters, route changes, consent state) are announced without forcibly moving focus.
 - Heading order matches the visual reading order with no skipped levels.
-- `aria-current="page"` is set on the active nav link.
+- `aria-current="page"` is set on the active nav link, paired with a visible indicator (color change or underline). Never rely on `aria-current` alone — it is invisible to sighted users.
 - No vague or duplicate link text ("view", "read more", "click here" alone).
 
 #### 2. Power Keyboard User (motor limit)
@@ -212,10 +212,25 @@ Apply this to every component you write or modify.
 
 ### Keyboard navigation
 
+Use the correct keys for each control type:
+
+| Control | Required keys |
+|---|---|
+| Button | `Enter`, `Space` |
+| Link | `Enter` |
+| Checkbox | `Space` to toggle |
+| Radio group | Arrow keys to move; `Space` to select |
+| Dialog | `Escape` to close; focus trapped inside while open |
+| Tab widget | Arrow keys between tabs; `Enter`/`Space` to activate |
+| Combobox | Arrow keys in list; `Enter` to select; `Escape` to collapse |
+
 - Every interactive element must be reachable and operable via keyboard.
 - Tab order must follow a logical reading order.
 - Never remove focus outlines.
-- Modals must trap focus while open and return focus on close. Use shadcn `Dialog`.
+- Modals must trap focus while open and return focus to the trigger on close. Use shadcn `Dialog`: verify `inert` is applied to background content, `Escape` closes the modal, and focus moves to the first interactive element on open.
+- Dropdown menus must use the Disclosure pattern: `<button aria-expanded="false" aria-controls="submenu-id">` toggling a `<ul id="submenu-id" hidden>`. `Escape` must close the dropdown and return focus to the trigger. Hover-triggered dropdowns must not vanish immediately — use a CSS `transition-delay` of at least 200ms.
+- Composite widgets (toolbars, radio groups, tab lists) must use roving tabindex so only one item is in the tab stop at a time and arrow keys move within the group. See [WAI-ARIA APG: Roving tabindex](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_roving_tabindex).
+- If sticky headers or floating elements exist, ensure focused elements are not fully hidden behind them (WCAG 2.4.12 Focus Not Obscured). Add to CSS: `:focus-visible { scroll-margin-top: var(--sticky-header-height, 4rem); }`
 
 ### Touch targets
 
@@ -226,11 +241,13 @@ Apply this to every component you write or modify.
 
 - All animations and transitions must respect `prefers-reduced-motion`.
 - Wrap motion in `@media (prefers-reduced-motion: no-preference)` in CSS, or check `window.matchMedia('(prefers-reduced-motion: reduce)')` before triggering JS-driven animation.
+- Also respect `prefers-contrast: more` (users requiring higher contrast) and `forced-colors: active` (Windows High Contrast Mode) in any component that communicates state through color or opacity alone. See the Windows High Contrast Mode section.
 
 ### Semantic HTML
 
 - Use the correct element for the job (`<button>` for actions, `<a>` for navigation, `<nav>`, `<main>`, `<header>`, `<footer>`, `<article>`, `<section>`).
 - Never use a `<div>` or `<span>` as an interactive element.
+- Never use `role="menu"` or `role="menuitem"` on site navigation. These roles put screen readers into application mode where arrow keys replace Tab, breaking web navigation expectations. Use native `<a>` elements inside `<nav>` instead.
 - One `<h1>` per page. No skipped heading levels.
 - Every `<section>` and `<article>` must have an accessible name via `aria-labelledby` pointing to its heading, or `aria-label` if there is no visible heading. An unnamed `<section>` is not exposed as a landmark to screen readers.
 - Never apply overline/label typography (`text-sm uppercase tracking-widest`) to a heading tag. If the text is a genuine section heading, give it heading-appropriate typography. If it is purely decorative, use `<span>` or `<p>`.
@@ -256,6 +273,7 @@ Apply this to every component you write or modify.
 - Every link's text must describe its destination. Never use "click here", "read more", or "more" alone as link text.
 - When link text is ambiguous in isolation (e.g. "View" repeated on every card), add `aria-label` on the `<a>` to provide a full, descriptive accessible name.
 - Every `<a>` element must have an accessible name (text content, `aria-label`, or `aria-labelledby`). An `<a>` with no accessible name is invisible to screen readers and cannot be operated by voice control.
+- When using `aria-label` on a link, include the visible link text in the label. Voice control users speak visible text to activate links; if the accessible name does not contain that text, the link cannot be activated by voice (WCAG 2.5.3 Label in Name).
 
 ### Icons and special characters
 
@@ -287,6 +305,7 @@ Apply this to every component you write or modify.
 - Use `role="alert"` (implicit `aria-live="assertive"`) only for errors requiring immediate attention. Never use `aria-live="assertive"` for informational updates.
 - Use `aria-expanded` on toggles that open/close UI.
 - Always add `aria-label` or `aria-labelledby` to icon-only buttons.
+- Preference toggles (theme, consent): announce state changes to screen readers with a `role="status"` live region. Clear the region then set new text after a 50ms delay so screen readers detect the change as a mutation: `region.textContent = ''` → `setTimeout(() => { region.textContent = 'Theme switched to dark mode'; }, 50)`.
 
 ### Tooltips
 
@@ -345,9 +364,25 @@ This site uses Radix UI's `<Tooltip>` primitive (via `src/components/ui/tooltip.
 
 Use this to identify which criterion applies before writing or reviewing code.
 
-| Principle | What to verify |
-|---|---|
-| **Perceivable (1.x)** | Every non-text element has a text alternative. Color is not the only means of conveying information. |
-| **Operable (2.x)** | Every interactive element is keyboard-operable. No keyboard trap. Focus indicator is always visible. Touch targets are large enough. Motion can be disabled. |
-| **Understandable (3.x)** | Error messages identify the field, describe the error, and suggest a correction. State is never communicated by color alone. |
-| **Robust (4.x)** | ARIA usage is valid for the host element. Dynamic content updates are announced without forcibly moving focus. |
+| Principle | Criterion | What to verify |
+|---|---|---|
+| **Perceivable (1.x)** | 1.1.1 Non-text Content (A) | Every image, icon, and non-text element has a text alternative or `aria-hidden`. |
+| | 1.3.1 Info and Relationships (A) | Structure conveyed visually is also in markup (headings, lists, tables). |
+| | 1.4.3 Contrast (AA) | Normal text 4.5:1, large text 3:1 against background. |
+| | 1.4.4 Resize Text (AA) | Text readable at 200% zoom. Never `user-scalable=no`. |
+| | 1.4.10 Reflow (AA) | No horizontal scroll at 400% zoom (320px viewport). |
+| | 1.4.11 Non-text Contrast (AA) | UI components and focus indicators: 3:1 against adjacent colors. |
+| **Operable (2.x)** | 2.1.1 Keyboard (A) | All functionality is keyboard-accessible. |
+| | 2.1.2 No Keyboard Trap (A) | Focus is never permanently trapped; `Escape` exits modals and dropdowns. |
+| | 2.3.1 Three Flashes (A) | No content flashes more than 3 times per second. |
+| | 2.4.1 Bypass Blocks (A) | Skip link is the first focusable element on every page. |
+| | 2.4.3 Focus Order (A) | Tab order follows logical reading order. |
+| | 2.4.7 Focus Visible (AA) | All focusable elements have a visible focus indicator. |
+| | 2.4.11 Focus Appearance (AA, WCAG 2.2) | Focus indicator is at least 2px, with 3:1 contrast against adjacent colors. |
+| | 2.4.12 Focus Not Obscured (AA, WCAG 2.2) | Focused elements are not fully hidden by sticky headers or overlays. |
+| | 2.5.3 Label in Name (A) | Accessible name contains the visible text (required for voice control). |
+| | 2.5.8 Target Size Minimum (AA, WCAG 2.2) | Touch targets are at least 24×24px. |
+| **Understandable (3.x)** | 3.1.1 Language of Page (A) | `<html lang="en">` is set. |
+| | 3.3.1 Error Identification (A) | Error messages identify the field and describe the error. |
+| | 3.3.2 Labels or Instructions (A) | Form fields have labels; placeholders are not substitutes. |
+| **Robust (4.x)** | 4.1.2 Name, Role, Value (A) | ARIA roles and attributes are valid. Dynamic state (`aria-expanded`, `aria-current`) is kept in sync. |

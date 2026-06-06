@@ -18,6 +18,8 @@ Project-level Claude Code skills live in `.claude/skills/`. Invoke them with `/s
 
 The `spec-first-coding` skill is installed globally (`~/.claude/skills/`) and is not in this repo. It enforces W3C spec citations before generating any accessibility-related code.
 
+Use `/a11y-audit` for all accessibility audits in this repo. It supersedes the global `/a11y` skill with a more structured pipeline specific to this project.
+
 ---
 
 ## Icons
@@ -346,7 +348,7 @@ All analytics-related constants live in `src/data/constants.ts`:
 - Use `@testing-library/react` for component tests. Test from the user's perspective, not implementation details.
 - Test files live in `src/test/` or co-located alongside the module as `*.test.ts(x)`.
 - Write tests for all logic in `src/lib/` and `src/hooks/`. Target 80% coverage for new utility and hook files.
-- Visual components do not require tests unless they contain non-trivial logic.
+- Pure visual components (no state, no side effects) do not require tests. A visual component that holds state or has side effects is not a pure visual component and must have tests.
 - Prefer `getByRole` and `getByLabelText` queries over `getByTestId`. They also validate accessibility.
 - Never ship code that causes test or lint failures.
 - Every new hook, utility function, or stateful component must have tests covering the happy path, edge cases, and all state transitions.
@@ -360,6 +362,7 @@ All analytics-related constants live in `src/data/constants.ts`:
 - When a page renders multiple navigation landmarks, use `within` from `@testing-library/react` to scope queries to the correct landmark before asserting link destinations.
 - **Testing hooks with dynamic imports:** Never use `vi.mock` for a dynamic import called inside a hook. Export a loader type and default loader; tests inject `vi.fn().mockResolvedValue(data)` via an optional argument. See `src/hooks/useDiscussionPosts.ts` for the reference implementation.
 - **Coverage:** run `npm run test:coverage` for v8 coverage reports. `@vitest/coverage-v8` is installed as a dev dependency.
+- **Axe incomplete flags:** When axe reports an "Incomplete" or "Needs Review" result, provide a definitive manual ruling (confirmed violation, confirmed pass, or cannot determine without AT testing) before merging. Do not leave incomplete flags unresolved. Use `/a11y-audit` to evaluate in context.
 
 ---
 
@@ -382,6 +385,7 @@ Whether or not the site is prerendered today, these patterns cause bugs. They pr
 
 - Anything that depends on `localStorage`, `matchMedia`, or similar must produce the same initial render as a fresh visitor with no stored state.
 - For theme and consent state: always render the default (dark, no-consent) on first render, then update in an effect.
+- Always wrap `localStorage` reads and writes in `try/catch`. Storage throws in private browsing and when quota is exceeded.
 
 ### No IntersectionObserver or ResizeObserver at render time
 
@@ -413,6 +417,15 @@ const [hasFiltered, setHasFiltered] = useState(() => searchParams.has("topics"))
 const [hasFiltered, setHasFiltered] = useState(false);
 useEffect(() => { if (searchParams.has("topics")) setHasFiltered(true); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 ```
+
+### JavaScript degradation testing
+
+Core content must be readable with JavaScript disabled. To verify: DevTools → Cmd+Shift+P → "Disable JavaScript" → reload the page.
+
+- Page headings, body text, images, and navigation links must be visible and functional.
+- Filters, theme toggle, and consent banner may degrade gracefully — they are JS-enhanced features.
+- Challenge and adventure text, navigation, and all other primary page content must not be exclusively client-side rendered.
+- Run `npm run build` and confirm all content appears in the prerendered HTML files in `dist/client/`.
 
 ---
 
@@ -625,7 +638,7 @@ Every code change must pass all of these checks before being considered done. St
 
 1. **Run lint:** `npm run lint` must exit with zero errors.
 2. **Run tests:** `npm test` must pass with zero failures.
-3. **Run e2e and a11y tests:** `npm run build && npm run test:e2e` must pass with zero failures. The axe audit runs tags `["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"]` in both light and dark mode. Never reduce this tag set.
+3. **Run e2e and a11y tests:** `npm run build && npm run test:e2e` must pass with zero failures. The axe audit runs tags `["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"]` in both light and dark mode. Never reduce this tag set. Axe catches roughly 30–40% of real issues — treat it as ground truth for mechanical violations, but manual persona testing (see ACCESSIBILITY.md) is always required.
 4. **Run build:** `npm run build` must complete with no TypeScript errors or bundling failures.
 5. **Re-read every file you changed:** verify the final state is correct. Never assume an edit landed correctly without checking.
 6. **Check all call sites:** if you changed a function signature, component props, or exported type, search for all usages and confirm they are updated.

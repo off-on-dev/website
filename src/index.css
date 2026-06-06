@@ -457,6 +457,10 @@ html {
 @media (max-width: 639px) {
   .firefly:nth-child(n+7) { display: none; }
 }
+/* Hide fireflies entirely for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .firefly { display: none; }
+}
 
 /* ─── Component classes ──────────────────────────────────── */
 
