@@ -43,7 +43,7 @@ const discussionModules = import.meta.glob("@/data/adventures/**/*-posts.json");
 
 // Default loader dynamically imports the per-level JSON file.
 // Each level JSON is expected to have optional `discussionPosts` and
-// `totalReplies` fields, populated by the daily GitHub Action.
+// `totalReplies` fields, populated by the hourly GitHub Action.
 const defaultLoader: DiscussionDataLoader = async (adventureId, levelId) => {
   const key = `/src/data/adventures/${adventureId}/${levelId}-posts.json`;
   const loader = discussionModules[key];
@@ -65,7 +65,7 @@ export type DiscussionResult = {
  * @param adventureId - The adventure slug (e.g. "echoes-lost-in-orbit").
  * @param levelId - The level slug (e.g. "beginner").
  * @param loader - Optional loader for testing; defaults to dynamically importing the level JSON.
- * @returns Object with posts array and totalReplies count.
+ * @returns Object with posts array, totalReplies count, solvers list, and a loaded flag.
  */
 export function useDiscussionPosts(
   adventureId: string,

@@ -11,7 +11,7 @@ export type ToolboxItem = {
   url?: string;
 }
 
-/** One step in the Walkthrough section. content is rendered as markdown so it can contain code blocks and links. */
+/** One step in the Walkthrough section. content is pre-rendered HTML generated at build time and rendered via dangerouslySetInnerHTML in MarkdownContent. */
 export type WalkthroughStep = {
   title: string;
   content: string;
@@ -30,7 +30,7 @@ export type HelpfulLink = {
   description?: string;
 }
 
-/** Mock entry in the "Top players" leaderboard inside the CommunitySidebar. */
+/** A player entry for the top-players leaderboard. Currently defined on AdventureLevel but not consumed by any component. */
 export type TopPlayer = {
   username: string;
   count: number;
@@ -86,8 +86,8 @@ export type AdventureLevel = {
   verification: VerificationInfo;
   // Optional SEO meta description (max 160 chars). When absent, ChallengeDetail.tsx generates one from level name, intro, and topics.
   metaDescription?: string;
-  // Mock community stats shown in the CommunitySidebar. Real data will replace
-  // these once we aggregate certificate posts and cross-challenge contribution.
+  // Unused fields — real solver and leaderboard data is fetched at runtime by
+  // useDiscussionPosts and useAdventureLeaderboard. No component reads these.
   solvedCount?: number;
   topPlayers?: TopPlayer[];
 }
