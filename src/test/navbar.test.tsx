@@ -138,15 +138,15 @@ describe("Navbar - mobile menu", () => {
     expect(hamburger.getAttribute("aria-expanded")).toBe("false");
   });
 
-  it("mobile menu drawer is not rendered initially", () => {
+  it("mobile menu drawer is hidden initially", () => {
     renderNavbar();
-    expect(document.getElementById("mobile-menu")).toBeNull();
+    expect(document.getElementById("mobile-menu")?.hasAttribute("hidden")).toBe(true);
   });
 
-  it("clicking the hamburger opens the mobile menu", () => {
+  it("clicking the hamburger reveals the mobile menu", () => {
     renderNavbar();
     fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
-    expect(document.getElementById("mobile-menu")).toBeTruthy();
+    expect(document.getElementById("mobile-menu")?.hasAttribute("hidden")).toBe(false);
   });
 
   it("hamburger button has aria-expanded='true' when menu is open", () => {
@@ -160,7 +160,7 @@ describe("Navbar - mobile menu", () => {
     renderNavbar();
     fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
     fireEvent.click(screen.getByRole("button", { name: /Close menu/i }));
-    expect(document.getElementById("mobile-menu")).toBeNull();
+    expect(document.getElementById("mobile-menu")?.hasAttribute("hidden")).toBe(true);
   });
 
   it("mobile menu contains navigation links when open", () => {
@@ -181,9 +181,9 @@ describe("Navbar - mobile menu", () => {
   it("pressing Escape closes the mobile menu", () => {
     renderNavbar();
     fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
-    expect(document.getElementById("mobile-menu")).toBeTruthy();
+    expect(document.getElementById("mobile-menu")?.hasAttribute("hidden")).toBe(false);
     fireEvent.keyDown(document, { key: "Escape" });
-    expect(document.getElementById("mobile-menu")).toBeNull();
+    expect(document.getElementById("mobile-menu")?.hasAttribute("hidden")).toBe(true);
   });
 
   it("pressing Escape returns focus to the hamburger button", () => {

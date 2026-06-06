@@ -31,22 +31,34 @@ type NavLinksProps = {
 };
 
 const NavLinks = ({ onNavigate }: NavLinksProps): JSX.Element => (
-  <>
-    <NavLink to="/challenges/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Challenges</NavLink>
-    <NavLink to="/about/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>About</NavLink>
-    <a
-      href={COMMUNITY_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={linkCls}
-      onClick={onNavigate}
-    >
-      Community <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-    </a>
-    <NavLink to="/contribute/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Contribute</NavLink>
-    <NavLink to="/handbook/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Handbook</NavLink>
-    <NavLink to="/sponsors/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Sponsors</NavLink>
-  </>
+  <ul role="list" className="contents">
+    <li className="contents">
+      <NavLink to="/challenges/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Challenges</NavLink>
+    </li>
+    <li className="contents">
+      <NavLink to="/about/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>About</NavLink>
+    </li>
+    <li className="contents">
+      <a
+        href={COMMUNITY_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={linkCls}
+        onClick={onNavigate}
+      >
+        Community <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+      </a>
+    </li>
+    <li className="contents">
+      <NavLink to="/contribute/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Contribute</NavLink>
+    </li>
+    <li className="contents">
+      <NavLink to="/handbook/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Handbook</NavLink>
+    </li>
+    <li className="contents">
+      <NavLink to="/sponsors/" className={linkCls} activeClassName={activeCls} onClick={onNavigate}>Sponsors</NavLink>
+    </li>
+  </ul>
 );
 
 export const Navbar = (): JSX.Element => {
@@ -155,15 +167,18 @@ export const Navbar = (): JSX.Element => {
         </div>
       </div>
 
-      {/* Mobile menu drawer */}
-      {menuOpen && (
-        <div
-          id="mobile-menu"
-          className="md:hidden border-t border-[hsl(var(--surface-border))] bg-background px-6 py-2 flex flex-col gap-1"
-        >
-          <NavLinks onNavigate={closeMenu} />
-        </div>
-      )}
+      {/* Mobile menu drawer — always in the DOM so aria-controls has a valid target */}
+      <nav
+        id="mobile-menu"
+        aria-label="Mobile navigation"
+        hidden={!menuOpen}
+        className={cn(
+          "md:hidden border-t border-[hsl(var(--surface-border))] bg-background px-6 py-2",
+          menuOpen && "flex flex-col gap-1"
+        )}
+      >
+        <NavLinks onNavigate={closeMenu} />
+      </nav>
     </nav>
   );
 };
