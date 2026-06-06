@@ -1,1 +1,0 @@
-import{E as e}from"./chunk-QUQL4437-DYf5G-rs.js";function t(){return e(`/handbook`)}export{t as clientLoader};
