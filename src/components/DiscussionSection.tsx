@@ -44,7 +44,7 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
       <h2 className="text-lg font-semibold text-foreground mb-4">Discussion</h2>
       <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">{statusMessage}</span>
       <div>
-      {posts.length === 0 ? (
+      {loaded && posts.length === 0 ? (
         <>
           <div className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8 text-center">
             <p className="text-muted-foreground text-sm">
@@ -53,7 +53,7 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
           </div>
           {joinLink}
         </>
-      ) : (
+      ) : loaded ? (
         <>
           {posts.map((post, i) => (
             <a
@@ -107,7 +107,7 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
           ))}
           {joinLink}
         </>
-      )}
+      ) : null}
       </div>
     </div>
   );

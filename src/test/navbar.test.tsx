@@ -178,6 +178,12 @@ describe("Navbar - mobile menu", () => {
     expect(hamburger.getAttribute("aria-controls")).toBe("mobile-menu");
   });
 
+  it("mobile menu drawer is a plain element, not a nav landmark, to avoid nested nav regions", () => {
+    renderNavbar();
+    const mobileMenu = document.getElementById("mobile-menu");
+    expect(mobileMenu?.tagName.toLowerCase()).not.toBe("nav");
+  });
+
   it("pressing Escape closes the mobile menu", () => {
     renderNavbar();
     fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));

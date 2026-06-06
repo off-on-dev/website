@@ -234,6 +234,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
                 {verification ? (
                   <span>
                     Verify your solution:
+                    {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- tabIndex={0} makes this scrollable code block keyboard-reachable per WCAG 2.1 SC 2.1.1 */}
                     <pre tabIndex={0} aria-label="Verification command (scroll left or right to see the full command)" className="mt-2 overflow-x-auto rounded-lg border border-[hsl(var(--surface-border))] bg-background/60 px-4 py-3 font-mono text-sm text-foreground">
                       <code>{verification.command}</code>
                     </pre>

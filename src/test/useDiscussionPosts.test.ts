@@ -105,6 +105,19 @@ describe("useDiscussionPosts - initial state", () => {
     await waitFor(() => expect(result.current.loaded).toBe(true));
     expect(result.current.posts).toEqual([]);
   });
+
+  it("clears stale posts, solvers, and totalReplies when IDs transition to empty", async () => {
+    const { result, rerender } = renderHook(
+      ({ id, lvl }: { id: string; lvl: string }) => useDiscussionPosts(id, lvl, mockLoader),
+      { initialProps: { id: "test-adventure", lvl: "beginner" } }
+    );
+    await waitFor(() => expect(result.current.posts.length).toBe(3));
+    rerender({ id: "", lvl: "beginner" });
+    await waitFor(() => expect(result.current.loaded).toBe(true));
+    expect(result.current.posts).toEqual([]);
+    expect(result.current.solvers).toEqual([]);
+    expect(result.current.totalReplies).toBe(0);
+  });
 });
 
 // ---------------------------------------------------------------------------

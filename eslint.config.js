@@ -33,11 +33,9 @@ export default tseslint.config(
         "varsIgnorePattern": "^_"
       }],
       // Safari VoiceOver strips list semantics when list-style is removed (Tailwind list-none).
-      // Explicit role="list" on <ul>/<ol> restores them. This is intentional throughout the codebase.
+      // Explicit role="list" on <ul>/<ol> restores them. This is intentional throughout the codebase
+      // (30+ instances), so a global off is more practical than per-site suppression comments.
       "jsx-a11y/no-redundant-roles": "off",
-      // tabIndex={0} on overflow-scrollable <pre> code blocks makes them keyboard-reachable,
-      // which is required by WCAG 2.1 SC 2.1.1. This is intentional in ChallengeDetail.
-      "jsx-a11y/no-noninteractive-tabindex": "off",
     },
   },
 );

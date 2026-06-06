@@ -86,7 +86,7 @@ export function useDiscussionPosts(
     promise
       .then((data) => {
         if (cancelled) return;
-        if (!data) { setLoaded(true); return; }
+        if (!data) { setPosts([]); setTotalReplies(0); setSolvers([]); setLoaded(true); return; }
         const raw = data.discussionPosts ?? [];
         const now = Date.now();
         setPosts(raw.map((p) => ({ ...p, age: timeAgo(p.created_at, now) })));

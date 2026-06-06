@@ -121,7 +121,7 @@ describe("ChallengesGrid", () => {
 
     it("announces challenge count and active difficulty in the live region", () => {
       const { container } = renderGrid();
-      const group = container.querySelector('[role="group"][aria-label="Filter by difficulty"]') as HTMLElement;
+      const group = container.querySelector('[role="group"][aria-label="Filter by difficulty"]:not([hidden])') as HTMLElement;
       fireEvent.click(within(group).getByRole("button", { name: "Beginner" }));
       const region = container.querySelector("[aria-live]");
       expect(region!.textContent).toContain("challenge");
@@ -175,7 +175,8 @@ describe("ChallengesGrid", () => {
 
   describe("difficulty filter", () => {
     const getDifficultyGroup = (container: HTMLElement): HTMLElement => {
-      const group = container.querySelector('[role="group"][aria-label="Filter by difficulty"]');
+      // Target the always-visible desktop group; the mobile panel has hidden="" when closed.
+      const group = container.querySelector('[role="group"][aria-label="Filter by difficulty"]:not([hidden])');
       expect(group).toBeTruthy();
       return group as HTMLElement;
     };
@@ -245,7 +246,7 @@ describe("ChallengesGrid", () => {
     it("combining difficulty and tag filters shows only matching levels", () => {
       const { container } = renderGrid();
       const diffGroup = getDifficultyGroup(container);
-      const tagGroup = container.querySelector('[role="group"][aria-label="Filter by technology"]') as HTMLElement;
+      const tagGroup = container.querySelector('[role="group"][aria-label="Filter by technology"]:not([hidden])') as HTMLElement;
       fireEvent.click(within(diffGroup).getByRole("button", { name: "Beginner" }));
       fireEvent.click(within(tagGroup).getByRole("button", { name: firstTag }));
       const expectedAdventures = ADVENTURES.filter((a) => a.tags.includes(firstTag));

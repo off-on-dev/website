@@ -1,8 +1,9 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { DiscussionSection } from "@/components/DiscussionSection";
+import { useDiscussionPosts } from "@/hooks/useDiscussionPosts";
 import type { PostWithAge } from "@/hooks/useDiscussionPosts";
 
 // ---------------------------------------------------------------------------
@@ -39,12 +40,16 @@ const MOCK_POSTS: PostWithAge[] = [
   },
 ];
 
-vi.mock("@/hooks/useDiscussionPosts", () => ({
-  useDiscussionPosts: (adventureId: string, levelId: string) =>
-    adventureId === "test-adventure" && levelId === "beginner"
-      ? { posts: MOCK_POSTS, totalReplies: MOCK_POSTS.length, solvers: [], loaded: true }
-      : { posts: [], totalReplies: 0, solvers: [], loaded: true },
-}));
+vi.mock("@/hooks/useDiscussionPosts");
+
+const defaultMockImpl = (adventureId: string, levelId: string) =>
+  adventureId === "test-adventure" && levelId === "beginner"
+    ? { posts: MOCK_POSTS, totalReplies: MOCK_POSTS.length, solvers: [], loaded: true }
+    : { posts: [], totalReplies: 0, solvers: [], loaded: true };
+
+beforeEach(() => {
+  vi.mocked(useDiscussionPosts).mockImplementation(defaultMockImpl);
+});
 
 // ---------------------------------------------------------------------------
 // Empty state
@@ -158,6 +163,15 @@ describe("DiscussionSection - live region status", () => {
     );
     const status = screen.getByRole("status");
     expect(status.textContent).not.toContain("Great challenge!");
+  });
+
+  it("renders nothing while not yet loaded (no flash of empty state)", () => {
+    vi.mocked(useDiscussionPosts).mockReturnValueOnce({ posts: [], totalReplies: 0, solvers: [], loaded: false });
+    render(
+      <DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.offon.dev/t/topic/42/1" />
+    );
+    expect(screen.queryByText(/No community posts yet/)).toBeNull();
+    expect(screen.queryByText(/Great challenge/)).toBeNull();
   });
 });
 

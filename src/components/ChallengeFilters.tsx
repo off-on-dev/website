@@ -64,6 +64,19 @@ export const ChallengeFilters = ({
     );
   };
 
+  // Arrow-key navigation within an open filter panel. Called from onKeyDown on
+  // each panel button; walks up to the nearest role="group" to find siblings.
+  const navigatePanel = (e: { key: string; currentTarget: HTMLButtonElement; preventDefault(): void }): void => {
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    e.preventDefault();
+    const panel = e.currentTarget.closest<HTMLElement>('[role="group"]');
+    if (!panel) return;
+    const btns = Array.from(panel.querySelectorAll<HTMLButtonElement>("button"));
+    const idx = btns.indexOf(e.currentTarget);
+    if (idx === -1) return;
+    btns[(e.key === "ArrowDown" ? idx + 1 : idx - 1 + btns.length) % btns.length].focus();
+  };
+
   const dropdownItemClass = (isActive: boolean): string => cn(
     "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-left transition-colors",
     isActive
@@ -96,15 +109,16 @@ export const ChallengeFilters = ({
               className={cn("transition-transform duration-200", difficultyOpen && "rotate-180")}
             />
           </button>
-          {difficultyOpen && (
-            <div
+          <div
               id={difficultyGroupId}
               role="group"
               aria-label="Filter by difficulty"
+              hidden={!difficultyOpen}
               className="absolute top-full left-0 z-20 mt-2 min-w-[160px] rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-1.5 shadow-lg"
             >
               <button type="button" aria-pressed={activeDifficulty === null}
                 onClick={() => { onDifficultyChange(null); setDifficultyOpen(false); }}
+                onKeyDown={navigatePanel}
                 className={dropdownItemClass(activeDifficulty === null)}
               >
                 {activeDifficulty === null ? <Check size={13} aria-hidden="true" /> : <span className="w-[13px] shrink-0" />}
@@ -115,6 +129,7 @@ export const ChallengeFilters = ({
                 return (
                   <button key={diff} type="button" aria-pressed={isActive}
                     onClick={() => { handleDifficultyClick(diff); setDifficultyOpen(false); }}
+                    onKeyDown={navigatePanel}
                     className={dropdownItemClass(isActive)}
                   >
                     {isActive ? <Check size={13} aria-hidden="true" /> : <span className="w-[13px] shrink-0" />}
@@ -123,7 +138,6 @@ export const ChallengeFilters = ({
                 );
               })}
             </div>
-          )}
         </div>
 
         {/* Tags dropdown */}
@@ -145,15 +159,16 @@ export const ChallengeFilters = ({
               className={cn("transition-transform duration-200", tagsOpen && "rotate-180")}
             />
           </button>
-          {tagsOpen && (
-            <div
+          <div
               id={tagsGroupId}
               role="group"
               aria-label="Filter by technology"
+              hidden={!tagsOpen}
               className="absolute top-full left-0 z-20 mt-2 min-w-[200px] rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-1.5 shadow-lg"
             >
               <button type="button" aria-pressed={activeTopics.length === 0}
                 onClick={() => { onTopicsChange([]); setTagsOpen(false); }}
+                onKeyDown={navigatePanel}
                 className={dropdownItemClass(activeTopics.length === 0)}
               >
                 {activeTopics.length === 0 ? <Check size={13} aria-hidden="true" /> : <span className="w-[13px] shrink-0" />}
@@ -164,6 +179,7 @@ export const ChallengeFilters = ({
                 return (
                   <button key={tag} type="button" aria-pressed={isActive}
                     onClick={() => { handleTagClick(tag); setTagsOpen(false); }}
+                    onKeyDown={navigatePanel}
                     className={dropdownItemClass(isActive)}
                   >
                     {isActive ? <Check size={13} aria-hidden="true" /> : <span className="w-[13px] shrink-0" />}
@@ -172,7 +188,6 @@ export const ChallengeFilters = ({
                 );
               })}
             </div>
-          )}
         </div>
 
       </div>

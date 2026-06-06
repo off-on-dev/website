@@ -689,7 +689,7 @@ Two-row filter UI for the adventure catalog. Row 1 is a difficulty single-select
 | `onDifficultyChange` | `(diff: Difficulty \| null) => void` | Called when difficulty changes. |
 | `onTopicsChange` | `(topics: string[]) => void` | Called when tag selection changes. |
 
-**ARIA pattern:** difficulty dropdown uses `role="menu"` with `role="menuitemradio"` items; technology dropdown uses `role="menu"` with `role="menuitemcheckbox"` items. Desktop pill rows use `role="group"` with `aria-pressed` on each button.
+**ARIA pattern:** all filter groups (mobile dropdowns and desktop pill rows) use `role="group"` with `aria-pressed` on each button. Mobile dropdowns are always in the DOM — the panel uses the HTML `hidden` attribute when closed so `aria-controls` on the trigger always resolves to a valid IDREF. Trigger buttons use `aria-expanded` and `aria-controls`. Arrow-key navigation (Up/Down) is supported within each open panel via `onKeyDown` handlers on the panel buttons.
 
 **Exported type:** `Difficulty = "Beginner" | "Intermediate" | "Expert"`. Import from `@/components/ChallengeFilters` where `activeDifficulty` state needs typing.
 
@@ -900,7 +900,7 @@ Displays up to three community posts for an adventure level, fetched at build ti
 
 The component is a pure renderer. All data-loading logic lives in `useDiscussionPosts` (see Hooks section). Falls back to an empty state with a "Join the discussion" link when no posts are found.
 
-Uses `aria-live="polite"` so screen readers announce the age values when they update after mount.
+Contains a `<span role="status" aria-live="polite" aria-atomic="true">` (sr-only) that announces the loaded post count to screen readers. Content rendering is gated on the `loaded` flag from `useDiscussionPosts` to prevent a flash of the empty state before data arrives.
 
 ---
 

@@ -167,10 +167,11 @@ export const Navbar = (): JSX.Element => {
         </div>
       </div>
 
-      {/* Mobile menu drawer — always in the DOM so aria-controls has a valid target */}
-      <nav
+      {/* Mobile menu drawer — always in the DOM so aria-controls has a valid target.
+          Plain <div>, not <nav>: this sits inside the outer <nav aria-label="Main">
+          and a nested nav landmark would create two overlapping navigation regions. */}
+      <div
         id="mobile-menu"
-        aria-label="Mobile navigation"
         hidden={!menuOpen}
         className={cn(
           "md:hidden border-t border-[hsl(var(--surface-border))] bg-background px-6 py-2",
@@ -178,7 +179,7 @@ export const Navbar = (): JSX.Element => {
         )}
       >
         <NavLinks onNavigate={closeMenu} />
-      </nav>
+      </div>
     </nav>
   );
 };
