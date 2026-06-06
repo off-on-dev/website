@@ -113,15 +113,14 @@ describe("useDiscussionPosts - initial state", () => {
     );
     await waitFor(() => expect(result.current.posts.length).toBe(3));
     rerender({ id: "", lvl: "beginner" });
-    // The hook clears posts, solvers, and totalReplies atomically in the same
-    // Promise.resolve().then() as setting loaded. Wait for posts to be cleared
-    // rather than loaded (which was already true from the first render).
+    // Wait for posts to be cleared rather than loaded (which was already true
+    // from the first render). All four fields update in the same microtask.
     await waitFor(() => {
       expect(result.current.posts).toEqual([]);
       expect(result.current.loaded).toBe(true);
+      expect(result.current.solvers).toEqual([]);
+      expect(result.current.totalReplies).toBe(0);
     });
-    expect(result.current.solvers).toEqual([]);
-    expect(result.current.totalReplies).toBe(0);
   });
 });
 
