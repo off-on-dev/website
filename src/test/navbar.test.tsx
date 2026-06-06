@@ -54,6 +54,20 @@ describe("Navbar - logo", () => {
 // Desktop navigation links
 // ---------------------------------------------------------------------------
 
+describe("Navbar - aria-current", () => {
+  it("sets aria-current='page' on the active desktop link", () => {
+    renderNavbar("/about/");
+    const aboutLinks = screen.getAllByRole("link", { name: /About/i });
+    expect(aboutLinks[0].getAttribute("aria-current")).toBe("page");
+  });
+
+  it("does not set aria-current on inactive desktop links", () => {
+    renderNavbar("/about/");
+    const challengesLinks = screen.getAllByRole("link", { name: /Challenges/i });
+    expect(challengesLinks[0].getAttribute("aria-current")).toBeNull();
+  });
+});
+
 describe("Navbar - desktop navigation", () => {
   it("contains a nav landmark labelled 'Main'", () => {
     renderNavbar();

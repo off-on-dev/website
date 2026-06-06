@@ -236,4 +236,35 @@ test.describe("hydration and interactivity", () => {
     await page.keyboard.press("Tab");
     await expect(page.locator(":focus")).toContainText("Skip to main content");
   });
+
+  test("skip nav link moves focus to #main-content when activated", async ({ page }) => {
+    await page.goto("/");
+    await page.keyboard.press("Tab");
+    await expect(page.locator(":focus")).toContainText("Skip to main content");
+    await page.keyboard.press("Enter");
+    await expect(page.locator(":focus")).toHaveAttribute("id", "main-content");
+  });
+});
+
+test.describe("reduced motion — axe scan", () => {
+  // Runs axe on representative routes with prefers-reduced-motion: reduce to catch
+  // content that becomes invisible or inaccessible when animations are disabled.
+  const ROUTES = [
+    "/",
+    "/challenges",
+    "/adventures/blind-by-design/levels/beginner",
+  ];
+
+  for (const path of ROUTES) {
+    test(`no axe violations on ${path} (reduced motion)`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      const response = await page.goto(path);
+      expect(response?.status(), `${path} returned non-200 status`).toBe(200);
+      await page.waitForLoadState("networkidle");
+      const a11y = await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"])
+        .analyze();
+      expect(a11y.violations, `axe violations on ${path} with reduced motion`).toEqual([]);
+    });
+  }
 });

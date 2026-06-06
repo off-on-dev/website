@@ -23,7 +23,7 @@ const Contribute = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main id="main-content">
+      <main id="main-content" tabIndex={-1}>
         <PageHero
           eyebrow="Contribute"
           title="Every Contribution Counts"

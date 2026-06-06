@@ -38,7 +38,7 @@ export const CommunitySidebar = ({
   discussionUrl,
   contributor,
 }: CommunitySidebarProps): JSX.Element => {
-  const { posts, solvers } = useDiscussionPosts(adventureId, levelId);
+  const { posts, solvers, loaded } = useDiscussionPosts(adventureId, levelId);
   const { rows: leaderboardRows } = useAdventureLeaderboard(adventureId);
   const hasThread = discussionUrl !== COMMUNITY_URL;
 
@@ -124,13 +124,13 @@ export const CommunitySidebar = ({
           </div>
 
         </div>
-      ) : (
+      ) : loaded ? (
         <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed mb-5">
           {hasThread
             ? "No posts yet. Be the first to share your solution or ask a question."
             : "Got stuck or want to share your solution? Join the conversation."}
         </p>
-      )}
+      ) : null}
 
       <div className="border-t border-[hsl(var(--surface-border))] pt-4">
         <a

@@ -73,21 +73,37 @@ describe("useDiscussionPosts - initial state", () => {
     const { result } = renderHook(() =>
       useDiscussionPosts("test-adventure", "beginner", pendingLoader)
     );
-    expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [] });
+    expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [], loaded: false });
   });
 
   it("returns an empty result when adventureId is empty", () => {
     const { result } = renderHook(() =>
       useDiscussionPosts("", "beginner", mockLoader)
     );
-    expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [] });
+    expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [], loaded: false });
   });
 
   it("returns an empty result when levelId is empty", () => {
     const { result } = renderHook(() =>
       useDiscussionPosts("test-adventure", "", mockLoader)
     );
-    expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [] });
+    expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [], loaded: false });
+  });
+
+  it("settles loaded to true when adventureId is empty", async () => {
+    const { result } = renderHook(() =>
+      useDiscussionPosts("", "beginner", mockLoader)
+    );
+    await waitFor(() => expect(result.current.loaded).toBe(true));
+    expect(result.current.posts).toEqual([]);
+  });
+
+  it("settles loaded to true when levelId is empty", async () => {
+    const { result } = renderHook(() =>
+      useDiscussionPosts("test-adventure", "", mockLoader)
+    );
+    await waitFor(() => expect(result.current.loaded).toBe(true));
+    expect(result.current.posts).toEqual([]);
   });
 });
 
@@ -112,7 +128,7 @@ describe("useDiscussionPosts - data loading", () => {
       useDiscussionPosts("test-adventure", "beginner", emptyLoader)
     );
     await waitFor(() => {
-      expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [] });
+      expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [], loaded: true });
     });
   });
 
@@ -206,7 +222,7 @@ describe("useDiscussionPosts - error handling", () => {
       useDiscussionPosts("test-adventure", "beginner", failLoader)
     );
     await waitFor(() => {
-      expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [] });
+      expect(result.current).toEqual({ posts: [], totalReplies: 0, solvers: [], loaded: true });
     });
   });
 });

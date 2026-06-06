@@ -8,6 +8,9 @@ type NavLinkCompatProps = Omit<NavLinkProps, "className"> & {
   pendingClassName?: string;
 }
 
+// React Router's NavLink automatically sets aria-current="page" on the rendered
+// <a> when isActive is true. Do not replace RouterNavLink with a plain <a> or
+// <Link> — doing so removes the aria-current injection.
 const NavLink: ForwardRefExoticComponent<NavLinkCompatProps & RefAttributes<HTMLAnchorElement>> = forwardRef<HTMLAnchorElement, NavLinkCompatProps>(
   ({ className, activeClassName, pendingClassName, to, ...props }, ref) => {
     return (

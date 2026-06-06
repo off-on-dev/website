@@ -42,8 +42,8 @@ const MOCK_POSTS: PostWithAge[] = [
 vi.mock("@/hooks/useDiscussionPosts", () => ({
   useDiscussionPosts: (adventureId: string, levelId: string) =>
     adventureId === "test-adventure" && levelId === "beginner"
-      ? { posts: MOCK_POSTS, totalReplies: MOCK_POSTS.length, solvers: [] }
-      : { posts: [], totalReplies: 0, solvers: [] },
+      ? { posts: MOCK_POSTS, totalReplies: MOCK_POSTS.length, solvers: [], loaded: true }
+      : { posts: [], totalReplies: 0, solvers: [], loaded: true },
 }));
 
 // ---------------------------------------------------------------------------
@@ -128,6 +128,36 @@ describe("DiscussionSection - age display", () => {
     expect(screen.getByText("45m ago")).toBeTruthy();
     expect(screen.getByText("3h ago")).toBeTruthy();
     expect(screen.getByText("2d ago")).toBeTruthy();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Live region: sr-only status node announces a concise count, not card content
+// ---------------------------------------------------------------------------
+
+describe("DiscussionSection - live region status", () => {
+  it("announces post count in the status node when posts are loaded", () => {
+    render(
+      <DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.offon.dev/t/topic/42/1" />
+    );
+    const status = screen.getByRole("status");
+    expect(status.textContent).toBe("3 recent discussion posts shown.");
+  });
+
+  it("announces no-posts status in the status node when the section is empty", () => {
+    render(
+      <DiscussionSection adventureId="unknown" levelId="unknown" discussionUrl="https://community.offon.dev/t/unknown/999/1" />
+    );
+    const status = screen.getByRole("status");
+    expect(status.textContent).toBe("No discussion posts loaded.");
+  });
+
+  it("status node does not render card content (only the concise message)", () => {
+    render(
+      <DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.offon.dev/t/topic/42/1" />
+    );
+    const status = screen.getByRole("status");
+    expect(status.textContent).not.toContain("Great challenge!");
   });
 });
 

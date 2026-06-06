@@ -57,14 +57,106 @@ Automated axe passes are necessary but not sufficient. Automated tools catch rou
 
 ### Manual
 
-For every UI change, contributors must verify:
+For every UI change, step through each persona below and verify the listed checks. These are the failure modes axe-core cannot catch. A change is not done until all six personas pass.
 
-1. **Keyboard-only navigation:** tab through the entire changed flow without a mouse. Tab order matches the visual reading order. No focus traps. Every interactive element is reachable and operable.
-2. **Focus visibility:** focus ring is visible on every interactive element in both light and dark mode.
-3. **Screen reader:** spot-check the changed flow with VoiceOver (macOS/iOS) or NVDA (Windows). Dynamic content updates are announced correctly.
-4. **Zoom:** the page works at 200% browser zoom without content clipping or layout breakage.
-5. **Viewports:** verify at 375px, 768px, and 1280px widths against the production build.
-6. **Windows High Contrast Mode:** interactive states (hover, focus, disabled) are visible. Do not rely solely on background-color or semi-transparent borders to communicate state.
+#### 1. Screen Reader Navigator (non-visual)
+
+Simulates a user who navigates entirely by audio output.
+
+- Spot-check the changed flow with VoiceOver (macOS/iOS) or NVDA (Windows). See the screen reader quick reference below.
+- Every interactive element is announced with its role and accessible name.
+- Dynamic content updates (filters, route changes, consent state) are announced without forcibly moving focus.
+- Heading order matches the visual reading order with no skipped levels.
+- `aria-current="page"` is set on the active nav link.
+- No vague or duplicate link text ("view", "read more", "click here" alone).
+
+#### 2. Power Keyboard User (motor limit)
+
+Simulates a user who operates the page with Tab, Shift+Tab, Enter, Space, and arrow keys only.
+
+- Tab through the entire changed flow without a mouse. Every interactive element is reachable.
+- Tab order follows a logical visual reading order.
+- No focus traps. Every trap-like UI (modal, dropdown) has a working Escape exit.
+- Focus ring is visible on every interactive element in both light and dark mode.
+- After dynamic changes (filter apply, modal close, route change), focus lands on a logical element — not reset to the top of the page.
+- Skip link is the first focusable element and is visible on focus.
+
+#### 3. Magnification Expert (low vision)
+
+Simulates a user navigating with browser zoom at 200% and 400%.
+
+- At 400% zoom: no horizontal scrolling required. Content reflows into a single column (WCAG 1.4.10).
+- Text is not truncated or clipped at high zoom.
+- No sticky/fixed elements that consume more than half the viewport height at 400%.
+- Focus ring remains clearly visible at high zoom.
+- Verify at 375px, 768px, and 1280px widths against the production build.
+- Windows High Contrast Mode: interactive states (hover, focus, disabled) are visible. Do not rely solely on `background-color` or semi-transparent borders.
+
+#### 4. Cognitive Strategist (neurodivergent)
+
+Simulates a user sensitive to clutter, inconsistent UI, and unpredictable behaviour.
+
+- Page title clearly reflects where the user is in the site.
+- Multi-step flows (e.g. challenge instructions) have a visible indication of progress or position.
+- UI controls are consistent: the same action uses the same element and label across all pages.
+- No auto-advancing UI (carousels, auto-dismiss toasts) that interrupts reading without user intent.
+- CTA labels clearly state the outcome ("Start the Beginner level" not "Go").
+- Error states identify the problem in plain language and suggest a fix — no technical "fail" messages.
+
+#### 5. Vestibular User (motion sensitivity)
+
+Simulates a user for whom animations can trigger motion sickness.
+
+- Every animation and transition in the changed code is gated by `@media (prefers-reduced-motion: no-preference)` in CSS, or by `window.matchMedia('(prefers-reduced-motion: reduce)')` in JS.
+- No parallax or scroll-linked motion effects.
+- No auto-playing animations triggered without user intent.
+- No content that flashes more than three times per second (WCAG 2.3.1).
+
+#### 6. Distracted / Fatigued User (situational limit)
+
+Simulates a user navigating under high cognitive load.
+
+- System status is clear after every action: the user knows whether something succeeded, is loading, or failed.
+- Consent and theme state are visually obvious at a glance (the banner or the toggle reflect the current state).
+- No session timeouts on this static site — confirm no new timed behaviour has been introduced.
+- The purpose of every CTA is unambiguous without surrounding context.
+
+### Screen reader quick reference
+
+Use these commands to run through a changed flow without a full-session setup.
+
+#### VoiceOver on macOS (VO = Caps Lock or Ctrl+Option)
+
+| Task | Keys |
+|---|---|
+| Toggle VoiceOver on/off | Cmd+F5 |
+| Read next / previous item | VO+→ / VO+← |
+| Navigate to next heading | VO+Cmd+H (and Shift to go back) |
+| List all headings | VO+U, then select Headings |
+| List all landmarks | VO+U, then select Landmarks |
+| List all links | VO+U, then select Links |
+| Activate a link or button | VO+Space |
+| Enter / exit a web area | VO+Shift+↓ / VO+Shift+↑ |
+| Stop speaking | Ctrl |
+
+#### NVDA on Windows (NVDA key = Insert by default)
+
+| Task | Keys |
+|---|---|
+| Toggle NVDA on/off | Ctrl+Alt+N (installer default) |
+| Read next / previous item | ↓ / ↑ (browse mode) |
+| Navigate to next heading | H (and Shift+H to go back) |
+| Navigate to next landmark | D (and Shift+D to go back) |
+| List elements dialog | NVDA+F7 |
+| Activate a link or button | Enter |
+| Toggle browse/focus mode | NVDA+Space |
+| Stop speaking | Ctrl |
+
+**What to verify in every changed flow:**
+1. Every interactive element is announced with its role (button, link, etc.) and accessible name.
+2. Dynamic content updates (state changes, filter results) are announced without forcibly moving focus.
+3. No phantom tab stops appear (e.g. from SVGs missing `focusable="false"` or decorative elements missing `aria-hidden`).
+4. Heading order matches the visual reading order.
 
 ---
 
@@ -172,6 +264,21 @@ Apply this to every component you write or modify.
 - Never use raw Unicode characters (`→`, `♥`, `✓`) to convey meaning.
 - Decorative separators between pill segments: use an empty `<span aria-hidden="true" className="inline-block w-px h-3 bg-current opacity-40" />` instead of a text character.
 
+### SVG
+
+- Always add `focusable="false"` to inline `<svg>` elements. Without it, Internet Explorer and some Edge versions make every SVG tab-focusable, creating phantom tab stops.
+- Decorative SVGs (icons next to text, or purely visual): `aria-hidden="true"` and `focusable="false"`. No `<title>`.
+- Meaningful SVGs conveying information without adjacent text (e.g. standalone infographics): add `role="img"`, a `<title>` as the first child with a unique `id`, and `aria-labelledby` pointing to that `id`.
+  ```tsx
+  <svg role="img" aria-labelledby="chart-title" focusable="false">
+    <title id="chart-title">Monthly active contributors: 142</title>
+    ...
+  </svg>
+  ```
+- Never use `aria-label` directly on `<svg>`. Support across assistive technologies is inconsistent. Use the `<title>` + `aria-labelledby` pattern instead.
+- For lucide-react icons: always pass `aria-hidden={true}` when the icon is decorative (next to visible text). For icon-only buttons, put `aria-label` on the parent `<button>` or `<a>`, not on the `<svg>`.
+- Brand SVGs (e.g. LinkedIn in `Footer.tsx`): set `aria-hidden="true"` on the `<svg>` and `aria-label` on the parent interactive element. Use `fill="currentColor"` so hover and theme color changes apply. See the Icons section of `styleguide.md`.
+
 ### ARIA
 
 - Only add ARIA attributes when semantic HTML is not enough.
@@ -180,6 +287,17 @@ Apply this to every component you write or modify.
 - Use `role="alert"` (implicit `aria-live="assertive"`) only for errors requiring immediate attention. Never use `aria-live="assertive"` for informational updates.
 - Use `aria-expanded` on toggles that open/close UI.
 - Always add `aria-label` or `aria-labelledby` to icon-only buttons.
+
+### Tooltips
+
+This site uses Radix UI's `<Tooltip>` primitive (via `src/components/ui/tooltip.tsx`). Radix manages `role="tooltip"` and `aria-describedby` automatically when the component is wired up correctly. The rules below cover the cases Radix does not handle for you.
+
+- Always wrap the usage site in `<TooltipProvider>`. Do not mount `<TooltipProvider>` globally in `Layout.tsx`; wrap only the subtree that uses `<Tooltip>`.
+- `<TooltipTrigger>` must wrap a real interactive element (`<button>`, `<a>`, or a component that renders one). Never put a non-interactive element like `<span>` or `<div>` as the direct trigger child; screen readers will not announce the tooltip.
+- Never put interactive content (buttons, links) inside `<TooltipContent>`. Tooltips are not reachable by touch or keyboard-only users and cannot contain their own focusable children.
+- Tooltips must not be the only means of conveying critical information. If the tooltip text is essential to understanding or operating the trigger, surface it as visible text, a label, or an accessible description instead.
+- Test that the tooltip appears on both `:hover` and `:focus-visible`. Radix handles this by default; do not override the `defaultOpen`/`open` props in a way that breaks focus triggering.
+- Mobile: there is no hover on touch screens. If the tooltip content is not exposed any other way, add visible text or an `aria-label` on the trigger as a fallback.
 
 ### Forms
 
@@ -190,7 +308,7 @@ Apply this to every component you write or modify.
 
 - Every page must have a skip link as the first focusable element targeting `#main-content`.
 - The skip link uses the `.skip-nav` class in `src/index.css`. Never remove this class or its focus rules.
-- When adding a new page, always add `id="main-content"` to its `<main>` element.
+- When adding a new page, always add `id="main-content" tabIndex={-1}` to its `<main>` element. Without `tabIndex={-1}`, activating the skip link scrolls the page but does not move keyboard focus -- the link is broken for keyboard users in Chromium and Safari.
 
 ### Hidden until found
 

@@ -165,6 +165,7 @@ describe("useClickTracking - anchor clicks", () => {
   it("falls back to data-url then 'no-url' when an anchor has no href", () => {
     render(
       <Harness>
+        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
         <a data-url="custom://target">No Href</a>
       </Harness>,
     );

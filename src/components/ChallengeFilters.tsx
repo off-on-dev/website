@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, type JSX } from "react";
+import { useState, useEffect, useRef, useId, type JSX } from "react";
 import { ChevronDown, Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DIFFICULTIES, type Difficulty } from "@/data/adventures/filter-utils";
@@ -24,6 +24,8 @@ export const ChallengeFilters = ({
   const [tagsOpen, setTagsOpen] = useState(false);
   const difficultyRef = useRef<HTMLDivElement>(null);
   const tagsRef = useRef<HTMLDivElement>(null);
+  const difficultyGroupId = useId();
+  const tagsGroupId = useId();
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent): void => {
@@ -81,7 +83,7 @@ export const ChallengeFilters = ({
             type="button"
             onClick={() => { setDifficultyOpen((o) => !o); setTagsOpen(false); }}
             aria-expanded={difficultyOpen}
-            aria-haspopup="menu"
+            aria-controls={difficultyGroupId}
             className={cn(
               activeDifficulty !== null ? "pill-active" : "pill-inactive",
               "px-6 gap-2"
@@ -96,11 +98,12 @@ export const ChallengeFilters = ({
           </button>
           {difficultyOpen && (
             <div
-              role="menu"
+              id={difficultyGroupId}
+              role="group"
               aria-label="Filter by difficulty"
               className="absolute top-full left-0 z-20 mt-2 min-w-[160px] rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-1.5 shadow-lg"
             >
-              <button type="button" role="menuitemradio" aria-checked={activeDifficulty === null}
+              <button type="button" aria-pressed={activeDifficulty === null}
                 onClick={() => { onDifficultyChange(null); setDifficultyOpen(false); }}
                 className={dropdownItemClass(activeDifficulty === null)}
               >
@@ -110,7 +113,7 @@ export const ChallengeFilters = ({
               {DIFFICULTIES.map((diff) => {
                 const isActive = activeDifficulty === diff;
                 return (
-                  <button key={diff} type="button" role="menuitemradio" aria-checked={isActive}
+                  <button key={diff} type="button" aria-pressed={isActive}
                     onClick={() => { handleDifficultyClick(diff); setDifficultyOpen(false); }}
                     className={dropdownItemClass(isActive)}
                   >
@@ -129,7 +132,7 @@ export const ChallengeFilters = ({
             type="button"
             onClick={() => { setTagsOpen((o) => !o); setDifficultyOpen(false); }}
             aria-expanded={tagsOpen}
-            aria-haspopup="menu"
+            aria-controls={tagsGroupId}
             className={cn(
               activeTopics.length > 0 ? "pill-active" : "pill-inactive",
               "px-6 gap-2"
@@ -144,11 +147,12 @@ export const ChallengeFilters = ({
           </button>
           {tagsOpen && (
             <div
-              role="menu"
+              id={tagsGroupId}
+              role="group"
               aria-label="Filter by technology"
               className="absolute top-full left-0 z-20 mt-2 min-w-[200px] rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-1.5 shadow-lg"
             >
-              <button type="button" role="menuitemcheckbox" aria-checked={activeTopics.length === 0}
+              <button type="button" aria-pressed={activeTopics.length === 0}
                 onClick={() => { onTopicsChange([]); setTagsOpen(false); }}
                 className={dropdownItemClass(activeTopics.length === 0)}
               >
@@ -158,7 +162,7 @@ export const ChallengeFilters = ({
               {tags.map((tag) => {
                 const isActive = activeTopics.includes(tag);
                 return (
-                  <button key={tag} type="button" role="menuitemcheckbox" aria-checked={isActive}
+                  <button key={tag} type="button" aria-pressed={isActive}
                     onClick={() => { handleTagClick(tag); setTagsOpen(false); }}
                     className={dropdownItemClass(isActive)}
                   >

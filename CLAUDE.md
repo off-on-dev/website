@@ -4,6 +4,22 @@ Guidance for AI coding agents working in this repository.
 
 ---
 
+## Project Skills
+
+Project-level Claude Code skills live in `.claude/skills/`. Invoke them with `/skill-name` in Claude Code. These are committed to the repo and available to all contributors.
+
+| Skill | When to use |
+|---|---|
+| `/a11y-audit` | On-demand accessibility audit using the Red Team / Blue Team persona pipeline. Run against a component or page to get a severity-weighted report. |
+| `/keyboard` | Writing or reviewing any interactive element — buttons, modals, dropdowns, tabs, custom widgets. |
+| `/navigation` | Working on nav components — primary nav, skip links, breadcrumbs, pagination, mobile menus. |
+| `/progressive-enhancement` | Building any new feature or reviewing architecture. Ensures core content works without JS. |
+| `/user-personalization` | Working on theme toggle, consent state, or any user preference persistence. |
+
+The `spec-first-coding` skill is installed globally (`~/.claude/skills/`) and is not in this repo. It enforces W3C spec citations before generating any accessibility-related code.
+
+---
+
 ## Icons
 
 - Always use **lucide-react** for all icons. Do not add any other icon library.
