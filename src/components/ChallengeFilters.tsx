@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useId, type JSX } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { ChevronDown, Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DIFFICULTIES, type Difficulty } from "@/data/adventures/filter-utils";
@@ -66,7 +67,7 @@ export const ChallengeFilters = ({
 
   // Arrow-key navigation within an open filter panel. Called from onKeyDown on
   // each panel button; walks up to the nearest role="group" to find siblings.
-  const navigatePanel = (e: { key: string; currentTarget: HTMLButtonElement; preventDefault(): void }): void => {
+  const navigatePanel = (e: ReactKeyboardEvent<HTMLButtonElement>): void => {
     if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
     e.preventDefault();
     const panel = e.currentTarget.closest<HTMLElement>('[role="group"]');

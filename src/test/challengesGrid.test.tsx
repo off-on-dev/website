@@ -173,6 +173,59 @@ describe("ChallengesGrid", () => {
     });
   });
 
+  describe("ChallengeFilters mobile dropdown arrow-key navigation", () => {
+    // Opens the mobile difficulty panel and returns its buttons.
+    // Mobile panels have an id from useId(); desktop pill rows do not.
+    const openDifficultyPanel = (container: HTMLElement): HTMLButtonElement[] => {
+      const [trigger] = container.querySelectorAll<HTMLButtonElement>("button[aria-expanded]");
+      fireEvent.click(trigger);
+      const panel = container.querySelector<HTMLElement>('[role="group"][aria-label="Filter by difficulty"][id]:not([hidden])');
+      expect(panel).toBeTruthy();
+      return Array.from(panel!.querySelectorAll<HTMLButtonElement>("button"));
+    };
+
+    it("ArrowDown moves focus to the next button", () => {
+      const { container } = renderGrid();
+      const btns = openDifficultyPanel(container);
+      btns[0].focus();
+      fireEvent.keyDown(btns[0], { key: "ArrowDown" });
+      expect(document.activeElement).toBe(btns[1]);
+    });
+
+    it("ArrowUp moves focus to the previous button", () => {
+      const { container } = renderGrid();
+      const btns = openDifficultyPanel(container);
+      btns[1].focus();
+      fireEvent.keyDown(btns[1], { key: "ArrowUp" });
+      expect(document.activeElement).toBe(btns[0]);
+    });
+
+    it("ArrowDown wraps from the last button to the first", () => {
+      const { container } = renderGrid();
+      const btns = openDifficultyPanel(container);
+      const last = btns[btns.length - 1];
+      last.focus();
+      fireEvent.keyDown(last, { key: "ArrowDown" });
+      expect(document.activeElement).toBe(btns[0]);
+    });
+
+    it("ArrowUp wraps from the first button to the last", () => {
+      const { container } = renderGrid();
+      const btns = openDifficultyPanel(container);
+      btns[0].focus();
+      fireEvent.keyDown(btns[0], { key: "ArrowUp" });
+      expect(document.activeElement).toBe(btns[btns.length - 1]);
+    });
+
+    it("non-arrow keys do not move focus", () => {
+      const { container } = renderGrid();
+      const btns = openDifficultyPanel(container);
+      btns[0].focus();
+      fireEvent.keyDown(btns[0], { key: "Enter" });
+      expect(document.activeElement).toBe(btns[0]);
+    });
+  });
+
   describe("difficulty filter", () => {
     const getDifficultyGroup = (container: HTMLElement): HTMLElement => {
       // Target the always-visible desktop group; the mobile panel has hidden="" when closed.
