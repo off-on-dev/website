@@ -80,8 +80,8 @@ jobs:
               ERRORS=$((ERRORS + 1))
             fi
 
-            # Extract level IDs from the YAML file (field renamed from `id:` to `level:` in the sync migration)
-            level_ids=$(grep -E '^\s+- level: ' "$adventure_dir/adventure.yaml" | sed 's/.*- level: //' | tr -d '"' || true)
+            # Extract live level IDs only (under `levels:`, not `upcoming_levels:`)
+            level_ids=$(awk '/^levels:/{s=1;next} /^[a-z]/{s=0} s && /- level:/{gsub(/.*- level: /,""); gsub(/"/,""); print}' "$adventure_dir/adventure.yaml" || true)
 
             # Check adventure landing page in prerender
             if ! grep -q "\"/adventures/$adventure_id\"" react-router.config.ts; then
