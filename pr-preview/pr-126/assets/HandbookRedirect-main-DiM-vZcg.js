@@ -1,0 +1,1 @@
+import{h as e}from"./vendor-router-Dq3zYW_L.js";var t=e(function(){return null});export{t as default};
