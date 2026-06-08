@@ -9,7 +9,7 @@ export const LEX_IMPERFECTA: Adventure = {
   month: "JUN 2026",
   story: "The Roman Republic has built a sophisticated legal system to protect its citizens — but the laws were written in haste, and the exceptions were written too generously. Policies go unenforced, the wrong citizens are exempt, and something has slipped through the gates unnoticed. As a newly appointed Praetor, your mission is to restore order before chaos takes hold.",
   metaDescription: "The Republic's legal system is in disarray — workloads run unchecked, required labels go missing, and privileged containers slip through the gates. As a...",
-  tags: ["Kyverno", "Kubernetes"],
+  tags: ["Kyverno", "Policy Reporter", "Kubernetes"],
   contributor: {
     name: "Katharina Sick",
     url: "https://ksick.dev/",
@@ -32,7 +32,6 @@ export const LEX_IMPERFECTA: Adventure = {
     rankingRulesUrl: `${COMMUNITY_URL}/t/about-the-challenges-category/16`,
   },
   upcomingLevels: [
-    { name: "Intermediate", difficulty: "Intermediate" },
     { name: "Expert", difficulty: "Expert" },
   ],
   levels: [
@@ -119,6 +118,105 @@ kyverno apply manifests/policies/stamp-travel-permit.yaml --resource manifests/p
         description: "Once you think you've solved the challenge, run the verification script. If it fails it will tell you which checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion.",
       },
       metaDescription: "The Twelve Tables: Fix broken Kyverno policies to restore proper admission control. A beginner Kyverno, Kubernetes challenge on OffOn.",
+    },
+    {
+      id: "intermediate",
+      name: "Governing the Provinces",
+      difficulty: "Intermediate",
+      topics: ["Kyverno", "Policy Reporter", "Kubernetes"],
+      audience: "Platform engineers and SREs who have some familiarity with Kyverno — ideally after completing the Beginner level. You should be comfortable reading Kubernetes YAML and basic kubectl commands.",
+      learnings: [
+        "How to scope policies using <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">ValidatingPolicy<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\" style=\"flex-shrink:0\"><path d=\"M15 3h6v6\"/><path d=\"M10 14 21 3\"/><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/></svg><span class=\"sr-only\"> (opens in new tab)</span></a> (cluster-wide) and <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">NamespacedValidatingPolicy<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\" style=\"flex-shrink:0\"><path d=\"M15 3h6v6\"/><path d=\"M10 14 21 3\"/><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/></svg><span class=\"sr-only\"> (opens in new tab)</span></a> (per-namespace), and when to use each",
+        "How <a href=\"https://kubernetes.io/docs/reference/using-api/cel/\" target=\"_blank\" rel=\"noopener noreferrer\">CEL expressions<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\" style=\"flex-shrink:0\"><path d=\"M15 3h6v6\"/><path d=\"M10 14 21 3\"/><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/></svg><span class=\"sr-only\"> (opens in new tab)</span></a> in <code>ValidatingPolicy</code> and <code>PolicyException</code> express fine-grained admission conditions",
+        "How to write and scope a <a href=\"https://kyverno.io/docs/policy-types/policy-exception/\" target=\"_blank\" rel=\"noopener noreferrer\">PolicyException<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\" style=\"flex-shrink:0\"><path d=\"M15 3h6v6\"/><path d=\"M10 14 21 3\"/><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/></svg><span class=\"sr-only\"> (opens in new tab)</span></a> correctly so only the intended workloads are exempt",
+        "How to use <a href=\"https://kyverno.github.io/policy-reporter/\" target=\"_blank\" rel=\"noopener noreferrer\">Policy Reporter<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\" style=\"flex-shrink:0\"><path d=\"M15 3h6v6\"/><path d=\"M10 14 21 3\"/><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/></svg><span class=\"sr-only\"> (opens in new tab)</span></a> and the <a href=\"https://kyverno.github.io/policy-reporter/guide/openreports/\" target=\"_blank\" rel=\"noopener noreferrer\">OpenReports<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\" style=\"flex-shrink:0\"><path d=\"M15 3h6v6\"/><path d=\"M10 14 21 3\"/><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/></svg><span class=\"sr-only\"> (opens in new tab)</span></a> format to audit and debug a policy estate across multiple namespaces",
+      ],
+      codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2Flex-imperfecta_intermediate%2Fdevcontainer.json&quickstart=1`,
+      discussionUrl: "",
+      deadline: "2026-06-23T23:59:00+01:00",
+      intro: [
+        "Fix a misconfigured Kyverno policy estate and use Policy Reporter to restore proper governance across the Republic's provinces.",
+      ],
+      backstory: [
+        "The Republic has grown. What once was a single city is now a sprawling empire of provinces, each governed by different magistrates with different needs. The legal scholars decided to catalogue every law in a central archive — the Tabularium — so that each province's statutes could be tracked and audited in one place.",
+        "But cataloguing the laws introduced new chaos. Policies meant for one province are bleeding into another. Exceptions that were meant to be narrow have been written too broadly. And somewhere in the estate, a workload is slipping through that shouldn't be.",
+        "The Tabularium's auditors have handed you a report: Policy Reporter shows violations where there should be none, and silence where there should be enforcement. Your mission: investigate the policy estate, fix the scoping issues, and restore order before the provinces descend into chaos.",
+      ],
+      objective: [
+        "The <strong>empire-wide laws</strong> enforce correctly across every province — privileged containers are blocked, and every workload declares a valid <code>republic.rome/gens</code> and a <code>republic.rome/province</code> that matches the namespace it runs in. Policies must scope to provinces using the namespace labels as the source of truth, not by hardcoding individual namespace names.",
+        "<strong>Aegyptus's provincial scribe law</strong> takes effect only within Aegyptus — it admits only workloads carrying <code>republic.rome/role: scribe</code> there, and has no power over the other provinces",
+        "The <strong>legacy exception</strong> is scoped to Aegyptus alone — only Aegyptus's grandfathered workload is spared the census, and no workload in any other province can claim it",
+        "The <strong>Tabularium's ledger</strong> is clean and on file — the estate's policy report is exported in the OpenReports format and saved as <code>estate-audit.yaml</code>",
+      ],
+      architecture: [
+        "<p>The Republic's policy estate spans five namespaces. Four are <strong>provinces</strong> — <code>gallia</code>, <code>hispania</code>, <code>britannia</code>, and <code>aegyptus</code> — each carrying the label <code>republic.rome/realm: province</code>. The fifth, <code>castra</code>, is the <strong>infra</strong> namespace (<code>republic.rome/realm: infra</code>) and operates outside the provinces' legal jurisdiction. Use <code>kubectl get ns --show-labels</code> to inspect these labels — they are what the cluster-wide policies use to decide where to enforce.</p>",
+        "<p>The estate is governed by a handful of Kyverno policies. Two are <strong>empire-wide</strong>: <code>no-privileged-containers</code> blocks privileged containers, and <code>require-census</code> requires every workload to declare its <code>republic.rome/gens</code> and a <code>republic.rome/province</code> that matches its namespace. Both are meant to apply across the provinces but not the infra realm. Aegyptus also carries a <strong>local law of its own</strong> — <code>aegyptus-require-scribe-role</code> — meant to admit only scribe workloads <em>within Aegyptus</em>. Finally, a <strong><code>PolicyException</code></strong> grandfathers Aegyptus's single legacy workload, which predates the census, so it alone may run without a gens. Some of these are no longer doing exactly what they were meant to.</p>",
+        "<p><strong>Edit <code>manifests/policies/</code> and <code>manifests/exceptions/</code></strong> — that is where the scoping has gone wrong. Leave <code>manifests/workloads/</code> and <code>manifests/namespaces/</code> alone; the workloads represent the citizens and their expected state, and the namespace labels are the ground truth the policies are measured against. Policies act at admission, so after each change run <code>make apply</code> to redeploy the workloads and re-evaluate the estate, then <code>make verify</code> to check your progress. When the estate is in order, file the audit with the Tabularium (see How to Play).</p>",
+      ],
+      toolbox: [
+        { name: "kubectl", description: "Apply and inspect cluster resources, check namespace labels and policy status", url: "https://kubernetes.io/docs/reference/kubectl/" },
+        { name: "kyverno CLI", description: "Test and lint policies locally before applying to the cluster", url: "https://kyverno.io/docs/kyverno-cli/" },
+        { name: "k9s", description: "Explore cluster resources and policy reports in a terminal UI", url: "https://k9scli.io/" },
+      ],
+      howToPlay: [
+        { title: "Explore the Estate", content: `<p>When your Codespace is ready, the policy estate is already deployed — but something is wrong.
+Open Policy Reporter at the forwarded port <strong>30110</strong> to get an overview of the estate:</p>
+<ul>
+<li>Which namespaces have violations?</li>
+<li>Which policies are generating results, and which are silent when they shouldn't be?</li>
+</ul>
+<p>Then dig into the cluster:</p>
+<pre tabindex="0" aria-label="Code block"><code class="language-bash"># Inspect the namespace topology — the labels here drive policy scoping
+kubectl get ns --show-labels
+
+# List all policies — note which are cluster-wide and which are namespaced
+kubectl get validatingpolicies
+kubectl get namespacedvalidatingpolicies -A
+
+# Inspect any policy or exception in full
+kubectl get validatingpolicy &#x3C;name> -o yaml
+kubectl get policyexceptions -A -o yaml
+
+# See the raw OpenReports data behind Policy Reporter
+kubectl get policyreports -A
+</code></pre>
+<p>You can also launch <strong>k9s</strong> for a terminal UI view:</p>
+<pre tabindex="0" aria-label="Code block"><code class="language-bash">k9s
+</code></pre>` },
+        { title: "Explore the UIs", content: `<p>Open the <strong>Ports</strong> tab and navigate to each service:</p>
+<ul>
+<li><strong>Port 30110:</strong> Policy Reporter. Audit the full policy estate — see which policies apply to which namespaces and where violations exist</li>
+</ul>` },
+        { title: "Fix the Policies", content: `<p>Review the <a href="#objective">Objective</a> and investigate what is wrong in <code>manifests/policies/</code> and
+<code>manifests/exceptions/</code>.</p>
+<p>Think about what each policy is <em>supposed</em> to cover, and compare that against what it is <em>actually</em>
+matching. The namespace labels you saw with <code>kubectl get ns --show-labels</code> are a key part of the picture.</p>
+<p><strong>Test locally with the Kyverno CLI before applying:</strong></p>
+<pre tabindex="0" aria-label="Code block"><code class="language-bash">kyverno apply manifests/policies/require-census.yaml --resource manifests/workloads/citizens.yaml
+kyverno apply manifests/policies/aegyptus-require-scribe-role.yaml --resource manifests/workloads/aegyptus-legacy-scribe.yaml
+</code></pre>
+<p><strong>Apply your changes to the cluster:</strong></p>
+<pre tabindex="0" aria-label="Code block"><code class="language-bash">make apply
+</code></pre>
+<p>Policies only act at admission, so <code>make apply</code> redeploys the workloads to re-evaluate the estate against
+your changes. Then check Policy Reporter again — the picture should improve as you fix each issue.</p>` },
+        { title: "File the Audit", content: `<p>Once the estate is in order, the Senate expects the Tabularium's ledger on file. Export the cluster's
+policy reports, the OpenReports data behind Policy Reporter, as the audit of record.</p>
+<pre tabindex="0" aria-label="Code block"><code class="language-bash">kubectl get policyreports -A -o yaml > estate-audit.yaml
+</code></pre>` },
+      ],
+      helpfulLinks: [
+        { title: "Kyverno ValidatingPolicy", url: "https://kyverno.io/docs/policy-types/validating-policy/", description: "Reference docs for ValidatingPolicy and NamespacedValidatingPolicy — the policy types you'll fix" },
+        { title: "Kyverno PolicyException", url: "https://kyverno.io/docs/policy-types/policy-exception/", description: "How to write and scope a PolicyException to exempt specific workloads" },
+        { title: "CEL Validation Expressions", url: "https://kubernetes.io/docs/reference/using-api/cel/", description: "How CEL expressions work in Kubernetes admission — including accessing namespace context" },
+        { title: "Policy Reporter", url: "https://kyverno.github.io/policy-reporter/", description: "How to use Policy Reporter to audit and visualise policy results across the cluster" },
+        { title: "OpenReports Format", url: "https://kyverno.github.io/policy-reporter/guide/openreports/", description: "The OpenReports standard that Kyverno uses to emit PolicyReport resources" },
+      ],
+      verification: {
+        command: "./verify.sh",
+        description: "Once you think you've solved the challenge, run the verification script. If it fails it will tell you which checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion.",
+      },
+      metaDescription: "Governing the Provinces: Fix a misconfigured Kyverno policy estate and use Policy Reporter to restore proper governance across the Republic's provinces.",
     },
   ],
 };
