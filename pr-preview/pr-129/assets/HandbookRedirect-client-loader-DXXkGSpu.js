@@ -1,0 +1,1 @@
+import{l as e}from"./vendor-router-DvVXSR4V.js";function t(){return e(`/handbook`)}export{t as clientLoader};
