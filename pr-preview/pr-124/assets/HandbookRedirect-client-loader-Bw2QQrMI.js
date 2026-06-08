@@ -1,1 +1,0 @@
-import{l as e}from"./vendor-router-BQT4-d_Z.js";function t(){return e(`/handbook`)}export{t as clientLoader};
