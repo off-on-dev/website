@@ -1,0 +1,1 @@
+var e=``,t=[],n=0,r={discussionUrl:``,discussionPosts:t,totalReplies:0};export{r as default,t as discussionPosts,e as discussionUrl,n as totalReplies};
