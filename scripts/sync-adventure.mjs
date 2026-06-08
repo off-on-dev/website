@@ -21,7 +21,13 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
-import { LEVEL_DIFFICULTY_BY_ID, LEVEL_DIFFICULTY_BY_EMOJI, LEVEL_ORDER } from "./lib/level-constants.mjs";
+import { LEVEL_ORDER } from "./lib/level-constants.mjs";
+import { parseDeadline } from "./lib/deadline.mjs";
+import {
+  findMissingUpstreamLevels,
+  selectActiveLevels,
+  computeUpcomingLevels,
+} from "./lib/level-sync.mjs";
 
 const execAsync = promisify(exec);
 
@@ -49,9 +55,9 @@ function currentMonth() {
 }
 
 function parseAdventureUrl(url) {
-  const m = url.match(/github\.com\/([^/]+\/[^/]+)\/(?:tree|blob)\/[^/]+\/(.+)/);
+  const m = url.match(/github\.com\/([^/]+\/[^/]+)\/(?:tree|blob)\/([^/]+)\/(.+)/);
   if (!m) fail(`Cannot parse GitHub URL: ${url}`);
-  return { repo: m[1], path: m[2].replace(/\/$/, "") };
+  return { repo: m[1], ref: m[2], path: m[3].replace(/\/$/, "") };
 }
 
 function deriveSlug(folderName) {
@@ -68,19 +74,19 @@ async function ghApi(endpoint) {
   }
 }
 
-async function fetchYaml(repo, filePath) {
-  const data = await ghApi(`repos/${repo}/contents/${filePath}`);
+async function fetchYaml(repo, filePath, ref) {
+  const data = await ghApi(`repos/${repo}/contents/${filePath}?ref=${encodeURIComponent(ref)}`);
   if (!data?.content) return null;
   return parseYaml(Buffer.from(data.content, "base64").toString("utf8"));
 }
 
-async function listDir(repo, dirPath) {
-  const data = await ghApi(`repos/${repo}/contents/${dirPath}`);
+async function listDir(repo, dirPath, ref) {
+  const data = await ghApi(`repos/${repo}/contents/${dirPath}?ref=${encodeURIComponent(ref)}`);
   return Array.isArray(data) ? data.map((f) => f.name) : [];
 }
 
-async function fetchBinaryFile(repo, filePath) {
-  const data = await ghApi(`repos/${repo}/contents/${filePath}`);
+async function fetchBinaryFile(repo, filePath, ref) {
+  const data = await ghApi(`repos/${repo}/contents/${filePath}?ref=${encodeURIComponent(ref)}`);
   if (!data?.content) return null;
   return Buffer.from(data.content, "base64");
 }
@@ -117,11 +123,12 @@ function buildLevel(raw, adventureTags, rewardsDeadline) {
   const cleaned = transformStrings(rest, stripCodeInLinks);
   return {
     ...cleaned,
+    ...(cleaned.deadline && { deadline: parseDeadline(cleaned.deadline) }),
     topics: cleaned.topics || deriveTopics(adventureTags),
     verification: cleaned.verification || VERIFICATION_STUB,
     // Fall back to the adventure-level rewards deadline when the level has no deadline of its own,
     // so the compact RewardsCard on ChallengeDetail always has a deadline to display.
-    ...(rewardsDeadline && !cleaned.deadline && { deadline: rewardsDeadline }),
+    ...(rewardsDeadline && !cleaned.deadline && { deadline: parseDeadline(rewardsDeadline) }),
   };
 }
 
@@ -145,12 +152,11 @@ function mergeLevels(existing, incoming, rawFetched) {
 
     levelMap[l.level] = {
       ...l,
-      // discussion_url is set after Discourse threads are created and is never present in the
-      // challenges repo. Preserve it so a re-sync does not wipe the community thread URL.
-      // Check both field names (discussion_url and its alias community_url) before deciding.
-      ...(prev?.discussion_url && !(raw?.discussion_url || raw?.community_url) && {
-        discussion_url: prev.discussion_url,
-      }),
+      // Preserve the discussion URL set by the add-discussion-url workflow.
+      // The challenges repo never sets these — check both field aliases so that
+      // adventures using community_url are handled the same as the older discussion_url.
+      ...(prev?.community_url && !raw?.community_url && { community_url: prev.community_url }),
+      ...(prev?.discussion_url && !raw?.discussion_url && { discussion_url: prev.discussion_url }),
       // architecture_diagram: use the value re-added by the SVG auto-fetch when present;
       // otherwise preserve any value that was manually set in a previous PR.
       ...(!l.architecture_diagram && prev?.architecture_diagram && { architecture_diagram: prev.architecture_diagram }),
@@ -178,17 +184,17 @@ async function main() {
     .map((s) => s.trim().toLowerCase())
     .filter(Boolean);
 
-  const { repo, path: adventurePath } = parseAdventureUrl(url);
+  const { repo, ref, path: adventurePath } = parseAdventureUrl(url);
   const folderName = adventurePath.split("/").pop();
   const slug = deriveSlug(folderName);
 
   const syncLabel = levelsToSync.length > 0 ? ` (levels: ${levelsToSync.join(", ")})` : " (all levels)";
-  console.log(`Syncing: ${repo}/${adventurePath} → ${slug}${syncLabel}`);
+  console.log(`Syncing: ${repo}/${adventurePath} @ ${ref} → ${slug}${syncLabel}`);
 
   // Fetch index.yaml and docs directory listing in parallel.
   const [indexData, docsFiles] = await Promise.all([
-    fetchYaml(repo, `${adventurePath}/docs/index.yaml`),
-    listDir(repo, `${adventurePath}/docs`),
+    fetchYaml(repo, `${adventurePath}/docs/index.yaml`, ref),
+    listDir(repo, `${adventurePath}/docs`, ref),
   ]);
   if (!indexData) fail(`docs/index.yaml not found at ${adventurePath}/docs/`);
 
@@ -199,7 +205,7 @@ async function main() {
 
   // Fetch all level YAMLs in parallel.
   const levelResults = await Promise.all(
-    levelFileNames.map((fileName) => fetchYaml(repo, `${adventurePath}/docs/${fileName}`))
+    levelFileNames.map((fileName) => fetchYaml(repo, `${adventurePath}/docs/${fileName}`, ref))
   );
   const allFetchedLevels = [];
   const rawFetchedLevels = [];
@@ -220,7 +226,7 @@ async function main() {
   const fetchedDiagrams = new Set();
   for (const raw of rawFetchedLevels) {
     if (!raw.architecture_diagram || fetchedDiagrams.has(raw.architecture_diagram)) continue;
-    const svgContent = await fetchBinaryFile(repo, `${adventurePath}/docs/diagrams/${raw.architecture_diagram}`);
+    const svgContent = await fetchBinaryFile(repo, `${adventurePath}/docs/diagrams/${raw.architecture_diagram}`, ref);
     if (svgContent) {
       writeFileSync(resolve(diagramsDir, raw.architecture_diagram), svgContent);
       fetchedDiagrams.add(raw.architecture_diagram);
@@ -237,59 +243,50 @@ async function main() {
     }
   }
 
-  // Track levels that were requested but don't exist in the challenges repo yet.
-  // These become "coming soon" placeholders on the website via upcoming_levels.
-  // They'll auto-promote to live the next time the sync runs and finds the YAML.
-  const fetchedIds = new Set(allFetchedLevels.map((l) => l.level));
-  const missingFromUpstream = levelsToSync.filter((id) => !fetchedIds.has(id));
-  if (missingFromUpstream.length > 0) {
-    console.log(`  Not in challenges repo yet (will appear as "coming soon"): ${missingFromUpstream.join(", ")}`);
-  }
-
   const adventureDir = resolve(ADVENTURES_DIR, slug);
   const yamlPath = resolve(adventureDir, "adventure.yaml");
   const existing = existsSync(yamlPath) ? parseYaml(readFileSync(yamlPath, "utf8")) : null;
   const mode = existing ? "update" : "create";
   console.log(`Mode: ${mode}`);
 
+  // Levels that were requested but don't exist in the challenges repo yet.
+  const fetchedIds = new Set(allFetchedLevels.map((l) => l.level));
+  const missingFromUpstream = findMissingUpstreamLevels(levelsToSync, fetchedIds);
+  if (missingFromUpstream.length > 0) {
+    if (mode === "update") {
+      fail(
+        `The following levels were requested but do not exist in the challenges repo: ${missingFromUpstream.join(", ")}.\n` +
+        `For an existing adventure, only levels already present upstream can be promoted. Wait until the level docs are added to the challenges repo, then re-run the sync.`
+      );
+    }
+    // New adventure: placeholders are fine — they'll auto-promote when the YAML appears upstream.
+    console.log(`  Not in challenges repo yet (will appear as "coming soon"): ${missingFromUpstream.join(", ")}`);
+  }
+
   // Levels already live in the adventure — never demoted regardless of levelsToSync.
   const existingLiveIds = new Set((existing?.levels || []).map((l) => l.level));
 
-  // Active = already live OR explicitly in levelsToSync (or all if levelsToSync is empty).
-  const activeLevels = allFetchedLevels.filter((l) => {
-    if (levelsToSync.length === 0) return true;
-    return existingLiveIds.has(l.level) || levelsToSync.includes(l.level);
-  });
+  // Active = explicitly in levelsToSync (or all fetched levels if levelsToSync is empty).
+  // Existing live levels not in levelsToSync are left untouched in adventure.yaml by mergeLevels,
+  // so syncing one level does not overwrite the others.
+  const activeLevels = selectActiveLevels(allFetchedLevels, levelsToSync);
 
   const activeLevelIds = new Set(activeLevels.map((l) => l.level));
 
   // Upcoming = (a) levels fetched from challenges repo but not yet promoted to live,
-  // plus (b) levels the user requested that don't exist upstream yet. Both render as
-  // "coming soon" placeholders via OtherLevelsCard on the website.
-  const upcomingFromUpstream = allFetchedLevels
-    .filter((l) => !existingLiveIds.has(l.level) && !activeLevelIds.has(l.level))
-    .map((l) => ({
-      level: l.level,
-      name: l.name || l.title,
-      difficulty: l.difficulty || LEVEL_DIFFICULTY_BY_EMOJI[l.emoji] || LEVEL_DIFFICULTY_BY_ID[l.level],
-    }));
-
-  const upcomingPlaceholders = missingFromUpstream
-    .filter((id) => !existingLiveIds.has(id))
-    .map((id) => ({
-      level: id,
-      name: LEVEL_DIFFICULTY_BY_ID[id] || id,
-      difficulty: LEVEL_DIFFICULTY_BY_ID[id] || id,
-    }));
-
-  // Dedupe by level id (upstream entry wins) and sort by canonical level order.
-  const upcomingById = new Map();
-  for (const u of [...upcomingPlaceholders, ...upcomingFromUpstream]) {
-    upcomingById.set(u.level, u);
-  }
-  const upcomingLevels = [...upcomingById.values()]
-    .sort((a, b) => (LEVEL_ORDER[a.level] ?? 99) - (LEVEL_ORDER[b.level] ?? 99))
-    .map(({ name, difficulty }) => ({ name, difficulty }));
+  // plus (b) levels the user requested that don't exist upstream yet, plus
+  // (c) manually-preserved entries from the previous YAML. Renders as
+  // "Coming Soon" placeholders via OtherLevelsCard on the website.
+  const upcomingWithIds = computeUpcomingLevels({
+    existing,
+    allFetchedLevels,
+    existingLiveIds,
+    activeLevelIds,
+    missingFromUpstream,
+  });
+  // Emit `level` so the preservation loop in computeUpcomingLevels can identify
+  // these entries on the next re-sync without relying on hand-edited YAML.
+  const upcomingLevels = upcomingWithIds.map(({ level, name, difficulty }) => ({ level, name, difficulty }));
 
   if (upcomingLevels.length > 0) {
     console.log(`  Upcoming (not live yet): ${upcomingLevels.map((u) => u.difficulty).join(", ")}`);
@@ -299,6 +296,8 @@ async function main() {
   // The generator accepts all aliases (name/title, emoji → icon, etc.).
   const adventure = {
     slug,
+    // Preserve community_category_id right after slug so its position stays stable on re-syncs.
+    ...(existing?.community_category_id !== undefined && { community_category_id: existing.community_category_id }),
     // Use whichever title field the challenges repo provides
     ...(indexData.title ? { title: indexData.title } : { name: indexData.name }),
     emoji: indexData.emoji,
@@ -307,11 +306,14 @@ async function main() {
     tags: adventureTags,
     ...(indexData.backstory?.length && { backstory: transformStrings(indexData.backstory, stripCodeInLinks) }),
     ...(indexData.overview?.length && { overview: transformStrings(indexData.overview, stripCodeInLinks) }),
-    ...(indexData.rewards && { rewards: indexData.rewards }),
+    ...(indexData.rewards && {
+      rewards: {
+        ...indexData.rewards,
+        ...(indexData.rewards.deadline && { deadline: parseDeadline(indexData.rewards.deadline) }),
+      },
+    }),
     // Preserve contributor set by a reviewer; omit otherwise (PR checklist item)
     ...(existing?.contributor && { contributor: existing.contributor }),
-    // Preserve community_category_id once a reviewer has set it; otherwise generator emits a TODO stub.
-    ...(existing?.community_category_id !== undefined && { community_category_id: existing.community_category_id }),
     ...(upcomingLevels.length > 0 && { upcoming_levels: upcomingLevels }),
     levels: mergeLevels(existing?.levels, activeLevels, rawFetchedLevels),
   };

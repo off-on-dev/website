@@ -57,9 +57,9 @@ jobs:
 
           # Each *-posts.json must have a "discussionPosts" array
           for f in src/data/adventures/*/*-posts.json; do
-            if ! node -e "
-              const d = JSON.parse(require('fs').readFileSync('$f', 'utf-8'));
-              if (!Array.isArray(d.discussionPosts)) { console.error('❌ $f: missing discussionPosts array'); process.exit(1); }
+            if ! FILE="$f" node -e "
+              const d = JSON.parse(require('fs').readFileSync(process.env.FILE, 'utf-8'));
+              if (!Array.isArray(d.discussionPosts)) { console.error('❌ ' + process.env.FILE + ': missing discussionPosts array'); process.exit(1); }
             " 2>&1; then
               ERRORS=$((ERRORS + 1))
             fi
@@ -67,9 +67,9 @@ jobs:
 
           # Each leaderboard.json must have a "rows" array
           for f in src/data/adventures/*/leaderboard.json; do
-            if ! node -e "
-              const d = JSON.parse(require('fs').readFileSync('$f', 'utf-8'));
-              if (!Array.isArray(d.rows)) { console.error('❌ $f: missing rows array'); process.exit(1); }
+            if ! FILE="$f" node -e "
+              const d = JSON.parse(require('fs').readFileSync(process.env.FILE, 'utf-8'));
+              if (!Array.isArray(d.rows)) { console.error('❌ ' + process.env.FILE + ': missing rows array'); process.exit(1); }
             " 2>&1; then
               ERRORS=$((ERRORS + 1))
             fi

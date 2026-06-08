@@ -15,6 +15,7 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseDocument } from "yaml";
+import { insertCommunityCategoryId } from "./lib/community-category.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const COMMUNITY_BASE = "https://community.offon.dev";
@@ -238,10 +239,7 @@ async function main() {
   console.log(`[posts] Fetching posts for topic ${topicId}...`);
   const result = await fetchTopicPosts(topicId, discussionUrl);
 
-  if (result?.categoryId > 0 && doc.get("community_category_id") == null) {
-    const slugIdx = doc.contents.items.findIndex((p) => p.key?.value === "slug");
-    const insertIdx = slugIdx >= 0 ? slugIdx + 1 : 1;
-    doc.contents.items.splice(insertIdx, 0, doc.createPair("community_category_id", result.categoryId));
+  if (insertCommunityCategoryId(doc, result?.categoryId)) {
     console.log(`[yaml] Set community_category_id to ${result.categoryId} in adventure.yaml`);
   }
 

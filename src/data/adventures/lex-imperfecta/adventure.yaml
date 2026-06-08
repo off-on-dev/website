@@ -29,9 +29,11 @@ contributor:
     and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities,
     inline skating rinks, and quiz nights across Europe.
 upcoming_levels:
-  - name: Intermediate
+  - level: intermediate
+    name: Intermediate
     difficulty: Intermediate
-  - name: Expert
+  - level: expert
+    name: Expert
     difficulty: Expert
 levels:
   - level: beginner

@@ -19,6 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -33,9 +35,19 @@ jobs:
       - name: Verify generated files are up-to-date
         run: |
           node scripts/generate-adventures.mjs
-          if ! git diff --quiet src/data/adventures/ public/llms.txt; then
+          GENERATED_PATHS=(
+            src/data/adventures/
+            public/llms.txt
+            public/sitemap.xml
+            react-router.config.ts
+            scripts/refresh-leaderboard.mjs
+            e2e/smoke.spec.ts
+            src/test/seo.test.ts
+            src/test/prerender.test.ts
+          )
+          if ! git diff --quiet "${GENERATED_PATHS[@]}"; then
             echo "❌ Generated files are out of date. Run 'npm run generate' and commit the result."
-            git diff --stat src/data/adventures/ public/llms.txt
+            git diff --stat "${GENERATED_PATHS[@]}"
             exit 1
           fi
 
@@ -68,8 +80,8 @@ jobs:
               ERRORS=$((ERRORS + 1))
             fi
 
-            # Extract level IDs from the YAML file (field renamed from `id:` to `level:` in the sync migration)
-            level_ids=$(grep -E '^\s+- level: ' "$adventure_dir/adventure.yaml" | sed 's/.*- level: //' | tr -d '"' || true)
+            # Extract live level IDs only (under `levels:`, not `upcoming_levels:`)
+            level_ids=$(awk '/^levels:/{s=1;next} /^[a-z]/{s=0} s && /- level:/{gsub(/.*- level: /,""); gsub(/"/,""); print}' "$adventure_dir/adventure.yaml" || true)
 
             # Check adventure landing page in prerender
             if ! grep -q "\"/adventures/$adventure_id\"" react-router.config.ts; then

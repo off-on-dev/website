@@ -36,6 +36,7 @@ import remarkRehype from "remark-rehype";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import rehypeStringify from "rehype-stringify";
 import { LEVEL_DIFFICULTY_BY_EMOJI } from "./lib/level-constants.mjs";
+import { parseDeadline } from "./lib/deadline.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -407,7 +408,7 @@ async function generateLevelCode(level, adventureId, indent) {
     lines.push(`${i2}discussionUrl: "",`);
   }
 
-  if (level.deadline) lines.push(`${i2}deadline: "${escapeDoubleQuoted(level.deadline)}",`);
+  if (level.deadline) lines.push(`${i2}deadline: "${escapeDoubleQuoted(parseDeadline(level.deadline))}",`);
   if (hookHtml) lines.push(`${i2}hook: ${formatString(hookHtml)},`);
   if (introHtml) lines.push(`${i2}intro: ${formatStringArray(introHtml, i2)},`);
   if (backstoryHtml) lines.push(`${i2}backstory: ${formatStringArray(backstoryHtml, i2)},`);
@@ -573,7 +574,7 @@ async function generateAdventureTs(data) {
       );
     }
     lines.push(`  rewards: {`);
-    const rewardsDeadline = data.rewards.deadline === "TODO" ? "" : data.rewards.deadline;
+    const rewardsDeadline = data.rewards.deadline === "TODO" ? "" : parseDeadline(data.rewards.deadline);
     lines.push(`    deadline: "${escapeDoubleQuoted(rewardsDeadline)}",`);
     lines.push(`    eligibility: ${formatString(eligibilityHtml)},`);
     lines.push(`    tiers: [`);
@@ -670,8 +671,8 @@ async function generateSummariesTs(adventures) {
       if (contributorAboutHtml) lines.push(`      aboutHtml: ${formatString(contributorAboutHtml)},`);
       lines.push(`    },`);
     }
-    const rewardsLive = data.rewards?.deadline && new Date(data.rewards.deadline) > now;
-    const levelLive = !rewardsLive && (data.levels ?? []).some((l) => l.deadline && new Date(l.deadline) > now);
+    const rewardsLive = data.rewards?.deadline && new Date(parseDeadline(data.rewards.deadline)) > now;
+    const levelLive = !rewardsLive && (data.levels ?? []).some((l) => l.deadline && new Date(parseDeadline(l.deadline)) > now);
     if (rewardsLive || levelLive) {
       lines.push(`    isLive: true,`);
     }
