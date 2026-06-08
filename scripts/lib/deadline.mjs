@@ -15,12 +15,13 @@ const TZ_OFFSETS = {
 
 export function parseDeadline(value) {
   if (!value || typeof value !== "string") return value;
-  if (/^\d{4}-\d{2}-\d{2}T/.test(value)) return value;
-  if (value === "TODO") return value;
+  const trimmed = value.trim();
+  if (/^\d{4}-\d{2}-\d{2}T/.test(trimmed)) return trimmed;
+  if (trimmed === "TODO") return trimmed;
 
-  // Expected: "[Weekday, ]D Month YYYY at HH:MM TZ"
-  const match = value.match(
-    /(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})\s+at\s+(\d{2}):(\d{2})\s+([A-Z]+)/
+  // Expected: "[Weekday, ]D Month YYYY at HH:MM TZ" — anchored so partial matches don't slip through.
+  const match = trimmed.match(
+    /^(?:[A-Za-z]+,\s+)?(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})\s+at\s+(\d{2}):(\d{2})\s+([A-Z]+)$/
   );
   if (!match) {
     console.warn(`  [deadline] Unrecognised format — leaving as-is: "${value}"`);
@@ -40,7 +41,7 @@ export function parseDeadline(value) {
     return value;
   }
 
-  const dd = String(parseInt(dayStr, 10)).padStart(2, "0");
+  const dd = dayStr.padStart(2, "0");
   const mm = String(month).padStart(2, "0");
   return `${year}-${mm}-${dd}T${hours}:${minutes}:00${offset}`;
 }

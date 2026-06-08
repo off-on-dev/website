@@ -33,25 +33,19 @@ jobs:
       - name: Verify generated files are up-to-date
         run: |
           node scripts/generate-adventures.mjs
-          if ! git diff --quiet \
-            src/data/adventures/ \
-            public/llms.txt \
-            public/sitemap.xml \
-            react-router.config.ts \
-            scripts/refresh-leaderboard.mjs \
-            e2e/smoke.spec.ts \
-            src/test/seo.test.ts \
-            src/test/prerender.test.ts; then
+          GENERATED_PATHS=(
+            src/data/adventures/
+            public/llms.txt
+            public/sitemap.xml
+            react-router.config.ts
+            scripts/refresh-leaderboard.mjs
+            e2e/smoke.spec.ts
+            src/test/seo.test.ts
+            src/test/prerender.test.ts
+          )
+          if ! git diff --quiet "${GENERATED_PATHS[@]}"; then
             echo "❌ Generated files are out of date. Run 'npm run generate' and commit the result."
-            git diff --stat \
-              src/data/adventures/ \
-              public/llms.txt \
-              public/sitemap.xml \
-              react-router.config.ts \
-              scripts/refresh-leaderboard.mjs \
-              e2e/smoke.spec.ts \
-              src/test/seo.test.ts \
-              src/test/prerender.test.ts
+            git diff --stat "${GENERATED_PATHS[@]}"
             exit 1
           fi
 

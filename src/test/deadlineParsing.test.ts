@@ -38,4 +38,16 @@ describe("parseDeadline", () => {
   it("passes through an unrecognised timezone unchanged", () => {
     expect(parseDeadline("23 June 2026 at 23:59 PST")).toBe("23 June 2026 at 23:59 PST");
   });
+
+  it("trims surrounding whitespace before parsing", () => {
+    expect(parseDeadline("  23 June 2026 at 23:59 CET  ")).toBe("2026-06-23T23:59:00+01:00");
+  });
+
+  it("rejects strings with trailing junk after the timezone", () => {
+    expect(parseDeadline("23 June 2026 at 23:59 CET extra")).toBe("23 June 2026 at 23:59 CET extra");
+  });
+
+  it("rejects strings with leading junk before the date", () => {
+    expect(parseDeadline("deadline: 23 June 2026 at 23:59 CET")).toBe("deadline: 23 June 2026 at 23:59 CET");
+  });
 });

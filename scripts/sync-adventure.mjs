@@ -21,8 +21,13 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
-import { LEVEL_DIFFICULTY_BY_ID, LEVEL_DIFFICULTY_BY_EMOJI, LEVEL_ORDER } from "./lib/level-constants.mjs";
+import { LEVEL_ORDER } from "./lib/level-constants.mjs";
 import { parseDeadline } from "./lib/deadline.mjs";
+import {
+  findMissingUpstreamLevels,
+  selectActiveLevels,
+  computeUpcomingLevels,
+} from "./lib/level-sync.mjs";
 
 const execAsync = promisify(exec);
 
@@ -246,7 +251,7 @@ async function main() {
 
   // Levels that were requested but don't exist in the challenges repo yet.
   const fetchedIds = new Set(allFetchedLevels.map((l) => l.level));
-  const missingFromUpstream = levelsToSync.filter((id) => !fetchedIds.has(id));
+  const missingFromUpstream = findMissingUpstreamLevels(levelsToSync, fetchedIds);
   if (missingFromUpstream.length > 0) {
     if (mode === "update") {
       fail(
@@ -264,57 +269,24 @@ async function main() {
   // Active = explicitly in levelsToSync (or all fetched levels if levelsToSync is empty).
   // Existing live levels not in levelsToSync are left untouched in adventure.yaml by mergeLevels,
   // so syncing one level does not overwrite the others.
-  const activeLevels = allFetchedLevels.filter((l) => {
-    if (levelsToSync.length === 0) return true;
-    return levelsToSync.includes(l.level);
-  });
+  const activeLevels = selectActiveLevels(allFetchedLevels, levelsToSync);
 
   const activeLevelIds = new Set(activeLevels.map((l) => l.level));
 
   // Upcoming = (a) levels fetched from challenges repo but not yet promoted to live,
-  // plus (b) levels the user requested that don't exist upstream yet. Both render as
-  // "coming soon" placeholders via OtherLevelsCard on the website.
-  const upcomingFromUpstream = allFetchedLevels
-    .filter((l) => !existingLiveIds.has(l.level) && !activeLevelIds.has(l.level))
-    .map((l) => ({
-      level: l.level,
-      name: l.name || l.title,
-      difficulty: l.difficulty || LEVEL_DIFFICULTY_BY_EMOJI[l.emoji] || LEVEL_DIFFICULTY_BY_ID[l.level],
-    }));
-
-  const upcomingPlaceholders = missingFromUpstream
-    .filter((id) => !existingLiveIds.has(id))
-    .map((id) => ({
-      level: id,
-      name: LEVEL_DIFFICULTY_BY_ID[id] || id,
-      difficulty: LEVEL_DIFFICULTY_BY_ID[id] || id,
-    }));
-
-  // Dedupe by level id (upstream entry wins) and sort by canonical level order.
-  const upcomingById = new Map();
-  for (const u of [...upcomingPlaceholders, ...upcomingFromUpstream]) {
-    upcomingById.set(u.level, u);
-  }
-
-  // Preserve manually-added upcoming_levels entries from the existing website YAML
-  // for levels not yet authored in the challenges repo. Without this, a re-sync drops
-  // placeholders that a reviewer added for levels that don't have YAML upstream yet.
-  for (const u of (existing?.upcoming_levels || [])) {
-    const levelId = typeof u.level === "string" ? u.level.toLowerCase() : "";
-    if (
-      levelId &&
-      !fetchedIds.has(levelId) &&
-      !existingLiveIds.has(levelId) &&
-      !activeLevelIds.has(levelId) &&
-      !upcomingById.has(levelId)
-    ) {
-      upcomingById.set(levelId, { level: levelId, name: u.name, difficulty: u.difficulty });
-    }
-  }
-
-  const upcomingLevels = [...upcomingById.values()]
-    .sort((a, b) => (LEVEL_ORDER[a.level] ?? 99) - (LEVEL_ORDER[b.level] ?? 99))
-    .map(({ name, difficulty }) => ({ name, difficulty }));
+  // plus (b) levels the user requested that don't exist upstream yet, plus
+  // (c) manually-preserved entries from the previous YAML. Renders as
+  // "Coming Soon" placeholders via OtherLevelsCard on the website.
+  const upcomingWithIds = computeUpcomingLevels({
+    existing,
+    allFetchedLevels,
+    existingLiveIds,
+    activeLevelIds,
+    missingFromUpstream,
+  });
+  // Emit `level` so the preservation loop in computeUpcomingLevels can identify
+  // these entries on the next re-sync without relying on hand-edited YAML.
+  const upcomingLevels = upcomingWithIds.map(({ level, name, difficulty }) => ({ level, name, difficulty }));
 
   if (upcomingLevels.length > 0) {
     console.log(`  Upcoming (not live yet): ${upcomingLevels.map((u) => u.difficulty).join(", ")}`);
