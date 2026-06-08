@@ -114,6 +114,7 @@
       "required": ["name", "difficulty"],
       "additionalProperties": false,
       "properties": {
+        "level": { "type": "string", "description": "Level identifier (beginner, intermediate, expert). Emitted by the sync script so the entry survives re-syncs; may be absent in hand-written entries." },
         "name": { "type": "string" },
         "difficulty": {
           "type": "string",
