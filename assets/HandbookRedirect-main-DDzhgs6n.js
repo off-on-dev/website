@@ -1,0 +1,1 @@
+import{h as e}from"./vendor-router-B7sYDP_Z.js";var t=e(function(){return null});export{t as default};
