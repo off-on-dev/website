@@ -798,9 +798,26 @@ function replaceRegion(filePath, openMarker, closeMarker, body) {
   }
 }
 
+// Parse lastmod dates already committed in the sitemap, keyed by URL.
+// Used as a stable fallback so re-running the generator on a clean file never changes
+// existing dates (avoids churn from shallow-clone environments where git log may be empty).
+const SITEMAP_PATH = resolve(ROOT, "public/sitemap.xml");
+const _existingSitemapDates = (() => {
+  const dates = new Map();
+  try {
+    const content = readFileSync(SITEMAP_PATH, "utf-8");
+    for (const m of content.matchAll(/<loc>([^<]+)<\/loc><lastmod>([^<]+)<\/lastmod>/g)) {
+      dates.set(m[1], m[2]);
+    }
+  } catch { /* sitemap may not exist yet */ }
+  return dates;
+})();
+
 // Returns the date the adventure.yaml was last modified, for use as sitemap lastmod.
-// Uses today for new or uncommitted-modified files; the git commit date for stable ones.
-// Falls back to today if git is unavailable. Results are memoized per slug.
+// If the YAML has uncommitted changes, uses today. If the URL is already in the sitemap
+// and the YAML is clean, preserves the existing date. For new URLs, falls back to the
+// git commit date (or today if git history is unavailable, e.g. shallow clones).
+// Results are memoized per slug.
 const _lastmodCache = new Map();
 function getAdventureLastmod(slug) {
   if (_lastmodCache.has(slug)) return _lastmodCache.get(slug);
@@ -810,9 +827,19 @@ function getAdventureLastmod(slug) {
     cwd: ROOT, encoding: "utf-8",
   });
   if (status.error || status.stdout.trim()) {
+    // YAML has uncommitted changes — content is actively being updated, use today.
     _lastmodCache.set(slug, today);
     return today;
   }
+  // YAML is clean. If this adventure already exists in the sitemap, keep its date
+  // to avoid churn caused by git log returning different results across environments
+  // (e.g. shallow clones in CI vs full history locally).
+  const existingDate = _existingSitemapDates.get(`https://offon.dev/adventures/${slug}/`);
+  if (existingDate) {
+    _lastmodCache.set(slug, existingDate);
+    return existingDate;
+  }
+  // New adventure not yet in the sitemap — use git log date or today as fallback.
   const gitLog = spawnSync("git", ["log", "--format=%ci", "-1", "--", relPath], {
     cwd: ROOT, encoding: "utf-8",
   });
@@ -933,11 +960,17 @@ function collectAllTags(adventures) {
 function buildSitemapTagsBody(tags, adventures) {
   const today = new Date().toISOString().slice(0, 10);
   const lines = tags.map((t) => {
+    const url = `https://offon.dev/challenges/${tagToSlug(t)}/`;
+    const existing = _existingSitemapDates.get(url);
     const matching = adventures.filter((a) => (a.tags || []).includes(t));
-    const lastmod = matching.length > 0
+    // Compute what the date would be from adventure data.
+    const derived = matching.length > 0
       ? matching.map((a) => getAdventureLastmod(a.slug)).sort().at(-1)
       : today;
-    return `  <url><loc>https://offon.dev/challenges/${tagToSlug(t)}/</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`;
+    // Preserve existing date if the derived date is not newer — prevents churn
+    // in shallow-clone environments where adventure dates may differ across runs.
+    const lastmod = existing && derived <= existing ? existing : derived;
+    return `  <url><loc>${url}</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`;
   });
   return lines.join("\n") + "\n";
 }
