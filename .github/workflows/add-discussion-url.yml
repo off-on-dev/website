@@ -118,7 +118,6 @@ jobs:
             "src/data/adventures/${ADVENTURE_ID}.generated.ts" \
             "src/data/adventures/index.ts" \
             "src/data/adventures/summaries.ts" \
-            "src/data/adventures/types.ts" \
             "scripts/refresh-leaderboard.mjs"
 
           HAS_CHANGES=false
