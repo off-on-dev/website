@@ -22,6 +22,7 @@ import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
 import { LEVEL_DIFFICULTY_BY_ID, LEVEL_DIFFICULTY_BY_EMOJI, LEVEL_ORDER } from "./lib/level-constants.mjs";
+import { parseDeadline } from "./lib/deadline.mjs";
 
 const execAsync = promisify(exec);
 
@@ -117,11 +118,12 @@ function buildLevel(raw, adventureTags, rewardsDeadline) {
   const cleaned = transformStrings(rest, stripCodeInLinks);
   return {
     ...cleaned,
+    ...(cleaned.deadline && { deadline: parseDeadline(cleaned.deadline) }),
     topics: cleaned.topics || deriveTopics(adventureTags),
     verification: cleaned.verification || VERIFICATION_STUB,
     // Fall back to the adventure-level rewards deadline when the level has no deadline of its own,
     // so the compact RewardsCard on ChallengeDetail always has a deadline to display.
-    ...(rewardsDeadline && !cleaned.deadline && { deadline: rewardsDeadline }),
+    ...(rewardsDeadline && !cleaned.deadline && { deadline: parseDeadline(rewardsDeadline) }),
   };
 }
 
@@ -307,7 +309,12 @@ async function main() {
     tags: adventureTags,
     ...(indexData.backstory?.length && { backstory: transformStrings(indexData.backstory, stripCodeInLinks) }),
     ...(indexData.overview?.length && { overview: transformStrings(indexData.overview, stripCodeInLinks) }),
-    ...(indexData.rewards && { rewards: indexData.rewards }),
+    ...(indexData.rewards && {
+      rewards: {
+        ...indexData.rewards,
+        ...(indexData.rewards.deadline && { deadline: parseDeadline(indexData.rewards.deadline) }),
+      },
+    }),
     // Preserve contributor set by a reviewer; omit otherwise (PR checklist item)
     ...(existing?.contributor && { contributor: existing.contributor }),
     // Preserve community_category_id once a reviewer has set it; otherwise generator emits a TODO stub.
