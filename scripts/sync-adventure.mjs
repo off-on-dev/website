@@ -55,9 +55,9 @@ function currentMonth() {
 }
 
 function parseAdventureUrl(url) {
-  const m = url.match(/github\.com\/([^/]+\/[^/]+)\/(?:tree|blob)\/[^/]+\/(.+)/);
+  const m = url.match(/github\.com\/([^/]+\/[^/]+)\/(?:tree|blob)\/([^/]+)\/(.+)/);
   if (!m) fail(`Cannot parse GitHub URL: ${url}`);
-  return { repo: m[1], path: m[2].replace(/\/$/, "") };
+  return { repo: m[1], ref: m[2], path: m[3].replace(/\/$/, "") };
 }
 
 function deriveSlug(folderName) {
@@ -74,19 +74,19 @@ async function ghApi(endpoint) {
   }
 }
 
-async function fetchYaml(repo, filePath) {
-  const data = await ghApi(`repos/${repo}/contents/${filePath}`);
+async function fetchYaml(repo, filePath, ref) {
+  const data = await ghApi(`repos/${repo}/contents/${filePath}?ref=${encodeURIComponent(ref)}`);
   if (!data?.content) return null;
   return parseYaml(Buffer.from(data.content, "base64").toString("utf8"));
 }
 
-async function listDir(repo, dirPath) {
-  const data = await ghApi(`repos/${repo}/contents/${dirPath}`);
+async function listDir(repo, dirPath, ref) {
+  const data = await ghApi(`repos/${repo}/contents/${dirPath}?ref=${encodeURIComponent(ref)}`);
   return Array.isArray(data) ? data.map((f) => f.name) : [];
 }
 
-async function fetchBinaryFile(repo, filePath) {
-  const data = await ghApi(`repos/${repo}/contents/${filePath}`);
+async function fetchBinaryFile(repo, filePath, ref) {
+  const data = await ghApi(`repos/${repo}/contents/${filePath}?ref=${encodeURIComponent(ref)}`);
   if (!data?.content) return null;
   return Buffer.from(data.content, "base64");
 }
@@ -184,17 +184,17 @@ async function main() {
     .map((s) => s.trim().toLowerCase())
     .filter(Boolean);
 
-  const { repo, path: adventurePath } = parseAdventureUrl(url);
+  const { repo, ref, path: adventurePath } = parseAdventureUrl(url);
   const folderName = adventurePath.split("/").pop();
   const slug = deriveSlug(folderName);
 
   const syncLabel = levelsToSync.length > 0 ? ` (levels: ${levelsToSync.join(", ")})` : " (all levels)";
-  console.log(`Syncing: ${repo}/${adventurePath} → ${slug}${syncLabel}`);
+  console.log(`Syncing: ${repo}/${adventurePath} @ ${ref} → ${slug}${syncLabel}`);
 
   // Fetch index.yaml and docs directory listing in parallel.
   const [indexData, docsFiles] = await Promise.all([
-    fetchYaml(repo, `${adventurePath}/docs/index.yaml`),
-    listDir(repo, `${adventurePath}/docs`),
+    fetchYaml(repo, `${adventurePath}/docs/index.yaml`, ref),
+    listDir(repo, `${adventurePath}/docs`, ref),
   ]);
   if (!indexData) fail(`docs/index.yaml not found at ${adventurePath}/docs/`);
 
@@ -205,7 +205,7 @@ async function main() {
 
   // Fetch all level YAMLs in parallel.
   const levelResults = await Promise.all(
-    levelFileNames.map((fileName) => fetchYaml(repo, `${adventurePath}/docs/${fileName}`))
+    levelFileNames.map((fileName) => fetchYaml(repo, `${adventurePath}/docs/${fileName}`, ref))
   );
   const allFetchedLevels = [];
   const rawFetchedLevels = [];
@@ -226,7 +226,7 @@ async function main() {
   const fetchedDiagrams = new Set();
   for (const raw of rawFetchedLevels) {
     if (!raw.architecture_diagram || fetchedDiagrams.has(raw.architecture_diagram)) continue;
-    const svgContent = await fetchBinaryFile(repo, `${adventurePath}/docs/diagrams/${raw.architecture_diagram}`);
+    const svgContent = await fetchBinaryFile(repo, `${adventurePath}/docs/diagrams/${raw.architecture_diagram}`, ref);
     if (svgContent) {
       writeFileSync(resolve(diagramsDir, raw.architecture_diagram), svgContent);
       fetchedDiagrams.add(raw.architecture_diagram);

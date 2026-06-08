@@ -30,7 +30,7 @@ Go to **Actions → Sync Adventure from Challenges Repo → Run workflow**.
 
 | Input | Required | Description |
 |---|---|---|
-| `adventure_url` | Yes | URL of the adventure folder in the challenges repo. Example: `https://github.com/off-on-dev/open-source-challenges/tree/main/adventures/05-lex-imperfecta` |
+| `adventure_url` | Yes | GitHub URL of the adventure folder — any branch works. Main: `https://github.com/off-on-dev/open-source-challenges/tree/main/adventures/05-lex-imperfecta`. PR branch: `https://github.com/off-on-dev/open-source-challenges/tree/feat/my-branch/adventures/05-lex-imperfecta`. |
 | `levels` | No | Comma-separated level IDs to make live now (e.g. `beginner` or `beginner,intermediate`). Levels that exist in the challenges repo but are not listed here appear as "Coming Soon" placeholders. Leave blank to make all levels live. |
 
 ### 2. What the workflow does

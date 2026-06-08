@@ -5,8 +5,9 @@ on:
     inputs:
       adventure_url:
         description: >
-          URL of the adventure folder in the challenges repo
-          (e.g. https://github.com/off-on-dev/open-source-challenges/tree/main/adventures/05-lex-imperfecta)
+          GitHub URL of the adventure folder in the challenges repo — any branch works.
+          main: https://github.com/off-on-dev/open-source-challenges/tree/main/adventures/05-lex-imperfecta
+          PR branch: https://github.com/off-on-dev/open-source-challenges/tree/feat/my-branch/adventures/05-lex-imperfecta
         required: true
         type: string
       levels:
@@ -42,8 +43,8 @@ jobs:
         env:
           ADVENTURE_URL: ${{ inputs.adventure_url }}
         run: |
-          if ! echo "$ADVENTURE_URL" | grep -qE '^https://github\.com/off-on-dev/open-source-challenges/tree/[^/]+/adventures/'; then
-            echo "Error: URL must point to an adventure folder under adventures/ in off-on-dev/open-source-challenges"
+          if ! echo "$ADVENTURE_URL" | grep -qE '^https://github\.com/off-on-dev/open-source-challenges/'; then
+            echo "Error: URL must be a GitHub URL from off-on-dev/open-source-challenges"
             echo "Example: https://github.com/off-on-dev/open-source-challenges/tree/main/adventures/05-lex-imperfecta"
             exit 1
           fi
