@@ -11,7 +11,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
     contributor: {
       name: "Katharina Sick",
       url: "https://ksick.dev/",
-      about: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
+      aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
     },
     isLive: true,
     levels: [
@@ -38,7 +38,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
     contributor: {
       name: "Simon Schrottner",
       url: "https://schrottner.at/",
-      about: "CNCF Ambassador and maintainer of OpenFeature and JUnit Pioneer. Helps teams release faster and with more confidence through open standards, feature flagging, and the communities that make both possible. A familiar face at KubeCon EU, Devoxx, ContainerDays, and meetups across Europe.",
+      aboutHtml: "CNCF Ambassador and maintainer of OpenFeature and JUnit Pioneer. Helps teams release faster and with more confidence through open standards, feature flagging, and the communities that make both possible. A familiar face at KubeCon EU, Devoxx, ContainerDays, and meetups across Europe.",
     },
     levels: [
       {
@@ -87,7 +87,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
     contributor: {
       name: "Katharina Sick",
       url: "https://ksick.dev/",
-      about: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
+      aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
     },
     levels: [
       {
@@ -132,7 +132,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
     contributor: {
       name: "Katharina Sick",
       url: "https://ksick.dev/",
-      about: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
+      aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
     },
     levels: [
       {
@@ -181,7 +181,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
     contributor: {
       name: "Katharina Sick",
       url: "https://ksick.dev/",
-      about: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
+      aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
     },
     levels: [
       {
@@ -253,7 +253,7 @@ export const ADVENTURE_CONTRIBUTORS: AdventureContributor[] = Object.values(
     .reduce<Record<string, AdventureContributor>>((acc, a) => {
       const key = a.contributor.name;
       if (!acc[key]) {
-        acc[key] = { name: a.contributor.name, url: a.contributor.url, about: a.contributor.about, adventures: [] };
+        acc[key] = { name: a.contributor.name, url: a.contributor.url, aboutHtml: a.contributor.aboutHtml, adventures: [] };
       }
       acc[key].adventures.push({ id: a.id, title: a.title });
       return acc;

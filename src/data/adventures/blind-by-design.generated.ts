@@ -14,7 +14,7 @@ export const BLIND_BY_DESIGN: Adventure = {
   contributor: {
     name: "Simon Schrottner",
     url: "https://schrottner.at/",
-    about: "CNCF Ambassador and maintainer of OpenFeature and JUnit Pioneer. Helps teams release faster and with more confidence through open standards, feature flagging, and the communities that make both possible. A familiar face at KubeCon EU, Devoxx, ContainerDays, and meetups across Europe.",
+    aboutHtml: "CNCF Ambassador and maintainer of OpenFeature and JUnit Pioneer. Helps teams release faster and with more confidence through open standards, feature flagging, and the communities that make both possible. A familiar face at KubeCon EU, Devoxx, ContainerDays, and meetups across Europe.",
   },
   backstory: [
     "The Aletheia Institute is running a multi-phase vision-enhancement trial. The lab is a Spring Boot service whose one job is to record the vision_state of every subject who walks through the protocol (blurry, sharp, enhanced, or clouded), because subjects don't all arrive with the same biology, the same dose adherence, or the same trial-jurisdiction baseline. The flag definitions that drive those readings live in flags.json, watched by a flagd sidecar; the OpenFeature SDK is supposed to call that sidecar on every evaluation.",

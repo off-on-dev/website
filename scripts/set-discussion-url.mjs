@@ -1,8 +1,9 @@
 /**
  * Set the discussion URL for a specific adventure level.
  *
- * Updates adventure.yaml (community_url / discussion_url field) and the
- * per-level *-posts.json file, then fetches initial posts from Discourse.
+ * Updates adventure.yaml (community_url field on the level; community_category_id at
+ * adventure root if missing) and the per-level *-posts.json file, then fetches
+ * initial posts from Discourse.
  *
  * Environment variables:
  *   ADVENTURE_ID    - adventure slug (e.g. lex-imperfecta)

@@ -27,7 +27,7 @@ export const ADVENTURE_CONTRIBUTORS: AdventureContributor[] = Object.values(
     .reduce<Record<string, AdventureContributor>>((acc, a) => {
       const key = a.contributor.name;
       if (!acc[key]) {
-        acc[key] = { name: a.contributor.name, url: a.contributor.url, about: a.contributor.about, adventures: [] };
+        acc[key] = { name: a.contributor.name, url: a.contributor.url, aboutHtml: a.contributor.aboutHtml, adventures: [] };
       }
       acc[key].adventures.push({ id: a.id, title: a.title });
       return acc;

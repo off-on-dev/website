@@ -1261,6 +1261,129 @@ Each platform link opens in a new tab with `rel="noopener noreferrer"`. All `<sv
 
 ---
 
+### `Hero`
+
+`src/components/Hero.tsx`
+
+Home page full-viewport hero section. No props. Renders `BRAND_SECONDARY_LINE_PARTS` as an animated `<h1>` (`id="hero-heading"`) with two `<span>` lines, a brand slogan pill above it, and two CTAs below. Eight `.firefly` particle `<span>` elements are generated with `useMemo` so they do not re-create on re-render. The section carries `aria-labelledby="hero-heading"`. Buttons use `.btn-primary` and `.btn-ghost` because the hero sits on the default page background, not on a `bg-primary` section.
+
+---
+
+### `BottomCTA`
+
+`src/components/BottomCTA.tsx`
+
+Full-width `bg-primary` amber section at the bottom of the home page. No props. Contains a four-line `<h2>` ("Start Curious. Break Things."), two paragraphs of brand copy, and two CTAs. At `lg+`, a Nyx mascot image renders as a third column and is hidden at smaller breakpoints. Buttons must use `.btn-inverse` and `.btn-ghost-inverse` because the section background is amber. Never use `.btn-primary` or `.btn-ghost` here.
+
+---
+
+### `Navbar`
+
+`src/components/Navbar.tsx`
+
+Site-wide sticky navigation bar. No props. Contains: logo `<Link>` (`logo-link` class), desktop nav links via the internal `NavLinks` component, a theme toggle via `NavThemeToggle`, and a mobile hamburger drawer. The mobile menu (`id="mobile-menu"`) is always in the DOM and uses the HTML `hidden` attribute so `aria-controls` on the trigger always resolves to a valid element. Three `useEffect` hooks handle Escape key close, Tab focus trap, and `inert`/`aria-hidden` on `#main-content` and `footer` while the drawer is open.
+
+---
+
+### `Footer`
+
+`src/components/Footer.tsx`
+
+Site-wide footer. No props. Contains two `<nav>` landmark regions (`aria-label="Explore"` and `aria-label="Community"`), a brand identity column, and a bottom strip with copyright text, the three-part slogan, and social icon links (LinkedIn, Bluesky, X). The logo `src` switches between `logoDark` and `logoLight` based on the active theme. Social icons use inline SVG brand marks (see Brand/social icon exceptions in the Icons section).
+
+---
+
+### `AdventureCard`
+
+`src/components/AdventureCard.tsx`
+
+Navigation card linking to an adventure overview page. The entire card is a `<Link>` to `/adventures/:id/`. Renders a header row with an "Adventure" mono label, an optional `LivePill`, and a `.badge-levels` level-count pill; the adventure title (hover: amber); a two-line `story` snippet; a row of `DifficultyBadge` instances; up to four technology tag `<span>` chips; and an optional `ContributorBadge` pinned to the card footer via `mt-auto`. Card border is `border-primary/50` when `adventure.isLive`, otherwise `border-[hsl(var(--surface-border))]`. Uses `card-glow` for hover glow.
+
+```tsx
+<AdventureCard adventure={adventureSummary} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `adventure` | `AdventureCardSummary` | Summary data from `ADVENTURE_SUMMARIES`. Includes `id`, `title`, `story`, `tags`, `levels`, `contributor`, and `isLive`. |
+
+Distinct from `FilteredLevelCard`: `AdventureCard` links to the adventure overview; `FilteredLevelCard` links to an individual level.
+
+---
+
+### `DifficultyBadge`
+
+`src/components/DifficultyBadge.tsx`
+
+Renders a difficulty level as a styled pill using the shadcn `Badge` primitive. Colors are applied via inline `style` referencing CSS tokens (`--difficulty-starter-bg`, `--difficulty-builder-bg`, `--difficulty-architect-bg`). The `data-difficulty` attribute on the root element is used for CSS targeting and for Playwright selectors in accessibility tests.
+
+```tsx
+<DifficultyBadge difficulty="Beginner" />
+<DifficultyBadge difficulty="Expert" showDot />
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `difficulty` | `"Beginner" \| "Intermediate" \| "Expert"` | required | Determines token set and badge label. |
+| `showDot` | `boolean` | `false` | When true, renders a small filled circle in the badge's text color before the label. Used by `LevelCard` to add a visual status indicator. |
+
+Never hardcode HSL values in this component. Use `hsl(var(--difficulty-*))` references only. See the Difficulty Badges section of Colors for the full token list.
+
+---
+
+### `CodespacesButton`
+
+`src/components/CodespacesButton.tsx`
+
+"Open in Codespaces" CTA. Renders a `.btn-primary` `<a>` that opens a GitHub Codespaces URL in a new tab, followed by a "Free GitHub account required" helper note in mono text.
+
+```tsx
+<CodespacesButton href={level.codespacesUrl} />
+<CodespacesButton href={level.codespacesUrl} fullWidth />
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `href` | `string` | required | GitHub Codespaces launch URL. |
+| `fullWidth` | `boolean` | `false` | When true, applies `w-full justify-center` to the button and centers the helper note. Used in mobile-oriented `LevelCard` layouts. |
+
+---
+
+### `TagChips`
+
+`src/components/TagChips.tsx`
+
+Renders a flat list of technology tag `<Link>` chips, each linking to `/challenges/:slug/`. Applies the `tag-chip-link` CSS class for light/dark mode contrast compliance (see CSS Class Patterns). No wrapper element; renders a fragment.
+
+```tsx
+<TagChips tags={level.topics} />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `tags` | `readonly string[]` | Technology tag display names. URL slugs are derived at render time via `tagToSlug`. |
+
+Used in `ChallengeDetail` and `AdventureDetail` to render the level's technology stack as navigable filter links.
+
+---
+
+### `NotFoundPage`
+
+`src/components/NotFoundPage.tsx`
+
+Reusable 404 page shell used by both `NotFound.tsx` (prerendered `/404` route) and `CatchAll.tsx` (client-side fallback). Renders `Navbar`, a centered `<main id="main-content">` with an `<h1>`, body message, and "Go to Homepage" link, and `Footer`.
+
+```tsx
+<NotFoundPage title="Page Not Found" message="The page you're looking for doesn't exist." />
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `title` | `string` | `<h1>` text. |
+| `message` | `string` | Body text below the heading. |
+
+---
+
 ## Patterns
 
 ### Inline Challenge Card
@@ -1323,6 +1446,24 @@ Used in `ChallengeDetail.tsx` (adventure level pages) and `AdventureDetail.tsx` 
 
 ## Utilities
 
+### `utils`
+
+`src/lib/utils.ts`
+
+General-purpose utility functions.
+
+| Export | Signature | Description |
+|---|---|---|
+| `cn` | `(...inputs: ClassValue[]) => string` | Merges Tailwind class names and resolves conflicts via `tailwind-merge`. Use everywhere class names are conditionally composed. |
+| `isDeadlinePast` | `(deadline: string \| undefined) => boolean` | Returns `true` if the ISO 8601 deadline string represents a date in the past. Returns `false` for `undefined` or unparseable values. |
+| `formatDeadline` | `(iso: string) => string` | Formats an ISO 8601 deadline string for human display, preserving the stored UTC offset rather than converting to the viewer's local timezone. `+01:00` renders as CET, `+02:00` as CEST. Returns the original string unchanged if it does not match the expected format. |
+
+```ts
+import { cn, isDeadlinePast, formatDeadline } from "@/lib/utils";
+```
+
+---
+
 ### `buildPageMeta`
 
 `src/lib/meta.ts`
@@ -1371,6 +1512,27 @@ Do not import these from `@/data/adventures` in card or filter components. That 
 
 ---
 
+### `filter-utils`
+
+`src/data/adventures/filter-utils.ts`
+
+Filtering logic for the adventure catalog. Built from `ADVENTURE_SUMMARIES` so it does not import the full generated detail files.
+
+| Export | Signature | Description |
+|---|---|---|
+| `getLevelSummariesByFilters` | `(tags: string[], difficulty: string \| null) => RelatedLevelSummary[]` | Returns all level summaries matching any of the provided tags (OR logic) and/or the difficulty. Pass `[]` and `null` to get all levels. |
+| `ALL_LEVEL_SUMMARIES` | `RelatedLevelSummary[]` | Pre-computed result of `getLevelSummariesByFilters([], null)`. Use this constant instead of calling the function with empty args. |
+| `DIFFICULTIES` | `readonly ["Beginner", "Intermediate", "Expert"]` | Ordered difficulty array. Use for rendering difficulty filter options. |
+| `Difficulty` | `type` | `"Beginner" \| "Intermediate" \| "Expert"`. Import from here rather than re-deriving the union. |
+
+```ts
+import { getLevelSummariesByFilters, DIFFICULTIES, type Difficulty } from "@/data/adventures/filter-utils";
+```
+
+Used by `ChallengesGrid` and `Challenges`. Do not call `getLevelSummariesByFilters` directly in components; use `ALL_LEVEL_SUMMARIES` for the unfiltered case.
+
+---
+
 ### `discussion-utils`
 
 `src/lib/discussion-utils.ts`
@@ -1394,6 +1556,7 @@ Helper functions for the `MarkdownContent` component.
 |---|---|---|
 | `slugify` | `(text: string) => string` | Converts heading text to a URL-safe slug for `id` attributes. |
 | `getSectionIcon` | `(slug: string) => LucideIcon \| undefined` | Maps known section slugs (`architecture`, `toolbox`, `how-to-play`) to their lucide-react icon. Returns `undefined` for unrecognised slugs. |
+| `stripLinks` | `(html: string) => string` | Strips `<a>` tags from sanitised HTML while preserving link text. Also removes generator-injected SVG icons and `sr-only` spans. Call before passing any author-prose HTML to `dangerouslySetInnerHTML` inside an interactive element (`<Link>`, `<button>`) to prevent invalid nested anchors. |
 
 ---
 
@@ -1642,7 +1805,7 @@ Measured against the production build locally (`npm run build && npm run preview
 
 | Category | Score |
 |---|---|
-| Performance | 93 (target: 95) |
+| Performance | 95 |
 | Accessibility | 100 |
 | Best Practices | 100 |
 | SEO | 100 |

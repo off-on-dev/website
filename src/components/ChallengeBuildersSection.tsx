@@ -23,8 +23,8 @@ export const ChallengeBuildersSection = ({ aside }: { aside?: ReactNode }): JSX.
             className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6"
           >
             <PersonNameLink name={contributor.name} url={contributor.url} />
-            {contributor.about && (
-              <InlineProse html={contributor.about} className="mt-1.5 text-sm text-muted-foreground leading-relaxed" />
+            {contributor.aboutHtml && (
+              <InlineProse html={contributor.aboutHtml} className="mt-1.5 text-sm text-muted-foreground leading-relaxed" />
             )}
             <p className="mt-6 mb-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">adventures created</p>
             <ul role="list" className="space-y-3">
