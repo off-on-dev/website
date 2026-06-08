@@ -1,1 +1,0 @@
-import{l as e}from"./vendor-router-BWjC-BeS.js";function t(){return e(`/handbook`)}export{t as clientLoader};
