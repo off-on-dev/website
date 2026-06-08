@@ -19,9 +19,10 @@ const sectionIcons: Record<string, LucideIcon> = {
 export const getSectionIcon = (slug: string): LucideIcon | undefined =>
   sectionIcons[slug];
 
-/** Strips `<a>` tags from pre-rendered HTML, preserving text. Removes SVG icons and sr-only spans injected by the generator. Use inside interactive elements where nested `<a>` tags are invalid. */
+/** Strips `<a>` tags from pre-rendered HTML, preserving text. Removes sr-only new-tab
+ *  spans injected by the generator. Use inside interactive elements where nested `<a>`
+ *  tags are invalid (e.g. a <Link> card or <button>). */
 export const stripLinks = (html: string): string =>
   html
     .replace(/<a\b[^>]*>([\s\S]*?)<\/a>/gi, "$1")
-    .replace(/<svg\b[\s\S]*?<\/svg>/gi, "")
     .replace(/<span\s+class="sr-only">[\s\S]*?<\/span>/gi, "");

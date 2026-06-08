@@ -90,19 +90,16 @@ const mdProcessor = unified()
   .use(rehypeSanitize, sanitizeSchema)
   .use(rehypeStringify);
 
-// Lucide ExternalLink icon at 12x12, paths from lucide-react v1.16.0.
-const EXT_LINK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="flex-shrink:0"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>`;
-
-/** Inject external link icon + target/rel + sr-only text into http/https <a> tags.
- *  Applied after sanitisation so the SVG is not stripped. */
-function addExternalLinkIcons(html) {
+/** Add target/rel/sr-only to http/https <a> tags. The external link icon is
+ *  rendered via CSS ::after on [target="_blank"] — no inline SVG needed. */
+function annotateExternalLinks(html) {
   return html.replace(
     /<a href="(https?:\/\/[^"]+)"([^>]*)>([\s\S]*?)<\/a>/gi,
     (_, href, restAttrs, content) => {
       const attrs = restAttrs.includes("target=")
         ? restAttrs
         : ` target="_blank" rel="noopener noreferrer"${restAttrs}`;
-      return `<a href="${href}"${attrs}>${content}${EXT_LINK_SVG}<span class="sr-only"> (opens in new tab)</span></a>`;
+      return `<a href="${href}"${attrs}>${content}<span class="sr-only"> (opens in new tab)</span></a>`;
     }
   );
 }
@@ -115,7 +112,7 @@ async function mdToBlock(str) {
   const result = await mdProcessor.process(str);
   let html = String(result).trim();
   html = html.replace(/<pre>/g, '<pre tabindex="0" aria-label="Code block">');
-  html = addExternalLinkIcons(html);
+  html = annotateExternalLinks(html);
   return html;
 }
 
@@ -130,7 +127,7 @@ async function mdToInline(str) {
   if (pCount === 1 && html.startsWith("<p>") && html.endsWith("</p>")) {
     html = html.slice(3, -4);
   }
-  html = addExternalLinkIcons(html);
+  html = annotateExternalLinks(html);
   return html;
 }
 
