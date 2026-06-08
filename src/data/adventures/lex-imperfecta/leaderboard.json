@@ -1,0 +1,29 @@
+{
+  "updatedAt": "2026-06-08T11:07:12.616Z",
+  "rows": [
+    {
+      "rank": 1,
+      "username": "maheedhar132",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/maheedhar132/90/339.png",
+      "points": 100,
+      "challengesSolved": 1,
+      "beginnerPoints": 100,
+      "intermediatePoints": 0,
+      "expertPoints": 0,
+      "singlePoints": 0,
+      "breakdown": "🟢 Restore proper admission control using Kyverno | June 2026 Adventure: Beginner [beginner] rank #1 = 100 pts"
+    },
+    {
+      "rank": 2,
+      "username": "theharithsa",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/90/297.png",
+      "points": 95,
+      "challengesSolved": 1,
+      "beginnerPoints": 95,
+      "intermediatePoints": 0,
+      "expertPoints": 0,
+      "singlePoints": 0,
+      "breakdown": "🟢 Restore proper admission control using Kyverno | June 2026 Adventure: Beginner [beginner] rank #2 = 95 pts"
+    }
+  ]
+}
