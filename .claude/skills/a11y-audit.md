@@ -5,11 +5,26 @@ description: >
   Load when asked to audit a component, page, or user flow for accessibility.
   Combines persona-based functional simulation, semantic code audit, axe output
   integration, and severity-weighted synthesis into a structured report.
+  For specialist rules, delegates to sub-skills: /keyboard, /navigation,
+  /progressive-enhancement, /user-personalization.
 ---
 
 # Accessibility Audit Skill
 
 Run a three-phase audit and synthesize the findings into a risk-weighted report.
+
+## Sub-skills
+
+Invoke these for focused specialist checks during or after this audit:
+
+| Sub-skill | When to use |
+|---|---|
+| `/keyboard` | Any interactive element — buttons, modals, dropdowns, tabs, custom widgets |
+| `/navigation` | Nav components — primary nav, skip links, breadcrumbs, pagination, mobile menus |
+| `/progressive-enhancement` | Any new feature or architecture review; ensures core content works without JS |
+| `/user-personalization` | Theme toggle, consent state, or any user preference persistence |
+
+---
 
 ---
 

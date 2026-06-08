@@ -28,13 +28,13 @@ export const BOARD_MEMBERS: BoardMember[] = [
   {
     name: "Kenyatta Forbes",
     url: "https://www.linkedin.com/in/kenyatta-f/",
-    about: "Program manager and community builder with deep roots in education and open source. Previously led product pilots reaching 189 million Google Classroom users, ran programs at Mozilla advancing the open internet, and started her career as an educator and technology coordinator for Chicago Public Schools.",
+    about: "Sr Program Manager at Dynatrace, focused on cross-functional collaboration at the intersection of education, open source, and technology. Previously led product pilots reaching 189 million Google Classroom users at Google for Education and ran open internet programs at Mozilla. Started her career as an educator and technology coordinator for Chicago Public Schools.",
     image: kenyattaImage,
   },
   {
     name: "Sinduri Guntupalli",
     url: "https://www.linkedin.com/in/sinduri-guntupalli-307542131/",
-    about: "Product Manager with a background in web development, configuration management, web analytics, and SEO. Active in the Drupal community as Marketing Manager for Drupal Austria and recipient of the Women in Drupal Award (Build). Open source enthusiast, positivity advocate, and continuous learner.",
+    about: "Sr Developer Programs Engineer at Dynatrace, with a background in web development, configuration management, web analytics, and SEO. Active in the Drupal community as Marketing Manager for Drupal Austria and recipient of the Women in Drupal Award (Build). Open source enthusiast, positivity advocate, and continuous learner.",
     image: sinduriImage,
   },
   // TODO: replace placeholder with confirmed board member
