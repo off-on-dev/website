@@ -1,6 +1,7 @@
-// Visual regression tests. Run `npm run build` before `npm run test:e2e`.
+// Visual regression tests. Run `npm run build` before `npm run test:visual`.
 // First run generates baseline screenshots in e2e/__screenshots__/.
 // Subsequent runs compare against baselines and fail if diffs exceed threshold.
+// Thresholds are set globally in playwright.config.ts.
 
 import { test, expect } from "@playwright/test";
 
@@ -24,30 +25,32 @@ const VISUAL_ROUTES: VisualRoute[] = [
   { path: "/404", name: "404" },
 ];
 
+// Hide consent banner and floating cookie button; both vary between sessions
+// and would produce spurious pixel diffs unrelated to visual changes.
+const HIDE_CONSENT_CSS = `
+  [role="region"][aria-label*="cookies"],
+  [aria-label*="cookie preferences"] {
+    display: none !important;
+  }
+`;
+
+async function hideConsent(page: import("@playwright/test").Page): Promise<void> {
+  await page.addStyleTag({ content: HIDE_CONSENT_CSS });
+}
+
 test.describe("visual regression (dark mode)", () => {
   for (const { path, name, maskSelectors } of VISUAL_ROUTES) {
     test(name, async ({ page }) => {
       await page.emulateMedia({ reducedMotion: "reduce" });
       await page.goto(path);
       await page.waitForLoadState("networkidle");
+      await hideConsent(page);
 
-      // Hide consent banner and cookie button to stabilize screenshots
-      await page.addStyleTag({
-        content: `
-          [role="region"][aria-label*="cookies"],
-          [aria-label*="cookie preferences"] {
-            display: none !important;
-          }
-        `,
-      });
-
-      const mask = maskSelectors ? await Promise.all(maskSelectors.map((s) => page.locator(s).first())) : [];
+      const mask = maskSelectors?.map((s) => page.locator(s).first()) ?? [];
 
       await expect(page).toHaveScreenshot(`${name}-dark.png`, {
         fullPage: true,
         mask,
-        threshold: 0.2, // Allow 20% pixel difference for font rendering variance
-        maxDiffPixels: 100,
       });
     });
   }
@@ -61,23 +64,13 @@ test.describe("visual regression (light mode)", () => {
       await page.goto(path);
       await page.waitForLoadState("networkidle");
       await expect(page.locator("html")).toHaveClass(/light/);
+      await hideConsent(page);
 
-      await page.addStyleTag({
-        content: `
-          [role="region"][aria-label*="cookies"],
-          [aria-label*="cookie preferences"] {
-            display: none !important;
-          }
-        `,
-      });
-
-      const mask = maskSelectors ? await Promise.all(maskSelectors.map((s) => page.locator(s).first())) : [];
+      const mask = maskSelectors?.map((s) => page.locator(s).first()) ?? [];
 
       await expect(page).toHaveScreenshot(`${name}-light.png`, {
         fullPage: true,
         mask,
-        threshold: 0.2,
-        maxDiffPixels: 100,
       });
     });
   }

@@ -171,7 +171,7 @@ test.describe("WCAG 1.4.11 border contrast: light mode (axe gap)", () => {
         cur = cur.parentElement;
       }
       if (!border || !bg) return null;
-      const lin = (c: number) => { const n = c / 255; return n <= 0.03928 ? n / 12.92 : Math.pow((n + 0.055) / 1.055, 2.4); };
+      const lin = (c: number) => { const n = c / 255; return n <= 0.04045 ? n / 12.92 : Math.pow((n + 0.055) / 1.055, 2.4); };
       const lum = ([r, g, b]: [number, number, number]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
       const l1 = lum(border);
       const l2 = lum(bg);
@@ -223,7 +223,7 @@ test.describe("hover state contrast: light mode", () => {
         cur = cur.parentElement;
       }
       if (!fg || !bg) return null;
-      const lin = (c: number) => { const n = c / 255; return n <= 0.03928 ? n / 12.92 : Math.pow((n + 0.055) / 1.055, 2.4); };
+      const lin = (c: number) => { const n = c / 255; return n <= 0.04045 ? n / 12.92 : Math.pow((n + 0.055) / 1.055, 2.4); };
       const lum = ([r, g, b]: [number, number, number]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
       const l1 = lum(fg);
       const l2 = lum(bg);
@@ -249,8 +249,10 @@ test.describe("hover state contrast: light mode", () => {
     await page.goto("/contribute");
     await page.waitForLoadState("networkidle");
     const link = page.locator(".docs-ext-link").first();
+    const preHoverColor = await link.evaluate((el) => window.getComputedStyle(el).color);
     await link.hover();
-    await page.waitForTimeout(250); // wait for 200ms color transition to complete
+    // toHaveCSS retries automatically; waits for the 200ms transition to settle
+    await expect(link).not.toHaveCSS("color", preHoverColor);
     const ratio = await getTextContrast(page, ".docs-ext-link");
     expect(ratio, ".docs-ext-link hover (16px normal = normal text) must be >= 7:1 (WCAG AAA)").not.toBeNull();
     expect(ratio!).toBeGreaterThanOrEqual(7.0);
