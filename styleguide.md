@@ -1653,7 +1653,7 @@ Used on `<span>` elements via the `SectionLabel` component in: `CommunitySection
 The standard class for all inline prose links across the site. Handles both modes correctly without any additional Tailwind utilities for color or hover state.
 
 **Dark mode:** foreground text with amber (`--primary`) underline. Hover shifts text and underline to full `hsl(var(--primary))` (`#ffc034`).
-**Light mode:** near-black foreground text with `currentColor` underline. Hover shifts text and underline to `--link-hover-light` (`hsl(41 100% 22%)` ≈ `#704d00`), dark amber, same hue as primary, ~7.4:1 contrast on light backgrounds. Passes WCAG AAA.
+**Light mode:** near-black foreground text with `currentColor` underline. Hover shifts text and underline to `--link-hover-light` (`hsl(41 100% 21%)` ≈ `#6b4900`), dark amber, same hue as primary, ~7.5:1 contrast on bg-card. Passes WCAG AAA.
 
 Used in: `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`, `ChallengeDetail`, `MarkdownContent`, `CommunitySidebar`, `RewardsCard`, `Accessibility`, and `Privacy`.
 
@@ -1676,7 +1676,7 @@ className="docs-ext-link text-sm font-medium mt-4"
 CSS class for icon-only social media `<a>` links. Used in the Spread the Word card on `/contribute` and in `ChallengeShareLinks` on challenge detail pages.
 
 **Dark mode:** base `text-[hsl(var(--text-secondary))]`, hover `hsl(var(--primary))` (amber, fine on dark backgrounds).
-**Light mode:** `.light .social-icon-link:hover` overrides to `hsl(var(--link-hover-light))` (~7.4:1 dark amber on white), avoiding `#ffc034` which is ~1.6:1 on near-white and fails WCAG 1.4.11.
+**Light mode:** `.light .social-icon-link:hover` overrides to `hsl(var(--link-hover-light))` (~7.5:1 dark amber on bg-card), avoiding `#ffc034` which is ~1.6:1 on near-white and fails WCAG 1.4.11.
 
 Includes `padding: 0.25rem` (equivalent to `p-1`) to improve tap target size and `border-radius: 2px` for focus ring containment.
 
