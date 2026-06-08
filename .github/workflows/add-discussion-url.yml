@@ -118,7 +118,8 @@ jobs:
             "src/data/adventures/${ADVENTURE_ID}.generated.ts" \
             "src/data/adventures/index.ts" \
             "src/data/adventures/summaries.ts" \
-            "src/data/adventures/types.ts"
+            "src/data/adventures/types.ts" \
+            "scripts/refresh-leaderboard.mjs"
 
           HAS_CHANGES=false
           if ! git diff --cached --quiet; then
@@ -142,9 +143,10 @@ jobs:
 
           ### What changed
 
-          - \`adventure.yaml\` — \`community_url\` / \`discussion_url\` set on the \`${LEVEL_ID}\` level
+          - \`adventure.yaml\` — \`community_url\` set on the \`${LEVEL_ID}\` level; \`community_category_id\` set at adventure root if it was missing
           - \`${LEVEL_ID}-posts.json\` — \`discussionUrl\` set and initial posts fetched from Discourse
           - Generated TypeScript updated (\`${ADVENTURE_ID}.generated.ts\`, \`index.ts\`, \`summaries.ts\`)
+          - \`scripts/refresh-leaderboard.mjs\` — \`ADVENTURE_CATEGORIES\` patched with the resolved category ID
 
           ### Before merging
 

@@ -6,6 +6,7 @@
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
       "cooked": "I completed this one for myself too. We are now saving the empire with our skills.",
       "created_at": "2026-06-07T10:22:25.669Z",
+      "challengeSolved": true,
       "topicUrl": "https://community.offon.dev/t/restore-proper-admission-control-using-kyverno-june-2026-adventure-beginner/1576"
     },
     {
@@ -44,6 +45,11 @@
       "username": "maheedhar132",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/maheedhar132/40/339_2.png",
       "solvedAt": "2026-06-05T13:56:52.389Z"
+    },
+    {
+      "username": "theharithsa",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
+      "solvedAt": "2026-06-07T10:22:25.669Z"
     }
   ]
 }

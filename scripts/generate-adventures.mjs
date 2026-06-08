@@ -24,6 +24,7 @@
  * - Never edit *.generated.ts by hand — changes will be overwritten.
  */
 
+import { execSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -774,13 +775,33 @@ function replaceRegion(filePath, openMarker, closeMarker, body) {
 }
 
 /** Build the body for a region as one block of text. Body must include a trailing newline. */
-function buildSitemapBody(adventures) {
+// Returns the date the adventure.yaml was last modified, for use as sitemap lastmod.
+// Uses today for new or uncommitted-modified files; the git commit date for stable ones.
+// Falls back to today if git is unavailable.
+function getAdventureLastmod(slug) {
   const today = new Date().toISOString().slice(0, 10);
+  const relPath = `src/data/adventures/${slug}/adventure.yaml`;
+  try {
+    const status = execSync(`git status --porcelain -- ${relPath}`, {
+      cwd: ROOT, encoding: "utf-8", stdio: ["pipe", "pipe", "pipe"],
+    }).trim();
+    if (status) return today;
+    const gitDate = execSync(`git log --format="%ci" -1 -- ${relPath}`, {
+      cwd: ROOT, encoding: "utf-8", stdio: ["pipe", "pipe", "pipe"],
+    }).trim();
+    return gitDate ? gitDate.slice(0, 10) : today;
+  } catch {
+    return today;
+  }
+}
+
+function buildSitemapBody(adventures) {
   const lines = [];
   for (const a of adventures) {
-    lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
+    const lastmod = getAdventureLastmod(a.slug);
+    lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
     for (const l of a.levels) {
-      lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/levels/${l.level}/</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
+      lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/levels/${l.level}/</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
     }
   }
   return lines.join("\n") + "\n  ";
@@ -881,12 +902,15 @@ function collectAllTags(adventures) {
   return [...set].sort((x, y) => x.localeCompare(y));
 }
 
-function buildSitemapTagsBody(tags) {
+function buildSitemapTagsBody(tags, adventures) {
   const today = new Date().toISOString().slice(0, 10);
-  const lines = tags.map(
-    (t) =>
-      `  <url><loc>https://offon.dev/challenges/${tagToSlug(t)}/</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`,
-  );
+  const lines = tags.map((t) => {
+    const matching = adventures.filter((a) => (a.tags || []).includes(t));
+    const lastmod = matching.length > 0
+      ? matching.map((a) => getAdventureLastmod(a.slug)).sort().at(-1)
+      : today;
+    return `  <url><loc>https://offon.dev/challenges/${tagToSlug(t)}/</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`;
+  });
   return lines.join("\n") + "\n";
 }
 
@@ -963,7 +987,7 @@ function patchRegions(adventures) {
     resolve(ROOT, "public/sitemap.xml"),
     `<url><loc>https://offon.dev/challenges/</loc><lastmod>2026-06-03</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>`,
     `</urlset>`,
-    buildSitemapTagsBody(tags)
+    buildSitemapTagsBody(tags, adventures)
   );
   replaceRegion(
     resolve(ROOT, "react-router.config.ts"),

@@ -159,6 +159,7 @@ async function fetchTopicPosts(topicId, topicUrl) {
   }
 
   const data = await res.json();
+  const categoryId = data.category_id ?? null;
   const firstPagePosts = data.post_stream?.posts ?? [];
   const allPostIds = data.post_stream?.stream ?? [];
 
@@ -209,7 +210,7 @@ async function fetchTopicPosts(topicId, topicUrl) {
     }));
 
   const totalReplies = Math.max(0, (data.posts_count ?? 0) - 1);
-  return { posts: storedPosts, totalReplies, solvers };
+  return { posts: storedPosts, totalReplies, solvers, categoryId };
 }
 
 async function main() {
@@ -235,6 +236,13 @@ async function main() {
 
   console.log(`[posts] Fetching posts for topic ${topicId}...`);
   const result = await fetchTopicPosts(topicId, discussionUrl);
+
+  if (result?.categoryId > 0 && doc.get("community_category_id") == null) {
+    const slugIdx = doc.contents.items.findIndex((p) => p.key?.value === "slug");
+    const insertIdx = slugIdx >= 0 ? slugIdx + 1 : 1;
+    doc.contents.items.splice(insertIdx, 0, doc.createPair("community_category_id", result.categoryId));
+    console.log(`[yaml] Set community_category_id to ${result.categoryId} in adventure.yaml`);
+  }
 
   const content = result
     ? { discussionUrl, discussionPosts: result.posts, totalReplies: result.totalReplies, solvers: result.solvers }
