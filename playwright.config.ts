@@ -3,6 +3,7 @@ import { defineConfig, devices } from "@playwright/test";
 // Requires a production build in dist/client/. Run `npm run build` first.
 export default defineConfig({
   testDir: "e2e",
+  testIgnore: "**/visual.spec.ts", // Visual tests are manual-only (npm run test:visual)
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
