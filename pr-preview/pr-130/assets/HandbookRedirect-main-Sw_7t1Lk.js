@@ -1,0 +1,1 @@
+import{h as e}from"./vendor-router-BYzC_gEN.js";var t=e(function(){return null});export{t as default};
