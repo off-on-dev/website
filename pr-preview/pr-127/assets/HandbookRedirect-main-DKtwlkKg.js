@@ -1,0 +1,1 @@
+import{h as e}from"./vendor-router-BWjC-BeS.js";var t=e(function(){return null});export{t as default};
