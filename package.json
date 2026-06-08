@@ -14,9 +14,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test",
-    "test:visual": "playwright test e2e/visual.spec.ts",
-    "test:visual:update": "playwright test e2e/visual.spec.ts --update-snapshots",
+    "test:e2e": "playwright test --ignore-snapshots '*.spec.ts' --grep-invert 'visual'",
+    "test:visual": "playwright test visual.spec.ts",
+    "test:visual:update": "playwright test visual.spec.ts --update-snapshots",
     "generate": "node scripts/generate-adventures.mjs",
     "generate:validate": "node scripts/generate-adventures.mjs --validate-only",
     "prebuild": "node scripts/generate-adventures.mjs"
