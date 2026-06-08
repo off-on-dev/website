@@ -1,0 +1,1 @@
+import{l as e}from"./vendor-router-d6ZRy7mZ.js";function t(){return e(`/handbook`)}export{t as clientLoader};
