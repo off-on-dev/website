@@ -14,6 +14,14 @@ export default defineConfig({
     // the site's default state regardless of the developer's OS setting.
     colorScheme: "dark",
   },
+  snapshotPathTemplate: "e2e/__screenshots__/{arg}{ext}",
+  expect: {
+    toHaveScreenshot: {
+      // Font rendering differs slightly across OS/browser versions
+      threshold: 0.2,
+      maxDiffPixels: 100,
+    },
+  },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
   ],

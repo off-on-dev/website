@@ -22,6 +22,9 @@ dist-ssr
 # Playwright
 test-results/
 playwright-report/
+# Ignore screenshot diffs; baselines are committed
+e2e/__screenshots__/*-actual.png
+e2e/__screenshots__/*-diff.png
 
 # Test coverage
 coverage/
