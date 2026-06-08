@@ -147,12 +147,11 @@ function mergeLevels(existing, incoming, rawFetched) {
 
     levelMap[l.level] = {
       ...l,
-      // discussion_url is set after Discourse threads are created and is never present in the
-      // challenges repo. Preserve it so a re-sync does not wipe the community thread URL.
-      // Check both field names (discussion_url and its alias community_url) before deciding.
-      ...(prev?.discussion_url && !(raw?.discussion_url || raw?.community_url) && {
-        discussion_url: prev.discussion_url,
-      }),
+      // Preserve the discussion URL set by the add-discussion-url workflow.
+      // The challenges repo never sets these — check both field aliases so that
+      // adventures using community_url are handled the same as the older discussion_url.
+      ...(prev?.community_url && !raw?.community_url && { community_url: prev.community_url }),
+      ...(prev?.discussion_url && !raw?.discussion_url && { discussion_url: prev.discussion_url }),
       // architecture_diagram: use the value re-added by the SVG auto-fetch when present;
       // otherwise preserve any value that was manually set in a previous PR.
       ...(!l.architecture_diagram && prev?.architecture_diagram && { architecture_diagram: prev.architecture_diagram }),
@@ -239,28 +238,35 @@ async function main() {
     }
   }
 
-  // Track levels that were requested but don't exist in the challenges repo yet.
-  // These become "coming soon" placeholders on the website via upcoming_levels.
-  // They'll auto-promote to live the next time the sync runs and finds the YAML.
-  const fetchedIds = new Set(allFetchedLevels.map((l) => l.level));
-  const missingFromUpstream = levelsToSync.filter((id) => !fetchedIds.has(id));
-  if (missingFromUpstream.length > 0) {
-    console.log(`  Not in challenges repo yet (will appear as "coming soon"): ${missingFromUpstream.join(", ")}`);
-  }
-
   const adventureDir = resolve(ADVENTURES_DIR, slug);
   const yamlPath = resolve(adventureDir, "adventure.yaml");
   const existing = existsSync(yamlPath) ? parseYaml(readFileSync(yamlPath, "utf8")) : null;
   const mode = existing ? "update" : "create";
   console.log(`Mode: ${mode}`);
 
+  // Levels that were requested but don't exist in the challenges repo yet.
+  const fetchedIds = new Set(allFetchedLevels.map((l) => l.level));
+  const missingFromUpstream = levelsToSync.filter((id) => !fetchedIds.has(id));
+  if (missingFromUpstream.length > 0) {
+    if (mode === "update") {
+      fail(
+        `The following levels were requested but do not exist in the challenges repo: ${missingFromUpstream.join(", ")}.\n` +
+        `For an existing adventure, only levels already present upstream can be promoted. Wait until the level docs are added to the challenges repo, then re-run the sync.`
+      );
+    }
+    // New adventure: placeholders are fine — they'll auto-promote when the YAML appears upstream.
+    console.log(`  Not in challenges repo yet (will appear as "coming soon"): ${missingFromUpstream.join(", ")}`);
+  }
+
   // Levels already live in the adventure — never demoted regardless of levelsToSync.
   const existingLiveIds = new Set((existing?.levels || []).map((l) => l.level));
 
-  // Active = already live OR explicitly in levelsToSync (or all if levelsToSync is empty).
+  // Active = explicitly in levelsToSync (or all fetched levels if levelsToSync is empty).
+  // Existing live levels not in levelsToSync are left untouched in adventure.yaml by mergeLevels,
+  // so syncing one level does not overwrite the others.
   const activeLevels = allFetchedLevels.filter((l) => {
     if (levelsToSync.length === 0) return true;
-    return existingLiveIds.has(l.level) || levelsToSync.includes(l.level);
+    return levelsToSync.includes(l.level);
   });
 
   const activeLevelIds = new Set(activeLevels.map((l) => l.level));
@@ -289,6 +295,23 @@ async function main() {
   for (const u of [...upcomingPlaceholders, ...upcomingFromUpstream]) {
     upcomingById.set(u.level, u);
   }
+
+  // Preserve manually-added upcoming_levels entries from the existing website YAML
+  // for levels not yet authored in the challenges repo. Without this, a re-sync drops
+  // placeholders that a reviewer added for levels that don't have YAML upstream yet.
+  for (const u of (existing?.upcoming_levels || [])) {
+    const levelId = (u.level || u.difficulty || "").toLowerCase();
+    if (
+      levelId &&
+      !fetchedIds.has(levelId) &&
+      !existingLiveIds.has(levelId) &&
+      !activeLevelIds.has(levelId) &&
+      !upcomingById.has(levelId)
+    ) {
+      upcomingById.set(levelId, { level: levelId, name: u.name, difficulty: u.difficulty });
+    }
+  }
+
   const upcomingLevels = [...upcomingById.values()]
     .sort((a, b) => (LEVEL_ORDER[a.level] ?? 99) - (LEVEL_ORDER[b.level] ?? 99))
     .map(({ name, difficulty }) => ({ name, difficulty }));
@@ -301,6 +324,8 @@ async function main() {
   // The generator accepts all aliases (name/title, emoji → icon, etc.).
   const adventure = {
     slug,
+    // Preserve community_category_id right after slug so its position stays stable on re-syncs.
+    ...(existing?.community_category_id !== undefined && { community_category_id: existing.community_category_id }),
     // Use whichever title field the challenges repo provides
     ...(indexData.title ? { title: indexData.title } : { name: indexData.name }),
     emoji: indexData.emoji,
@@ -317,8 +342,6 @@ async function main() {
     }),
     // Preserve contributor set by a reviewer; omit otherwise (PR checklist item)
     ...(existing?.contributor && { contributor: existing.contributor }),
-    // Preserve community_category_id once a reviewer has set it; otherwise generator emits a TODO stub.
-    ...(existing?.community_category_id !== undefined && { community_category_id: existing.community_category_id }),
     ...(upcomingLevels.length > 0 && { upcoming_levels: upcomingLevels }),
     levels: mergeLevels(existing?.levels, activeLevels, rawFetchedLevels),
   };
