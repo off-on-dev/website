@@ -14,7 +14,13 @@ const TZ_OFFSETS = {
 };
 
 export function parseDeadline(value) {
-  if (!value || typeof value !== "string") return value;
+  if (value === null || value === undefined) return value;
+  if (typeof value !== "string") {
+    throw new Error(
+      `[deadline] Expected a string but got ${typeof value} (${String(value)}). ` +
+      "The YAML parser may have auto-cast a timestamp — quote deadline values in YAML to prevent this."
+    );
+  }
   const trimmed = value.trim();
   if (/^\d{4}-\d{2}-\d{2}T/.test(trimmed)) return trimmed;
   if (trimmed === "TODO") return trimmed;

@@ -50,4 +50,10 @@ describe("parseDeadline", () => {
   it("rejects strings with leading junk before the date", () => {
     expect(parseDeadline("deadline: 23 June 2026 at 23:59 CET")).toBe("deadline: 23 June 2026 at 23:59 CET");
   });
+
+  it("throws when passed a non-string (e.g. a Date from a YAML 1.1 parser)", () => {
+    expect(() => parseDeadline(new Date("2026-06-23T23:59:00+01:00"))).toThrow(
+      /Expected a string but got object/
+    );
+  });
 });
