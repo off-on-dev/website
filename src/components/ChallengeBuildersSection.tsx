@@ -1,6 +1,6 @@
 import type { JSX, ReactNode } from "react";
 import { Link } from "react-router";
-import { ADVENTURE_CONTRIBUTORS } from "@/data/adventures";
+import { ADVENTURE_CONTRIBUTORS } from "@/data/adventures/summaries";
 import { PersonNameLink } from "@/components/PersonNameLink";
 import { SidebarLayout } from "@/components/SidebarLayout";
 import { InlineProse } from "@/components/InlineProse";

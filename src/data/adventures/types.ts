@@ -164,7 +164,7 @@ export type AdventureCardSummary = {
   story: string;
   tags: string[];
   levels: AdventureLevelSummary[];
-  contributor?: { name: string };
+  contributor?: { name: string; url?: string; about?: string };
   /** True when the adventure has an active rewards window or any level deadline in the future. */
   isLive?: boolean;
 };
