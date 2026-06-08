@@ -43,6 +43,9 @@ const ROOT = resolve(__dirname, "..");
 const ADVENTURES_DIR = resolve(ROOT, "src/data/adventures");
 const SCHEMA_PATH = resolve(ROOT, "schemas/adventure.schema.json");
 
+// Computed once at startup so all date comparisons within a single run are consistent.
+const TODAY = new Date().toISOString().slice(0, 10);
+
 const validateOnly = process.argv.includes("--validate-only");
 
 // Maps emoji shorthand to Lucide React icon names used in AdventureDetail.
@@ -802,16 +805,19 @@ function replaceRegion(filePath, openMarker, closeMarker, body) {
 // Used as a stable fallback so re-running the generator on a clean file never changes
 // existing dates (avoids churn from shallow-clone environments where git log may be empty).
 const SITEMAP_PATH = resolve(ROOT, "public/sitemap.xml");
-const _existingSitemapDates = (() => {
+
+function loadExistingSitemapDates() {
   const dates = new Map();
   try {
     const content = readFileSync(SITEMAP_PATH, "utf-8");
     for (const m of content.matchAll(/<loc>([^<]+)<\/loc><lastmod>([^<]+)<\/lastmod>/g)) {
       dates.set(m[1], m[2]);
     }
-  } catch { /* sitemap may not exist yet */ }
+  } catch { /* sitemap may not exist yet on first run */ }
   return dates;
-})();
+}
+
+const _existingSitemapDates = loadExistingSitemapDates();
 
 // Returns the date the adventure.yaml was last modified, for use as sitemap lastmod.
 // If the YAML has uncommitted changes, uses today. If the URL is already in the sitemap
@@ -821,15 +827,14 @@ const _existingSitemapDates = (() => {
 const _lastmodCache = new Map();
 function getAdventureLastmod(slug) {
   if (_lastmodCache.has(slug)) return _lastmodCache.get(slug);
-  const today = new Date().toISOString().slice(0, 10);
   const relPath = `src/data/adventures/${slug}/adventure.yaml`;
   const status = spawnSync("git", ["status", "--porcelain", "--", relPath], {
     cwd: ROOT, encoding: "utf-8",
   });
   if (status.error || status.stdout.trim()) {
     // YAML has uncommitted changes — content is actively being updated, use today.
-    _lastmodCache.set(slug, today);
-    return today;
+    _lastmodCache.set(slug, TODAY);
+    return TODAY;
   }
   // YAML is clean. If this adventure already exists in the sitemap, keep its date
   // to avoid churn caused by git log returning different results across environments
@@ -844,7 +849,7 @@ function getAdventureLastmod(slug) {
     cwd: ROOT, encoding: "utf-8",
   });
   const gitDate = gitLog.stdout.trim();
-  const result = gitDate ? gitDate.slice(0, 10) : today;
+  const result = gitDate ? gitDate.slice(0, 10) : TODAY;
   _lastmodCache.set(slug, result);
   return result;
 }
@@ -958,7 +963,6 @@ function collectAllTags(adventures) {
 }
 
 function buildSitemapTagsBody(tags, adventures) {
-  const today = new Date().toISOString().slice(0, 10);
   const lines = tags.map((t) => {
     const url = `https://offon.dev/challenges/${tagToSlug(t)}/`;
     const existing = _existingSitemapDates.get(url);
@@ -966,9 +970,11 @@ function buildSitemapTagsBody(tags, adventures) {
     // Compute what the date would be from adventure data.
     const derived = matching.length > 0
       ? matching.map((a) => getAdventureLastmod(a.slug)).sort().at(-1)
-      : today;
-    // Preserve existing date if the derived date is not newer — prevents churn
-    // in shallow-clone environments where adventure dates may differ across runs.
+      : TODAY;
+    // ISO date strings (YYYY-MM-DD) sort lexicographically in chronological order,
+    // so string comparison is equivalent to date comparison here.
+    // Preserve existing date if derived is not newer — prevents churn in shallow-clone
+    // environments where adventure dates may differ across runs.
     const lastmod = existing && derived <= existing ? existing : derived;
     return `  <url><loc>${url}</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`;
   });
