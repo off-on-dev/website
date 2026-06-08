@@ -1,5 +1,4 @@
 slug: lex-imperfecta
-community_category_id: 43
 name: Lex Imperfecta
 emoji: ⚖️
 month: JUN 2026
@@ -16,7 +15,7 @@ overview:
     containers slip through the gates. As a newly appointed Praetor, your mission is to restore order by fixing broken
     Kyverno policies and enforcing proper admission control.
 rewards:
-  deadline: "2026-06-23T23:59:00+01:00"
+  deadline: Tuesday, 23 June 2026 at 23:59 CET
   tiers:
     - label: 1st place
       description: 50% voucher for a Linux Foundation certification
@@ -28,17 +27,16 @@ contributor:
   about: DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native
     and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities,
     inline skating rinks, and quiz nights across Europe.
+community_category_id: 43
 upcoming_levels:
   - name: Intermediate
     difficulty: Intermediate
-  - name: Expert
-    difficulty: Expert
 levels:
   - level: beginner
     emoji: 🟢
     title: The Twelve Tables
     devcontainer: lex-imperfecta_beginner
-    community_url: "https://community.offon.dev/t/restore-proper-admission-control-using-kyverno-june-2026-adventure-beginner/1576"
+    community_url: ""
     summary: Fix broken Kyverno policies to restore proper admission control.
     audience: Platform engineers, SREs, and developers curious about Kubernetes security — no prior Kyverno experience
       needed, but familiarity with basic `kubectl` and YAML will help.
@@ -209,7 +207,7 @@ levels:
       command: ./verify.sh
       description: Once you think you've solved the challenge, run the verification script. If it fails it will tell you which
         checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion.
-    deadline: "2026-06-23T23:59:00+01:00"
+    deadline: Tuesday, 23 June 2026 at 23:59 CET
     architecture_diagram: lex-imperfecta-beginner.svg
     diagram_alt: Workload request flows through Kyverno's admission webhook before reaching the Kubernetes cluster. Two
       ValidatingPolicy resources block non-compliant workloads, and one MutatingPolicy automatically patches admitted

@@ -22,7 +22,7 @@ export const LEX_IMPERFECTA: Adventure = {
     "The Republic's legal system is in disarray — workloads run unchecked, required labels go missing, and privileged containers slip through the gates. As a newly appointed Praetor, your mission is to restore order by fixing broken Kyverno policies and enforcing proper admission control.",
   ],
   rewards: {
-    deadline: "2026-06-23T23:59:00+01:00",
+    deadline: "Tuesday, 23 June 2026 at 23:59 CET",
     eligibility: "Complete all levels and post your solution in the community before the deadline to be eligible.",
     tiers: [
       { label: "1st place", description: "50% voucher for a Linux Foundation certification" },
@@ -33,7 +33,6 @@ export const LEX_IMPERFECTA: Adventure = {
   },
   upcomingLevels: [
     { name: "Intermediate", difficulty: "Intermediate" },
-    { name: "Expert", difficulty: "Expert" },
   ],
   levels: [
     {
@@ -49,8 +48,8 @@ export const LEX_IMPERFECTA: Adventure = {
         "How Kyverno <a href=\"https://kyverno.io/docs/policy-types/mutating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">MutatingPolicy<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\" style=\"flex-shrink:0\"><path d=\"M15 3h6v6\"/><path d=\"M10 14 21 3\"/><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/></svg><span class=\"sr-only\"> (opens in new tab)</span></a> resources automatically  patch incoming workloads at admission",
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2Flex-imperfecta_beginner%2Fdevcontainer.json&quickstart=1`,
-      discussionUrl: "https://community.offon.dev/t/restore-proper-admission-control-using-kyverno-june-2026-adventure-beginner/1576",
-      deadline: "2026-06-23T23:59:00+01:00",
+      discussionUrl: "",
+      deadline: "Tuesday, 23 June 2026 at 23:59 CET",
       intro: ["Fix broken Kyverno policies to restore proper admission control."],
       backstory: [
         "The Republic's legal scholars have been busy — perhaps too busy. In their haste to codify the Twelve Tables, the  foundation of the Republic's legal system, they introduced errors that now threaten the city's order. Workloads  that should be blocked are running freely, and workloads that should be allowed are being turned away at the gates.",
