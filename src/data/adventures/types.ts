@@ -115,7 +115,7 @@ export type Adventure = {
   metaDescription?: string;
   tags: string[];
   levels: AdventureLevel[];
-  contributor?: { name: string; url?: string; about?: string };
+  contributor?: { name: string; url?: string; aboutHtml?: string };
   // Narrative backstory paragraphs shown on the adventure overview page.
   backstory?: string[];
   // Context paragraphs explaining what technologies or concepts the adventure covers.
@@ -131,7 +131,8 @@ export type Adventure = {
 export type AdventureContributor = {
   name: string;
   url?: string;
-  about?: string;
+  /** Pre-rendered HTML from markdown — always render via InlineProse or dangerouslySetInnerHTML. */
+  aboutHtml?: string;
   adventures: { id: string; title: string }[];
 };
 
@@ -164,7 +165,7 @@ export type AdventureCardSummary = {
   story: string;
   tags: string[];
   levels: AdventureLevelSummary[];
-  contributor?: { name: string };
+  contributor?: { name: string; url?: string; aboutHtml?: string };
   /** True when the adventure has an active rewards window or any level deadline in the future. */
   isLive?: boolean;
 };

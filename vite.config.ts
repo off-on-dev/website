@@ -27,6 +27,12 @@ export default defineConfig(() => ({
           ) {
             return "vendor-react";
           }
+          if (
+            id.includes("/node_modules/react-router/") ||
+            id.includes("/node_modules/@react-router/")
+          ) {
+            return "vendor-router";
+          }
         },
       },
     },

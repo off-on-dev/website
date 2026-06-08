@@ -264,9 +264,9 @@ const AdventureDetail = (): JSX.Element => {
                     Adventure by
                   </p>
                   <PersonNameLink name={adventure.contributor.name} url={adventure.contributor.url} />
-                  {adventure.contributor.about && (
+                  {adventure.contributor.aboutHtml && (
                     <InlineProse
-                      html={adventure.contributor.about}
+                      html={adventure.contributor.aboutHtml}
                       className="mt-2 text-sm text-[hsl(var(--text-secondary))] leading-relaxed"
                     />
                   )}
