@@ -1196,7 +1196,7 @@ Renders pre-compiled block HTML (generated at build time by `scripts/generate-ad
 
 - Fenced code blocks get a hover/focus-visible "Copy" button via DOM injection (clipboard API, flips to "Copied" for 1.5 s, with proper `aria-label` updates).
 - All element styles (headings, lists, code, blockquote, tables, links) are driven by `.md-content` rules in `src/index.css`.
-- External links, `<pre>` accessibility attributes, and external-link icons are injected by the generator, not by this component.
+- External links get `target="_blank"`, `rel="noopener noreferrer"`, and a `<span class="sr-only"> (opens in new tab)</span>` injected by the generator. The external link icon is rendered purely via a CSS `::after` rule on `[target="_blank"]` in `src/index.css` — no inline SVG in the HTML.
 
 ```tsx
 <MarkdownContent source={htmlString} />
@@ -1556,7 +1556,7 @@ Helper functions for the `MarkdownContent` component.
 |---|---|---|
 | `slugify` | `(text: string) => string` | Converts heading text to a URL-safe slug for `id` attributes. |
 | `getSectionIcon` | `(slug: string) => LucideIcon \| undefined` | Maps known section slugs (`architecture`, `toolbox`, `how-to-play`) to their lucide-react icon. Returns `undefined` for unrecognised slugs. |
-| `stripLinks` | `(html: string) => string` | Strips `<a>` tags from sanitised HTML while preserving link text. Also removes generator-injected SVG icons and `sr-only` spans. Call before passing any author-prose HTML to `dangerouslySetInnerHTML` inside an interactive element (`<Link>`, `<button>`) to prevent invalid nested anchors. |
+| `stripLinks` | `(html: string) => string` | Strips `<a>` tags from sanitised HTML while preserving link text. Also removes `sr-only` new-tab spans injected by the generator. Call before passing any author-prose HTML to `dangerouslySetInnerHTML` inside an interactive element (`<Link>`, `<button>`) to prevent invalid nested anchors. |
 
 ---
 

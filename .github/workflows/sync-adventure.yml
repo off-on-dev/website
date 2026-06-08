@@ -136,7 +136,47 @@ jobs:
             PR_TITLE="feat(adventure): add ${NAME}"
           fi
 
-          cat > /tmp/pr-body.md <<EOF
+          if [ "$MODE" = "update" ]; then
+            cat > /tmp/pr-body.md <<EOF
+          ## ${MODE}: ${NAME}
+
+          Auto-synced from the challenges repo.
+
+          **Source:** ${SOURCE_URL}
+
+          **Levels in this PR:** \`${LEVELS}\`
+
+          ---
+
+          ### Before merging
+
+          - [ ] Review \`topics:\` on each level, auto-set to all adventure tags, refine to level-specific subset if needed
+          - [ ] Update \`discussion_url:\` in each level once the Discourse threads are created
+          - [ ] Update \`discussionUrl\` in each \`*-posts.json\` stub
+
+          ### Manual steps (only if needed)
+
+          - [ ] If a level's \`architecture_diagram\` SVG was not auto-fetched (check the sync logs for a warning), add the SVG manually to \`src/assets/diagrams/\` and add \`architecture_diagram: <file>.svg\` to that level in \`adventure.yaml\`, then run \`npm run generate\`
+          - [ ] If a level has an \`architecture_diagram\` but no \`diagram_alt\`, add \`diagram_alt:\` to that level in \`adventure.yaml\` with a one-sentence description of the diagram, then run \`npm run generate\`
+          - [ ] Run \`node scripts/refresh-discussions.mjs\` after \`discussionUrl\` values are set
+
+          ### Auto-generated (do not edit by hand)
+
+          The following are kept in sync with \`adventure.yaml\` by \`npm run generate\` (prebuild hook):
+          - \`public/sitemap.xml\` (GENERATED:adventures region)
+          - \`react-router.config.ts\` prerender (GENERATED:adventures region)
+          - \`e2e/smoke.spec.ts\` and \`src/test/seo.test.ts\` route arrays
+          - \`src/test/prerender.test.ts\` pages array
+          - \`scripts/refresh-leaderboard.mjs\` ADVENTURE_CATEGORIES
+
+          ### Checks
+
+          \`\`\`sh
+          npm run lint && npm test && npm run build && npm run test:e2e
+          \`\`\`
+          EOF
+          else
+            cat > /tmp/pr-body.md <<EOF
           ## ${MODE}: ${NAME}
 
           Auto-synced from the challenges repo.
@@ -185,6 +225,7 @@ jobs:
           npm run lint && npm test && npm run build && npm run test:e2e
           \`\`\`
           EOF
+          fi
 
           EXISTING_PR=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
           if [ -n "$EXISTING_PR" ]; then
