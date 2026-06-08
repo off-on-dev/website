@@ -11,7 +11,7 @@ describe("parseDeadline", () => {
   });
 
   it("converts CEST timezone to +02:00", () => {
-    expect(parseDeadline("10 December 2026 at 09:00 CEST")).toBe("2026-12-10T09:00:00+02:00");
+    expect(parseDeadline("10 August 2026 at 09:00 CEST")).toBe("2026-08-10T09:00:00+02:00");
   });
 
   it("pads single-digit day to two digits", () => {

@@ -300,7 +300,7 @@ async function main() {
   // for levels not yet authored in the challenges repo. Without this, a re-sync drops
   // placeholders that a reviewer added for levels that don't have YAML upstream yet.
   for (const u of (existing?.upcoming_levels || [])) {
-    const levelId = (u.level || u.difficulty || "").toLowerCase();
+    const levelId = typeof u.level === "string" ? u.level.toLowerCase() : "";
     if (
       levelId &&
       !fetchedIds.has(levelId) &&

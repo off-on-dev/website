@@ -1,16 +1,4 @@
-/**
- * Normalises a deadline string to ISO 8601.
- *
- * The challenges repo stores deadlines in a human-readable format:
- *   "Tuesday, 23 June 2026 at 23:59 CET"
- *
- * The website schema and generator require ISO 8601:
- *   "2026-06-23T23:59:00+01:00"
- *
- * Pass-throughs: values that already look like ISO 8601, the "TODO" placeholder,
- * null, and undefined are all returned unchanged. Unrecognised formats produce a
- * warning and are also returned unchanged so the generator can surface the error.
- */
+// Converts "D Month YYYY at HH:MM TZ" (challenges repo format) to ISO 8601; pass-throughs for ISO, TODO, null, undefined.
 
 const MONTH_INDEX = {
   January: 1, February: 2, March: 3, April: 4, May: 5, June: 6,

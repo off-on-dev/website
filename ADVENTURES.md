@@ -74,7 +74,17 @@ This field also survives future re-syncs once set.
 
 ### Update rewards deadline
 
-Change `rewards.deadline:` from `TODO` to a real ISO 8601 datetime: e.g. `2026-07-01T23:59:00+01:00`.
+Change `rewards.deadline:` from `TODO` to either an ISO 8601 datetime or the human-readable format used in the challenges repo:
+
+```
+# ISO 8601 (preferred for direct edits)
+rewards.deadline: "2026-07-01T23:59:00+01:00"
+
+# Human-readable (accepted; the generator converts it automatically)
+rewards.deadline: "Tuesday, 1 July 2026 at 23:59 CET"
+```
+
+Supported timezone abbreviations: `CET` (+01:00), `CEST` (+02:00), `UTC` (+00:00), `GMT` (+00:00). Unrecognised abbreviations are left as-is and logged as warnings during generation.
 
 ### Review topics
 
@@ -139,11 +149,12 @@ If the challenges repo is updated while your PR is still open, or you want to pr
 | Field | Preserved | Notes |
 |---|---|---|
 | `contributor:` (adventure) | Always | Survives every re-sync once set |
-| `community_category_id:` (adventure) | Always | Survives every re-sync once set |
+| `community_category_id:` (adventure) | Always | Survives every re-sync once set; position is kept directly after `slug` |
 | `month:` (adventure) | Always | Survives every re-sync once set |
-| `discussion_url:` (level) | Always | Website-only field; never in the challenges repo |
+| `discussion_url:` / `community_url:` (level) | Always | Website-only fields; never in the challenges repo. Both field aliases are preserved independently |
 | `architecture_diagram:` (level) | Always | Stripped from incoming; preserved once added manually |
 | `topics:` (level) | Only if challenges repo did not set them | If the challenges repo sets `topics:` explicitly, the upstream value wins |
+| `upcoming_levels:` entries for levels not yet upstream | Always | Placeholders for levels not yet authored in the challenges repo survive re-syncs so "Coming Soon" cards are not dropped |
 | All other level content | Never | Steps, objectives, toolbox, services, how_to_play, verification, etc. are always refreshed from the challenges repo |
 
 ---
@@ -156,6 +167,8 @@ When a new level is ready in the challenges repo after the first adventure PR ha
 2. The workflow detects the adventure already exists in `main` and uses `mode: update`.
 3. A new PR is opened on `feat/adventure-<slug>` (the previous PR was merged, so there is no open PR to update).
 4. Complete the checklist for the new level only. Adventure-level fields (`contributor`, `community_category_id`, `month`) are already set in `main` and are preserved automatically.
+
+> **Note:** For an existing adventure (`mode: update`), specifying a level that does not yet exist in the challenges repo is an error. The workflow will fail and log the missing level IDs. Wait until the level YAML has been added to the challenges repo, then re-run the sync. This restriction does not apply to new adventures (`mode: create`), where missing levels produce "Coming Soon" placeholders as usual.
 
 ---
 

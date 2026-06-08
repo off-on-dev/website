@@ -2,6 +2,12 @@ import { describe, expect, it } from "vitest";
 import { parseDocument } from "yaml";
 import { insertCommunityCategoryId } from "../../scripts/lib/community-category.mjs";
 
+type YAMLDocContents = { items?: Array<{ key?: { value?: string } }> };
+
+function docKeys(doc: ReturnType<typeof parseDocument>): string[] {
+  return (doc.contents as YAMLDocContents).items?.map((item) => item.key?.value ?? "") ?? [];
+}
+
 describe("insertCommunityCategoryId", () => {
   it("inserts community_category_id after slug when missing", () => {
     const doc = parseDocument("slug: lex-imperfecta\nname: Lex Imperfecta\n");
@@ -11,10 +17,7 @@ describe("insertCommunityCategoryId", () => {
     expect(inserted).toBe(true);
     expect(doc.get("community_category_id")).toBe(43);
 
-    const keys = (doc.contents as { items?: Array<{ key?: { value?: string } }> }).items?.map(
-      (item) => item.key?.value
-    ) ?? [];
-    expect(keys).toEqual(["slug", "community_category_id", "name"]);
+    expect(docKeys(doc)).toEqual(["slug", "community_category_id", "name"]);
   });
 
   it("does not insert when key already exists", () => {
@@ -43,10 +46,7 @@ describe("insertCommunityCategoryId", () => {
     expect(inserted).toBe(true);
     expect(doc.get("community_category_id")).toBe(43);
 
-    const keys = (doc.contents as { items?: Array<{ key?: { value?: string } }> }).items?.map(
-      (item) => item.key?.value
-    ) ?? [];
-    expect(keys[0]).toBe("community_category_id");
+    expect(docKeys(doc)[0]).toBe("community_category_id");
   });
 
   it("returns false for non-mapping root documents", () => {
