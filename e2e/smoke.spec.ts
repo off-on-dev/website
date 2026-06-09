@@ -97,30 +97,8 @@ test.describe("every prerendered route", () => {
   }
 });
 
-// Representative sample covering all page types. Light mode shares the same
-// HTML structure; full axe coverage on every route in both modes is redundant.
-const LIGHT_MODE_SAMPLE = [
-  "/",
-  "/about",
-  "/contribute",
-  "/handbook",
-  "/privacy",
-  "/accessibility",
-  "/404",
-  "/adventures",
-  "/adventures/blind-by-design",
-  "/adventures/building-cloudhaven",
-  "/adventures/blind-by-design/levels/beginner",
-  "/adventures/the-ai-observatory/levels/intermediate",
-  "/adventures/building-cloudhaven/levels/expert",
-  "/challenges",
-  "/challenges/python",
-  "/challenges/kubernetes",
-  "/challenges/opentelemetry",
-];
-
-test.describe("representative routes (light mode)", () => {
-  for (const path of LIGHT_MODE_SAMPLE) {
+test.describe("every prerendered route (light mode)", () => {
+  for (const { path } of ROUTES) {
     test(path, async ({ page }) => {
       const pageErrors: string[] = [];
       const consoleErrors: string[] = [];
