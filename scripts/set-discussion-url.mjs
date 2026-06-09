@@ -5,6 +5,9 @@
  * adventure root if missing) and the per-level *-posts.json file, then fetches
  * initial posts from Discourse.
  *
+ * Uses targeted text replacement to avoid reformatting the YAML file. The yaml
+ * library is used for read-only validation only.
+ *
  * Environment variables:
  *   ADVENTURE_ID    - adventure slug (e.g. lex-imperfecta)
  *   LEVEL_ID        - level ID (beginner, intermediate, expert)
@@ -15,7 +18,7 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseDocument } from "yaml";
-import { insertCommunityCategoryId } from "./lib/community-category.mjs";
+import { setLevelField, insertRootFieldAfterSlug } from "./lib/yaml-text-edit.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const COMMUNITY_BASE = "https://community.offon.dev";
@@ -65,9 +68,13 @@ if (!existsSync(postsPath)) {
   process.exit(1);
 }
 
-// --- YAML update -------------------------------------------------------
+// --- YAML: read and validate -----------------------------------------------
 
+// Read as raw text. We use targeted text replacement for writing so that only
+// the changed lines are different — no formatting churn on the rest of the file.
 const yamlText = readFileSync(yamlPath, "utf-8");
+
+// Parse for validation only, never for serialization.
 const doc = parseDocument(yamlText);
 
 const levels = doc.get("levels");
@@ -76,12 +83,11 @@ if (!levels || !levels.items) {
   process.exit(1);
 }
 
+let fieldName;
 let levelFound = false;
 for (const levelNode of levels.items) {
   if (levelNode.get("level") !== levelId) continue;
-
-  const fieldName = levelNode.has("community_url") ? "community_url" : "discussion_url";
-  levelNode.set(fieldName, discussionUrl);
+  fieldName = levelNode.has("community_url") ? "community_url" : "discussion_url";
   levelFound = true;
   break;
 }
@@ -99,7 +105,7 @@ if (!levelFound) {
   process.exit(1);
 }
 
-// --- Posts JSON fetch --------------------------------------------------
+// --- Posts JSON fetch -------------------------------------------------------
 // YAML is written after the posts fetch so that a network failure before the
 // write leaves both files unchanged. On retry neither file is stale.
 
@@ -230,7 +236,7 @@ async function main() {
       solvers: [],
     };
     writeFileSync(postsPath, JSON.stringify(stub, null, 2) + "\n");
-    writeFileSync(yamlPath, doc.toString());
+    writeFileSync(yamlPath, setLevelField(yamlText, levelId, fieldName, discussionUrl));
     console.log(`[posts] Wrote stub to ${postsPath}`);
     console.log(`[yaml] Updated ${levelId} discussion URL in adventure.yaml`);
     return;
@@ -239,16 +245,20 @@ async function main() {
   console.log(`[posts] Fetching posts for topic ${topicId}...`);
   const result = await fetchTopicPosts(topicId, discussionUrl);
 
-  if (insertCommunityCategoryId(doc, result?.categoryId)) {
-    console.log(`[yaml] Set community_category_id to ${result.categoryId} in adventure.yaml`);
-  }
-
   const content = result
     ? { discussionUrl, discussionPosts: result.posts, totalReplies: result.totalReplies, solvers: result.solvers }
     : { discussionUrl, discussionPosts: [], totalReplies: 0, solvers: [] };
 
+  let updatedYaml = setLevelField(yamlText, levelId, fieldName, discussionUrl);
+
+  const categoryId = result?.categoryId;
+  if (Number.isInteger(categoryId) && categoryId > 0 && doc.get("community_category_id") == null) {
+    updatedYaml = insertRootFieldAfterSlug(updatedYaml, "community_category_id", categoryId);
+    console.log(`[yaml] Set community_category_id to ${categoryId} in adventure.yaml`);
+  }
+
   writeFileSync(postsPath, JSON.stringify(content, null, 2) + "\n");
-  writeFileSync(yamlPath, doc.toString());
+  writeFileSync(yamlPath, updatedYaml);
 
   if (result) {
     console.log(

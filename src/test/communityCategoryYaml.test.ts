@@ -1,60 +1,82 @@
 import { describe, expect, it } from "vitest";
-import { parseDocument } from "yaml";
-import { insertCommunityCategoryId } from "../../scripts/lib/community-category.mjs";
+import {
+  insertRootFieldAfterSlug,
+  setLevelField,
+} from "../../scripts/lib/yaml-text-edit.mjs";
 
-type YAMLDocContents = { items?: Array<{ key?: { value?: string } }> };
+describe("setLevelField", () => {
+  const yaml = [
+    "slug: my-adventure",
+    "levels:",
+    "  - level: beginner",
+    "    name: Beginner",
+    "    community_url: https://community.offon.dev/t/old/1",
+    "  - level: intermediate",
+    "    name: Intermediate",
+    "    community_url: \"\"",
+  ].join("\n");
 
-function docKeys(doc: ReturnType<typeof parseDocument>): string[] {
-  return (doc.contents as YAMLDocContents).items?.map((item) => item.key?.value ?? "") ?? [];
-}
-
-describe("insertCommunityCategoryId", () => {
-  it("inserts community_category_id after slug when missing", () => {
-    const doc = parseDocument("slug: lex-imperfecta\nname: Lex Imperfecta\n");
-
-    const inserted = insertCommunityCategoryId(doc, 43);
-
-    expect(inserted).toBe(true);
-    expect(doc.get("community_category_id")).toBe(43);
-
-    expect(docKeys(doc)).toEqual(["slug", "community_category_id", "name"]);
+  it("updates the field in the target level", () => {
+    const result = setLevelField(yaml, "intermediate", "community_url", "https://community.offon.dev/t/new/2");
+    expect(result).toContain('    community_url: https://community.offon.dev/t/new/2');
   });
 
-  it("does not insert when key already exists", () => {
-    const doc = parseDocument("slug: lex-imperfecta\ncommunity_category_id: 43\nname: Lex Imperfecta\n");
-
-    const inserted = insertCommunityCategoryId(doc, 44);
-
-    expect(inserted).toBe(false);
-    expect(doc.get("community_category_id")).toBe(43);
+  it("leaves all other lines unchanged", () => {
+    const result = setLevelField(yaml, "intermediate", "community_url", "https://community.offon.dev/t/new/2");
+    const changedLines = result.split("\n").filter((l, i) => l !== yaml.split("\n")[i]);
+    expect(changedLines).toHaveLength(1);
   });
 
-  it("does not insert for invalid category IDs", () => {
-    const doc = parseDocument("slug: lex-imperfecta\nname: Lex Imperfecta\n");
-
-    expect(insertCommunityCategoryId(doc, 0)).toBe(false);
-    expect(insertCommunityCategoryId(doc, -1)).toBe(false);
-    expect(insertCommunityCategoryId(doc, Number.NaN)).toBe(false);
-    expect(doc.get("community_category_id")).toBeUndefined();
+  it("does not modify a different level with the same field name", () => {
+    const result = setLevelField(yaml, "intermediate", "community_url", "https://community.offon.dev/t/new/2");
+    expect(result).toContain("community_url: https://community.offon.dev/t/old/1");
   });
 
-  it("inserts at position 0 when slug key is absent", () => {
-    const doc = parseDocument("name: Lex Imperfecta\n");
-
-    const inserted = insertCommunityCategoryId(doc, 43);
-
-    expect(inserted).toBe(true);
-    expect(doc.get("community_category_id")).toBe(43);
-
-    expect(docKeys(doc)[0]).toBe("community_category_id");
+  it("replaces a quoted empty value", () => {
+    const result = setLevelField(yaml, "intermediate", "community_url", "https://community.offon.dev/t/new/2");
+    expect(result).not.toContain('community_url: ""');
+    expect(result).toContain("community_url: https://community.offon.dev/t/new/2");
   });
 
-  it("returns false for non-mapping root documents", () => {
-    const doc = parseDocument("- one\n- two\n");
+  it("throws when the field is not found in the target level", () => {
+    expect(() => setLevelField(yaml, "intermediate", "nonexistent_field", "value")).toThrow(
+      "Field 'nonexistent_field' not found in level 'intermediate'"
+    );
+  });
 
-    const inserted = insertCommunityCategoryId(doc, 43);
+  it("throws when the target level does not exist", () => {
+    expect(() => setLevelField(yaml, "expert", "community_url", "value")).toThrow(
+      "Field 'community_url' not found in level 'expert'"
+    );
+  });
+});
 
-    expect(inserted).toBe(false);
-    expect(doc.get("community_category_id")).toBeUndefined();
+describe("insertRootFieldAfterSlug", () => {
+  it("inserts the field immediately after slug", () => {
+    const text = "slug: my-adventure\nname: My Adventure\n";
+    const result = insertRootFieldAfterSlug(text, "community_category_id", 43);
+    expect(result).toBe("slug: my-adventure\ncommunity_category_id: 43\nname: My Adventure\n");
+  });
+
+  it("inserts only one new line", () => {
+    const text = "slug: my-adventure\nname: My Adventure\n";
+    const result = insertRootFieldAfterSlug(text, "community_category_id", 43);
+    const addedLines = result.split("\n").filter((l) => !text.split("\n").includes(l));
+    expect(addedLines).toHaveLength(1);
+    expect(addedLines[0]).toBe("community_category_id: 43");
+  });
+
+  it("does not match an indented slug key inside a nested block", () => {
+    const text = "slug: root\nlevels:\n  - level: beginner\n    slug: nested\nname: X\n";
+    const result = insertRootFieldAfterSlug(text, "community_category_id", 43);
+    // Should insert after the root slug, not the nested one
+    expect(result.split("\n")[1]).toBe("community_category_id: 43");
+  });
+
+  it("throws when no root-level slug field exists", () => {
+    const text = "name: My Adventure\n";
+    expect(() => insertRootFieldAfterSlug(text, "community_category_id", 43)).toThrow(
+      "'slug' field not found in adventure.yaml"
+    );
   });
 });

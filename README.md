@@ -82,7 +82,7 @@ scripts/
   set-discussion-url.mjs        # Set a Discourse thread URL on a level (called by add-discussion-url.yml)
   lib/
     deadline.mjs                # Normalises human-readable deadline strings to ISO 8601
-    community-category.mjs      # Inserts community_category_id into YAML at the correct position
+    yaml-text-edit.mjs          # Targeted text-based helpers for editing adventure YAML without reformatting
     level-constants.mjs         # Level difficulty and ordering constants shared by scripts
     level-sync.mjs              # Pure helpers used by sync-adventure (level selection and "Coming Soon" computation)
 public/
