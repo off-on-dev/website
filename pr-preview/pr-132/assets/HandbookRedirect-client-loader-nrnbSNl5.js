@@ -1,1 +1,0 @@
-import{l as e}from"./vendor-router-Bzt66sc7.js";function t(){return e(`/handbook`)}export{t as clientLoader};
