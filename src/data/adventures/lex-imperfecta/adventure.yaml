@@ -3,20 +3,23 @@ community_category_id: 43
 name: Lex Imperfecta
 emoji: ⚖️
 month: JUN 2026
-tags:
+tags: &a1
   - Kyverno
+  - Policy Reporter
   - Kubernetes
 backstory:
-  - The Roman Republic has built a sophisticated legal system to protect its citizens — but the laws were written in
-    haste, and the exceptions were written too generously. Policies go unenforced, the wrong citizens are exempt, and
-    something has slipped through the gates unnoticed. As a newly appointed Praetor, your mission is to restore order
-    before chaos takes hold.
+  - The Roman Republic has built a sophisticated legal system to protect its
+    citizens — but the laws were written in haste, and the exceptions were
+    written too generously. Policies go unenforced, the wrong citizens are
+    exempt, and something has slipped through the gates unnoticed. As a newly
+    appointed Praetor, your mission is to restore order before chaos takes hold.
 overview:
-  - The Republic's legal system is in disarray — workloads run unchecked, required labels go missing, and privileged
-    containers slip through the gates. As a newly appointed Praetor, your mission is to restore order by fixing broken
-    Kyverno policies and enforcing proper admission control.
+  - The Republic's legal system is in disarray — workloads run unchecked,
+    required labels go missing, and privileged containers slip through the
+    gates. As a newly appointed Praetor, your mission is to restore order by
+    fixing broken Kyverno policies and enforcing proper admission control.
 rewards:
-  deadline: "2026-06-23T23:59:00+01:00"
+  deadline: 2026-06-23T23:59:00+01:00
   tiers:
     - label: 1st place
       description: 50% voucher for a Linux Foundation certification
@@ -25,13 +28,11 @@ rewards:
 contributor:
   name: Katharina Sick
   url: https://ksick.dev/
-  about: DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native
-    and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities,
-    inline skating rinks, and quiz nights across Europe.
+  about: DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate
+    about building user-friendly Cloud Native and Kubernetes solutions, with a
+    background in mobile and backend development. Found in tech and sports
+    communities, inline skating rinks, and quiz nights across Europe.
 upcoming_levels:
-  - level: intermediate
-    name: Intermediate
-    difficulty: Intermediate
   - level: expert
     name: Expert
     difficulty: Expert
@@ -39,45 +40,60 @@ levels:
   - level: beginner
     emoji: 🟢
     title: The Twelve Tables
-    devcontainer: lex-imperfecta_beginner
-    community_url: "https://community.offon.dev/t/restore-proper-admission-control-using-kyverno-june-2026-adventure-beginner/1576"
+    devcontainer: 05-lex-imperfecta_01-beginner
+    community_url: https://community.offon.dev/t/restore-proper-admission-control-using-kyverno-june-2026-adventure-beginner/1576
     summary: Fix broken Kyverno policies to restore proper admission control.
-    audience: Platform engineers, SREs, and developers curious about Kubernetes security — no prior Kyverno experience
-      needed, but familiarity with basic `kubectl` and YAML will help.
+    audience: Platform engineers, SREs, and developers curious about Kubernetes
+      security — no prior Kyverno experience needed, but familiarity with basic
+      `kubectl` and YAML will help.
     backstory:
-      - The Republic's legal scholars have been busy — perhaps too busy. In their haste to codify the Twelve Tables,
-        the  foundation of the Republic's legal system, they introduced errors that now threaten the city's order.
-        Workloads  that should be blocked are running freely, and workloads that should be allowed are being turned away
-        at the gates.
-      - "Another scholar left a note: \"I tried to set up policies for privileged containers and required labels,
-        but  something's off — I can't figure out why the wrong things are getting through. There was also supposed to
-        be a  system for automatically issuing travel permits to foreign visitors, but that one is broken too.\""
-      - "Your mission: investigate the Kyverno policies and restore proper admission control before chaos reaches the
-        city."
+      - The Republic's legal scholars have been busy — perhaps too busy. In
+        their haste to codify the Twelve Tables, the  foundation of the
+        Republic's legal system, they introduced errors that now threaten the
+        city's order. Workloads  that should be blocked are running freely, and
+        workloads that should be allowed are being turned away at the gates.
+      - "Another scholar left a note: \"I tried to set up policies for
+        privileged containers and required labels, but  something's off — I
+        can't figure out why the wrong things are getting through. There was
+        also supposed to be a  system for automatically issuing travel permits
+        to foreign visitors, but that one is broken too.\""
+      - "Your mission: investigate the Kyverno policies and restore proper
+        admission control before chaos reaches the city."
     objective:
-      - All workloads **missing the `republic.rome/gens` label** are blocked at admission with a clear policy violation
-        message
-      - All workloads **running as privileged containers** are blocked at admission with a clear policy violation message
-      - "All pods declaring **`republic.rome/traveler: peregrinus`** automatically receive the
-        **`republic.rome/travel-permit: granted`** label"
+      - All workloads **missing the `republic.rome/gens` label** are blocked at
+        admission with a clear policy violation message
+      - All workloads **running as privileged containers** are blocked at
+        admission with a clear policy violation message
+      - "All pods declaring **`republic.rome/traveler: peregrinus`**
+        automatically receive the **`republic.rome/travel-permit: granted`**
+        label"
       - "**All other workloads** deploy and run successfully in the cluster"
     what_you_learn:
-      - How Kyverno [ValidatingPolicy](https://kyverno.io/docs/policy-types/validating-policy/) resources and  [CEL
-        validation expressions](https://kubernetes.io/docs/reference/using-api/cel/) work
-      - The difference between [Audit, Deny, and Warn](https://kyverno.io/docs/policy-types/validating-policy/)
+      - How Kyverno
+        [ValidatingPolicy](https://kyverno.io/docs/policy-types/validating-policy/)
+        resources and  [CEL validation
+        expressions](https://kubernetes.io/docs/reference/using-api/cel/) work
+      - The difference between [Audit, Deny, and
+        Warn](https://kyverno.io/docs/policy-types/validating-policy/)
         validation actions
-      - How to use [custom label keys](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)
+      - How to use [custom label
+        keys](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)
         to  enforce workload identity standards
-      - How Kyverno [MutatingPolicy](https://kyverno.io/docs/policy-types/mutating-policy/) resources
-        automatically  patch incoming workloads at admission
+      - How Kyverno
+        [MutatingPolicy](https://kyverno.io/docs/policy-types/mutating-policy/)
+        resources automatically  patch incoming workloads at admission
     architecture:
-      - "The Twelve Tables enforced Roman law **at the gates** — before a citizen could act, not after the damage was
-        done. Kyverno works the same way: it intercepts every workload request *before* it reaches the cluster. A
-        misconfigured policy doesn't just fail to enforce — it fails silently, letting non-compliant workloads slip
-        through while you assume everything is fine."
-      - Your Codespace comes with a Kubernetes cluster and Kyverno pre-installed. Three broken policies are already
-        deployed in `manifests/policies/` — two `ValidatingPolicy` resources and one `MutatingPolicy`. Edit them
-        directly and re-apply with `kubectl`. The pods in `manifests/pods/` are for reference only — no GitOps, no
+      - "The Twelve Tables enforced Roman law **at the gates** — before a
+        citizen could act, not after the damage was done. Kyverno works the same
+        way: it intercepts every workload request *before* it reaches the
+        cluster. A misconfigured policy doesn't just fail to enforce — it fails
+        silently, letting non-compliant workloads slip through while you assume
+        everything is fine."
+      - Your Codespace comes with a Kubernetes cluster and Kyverno
+        pre-installed. Three broken policies are already deployed in
+        `manifests/policies/` — two `ValidatingPolicy` resources and one
+        `MutatingPolicy`. Edit them directly and re-apply with `kubectl`. The
+        pods in `manifests/pods/` are for reference only — no GitOps, no
         dashboards.
     toolbox:
       - name: kubectl
@@ -94,8 +110,8 @@ levels:
       - id: explore
         title: Explore the Cluster
         content: >
-          When your Codespace is ready, four pods are already running — or trying to. Open a terminal and check what's
-          going on:
+          When your Codespace is ready, four pods are already running — or
+          trying to. Open a terminal and check what's going on:
 
 
           ```bash
@@ -134,7 +150,8 @@ levels:
           ```
 
 
-          You can also launch **k9s** for a terminal UI view of all cluster resources:
+          You can also launch **k9s** for a terminal UI view of all cluster
+          resources:
 
 
           ```bash
@@ -144,32 +161,37 @@ levels:
           ```
 
 
-          Navigate to `ValidatingPolicy` resources with `:validatingpolicies` and `MutatingPolicy` resources with
-          `:mutatingpolicies` to inspect all three policies.
+          Navigate to `ValidatingPolicy` resources with `:validatingpolicies`
+          and `MutatingPolicy` resources with `:mutatingpolicies` to inspect all
+          three policies.
       - id: fix-policies
         title: Fix the Policies
         content: >
-          Review the [Objective](#objective) and investigate what's wrong in `manifests/policies/`.
+          Review the [Objective](#objective) and investigate what's wrong in
+          `manifests/policies/`.
 
 
-          All three broken policies are in `manifests/policies/`. Read them carefully — each has a different kind of
-          misconfiguration.
+          All three broken policies are in `manifests/policies/`. Read them
+          carefully — each has a different kind of misconfiguration.
 
 
           **Test Locally with the Kyverno CLI**
 
 
-          Before applying to the cluster, you can use the `kyverno` CLI to test your policy changes locally against the
-          workload manifests:
+          Before applying to the cluster, you can use the `kyverno` CLI to test
+          your policy changes locally against the workload manifests:
 
 
           ```bash
 
-          kyverno apply manifests/policies/require-labels.yaml --resource manifests/pods/missing-labels.yaml
+          kyverno apply manifests/policies/require-labels.yaml --resource
+          manifests/pods/missing-labels.yaml
 
-          kyverno apply manifests/policies/no-privileged-containers.yaml --resource manifests/pods/privileged.yaml
+          kyverno apply manifests/policies/no-privileged-containers.yaml
+          --resource manifests/pods/privileged.yaml
 
-          kyverno apply manifests/policies/stamp-travel-permit.yaml --resource manifests/pods/peregrinus.yaml
+          kyverno apply manifests/policies/stamp-travel-permit.yaml --resource
+          manifests/pods/peregrinus.yaml
 
           ```
 
@@ -190,29 +212,231 @@ levels:
           ```
 
 
-          This re-applies the policies and re-deploys all workloads so you immediately see the effect of your changes.
+          This re-applies the policies and re-deploys all workloads so you
+          immediately see the effect of your changes.
     helpful_links:
       - title: Kyverno ValidatingPolicy
         url: https://kyverno.io/docs/policy-types/validating-policy/
-        description: Reference docs for ValidatingPolicy — the resource type you'll fix to block non-compliant workloads
+        description: Reference docs for ValidatingPolicy — the resource type you'll fix
+          to block non-compliant workloads
       - title: Kyverno MutatingPolicy
         url: https://kyverno.io/docs/policy-types/mutating-policy/
-        description: Reference docs for MutatingPolicy — the resource type you'll fix to auto-stamp travel permits
+        description: Reference docs for MutatingPolicy — the resource type you'll fix to
+          auto-stamp travel permits
       - title: CEL Validation Expressions
         url: https://kubernetes.io/docs/reference/using-api/cel/
-        description: How CEL expressions work in Kubernetes admission — what you'll write inside the policy rules
+        description: How CEL expressions work in Kubernetes admission — what you'll
+          write inside the policy rules
       - title: Kyverno Playground
         url: https://playground.kyverno.io
-        description: Test your CEL expressions interactively against sample resources before applying them to the cluster
+        description: Test your CEL expressions interactively against sample resources
+          before applying them to the cluster
     topics:
       - Kyverno
       - Kubernetes
     verification:
       command: ./verify.sh
-      description: Once you think you've solved the challenge, run the verification script. If it fails it will tell you which
-        checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion.
-    deadline: "2026-06-23T23:59:00+01:00"
+      description: Once you think you've solved the challenge, run the verification
+        script. If it fails it will tell you which checks didn't pass. If it
+        passes, it generates a Certificate of Completion you can paste into the
+        discussion.
+    deadline: 2026-06-23T23:59:00+01:00
     architecture_diagram: lex-imperfecta-beginner.svg
-    diagram_alt: Workload request flows through Kyverno's admission webhook before reaching the Kubernetes cluster. Two
-      ValidatingPolicy resources block non-compliant workloads, and one MutatingPolicy automatically patches admitted
-      workloads with required labels.
+    diagram_alt: Workload request flows through Kyverno's admission webhook before
+      reaching the Kubernetes cluster. Two ValidatingPolicy resources block
+      non-compliant workloads, and one MutatingPolicy automatically patches
+      admitted workloads with required labels.
+  - level: intermediate
+    emoji: 🟡
+    title: Governing the Provinces
+    devcontainer: 05-lex-imperfecta_02-intermediate
+    community_url: "https://community.offon.dev/t/fix-a-broken-kyverno-policy-estat\
+      e-june-2026-adventure-intermediate/1581"
+    summary: Fix a misconfigured Kyverno policy estate and use Policy Reporter to
+      restore proper governance across the Republic's provinces.
+    audience: Platform engineers and SREs who have some familiarity with Kyverno,
+      ideally after completing the Beginner level. You should be comfortable
+      reading Kubernetes YAML and basic kubectl commands.
+    backstory:
+      - The Republic has grown. What once was a single city is now a sprawling
+        empire of provinces, each governed by different magistrates with
+        different needs. The legal scholars decided to catalogue every law in a
+        central archive (the Tabularium) so that each province's statutes could
+        be tracked and audited in one place.
+      - But cataloguing the laws introduced new chaos. Policies meant for one
+        province are bleeding into another. Exceptions that were meant to be
+        narrow have been written too broadly. And somewhere in the estate, a
+        workload is slipping through that shouldn't be.
+      - "The Tabularium's auditors have handed you a report: Policy Reporter
+        shows violations where there should be none, and silence where there
+        should be enforcement. Your mission: investigate the policy estate, fix
+        the scoping issues, and restore order before the provinces descend into
+        chaos."
+    objective:
+      - "**Empire-wide laws** enforce across every province: no privileged
+        containers, every workload carries a valid `republic.rome/gens` and
+        `republic.rome/province` matching its namespace, scoped by namespace
+        label rather than hardcoded names"
+      - "**Aegyptus's scribe law** applies only within Aegyptus, admitting
+        `republic.rome/role: scribe` workloads exclusively"
+      - The **legacy exception** is scoped to Aegyptus's grandfathered workload
+        and cannot be claimed by any other province
+      - "The **Tabularium's ledger** is on file: policy reports exported in
+        OpenReports format as `estate-audit.yaml`"
+    what_you_learn:
+      - How to scope policies using
+        [ValidatingPolicy](https://kyverno.io/docs/policy-types/validating-policy/)
+        (cluster-wide) and
+        [NamespacedValidatingPolicy](https://kyverno.io/docs/policy-types/validating-policy/#policy-scope)
+        (per-namespace), and when to use each
+      - How [CEL
+        expressions](https://kubernetes.io/docs/reference/using-api/cel/) in
+        `ValidatingPolicy` and `PolicyException` express fine-grained admission
+        conditions
+      - How to write and scope a
+        [PolicyException](https://kyverno.io/docs/guides/exceptions/) correctly
+        so only the intended workloads are exempt
+      - How to use [Policy Reporter](https://kyverno.github.io/policy-reporter/)
+        and the [OpenReports](https://openreports.io/) format to audit and debug
+        a policy estate across multiple namespaces
+    architecture:
+      - "Five namespaces span the estate: four **provinces** (`gallia`,
+        `hispania`, `britannia`, `aegyptus`) with `republic.rome/realm:
+        province`, and `castra`, the **infra** namespace, with
+        `republic.rome/realm: infra`. These labels drive policy scoping; use
+        `kubectl get ns --show-labels` to inspect them."
+      - "Two **empire-wide** policies cover all provinces:
+        `no-privileged-containers` and `require-census` (every workload must
+        declare a valid `republic.rome/gens` and a matching
+        `republic.rome/province`). Aegyptus adds `aegyptus-require-scribe-role`
+        for its local scribe requirement, and a **`PolicyException`** covers its
+        single legacy workload."
+      - The broken policies live in `manifests/policies/` and
+        `manifests/exceptions/`. After each change, run `make apply` to redeploy
+        the workloads, then `make verify` to check your progress.
+    toolbox:
+      - name: kubectl
+        url: https://kubernetes.io/docs/reference/kubectl/
+        description: Apply and inspect cluster resources, check namespace labels and
+          policy status
+      - name: kyverno CLI
+        url: https://kyverno.io/docs/kyverno-cli/
+        description: Test and lint policies locally before applying to the cluster
+      - name: k9s
+        url: https://k9scli.io/
+        description: Explore cluster resources and policy reports in a terminal UI
+    how_to_play:
+      - id: explore
+        title: Explore the Estate
+        content: |
+          When your Codespace is ready, the policy estate is already deployed, but something is wrong.
+          Open Policy Reporter at port **30110** (find it in the **Ports** tab) to get an overview of the estate:
+
+          - Which namespaces have violations?
+          - Which policies are generating results, and which are silent when they shouldn't be?
+
+          Then dig into the cluster:
+
+          ```bash
+          # Inspect the namespace topology — the labels here drive policy scoping
+          kubectl get ns --show-labels
+
+          # List all policies — note which are cluster-wide and which are namespaced
+          kubectl get validatingpolicies
+          kubectl get namespacedvalidatingpolicies -A
+
+          # Inspect any policy or exception in full
+          kubectl get validatingpolicy <name> -o yaml
+          kubectl get policyexceptions -A -o yaml
+
+          # See the raw OpenReports data behind Policy Reporter
+          kubectl get policyreports -A
+          ```
+
+          You can also launch **k9s** for a terminal UI view:
+
+          ```bash
+          k9s
+          ```
+      - id: fix
+        title: Fix the Policies
+        content: >
+          Review the [Objective](#objective) and investigate what is wrong in
+          `manifests/policies/` and
+
+          `manifests/exceptions/`.
+
+
+          Think about what each policy is *supposed* to cover, and compare that
+          against what it is *actually*
+
+          matching. The namespace labels you saw with `kubectl get ns
+          --show-labels` are a key part of the picture.
+
+
+          **Test locally with the Kyverno CLI before applying:**
+
+
+          ```bash
+
+          kyverno apply manifests/policies/require-census.yaml --resource
+          manifests/workloads/citizens.yaml
+
+          kyverno apply manifests/policies/aegyptus-require-scribe-role.yaml
+          --resource manifests/workloads/aegyptus-legacy-scribe.yaml
+
+          ```
+
+
+          **Apply your changes to the cluster:**
+
+
+          ```bash
+
+          make apply
+
+          ```
+
+
+          Policies only act at admission, so `make apply` redeploys the
+          workloads to re-evaluate the estate against
+
+          your changes. Then check Policy Reporter again. The picture should
+          improve as you fix each issue.
+      - id: file
+        title: File the Audit
+        content: |
+          Once the estate is in order, the Senate expects the Tabularium's ledger on file. Export the cluster's
+          policy reports, the OpenReports data behind Policy Reporter, as the audit of record.
+
+          ```bash
+          kubectl get policyreports -A -o yaml > estate-audit.yaml
+          ```
+    helpful_links:
+      - title: Kyverno ValidatingPolicy
+        url: https://kyverno.io/docs/policy-types/validating-policy/
+        description: "Reference docs for ValidatingPolicy and
+          NamespacedValidatingPolicy: the policy types you'll fix"
+      - title: Kyverno PolicyException
+        url: https://kyverno.io/docs/guides/exceptions/
+        description: How to write and scope a PolicyException to exempt specific workloads
+      - title: CEL Validation Expressions
+        url: https://kubernetes.io/docs/reference/using-api/cel/
+        description: How CEL expressions work in Kubernetes admission, including
+          accessing namespace context
+      - title: Policy Reporter
+        url: https://kyverno.github.io/policy-reporter/
+        description: How to use Policy Reporter to audit and visualise policy results
+          across the cluster
+      - title: OpenReports Format
+        url: https://openreports.io/
+        description: The OpenReports standard that Kyverno uses to emit PolicyReport
+          resources
+    topics: *a1
+    verification:
+      command: ./verify.sh
+      description: Once you think you've solved the challenge, run the verification
+        script. If it fails it will tell you which checks didn't pass. If it
+        passes, it generates a Certificate of Completion you can paste into the
+        discussion.
+    deadline: 2026-06-23T23:59:00+01:00

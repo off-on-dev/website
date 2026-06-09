@@ -21,6 +21,7 @@ const ROUTES = [
   // GENERATED:adventures
   "/adventures/lex-imperfecta",
   "/adventures/lex-imperfecta/levels/beginner",
+  "/adventures/lex-imperfecta/levels/intermediate",
   "/adventures/blind-by-design",
   "/adventures/blind-by-design/levels/beginner",
   "/adventures/blind-by-design/levels/intermediate",
@@ -53,6 +54,7 @@ const ROUTES = [
   "/challenges/openllmetry",
   "/challenges/opentelemetry",
   "/challenges/opentofu",
+  "/challenges/policy-reporter",
   "/challenges/prometheus",
   "/challenges/promql",
   "/challenges/python",
