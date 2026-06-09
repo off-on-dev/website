@@ -2,6 +2,11 @@
 // First run generates baseline screenshots in e2e/__screenshots__/.
 // Subsequent runs compare against baselines and fail if diffs exceed threshold.
 // Thresholds are set globally in playwright.config.ts.
+//
+// These tests are intentionally local-only. They are not run in CI or on PR
+// previews because screenshot rendering differs between macOS and Linux, making
+// cross-platform comparison unreliable. Run them manually before and after any
+// major layout or design change to catch visual regressions on your own machine.
 
 import { test, expect, type Page } from "@playwright/test";
 

@@ -12,7 +12,7 @@
  *
  * @param {string} text - Raw YAML file contents.
  * @param {string} targetLevelId - The `level:` value identifying the block (e.g. "intermediate").
- * @param {string} field - The field name to update (e.g. "community_url").
+ * @param {string} field - The field name to update (e.g. "community_url"). Must be a plain identifier; regex special characters are not escaped.
  * @param {string} value - The new value to write (unquoted).
  * @returns {string} Updated file contents.
  * @throws {Error} If the field is not found within the target level block.
