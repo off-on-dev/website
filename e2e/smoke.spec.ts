@@ -19,6 +19,7 @@ const ROUTES: RouteSpec[] = [
   // GENERATED:adventures
   { path: "/adventures/lex-imperfecta", title: /Lex Imperfecta/ },
   { path: "/adventures/lex-imperfecta/levels/beginner", title: /The Twelve Tables/ },
+  { path: "/adventures/lex-imperfecta/levels/intermediate", title: /Governing the Provinces/ },
   { path: "/adventures/blind-by-design", title: /Blind by Design/ },
   { path: "/adventures/blind-by-design/levels/beginner", title: /Stand up the Lab/ },
   { path: "/adventures/blind-by-design/levels/intermediate", title: /Outcome by Cohort/ },
@@ -51,6 +52,7 @@ const ROUTES: RouteSpec[] = [
   { path: "/challenges/openllmetry", title: /OpenLLMetry Challenges/ },
   { path: "/challenges/opentelemetry", title: /OpenTelemetry Challenges/ },
   { path: "/challenges/opentofu", title: /OpenTofu Challenges/ },
+  { path: "/challenges/policy-reporter", title: /Policy Reporter Challenges/ },
   { path: "/challenges/prometheus", title: /Prometheus Challenges/ },
   { path: "/challenges/promql", title: /PromQL Challenges/ },
   { path: "/challenges/python", title: /Python Challenges/ },
