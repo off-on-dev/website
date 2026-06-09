@@ -63,6 +63,10 @@ const pages: PageSpec[] = [
     check: { type: "contains", value: "The Twelve Tables" },
   },
   {
+    file: "adventures/lex-imperfecta/levels/intermediate/index.html",
+    check: { type: "contains", value: "Governing the Provinces" },
+  },
+  {
     file: "adventures/blind-by-design/index.html",
     check: { type: "contains", value: "Blind by Design" },
   },
