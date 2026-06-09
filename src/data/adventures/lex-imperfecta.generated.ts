@@ -48,7 +48,7 @@ export const LEX_IMPERFECTA: Adventure = {
         "How to use <a href=\"https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/\" target=\"_blank\" rel=\"noopener noreferrer\">custom label keys<span class=\"sr-only\"> (opens in new tab)</span></a> to  enforce workload identity standards",
         "How Kyverno <a href=\"https://kyverno.io/docs/policy-types/mutating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">MutatingPolicy<span class=\"sr-only\"> (opens in new tab)</span></a> resources automatically  patch incoming workloads at admission",
       ],
-      codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2Flex-imperfecta_beginner%2Fdevcontainer.json&quickstart=1`,
+      codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F05-lex-imperfecta_01-beginner%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: "https://community.offon.dev/t/restore-proper-admission-control-using-kyverno-june-2026-adventure-beginner/1576",
       deadline: "2026-06-23T23:59:00+01:00",
       intro: ["Fix broken Kyverno policies to restore proper admission control."],
