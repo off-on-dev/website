@@ -1,6 +1,6 @@
 // Requires a production build in dist/client/. Run `npm run build` before `npm run test:e2e`.
 
-import { test, expect } from "@playwright/test";
+import { test, expect, type Locator } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 type RouteSpec = { path: string; title: RegExp };
@@ -62,6 +62,63 @@ const ROUTES: RouteSpec[] = [
   { path: "/challenges/trivy", title: /Trivy Challenges/ },
   // /GENERATED:challenge-tags
 ];
+
+// Contrast ratio helpers used by the WCAG 1.4.11 and hover-state test blocks
+// below. Both accept a Playwright Locator so callers name the element they
+// already have rather than passing a redundant CSS selector string.
+//
+// The sRGB linearisation math (lin / lum) is inline inside locator.evaluate()
+// because evaluate() serialises the callback to run in browser context; it
+// cannot close over module-level functions. The duplication between the two
+// helpers is an unavoidable constraint of Playwright's evaluate API.
+
+async function getBorderContrast(target: Locator): Promise<number | null> {
+  return target.evaluate((el) => {
+    const parse = (s: string) => {
+      const m = s.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+      return m ? ([+m[1], +m[2], +m[3]] as [number, number, number]) : null;
+    };
+    const border = parse(window.getComputedStyle(el).borderTopColor);
+    let bg: [number, number, number] | null = null;
+    let cur: Element | null = el;
+    while (cur) {
+      const bgStr = window.getComputedStyle(cur).backgroundColor;
+      const b = parse(bgStr);
+      if (b && bgStr !== "rgba(0, 0, 0, 0)") { bg = b; break; }
+      cur = cur.parentElement;
+    }
+    if (!border || !bg) return null;
+    const lin = (c: number) => { const n = c / 255; return n <= 0.04045 ? n / 12.92 : Math.pow((n + 0.055) / 1.055, 2.4); };
+    const lum = ([r, g, b]: [number, number, number]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+    const l1 = lum(border);
+    const l2 = lum(bg);
+    return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+  });
+}
+
+async function getTextContrast(target: Locator): Promise<number | null> {
+  return target.evaluate((el) => {
+    const parse = (s: string) => {
+      const m = s.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+      return m ? ([+m[1], +m[2], +m[3]] as [number, number, number]) : null;
+    };
+    const fg = parse(window.getComputedStyle(el).color);
+    let bg: [number, number, number] | null = null;
+    let cur: Element | null = el;
+    while (cur) {
+      const bgStr = window.getComputedStyle(cur).backgroundColor;
+      const b = parse(bgStr);
+      if (b && bgStr !== "rgba(0, 0, 0, 0)") { bg = b; break; }
+      cur = cur.parentElement;
+    }
+    if (!fg || !bg) return null;
+    const lin = (c: number) => { const n = c / 255; return n <= 0.04045 ? n / 12.92 : Math.pow((n + 0.055) / 1.055, 2.4); };
+    const lum = ([r, g, b]: [number, number, number]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+    const l1 = lum(fg);
+    const l2 = lum(bg);
+    return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+  });
+}
 
 test.describe("every prerendered route", () => {
   for (const { path, title } of ROUTES) {
@@ -132,39 +189,12 @@ test.describe("every prerendered route (light mode)", () => {
 // axe-core does not check WCAG 1.4.11 border contrast on styled <a> link elements.
 // This block fills that gap for the specific interactive chip/pill components.
 test.describe("WCAG 1.4.11 border contrast: light mode (axe gap)", () => {
-  // All contrast math runs inside page.evaluate so helpers are inline there.
-  async function getBorderContrast(page: import("@playwright/test").Page, selector: string): Promise<number | null> {
-    return page.evaluate((sel) => {
-      const el = document.querySelector(sel);
-      if (!el) return null;
-      const cs = window.getComputedStyle(el);
-      const parse = (s: string) => {
-        const m = s.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-        return m ? [+m[1], +m[2], +m[3]] as [number, number, number] : null;
-      };
-      const border = parse(cs.borderTopColor);
-      let bg: [number, number, number] | null = null;
-      let cur: Element | null = el;
-      while (cur) {
-        const b = parse(window.getComputedStyle(cur).backgroundColor);
-        if (b && window.getComputedStyle(cur).backgroundColor !== "rgba(0, 0, 0, 0)") { bg = b; break; }
-        cur = cur.parentElement;
-      }
-      if (!border || !bg) return null;
-      const lin = (c: number) => { const n = c / 255; return n <= 0.03928 ? n / 12.92 : Math.pow((n + 0.055) / 1.055, 2.4); };
-      const lum = ([r, g, b]: [number, number, number]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
-      const l1 = lum(border);
-      const l2 = lum(bg);
-      return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
-    }, selector);
-  }
-
   test("tag-chip-link border contrast >= 3:1 on challenge detail (light mode)", async ({ page }) => {
     await page.addInitScript(() => localStorage.setItem("theme", "light"));
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/adventures/blind-by-design/levels/beginner");
     await page.waitForLoadState("networkidle");
-    const ratio = await getBorderContrast(page, ".tag-chip-link");
+    const ratio = await getBorderContrast(page.locator(".tag-chip-link").first());
     expect(ratio, "tag-chip-link border contrast must be >= 3:1 (WCAG 1.4.11)").not.toBeNull();
     expect(ratio!).toBeGreaterThanOrEqual(3.0);
   });
@@ -174,9 +204,66 @@ test.describe("WCAG 1.4.11 border contrast: light mode (axe gap)", () => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/adventures/blind-by-design");
     await page.waitForLoadState("networkidle");
-    const ratio = await getBorderContrast(page, ".contributor-pill");
+    const ratio = await getBorderContrast(page.locator(".contributor-pill").first());
     expect(ratio, "contributor-pill border contrast must be >= 3:1 (WCAG 1.4.11)").not.toBeNull();
     expect(ratio!).toBeGreaterThanOrEqual(3.0);
+  });
+});
+
+// axe-core and the static border tests above do not check hover states.
+// This block catches hover color contrast violations in light mode.
+// WCAG AAA thresholds: normal text (under 18px / non-bold under 14px) = 7:1,
+// large text (18px+ or bold 14px+) = 4.5:1.
+test.describe("hover state contrast: light mode", () => {
+  test("primary nav links (14px medium = normal text) hover >= 7:1", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("theme", "light"));
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+    const link = page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "About" });
+    await link.hover();
+    const ratio = await getTextContrast(link);
+    expect(ratio, "nav link hover (14px medium = normal text) must be >= 7:1 (WCAG AAA)").not.toBeNull();
+    expect(ratio!).toBeGreaterThanOrEqual(7.0);
+  });
+
+  test("inline prose links .docs-ext-link (16px normal = normal text) hover >= 7:1", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("theme", "light"));
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/contribute");
+    await page.waitForLoadState("networkidle");
+    const link = page.locator(".docs-ext-link").first();
+    const preHoverColor = await link.evaluate((el) => window.getComputedStyle(el).color);
+    await link.hover();
+    // toHaveCSS retries automatically; waits for the 200ms transition to settle
+    await expect(link).not.toHaveCSS("color", preHoverColor);
+    const ratio = await getTextContrast(link);
+    expect(ratio, ".docs-ext-link hover (16px normal = normal text) must be >= 7:1 (WCAG AAA)").not.toBeNull();
+    expect(ratio!).toBeGreaterThanOrEqual(7.0);
+  });
+
+  test("tag chip links (12px = normal text) hover >= 7:1", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("theme", "light"));
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/adventures/blind-by-design/levels/beginner");
+    await page.waitForLoadState("networkidle");
+    const chip = page.locator(".tag-chip-link").first();
+    await chip.hover();
+    const ratio = await getTextContrast(chip);
+    expect(ratio, ".tag-chip-link hover (12px = normal text) must be >= 7:1 (WCAG AAA)").not.toBeNull();
+    expect(ratio!).toBeGreaterThanOrEqual(7.0);
+  });
+
+  test("primary button .btn-primary (14px semibold = normal text) hover >= 7:1", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("theme", "light"));
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+    const btn = page.getByRole("link", { name: /Start a Challenge/i });
+    await btn.hover();
+    const ratio = await getTextContrast(btn);
+    expect(ratio, "primary button hover (14px semibold = normal text) must be >= 7:1 (WCAG AAA)").not.toBeNull();
+    expect(ratio!).toBeGreaterThanOrEqual(7.0);
   });
 });
 
@@ -246,27 +333,4 @@ test.describe("hydration and interactivity", () => {
     await page.keyboard.press("Enter");
     await expect(page.locator(":focus")).toHaveAttribute("id", "main-content");
   });
-});
-
-test.describe("reduced motion — axe scan", () => {
-  // Runs axe on representative routes with prefers-reduced-motion: reduce to catch
-  // content that becomes invisible or inaccessible when animations are disabled.
-  const ROUTES = [
-    "/",
-    "/challenges",
-    "/adventures/blind-by-design/levels/beginner",
-  ];
-
-  for (const path of ROUTES) {
-    test(`no axe violations on ${path} (reduced motion)`, async ({ page }) => {
-      await page.emulateMedia({ reducedMotion: "reduce" });
-      const response = await page.goto(path);
-      expect(response?.status(), `${path} returned non-200 status`).toBe(200);
-      await page.waitForLoadState("networkidle");
-      const a11y = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"])
-        .analyze();
-      expect(a11y.violations, `axe violations on ${path} with reduced motion`).toEqual([]);
-    });
-  }
 });

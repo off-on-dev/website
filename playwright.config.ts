@@ -14,6 +14,18 @@ export default defineConfig({
     // the site's default state regardless of the developer's OS setting.
     colorScheme: "dark",
   },
+  snapshotPathTemplate: "e2e/__screenshots__/{arg}{ext}",
+  expect: {
+    toHaveScreenshot: {
+      // Threshold: per-pixel color difference tolerance (0-1)
+      // 0.2 allows 20% color variation per pixel (tolerates font anti-aliasing)
+      threshold: 0.2,
+      // Max diff pixels: absolute count that can differ
+      // ~0.1% of a 1280×4689 page (6M pixels) = 6000 pixels
+      // Tolerates small UI changes (text updates, badge counts, etc.)
+      maxDiffPixels: 6000,
+    },
+  },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
   ],

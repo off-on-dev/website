@@ -14,7 +14,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test",
+    "test:e2e": "playwright test --grep-invert visual",
+    "test:visual": "playwright test --grep visual",
+    "test:visual:update": "playwright test --grep visual --update-snapshots",
     "generate": "node scripts/generate-adventures.mjs",
     "generate:validate": "node scripts/generate-adventures.mjs --validate-only",
     "prebuild": "node scripts/generate-adventures.mjs"

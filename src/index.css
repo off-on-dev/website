@@ -311,8 +311,8 @@ html {
     --text-muted: 35 8% 29%;
     --text-faint: 35 8% 29%;
     /* Dark amber for inline link hover in light mode, same hue as primary,
-       darkened to hsl(41 100% 22%) ≈ #704d00 for ~7.4:1 contrast on light bg */
-    --link-hover-light: 41 100% 22%;
+       darkened to hsl(41 100% 21%) ≈ #6b4900 for ~7.5:1 contrast on bg-card */
+    --link-hover-light: 41 100% 21%;
 
     /* Custom surface tokens */
     --surface: 220 10% 96%;
@@ -809,7 +809,7 @@ html {
   text-decoration-color: currentColor;
 }
 
-/* Light mode hover: dark amber, same hue as primary, L=22% gives ~7.4:1 contrast */
+/* Light mode hover: dark amber, same hue as primary, L=21% gives ~7.5:1 contrast on bg-card */
 .light .docs-ext-link:hover {
   color: hsl(var(--link-hover-light));
   text-decoration-color: currentColor;
@@ -1039,7 +1039,7 @@ html {
 /* ─── Social icon links ──────────────────────────────────── */
 /* Icon-only links used in the Spread the Word card on /contribute.
    bg-card in light mode is near-white; #ffc034 (--primary) gives ~1.6:1 on hover,
-   fails WCAG 1.4.11. Use link-hover-light (~7.4:1) in light mode instead. */
+   fails WCAG 1.4.11. Use link-hover-light (~7.5:1) in light mode instead. */
 .social-icon-link {
   padding: 0.25rem;
   color: hsl(var(--text-secondary));
