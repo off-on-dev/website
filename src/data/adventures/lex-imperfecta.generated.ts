@@ -131,7 +131,7 @@ kyverno apply manifests/policies/stamp-travel-permit.yaml --resource manifests/p
         "How to write and scope a <a href=\"https://kyverno.io/docs/guides/exceptions/\" target=\"_blank\" rel=\"noopener noreferrer\">PolicyException<span class=\"sr-only\"> (opens in new tab)</span></a> correctly so only the intended workloads are exempt",
         "How to use <a href=\"https://kyverno.github.io/policy-reporter/\" target=\"_blank\" rel=\"noopener noreferrer\">Policy Reporter<span class=\"sr-only\"> (opens in new tab)</span></a> and the <a href=\"https://openreports.io/\" target=\"_blank\" rel=\"noopener noreferrer\">OpenReports<span class=\"sr-only\"> (opens in new tab)</span></a> format to audit and debug a policy estate across multiple namespaces",
       ],
-      codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2Flex-imperfecta_intermediate%2Fdevcontainer.json&quickstart=1`,
+      codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F05-lex-imperfecta_02-intermediate%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: "",
       deadline: "2026-06-23T23:59:00+01:00",
       intro: [

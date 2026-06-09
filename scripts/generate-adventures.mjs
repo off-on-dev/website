@@ -32,8 +32,8 @@
  *   The corrected value should also be fixed upstream in the challenges repo.
  * - In --validate-only mode, wrong values are always errors (CI must not
  *   silently mutate source files).
- * - If gh is unavailable or unauthenticated, the check is skipped with a
- *   warning and generation proceeds.
+ * - Uses the GitHub REST API via native fetch (no auth required for public
+ *   repos). Falls back gracefully if the network is unavailable.
  */
 
 import { spawnSync } from "node:child_process";
@@ -317,27 +317,26 @@ function monthToSortKey(month) {
 
 /**
  * Fetch the set of valid devcontainer folder names from the challenges repo
- * via gh api (uses the local gh auth token — no extra credentials needed).
+ * via the GitHub REST API using native fetch. Works without authentication for
+ * public repos, so it runs correctly in every environment — local, sync
+ * workflow, and validate CI — without requiring cross-repo token access.
  * Returns null when the check cannot be performed so callers can skip it
  * gracefully instead of failing the build.
- *
- * Results are cached for 1 hour by gh to avoid hammering the API on repeated
- * runs (e.g. npm run build triggers generate via the prebuild hook).
  */
-function fetchValidDevcontainerFolders() {
-  const result = spawnSync(
-    "gh",
-    ["api", "repos/off-on-dev/open-source-challenges/contents/.devcontainer", "--jq", "[.[] | select(.type == \"dir\") | .name]", "--cache", "1h"],
-    { encoding: "utf-8" }
-  );
-  if (result.status !== 0 || !result.stdout.trim()) {
-    warn("Could not fetch devcontainer folder list from GitHub (offline or gh not authenticated). Skipping devcontainer path validation.");
-    return null;
-  }
+async function fetchValidDevcontainerFolders() {
   try {
-    return new Set(JSON.parse(result.stdout));
-  } catch {
-    warn("Failed to parse devcontainer folder list from GitHub. Skipping devcontainer path validation.");
+    const response = await fetch(
+      "https://api.github.com/repos/off-on-dev/open-source-challenges/contents/.devcontainer",
+      { headers: { "User-Agent": "offon-dev/website generate-adventures" } }
+    );
+    if (!response.ok) {
+      warn(`Could not fetch devcontainer folder list from GitHub (HTTP ${response.status}). Skipping devcontainer path validation.`);
+      return null;
+    }
+    const entries = await response.json();
+    return new Set(entries.filter((e) => e.type === "dir").map((e) => e.name));
+  } catch (e) {
+    warn(`Could not fetch devcontainer folder list from GitHub (${e.message}). Skipping devcontainer path validation.`);
     return null;
   }
 }
@@ -1169,7 +1168,7 @@ async function main() {
 
   console.log(`Found ${yamls.length} adventure YAML file(s):\n`);
 
-  const validDevcontainerFolders = fetchValidDevcontainerFolders();
+  const validDevcontainerFolders = await fetchValidDevcontainerFolders();
   const adventures = [];
   let hasErrors = false;
 

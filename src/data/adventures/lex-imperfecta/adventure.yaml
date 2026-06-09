@@ -217,7 +217,7 @@ levels:
   - level: intermediate
     emoji: 🟡
     title: Governing the Provinces
-    devcontainer: lex-imperfecta_intermediate
+    devcontainer: 05-lex-imperfecta_02-intermediate
     community_url: ""
     summary: Fix a misconfigured Kyverno policy estate and use Policy Reporter to restore proper governance across the
       Republic's provinces.
