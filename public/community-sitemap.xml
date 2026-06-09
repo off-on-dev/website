@@ -2,19 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://community.offon.dev</loc>
-    <lastmod>2026-06-08</lastmod>
+    <lastmod>2026-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://community.offon.dev/c/community-voices/38</loc>
-    <lastmod>2026-06-08</lastmod>
+    <lastmod>2026-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://community.offon.dev/c/challenges/11</loc>
-    <lastmod>2026-06-08</lastmod>
+    <lastmod>2026-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -301,14 +301,14 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://community.offon.dev/t/restore-proper-admission-control-using-kyverno-june-2026-adventure-beginner/1576</loc>
-    <lastmod>2026-06-07</lastmod>
+    <loc>https://community.offon.dev/t/fix-a-broken-kyverno-policy-estate-june-2026-adventure-intermediate/1581</loc>
+    <lastmod>2026-06-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://community.offon.dev/t/wire-openfeature-flagd-into-a-spring-boot-service-with-zero-setup-adventure-04-beginner/1419</loc>
-    <lastmod>2026-06-01</lastmod>
+    <loc>https://community.offon.dev/t/restore-proper-admission-control-using-kyverno-june-2026-adventure-beginner/1576</loc>
+    <lastmod>2026-06-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -331,14 +331,8 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://community.offon.dev/t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865</loc>
-    <lastmod>2026-04-08</lastmod>
+    <loc>https://community.offon.dev/t/wire-openfeature-flagd-into-a-spring-boot-service-with-zero-setup-adventure-04-beginner/1419</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -349,8 +343,20 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://community.offon.dev/t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://community.offon.dev/t/january-adventure-summary-building-cloudhaven/914</loc>
     <lastmod>2026-02-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865</loc>
+    <lastmod>2026-04-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -367,26 +373,14 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://community.offon.dev/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656</loc>
-    <lastmod>2026-01-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://community.offon.dev/t/december-adventure-summary-echoes-lost-in-orbit/662</loc>
     <lastmod>2026-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-beginner-broken-echoes/117</loc>
-    <lastmod>2026-01-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351</loc>
-    <lastmod>2026-01-07</lastmod>
+    <loc>https://community.offon.dev/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656</loc>
+    <lastmod>2026-01-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -397,8 +391,8 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-intermediate-the-silent-canary/310</loc>
-    <lastmod>2025-12-23</lastmod>
+    <loc>https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-expert-hyperspace-operations-transport/351</loc>
+    <lastmod>2026-01-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -415,8 +409,20 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-intermediate-the-silent-canary/310</loc>
+    <lastmod>2025-12-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://community.offon.dev/t/call-for-builders-create-your-own-technical-challenge/131</loc>
     <lastmod>2025-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-beginner-broken-echoes/117</loc>
+    <lastmod>2026-01-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
