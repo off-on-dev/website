@@ -1,1 +1,0 @@
-import{l as e}from"./vendor-router-DZ4BCFy4.js";function t(){return e(`/handbook`)}export{t as clientLoader};
