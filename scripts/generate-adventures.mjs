@@ -22,6 +22,18 @@
  *   this script first. CI can detect out-of-sync output by running
  *   `npm run generate` and checking for a clean git diff.
  * - Never edit *.generated.ts by hand — changes will be overwritten.
+ *
+ * Devcontainer validation and auto-correction:
+ * - In generate mode, each level's devcontainer value is cross-checked
+ *   against the actual folder names in the challenges repo
+ *   (off-on-dev/open-source-challenges/.devcontainer) via gh api.
+ * - If a value is wrong but an unambiguous match can be found by slug and
+ *   difficulty, the YAML file is patched in place and a warning is emitted.
+ *   The corrected value should also be fixed upstream in the challenges repo.
+ * - In --validate-only mode, wrong values are always errors (CI must not
+ *   silently mutate source files).
+ * - If gh is unavailable or unauthenticated, the check is skipped with a
+ *   warning and generation proceeds.
  */
 
 import { spawnSync } from "node:child_process";
@@ -303,7 +315,75 @@ function monthToSortKey(month) {
   return Number(match[2]) * 12 + m;
 }
 
-function validateAdventure(data, id) {
+/**
+ * Fetch the set of valid devcontainer folder names from the challenges repo
+ * via gh api (uses the local gh auth token — no extra credentials needed).
+ * Returns null when the check cannot be performed so callers can skip it
+ * gracefully instead of failing the build.
+ *
+ * Results are cached for 1 hour by gh to avoid hammering the API on repeated
+ * runs (e.g. npm run build triggers generate via the prebuild hook).
+ */
+function fetchValidDevcontainerFolders() {
+  const result = spawnSync(
+    "gh",
+    ["api", "repos/off-on-dev/open-source-challenges/contents/.devcontainer", "--jq", "[.[] | select(.type == \"dir\") | .name]", "--cache", "1h"],
+    { encoding: "utf-8" }
+  );
+  if (result.status !== 0 || !result.stdout.trim()) {
+    warn("Could not fetch devcontainer folder list from GitHub (offline or gh not authenticated). Skipping devcontainer path validation.");
+    return null;
+  }
+  try {
+    return new Set(JSON.parse(result.stdout));
+  } catch {
+    warn("Failed to parse devcontainer folder list from GitHub. Skipping devcontainer path validation.");
+    return null;
+  }
+}
+
+/**
+ * For each level whose devcontainer value is missing from validFolders, try
+ * to find the correct folder by matching both the adventure slug and the level
+ * difficulty (lowercased) against the known folder names.
+ *
+ * If exactly one candidate matches, the YAML file on disk is patched and the
+ * in-memory data object is updated. Ambiguous or unresolvable cases are left
+ * unchanged so validateAdventure can report them as errors.
+ *
+ * Only called in generate mode — CI (--validate-only) must not silently
+ * mutate source files.
+ *
+ * @returns {{ levelIndex: number, from: string, to: string }[]}
+ */
+function autoCorrectDevcontainerPaths(data, id, yamlPath, validFolders) {
+  if (!validFolders || !data.levels) return [];
+  const corrections = [];
+  let rawYaml = readFileSync(yamlPath, "utf-8");
+
+  for (let i = 0; i < data.levels.length; i++) {
+    const level = data.levels[i];
+    const wrong = level.devcontainer;
+    if (!wrong || validFolders.has(wrong)) continue;
+
+    const difficulty = (level.difficulty || LEVEL_DIFFICULTY_BY_EMOJI[level.emoji] || "").toLowerCase();
+    const candidates = [...validFolders].filter(
+      (f) => f.includes(id) && (!difficulty || f.includes(difficulty))
+    );
+
+    if (candidates.length !== 1) continue;
+
+    const correct = candidates[0];
+    rawYaml = rawYaml.replace(`devcontainer: ${wrong}`, `devcontainer: ${correct}`);
+    data.levels[i].devcontainer = correct;
+    corrections.push({ levelIndex: i, from: wrong, to: correct });
+  }
+
+  if (corrections.length > 0) writeFileSync(yamlPath, rawYaml);
+  return corrections;
+}
+
+function validateAdventure(data, id, validDevcontainerFolders) {
   const errors = [];
   if (!data.slug) errors.push("Missing required field: slug");
   else if (data.slug !== id) errors.push(`slug "${data.slug}" does not match folder name "${id}"`);
@@ -338,7 +418,11 @@ function validateAdventure(data, id) {
       if (!level.learnings && !level.what_you_learn) {
         errors.push(`${prefix}: Missing learnings (or what_you_learn)`);
       }
-      if (!level.devcontainer) errors.push(`${prefix}: Missing devcontainer`);
+      if (!level.devcontainer) {
+        errors.push(`${prefix}: Missing devcontainer`);
+      } else if (validDevcontainerFolders && !validDevcontainerFolders.has(level.devcontainer)) {
+        errors.push(`${prefix}: devcontainer "${level.devcontainer}" not found in off-on-dev/open-source-challenges/.devcontainer — check https://github.com/off-on-dev/open-source-challenges/tree/main/.devcontainer`);
+      }
       const discussionUrl = level.discussion_url ?? level.community_url;
       if (discussionUrl === undefined || discussionUrl === null) {
         errors.push(`${prefix}: Missing discussion_url (or community_url)`);
@@ -1085,6 +1169,7 @@ async function main() {
 
   console.log(`Found ${yamls.length} adventure YAML file(s):\n`);
 
+  const validDevcontainerFolders = fetchValidDevcontainerFolders();
   const adventures = [];
   let hasErrors = false;
 
@@ -1099,7 +1184,17 @@ async function main() {
       continue;
     }
 
-    const errors = validateAdventure(data, id);
+    // In generate mode, auto-correct devcontainer values that don't match
+    // the challenges repo before validation so the corrected values pass.
+    // --validate-only intentionally skips this to keep CI a pure read-only check.
+    if (!validateOnly && validDevcontainerFolders) {
+      const corrections = autoCorrectDevcontainerPaths(data, id, path, validDevcontainerFolders);
+      for (const { levelIndex, from, to } of corrections) {
+        warn(`${id} levels[${levelIndex}]: devcontainer auto-corrected "${from}" → "${to}" — update adventure.yaml in the challenges repo`);
+      }
+    }
+
+    const errors = validateAdventure(data, id, validDevcontainerFolders);
     if (errors.length > 0) {
       console.error(`  \x1b[31m✗\x1b[0m ${id}/adventure.yaml:`);
       for (const err of errors) {

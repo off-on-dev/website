@@ -121,6 +121,22 @@ node scripts/refresh-leaderboard.mjs
 
 Run this after `community_category_id` is set. It adds the adventure to the leaderboard data used on the site. Requires `DISCOURSE_API_KEY` and `DISCOURSE_API_USERNAME` in your environment or a `.env` file.
 
+### Verify devcontainer paths
+
+`generate-adventures.mjs` cross-checks each level's `devcontainer:` value against the actual folder names in [`off-on-dev/open-source-challenges/.devcontainer`](https://github.com/off-on-dev/open-source-challenges/tree/main/.devcontainer) via `gh api`.
+
+**In generate mode** (the default, including the sync workflow): if a value is wrong but an unambiguous match can be found by slug and difficulty, the YAML is patched in place and a warning is printed:
+
+```
+Warning: <slug> levels[0]: devcontainer auto-corrected "<wrong>" → "<correct>" — update adventure.yaml in the challenges repo
+```
+
+If you see this warning, also fix the `devcontainer:` value upstream in the challenges repo so the next sync does not reintroduce the wrong value.
+
+**In `--validate-only` mode** (`npm run generate:validate`, used by CI): wrong values are always hard errors with no auto-correction.
+
+If `gh` is unavailable or unauthenticated, the check is skipped with a warning and generation proceeds.
+
 ### Final checks
 
 ```sh

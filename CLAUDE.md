@@ -241,9 +241,6 @@ When diagnosing a bug, especially in the production build, follow these rules wi
   - **Why YAML + generated TS instead of writing TS directly?** YAML is easier to author and review for non-engineers, and validated by JSON Schema. Vite cannot import YAML natively, so a generator converts it to fully-typed TS that the app can statically import. Committing the generated files means the build works without running the generator first, and CI can detect when generated output is out of sync with the source YAML.
 - **Schema validation:** Adventure YAML files are validated against `schemas/adventure.schema.json` (JSON Schema Draft 2020-12). Run `npm run generate:validate` to check without writing files.
 - **Build-time fetching:** Discussion data lives in per-level JSON files under `src/data/adventures/<adventure-id>/<level-id>-posts.json`. Each file contains only `discussionUrl`, `discussionPosts`, and `totalReplies`. These are refreshed hourly by the GitHub Action in `.github/workflows/refresh-community-data.yml` (runs `scripts/refresh-discussions.mjs`). Components import the JSON dynamically via `import.meta.glob`.
-- When adding a new adventure level, create its per-level discussion JSON file (`<level-id>-posts.json`) with a `discussionUrl` field. The refresh script uses this URL to fetch posts.
-- `scripts/refresh-discussions.mjs`, `scripts/refresh-leaderboard.mjs`, and `scripts/refresh-community-leaders.mjs` each contain a `COMMUNITY_BASE` constant that is a necessary duplicate of `COMMUNITY_URL` in `src/data/constants.ts`. The scripts run in Node and cannot import from `src/`, so the value must be maintained manually in all four places. Always update them together.
-- The domain `community.offon.dev` in the three refresh scripts and `src/data/constants.ts` is the actual Discourse server URL used for API calls at build time. `COMMUNITY_DISPLAY_NAME` in `src/data/constants.ts` is the separate user-facing label shown in the UI. Always update all four places together.
 
 ---
 
@@ -585,21 +582,13 @@ When adding a new route to `src/routes.ts`, follow these rules by route type:
 
 ### When adding a new adventure or a new level to an existing adventure
 
-Adventures and levels are synced from the challenges repo via the `sync-adventure` GitHub Actions workflow (Actions tab → Sync Adventure from Challenges Repo → Run workflow).
-
-Inputs:
-- `adventure_url`: URL of the adventure folder in the challenges repo (e.g. `https://github.com/off-on-dev/open-source-challenges/tree/main/adventures/05-lex-imperfecta`)
-- `levels`: comma-separated level IDs to make live now (e.g. `beginner` or `beginner,intermediate`). Levels present in the challenges repo but not listed are added as "coming soon" placeholders. Leave blank to sync all levels.
-
-The workflow opens a PR with a checklist. Before merging, complete all items in that checklist, including:
+See [`ADVENTURES.md`](ADVENTURES.md) for the full sync process and PR checklist. The code changes required before merging are:
 
 1. Add the adventure detail route and all level routes to `src/routes.ts`.
 2. Add all URLs to `public/sitemap.xml` and the `prerender` array in `react-router.config.ts`.
-3. Add the adventure to `ADVENTURE_CATEGORIES` in `scripts/refresh-leaderboard.mjs` and run `node scripts/refresh-leaderboard.mjs`.
-4. Set `discussionUrl` in each `*-posts.json` using the **Add Discussion URL to Level** GitHub Actions workflow (Actions → Add Discussion URL to Level). The workflow updates `adventure.yaml`, fetches initial posts, regenerates TypeScript, and opens a PR. Run once per level. Do not run `node scripts/refresh-discussions.mjs` manually for this step.
-5. Add each level URL to the `ROUTES` array in `e2e/smoke.spec.ts` and `src/test/seo.test.ts`, and to the `pages` array in `src/test/prerender.test.ts` with the expected `<title>` value.
-6. Update the routes table in `README.md`.
-7. Add the adventure to `public/llms.txt` under the Adventures section so AI agents can discover it.
+3. Add each level URL to the `ROUTES` array in `e2e/smoke.spec.ts` and `src/test/seo.test.ts`, and to the `pages` array in `src/test/prerender.test.ts` with the expected `<title>` value.
+4. Update the routes table in `README.md`.
+5. Add the adventure to `public/llms.txt` under the Adventures section so AI agents can discover it.
 
 ---
 

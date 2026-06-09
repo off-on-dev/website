@@ -39,7 +39,7 @@ levels:
   - level: beginner
     emoji: 🟢
     title: The Twelve Tables
-    devcontainer: lex-imperfecta_beginner
+    devcontainer: 05-lex-imperfecta_01-beginner
     community_url: "https://community.offon.dev/t/restore-proper-admission-control-using-kyverno-june-2026-adventure-beginner/1576"
     summary: Fix broken Kyverno policies to restore proper admission control.
     audience: Platform engineers, SREs, and developers curious about Kubernetes security — no prior Kyverno experience
