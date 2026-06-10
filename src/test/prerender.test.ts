@@ -135,6 +135,12 @@ const pages: PageSpec[] = [
     check: { type: "contains", value: "Hyperspace Operations &amp; Transport" },
   },
   // /GENERATED:adventures
+  // GENERATED:solutions
+  {
+    file: "adventures/echoes-lost-in-orbit/levels/beginner/solution/index.html",
+    check: { type: "contains", value: "Solution" },
+  },
+  // /GENERATED:solutions
   {
     file: "challenges/index.html",
     check: { type: "exact", value: "Open Source Challenges | OffOn" },

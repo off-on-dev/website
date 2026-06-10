@@ -40,6 +40,9 @@ const ROUTES = [
   "/adventures/echoes-lost-in-orbit/levels/intermediate",
   "/adventures/echoes-lost-in-orbit/levels/expert",
   // /GENERATED:adventures
+  // GENERATED:solutions
+  "/adventures/echoes-lost-in-orbit/levels/beginner/solution",
+  // /GENERATED:solutions
   "/challenges",
   // GENERATED:challenge-tags
   "/challenges/argo-cd",

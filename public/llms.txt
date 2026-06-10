@@ -25,6 +25,7 @@ Each adventure is a scenario-driven challenge with beginner, intermediate, and e
 - [The AI Observatory](https://offon.dev/adventures/the-ai-observatory/): Investigate a mysterious bandwidth anomaly at a remote research station by instrumenting its AI system with OpenTelemetry, OpenLLMetry, and Jaeger.
 - [Building CloudHaven](https://offon.dev/adventures/building-cloudhaven/): Join the Infrastructure Guild and modernize CloudHaven's infrastructure from manual provisioning to a self-service platform using Infrastructure as Code. A hands-on journey through infrastructure as code with OpenTofu and GitHub Actions.
 - [Echoes Lost in Orbit](https://offon.dev/adventures/echoes-lost-in-orbit/): Restore interstellar communications by fixing broken GitOps setups, progressive delivery systems, and observability pipelines across three galactic missions.
+  - [Broken Echoes solution](https://offon.dev/adventures/echoes-lost-in-orbit/levels/beginner/solution/)
 
 ## Challenge Technologies
 

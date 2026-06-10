@@ -38,6 +38,9 @@ const ROUTES: RouteSpec[] = [
   { path: "/adventures/echoes-lost-in-orbit/levels/intermediate", title: /The Silent Canary/ },
   { path: "/adventures/echoes-lost-in-orbit/levels/expert", title: /Hyperspace Operations & Transport/ },
   // /GENERATED:adventures
+  // GENERATED:solutions
+  { path: "/adventures/echoes-lost-in-orbit/levels/beginner/solution", title: /Solution/ },
+  // /GENERATED:solutions
   { path: "/challenges", title: /Open Source Challenges/ },
   // GENERATED:challenge-tags
   { path: "/challenges/argo-cd", title: /Argo CD Challenges/ },
