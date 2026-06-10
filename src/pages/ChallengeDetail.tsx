@@ -1,7 +1,7 @@
 import { type JSX } from "react";
-import { useParams, useLoaderData } from "react-router";
+import { useParams, useLoaderData, Link } from "react-router";
 import type { MetaFunction, LoaderFunctionArgs, LinksFunction } from "react-router";
-import { Check, Clock, ExternalLink } from "lucide-react";
+import { Check, Clock, ExternalLink, ArrowRight } from "lucide-react";
 import { ADVENTURES } from "@/data/adventures";
 import { TagChips } from "@/components/TagChips";
 import { CodespacesButton } from "@/components/CodespacesButton";
@@ -274,6 +274,25 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
               </a>
             </p>
           </section>
+
+          {/* Solution walkthrough link — shown after deadline passes */}
+          {rewardsBelowFold && (
+            <section className="mb-6 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+              <p className="font-sans text-sm font-semibold tracking-wide text-primary mb-1">
+                Check Out the Solution Walkthrough
+              </p>
+              <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed mb-3">
+                See how we approached this challenge step by step. Found a better way? We&apos;d love to hear about it in the discussion.
+              </p>
+              <Link
+                to={`/adventures/${adventure.id}/levels/${level.id}/solution`}
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+              >
+                View the solution walkthrough
+                <ArrowRight size={13} aria-hidden="true" />
+              </Link>
+            </section>
+          )}
 
           {/* Toolbox + Helpful Documentation side-by-side */}
           {((toolbox && toolbox.length > 0) || (helpfulLinks && helpfulLinks.length > 0)) && (

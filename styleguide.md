@@ -1809,3 +1809,48 @@ Measured against the production build locally (`npm run build && npm run preview
 | Accessibility | 100 |
 | Best Practices | 100 |
 | SEO | 100 |
+
+## Solution Pages (`/adventures/:id/levels/:levelId/solution`)
+
+Solution walkthroughs live at `src/pages/SolutionDetail.tsx`. The page is gated: if a deadline has not passed (or no solution file exists), a locked state is shown. Once available, the page renders a two-column layout.
+
+### Data model
+
+Source files live at `src/data/solutions/<adventure-id>/<level-id>.ts`. Types are in `src/data/solutions/types.ts`.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `title` | `string` | Title case, no emoji, no em dashes |
+| `spoilerWarning` | `string` | One sentence, plain text |
+| `intro` | `string` | One or two sentences, plain text |
+| `context` | `{ title, body: SolutionBlock[] }` | Optional setup/tooling explanation |
+| `steps` | `SolutionStep[]` | One step per challenge objective |
+| `completeSolution` | `{ title, description, language, code }` | Final corrected config/code |
+
+### `SolutionBlock` union
+
+| `type` | Fields | Rendered as |
+| --- | --- | --- |
+| `text` | `html: string` | `.md-content` div with `dangerouslySetInnerHTML` |
+| `code` | `language, title?, code` | `.md-pre-group` with copy button and language label |
+| `image` | `src, alt, caption?` | `<figure>` with `<img>` and optional `<figcaption>` |
+| `callout` | `variant: tip, warning, or info; html` | Bordered box with icon and variant label |
+
+### Callout variants
+
+| Variant | Icon | Color |
+| --- | --- | --- |
+| `tip` | `Lightbulb` | Amber (`primary`) |
+| `warning` | `AlertTriangle` | Orange |
+| `info` | `Info` | Blue |
+
+### Images
+
+- Stored in `public/solutions/<adventure-id>/`.
+- File naming: `<level-id>-<descriptive-slug>.webp`.
+- Converted from source PNGs using `cwebp -q 85`.
+- Alt text: one sentence, direct description, no em dashes, no "screenshot of" filler.
+
+### Adding a new solution
+
+Use the `/add-solution` command. It handles image conversion, TypeScript authoring, and generator patching automatically.

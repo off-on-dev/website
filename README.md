@@ -110,6 +110,7 @@ Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and
 | `/adventures` | `Adventures.tsx` | Adventure landing hub (links to /challenges) |
 | `/adventures/:id` | `AdventureDetail.tsx` | Adventure landing |
 | `/adventures/:id/levels/:levelId` | `ChallengeDetail.tsx` | Individual challenge |
+| `/adventures/:id/levels/:levelId/solution` | `SolutionDetail.tsx` | Solution walkthrough (post-deadline) |
 | `/contribute` | `Contribute.tsx` | How to contribute (technical and non-technical ways) |
 | `/sponsors` | `Sponsors.tsx` | Sponsorship info |
 | `/about` | `About.tsx` | About the community |
