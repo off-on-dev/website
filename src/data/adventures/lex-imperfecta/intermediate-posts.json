@@ -6,9 +6,16 @@
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
       "cooked": "Mission acomplished!!! Order restored for the 2nd time. This story is very cool. Saving the empire and restoring the order. What is next? Saving the Galaxy?",
       "created_at": "2026-06-09T16:28:54.653Z",
+      "challengeSolved": true,
       "topicUrl": "https://community.offon.dev/t/fix-a-broken-kyverno-policy-estate-june-2026-adventure-intermediate/1581"
     }
   ],
   "totalReplies": 1,
-  "solvers": []
+  "solvers": [
+    {
+      "username": "theharithsa",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
+      "solvedAt": "2026-06-09T16:28:54.653Z"
+    }
+  ]
 }

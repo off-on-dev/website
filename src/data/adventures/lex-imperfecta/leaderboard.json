@@ -1,8 +1,20 @@
 {
-  "updatedAt": "2026-06-08T11:07:12.616Z",
+  "updatedAt": "2026-06-10T12:51:13.171Z",
   "rows": [
     {
       "rank": 1,
+      "username": "theharithsa",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/90/297.png",
+      "points": 195,
+      "challengesSolved": 2,
+      "beginnerPoints": 95,
+      "intermediatePoints": 100,
+      "expertPoints": 0,
+      "singlePoints": 0,
+      "breakdown": "🟡 Fix a broken Kyverno policy estate | June 2026 Adventure: Intermediate [intermediate] rank #1 = 100 pts | 🟢 Restore proper admission control using Kyverno | June 2026 Adventure: Beginner [beginner] rank #2 = 95 pts"
+    },
+    {
+      "rank": 2,
       "username": "maheedhar132",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/maheedhar132/90/339.png",
       "points": 100,
@@ -14,16 +26,16 @@
       "breakdown": "🟢 Restore proper admission control using Kyverno | June 2026 Adventure: Beginner [beginner] rank #1 = 100 pts"
     },
     {
-      "rank": 2,
-      "username": "theharithsa",
-      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/90/297.png",
-      "points": 95,
+      "rank": 3,
+      "username": "iw4p",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/90/345.png",
+      "points": 60,
       "challengesSolved": 1,
-      "beginnerPoints": 95,
+      "beginnerPoints": 60,
       "intermediatePoints": 0,
       "expertPoints": 0,
       "singlePoints": 0,
-      "breakdown": "🟢 Restore proper admission control using Kyverno | June 2026 Adventure: Beginner [beginner] rank #2 = 95 pts"
+      "breakdown": "🟢 Restore proper admission control using Kyverno | June 2026 Adventure: Beginner [beginner] late = 60 pts"
     }
   ]
 }
