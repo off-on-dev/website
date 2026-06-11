@@ -2,6 +2,20 @@
   "discussionUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8",
   "discussionPosts": [
     {
+      "username": "KatharinaSick",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
+      "cooked": "It should still be valid, yes. Let me take a look what’s going on and I’ll get back to you. Sorry for the issues!",
+      "created_at": "2026-06-11T19:27:26.601Z",
+      "topicUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
+    },
+    {
+      "username": "iw4p",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
+      "cooked": "Hi! is this challenge still valid? I can’t see 30103 in ports tab and also there’s no kubectl, i tried to also get pods with a downloaded binary of kubectl, but still can’t access pods..",
+      "created_at": "2026-06-11T19:17:52.669Z",
+      "topicUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
+    },
+    {
       "username": "theharithsa",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
       "cooked": "Good Challenge for beginners.",
@@ -44,25 +58,9 @@
       "created_at": "2026-02-08T03:55:32.247Z",
       "challengeSolved": true,
       "topicUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
-    },
-    {
-      "username": "alvin",
-      "avatarUrl": "https://avatars.discourse-cdn.com/v4/letter/a/b5a626/40.png",
-      "cooked": "Thanks for the challenge — CERTIFICATE START — Adventure: 03-the-ai-observatory Level: beginner User: malv3 Repo: malv3/open-ecosystem-challenges Date: Sat 07 Feb 2026 02:05:11 AM UTC Url: — CERTIFICATE END —",
-      "created_at": "2026-02-07T02:06:26.962Z",
-      "challengeSolved": true,
-      "topicUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
-    },
-    {
-      "username": "gsigmund",
-      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/gsigmund/40/99_2.png",
-      "cooked": "— CERTIFICATE START — Adventure: 03-the-ai-observatory Level: beginner User: Gerald Sigmund Repo: gsigmund/open-ecosystem-challenges Date: Fri 06 Feb 2026 01:27:07 PM UTC Url: — CERTIFICATE END — Nice challenge looking forward how this continues",
-      "created_at": "2026-02-06T13:27:59.557Z",
-      "challengeSolved": true,
-      "topicUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
     }
   ],
-  "totalReplies": 8,
+  "totalReplies": 10,
   "solvers": [
     {
       "username": "gsigmund",
