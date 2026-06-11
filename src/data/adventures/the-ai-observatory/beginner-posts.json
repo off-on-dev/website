@@ -2,6 +2,13 @@
   "discussionUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8",
   "discussionPosts": [
     {
+      "username": "iw4p",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
+      "cooked": "Hi @KatharinaSick, thanks a lot for the quick fix! nice challenge, thanks!",
+      "created_at": "2026-06-11T22:28:40.187Z",
+      "topicUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
+    },
+    {
       "username": "KatharinaSick",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
       "cooked": "Hi @iw4p, I just resolved the issue. I’m sorry for the delay and hope you still enjoy the challenge",
@@ -50,16 +57,9 @@
       "created_at": "2026-02-14T22:05:45.322Z",
       "challengeSolved": true,
       "topicUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
-    },
-    {
-      "username": "KatharinaSick",
-      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
-      "cooked": "Hey all Sorry for the short notice, but there will be no challenge today. The intermediate level will follow next week. Enjoy your weekend!",
-      "created_at": "2026-02-13T07:58:53.285Z",
-      "topicUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
     }
   ],
-  "totalReplies": 11,
+  "totalReplies": 12,
   "solvers": [
     {
       "username": "gsigmund",
