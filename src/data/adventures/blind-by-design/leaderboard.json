@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-02T07:55:50.831Z",
+  "updatedAt": "2026-06-11T12:39:36.343Z",
   "rows": [
     {
       "rank": 1,
@@ -17,6 +17,18 @@
       "rank": 2,
       "username": "AndreasSpDt",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/AndreasSpDt/90/328.png",
+      "points": 60,
+      "challengesSolved": 1,
+      "beginnerPoints": 60,
+      "intermediatePoints": 0,
+      "expertPoints": 0,
+      "singlePoints": 0,
+      "breakdown": ":green_circle: Wire OpenFeature + flagd into a Spring Boot service with zero setup | Adventure 04 : Beginner [beginner] late = 60 pts"
+    },
+    {
+      "rank": 3,
+      "username": "iw4p",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/90/345.png",
       "points": 60,
       "challengesSolved": 1,
       "beginnerPoints": 60,
