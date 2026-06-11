@@ -4,6 +4,13 @@
     {
       "username": "KatharinaSick",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
+      "cooked": "Hi @iw4p, I just resolved the issue. I’m sorry for the delay and hope you still enjoy the challenge",
+      "created_at": "2026-06-11T20:15:37.464Z",
+      "topicUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
+    },
+    {
+      "username": "KatharinaSick",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
       "cooked": "It should still be valid, yes. Let me take a look what’s going on and I’ll get back to you. Sorry for the issues!",
       "created_at": "2026-06-11T19:27:26.601Z",
       "topicUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
@@ -50,17 +57,9 @@
       "cooked": "Hey all Sorry for the short notice, but there will be no challenge today. The intermediate level will follow next week. Enjoy your weekend!",
       "created_at": "2026-02-13T07:58:53.285Z",
       "topicUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
-    },
-    {
-      "username": "justinrand",
-      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/justinrand/40/140_2.png",
-      "cooked": "— CERTIFICATE START — Adventure: 03-the-ai-observatory Level: beginner User: justinrand Repo: justinrand/open-ecosystem-challenges Date: Sun 08 Feb 2026 03:54:33 AM UTC Url: — CERTIFICATE END —",
-      "created_at": "2026-02-08T03:55:32.247Z",
-      "challengeSolved": true,
-      "topicUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
     }
   ],
-  "totalReplies": 10,
+  "totalReplies": 11,
   "solvers": [
     {
       "username": "gsigmund",
