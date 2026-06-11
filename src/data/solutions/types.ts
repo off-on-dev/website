@@ -18,6 +18,8 @@ export type Solution = {
   levelId: string;
   /** Page title, e.g. "Beginner Solution: Broken Echoes" */
   title: string;
+  /** Person who wrote the walkthrough (may differ from the challenge builder) */
+  contributor?: { name: string; url?: string };
   /** Spoiler note rendered at the top of the page */
   spoilerWarning?: string;
   /** Intro paragraph(s) rendered before the context card */
