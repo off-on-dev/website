@@ -99,7 +99,7 @@ function generateSolutions() {
         [
           `  {`,
           `    file: "adventures/${adventureId}/levels/${levelId}/solution/index.html",`,
-          `    check: { type: "contains", value: "Solution" },`,
+          `    check: { type: "contains", value: "Solution:" },`,
           `  },`,
         ].join("\n")
       )

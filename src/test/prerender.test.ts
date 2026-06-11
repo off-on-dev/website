@@ -138,7 +138,7 @@ const pages: PageSpec[] = [
   // GENERATED:solutions
   {
     file: "adventures/echoes-lost-in-orbit/levels/beginner/solution/index.html",
-    check: { type: "contains", value: "Solution" },
+    check: { type: "contains", value: "Solution:" },
   },
   // /GENERATED:solutions
   {

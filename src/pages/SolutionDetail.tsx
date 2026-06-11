@@ -107,6 +107,8 @@ const CodeBlock = ({
     navigator.clipboard.writeText(code).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
+    }).catch(() => {
+      // Clipboard write can fail in non-secure contexts or when the document loses focus
     });
   };
 
