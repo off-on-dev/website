@@ -20,6 +20,7 @@ import { SOLUTIONS } from "@/data/solutions";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { ContributorBadge } from "@/components/ContributorBadge";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { CodespacesButton } from "@/components/CodespacesButton";
 import {
@@ -324,7 +325,7 @@ const summaryBase =
 type HeroProps = {
   adventure: { title: string; backstory?: string[] };
   level: { difficulty: string; topics?: string[]; backstory?: string[] };
-  solution: { title: string; intro?: string };
+  solution: { title: string; intro?: string; contributor?: { name: string; url?: string } };
 };
 
 const TopicPills = ({ topics }: { topics?: string[] }): JSX.Element | null => {
@@ -362,6 +363,13 @@ const SolutionHero = ({ adventure, level, solution }: HeroProps): JSX.Element =>
         <span className="text-xs text-[hsl(var(--text-faint))] uppercase tracking-wider">
           Solution
         </span>
+        {solution.contributor && (
+          <ContributorBadge
+            name={solution.contributor.name}
+            url={solution.contributor.url}
+            label="Solution Contributor"
+          />
+        )}
       </div>
       <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
         {solution.title}
