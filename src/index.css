@@ -1040,7 +1040,7 @@ html {
   border-radius: 0.375rem;
   border: 1px solid hsl(var(--surface-border));
   background: hsl(var(--background) / 0.8);
-  padding: 0.25rem 0.5rem;
+  padding: 0.375rem 0.5rem;
   font-size: 0.75rem;
   font-weight: 500;
   color: hsl(var(--text-secondary));

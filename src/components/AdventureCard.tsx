@@ -14,8 +14,8 @@ export const AdventureCard = ({ adventure }: AdventureCardProps): JSX.Element =>
   const difficulties = adventure.levels.map((l) => l.difficulty).join(", ");
   const tags = adventure.tags.slice(0, 4).join(", ");
   const label = tags
-    ? `${adventure.title} — ${difficulties} — ${tags}`
-    : `${adventure.title} — ${difficulties}`;
+    ? `${adventure.title}: ${difficulties}, ${tags}`
+    : `${adventure.title}: ${difficulties}`;
 
   return (
     <Link

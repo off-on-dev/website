@@ -23,10 +23,11 @@ const solution = SOLUTIONS.find(
 const baseLoader = {
   adventure,
   level,
-  available: true,
+  solutionUnlocked: true,
   solution,
   challengeUrl: `/adventures/${adventure.id}/levels/${level.id}/`,
   discussionUrl: COMMUNITY_URL,
+  deadline: undefined,
 };
 
 function renderPage() {
@@ -81,7 +82,7 @@ describe("SolutionDetail — locked state", () => {
   it("shows not-yet-available message when deadline has not passed", () => {
     vi.mocked(useLoaderData).mockReturnValue({
       ...baseLoader,
-      available: false,
+      solutionUnlocked: false,
       solution: null,
     });
     renderPage();
@@ -94,7 +95,7 @@ describe("SolutionDetail — no solution authored", () => {
   it("shows placeholder message when deadline passed but no solution exists", () => {
     vi.mocked(useLoaderData).mockReturnValue({
       ...baseLoader,
-      available: true,
+      solutionUnlocked: true,
       solution: null,
     });
     renderPage();
@@ -108,10 +109,11 @@ describe("SolutionDetail — not found", () => {
     vi.mocked(useLoaderData).mockReturnValue({
       adventure: null,
       level: null,
-      available: false,
+      solutionUnlocked: false,
       solution: null,
       challengeUrl: "/adventures/",
       discussionUrl: COMMUNITY_URL,
+      deadline: undefined,
     });
     renderPage();
     expect(screen.getByRole("heading", { level: 1, name: /Solution not found/i })).toBeTruthy();

@@ -24,7 +24,7 @@ export const FilteredLevelCard = ({
 }: FilteredLevelCardProps): JSX.Element => (
   <Link
     to={`/adventures/${adventureId}/levels/${level.id}/`}
-    aria-label={`${level.name} — ${level.difficulty} — ${adventureTitle}`}
+    aria-label={`${level.name}: ${level.difficulty}, ${adventureTitle}`}
     className={cn(
       "group card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
       className

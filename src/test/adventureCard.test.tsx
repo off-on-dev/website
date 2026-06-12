@@ -24,7 +24,7 @@ describe("AdventureCard", () => {
       </MemoryRouter>
     );
     const link = container.querySelector("a[href='/adventures/test-adventure/']");
-    expect(link?.getAttribute("aria-label")).toBe("Test Adventure — beginner — a, b");
+    expect(link?.getAttribute("aria-label")).toBe("Test Adventure: beginner, a, b");
   });
 
   it("aria-label omits tags section when adventure has no tags", () => {
@@ -35,7 +35,7 @@ describe("AdventureCard", () => {
       </MemoryRouter>
     );
     const link = container.querySelector("a[href='/adventures/test-adventure/']");
-    expect(link?.getAttribute("aria-label")).toBe("Test Adventure — beginner");
+    expect(link?.getAttribute("aria-label")).toBe("Test Adventure: beginner");
   });
 
   it("never renders a nested <a> inside the outer card link, even when story contains a markdown link", () => {
