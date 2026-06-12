@@ -5,6 +5,7 @@
  *
  * Usage:
  *   node scripts/generate-solutions.mjs
+ *   node scripts/generate-solutions.mjs --validate-only
  *
  * Scans src/data/solutions/<adventure-id>/<level-id>.ts (authored files, not generated)
  * and rebuilds the barrel index plus patches GENERATED:solutions regions in
@@ -21,6 +22,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const SOLUTIONS_DIR = resolve(ROOT, "src/data/solutions");
+const VALIDATE_ONLY = process.argv.includes("--validate-only");
 
 const EXCLUDED = new Set(["index.ts", "types.ts"]);
 
@@ -68,8 +70,19 @@ function generateSolutions() {
   indexLines.push(`];`);
   indexLines.push(``);
 
-  writeFileSync(resolve(SOLUTIONS_DIR, "index.ts"), indexLines.join("\n"), "utf-8");
-  console.log(`  Generated solutions/index.ts (${entries.length} solution${entries.length !== 1 ? "s" : ""})`);
+  const indexContent = indexLines.join("\n");
+  const indexPath = resolve(SOLUTIONS_DIR, "index.ts");
+
+  if (VALIDATE_ONLY) {
+    const current = existsSync(indexPath) ? readFileSync(indexPath, "utf-8") : "";
+    if (current !== indexContent) {
+      console.error(`  Out of sync: src/data/solutions/index.ts`);
+      process.exit(1);
+    }
+  } else {
+    writeFileSync(indexPath, indexContent, "utf-8");
+    console.log(`  Generated solutions/index.ts (${entries.length} solution${entries.length !== 1 ? "s" : ""})`);
+  }
 
   // Patch GENERATED:solutions regions in route/config/test files.
   patchRegion(
@@ -116,6 +129,10 @@ function generateSolutions() {
       )
       .join("\n") + "\n  "
   );
+
+  if (VALIDATE_ONLY) {
+    console.log(`  Validated ${entries.length} solution${entries.length !== 1 ? "s" : ""} — all in sync`);
+  }
 }
 
 function escapeRegex(s) {
@@ -128,9 +145,16 @@ function patchRegion(filePath, openMarker, closeMarker, body) {
   const re = new RegExp(
     `(${escapeRegex(openMarker)})[\\s\\S]*?(${escapeRegex(closeMarker)})`
   );
-  if (!re.test(content)) return;
+  if (!re.test(content)) {
+    console.error(`  Error: region markers not found in ${filePath.replace(ROOT + "/", "")}`);
+    process.exit(1);
+  }
   const next = content.replace(re, `$1\n${body}$2`);
   if (next !== content) {
+    if (VALIDATE_ONLY) {
+      console.error(`  Out of sync: ${filePath.replace(ROOT + "/", "")}`);
+      process.exit(1);
+    }
     writeFileSync(filePath, next, "utf-8");
     console.log(`  Patched region: ${filePath.replace(ROOT + "/", "")}`);
   }

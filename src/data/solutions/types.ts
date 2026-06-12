@@ -10,7 +10,6 @@ export type SolutionStep = {
   intro?: string;
   body: SolutionBlock[];
   takeaways?: string[];
-  furtherReading?: Array<{ title: string; url: string }>;
 };
 
 export type Solution = {
@@ -30,6 +29,8 @@ export type Solution = {
     body: SolutionBlock[];
   };
   steps: SolutionStep[];
+  /** Links shown in the sidebar Further Reading card. Dedup by URL before adding. */
+  furtherReading?: Array<{ title: string; url: string }>;
   /** Final corrected config or code shown as a summary card */
   completeSolution?: {
     title?: string;

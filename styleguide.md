@@ -636,6 +636,8 @@ Renders a single adventure level as a card: difficulty badge, level name, key le
 
 Navigation card used in tag-filtered level grids. The entire card is a `<Link>` to the challenge detail page. Renders a difficulty badge, level name, first three learnings, and a footer row with "Challenge" label, an optional estimated time pill (`Clock` icon + `level.estimatedTime`), and the parent adventure title.
 
+**Accessible name:** the link carries `aria-label` in the format `"{level.name} — {difficulty} — {adventureTitle}"` (e.g. `"The Observability Challenge — Beginner — Blind by Design"`). This replaces the verbose computed name that would otherwise include all three learning bullet points.
+
 ```tsx
 <FilteredLevelCard
   level={level}
@@ -696,7 +698,7 @@ Two-row filter UI for the adventure catalog. Row 1 is a difficulty single-select
 | `onDifficultyChange` | `(diff: Difficulty \| null) => void` | Called when difficulty changes. |
 | `onTopicsChange` | `(topics: string[]) => void` | Called when tag selection changes. |
 
-**ARIA pattern:** all filter groups (mobile dropdowns and desktop pill rows) use `role="group"` with `aria-pressed` on each button. Mobile dropdowns are always in the DOM — the panel uses the HTML `hidden` attribute when closed so `aria-controls` on the trigger always resolves to a valid IDREF. Trigger buttons use `aria-expanded` and `aria-controls`. Arrow-key navigation (Up/Down) is supported within each open panel via `onKeyDown` handlers on the panel buttons.
+**ARIA pattern:** all filter groups (mobile dropdowns and desktop pill rows) use `role="group"` with `aria-pressed` on each button. Mobile dropdowns are always in the DOM — the panel uses the HTML `hidden` attribute when closed so `aria-controls` on the trigger always resolves to a valid IDREF. Trigger buttons use `aria-expanded`, `aria-controls`, and `aria-haspopup="true"` so AT announces them as popup controls. Arrow-key navigation (Up/Down) is supported within each open panel via `onKeyDown` handlers on the panel buttons.
 
 **Exported type:** `Difficulty = "Beginner" | "Intermediate" | "Expert"`. Import from `@/components/ChallengeFilters` where `activeDifficulty` state needs typing.
 
@@ -1299,6 +1301,8 @@ Site-wide footer. No props. Contains two `<nav>` landmark regions (`aria-label="
 
 Navigation card linking to an adventure overview page. The entire card is a `<Link>` to `/adventures/:id/`. Renders a header row with an "Adventure" mono label, an optional `LivePill`, and a `.badge-levels` level-count pill; the adventure title (hover: amber); a two-line `story` snippet; a row of `DifficultyBadge` instances; up to four technology tag `<span>` chips; and an optional `ContributorBadge` pinned to the card footer via `mt-auto`. Card border is `border-primary/50` when `adventure.isLive`, otherwise `border-[hsl(var(--surface-border))]`. Uses `card-glow` for hover glow.
 
+**Accessible name:** the link carries `aria-label` in the format `"{title} — {difficulties} — {tags}"` (e.g. `"Blind by Design — Beginner, Intermediate, Expert — Prometheus, Grafana"`). Tags are omitted if the adventure has none. This gives screen reader users difficulty and technology context when navigating by links, without the verbosity of the full card content.
+
 ```tsx
 <AdventureCard adventure={adventureSummary} />
 ```
@@ -1825,7 +1829,8 @@ Source files live at `src/data/solutions/<adventure-id>/<level-id>.ts`. Types ar
 | `spoilerWarning` | `string` | One sentence, plain text |
 | `intro` | `string` | One or two sentences, plain text |
 | `context` | `{ title, body: SolutionBlock[] }` | Optional. Always-open setup section rendered before the step accordions. Include only when the reader needs background on tooling or architecture before the steps make sense. Title should reflect the specific challenge; avoid generic phrases. |
-| `steps` | `SolutionStep[]` | One step per challenge objective. Max two takeaways per step. `furtherReading` links are aggregated de-duped into the sidebar "Further Reading" card — do not repeat the same URL across steps. |
+| `steps` | `SolutionStep[]` | One step per challenge objective. Max two takeaways per step. |
+| `furtherReading` | `Array<{ title, url }>` | Optional. Links shown in the sidebar "Further Reading" card. Deduplicate by URL before adding. |
 | `completeSolution` | `{ title, description, language, code }` | Optional. Final corrected config or runbook shown as a summary card. |
 | `outro` | `{ heading: string; html: string }` | Narrative close. End with a sentence that follows the adventure's story world, then a sentence inviting the reader to see how others solved it. The "Browse the discussion" link is rendered by the component automatically after the html. |
 
@@ -1858,7 +1863,7 @@ Source files live at `src/data/solutions/<adventure-id>/<level-id>.ts`. Types ar
 The solution page uses a two-column layout: main article on the left, sticky sidebar on the right (collapses to a single column on mobile).
 
 - **Hero**: backstory quote (top band), then difficulty badge + "Solution" label, `h1` title, intro text, contributor pill (if present), topic tag pills.
-- **Sidebar**: "What Was Fixed" step nav, "Solve Along" Codespaces card (if `codespacesUrl` present), challenge back-link, discussion link, "Further Reading" card (aggregated from all steps).
+- **Sidebar**: "What Was Fixed" step nav, "Solve Along" Codespaces card (if `codespacesUrl` present), challenge back-link, discussion link, "Further Reading" card (from `solution.furtherReading`).
 - **Main column**: spoiler warning, context section (always-open, no toggle), step accordions (first step open by default), complete solution toggle, outro card.
 
 ### Adding a new solution

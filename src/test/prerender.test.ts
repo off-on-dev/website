@@ -1,9 +1,10 @@
 // This test requires a production build to exist in dist/client/.
 // Run `npm run build` before running these tests.
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeAll } from "vitest";
 import * as fs from "fs";
 import * as path from "path";
+import { SOLUTIONS } from "@/data/solutions";
 
 const DIST_ROOT = path.resolve(__dirname, "../../dist/client");
 
@@ -204,6 +205,9 @@ describe("prerendered HTML title tags", () => {
 
 describe("prerendered solution page content", () => {
   const solutionFile = "adventures/echoes-lost-in-orbit/levels/beginner/solution/index.html";
+  const solutionData = SOLUTIONS.find(
+    (s) => s.adventureId === "echoes-lost-in-orbit" && s.levelId === "beginner"
+  )!;
   let html: string;
 
   beforeAll(() => {
@@ -215,11 +219,11 @@ describe("prerendered solution page content", () => {
   });
 
   it("contains the contributor name", () => {
-    expect(html).toContain("Katharina Sick");
+    expect(html).toContain(solutionData.contributor!.name);
   });
 
   it("contains the outro heading", () => {
-    expect(html).toContain("Transmissions Restored");
+    expect(html).toContain(solutionData.outro!.heading);
   });
 
   it("contains the discussion link text", () => {
