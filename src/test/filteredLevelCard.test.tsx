@@ -61,10 +61,10 @@ describe("FilteredLevelCard - link", () => {
     expect(link.getAttribute("href")).toBe("/adventures/my-adventure/levels/beginner/");
   });
 
-  it("aria-label is level name, difficulty, and adventure title joined with em dashes", () => {
+  it("aria-label is level name, difficulty, and adventure title joined with colon and comma", () => {
     renderCard(LEVEL, "adventure-01", "Kubernetes 101");
     const link = screen.getByRole("link");
-    expect(link.getAttribute("aria-label")).toBe("Beginner Challenge — Beginner — Kubernetes 101");
+    expect(link.getAttribute("aria-label")).toBe("Beginner Challenge: Beginner, Kubernetes 101");
   });
 });
 

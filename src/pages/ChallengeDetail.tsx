@@ -24,7 +24,7 @@ import { RewardsCard } from "@/components/RewardsCard";
 import { ChallengeShareLinks } from "@/components/ChallengeShareLinks";
 import { SITE_URL, BRAND_NAME, COMMUNITY_DISPLAY_NAME, COMMUNITY_URL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
-import { isDeadlinePast } from "@/lib/utils";
+import { isDeadlinePast, isSolutionUnlocked } from "@/lib/utils";
 import { InlineProse } from "@/components/InlineProse";
 
 export const links: LinksFunction = () => [
@@ -37,7 +37,7 @@ export function loader({ params }: LoaderFunctionArgs): { rewardsBelowFold: bool
   const level = adventure?.levels.find((l) => l.id === params.levelId);
   const deadline = level?.deadline ?? adventure?.rewards?.deadline;
   const rewardsBelowFold = isDeadlinePast(deadline);
-  const hasSolution = rewardsBelowFold && SOLUTIONS.some(
+  const hasSolution = isSolutionUnlocked(deadline) && SOLUTIONS.some(
     (s) => s.adventureId === params.id && s.levelId === params.levelId
   );
   return { rewardsBelowFold, hasSolution };
@@ -284,9 +284,9 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
           {/* Solution walkthrough link — shown after deadline passes and only when a solution is authored */}
           {hasSolution && (
             <section className="mb-6 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-              <p className="font-sans text-sm font-semibold tracking-wide text-primary mb-1">
+              <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-1">
                 Check Out the Solution Walkthrough
-              </p>
+              </h2>
               <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed mb-3">
                 See how we approached this challenge step by step. Found a better way? We&apos;d love to hear about it in the discussion.
               </p>
@@ -295,7 +295,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
                 className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
               >
                 View the solution walkthrough
-                <ArrowRight size={13} aria-hidden="true" />
+                <ArrowRight size={14} aria-hidden="true" />
               </Link>
             </section>
           )}
@@ -399,7 +399,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
 
 const ChallengeDetail = (): JSX.Element => {
   const { id, levelId } = useParams<{ id: string; levelId: string }>();
-  const { rewardsBelowFold, hasSolution } = useLoaderData<{ rewardsBelowFold: boolean; hasSolution: boolean }>();
+  const { rewardsBelowFold, hasSolution } = useLoaderData<ReturnType<typeof loader>>();
   const adventure = ADVENTURES.find((adventure) => adventure.id === id);
   const level = adventure?.levels.find((level) => level.id === levelId);
 

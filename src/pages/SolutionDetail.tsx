@@ -28,15 +28,15 @@ import {
   COMMUNITY_URL,
 } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
-import { isDeadlinePast, formatDeadline } from "@/lib/utils";
+import { isSolutionUnlocked, formatDeadline } from "@/lib/utils";
 
 export function loader({ params }: LoaderFunctionArgs) {
   const adventure = ADVENTURES.find((a) => a.id === params.id) ?? null;
   const level = adventure?.levels.find((l) => l.id === params.levelId) ?? null;
   const deadline = level?.deadline ?? adventure?.rewards?.deadline;
-  const available = !deadline || isDeadlinePast(deadline);
+  const solutionUnlocked = isSolutionUnlocked(deadline);
   const solution =
-    available && adventure !== null && level !== null
+    solutionUnlocked && adventure !== null && level !== null
       ? (SOLUTIONS.find((s) => s.adventureId === params.id && s.levelId === params.levelId) ?? null)
       : null;
   const challengeUrl =
@@ -48,7 +48,7 @@ export function loader({ params }: LoaderFunctionArgs) {
       ? level.discussionUrl
       : `${COMMUNITY_URL}${level.discussionUrl}`
     : COMMUNITY_URL;
-  return { adventure, level, available, solution, challengeUrl, discussionUrl, deadline };
+  return { adventure, level, solutionUnlocked, solution, challengeUrl, discussionUrl, deadline };
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -58,7 +58,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
       { name: "robots", content: "noindex, nofollow" },
     ];
   }
-  if (!data.available) {
+  if (!data.solutionUnlocked) {
     return [
       { title: `${data.level.name} Solution - ${data.adventure.title} - ${BRAND_NAME}` },
       { name: "robots", content: "noindex, nofollow" },
@@ -259,21 +259,24 @@ const BlockRenderer = ({ blocks }: { blocks: SolutionBlock[] }): JSX.Element => 
   </div>
 );
 
-const TakeawaysList = ({ items }: { items: string[] }): JSX.Element => (
-  <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
-    <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">
-      Key Takeaways
-    </p>
-    <ul className="space-y-2" role="list">
-      {items.map((item) => (
-        <li key={item} className="flex gap-2 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
-          <span className="shrink-0 text-primary mt-0.5" aria-hidden="true">›</span>
-          {item}
-        </li>
-      ))}
-    </ul>
-  </div>
-);
+const TakeawaysList = ({ items }: { items?: string[] }): JSX.Element | null => {
+  if (!items || items.length === 0) return null;
+  return (
+    <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
+      <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">
+        Key Takeaways
+      </p>
+      <ul className="space-y-2" role="list">
+        {items.map((item) => (
+          <li key={item} className="flex gap-2 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+            <span className="shrink-0 text-primary mt-0.5" aria-hidden="true">›</span>
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 const FurtherReadingList = ({ links }: { links: Array<{ title: string; url: string }> }): JSX.Element => (
   <ul className="space-y-1" role="list">
@@ -288,11 +291,6 @@ const FurtherReadingList = ({ links }: { links: Array<{ title: string; url: stri
     ))}
   </ul>
 );
-
-const StepFooter = ({ takeaways }: { takeaways?: string[] }): JSX.Element | null => {
-  if (!takeaways || takeaways.length === 0) return null;
-  return <TakeawaysList items={takeaways} />;
-};
 
 // Shared <summary> chevron
 const SummaryChevron = (): JSX.Element => (
@@ -325,7 +323,7 @@ const TopicPills = ({ topics }: { topics?: string[] }): JSX.Element | null => {
         <li key={t}>
           <Link
             to={`/challenges/${tagToSlug(t)}/`}
-            className="px-2.5 py-1 rounded-full border border-[hsl(var(--surface-border))] bg-background/40 text-xs text-[hsl(var(--text-secondary))] font-mono hover:border-primary/50 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+            className="px-2.5 py-1.5 rounded-full border border-[hsl(var(--surface-border))] bg-background/40 text-xs text-[hsl(var(--text-secondary))] font-mono hover:border-primary/50 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
           >
             {t}
           </Link>
@@ -339,11 +337,13 @@ const SolutionHero = ({ adventure, level, solution }: HeroProps): JSX.Element =>
   <div className="rounded-2xl border border-[hsl(var(--surface-border))] overflow-hidden mb-8">
     <div className="bg-[hsl(var(--surface))] px-6 md:px-8 pt-7 pb-6">
       {/* backstory[0] is pre-rendered HTML from the markdown pipeline */}
-      <div
-        role="note"
-        className="text-base italic text-[hsl(var(--text-secondary))] leading-relaxed [&>p]:mb-0"
-        dangerouslySetInnerHTML={{ __html: (level.backstory ?? adventure.backstory ?? [])[0] ?? "" }}
-      />
+      {(level.backstory?.[0] ?? adventure.backstory?.[0]) && (
+        <div
+          role="note"
+          className="text-base italic text-[hsl(var(--text-secondary))] leading-relaxed [&>p]:mb-0"
+          dangerouslySetInnerHTML={{ __html: (level.backstory ?? adventure.backstory ?? [])[0] ?? "" }}
+        />
+      )}
     </div>
     <div className="h-0.5 bg-primary" aria-hidden="true" />
     <div className="bg-background/40 px-6 md:px-8 py-6">
@@ -504,7 +504,7 @@ const SolutionSidebar = ({
 // ---------------------------------------------------------------------------
 
 const SolutionDetail = (): JSX.Element => {
-  const { adventure, level, available, solution, challengeUrl, discussionUrl, deadline } =
+  const { adventure, level, solutionUnlocked, solution, challengeUrl, discussionUrl, deadline } =
     useLoaderData<ReturnType<typeof loader>>();
 
   if (!adventure || !level) {
@@ -547,7 +547,7 @@ const SolutionDetail = (): JSX.Element => {
           />
 
           {/* Not yet available */}
-          {!available && (
+          {!solutionUnlocked && (
             <div className="max-w-2xl">
               <div className="flex flex-wrap items-center gap-2 mb-4">
                 <DifficultyBadge difficulty={level.difficulty} showDot />
@@ -581,7 +581,7 @@ const SolutionDetail = (): JSX.Element => {
           )}
 
           {/* Available but no solution authored yet */}
-          {available && !solution && (
+          {solutionUnlocked && !solution && (
             <div className="max-w-2xl">
               <div className="flex flex-wrap items-center gap-2 mb-4">
                 <DifficultyBadge difficulty={level.difficulty} showDot />
@@ -603,7 +603,7 @@ const SolutionDetail = (): JSX.Element => {
           )}
 
           {/* Full solution — Overview + Detail layout */}
-          {available && solution && (
+          {solutionUnlocked && solution && (
             <>
               <SolutionHero adventure={adventure} level={level} solution={solution} />
 
@@ -645,7 +645,7 @@ const SolutionDetail = (): JSX.Element => {
                   )}
 
                   {/* Step cards */}
-                  <ol className="space-y-3 mt-3" aria-label="Solution steps">
+                  <ol className="space-y-3 mt-3" role="list" aria-label="Solution steps">
                     {solution.steps.map((step, index) => (
                       <li key={step.id}>
                         <details
@@ -663,9 +663,9 @@ const SolutionDetail = (): JSX.Element => {
                             >
                               {String(index + 1).padStart(2, "0")}
                             </span>
-                            <span className="text-base font-semibold text-foreground flex-1">
+                            <h3 className="text-base font-semibold text-foreground flex-1">
                               {step.title}
-                            </span>
+                            </h3>
                             <SummaryChevron />
                           </summary>
                           <div className="rounded-b-xl border border-t-0 border-[hsl(var(--surface-border))] bg-background/40 px-5 py-5 space-y-5">
@@ -675,7 +675,7 @@ const SolutionDetail = (): JSX.Element => {
                               </p>
                             )}
                             <BlockRenderer blocks={step.body} />
-                            <StepFooter takeaways={step.takeaways} />
+                            <TakeawaysList items={step.takeaways} />
                           </div>
                         </details>
                       </li>
