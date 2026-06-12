@@ -137,6 +137,16 @@ If you see this warning, also fix the `devcontainer:` value upstream in the chal
 
 If `gh` is unavailable or unauthenticated, the check is skipped with a warning and generation proceeds.
 
+### Run the a11y audit
+
+After the build passes, run the accessibility audit against any new or changed pages:
+
+```sh
+/a11y-audit
+```
+
+Target any new adventure or level detail pages. All severity-weighted findings must be resolved before merging.
+
 ### Final checks
 
 ```sh
@@ -207,6 +217,7 @@ Paste or attach the walkthrough content in any format — markdown, YAML, HTML, 
 3. Writes `src/data/solutions/<adventure-id>/<level-id>.ts` with the full typed `Solution` object.
 4. Runs `node scripts/generate-solutions.mjs` to rebuild the barrel index and patch region markers.
 5. Runs `npm run build` and `npm run lint` to verify the output compiles cleanly.
+6. Run `/a11y-audit` against the new solution page to catch any accessibility issues before merging.
 
 ### What the generator updates
 

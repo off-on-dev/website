@@ -71,12 +71,21 @@ spec:
         },
         {
           type: "text",
-          html: "<p>Check whether the ApplicationSet exists and read its status:</p>",
+          html: "<p>Check whether the ApplicationSet exists:</p>",
         },
         {
           type: "code",
           language: "bash",
-          code: "kubectl get applicationset -n argocd\nkubectl get applicationset echo-server -n argocd -o yaml",
+          code: "kubectl get applicationset -n argocd",
+        },
+        {
+          type: "text",
+          html: "<p>You should see <code>echo-server</code> listed. That means Argo CD is at least aware of our ApplicationSet. Let's dig deeper and check its status:</p>",
+        },
+        {
+          type: "code",
+          language: "bash",
+          code: "kubectl get applicationset echo-server -n argocd -o yaml",
         },
         {
           type: "text",
@@ -101,7 +110,7 @@ spec:
         },
         {
           type: "text",
-          html: "<p>Apply and check the dashboard:</p>",
+          html: "<p>Apply the fix:</p>",
         },
         {
           type: "code",
@@ -109,9 +118,13 @@ spec:
           code: "kubectl apply -n argocd -f adventures/01-echoes-lost-in-orbit/beginner/manifests/appset.yaml",
         },
         {
+          type: "text",
+          html: "<p>Go back to the dashboard. You should now see two progressing applications:</p>",
+        },
+        {
           type: "image",
           src: "/solutions/echoes-lost-in-orbit/beginner-two-apps.webp",
-          alt: "Two applications syncing in Argo CD dashboard",
+          alt: "Two applications progressing in Argo CD dashboard",
         },
       ],
       takeaways: [
@@ -168,6 +181,11 @@ spec:
           code: "syncPolicy:\n  automated:\n    enabled: true\n  syncOptions:\n    - CreateNamespace=true",
         },
         {
+          type: "code",
+          language: "bash",
+          code: "kubectl apply -n argocd -f adventures/01-echoes-lost-in-orbit/beginner/manifests/appset.yaml",
+        },
+        {
           type: "callout",
           variant: "tip",
           html: "<p>By default, Argo CD polls Git every 3 minutes. You can speed this up by configuring a webhook, but for this challenge a manual refresh in the UI is fine.</p>",
@@ -195,6 +213,10 @@ spec:
           type: "code",
           language: "bash",
           code: "kubectl scale deployment echo-server-staging -n echo-staging --replicas=3\nkubectl get pods -n echo-staging -w",
+        },
+        {
+          type: "text",
+          html: "<p>Within seconds, Argo CD will detect the drift and scale it back down to 1 replica (as defined in Git).</p>",
         },
       ],
       takeaways: [
