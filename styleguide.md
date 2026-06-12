@@ -1821,11 +1821,13 @@ Source files live at `src/data/solutions/<adventure-id>/<level-id>.ts`. Types ar
 | Field | Type | Notes |
 | --- | --- | --- |
 | `title` | `string` | Title case, no emoji, no em dashes |
+| `contributor` | `{ name: string; url?: string }` | Optional. Walkthrough author if different from the challenge builder. Renders as a pill between the intro text and the topic tag pills in the hero. |
 | `spoilerWarning` | `string` | One sentence, plain text |
 | `intro` | `string` | One or two sentences, plain text |
-| `context` | `{ title, body: SolutionBlock[] }` | Optional setup/tooling explanation |
-| `steps` | `SolutionStep[]` | One step per challenge objective |
-| `completeSolution` | `{ title, description, language, code }` | Final corrected config/code |
+| `context` | `{ title, body: SolutionBlock[] }` | Optional. Always-open setup section rendered before the step accordions. Include only when the reader needs background on tooling or architecture before the steps make sense. Title should reflect the specific challenge; avoid generic phrases. |
+| `steps` | `SolutionStep[]` | One step per challenge objective. Max two takeaways per step. `furtherReading` links are aggregated de-duped into the sidebar "Further Reading" card — do not repeat the same URL across steps. |
+| `completeSolution` | `{ title, description, language, code }` | Optional. Final corrected config or runbook shown as a summary card. |
+| `outro` | `{ heading: string; html: string }` | Narrative close. End with a sentence that follows the adventure's story world, then a sentence inviting the reader to see how others solved it. The "Browse the discussion" link is rendered by the component automatically after the html. |
 
 ### `SolutionBlock` union
 
@@ -1850,6 +1852,14 @@ Source files live at `src/data/solutions/<adventure-id>/<level-id>.ts`. Types ar
 - File naming: `<level-id>-<descriptive-slug>.webp`.
 - Converted from source PNGs using `cwebp -q 85`.
 - Alt text: one sentence, direct description, no em dashes, no "screenshot of" filler.
+
+### Page layout
+
+The solution page uses a two-column layout: main article on the left, sticky sidebar on the right (collapses to a single column on mobile).
+
+- **Hero**: backstory quote (top band), then difficulty badge + "Solution" label, `h1` title, intro text, contributor pill (if present), topic tag pills.
+- **Sidebar**: "What Was Fixed" step nav, "Solve Along" Codespaces card (if `codespacesUrl` present), challenge back-link, discussion link, "Further Reading" card (aggregated from all steps).
+- **Main column**: spoiler warning, context section (always-open, no toggle), step accordions (first step open by default), complete solution toggle, outro card.
 
 ### Adding a new solution
 

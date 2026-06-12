@@ -198,6 +198,31 @@ describe("prerendered HTML title tags", () => {
   }
 });
 
+describe("prerendered solution page content", () => {
+  const solutionFile = "adventures/echoes-lost-in-orbit/levels/beginner/solution/index.html";
+  let html: string;
+
+  beforeAll(() => {
+    const fullPath = path.join(DIST_ROOT, solutionFile);
+    if (!fs.existsSync(fullPath)) {
+      throw new Error(`dist/client/${solutionFile} not found. Run npm run build first.`);
+    }
+    html = fs.readFileSync(fullPath, "utf-8");
+  });
+
+  it("contains the contributor name", () => {
+    expect(html).toContain("Katharina Sick");
+  });
+
+  it("contains the outro heading", () => {
+    expect(html).toContain("Transmissions Restored");
+  });
+
+  it("contains the discussion link text", () => {
+    expect(html).toContain("Browse the discussion");
+  });
+});
+
 describe("prerendered challenge pages include all content sections", () => {
   const challengePage = "adventures/echoes-lost-in-orbit/levels/beginner/index.html";
   const requiredSections = ["objective", "backstory", "toolbox", "learnings", "walkthrough", "completion"];

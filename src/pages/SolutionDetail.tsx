@@ -10,7 +10,6 @@ import {
   Lightbulb,
   AlertTriangle,
   Info,
-  BookOpen,
   ChevronDown,
   Sparkles,
 } from "lucide-react";
@@ -114,22 +113,19 @@ const CodeBlock = ({
 
   return (
     <div>
-      {title && (
-        <p className="text-xs font-medium text-[hsl(var(--text-faint))] mb-1.5">{title}</p>
-      )}
-      {/* md-content wrapper gives <pre> the same border/bg/font as ChallengeDetail markdown blocks */}
-      <div className="md-content">
+      {/* Header bar: label always visible, no copy button here */}
+      <div className="flex items-center justify-end rounded-t-lg border border-b-0 border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-3 py-2">
+        <span className="truncate text-xs font-mono text-[hsl(var(--text-faint))] select-none" aria-hidden="true">
+          {title ?? language}
+        </span>
+      </div>
+      {/* Same md-pre-group + md-copy-btn pattern as ChallengeDetail: hover-to-show */}
+      <div className="md-content code-block-body">
         <div className="md-pre-group">
           {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- makes scrollable code block keyboard-reachable per WCAG 2.1 SC 2.1.1 */}
           <pre tabIndex={0} aria-label={title ?? `${language} code block`}>
             <code>{code}</code>
           </pre>
-          <span
-            className="absolute top-2 right-12 text-xs font-mono text-[hsl(var(--text-faint))] select-none pointer-events-none hidden sm:block"
-            aria-hidden="true"
-          >
-            {language}
-          </span>
           <button
             type="button"
             className="md-copy-btn"
@@ -270,41 +266,22 @@ const TakeawaysList = ({ items }: { items: string[] }): JSX.Element => (
 );
 
 const FurtherReadingList = ({ links }: { links: Array<{ title: string; url: string }> }): JSX.Element => (
-  <div>
-    <p className="flex items-center gap-1.5 text-xs font-semibold text-[hsl(var(--text-faint))] uppercase tracking-wider mb-2">
-      <BookOpen size={12} aria-hidden="true" />
-      Further Reading
-    </p>
-    <ul className="space-y-1" role="list">
-      {links.map((link) => (
-        <li key={link.url}>
-          <a href={link.url} target="_blank" rel="noopener noreferrer" className="docs-ext-link text-sm">
-            {link.title}
-            <ExternalLink size={11} aria-hidden="true" />
-            <span className="sr-only"> (opens in new tab)</span>
-          </a>
-        </li>
-      ))}
-    </ul>
-  </div>
+  <ul className="space-y-1" role="list">
+    {links.map((link) => (
+      <li key={link.url}>
+        <a href={link.url} target="_blank" rel="noopener noreferrer" className="docs-ext-link text-sm">
+          {link.title}
+          <ExternalLink size={11} aria-hidden="true" />
+          <span className="sr-only"> (opens in new tab)</span>
+        </a>
+      </li>
+    ))}
+  </ul>
 );
 
-const StepFooter = ({
-  takeaways,
-  furtherReading,
-}: {
-  takeaways?: string[];
-  furtherReading?: Array<{ title: string; url: string }>;
-}): JSX.Element | null => {
-  const hasTakeaways = takeaways && takeaways.length > 0;
-  const hasFurtherReading = furtherReading && furtherReading.length > 0;
-  if (!hasTakeaways && !hasFurtherReading) return null;
-  return (
-    <div className="space-y-4">
-      {hasTakeaways && <TakeawaysList items={takeaways} />}
-      {hasFurtherReading && <FurtherReadingList links={furtherReading} />}
-    </div>
-  );
+const StepFooter = ({ takeaways }: { takeaways?: string[] }): JSX.Element | null => {
+  if (!takeaways || takeaways.length === 0) return null;
+  return <TakeawaysList items={takeaways} />;
 };
 
 // Shared <summary> chevron
@@ -365,13 +342,6 @@ const SolutionHero = ({ adventure, level, solution }: HeroProps): JSX.Element =>
         <span className="text-xs text-[hsl(var(--text-faint))] uppercase tracking-wider">
           Solution
         </span>
-        {solution.contributor && (
-          <ContributorBadge
-            name={solution.contributor.name}
-            url={solution.contributor.url}
-            label="Solution Contributor"
-          />
-        )}
       </div>
       <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
         {solution.title}
@@ -380,6 +350,15 @@ const SolutionHero = ({ adventure, level, solution }: HeroProps): JSX.Element =>
         <p className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl">
           {solution.intro}
         </p>
+      )}
+      {solution.contributor && (
+        <div className="mt-3">
+          <ContributorBadge
+            name={solution.contributor.name}
+            url={solution.contributor.url}
+            label="Solution Contributor"
+          />
+        </div>
       )}
       <TopicPills topics={level.topics} />
     </div>
@@ -413,7 +392,43 @@ type SolutionSidebarProps = {
   steps: Array<{ id: string; title: string }>;
   challengeUrl: string;
   discussionUrl: string;
+  furtherReading?: Array<{ title: string; url: string }>;
 };
+
+const StepNav = ({
+  steps,
+  className = "",
+}: {
+  steps: Array<{ id: string; title: string }>;
+  className?: string;
+}): JSX.Element => (
+  <nav
+    aria-label="Steps in this solution"
+    className={`rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5 ${className}`}
+  >
+    <p className="font-sans text-xs font-semibold tracking-wide text-primary uppercase mb-3">
+      What Was Fixed
+    </p>
+    <ol className="space-y-2" role="list">
+      {steps.map((step, index) => (
+        <li key={step.id} className="flex gap-2.5 items-baseline">
+          <span
+            className="shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-primary/15 text-primary text-xs font-bold tabular-nums leading-none"
+            aria-hidden="true"
+          >
+            {index + 1}
+          </span>
+          <a
+            href={`#${step.id}`}
+            className="text-sm text-[hsl(var(--text-secondary))] hover:text-foreground transition-colors leading-snug focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+          >
+            {step.title}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+);
 
 const SolutionSidebar = ({
   adventure,
@@ -421,6 +436,7 @@ const SolutionSidebar = ({
   steps,
   challengeUrl,
   discussionUrl,
+  furtherReading,
 }: SolutionSidebarProps): JSX.Element => (
   <aside
     aria-label="Solution navigation"
@@ -435,36 +451,20 @@ const SolutionSidebar = ({
       </SidebarCard>
     )}
 
-    <nav aria-label="Steps in this solution" className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-      <p className="font-sans text-xs font-semibold tracking-wide text-primary uppercase mb-3">
-        In This Solution
-      </p>
-      <ol className="space-y-2" role="list">
-        {steps.map((step, index) => (
-          <li key={step.id} className="flex gap-2.5 items-baseline">
-            <span
-              className="shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-primary/15 text-primary text-[10px] font-bold tabular-nums leading-none"
-              aria-hidden="true"
-            >
-              {index + 1}
-            </span>
-            <a
-              href={`#${step.id}`}
-              className="text-sm text-[hsl(var(--text-secondary))] hover:text-foreground transition-colors leading-snug focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
-            >
-              {step.title}
-            </a>
-          </li>
-        ))}
-      </ol>
-    </nav>
+    <StepNav steps={steps} className="hidden lg:block" />
+
+    {furtherReading && furtherReading.length > 0 && (
+      <SidebarCard label="Further Reading" labelSpacing="mb-2">
+        <FurtherReadingList links={furtherReading} />
+      </SidebarCard>
+    )}
 
     <SidebarCard label="Challenge">
       <p className="text-sm font-semibold text-foreground mb-0.5">{adventure.title}</p>
       <p className="text-xs text-[hsl(var(--text-faint))] mb-4">{level.name}</p>
       <Link
         to={challengeUrl}
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
       >
         <ArrowLeft size={13} aria-hidden="true" />
         Back to challenge
@@ -630,59 +630,23 @@ const SolutionDetail = (): JSX.Element => {
                     </div>
                   )}
 
-                  {/* What Was Fixed — overview card */}
-                  <section
-                    aria-labelledby="what-was-fixed-heading"
-                    className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5 mb-6"
-                  >
-                    <h2
-                      id="what-was-fixed-heading"
-                      className="font-sans text-sm font-semibold tracking-wide text-primary uppercase mb-4"
-                    >
-                      What Was Fixed
-                    </h2>
-                    <ol className="space-y-3" role="list">
-                      {solution.steps.map((step, index) => (
-                        <li key={step.id} className="flex items-start gap-3">
-                          <span
-                            className="shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-primary text-[hsl(var(--primary-foreground))] text-[10px] font-bold tabular-nums mt-0.5"
-                            aria-hidden="true"
-                          >
-                            {index + 1}
-                          </span>
-                          <div className="min-w-0">
-                            <a
-                              href={`#${step.id}`}
-                              className="text-sm font-semibold text-foreground hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
-                            >
-                              {step.title}
-                            </a>
-                            {step.intro && (
-                              <p className="text-xs text-[hsl(var(--text-faint))] mt-0.5 leading-snug line-clamp-2">
-                                {step.intro}
-                              </p>
-                            )}
-                          </div>
-                        </li>
-                      ))}
-                    </ol>
-                  </section>
+                  {/* What Was Fixed — mobile only; desktop shows this in the sidebar */}
+                  <StepNav steps={solution.steps} className="lg:hidden mb-4" />
 
                   {/* Context */}
                   {solution.context && (
-                    <details open tabIndex={-1} className="group mb-3 scroll-mt-28 rounded-xl">
-                      <summary
-                        className={`${summaryBase} rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-5 py-4 group-open:rounded-b-none group-open:border-b-0`}
+                    <section
+                      aria-labelledby="context-heading"
+                      className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-5 py-5 mb-3"
+                    >
+                      <h2
+                        id="context-heading"
+                        className="font-sans text-sm font-semibold tracking-wide text-primary uppercase mb-4"
                       >
-                        <h2 className="font-sans text-sm font-semibold tracking-wide text-primary flex-1">
-                          {solution.context.title}
-                        </h2>
-                        <SummaryChevron />
-                      </summary>
-                      <div className="rounded-b-xl border border-t-0 border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-5 py-5">
-                        <BlockRenderer blocks={solution.context.body} />
-                      </div>
-                    </details>
+                        {solution.context.title}
+                      </h2>
+                      <BlockRenderer blocks={solution.context.body} />
+                    </section>
                   )}
 
                   {/* Step cards */}
@@ -699,7 +663,7 @@ const SolutionDetail = (): JSX.Element => {
                             className={`${summaryBase} gap-4 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-5 py-4 group-open:rounded-b-none group-open:border-b-0`}
                           >
                             <span
-                              className="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-primary text-[hsl(var(--primary-foreground))] text-xs font-bold tabular-nums"
+                              className="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-primary text-[hsl(var(--primary-foreground))] text-sm font-bold tabular-nums"
                               aria-hidden="true"
                             >
                               {String(index + 1).padStart(2, "0")}
@@ -719,10 +683,7 @@ const SolutionDetail = (): JSX.Element => {
                               </p>
                             )}
                             <BlockRenderer blocks={step.body} />
-                            <StepFooter
-                              takeaways={step.takeaways}
-                              furtherReading={step.furtherReading}
-                            />
+                            <StepFooter takeaways={step.takeaways} />
                           </div>
                         </details>
                       </li>
@@ -791,7 +752,7 @@ const SolutionDetail = (): JSX.Element => {
                               rel="noopener noreferrer"
                               className="docs-ext-link text-sm font-medium mt-4"
                             >
-                              The discussion is open
+                              Browse the discussion
                               <ExternalLink size={12} aria-hidden="true" />
                               <span className="sr-only"> (opens in new tab)</span>
                             </a>
@@ -808,6 +769,9 @@ const SolutionDetail = (): JSX.Element => {
                   steps={solution.steps}
                   challengeUrl={challengeUrl}
                   discussionUrl={discussionUrl}
+                  furtherReading={solution.steps
+                    .flatMap((s) => s.furtherReading ?? [])
+                    .filter((link, i, arr) => arr.findIndex((l) => l.url === link.url) === i)}
                 />
               </div>
             </>
