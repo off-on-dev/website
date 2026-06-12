@@ -13,7 +13,7 @@ import {
   ChevronDown,
   Sparkles,
 } from "lucide-react";
-import type { SolutionBlock } from "@/data/solutions/types";
+import type { SolutionBlock, Solution } from "@/data/solutions/types";
 import { ADVENTURES, tagToSlug } from "@/data/adventures";
 import { SOLUTIONS } from "@/data/solutions";
 import { Navbar } from "@/components/Navbar";
@@ -30,7 +30,17 @@ import {
 import { buildPageMeta } from "@/lib/meta";
 import { isSolutionUnlocked, formatDeadline } from "@/lib/utils";
 
-export function loader({ params }: LoaderFunctionArgs) {
+type LoaderData = {
+  adventure: (typeof ADVENTURES)[number] | null;
+  level: (typeof ADVENTURES)[number]["levels"][number] | null;
+  solutionUnlocked: boolean;
+  solution: Solution | null;
+  challengeUrl: string;
+  discussionUrl: string;
+  deadline: string | undefined;
+};
+
+export function loader({ params }: LoaderFunctionArgs): LoaderData {
   const adventure = ADVENTURES.find((a) => a.id === params.id) ?? null;
   const level = adventure?.levels.find((l) => l.id === params.levelId) ?? null;
   const deadline = level?.deadline ?? adventure?.rewards?.deadline;
@@ -76,7 +86,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return buildPageMeta({
     title,
     description,
-    url: `${SITE_URL}/adventures/${adventure.id}/levels/${level.id}/solution`,
+    url: `${SITE_URL}/adventures/${adventure.id}/levels/${level.id}/solution/`,
     ogType: "article",
     extra: [
       {
@@ -112,11 +122,11 @@ const CodeBlock = ({
   const [copied, setCopied] = useState(false);
 
   const handleCopy = (): void => {
-    navigator.clipboard.writeText(code).then(() => {
+    navigator.clipboard?.writeText(code).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     }).catch(() => {
-      // Clipboard write can fail in non-secure contexts or when the document loses focus
+      // writeText can fail when the document loses focus
     });
   };
 
@@ -417,7 +427,7 @@ const StepNav = ({
     className={`rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5 ${className}`}
   >
     <p className="font-sans text-xs font-semibold tracking-wide text-primary uppercase mb-3">
-      What Was Fixed
+      what was fixed
     </p>
     <ol className="space-y-2" role="list">
       {steps.map((step, index) => (
@@ -453,7 +463,7 @@ const SolutionSidebar = ({
     className="mt-10 lg:mt-0 space-y-4 lg:sticky lg:top-28 lg:self-start"
   >
     {level.codespacesUrl && (
-      <SidebarCard label="Solve Along" labelSpacing="mb-2">
+      <SidebarCard label="solve along" labelSpacing="mb-2">
         <p className="text-xs text-[hsl(var(--text-secondary))] leading-relaxed mb-4">
           Haven&apos;t solved it yet? Open the challenge in Codespaces and follow each step as you go.
         </p>
@@ -464,12 +474,12 @@ const SolutionSidebar = ({
     <StepNav steps={steps} className="hidden lg:block" />
 
     {furtherReading && furtherReading.length > 0 && (
-      <SidebarCard label="Further Reading" labelSpacing="mb-2">
+      <SidebarCard label="further reading" labelSpacing="mb-2">
         <FurtherReadingList links={furtherReading} />
       </SidebarCard>
     )}
 
-    <SidebarCard label="Challenge">
+    <SidebarCard label="challenge">
       <p className="text-sm font-semibold text-foreground mb-0.5">{adventure.title}</p>
       <p className="text-xs text-[hsl(var(--text-faint))] mb-4">{level.name}</p>
       <Link
@@ -481,7 +491,7 @@ const SolutionSidebar = ({
       </Link>
     </SidebarCard>
 
-    <SidebarCard label="Discussion" labelSpacing="mb-2">
+    <SidebarCard label="discussion" labelSpacing="mb-2">
       <p className="text-xs text-[hsl(var(--text-secondary))] mb-3 leading-relaxed">
         Found a better way? Share your approach and compare notes with others who solved it.
       </p>
