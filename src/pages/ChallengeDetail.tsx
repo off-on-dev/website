@@ -291,7 +291,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
                 See how we approached this challenge step by step. Found a better way? We&apos;d love to hear about it in the discussion.
               </p>
               <Link
-                to={`/adventures/${adventure.id}/levels/${level.id}/solution`}
+                to={`/adventures/${adventure.id}/levels/${level.id}/solution/`}
                 className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
               >
                 View the solution walkthrough
