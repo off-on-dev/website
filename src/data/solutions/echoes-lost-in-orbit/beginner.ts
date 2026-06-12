@@ -119,20 +119,6 @@ spec:
         "The Git directory generator creates one Application per overlay directory, so template variables like {{path.basename}} are essential for dynamic naming.",
         "The ApplicationSet and Application status conditions are the first place to look when something isn't generating.",
       ],
-      furtherReading: [
-        {
-          title: "Argo CD ApplicationSet documentation",
-          url: "https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/",
-        },
-        {
-          title: "ApplicationSet templates",
-          url: "https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Template/",
-        },
-        {
-          title: "Git directory generator",
-          url: "https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Generators-Git/#git-generator-directories",
-        },
-      ],
     },
     {
       id: "isolated-namespaces",
@@ -163,12 +149,6 @@ spec:
       takeaways: [
         "Template variables work in any field of the ApplicationSet spec, not just the name.",
         "Namespace isolation prevents resource name collisions and makes per-environment RBAC and quotas straightforward.",
-      ],
-      furtherReading: [
-        {
-          title: "Kubernetes namespaces",
-          url: "https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/",
-        },
       ],
     },
     {
@@ -222,16 +202,6 @@ spec:
         "Self-healing reconciles drift: any manual change to cluster state is reverted to match Git.",
         "Auto sync + self-heal together are the foundation of a GitOps workflow.",
       ],
-      furtherReading: [
-        {
-          title: "Argo CD automated sync policy",
-          url: "https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/",
-        },
-        {
-          title: "Automatic self-healing",
-          url: "https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/#automatic-self-healing",
-        },
-      ],
     },
     {
       id: "pruning",
@@ -268,13 +238,16 @@ spec:
         "Pruning, combined with self-heal, gives you full GitOps: the cluster always matches the Git state exactly.",
         "Without pruning, deleted manifests leave stale objects that can cause resource conflicts or unexpected behaviour.",
       ],
-      furtherReading: [
-        {
-          title: "Argo CD automatic pruning",
-          url: "https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/#automatic-pruning",
-        },
-      ],
     },
+  ],
+  furtherReading: [
+    { title: "Argo CD ApplicationSet documentation", url: "https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/" },
+    { title: "ApplicationSet templates", url: "https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Template/" },
+    { title: "Git directory generator", url: "https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Generators-Git/#git-generator-directories" },
+    { title: "Kubernetes namespaces", url: "https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/" },
+    { title: "Argo CD automated sync policy", url: "https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/" },
+    { title: "Automatic self-healing", url: "https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/#automatic-self-healing" },
+    { title: "Argo CD automatic pruning", url: "https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/#automatic-pruning" },
   ],
   completeSolution: {
     title: "Complete ApplicationSet",

@@ -1,6 +1,6 @@
 import { type JSX, useState } from "react";
-import { useParams, Link } from "react-router";
-import type { MetaFunction } from "react-router";
+import { useLoaderData, Link } from "react-router";
+import type { MetaFunction, LoaderFunctionArgs } from "react-router";
 import {
   ArrowLeft,
   ExternalLink,
@@ -13,7 +13,7 @@ import {
   ChevronDown,
   Sparkles,
 } from "lucide-react";
-import type { SolutionBlock, Solution } from "@/data/solutions/types";
+import type { SolutionBlock } from "@/data/solutions/types";
 import { ADVENTURES, tagToSlug } from "@/data/adventures";
 import { SOLUTIONS } from "@/data/solutions";
 import { Navbar } from "@/components/Navbar";
@@ -30,40 +30,49 @@ import {
 import { buildPageMeta } from "@/lib/meta";
 import { isDeadlinePast, formatDeadline } from "@/lib/utils";
 
-export const meta: MetaFunction = ({ params }) => {
-  const adventure = ADVENTURES.find((a) => a.id === params.id);
-  const level = adventure?.levels.find((l) => l.id === params.levelId);
-
-  if (!adventure || !level) {
-    return [
-      { title: `Solution Not Found - ${BRAND_NAME}` },
-      { name: "robots", content: "noindex, nofollow" },
-    ];
-  }
-
-  const deadline = level.deadline ?? adventure.rewards?.deadline;
+export function loader({ params }: LoaderFunctionArgs) {
+  const adventure = ADVENTURES.find((a) => a.id === params.id) ?? null;
+  const level = adventure?.levels.find((l) => l.id === params.levelId) ?? null;
+  const deadline = level?.deadline ?? adventure?.rewards?.deadline;
   const available = !deadline || isDeadlinePast(deadline);
+  const solution =
+    available && adventure !== null && level !== null
+      ? (SOLUTIONS.find((s) => s.adventureId === params.id && s.levelId === params.levelId) ?? null)
+      : null;
+  const challengeUrl =
+    adventure !== null && level !== null
+      ? `/adventures/${adventure.id}/levels/${level.id}/`
+      : "/adventures/";
+  const discussionUrl = level?.discussionUrl
+    ? level.discussionUrl.startsWith("http")
+      ? level.discussionUrl
+      : `${COMMUNITY_URL}${level.discussionUrl}`
+    : COMMUNITY_URL;
+  return { adventure, level, available, solution, challengeUrl, discussionUrl, deadline };
+}
 
-  if (!available) {
-    return [
-      { title: `${level.name} Solution - ${adventure.title} - ${BRAND_NAME}` },
-      { name: "robots", content: "noindex, nofollow" },
-    ];
-  }
-
-  const solution = SOLUTIONS.find(
-    (s) => s.adventureId === params.id && s.levelId === params.levelId
-  );
-  if (!solution) {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  if (!data?.adventure || !data?.level) {
     return [
       { title: `Solution Not Found - ${BRAND_NAME}` },
       { name: "robots", content: "noindex, nofollow" },
     ];
   }
-
+  if (!data.available) {
+    return [
+      { title: `${data.level.name} Solution - ${data.adventure.title} - ${BRAND_NAME}` },
+      { name: "robots", content: "noindex, nofollow" },
+    ];
+  }
+  if (!data.solution) {
+    return [
+      { title: `Solution Not Found - ${BRAND_NAME}` },
+      { name: "robots", content: "noindex, nofollow" },
+    ];
+  }
+  const { adventure, level, solution } = data;
   const title = `${solution.title} - ${adventure.title} - ${BRAND_NAME}`;
   const description = `Step-by-step solution walkthrough for the ${level.name} challenge in ${adventure.title}.`;
-
   return buildPageMeta({
     title,
     description,
@@ -226,23 +235,24 @@ const SolutionImage = ({
 const BlockRenderer = ({ blocks }: { blocks: SolutionBlock[] }): JSX.Element => (
   <div className="space-y-4">
     {blocks.map((block, i) => {
+      const key = `${block.type}-${i}`;
       if (block.type === "text") {
         return (
-          <div key={i} className="md-content" dangerouslySetInnerHTML={{ __html: block.html }} />
+          <div key={key} className="md-content" dangerouslySetInnerHTML={{ __html: block.html }} />
         );
       }
       if (block.type === "code") {
         return (
-          <CodeBlock key={i} language={block.language} title={block.title} code={block.code} />
+          <CodeBlock key={key} language={block.language} title={block.title} code={block.code} />
         );
       }
       if (block.type === "image") {
         return (
-          <SolutionImage key={i} src={block.src} alt={block.alt} caption={block.caption} />
+          <SolutionImage key={key} src={block.src} alt={block.alt} caption={block.caption} />
         );
       }
       if (block.type === "callout") {
-        return <Callout key={i} variant={block.variant} html={block.html} />;
+        return <Callout key={key} variant={block.variant} html={block.html} />;
       }
       return null;
     })}
@@ -255,8 +265,8 @@ const TakeawaysList = ({ items }: { items: string[] }): JSX.Element => (
       Key Takeaways
     </p>
     <ul className="space-y-2" role="list">
-      {items.map((item, i) => (
-        <li key={i} className="flex gap-2 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+      {items.map((item) => (
+        <li key={item} className="flex gap-2 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
           <span className="shrink-0 text-primary mt-0.5" aria-hidden="true">›</span>
           {item}
         </li>
@@ -494,10 +504,8 @@ const SolutionSidebar = ({
 // ---------------------------------------------------------------------------
 
 const SolutionDetail = (): JSX.Element => {
-  const { id, levelId } = useParams<{ id: string; levelId: string }>();
-
-  const adventure = ADVENTURES.find((a) => a.id === id);
-  const level = adventure?.levels.find((l) => l.id === levelId);
+  const { adventure, level, available, solution, challengeUrl, discussionUrl, deadline } =
+    useLoaderData<ReturnType<typeof loader>>();
 
   if (!adventure || !level) {
     return (
@@ -522,19 +530,6 @@ const SolutionDetail = (): JSX.Element => {
       </div>
     );
   }
-
-  const deadline = level.deadline ?? adventure.rewards?.deadline;
-  const available = !deadline || isDeadlinePast(deadline);
-  const solution: Solution | undefined = available
-    ? SOLUTIONS.find((s) => s.adventureId === id && s.levelId === levelId)
-    : undefined;
-
-  const challengeUrl = `/adventures/${adventure.id}/levels/${level.id}/`;
-  const discussionUrl = level.discussionUrl
-    ? level.discussionUrl.startsWith("http")
-      ? level.discussionUrl
-      : `${COMMUNITY_URL}${level.discussionUrl}`
-    : COMMUNITY_URL;
 
   return (
     <div className="min-h-screen bg-background">
@@ -668,12 +663,9 @@ const SolutionDetail = (): JSX.Element => {
                             >
                               {String(index + 1).padStart(2, "0")}
                             </span>
-                            <h2
-                              id={`step-${step.id}-heading`}
-                              className="text-base font-semibold text-foreground flex-1"
-                            >
+                            <span className="text-base font-semibold text-foreground flex-1">
                               {step.title}
-                            </h2>
+                            </span>
                             <SummaryChevron />
                           </summary>
                           <div className="rounded-b-xl border border-t-0 border-[hsl(var(--surface-border))] bg-background/40 px-5 py-5 space-y-5">
@@ -700,9 +692,9 @@ const SolutionDetail = (): JSX.Element => {
                           <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-0.5">
                             Final Result
                           </p>
-                          <h2 className="text-base font-semibold text-foreground leading-snug">
+                          <span className="text-base font-semibold text-foreground leading-snug">
                             {solution.completeSolution.title ?? "Complete Solution"}
-                          </h2>
+                          </span>
                         </div>
                         <SummaryChevron />
                       </summary>
@@ -769,9 +761,7 @@ const SolutionDetail = (): JSX.Element => {
                   steps={solution.steps}
                   challengeUrl={challengeUrl}
                   discussionUrl={discussionUrl}
-                  furtherReading={solution.steps
-                    .flatMap((s) => s.furtherReading ?? [])
-                    .filter((link, i, arr) => arr.findIndex((l) => l.url === link.url) === i)}
+                  furtherReading={solution.furtherReading}
                 />
               </div>
             </>

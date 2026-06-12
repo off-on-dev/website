@@ -523,7 +523,7 @@ html {
 
 /* Glowing card hover - add card-glow class to cards */
 .card-glow {
-  transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
 }
 .card-glow:hover {
   box-shadow:
