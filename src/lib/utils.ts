@@ -13,6 +13,11 @@ export function isDeadlinePast(deadline: string | undefined): boolean {
   return !isNaN(date.getTime()) && date < new Date();
 }
 
+/** Returns true when the solution for a challenge is unlocked: no deadline, or deadline has passed. */
+export function isSolutionUnlocked(deadline: string | undefined): boolean {
+  return !deadline || isDeadlinePast(deadline);
+}
+
 /**
  * Formats an ISO 8601 deadline string for human display.
  * Preserves the stored UTC offset rather than converting to the viewer's local timezone.

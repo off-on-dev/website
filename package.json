@@ -19,7 +19,9 @@
     "test:visual:update": "playwright test --grep visual --update-snapshots",
     "generate": "node scripts/generate-adventures.mjs",
     "generate:validate": "node scripts/generate-adventures.mjs --validate-only",
-    "prebuild": "node scripts/generate-adventures.mjs"
+    "generate:solutions": "node scripts/generate-solutions.mjs",
+    "generate:solutions:validate": "node scripts/generate-solutions.mjs --validate-only",
+    "prebuild": "node scripts/generate-adventures.mjs && node scripts/generate-solutions.mjs"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
