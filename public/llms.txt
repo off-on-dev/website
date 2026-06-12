@@ -26,6 +26,8 @@ Each adventure is a scenario-driven challenge with beginner, intermediate, and e
 - [Building CloudHaven](https://offon.dev/adventures/building-cloudhaven/): Join the Infrastructure Guild and modernize CloudHaven's infrastructure from manual provisioning to a self-service platform using Infrastructure as Code. A hands-on journey through infrastructure as code with OpenTofu and GitHub Actions.
 - [Echoes Lost in Orbit](https://offon.dev/adventures/echoes-lost-in-orbit/): Restore interstellar communications by fixing broken GitOps setups, progressive delivery systems, and observability pipelines across three galactic missions.
   - [Broken Echoes solution](https://offon.dev/adventures/echoes-lost-in-orbit/levels/beginner/solution/)
+  - [The Silent Canary solution](https://offon.dev/adventures/echoes-lost-in-orbit/levels/intermediate/solution/)
+  - [Hyperspace Operations & Transport solution](https://offon.dev/adventures/echoes-lost-in-orbit/levels/expert/solution/)
 
 ## Challenge Technologies
 

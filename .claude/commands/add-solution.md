@@ -67,7 +67,7 @@ Read the input regardless of format (markdown, YAML, HTML, plain text). Extract:
   - `title` — title case, no leading emoji
   - `intro` — one to two sentences, plain text
   - `body` — array of `SolutionBlock` (see below). Code patches go here as `code` blocks.
-  - `takeaways` — **maximum two** plain-text strings, sentence case. Distil the most transferable insight. Omit if there is nothing non-obvious to say.
+  - `takeaways` — plain-text strings, sentence case. Preserve all takeaways from the source. Omit only if a step has no non-obvious insight to share.
   - `furtherReading` — array of `{ title, url }`. These are aggregated into the sidebar across all steps; do not duplicate a URL across multiple steps.
 - **`completeSolution`** (optional) — final corrected config or runbook shown as a summary at the end.
 - **`outro`** — narrative closing. End with a sentence that follows the adventure's story world, then invite the reader to see how others solved it. Do not use "Got there by a different route?" or similar generic phrases.
@@ -143,7 +143,7 @@ export const solution: Solution = {
       title: "<Title Case>",
       intro: "<plain text>",
       body: [ /* SolutionBlock[] */ ],
-      takeaways: [ /* max two plain-text strings */ ],
+      takeaways: [ /* plain-text strings */ ],
       furtherReading: [ /* { title, url }[] */ ],
     },
     // ... more steps
@@ -212,5 +212,5 @@ Report success with the path if both pass.
 - Titles use Title Case. Takeaways and body prose use sentence case.
 - **Contributor:** include `contributor: { name }` when the walkthrough author is known. Omit the field if unknown. Never fabricate a name.
 - **Outro:** always include one. End with a narrative sentence that follows the adventure's story world (characters, setting, mission), then a sentence inviting the reader to see how others solved it. The "Browse the discussion" link in the component handles the CTA itself.
-- **Takeaways:** maximum two per step. If a step's insight is obvious from the code, omit takeaways entirely rather than filling them with padding.
+- **Takeaways:** preserve all takeaways from the source. Omit only if a step has no non-obvious insight. Do not cap or trim them.
 - **Context section:** include only when the reader needs background on the tooling or architecture before they can understand the steps. If steps are self-contained, omit it.

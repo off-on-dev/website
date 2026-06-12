@@ -2,7 +2,11 @@
 import type { Solution } from "./types";
 
 import { solution as solution_echoes_lost_in_orbit_beginner } from "./echoes-lost-in-orbit/beginner";
+import { solution as solution_echoes_lost_in_orbit_expert } from "./echoes-lost-in-orbit/expert";
+import { solution as solution_echoes_lost_in_orbit_intermediate } from "./echoes-lost-in-orbit/intermediate";
 
 export const SOLUTIONS: Solution[] = [
   solution_echoes_lost_in_orbit_beginner,
+  solution_echoes_lost_in_orbit_expert,
+  solution_echoes_lost_in_orbit_intermediate,
 ];
