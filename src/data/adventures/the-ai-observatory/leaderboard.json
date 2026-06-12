@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-29T10:41:34.689Z",
+  "updatedAt": "2026-06-12T07:22:53.221Z",
   "rows": [
     {
       "rank": 1,
@@ -11,7 +11,7 @@
       "intermediatePoints": 100,
       "expertPoints": 0,
       "singlePoints": 0,
-      "breakdown": "🟢 Instrument Your First LLM: Adventure 03 | Beginner is Live! [beginner] rank #1 = 100 pts | 🟡 Instrument & Debug a RAG Pipeline: Adventure 03 | Intermediate is Live! [intermediate] rank #1 = 100 pts"
+      "breakdown": "🟡 Instrument & Debug a RAG Pipeline: Adventure 03 | Intermediate is Live! [intermediate] rank #1 = 100 pts | 🟢 Instrument Your First LLM: Adventure 03 | Beginner is Live! [beginner] rank #1 = 100 pts"
     },
     {
       "rank": 2,
@@ -48,6 +48,30 @@
       "expertPoints": 0,
       "singlePoints": 0,
       "breakdown": "🟢 Instrument Your First LLM: Adventure 03 | Beginner is Live! [beginner] rank #3 = 90 pts"
+    },
+    {
+      "rank": 5,
+      "username": "iw4p",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/90/345.png",
+      "points": 60,
+      "challengesSolved": 1,
+      "beginnerPoints": 60,
+      "intermediatePoints": 0,
+      "expertPoints": 0,
+      "singlePoints": 0,
+      "breakdown": "🟢 Instrument Your First LLM: Adventure 03 | Beginner is Live! [beginner] late = 60 pts"
+    },
+    {
+      "rank": 6,
+      "username": "theharithsa",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/90/297.png",
+      "points": 60,
+      "challengesSolved": 1,
+      "beginnerPoints": 60,
+      "intermediatePoints": 0,
+      "expertPoints": 0,
+      "singlePoints": 0,
+      "breakdown": "🟢 Instrument Your First LLM: Adventure 03 | Beginner is Live! [beginner] late = 60 pts"
     }
   ]
 }

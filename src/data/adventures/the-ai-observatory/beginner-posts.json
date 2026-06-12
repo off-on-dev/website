@@ -2,10 +2,18 @@
   "discussionUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8",
   "discussionPosts": [
     {
+      "username": "KatharinaSick",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
+      "cooked": "Thank you!",
+      "created_at": "2026-06-12T04:10:28.387Z",
+      "topicUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
+    },
+    {
       "username": "iw4p",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
       "cooked": "Hi @KatharinaSick, thanks a lot for the quick fix! nice challenge, thanks!",
       "created_at": "2026-06-11T22:28:40.187Z",
+      "challengeSolved": true,
       "topicUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
     },
     {
@@ -34,6 +42,7 @@
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
       "cooked": "Good Challenge for beginners.",
       "created_at": "2026-04-08T04:51:26.980Z",
+      "challengeSolved": true,
       "topicUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
     },
     {
@@ -49,17 +58,9 @@
       "cooked": "Ready to instrument & debug a full RAG pipeline? Head over to Instrument & Debug a RAG Pipeline: Adventure 03 | Intermediate is Live! to play",
       "created_at": "2026-02-20T15:04:24.610Z",
       "topicUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
-    },
-    {
-      "username": "rohit_bc",
-      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/rohit_bc/40/164_2.png",
-      "cooked": "— CERTIFICATE START — Adventure: 03-the-ai-observatory Level: beginner User: rohitbc23 Repo: rohitbc23/open-ecosystem-challenges Date: Sat 14 Feb 2026 10:04:53 PM UTC Url: — CERTIFICATE END —",
-      "created_at": "2026-02-14T22:05:45.322Z",
-      "challengeSolved": true,
-      "topicUrl": "https://community.offon.dev/t/instrument-your-first-llm-adventure-03-beginner-is-live/865/8"
     }
   ],
-  "totalReplies": 12,
+  "totalReplies": 13,
   "solvers": [
     {
       "username": "gsigmund",
@@ -80,6 +81,16 @@
       "username": "rohit_bc",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/rohit_bc/40/164_2.png",
       "solvedAt": "2026-02-14T22:05:45.322Z"
+    },
+    {
+      "username": "theharithsa",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
+      "solvedAt": "2026-04-08T04:51:26.980Z"
+    },
+    {
+      "username": "iw4p",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
+      "solvedAt": "2026-06-11T22:28:40.187Z"
     }
   ]
 }
