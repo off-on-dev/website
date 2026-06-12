@@ -828,6 +828,7 @@ html {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.85em;
   color: hsl(var(--foreground));
+  overflow-wrap: break-word;
 }
 .md-inline strong { font-weight: 600; color: hsl(var(--foreground)); }
 .md-inline em { font-style: italic; color: hsl(var(--text-secondary)); }
@@ -901,6 +902,7 @@ html {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.85em;
   color: hsl(var(--foreground));
+  overflow-wrap: break-word;
 }
 /* Code inside a link: only show link style, not code chip.
    Must appear after the generic code rules so it wins by source order
@@ -1025,6 +1027,9 @@ html {
 /* Copy button wrapper injected by MarkdownContent's useEffect */
 .md-pre-group { position: relative; margin-bottom: 1rem; }
 .md-pre-group pre { margin-bottom: 0; padding-right: 3.5rem; }
+/* CodeBlock header-bar pattern: pre and its wrapper attach flush to the header row above */
+.code-block-body pre { border-top-left-radius: 0; border-top-right-radius: 0; border-top: none; margin-bottom: 0; }
+.code-block-body .md-pre-group { margin-bottom: 0; }
 .md-copy-btn {
   position: absolute;
   top: 0.5rem;

@@ -317,6 +317,6 @@ spec:
   },
   outro: {
     heading: "Transmissions Restored",
-    html: "<p>Both Applications are healthy, syncing continuously from Git, reverting any drift the moment it appears, and cleaning up what no longer belongs. The Staging Moonbase and the Production Outpost are online. The Echo Server is echoing again.</p><p>The whispering cloud-dwellers of Nebulon and the rhythmic click-speakers of Crustacea Prime can hear each other once more. The GitOps Starliner moves on.</p><p>Got there by a different route? Found something that could be sharper?</p>",
+    html: "<p>Both Applications are healthy, syncing continuously from Git, reverting any drift the moment it appears, and cleaning up what no longer belongs. The Staging Moonbase and the Production Outpost are online. The Echo Server is echoing again.</p><p>The whispering cloud-dwellers of Nebulon and the rhythmic click-speakers of Crustacea Prime can hear each other once more. The GitOps Starliner moves on.</p><p>The Starliner carries more than one crew. See how others got the echo back.</p>",
   },
 };
