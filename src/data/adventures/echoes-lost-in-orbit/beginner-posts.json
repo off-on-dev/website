@@ -2,6 +2,13 @@
   "discussionUrl": "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40",
   "discussionPosts": [
     {
+      "username": "iw4p",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
+      "cooked": "Thanks! Done",
+      "created_at": "2026-06-14T15:36:20.255Z",
+      "topicUrl": "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
+    },
+    {
       "username": "KatharinaSick",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
       "cooked": "There’s another beginner challenge available now. It’s about Infrastructure as Code with OpenTofu. I hope you enjoy it Practice Infrastructure as Code with Zero Setup ( Adventure 02 | Beginner)",
@@ -51,16 +58,9 @@
       "cooked": "No, that should be preinstalled @macca728. Could it be, that you started the Codespace with the default configuration instead of “Adventure 01 | Beginner (Broken Echoes)“? You can find more details about that here:",
       "created_at": "2025-12-04T05:36:57.191Z",
       "topicUrl": "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
-    },
-    {
-      "username": "macca728",
-      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/macca728/40/156_2.png",
-      "cooked": "Never used codespaces before, but when tying to run the smoke-test.sh I get this error: $ ./smoke-test.sh /workspaces/open-ecosystem-challenges/lib/output.sh: line 6: gum: command not found Is fixing this part of the challenge?",
-      "created_at": "2025-12-04T04:28:54.626Z",
-      "topicUrl": "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
     }
   ],
-  "totalReplies": 36,
+  "totalReplies": 37,
   "solvers": [
     {
       "username": "KatharinaSick",
