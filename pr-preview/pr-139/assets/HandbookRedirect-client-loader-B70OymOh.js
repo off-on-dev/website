@@ -1,0 +1,1 @@
+import{l as e}from"./vendor-router-CLInioII.js";function t(){return e(`/handbook`)}export{t as clientLoader};
