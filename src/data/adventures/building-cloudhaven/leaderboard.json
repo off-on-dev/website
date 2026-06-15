@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-29T10:41:34.626Z",
+  "updatedAt": "2026-06-15T09:56:19.221Z",
   "rows": [
     {
       "rank": 1,
@@ -11,7 +11,7 @@
       "intermediatePoints": 95,
       "expertPoints": 100,
       "singlePoints": 0,
-      "breakdown": "Practice Infrastructure as Code with Zero Setup (🌆 Adventure 02 | Beginner) [beginner] rank #1 = 100 pts | Adventure 02: Building CloudHaven | 🔴 Expert: The Guardian Protocols [expert] rank #1 = 100 pts | Adventure 02: Building CloudHaven | 🟡 Intermediate: The Modular Metropolis [intermediate] rank #2 = 95 pts"
+      "breakdown": "Adventure 02: Building CloudHaven | 🔴 Expert: The Guardian Protocols [expert] rank #1 = 100 pts | Practice Infrastructure as Code with Zero Setup (🌆 Adventure 02 | Beginner) [beginner] rank #1 = 100 pts | Adventure 02: Building CloudHaven | 🟡 Intermediate: The Modular Metropolis [intermediate] rank #2 = 95 pts"
     },
     {
       "rank": 2,
@@ -48,6 +48,18 @@
       "expertPoints": 0,
       "singlePoints": 0,
       "breakdown": "Practice Infrastructure as Code with Zero Setup (🌆 Adventure 02 | Beginner) [beginner] rank #2 = 95 pts"
+    },
+    {
+      "rank": 5,
+      "username": "iw4p",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/90/345.png",
+      "points": 60,
+      "challengesSolved": 1,
+      "beginnerPoints": 60,
+      "intermediatePoints": 0,
+      "expertPoints": 0,
+      "singlePoints": 0,
+      "breakdown": "Practice Infrastructure as Code with Zero Setup (🌆 Adventure 02 | Beginner) [beginner] late = 60 pts"
     }
   ]
 }

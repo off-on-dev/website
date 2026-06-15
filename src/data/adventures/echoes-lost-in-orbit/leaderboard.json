@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-29T10:41:34.570Z",
+  "updatedAt": "2026-06-15T09:56:19.318Z",
   "rows": [
     {
       "rank": 1,
@@ -123,15 +123,15 @@
     },
     {
       "rank": 11,
-      "username": "RoelofW",
-      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/RoelofW/90/1.png",
+      "username": "theharithsa",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/90/297.png",
       "points": 70,
       "challengesSolved": 1,
       "beginnerPoints": 70,
       "intermediatePoints": 0,
       "expertPoints": 0,
       "singlePoints": 0,
-      "breakdown": "Adventure 01: Echoes Lost In Orbit | 🟢 Beginner: Broken Echoes [beginner] rank #7 = 70 pts"
+      "breakdown": "Adventure 01: Echoes Lost In Orbit | 🟢 Beginner: Broken Echoes [beginner] rank #8 = 70 pts"
     },
     {
       "rank": 12,
@@ -147,15 +147,15 @@
     },
     {
       "rank": 13,
-      "username": "theharithsa",
-      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/90/297.png",
+      "username": "RoelofW",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/RoelofW/90/1.png",
       "points": 70,
       "challengesSolved": 1,
       "beginnerPoints": 70,
       "intermediatePoints": 0,
       "expertPoints": 0,
       "singlePoints": 0,
-      "breakdown": "Adventure 01: Echoes Lost In Orbit | 🟢 Beginner: Broken Echoes [beginner] rank #8 = 70 pts"
+      "breakdown": "Adventure 01: Echoes Lost In Orbit | 🟢 Beginner: Broken Echoes [beginner] rank #7 = 70 pts"
     },
     {
       "rank": 14,
@@ -171,6 +171,18 @@
     },
     {
       "rank": 15,
+      "username": "iw4p",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/90/345.png",
+      "points": 60,
+      "challengesSolved": 1,
+      "beginnerPoints": 60,
+      "intermediatePoints": 0,
+      "expertPoints": 0,
+      "singlePoints": 0,
+      "breakdown": "Adventure 01: Echoes Lost In Orbit | 🟢 Beginner: Broken Echoes [beginner] late = 60 pts"
+    },
+    {
+      "rank": 16,
       "username": "mikeadityas",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/mikeadityas/90/144.png",
       "points": 60,

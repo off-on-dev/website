@@ -6,6 +6,7 @@
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
       "cooked": "Thanks for the challenge! done",
       "created_at": "2026-06-12T22:13:34.444Z",
+      "challengeSolved": true,
       "topicUrl": "https://community.offon.dev/t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656"
     },
     {
@@ -83,6 +84,11 @@
       "username": "justinrand",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/justinrand/40/140_2.png",
       "solvedAt": "2026-01-18T04:11:43.746Z"
+    },
+    {
+      "username": "iw4p",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
+      "solvedAt": "2026-06-12T22:13:34.444Z"
     }
   ]
 }
