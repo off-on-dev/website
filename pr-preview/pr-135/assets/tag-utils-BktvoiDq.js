@@ -1,0 +1,1 @@
+import{r as e}from"./summaries-DLCngYJ6.js";var t=e=>e.toLowerCase().replace(/[^a-z0-9]+/g,`-`).replace(/(^-|-$)/g,``),n=Object.fromEntries(e.map(e=>[t(e),e])),r=e=>n[e];export{t as n,r as t};
