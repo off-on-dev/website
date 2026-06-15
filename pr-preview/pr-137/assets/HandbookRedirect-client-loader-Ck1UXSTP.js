@@ -1,0 +1,1 @@
+import{l as e}from"./vendor-router-DiFF7R_-.js";function t(){return e(`/handbook`)}export{t as clientLoader};
