@@ -60,7 +60,7 @@
     "typescript-eslint": "^8.59.2",
     "unified": "^11.0.5",
     "vite": "^8.0.10",
-    "vitest": "^4.1.5",
+    "vitest": "^4.1.9",
     "yaml": "^2.9.0"
   }
 }
