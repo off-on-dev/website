@@ -225,7 +225,7 @@ policy reports, the OpenReports data behind Policy Reporter, as the audit of rec
         "How <a href=\"https://github.com/falcosecurity/falcosidekick\" target=\"_blank\" rel=\"noopener noreferrer\">Falcosidekick<span class=\"sr-only\"> (opens in new tab)</span></a> aggregates Falco alerts and how to use its UI to watch a runtime incident in real time",
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F05-lex-imperfecta_03-expert%2Fdevcontainer.json&quickstart=1`,
-      discussionUrl: "",
+      discussionUrl: "https://community.offon.dev/t/catch-the-intruder-the-guard-couldnt-see-june-2026-adventure-expert/1591",
       deadline: "2026-06-23T23:59:00+01:00",
       intro: [
         "An intruder is already inside the Republic, and the watchmen cannot see it. Fix the Praetorian Guard's broken detection rule, close the admission gap that let the intruder slip through, and seal the census archive against unauthorized access.",
