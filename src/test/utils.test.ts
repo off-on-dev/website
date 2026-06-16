@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { isDeadlinePast, formatDeadline } from '@/lib/utils';
+import { isDeadlinePast, formatDeadline, isSolutionUnlocked } from '@/lib/utils';
 
 describe('isDeadlinePast', () => {
   beforeEach(() => {
@@ -37,6 +37,33 @@ describe('isDeadlinePast', () => {
 
   it('returns false for an unparseable string', () => {
     expect(isDeadlinePast('not a date')).toBe(false);
+  });
+});
+
+describe('isSolutionUnlocked', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-01-15T12:00:00Z'));
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('returns true when deadline is undefined (no deadline = always unlocked)', () => {
+    expect(isSolutionUnlocked(undefined)).toBe(true);
+  });
+
+  it('returns true when deadline has passed', () => {
+    expect(isSolutionUnlocked('2025-12-10T09:00:00+01:00')).toBe(true);
+  });
+
+  it('returns false when deadline is in the future', () => {
+    expect(isSolutionUnlocked('2026-06-10T09:00:00+02:00')).toBe(false);
+  });
+
+  it('returns false for an unparseable deadline string', () => {
+    expect(isSolutionUnlocked('not a date')).toBe(false);
   });
 });
 

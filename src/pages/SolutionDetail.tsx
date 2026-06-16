@@ -1,4 +1,4 @@
-import { type JSX, useState } from "react";
+import { type JSX, useState, useRef, useEffect } from "react";
 import { useLoaderData, Link } from "react-router";
 import type { MetaFunction, LoaderFunctionArgs } from "react-router";
 import {
@@ -120,11 +120,17 @@ const CodeBlock = ({
   code: string;
 }): JSX.Element => {
   const [copied, setCopied] = useState(false);
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => (): void => {
+    if (copyTimeoutRef.current !== null) clearTimeout(copyTimeoutRef.current);
+  }, []);
 
   const handleCopy = (): void => {
     navigator.clipboard?.writeText(code).then(() => {
       setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
+      if (copyTimeoutRef.current !== null) clearTimeout(copyTimeoutRef.current);
+      copyTimeoutRef.current = setTimeout(() => setCopied(false), 1500);
     }).catch(() => {
       // writeText can fail when the document loses focus
     });

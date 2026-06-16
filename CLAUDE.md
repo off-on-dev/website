@@ -725,6 +725,18 @@ Any file that renders or returns JSX must use the `.tsx` extension. Files that a
 
 Each `useEffect` must have a single responsibility. Never combine side effects with different trigger conditions into one effect. Split them.
 
+Every `useEffect` that creates a `setTimeout`, `setInterval`, or event listener must return a cleanup function that cancels it. Clear and reassign timer refs before setting a new one so rapid re-fires don't stack. Example:
+
+```tsx
+const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+useEffect(() => (): void => {
+  if (timerRef.current !== null) clearTimeout(timerRef.current);
+}, []);
+// in handler:
+if (timerRef.current !== null) clearTimeout(timerRef.current);
+timerRef.current = setTimeout(() => setState(false), 1500);
+```
+
 ### State machines
 
 When implementing any feature with multiple states, enumerate every transition before writing code. For each transition, list every system that must be updated (storage, UI state, external APIs, DOM).
