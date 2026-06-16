@@ -31,9 +31,6 @@ export const LEX_IMPERFECTA: Adventure = {
     rankingNote: "Ranking is determined by total points across all three levels. Points per level are awarded by submission order within the active week (100 for the first valid solution, 95 for the second, and so on; late submissions still earn 60).",
     rankingRulesUrl: `${COMMUNITY_URL}/t/about-the-challenges-category/16`,
   },
-  upcomingLevels: [
-    { name: "Expert", difficulty: "Expert" },
-  ],
   levels: [
     {
       id: "beginner",
@@ -213,6 +210,90 @@ policy reports, the OpenReports data behind Policy Reporter, as the audit of rec
         description: "Once you think you've solved the challenge, run the verification script. If it fails it will tell you which checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion.",
       },
       metaDescription: "Governing the Provinces: Fix a misconfigured Kyverno policy estate and use Policy Reporter to restore proper governance across the Republic's provinces.",
+    },
+    {
+      id: "expert",
+      name: "Quis Custodiet",
+      difficulty: "Expert",
+      topics: ["Kyverno", "Policy Reporter", "Kubernetes"],
+      audience: "Security engineers and platform engineers who want to explore the boundary between admission control and runtime security. Completing the Intermediate level first is helpful but not required. You should be comfortable reading Kyverno ValidatingPolicies and CEL expressions. No prior Falco experience required.",
+      learnings: [
+        "How <a href=\"https://falco.org/docs/reference/rules/\" target=\"_blank\" rel=\"noopener noreferrer\">Falco rules<span class=\"sr-only\"> (opens in new tab)</span></a> are structured: conditions, output, and kernel-level fields, and how to write a rule targeting a specific runtime behaviour",
+        "Why <code>privileged: false</code> is not enough: how <a href=\"https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-capabilities-for-a-container\" target=\"_blank\" rel=\"noopener noreferrer\">Linux capabilities<span class=\"sr-only\"> (opens in new tab)</span></a> grant host-level access without the privileged flag",
+        "How to use <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">spec.variables<span class=\"sr-only\"> (opens in new tab)</span></a> in a <code>ValidatingPolicy</code> to share reusable CEL expressions across validations",
+        "How pod volumes reference secrets, and why a volume's name and the secret it mounts are two separate fields in the pod spec",
+        "How <a href=\"https://github.com/falcosecurity/falcosidekick\" target=\"_blank\" rel=\"noopener noreferrer\">Falcosidekick<span class=\"sr-only\"> (opens in new tab)</span></a> aggregates Falco alerts and how to use its UI to watch a runtime incident in real time",
+      ],
+      codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F05-lex-imperfecta_03-expert%2Fdevcontainer.json&quickstart=1`,
+      discussionUrl: "",
+      deadline: "2026-06-23T23:59:00+01:00",
+      intro: [
+        "An intruder is already inside the Republic, and the watchmen cannot see it. Fix the Praetorian Guard's broken detection rule, close the admission gap that let the intruder slip through, and seal the census archive against unauthorized access.",
+      ],
+      backstory: [
+        "The Republic's defences have always rested on the law: block the wrong workloads at the gate, and nothing bad gets in. But the Senate's Praetorian Guard was built for a different threat: the workload that slips through and acts badly at runtime. The Guard watches the provinces through Falco, but tonight, the watchtower is dark. Someone broke the rule that should fire when the census archive is touched. The Guard sees nothing.",
+        "And while the Guard slept, an intruder crept in. It declared valid labels, passed the census, and presented itself as a loyal citizen of the Republic. Its papers were in order. Its power was not. Once inside, it reached straight for the census archive: the imperial rolls of every citizen, sealed records it had no right to touch. It reads them on a loop and tries to send them out of the Republic.",
+      ],
+      objective: [
+        "<strong>The Praetorian Guard awake</strong>: Falco fires an alert every time an unauthorized process reads the census archive, with live alerts streaming into the Falcosidekick UI",
+        "<strong>The gate closed</strong>: the intruder is denied re-admission. The policy that kept privileged containers out now covers every path to unchecked host power",
+        "<strong>The archive sealed</strong>: the census-archive secret is inaccessible to any workload that does not bear the Archivist role",
+        "<strong>The empire-wide laws holding</strong>: all intermediate-level checks still green across every province",
+      ],
+      architecture: [
+        "<p>The estate inherits the full intermediate topology: four province namespaces (<code>gallia</code>, <code>hispania</code>, <code>britannia</code>, <code>aegyptus</code>) and one infra namespace (<code>castra</code>), each labelled as before. Alongside the Kyverno stack and Policy Reporter, the cluster now runs <strong>Falco</strong> (eBPF-based, as a DaemonSet) and <strong>Falcosidekick</strong> with its UI at port <strong>30111</strong>. At startup, an intruder pod is already running in one of the provinces, quietly reading the census archive: imperial rolls that only workloads bearing the <code>republic.rome/role: archivist</code> label are permitted to access.</p>",
+        "<p>Your working directory is the challenge root. <code>manifests/secrets/</code> and <code>manifests/workloads/</code> are already in place. They define the estate and the intruder, and need no changes. Everything else is yours to investigate and fix.</p>",
+      ],
+      toolbox: [
+        { name: "kubectl", description: "Apply and inspect cluster resources, check pod status and security contexts", url: "https://kubernetes.io/docs/reference/kubectl/" },
+        { name: "k9s", description: "Explore cluster resources, pod logs, and policy reports in a terminal UI", url: "https://k9scli.io/" },
+        { name: "kyverno", description: "Test a policy against a resource locally before applying it to the cluster", url: "https://kyverno.io/docs/kyverno-cli/" },
+      ],
+      howToPlay: [
+        { title: "Survey the Scene", content: `<p>When your Codespace opens, the intruder is already running. Open the <strong>Falcosidekick UI</strong> at
+the forwarded port <strong>30111</strong>. It should be streaming alerts about census archive reads,
+but it is silent. That silence is your first clue that something is wrong with the Guard.</p>
+<p>Start by getting oriented:</p>
+<pre tabindex="0" aria-label="Code block"><code class="language-bash"># Can you find the intruder?
+kubectl get pods -A
+
+# Read the Falco rule that should be firing
+cat falco-rules.yaml
+
+# Which policies are in force?
+kubectl get validatingpolicies
+kubectl get namespacedvalidatingpolicies -A
+</code></pre>
+<p>Open <strong>Policy Reporter</strong> at port <strong>30110</strong> as well. The intermediate estate should look clean:
+the intruder left no trace at admission. That is part of the problem.</p>` },
+        { title: "Act 1: Wake the Praetorian Guard", content: `<p>The Falco rule in <code>falco-rules.yaml</code> has a defect: find the break, fix it, and run <code>make apply</code>;
+alerts streaming into the <strong>Falcosidekick UI at port 30111</strong> are your signal. The
+<a href="https://falco.org/docs/reference/rules/supported-fields/" target="_blank" rel="noopener noreferrer">Falco condition fields reference<span class="sr-only"> (opens in new tab)</span></a>
+documents every available field.</p>` },
+        { title: "Act 2: Close the Gate", content: `<p>The intruder passed admission: find the policy gap that let it through, close it, and run
+<code>make apply</code>; re-admission denied and the <strong>Falcosidekick UI</strong> going quiet confirm Act 2 is done.
+The existing policy already uses <a href="https://kyverno.io/docs/policy-types/validating-policy/" target="_blank" rel="noopener noreferrer">spec.variables<span class="sr-only"> (opens in new tab)</span></a>
+to share expressions across validations, a pattern worth exploring.</p>` },
+        { title: "Act 3: Seal the Archive", content: `<p>Open <code>manifests/policies/</code>: something is missing; the other policies show the structure, write
+what's needed, then run <code>make apply</code>.</p>
+<p><strong>Going further:</strong> even with the archive sealed at admission, any workload admitted with the
+Archivist role can read the secret. Kubernetes RBAC can restrict which service accounts may
+<code>get</code> a secret at the API level, a complementary layer that admission control alone cannot
+provide.</p>` },
+      ],
+      helpfulLinks: [
+        { title: "Falco Rules Reference", url: "https://falco.org/docs/reference/rules/", description: "The anatomy of a Falco rule: condition, output, priority, tags, and how rules are evaluated" },
+        { title: "Falco Condition Fields", url: "https://falco.org/docs/reference/rules/supported-fields/", description: "Every field available in Falco rule conditions: syscall events, file descriptors, process info, and Kubernetes metadata" },
+        { title: "Linux Capabilities in Kubernetes", url: "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-capabilities-for-a-container", description: "How Linux capabilities work and how to configure or restrict them in a pod's security context" },
+        { title: "Kyverno ValidatingPolicy", url: "https://kyverno.io/docs/policy-types/validating-policy/", description: "Reference docs for ValidatingPolicy, including spec.variables for composing reusable CEL expressions" },
+        { title: "CEL Validation Expressions", url: "https://kubernetes.io/docs/reference/using-api/cel/", description: "How CEL expressions work in Kubernetes admission: operators, optional chaining, and collection functions" },
+        { title: "Falcosidekick", url: "https://github.com/falcosecurity/falcosidekick", description: "The Falco alert aggregator that routes Falco events to sinks including the Falcosidekick UI" },
+      ],
+      verification: {
+        command: "./verify.sh",
+        description: "Once you think you've solved the challenge, run the verification script. If it fails it will tell you which checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion.",
+      },
+      metaDescription: "Quis Custodiet: An intruder is already inside the Republic, and the watchmen cannot see it. Fix the Praetorian Guard's broken detection rule, close the...",
     },
   ],
 };

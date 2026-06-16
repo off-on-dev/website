@@ -20,6 +20,7 @@ const ROUTES: RouteSpec[] = [
   { path: "/adventures/lex-imperfecta", title: /Lex Imperfecta/ },
   { path: "/adventures/lex-imperfecta/levels/beginner", title: /The Twelve Tables/ },
   { path: "/adventures/lex-imperfecta/levels/intermediate", title: /Governing the Provinces/ },
+  { path: "/adventures/lex-imperfecta/levels/expert", title: /Quis Custodiet/ },
   { path: "/adventures/blind-by-design", title: /Blind by Design/ },
   { path: "/adventures/blind-by-design/levels/beginner", title: /Stand up the Lab/ },
   { path: "/adventures/blind-by-design/levels/intermediate", title: /Outcome by Cohort/ },

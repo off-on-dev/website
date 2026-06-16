@@ -22,6 +22,7 @@ const ROUTES = [
   "/adventures/lex-imperfecta",
   "/adventures/lex-imperfecta/levels/beginner",
   "/adventures/lex-imperfecta/levels/intermediate",
+  "/adventures/lex-imperfecta/levels/expert",
   "/adventures/blind-by-design",
   "/adventures/blind-by-design/levels/beginner",
   "/adventures/blind-by-design/levels/intermediate",

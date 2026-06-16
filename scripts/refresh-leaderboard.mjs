@@ -35,7 +35,7 @@ const QUERY_ID = 5;
 // Category IDs are from: GET https://community.offon.dev/categories.json
 const ADVENTURE_CATEGORIES = {
   // GENERATED:adventures
-  "lex-imperfecta":       { categoryId: 43, has_beginner: true, has_intermediate: true, has_expert: false, has_single: false },
+  "lex-imperfecta":       { categoryId: 43, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
   "blind-by-design":      { categoryId: 41, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
   "the-ai-observatory":   { categoryId: 37, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
   "building-cloudhaven":  { categoryId: 36, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
