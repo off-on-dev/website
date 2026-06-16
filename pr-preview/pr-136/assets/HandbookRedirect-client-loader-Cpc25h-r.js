@@ -1,1 +1,0 @@
-import{l as e}from"./vendor-router-vcr-b0pU.js";function t(){return e(`/handbook`)}export{t as clientLoader};
