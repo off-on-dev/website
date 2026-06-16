@@ -39,6 +39,19 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
           "How to use <a href=\"https://kyverno.github.io/policy-reporter/\" target=\"_blank\" rel=\"noopener noreferrer\">Policy Reporter<span class=\"sr-only\"> (opens in new tab)</span></a> and the <a href=\"https://openreports.io/\" target=\"_blank\" rel=\"noopener noreferrer\">OpenReports<span class=\"sr-only\"> (opens in new tab)</span></a> format to audit and debug a policy estate across multiple namespaces",
         ],
       },
+      {
+        id: "expert",
+        name: "Quis Custodiet",
+        difficulty: "Expert",
+        topics: ["Kyverno", "Policy Reporter", "Kubernetes"],
+        learnings: [
+          "How <a href=\"https://falco.org/docs/reference/rules/\" target=\"_blank\" rel=\"noopener noreferrer\">Falco rules<span class=\"sr-only\"> (opens in new tab)</span></a> are structured: conditions, output, and kernel-level fields, and how to write a rule targeting a specific runtime behaviour",
+          "Why <code>privileged: false</code> is not enough: how <a href=\"https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-capabilities-for-a-container\" target=\"_blank\" rel=\"noopener noreferrer\">Linux capabilities<span class=\"sr-only\"> (opens in new tab)</span></a> grant host-level access without the privileged flag",
+          "How to use <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">spec.variables<span class=\"sr-only\"> (opens in new tab)</span></a> in a <code>ValidatingPolicy</code> to share reusable CEL expressions across validations",
+          "How pod volumes reference secrets, and why a volume's name and the secret it mounts are two separate fields in the pod spec",
+          "How <a href=\"https://github.com/falcosecurity/falcosidekick\" target=\"_blank\" rel=\"noopener noreferrer\">Falcosidekick<span class=\"sr-only\"> (opens in new tab)</span></a> aggregates Falco alerts and how to use its UI to watch a runtime incident in real time",
+        ],
+      },
     ],
   },
   {
