@@ -52,8 +52,6 @@
       padding: 2em 2.5em 1.6em;
       box-sizing: border-box;
       height: 100%;
-      position: relative;
-      overflow: hidden;
     }
 
     .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
@@ -380,6 +378,8 @@
       align-items: flex-start;
       height: 100%;
       padding: 3em 3.2em !important;
+      position: relative;
+      overflow: hidden;
     }
     .cobrand {
       display: flex;
@@ -443,46 +443,25 @@
     .pill:hover { border-color: var(--amber); color: var(--amber) !important; text-decoration: none !important; }
     .pill.hi { background: var(--amber-glow); border-color: rgba(255,192,52,0.38); color: var(--amber) !important; }
 
-    /* ── Fireflies ── */
-    @keyframes fireflyFloat {
-      0%   { transform: translate(0,     0);    opacity: 0;    }
-      4%   { transform: translate(0,     0);    opacity: 0.85; }
-      20%  { transform: translate(4px,  -6px);  opacity: 0.75; }
-      26%  { transform: translate(26px, -20px); opacity: 0;    }
-      30%  { transform: translate(26px, -20px); opacity: 0.8;  }
-      46%  { transform: translate(23px, -25px); opacity: 0.7;  }
-      52%  { transform: translate(-9px,  -5px); opacity: 0;    }
-      56%  { transform: translate(-9px,  -5px); opacity: 0.8;  }
-      72%  { transform: translate(-13px, -8px); opacity: 0.65; }
-      78%  { transform: translate(0,     0);    opacity: 0;    }
-      82%  { transform: translate(0,     0);    opacity: 0.75; }
-      96%  { transform: translate(3px,  -4px);  opacity: 0.6;  }
-      100% { transform: translate(0,     0);    opacity: 0;    }
-    }
+    /* ── Fireflies (static scatter, title slide only) ── */
     .ff {
       position: absolute;
-      width: 3px;
-      height: 3px;
+      width: 2px;
+      height: 2px;
       border-radius: 50%;
       pointer-events: none;
       background-color: #ffc034;
       box-shadow:
-        0 0 3px 1px  #ffc034,
-        0 0 8px 3px  rgba(255,192,52,0.55),
-        0 0 16px 5px rgba(255,192,52,0.18);
-      animation: fireflyFloat linear infinite;
+        0 0 2px 1px  #ffc034,
+        0 0 6px 2px  rgba(255,192,52,0.45),
+        0 0 12px 4px rgba(255,192,52,0.12);
     }
-    @media (prefers-reduced-motion: reduce) { .ff { display: none; } }
-    .ff:nth-child(1)  { top: 10%; left:  7%;  animation-duration: 6s;   animation-delay: 0s;   }
-    .ff:nth-child(2)  { top: 22%; right: 11%; animation-duration: 7.5s; animation-delay: 1.3s; }
-    .ff:nth-child(3)  { top: 65%; left: 15%;  animation-duration: 7s;   animation-delay: 2.1s; }
-    .ff:nth-child(4)  { top: 40%; right: 20%; animation-duration: 8.5s; animation-delay: 0.7s; }
-    .ff:nth-child(5)  { top: 80%; left: 40%;  animation-duration: 5.5s; animation-delay: 3.2s; }
-    .ff:nth-child(6)  { top: 15%; left: 58%;  animation-duration: 8s;   animation-delay: 1.8s; }
-    .ff:nth-child(7)  { top: 55%; right: 6%;  animation-duration: 6.5s; animation-delay: 4s;   }
-    .ff:nth-child(8)  { top: 88%; left: 72%;  animation-duration: 9s;   animation-delay: 2.6s; }
-    .ff:nth-child(9)  { top: 32%; left: 32%;  animation-duration: 7.2s; animation-delay: 0.4s; }
-    .ff:nth-child(10) { top: 72%; right: 32%; animation-duration: 6.8s; animation-delay: 3.8s; }
+    .ff:nth-child(1) { top: 11%; left:  8%;  opacity: 0.7; }
+    .ff:nth-child(2) { top: 24%; right: 13%; opacity: 0.5; }
+    .ff:nth-child(3) { top: 68%; left: 14%;  opacity: 0.6; }
+    .ff:nth-child(4) { top: 42%; right: 19%; opacity: 0.45; }
+    .ff:nth-child(5) { top: 82%; left: 44%;  opacity: 0.55; }
+    .ff:nth-child(6) { top: 17%; left: 61%;  opacity: 0.5; }
   </style>
 </head>
 <body>
@@ -491,11 +470,9 @@
 
     <!-- 1 ─ Title -->
     <section>
-      <span class="ff"></span><span class="ff"></span><span class="ff"></span>
-      <span class="ff"></span><span class="ff"></span><span class="ff"></span>
-      <span class="ff"></span><span class="ff"></span><span class="ff"></span>
-      <span class="ff"></span>
       <div class="title-slide">
+        <span class="ff"></span><span class="ff"></span><span class="ff"></span>
+        <span class="ff"></span><span class="ff"></span><span class="ff"></span>
         <div class="cobrand">
           <img src="/brand/offon-logo-dark-color.svg" alt="OffOn">
           <span class="xsep">×</span>
