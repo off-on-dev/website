@@ -16,6 +16,7 @@ Project-level Claude Code commands live in `.claude/commands/`. Invoke them with
 | &nbsp;&nbsp;`/progressive-enhancement` | Sub-command: building any new feature or reviewing architecture. Ensures core content works without JS. |
 | &nbsp;&nbsp;`/user-personalization` | Sub-command: working on theme toggle, consent state, or any user preference persistence. |
 | `/add-solution` | Generate a structured TypeScript solution file from any input format (md, YAML, HTML, plain text). Downloads and converts images to WebP. |
+| `/create-presentation` | Create a Reveal.js presentation deck for an OffOn event or challenge. Follows the design system in `public/deck.html`. Outputs to `public/<filename>.html` with speaker notes. |
 
 The `spec-first-coding` command is installed globally (`~/.claude/skills/`) and is not in this repo. It enforces W3C spec citations before generating any accessibility-related code.
 
@@ -102,6 +103,8 @@ e2e/
   smoke.spec.ts # Playwright smoke tests (requires npm run build first)
 public/
   fonts/        # Self-hosted fonts (Inter, Syne, JetBrains Mono)
+  team/         # Team and speaker photos (*.webp). Single source of truth — used by BoardSection and presentation decks. Do not duplicate into src/assets/.
+  deck.html     # Reveal.js presentation for Open Source Talks events. Not a React route; served directly by GitHub Pages.
 .github/
   workflows/
     deploy.yml                    # Production deploy to GitHub Pages (push to main)

@@ -1,0 +1,973 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Open Source Talks by OffOn x Dynatrace</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/reveal/reset.css">
+  <link rel="stylesheet" href="/reveal/reveal.css">
+  <style>
+    @font-face {
+      font-family: 'Syne';
+      src: url('/fonts/syne-latin-700-normal.woff2') format('woff2');
+      font-weight: 700;
+    }
+    @font-face {
+      font-family: 'Inter';
+      src: url('/fonts/inter-latin-400-normal.woff2') format('woff2');
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'Inter';
+      src: url('/fonts/inter-latin-500-normal.woff2') format('woff2');
+      font-weight: 500;
+    }
+    @font-face {
+      font-family: 'Inter';
+      src: url('/fonts/inter-latin-600-normal.woff2') format('woff2');
+      font-weight: 600;
+    }
+
+    :root {
+      --bg:         #0a0a0a;
+      --card:       #141419;
+      --border:     #232c3d;
+      --fg:         #faf9f2;
+      --muted:      #b8b5a8;
+      --amber:      #ffc034;
+      --amber-glow: rgba(255, 192, 52, 0.13);
+    }
+
+    /* ── Base ── */
+    .reveal-viewport { background: var(--bg); }
+
+    .reveal {
+      font-family: 'Inter', sans-serif;
+      font-size: 36px;
+      color: var(--fg);
+    }
+
+    .reveal .slides section {
+      text-align: left;
+      padding: 2em 2.5em 1.6em;
+      box-sizing: border-box;
+      height: 100%;
+    }
+
+    .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      color: var(--fg);
+      text-transform: none;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin: 0 0 0.3em;
+    }
+
+    .reveal h1 { font-size: 2.1em; }
+    .reveal h2 { font-size: 1.25em; }
+
+    .reveal p {
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.78em;
+      margin: 0;
+    }
+
+    .reveal a { color: var(--amber); text-decoration: none; }
+    .reveal a:hover { text-decoration: underline; }
+
+    .reveal .controls { color: var(--amber); }
+    .reveal .progress span { background: var(--amber); }
+    .reveal .slide-number { color: var(--muted); font-size: 0.38em; background: none; }
+
+    /* ── Slide header ── */
+    .sh {
+      border-left: 3px solid var(--amber);
+      padding-left: 0.55em;
+      margin-bottom: 0.7em;
+    }
+    .sh .label {
+      display: block;
+      font-size: 0.37em;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 0.2em;
+    }
+    .sh h2 { font-size: 1.2em; margin: 0; }
+
+    /* ── Grids ── */
+    .g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5em; margin-top: 0.6em; }
+    .g2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5em; margin-top: 0.6em; }
+    .g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.45em; margin-top: 0.6em; }
+    .split { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 1.3em; align-items: start; }
+    .split-even { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2em; align-items: start; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.65em 0.85em;
+    }
+    .card h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.6em;
+      font-weight: 700;
+      color: var(--fg);
+      margin: 0 0 0.3em;
+    }
+    .card p { font-size: 0.52em; margin: 0; line-height: 1.5; }
+    .card p + p { margin-top: 0.4em; }
+
+    /* ── Agenda ── */
+    .agenda {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5em;
+      font-size: 0.56em;
+    }
+    .agenda tr { border-bottom: 1px solid var(--border); }
+    .agenda tr:last-child { border-bottom: none; }
+    .agenda td {
+      padding: 0.32em 0.5em;
+      color: var(--muted);
+      vertical-align: middle;
+    }
+    .agenda td:first-child {
+      color: var(--amber);
+      font-weight: 600;
+      white-space: nowrap;
+      padding-right: 0.9em;
+      font-variant-numeric: tabular-nums;
+      width: 3.8em;
+    }
+    .agenda td:last-child {
+      opacity: 0.5;
+      font-size: 0.9em;
+      text-align: right;
+      white-space: nowrap;
+    }
+    .agenda .hi td { color: var(--fg); }
+    .agenda .hi td:first-child { color: var(--amber); }
+    .agenda .hi td:last-child { color: var(--muted); opacity: 0.65; }
+
+    /* ── Bullet rows ── */
+    .brow {
+      display: flex;
+      gap: 0.55em;
+      align-items: flex-start;
+      margin-bottom: 0.42em;
+    }
+    .brow .dot {
+      flex-shrink: 0;
+      color: var(--amber);
+      font-size: 0.58em;
+      margin-top: 0.28em;
+      line-height: 1;
+      width: 0.8em;
+    }
+    .brow .bt { font-size: 0.58em; color: var(--muted); line-height: 1.45; }
+    .brow .bt strong { color: var(--fg); font-weight: 600; }
+
+    /* ── Quiz rows ── */
+    .qrow {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      column-gap: 0.65em;
+      align-items: start;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.55em 0.8em;
+      margin-bottom: 0.4em;
+    }
+    .qrow .rnum {
+      grid-row: span 2;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.5em;
+      font-weight: 700;
+      color: var(--amber);
+      background: var(--amber-glow);
+      border: 1px solid rgba(255,192,52,0.22);
+      border-radius: 6px;
+      padding: 0.3em 0.55em;
+      white-space: nowrap;
+      align-self: center;
+    }
+    .qrow h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.58em;
+      font-weight: 700;
+      color: var(--fg);
+      margin: 0 0 0.12em;
+    }
+    .qrow p { font-size: 0.5em; margin: 0; }
+
+    /* ── Speaker cards ── */
+    .speaker-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.9em 1em;
+      display: flex;
+      gap: 0.8em;
+      align-items: flex-start;
+    }
+    .speaker-card .sp-av {
+      flex-shrink: 0;
+      width: 2.4em;
+      height: 2.4em;
+      border-radius: 50%;
+      background: var(--amber-glow);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.52em;
+      color: var(--amber);
+      overflow: hidden;
+    }
+    .speaker-card .sp-av img {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+    }
+    .speaker-card .sp-info { flex: 1; }
+    .speaker-card .sp-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.62em;
+      font-weight: 700;
+      color: var(--fg);
+      margin: 0 0 0.1em;
+    }
+    .speaker-card .sp-talk {
+      font-size: 0.52em;
+      color: var(--amber);
+      font-weight: 600;
+      margin: 0 0 0.25em;
+      line-height: 1.3;
+    }
+    .speaker-card .sp-bio { font-size: 0.5em; color: var(--muted); margin: 0; line-height: 1.45; }
+
+    /* ── Board ── */
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.48em;
+      margin-top: 0.6em;
+    }
+    .person {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.6em 0.75em;
+      display: flex;
+      gap: 0.55em;
+      align-items: flex-start;
+    }
+    .person .av {
+      flex-shrink: 0;
+      width: 1.8em;
+      height: 1.8em;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--amber-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.5em;
+      color: var(--amber);
+      overflow: hidden;
+    }
+    .person .av img { width: 100%; height: 100%; object-fit: cover; }
+    .person .pi { flex: 1; min-width: 0; }
+    .person .pn {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.56em;
+      font-weight: 700;
+      color: var(--fg);
+      margin: 0 0 0.12em;
+      line-height: 1.2;
+    }
+    .person .pr { font-size: 0.46em; color: var(--muted); line-height: 1.4; margin: 0; }
+    .person.tba { opacity: 0.32; border-style: dashed; }
+
+    /* ── Value rows ── */
+    .vrow {
+      border-left: 2px solid var(--border);
+      padding-left: 0.58em;
+      margin-bottom: 0.48em;
+    }
+    .vrow.hi { border-left-color: var(--amber); }
+    .vrow h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.58em;
+      font-weight: 700;
+      color: var(--fg);
+      margin: 0 0 0.1em;
+    }
+    .vrow p { font-size: 0.5em; margin: 0; }
+
+    /* ── Contribute cards ── */
+    .contrib {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.65em 0.8em;
+    }
+    .contrib .ci { font-size: 0.9em; margin-bottom: 0.22em; display: block; }
+    .contrib h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.58em;
+      font-weight: 700;
+      color: var(--fg);
+      margin: 0 0 0.28em;
+    }
+    .contrib .citem {
+      display: flex;
+      gap: 0.45em;
+      align-items: flex-start;
+      margin-bottom: 0.22em;
+    }
+    .contrib .citem .cdot {
+      flex-shrink: 0;
+      color: var(--amber);
+      font-size: 0.48em;
+      margin-top: 0.3em;
+      line-height: 1;
+      width: 0.8em;
+    }
+    .contrib .citem .ctext {
+      font-size: 0.48em;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* ── Tech tags ── */
+    .tags { display: flex; flex-wrap: wrap; gap: 0.3em; margin-top: 0.5em; }
+    .tag {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.14em 0.45em;
+      font-size: 0.44em;
+      color: var(--muted);
+    }
+
+    /* ── Column label ── */
+    .col-label {
+      display: block;
+      font-size: 0.44em;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 0.5em;
+    }
+
+    /* ── Title slide ── */
+    .title-slide {
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      height: 100%;
+      padding: 3em 3.2em !important;
+    }
+    .cobrand {
+      display: flex;
+      align-items: center;
+      gap: 0.65em;
+      margin-bottom: 0.85em;
+    }
+    .cobrand img { height: 36px; width: auto; }
+    .cobrand .xsep {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.1em;
+      color: #ffc034;
+      line-height: 1;
+    }
+    .cobrand .partner {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.8em;
+      color: var(--fg);
+      letter-spacing: -0.02em;
+    }
+
+    /* Title slide gets a much larger cobrand */
+    .title-slide .cobrand img { height: 84px; }
+    .title-slide .cobrand .xsep { font-size: 2em; }
+    .title-slide .cobrand .partner { font-size: 1.5em; }
+    .title-slide .cobrand { gap: 0.8em; margin-bottom: 1em; }
+
+    /* ── Final slide ── */
+    .final {
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 100%;
+    }
+    .final .cobrand { justify-content: center; margin-bottom: 0.6em; }
+    .final .cobrand img { height: 36px; }
+    .final .cobrand .partner { font-size: 0.72em; }
+    .final .cobrand .xsep { font-size: 0.85em; }
+    .final h2 { font-size: 1.35em; margin-bottom: 0.3em; }
+
+    .link-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.45em;
+      margin-top: 0.6em;
+    }
+    .pill {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 0.24em 0.62em;
+      font-size: 0.46em;
+      color: var(--muted) !important;
+      font-family: 'Inter', sans-serif;
+    }
+    .pill:hover { border-color: var(--amber); color: var(--amber) !important; text-decoration: none !important; }
+    .pill.hi { background: var(--amber-glow); border-color: rgba(255,192,52,0.38); color: var(--amber) !important; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- 1 ─ Title -->
+    <section>
+      <div class="title-slide">
+        <div class="cobrand">
+          <img src="/brand/offon-logo-dark-color.svg" alt="OffOn">
+          <span class="xsep">×</span>
+          <span class="partner">Dynatrace</span>
+        </div>
+        <h1>Open Source Talks</h1>
+        <p style="font-size: 0.7em; margin-top: 0.45em;">Open Source. Vendor Agnostic. Community Driven.</p>
+        <p style="font-size: 0.52em; margin-top: 0.35em; opacity: 0.5;">Vienna and Linz, Austria</p>
+        <p style="position: absolute; bottom: 1.8em; right: 2.2em; font-size: 0.38em; opacity: 0.28; letter-spacing: 0.04em;">Press S for speaker notes</p>
+      </div>
+      <aside class="notes">
+        - Welcome everyone to the first Open Source Talks by OffOn and Dynatrace.
+        - This is a 10-minute intro before the talks. We'll cover what this event is, who OffOn is, what we've built, and how to get involved.
+        - The goal is not to pitch anything. It's to give context so you know what you've walked into and why we keep doing this.
+        - After the intro: two talks, a break, then the pub quiz.
+      </aside>
+    </section>
+
+    <!-- 2 ─ What are Open Source Talks -->
+    <section>
+      <div class="sh">
+        <span class="label">The Event</span>
+        <h2>What are Open Source Talks?</h2>
+      </div>
+      <p style="font-size: 0.65em; margin-bottom: 0.6em;">A recurring in-person meetup for the Austrian open source community, organised by OffOn.dev and the Dynatrace OSPO team. We bring together people from different OSS projects and communities to share knowledge and find unexpected common ground.</p>
+      <div class="g3">
+        <div class="card">
+          <h4>Vienna and Linz</h4>
+          <p>Hosted at Dynatrace offices. About 6 events per year, last Thursday of the month.</p>
+        </div>
+        <div class="card">
+          <h4>Two Talks Per Evening</h4>
+          <p>Speakers from any open source project or community. 25 minutes each, followed by Q&amp;A.</p>
+        </div>
+        <div class="card">
+          <h4>Open Source Pub Quiz</h4>
+          <p>Three rounds, teams of 3 to 4. OSS history, tonight's topics, and a wildcard round. Fun, not competitive.</p>
+        </div>
+      </div>
+      <aside class="notes">
+        - This is not a conference. No badge scanning, no lead gen, no product pitches.
+        - Two cities: Vienna at Rennweg, Linz at Freistädter Straße. Roughly 6 events per year, always last Thursday of the month.
+        - Format is fixed: two talks of 25 minutes each, followed by Q&amp;A. Then the pub quiz.
+        - Talks come from any open source project or community, not tied to Dynatrace or OffOn projects.
+        - The quiz is the social glue. Teams form organically, people who don't know each other end up talking.
+        - Free to attend. Always. No registration wall, no ticket.
+      </aside>
+    </section>
+
+    <!-- 3 ─ Tonight's agenda -->
+    <section>
+      <div class="sh">
+        <span class="label">Tonight</span>
+        <h2>The agenda</h2>
+      </div>
+      <table class="agenda">
+        <tr><td>17:30</td><td>Doors open, networking</td><td>30 min</td></tr>
+        <tr class="hi"><td>18:00</td><td>Welcome, OffOn.dev intro</td><td>10 min</td></tr>
+        <tr class="hi"><td>18:10</td><td>Drupal CMS 2.0 · Nico Grienauer &amp; Sinduri</td><td>25 min + Q&amp;A</td></tr>
+        <tr><td>18:40</td><td>Break</td><td>15 min</td></tr>
+        <tr class="hi"><td>18:55</td><td>Flip the Switch: Feature Flags and the Power of Open Standards · Simon Schrottner</td><td>25 min + Q&amp;A</td></tr>
+        <tr><td>19:25</td><td>Open floor, networking</td><td>15 min</td></tr>
+        <tr class="hi"><td>19:40</td><td>Open Source Pub Quiz</td><td>15 min</td></tr>
+        <tr><td>19:55</td><td>Wrap-up and next event teaser</td><td>5 min</td></tr>
+        <tr><td>20:00</td><td>Networking</td><td>Open-ended</td></tr>
+      </table>
+      <aside class="notes">
+        - Doors at 17:30. Talks start at 18:00. Everything is structured until 20:00, then open networking.
+        - This intro runs 10 minutes: 18:00 to 18:10. Don't run over. Nico and Sinduri are up next.
+        - The 15-minute break at 18:40 is real. People need to move, refill, talk.
+        - Pub quiz runs 19:40 to 19:55. Host reads each question twice, 30 seconds per answer. Score at the end.
+        - Wrap-up at 19:55: thank the speakers, tease the next event, mention how to sign up to speak.
+      </aside>
+    </section>
+
+    <!-- 4 ─ Tonight's speakers -->
+    <section>
+      <div class="sh">
+        <span class="label">Tonight's Speakers</span>
+        <h2>Who's presenting</h2>
+      </div>
+      <div class="g3" style="margin-top: 0.55em;">
+        <div class="speaker-card" style="flex-direction: column; gap: 0.55em;">
+          <div style="display: flex; gap: 0.65em; align-items: center;">
+            <div class="sp-av"><img src="/team/nico.webp" alt="Nico Grienauer"></div>
+            <div>
+              <p class="sp-name">Nico Grienauer</p>
+              <p class="sp-talk" style="margin: 0;">Drupal CMS 2.0</p>
+            </div>
+          </div>
+          <p class="sp-bio">Drupal expert and Drupal Austria board member. Founder of acolono GmbH, CodeWeekEU ambassador, and initiator of the Austrian Open Source Award.</p>
+        </div>
+        <div class="speaker-card" style="flex-direction: column; gap: 0.55em;">
+          <div style="display: flex; gap: 0.65em; align-items: center;">
+            <div class="sp-av"><img src="/team/sinduri.webp" alt="Sinduri Guntupalli"></div>
+            <div>
+              <p class="sp-name">Sinduri Guntupalli</p>
+              <p class="sp-talk" style="margin: 0;">Drupal CMS 2.0 (co-presenter)</p>
+            </div>
+          </div>
+          <p class="sp-bio">Sr Developer Programs Engineer at Dynatrace. Active in the Drupal community. OffOn board member.</p>
+        </div>
+        <div class="speaker-card" style="flex-direction: column; gap: 0.55em;">
+          <div style="display: flex; gap: 0.65em; align-items: center;">
+            <div class="sp-av"><img src="/team/simon.webp" alt="Simon Schrottner"></div>
+            <div>
+              <p class="sp-name">Simon Schrottner</p>
+              <p class="sp-talk" style="margin: 0;">Feature Flags and Open Standards</p>
+            </div>
+          </div>
+          <p class="sp-bio">OpenFeature maintainer and CNCF Ambassador. Helps teams release faster through open standards and feature flagging.</p>
+        </div>
+      </div>
+      <aside class="notes">
+        - Nico Grienauer: Drupal Austria board member, founder of acolono GmbH, initiator of the Austrian Open Source Award. He's been in the Drupal community for a long time.
+        - Sinduri Guntupalli: OffOn board member, Sr Developer Programs Engineer at Dynatrace. Active in the Drupal community, including Drupal Austria Marketing Manager and Women in Drupal Award recipient.
+        - Simon Schrottner: OpenFeature maintainer, CNCF Ambassador. Regular speaker at KubeCon, Devoxx, ContainerDays. One of the contributors behind OffOn's OpenFeature challenge.
+        - Talk 1 (Nico + Sinduri): Drupal CMS 2.0: what's new, why it matters. 25 minutes plus Q&amp;A.
+        - Talk 2 (Simon): Feature flags and open standards with OpenFeature. 25 minutes plus Q&amp;A.
+      </aside>
+    </section>
+
+    <!-- 5 ─ The talks format -->
+    <section>
+      <div class="split">
+        <div>
+          <div class="sh">
+            <span class="label">Speaking</span>
+            <h2>What makes a good talk</h2>
+          </div>
+          <div class="brow">
+            <span class="dot">→</span>
+            <span class="bt">An intro to the open source project you maintain or contribute to</span>
+          </div>
+          <div class="brow">
+            <span class="dot">→</span>
+            <span class="bt">A demo of something you built with open source tools, including what broke</span>
+          </div>
+          <div class="brow">
+            <span class="dot">→</span>
+            <span class="bt">A concept explained clearly for a mixed audience, with a working example</span>
+          </div>
+          <div class="brow">
+            <span class="dot">→</span>
+            <span class="bt">A contribution story: your first PR, a tricky bug, a community experience</span>
+          </div>
+          <div style="margin-top: 0.5em; background: rgba(200,80,80,0.06); border: 1px solid rgba(200,80,80,0.22); border-radius: 8px; padding: 0.45em 0.65em;">
+            <p style="font-size: 0.5em; color: rgba(210,130,130,0.9);">Not a good fit: product demos, vendor pitches, or talks that require a commercial tool to be relevant.</p>
+          </div>
+        </div>
+        <div>
+          <div class="sh">
+            <span class="label">Speak at the next event</span>
+            <h2>Want to present?</h2>
+          </div>
+          <p style="font-size: 0.6em; margin-bottom: 0.6em;">We are always looking for speakers from any open source project or community. Talk length is 25 minutes plus 5 minutes Q&amp;A. Language is English.</p>
+          <div class="card">
+            <h4>Get in touch</h4>
+            <p>Send your name, talk title, and a 2 to 3 sentence description to:</p>
+            <p style="margin-top: 0.45em; color: var(--amber);"><a href="mailto:offondev@gmail.com">offondev@gmail.com</a></p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">
+        - Vendor-neutral rule is non-negotiable. Talks about projects that are backed by companies are fine. Talks that exist to demo or sell a product are not.
+        - "What you maintain or contribute to" is the frame. Personal, specific, grounded in real experience.
+        - "What broke" is important. Honest talks about failure or difficulty are more useful than polished success stories.
+        - 25-minute talks plus 5 minutes Q&amp;A. English. Slides optional.
+        - To speak: send name, title, and 2-3 sentence description to offondev@gmail.com. We review and get back within a week.
+        - Encourage anyone in the room who has something to share. Repeat the email at the end of the intro.
+      </aside>
+    </section>
+
+    <!-- 6 ─ Pub quiz -->
+    <section>
+      <div class="sh">
+        <span class="label">The Quiz</span>
+        <h2>Open Source Pub Quiz</h2>
+      </div>
+      <p style="font-size: 0.6em; margin-bottom: 0.55em;">3 rounds, 18 questions, teams of 3 to 4, 25 minutes. Written answers. Fun, not competitive.</p>
+      <div class="qrow">
+        <span class="rnum">Round 1</span>
+        <h4>OSS History and Culture</h4>
+        <p>General open source knowledge, accessible to all levels. Who created Linux? What does GPL stand for?</p>
+      </div>
+      <div class="qrow">
+        <span class="rnum">Round 2</span>
+        <h4>Tonight's Topics</h4>
+        <p>6 questions based on the two talks from the evening. Rewards people who paid attention, kept accessible for all.</p>
+      </div>
+      <div class="qrow">
+        <span class="rnum">Round 3</span>
+        <h4>Wildcard</h4>
+        <p>Rotating format each month. Guess the project logo, whose commit message is this, name the project from its homepage.</p>
+      </div>
+      <aside class="notes">
+        - 3 rounds, 6 questions each, 18 questions total. Teams of 3 to 4. Written answers on paper.
+        - Round 1: general OSS history and culture. Accessible to everyone, even if they don't code.
+        - Round 2: based on tonight's two talks. Rewards people who were paying attention. Keep questions fair: no trick questions, no obscure details.
+        - Round 3: wildcard format changes each month. Options: guess the project logo, name the project from its README first line, whose commit message is this.
+        - Host reads each question twice. 30 seconds per question. Host scores at the end.
+        - Prizes: stickers, OffOn swag, or whatever the organiser brings. Winning isn't the point. It's the excuse to talk to strangers.
+      </aside>
+    </section>
+
+    <!-- 7 ─ About OffOn -->
+    <section>
+      <div class="split" style="align-items: center;">
+        <div>
+          <div class="sh">
+            <span class="label">About OffOn</span>
+            <h2>For the people who keep open source alive</h2>
+          </div>
+          <div class="brow" style="margin-top: 0.5em;">
+            <span class="dot">→</span>
+            <span class="bt">A vendor-neutral, community-driven space built around one goal: sustaining the people behind open source and creating the maintainers of tomorrow</span>
+          </div>
+          <div class="brow">
+            <span class="dot">→</span>
+            <span class="bt">From curious learners to first-time contributors to long-term maintainers, regardless of background or project</span>
+          </div>
+          <div class="brow">
+            <span class="dot">→</span>
+            <span class="bt">Open to everyone: developers, writers, designers, translators, organisers. Sponsors fund the work, they do not shape the mission</span>
+          </div>
+          <p style="margin-top: 0.7em; font-size: 0.5em; opacity: 0.45;">always on. always open. always learning.</p>
+        </div>
+        <div style="display: flex; align-items: flex-end; justify-content: flex-end;">
+          <img src="/brand/offon-nyx-peek.png" alt="" aria-hidden="true" style="height: 230px; object-fit: contain; opacity: 0.6;">
+        </div>
+      </div>
+      <aside class="notes">
+        - OffOn is the organisation behind this event. We exist to sustain the people behind open source, not the projects. The people.
+        - Most platforms built around open source are designed for enterprises, foundations, or marketing teams. OffOn is built for the individuals who actually do the work.
+        - Vendor-neutral by design: any sponsor funds the work, not the mission. Dynatrace is the founding sponsor but does not control what OffOn builds or says.
+        - Open to everyone: not just developers. Writers, designers, translators, event organisers. All count.
+        - The figure in the corner is Nyx, the OffOn mascot. Use it as a visual anchor, not a talking point.
+      </aside>
+    </section>
+
+    <!-- 8 ─ What we've built -->
+    <section>
+      <div class="sh">
+        <span class="label">What We've Built</span>
+        <h2>Two ways to learn and grow</h2>
+      </div>
+      <div class="split-even" style="margin-top: 0.5em;">
+        <div>
+          <span class="col-label">Adventures</span>
+          <p style="font-size: 0.6em; margin-bottom: 0.5em;">Hands-on scenario-driven challenges built around real open source tools. Each adventure runs entirely in GitHub Codespaces. No local setup, no Docker, no dependency conflicts.</p>
+          <div class="brow">
+            <span class="dot">→</span>
+            <span class="bt"><strong>Pick a scenario</strong> at the difficulty that fits where you are</span>
+          </div>
+          <div class="brow">
+            <span class="dot">→</span>
+            <span class="bt"><strong>Launch in Codespaces</strong> and work through real-world failures</span>
+          </div>
+          <div class="brow">
+            <span class="dot">→</span>
+            <span class="bt"><strong>Earn Credly badges</strong> and leaderboard points along the way</span>
+          </div>
+          <div class="tags" style="margin-top: 0.55em;">
+            <span class="tag">OpenTelemetry</span>
+            <span class="tag">Kyverno</span>
+            <span class="tag">OpenFeature</span>
+            <span class="tag">ArgoCD</span>
+            <span class="tag">OpenTofu</span>
+            <span class="tag">Grafana</span>
+            <span class="tag" style="border-style: dashed; color: var(--amber); border-color: rgba(255,192,52,0.3);">your project?</span>
+          </div>
+          <p style="margin-top: 0.4em; font-size: 0.44em; opacity: 0.6;">Propose an adventure at <a href="https://offon.dev">offon.dev</a></p>
+        </div>
+        <div>
+          <span class="col-label">Community</span>
+          <p style="font-size: 0.6em; margin-bottom: 0.5em;">A community hub at community.offon.dev, open to everyone who cares about open source.</p>
+          <div class="brow">
+            <span class="dot">→</span>
+            <span class="bt"><strong>Community Voices:</strong> tutorials, project showcases, open source news</span>
+          </div>
+          <div class="brow">
+            <span class="dot">→</span>
+            <span class="bt"><strong>Q&amp;A:</strong> get unstuck, share what you know, no question too basic</span>
+          </div>
+          <div class="brow">
+            <span class="dot">→</span>
+            <span class="bt"><strong>Introduce yourself:</strong> tell us who you are and what you're building</span>
+          </div>
+          <div class="brow">
+            <span class="dot">→</span>
+            <span class="bt"><strong>Events:</strong> find meetups, add local events, connect in your city</span>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">
+        - Adventures are the challenge platform: real-world scenarios built around open source tools, run entirely in GitHub Codespaces.
+        - Current tools covered: OpenTelemetry, Kyverno, OpenFeature, ArgoCD, OpenTofu, Grafana. More in progress.
+        - Each adventure has multiple difficulty levels. Completions earn Credly badges and leaderboard points.
+        - The "your project?" tag is intentional. If you maintain or contribute to an open source project, this is an invitation to propose an adventure.
+        - Community is at community.offon.dev: Q&amp;A, tutorials, project showcases, event listings, and an intro thread. Discourse-based, open to all.
+        - Both are free. No paywall, no account required to read, open registration to participate.
+      </aside>
+    </section>
+
+    <!-- 9 ─ Contribute -->
+    <section>
+      <div class="sh">
+        <span class="label">Get Involved</span>
+        <h2>Every contribution counts</h2>
+      </div>
+      <p style="font-size: 0.62em; margin-bottom: 0.6em;">OffOn is built by the community. You do not need to write code to contribute.</p>
+      <div class="g4">
+        <div class="contrib">
+          <span class="ci">💬</span>
+          <h4>Community</h4>
+          <div class="citem"><span class="cdot">→</span><span class="ctext">Introduce yourself</span></div>
+          <div class="citem"><span class="cdot">→</span><span class="ctext">Answer questions in Q&amp;A</span></div>
+          <div class="citem"><span class="cdot">→</span><span class="ctext">Write tutorials</span></div>
+          <div class="citem"><span class="cdot">→</span><span class="ctext">Support newcomers</span></div>
+        </div>
+        <div class="contrib">
+          <span class="ci">⚡</span>
+          <h4>Challenges</h4>
+          <div class="citem"><span class="cdot">→</span><span class="ctext">Play adventures</span></div>
+          <div class="citem"><span class="cdot">→</span><span class="ctext">Give feedback on difficulty</span></div>
+          <div class="citem"><span class="cdot">→</span><span class="ctext">Submit ideas for new challenges</span></div>
+          <div class="citem"><span class="cdot">→</span><span class="ctext">Build an adventure</span></div>
+        </div>
+        <div class="contrib">
+          <span class="ci">✍️</span>
+          <h4>Content</h4>
+          <div class="citem"><span class="cdot">→</span><span class="ctext">Write solution walkthroughs</span></div>
+          <div class="citem"><span class="cdot">→</span><span class="ctext">Improve docs</span></div>
+          <div class="citem"><span class="cdot">→</span><span class="ctext">Fix typos and broken links</span></div>
+          <div class="citem"><span class="cdot">→</span><span class="ctext">Report issues on GitHub</span></div>
+        </div>
+        <div class="contrib">
+          <span class="ci">🌍</span>
+          <h4>Community Building</h4>
+          <div class="citem"><span class="cdot">→</span><span class="ctext">Organise meetups</span></div>
+          <div class="citem"><span class="cdot">→</span><span class="ctext">Advocate on social media</span></div>
+          <div class="citem"><span class="cdot">→</span><span class="ctext">Speak at an event</span></div>
+          <div class="citem"><span class="cdot">→</span><span class="ctext">Propose a sponsor</span></div>
+        </div>
+      </div>
+      <p style="margin-top: 0.5em; font-size: 0.5em; opacity: 0.55;">offon.dev/contribute</p>
+      <aside class="notes">
+        - No contribution is too small. Introducing yourself in the community, answering one question in Q&amp;A, fixing a typo in docs. All of it moves things forward.
+        - Code is not the only way in. Writers, designers, translators, event organisers are all first-class contributors.
+        - If someone in the room wants to contribute but isn't sure how: community.offon.dev is the easiest starting point. Just introduce yourself.
+        - If someone wants to build an adventure or propose a challenge around their project: offon.dev/contribute has the path.
+        - Speaking at this event is also a contribution. That's why it's on this slide.
+      </aside>
+    </section>
+
+    <!-- 10 ─ Board -->
+    <section>
+      <div class="sh">
+        <span class="label">The Team</span>
+        <h2>OffOn board members</h2>
+      </div>
+      <div class="board">
+        <div class="person">
+          <div class="av"><img src="/team/david.webp" alt="David Hirsch"></div>
+          <div class="pi">
+            <p class="pn">David Hirsch</p>
+            <p class="pr">Head of Community and Open Source, Dynatrace. Co-founder of KCD Austria.</p>
+          </div>
+        </div>
+        <div class="person">
+          <div class="av"><img src="/team/katharina.webp" alt="Katharina Sick"></div>
+          <div class="pi">
+            <p class="pn">Katharina Sick</p>
+            <p class="pr">DevRel, Dynatrace. Co-organiser of Cloud Native Linz. Adventure builder.</p>
+          </div>
+        </div>
+        <div class="person">
+          <div class="av"><img src="/team/kenyatta.webp" alt="Kenyatta Forbes"></div>
+          <div class="pi">
+            <p class="pn">Kenyatta Forbes</p>
+            <p class="pr">Sr Program Manager, Dynatrace. Previously Google for Education and Mozilla.</p>
+          </div>
+        </div>
+        <div class="person">
+          <div class="av"><img src="/team/sinduri.webp" alt="Sinduri Guntupalli"></div>
+          <div class="pi">
+            <p class="pn">Sinduri Guntupalli</p>
+            <p class="pr">Sr Developer Programs Engineer, Dynatrace. Drupal Austria Marketing Manager.</p>
+          </div>
+        </div>
+        <div class="person tba">
+          <div class="av">?</div>
+          <div class="pi">
+            <p class="pn">To be announced</p>
+            <p class="pr">Board seat open</p>
+          </div>
+        </div>
+        <div class="person tba">
+          <div class="av">?</div>
+          <div class="pi">
+            <p class="pn">To be announced</p>
+            <p class="pr">Board seat open</p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">
+        - Four confirmed board members: David Hirsch, Katharina Sick, Kenyatta Forbes, Sinduri Guntupalli. Two seats still open.
+        - All current members are at Dynatrace. This is acknowledged openly. It's where OffOn started. The goal is to bring in voices from outside Dynatrace as the community grows.
+        - David: Head of Community and Open Source at Dynatrace, co-founder of KCD Austria.
+        - Katharina: DevRel at Dynatrace, co-organiser of Cloud Native Linz, adventure builder.
+        - Kenyatta: Sr Program Manager, previously led programs at Google for Education and Mozilla.
+        - Sinduri: Sr Developer Programs Engineer, Drupal Austria Marketing Manager, Women in Drupal Award (Build).
+        - Board seats are not honorary. They involve real work: platform direction, community governance, event organisation.
+      </aside>
+    </section>
+
+    <!-- 11 ─ Dynatrace -->
+    <section>
+      <div class="split-even">
+        <div>
+          <div class="sh">
+            <span class="label">Our Founding Sponsor</span>
+            <h2>Why Dynatrace cares</h2>
+          </div>
+          <div class="brow" style="margin-top: 0.5em;">
+            <span class="dot">→</span>
+            <span class="bt">Dynatrace builds on open source, contributes to it, and depends on its long-term health. Supporting the ecosystem is part of how they operate, not a side activity.</span>
+          </div>
+          <div class="brow">
+            <span class="dot">→</span>
+            <span class="bt">Most corporate OSS investment flows toward foundations and large strategic projects. Far less of it reaches the individuals who write the code and keep projects alive day to day.</span>
+          </div>
+          <div class="brow">
+            <span class="dot">→</span>
+            <span class="bt">Sponsoring OffOn is about being a responsible participant in the ecosystem they all rely on. Not a marketing exercise.</span>
+          </div>
+        </div>
+        <div>
+          <span class="col-label">What Dynatrace provides</span>
+          <div class="vrow">
+            <h4>Funding</h4>
+            <p>Keeps the platform running and accessible to everyone.</p>
+          </div>
+          <div class="vrow">
+            <h4>Engineering and developer advocacy time</h4>
+            <p>People who build adventures, support contributors, and help run the community.</p>
+          </div>
+          <div class="vrow">
+            <h4>Infrastructure and tooling</h4>
+            <p>Operational support to keep the platform reliable.</p>
+          </div>
+          <div class="vrow">
+            <h4>Visibility</h4>
+            <p>Amplification through Dynatrace channels when it helps the community, not the company.</p>
+          </div>
+          <div class="vrow">
+            <h4>Venue, food, and drinks</h4>
+            <p>Every Open Source Talks event, covered in full.</p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">
+        - Dynatrace is the founding sponsor. They make this event possible without a ticket price, without sponsor logos on every slide, and without a sales angle.
+        - The OSPO (Open Source Programs Office) at Dynatrace is the team behind this. Their mandate is to invest in the open source ecosystem, not just consume it.
+        - What "responsible participation" means in practice: funding the platform, putting engineering time into building challenges, providing the venue and food so the event is free to everyone.
+        - Visibility is offered but not pushed. If something amplification would help the community more than Dynatrace, they say yes. If it's purely self-promotional, they don't ask for it.
+        - This is not typical. Most corporate OSS investment goes to foundations and large strategic projects. This is investment in the individuals.
+      </aside>
+    </section>
+
+    <!-- 12 ─ Join us -->
+    <section>
+      <div class="final">
+        <div class="cobrand">
+          <img src="/brand/offon-logo-dark-color.svg" alt="OffOn">
+          <span class="xsep">×</span>
+          <span class="partner">Dynatrace</span>
+        </div>
+        <h2>Join us</h2>
+        <p style="font-size: 0.65em; max-width: 22em; margin: 0.35em auto 0;">Attend an event, propose a talk, start a challenge, or just say hello in the community.</p>
+        <div class="link-row">
+          <a href="https://offon.dev" class="pill hi">offon.dev</a>
+          <a href="https://community.offon.dev" class="pill">community.offon.dev</a>
+          <a href="https://offon.dev/contribute/" class="pill">offon.dev/contribute</a>
+        </div>
+        <div class="link-row">
+          <a href="mailto:offondev@gmail.com" class="pill">offondev@gmail.com</a>
+          <a href="https://bsky.app/profile/off-on-dev.bsky.social" class="pill">Bluesky</a>
+          <a href="https://www.linkedin.com/company/offondev" class="pill">LinkedIn</a>
+          <a href="https://x.com/OffonDev" class="pill">X</a>
+        </div>
+      </div>
+      <aside class="notes">
+        - That's the intro. We're done in 10 minutes, right on time. Thank you for being here.
+        - Repeat the call to action: if you want to speak at a future event, find us tonight or email offondev@gmail.com.
+        - Remind the room: community.offon.dev to introduce yourself, ask questions, or follow what we're building.
+        - Next slide cue: hand off to Nico and Sinduri for the first talk.
+      </aside>
+    </section>
+
+  </div>
+</div>
+
+<script src="/reveal/reveal.js"></script>
+<script src="/reveal/plugin/notes.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'slide',
+    backgroundTransition: 'fade',
+    controls: true,
+    progress: true,
+    center: false,
+    width: 1280,
+    height: 720,
+    margin: 0.04,
+    plugins: [ RevealNotes ]
+  });
+</script>
+</body>
+</html>
