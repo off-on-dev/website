@@ -35,21 +35,38 @@ If the user is creating an event deck, check `public/deck.html` for the existing
 
 ## Design system
 
-All presentations share these tokens (already defined in `public/deck.html` — copy the `<style>` block and fonts verbatim):
+**Always copy the `<style>` block and `<head>` (fonts, Reveal.js links) verbatim from `public/deck.html`.** Do not reconstruct tokens or CSS from memory — the file is the source of truth and drifts over time.
 
-```
---bg:         #0a0a0a
---card:       #141419
---border:     #232c3d
---fg:         #faf9f2
---muted:      #b8b5a8
---amber:      #ffc034
---amber-glow: rgba(255, 192, 52, 0.13)
+Current token reference (verify against `public/deck.html` before use):
+
+```css
+--bg:         #0a0a0a;
+--card:       #141419;
+--border:     #1e2535;
+--fg:         #faf9f2;          /* headings, Syne 700 */
+--muted:      #f0ede5;          /* body text, Inter — matches site's hsl(43, 27%, 92%) */
+--amber:      #ffc034;
+--amber-glow: rgba(255, 192, 52, 0.14);
 ```
 
 Fonts: Syne 700 (headings), Inter 400/500/600 (body). Self-hosted from `/fonts/`. No CDN links.
 
 Reveal.js: self-hosted from `/reveal/`. Initialize with `RevealNotes` plugin, `width: 1280`, `height: 720`.
+
+### Type scale
+
+Four tiers — do not introduce intermediate sizes:
+
+- **Heading** — `2.2em` (h1), `1.4em` (h2): slide titles only
+- **Body** — `0.78em`: `.reveal p` baseline
+- **Component** — `0.6em` (h4 equivalents), `0.54em` (body): card titles, bullet text, bios, descriptions
+- **Label** — `0.38em`: overlines, tags, col-labels, metadata
+
+Pills are `0.44em` — slightly above label tier because they are interactive.
+
+### Amber discipline
+
+Amber (`--amber`) signals two things only: **structure** (`.sh` overline label) and **active/current state** (highlighted rows, links, pills on hover). Do not use amber for bullet arrows or decorative dots — those use `var(--muted)` at 50% opacity.
 
 ---
 
@@ -58,12 +75,17 @@ Reveal.js: self-hosted from `/reveal/`. Initialize with `RevealNotes` plugin, `w
 Copy these patterns from `public/deck.html`. Do not invent new CSS.
 
 ### Slide header (every content slide)
+
+The `.sh` header uses amber on the overline label and bold Syne on the h2. No border or bar — the color and size contrast creates hierarchy on its own.
+
 ```html
 <div class="sh">
-  <span class="label">Overline Label</span>
+  <span class="label">overline label</span>
   <h2>Slide Title</h2>
 </div>
 ```
+
+Overline label text is lowercase in HTML — CSS applies `text-transform: uppercase`.
 
 ### Layout grids
 - `.g2` — 2-column equal grid
@@ -87,6 +109,8 @@ Copy these patterns from `public/deck.html`. Do not invent new CSS.
   <span class="bt">Bullet text. <strong>Bold part</strong> if needed.</span>
 </div>
 ```
+
+The dot is muted, not amber. The `<strong>` inside `.bt` renders in `--fg` (near-white).
 
 ### Value rows (for two-column feature lists)
 ```html
@@ -158,7 +182,7 @@ Photos go in `public/team/<name>.webp`. If a photo is not available, use initial
 </section>
 ```
 
-If there is no co-brand partner, omit the `.cobrand` div and just show the OffOn logo above the `h1`.
+If there is no co-brand partner, omit the `.cobrand` div and place the OffOn logo directly above the `h1`.
 
 ### Final / join slide
 ```html
@@ -199,8 +223,10 @@ If there is no co-brand partner, omit the `.cobrand` div and just show the OffOn
 
 ### Column label (above a column in split layouts)
 ```html
-<span class="col-label">Column heading</span>
+<span class="col-label">column heading</span>
 ```
+
+Column label text is lowercase in HTML — CSS applies `text-transform: uppercase`.
 
 ---
 
@@ -208,7 +234,7 @@ If there is no co-brand partner, omit the `.cobrand` div and just show the OffOn
 
 - No em dashes anywhere. Use commas or periods.
 - "always" is lowercase — never "Always" in the tagline.
-- Overline labels: lowercase source text (CSS applies `text-transform: uppercase`).
+- Overline labels and column labels: write source text in lowercase (CSS uppercases them).
 - Title case for slide titles and card headings. Sentence case for body copy.
 - Brand is always "OffOn" (camelCase). Domain is always "offon.dev" (lowercase).
 - Do not enumerate difficulty levels by name.

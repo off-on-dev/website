@@ -28,14 +28,15 @@
       font-weight: 600;
     }
 
+    /* Phase 1: temperature-correct border; revert muted and glow to original values */
     :root {
       --bg:         #0a0a0a;
       --card:       #141419;
-      --border:     #2a3549;
+      --border:     #1e2535;
       --fg:         #faf9f2;
-      --muted:      #ccc9bb;
+      --muted:      #f0ede5;
       --amber:      #ffc034;
-      --amber-glow: rgba(255, 192, 52, 0.18);
+      --amber-glow: rgba(255, 192, 52, 0.14);
     }
 
     /* ── Base ── */
@@ -64,8 +65,8 @@
       margin: 0 0 0.3em;
     }
 
-    .reveal h1 { font-size: 2.5em; }
-    .reveal h2 { font-size: 1.35em; }
+    .reveal h1 { font-size: 2.2em; }
+    .reveal h2 { font-size: 1.4em; }
 
     .reveal p {
       color: var(--muted);
@@ -82,21 +83,17 @@
     .reveal .slide-number { color: var(--muted); font-size: 0.38em; background: none; }
 
     /* ── Slide header ── */
-    .sh {
-      border-left: 4px solid var(--amber);
-      padding-left: 0.55em;
-      margin-bottom: 0.7em;
-    }
+    .sh { margin-bottom: 0.7em; }
     .sh .label {
       display: block;
-      font-size: 0.4em;
+      font-size: 0.38em;
       font-weight: 600;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--amber);
-      margin-bottom: 0.2em;
+      margin-bottom: 0.25em;
     }
-    .sh h2 { font-size: 1.3em; margin: 0; }
+    .sh h2 { font-size: 1.4em; margin: 0; }
 
     /* ── Grids ── */
     .g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5em; margin-top: 0.6em; }
@@ -106,11 +103,12 @@
     .split-even { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2em; align-items: start; }
 
     /* ── Card ── */
+    /* Phase 4: unified border-radius and padding; Phase 3: body text on component tier */
     .card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 0.65em 0.85em;
+      border-radius: 8px;
+      padding: 0.7em 0.9em;
     }
     .card h4 {
       font-family: 'Syne', sans-serif;
@@ -119,15 +117,16 @@
       color: var(--fg);
       margin: 0 0 0.3em;
     }
-    .card p { font-size: 0.52em; margin: 0; line-height: 1.5; }
+    .card p { font-size: 0.54em; margin: 0; line-height: 1.5; }
     .card p + p { margin-top: 0.4em; }
 
     /* ── Agenda ── */
+    /* Phase 3: component body tier */
     .agenda {
       width: 100%;
       border-collapse: collapse;
       margin-top: 0.5em;
-      font-size: 0.56em;
+      font-size: 0.54em;
     }
     .agenda tr { border-bottom: 1px solid var(--border); }
     .agenda tr:last-child { border-bottom: none; }
@@ -155,6 +154,7 @@
     .agenda .hi td:last-child { color: var(--muted); opacity: 0.65; }
 
     /* ── Bullet rows ── */
+    /* Phase 2: dot is muted+dimmed, not amber; Phase 3: both on component body tier */
     .brow {
       display: flex;
       gap: 0.55em;
@@ -163,16 +163,18 @@
     }
     .brow .dot {
       flex-shrink: 0;
-      color: var(--amber);
-      font-size: 0.58em;
+      color: var(--muted);
+      opacity: 0.5;
+      font-size: 0.54em;
       margin-top: 0.28em;
       line-height: 1;
       width: 0.8em;
     }
-    .brow .bt { font-size: 0.58em; color: var(--muted); line-height: 1.45; }
+    .brow .bt { font-size: 0.54em; color: var(--muted); line-height: 1.45; }
     .brow .bt strong { color: var(--fg); font-weight: 600; }
 
     /* ── Quiz rows ── */
+    /* Phase 4: unified radius and padding; Phase 3: heading and body tiers */
     .qrow {
       display: grid;
       grid-template-columns: auto 1fr;
@@ -180,38 +182,39 @@
       align-items: start;
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 0.55em 0.8em;
+      border-radius: 8px;
+      padding: 0.7em 0.9em;
       margin-bottom: 0.4em;
     }
     .qrow .rnum {
       grid-row: span 2;
       font-family: 'Syne', sans-serif;
-      font-size: 0.5em;
+      font-size: 0.54em;
       font-weight: 700;
       color: var(--amber);
       background: var(--amber-glow);
       border: 1px solid rgba(255,192,52,0.22);
-      border-radius: 6px;
+      border-radius: 4px;
       padding: 0.3em 0.55em;
       white-space: nowrap;
       align-self: center;
     }
     .qrow h4 {
       font-family: 'Syne', sans-serif;
-      font-size: 0.58em;
+      font-size: 0.6em;
       font-weight: 700;
       color: var(--fg);
       margin: 0 0 0.12em;
     }
-    .qrow p { font-size: 0.5em; margin: 0; }
+    .qrow p { font-size: 0.54em; margin: 0; }
 
     /* ── Speaker cards ── */
+    /* Phase 4: unified radius and padding; Phase 3: heading and body tiers */
     .speaker-card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 0.9em 1em;
+      border-radius: 8px;
+      padding: 0.7em 0.9em;
       display: flex;
       gap: 0.8em;
       align-items: flex-start;
@@ -228,7 +231,7 @@
       justify-content: center;
       font-family: 'Syne', sans-serif;
       font-weight: 700;
-      font-size: 0.52em;
+      font-size: 0.54em;
       color: var(--amber);
       overflow: hidden;
     }
@@ -238,21 +241,22 @@
     .speaker-card .sp-info { flex: 1; }
     .speaker-card .sp-name {
       font-family: 'Syne', sans-serif;
-      font-size: 0.62em;
+      font-size: 0.6em;
       font-weight: 700;
       color: var(--fg);
       margin: 0 0 0.1em;
     }
     .speaker-card .sp-talk {
-      font-size: 0.52em;
+      font-size: 0.54em;
       color: var(--amber);
       font-weight: 600;
       margin: 0 0 0.25em;
       line-height: 1.3;
     }
-    .speaker-card .sp-bio { font-size: 0.5em; color: var(--muted); margin: 0; line-height: 1.45; }
+    .speaker-card .sp-bio { font-size: 0.54em; color: var(--muted); margin: 0; line-height: 1.45; }
 
     /* ── Board ── */
+    /* Phase 4: unified radius and padding; Phase 3: heading and sub tiers */
     .board {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -262,8 +266,8 @@
     .person {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 0.6em 0.75em;
+      border-radius: 8px;
+      padding: 0.7em 0.9em;
       display: flex;
       gap: 0.55em;
       align-items: flex-start;
@@ -280,7 +284,7 @@
       justify-content: center;
       font-family: 'Syne', sans-serif;
       font-weight: 700;
-      font-size: 0.5em;
+      font-size: 0.54em;
       color: var(--amber);
       overflow: hidden;
     }
@@ -288,16 +292,17 @@
     .person .pi { flex: 1; min-width: 0; }
     .person .pn {
       font-family: 'Syne', sans-serif;
-      font-size: 0.56em;
+      font-size: 0.6em;
       font-weight: 700;
       color: var(--fg);
       margin: 0 0 0.12em;
       line-height: 1.2;
     }
-    .person .pr { font-size: 0.46em; color: var(--muted); line-height: 1.4; margin: 0; }
+    .person .pr { font-size: 0.48em; color: var(--muted); line-height: 1.4; margin: 0; }
     .person.tba { opacity: 0.32; border-style: dashed; }
 
     /* ── Value rows ── */
+    /* Phase 3: heading and body tiers */
     .vrow {
       border-left: 2px solid var(--border);
       padding-left: 0.58em;
@@ -306,24 +311,25 @@
     .vrow.hi { border-left-color: var(--amber); }
     .vrow h4 {
       font-family: 'Syne', sans-serif;
-      font-size: 0.58em;
+      font-size: 0.6em;
       font-weight: 700;
       color: var(--fg);
       margin: 0 0 0.1em;
     }
-    .vrow p { font-size: 0.5em; margin: 0; }
+    .vrow p { font-size: 0.54em; margin: 0; }
 
     /* ── Contribute cards ── */
+    /* Phase 2: cdot is muted+dimmed; Phase 4: unified radius and padding; Phase 3: tiers */
     .contrib {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 0.65em 0.8em;
+      border-radius: 8px;
+      padding: 0.7em 0.9em;
     }
     .contrib .ci { font-size: 0.9em; margin-bottom: 0.22em; display: block; }
     .contrib h4 {
       font-family: 'Syne', sans-serif;
-      font-size: 0.58em;
+      font-size: 0.6em;
       font-weight: 700;
       color: var(--fg);
       margin: 0 0 0.28em;
@@ -336,33 +342,36 @@
     }
     .contrib .citem .cdot {
       flex-shrink: 0;
-      color: var(--amber);
-      font-size: 0.48em;
+      color: var(--muted);
+      opacity: 0.5;
+      font-size: 0.54em;
       margin-top: 0.3em;
       line-height: 1;
       width: 0.8em;
     }
     .contrib .citem .ctext {
-      font-size: 0.48em;
+      font-size: 0.54em;
       color: var(--muted);
       line-height: 1.4;
     }
 
     /* ── Tech tags ── */
+    /* Phase 3: label tier */
     .tags { display: flex; flex-wrap: wrap; gap: 0.3em; margin-top: 0.5em; }
     .tag {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 6px;
       padding: 0.14em 0.45em;
-      font-size: 0.44em;
+      font-size: 0.38em;
       color: var(--muted);
     }
 
     /* ── Column label ── */
+    /* Phase 3: label tier */
     .col-label {
       display: block;
-      font-size: 0.44em;
+      font-size: 0.38em;
       font-weight: 600;
       letter-spacing: 0.12em;
       text-transform: uppercase;
@@ -420,7 +429,7 @@
     .final .cobrand img { height: 36px; }
     .final .cobrand .partner { font-size: 0.72em; }
     .final .cobrand .xsep { font-size: 0.85em; }
-    .final h2 { font-size: 1.35em; margin-bottom: 0.3em; }
+    .final h2 { font-size: 1.4em; margin-bottom: 0.3em; }
 
     .link-row {
       display: flex;
@@ -429,26 +438,26 @@
       gap: 0.45em;
       margin-top: 0.6em;
     }
+    /* Phase 4: radius unified; pills stay slightly above label tier — they're interactive */
     .pill {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 7px;
+      border-radius: 6px;
       padding: 0.24em 0.62em;
-      font-size: 0.46em;
+      font-size: 0.44em;
       color: var(--muted) !important;
       font-family: 'Inter', sans-serif;
     }
     .pill:hover { border-color: var(--amber); color: var(--amber) !important; text-decoration: none !important; }
     .pill.hi { background: var(--amber-glow); border-color: rgba(255,192,52,0.38); color: var(--amber) !important; }
 
-    /* Firefly scatter: edge-only dots on every slide via background-image */
+    /* Phase 5: four corner anchors replace random edge scatter */
     .reveal .slides section {
       background-image:
-        radial-gradient(circle 3px at  3%  8%, rgba(255,192,52,0.95) 0%, rgba(255,192,52,0.22) 55%, transparent 100%),
-        radial-gradient(circle 4px at 97% 18%, rgba(255,192,52,0.92) 0%, rgba(255,192,52,0.20) 55%, transparent 100%),
-        radial-gradient(circle 3px at  2% 68%, rgba(255,192,52,0.90) 0%, rgba(255,192,52,0.18) 55%, transparent 100%),
-        radial-gradient(circle 3px at 96% 82%, rgba(255,192,52,0.88) 0%, rgba(255,192,52,0.16) 55%, transparent 100%),
-        radial-gradient(circle 3px at 50%  2%, rgba(255,192,52,0.88) 0%, rgba(255,192,52,0.16) 55%, transparent 100%);
+        radial-gradient(circle 2px at  2.5%  3.5%, rgba(255,192,52,1.00) 0%, rgba(255,192,52,0.12) 60%, transparent 100%),
+        radial-gradient(circle 2px at 97.5%  3.5%, rgba(255,192,52,0.95) 0%, rgba(255,192,52,0.10) 60%, transparent 100%),
+        radial-gradient(circle 2px at  2.5% 96.5%, rgba(255,192,52,0.90) 0%, rgba(255,192,52,0.08) 60%, transparent 100%),
+        radial-gradient(circle 2px at 97.5% 96.5%, rgba(255,192,52,0.88) 0%, rgba(255,192,52,0.07) 60%, transparent 100%);
     }
   </style>
 </head>
@@ -614,7 +623,7 @@
             <span class="label">Speak at the next event</span>
             <h2>Want to present?</h2>
           </div>
-          <p style="font-size: 0.58em; margin-bottom: 0; opacity: 0.75;">25 min plus Q&amp;A. English. Any open source project. Slides optional.</p>
+          <p style="font-size: 0.54em; margin-bottom: 0; opacity: 0.75;">25 min plus Q&amp;A. English. Any open source project. Slides optional.</p>
           <div class="card" style="margin-top: auto; padding-top: 0.8em; padding-bottom: 0.8em;">
             <h4>Get in touch</h4>
             <p>Your name, talk title, and a 2 to 3 sentence description:</p>
@@ -703,7 +712,7 @@
       <div class="split-even" style="margin-top: 0.5em;">
         <div>
           <span class="col-label">Adventures</span>
-          <p style="font-size: 0.56em; margin: 0.25em 0 0.45em; opacity: 0.75;">Hands-on scenario-driven challenges built around real open source tools. Runs entirely in GitHub Codespaces. No local setup, no Docker, no dependency conflicts.</p>
+          <p style="font-size: 0.54em; margin: 0.25em 0 0.45em; opacity: 0.75;">Hands-on scenario-driven challenges built around real open source tools. Runs entirely in GitHub Codespaces. No local setup, no Docker, no dependency conflicts.</p>
           <div class="brow">
             <span class="dot">→</span>
             <span class="bt"><strong>Pick a scenario</strong> at the difficulty that fits where you are</span>
@@ -725,11 +734,11 @@
             <span class="tag">Grafana</span>
             <span class="tag" style="border-style: dashed; color: var(--amber); border-color: rgba(255,192,52,0.3);">your project?</span>
           </div>
-          <p style="margin-top: 0.4em; font-size: 0.44em; opacity: 0.6;">Propose an adventure at <a href="https://offon.dev">offon.dev</a></p>
+          <p style="margin-top: 0.4em; font-size: 0.38em; opacity: 0.6;">Propose an adventure at <a href="https://offon.dev">offon.dev</a></p>
         </div>
         <div>
           <span class="col-label">Community</span>
-          <p style="font-size: 0.56em; margin: 0.25em 0 0.45em; opacity: 0.75;">A discussion hub at community.offon.dev, open to everyone who cares about open source.</p>
+          <p style="font-size: 0.54em; margin: 0.25em 0 0.45em; opacity: 0.75;">A discussion hub at community.offon.dev, open to everyone who cares about open source.</p>
           <div class="brow">
             <span class="dot">→</span>
             <span class="bt"><strong>Community Voices:</strong> tutorials, project showcases, open source news</span>
@@ -764,7 +773,7 @@
         <span class="label">Get Involved</span>
         <h2>Every contribution counts</h2>
       </div>
-      <p style="font-size: 0.62em; margin-bottom: 0.6em;">OffOn is built by the community. You do not need to write code to contribute.</p>
+      <p style="font-size: 0.54em; margin-bottom: 0.6em;">OffOn is built by the community. You do not need to write code to contribute.</p>
       <div class="g4">
         <div class="contrib">
           <span class="ci">💬</span>
@@ -799,7 +808,7 @@
           <div class="citem"><span class="cdot">→</span><span class="ctext">Propose a sponsor</span></div>
         </div>
       </div>
-      <p style="margin-top: 0.5em; font-size: 0.5em; opacity: 0.55;">offon.dev/contribute</p>
+      <p style="margin-top: 0.5em; font-size: 0.38em; opacity: 0.55;">offon.dev/contribute</p>
       <aside class="notes">
         - No contribution is too small. Introducing yourself in the community, answering one question in Q&amp;A, fixing a typo in docs. All of it moves things forward.
         - Code is not the only way in. Writers, designers, translators, event organisers are all first-class contributors.
