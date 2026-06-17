@@ -52,6 +52,8 @@
       padding: 2em 2.5em 1.6em;
       box-sizing: border-box;
       height: 100%;
+      position: relative;
+      overflow: hidden;
     }
 
     .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
@@ -440,6 +442,47 @@
     }
     .pill:hover { border-color: var(--amber); color: var(--amber) !important; text-decoration: none !important; }
     .pill.hi { background: var(--amber-glow); border-color: rgba(255,192,52,0.38); color: var(--amber) !important; }
+
+    /* ── Fireflies ── */
+    @keyframes fireflyFloat {
+      0%   { transform: translate(0,     0);    opacity: 0;    }
+      4%   { transform: translate(0,     0);    opacity: 0.85; }
+      20%  { transform: translate(4px,  -6px);  opacity: 0.75; }
+      26%  { transform: translate(26px, -20px); opacity: 0;    }
+      30%  { transform: translate(26px, -20px); opacity: 0.8;  }
+      46%  { transform: translate(23px, -25px); opacity: 0.7;  }
+      52%  { transform: translate(-9px,  -5px); opacity: 0;    }
+      56%  { transform: translate(-9px,  -5px); opacity: 0.8;  }
+      72%  { transform: translate(-13px, -8px); opacity: 0.65; }
+      78%  { transform: translate(0,     0);    opacity: 0;    }
+      82%  { transform: translate(0,     0);    opacity: 0.75; }
+      96%  { transform: translate(3px,  -4px);  opacity: 0.6;  }
+      100% { transform: translate(0,     0);    opacity: 0;    }
+    }
+    .ff {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      pointer-events: none;
+      background-color: #ffc034;
+      box-shadow:
+        0 0 3px 1px  #ffc034,
+        0 0 8px 3px  rgba(255,192,52,0.55),
+        0 0 16px 5px rgba(255,192,52,0.18);
+      animation: fireflyFloat linear infinite;
+    }
+    @media (prefers-reduced-motion: reduce) { .ff { display: none; } }
+    .ff:nth-child(1)  { top: 10%; left:  7%;  animation-duration: 6s;   animation-delay: 0s;   }
+    .ff:nth-child(2)  { top: 22%; right: 11%; animation-duration: 7.5s; animation-delay: 1.3s; }
+    .ff:nth-child(3)  { top: 65%; left: 15%;  animation-duration: 7s;   animation-delay: 2.1s; }
+    .ff:nth-child(4)  { top: 40%; right: 20%; animation-duration: 8.5s; animation-delay: 0.7s; }
+    .ff:nth-child(5)  { top: 80%; left: 40%;  animation-duration: 5.5s; animation-delay: 3.2s; }
+    .ff:nth-child(6)  { top: 15%; left: 58%;  animation-duration: 8s;   animation-delay: 1.8s; }
+    .ff:nth-child(7)  { top: 55%; right: 6%;  animation-duration: 6.5s; animation-delay: 4s;   }
+    .ff:nth-child(8)  { top: 88%; left: 72%;  animation-duration: 9s;   animation-delay: 2.6s; }
+    .ff:nth-child(9)  { top: 32%; left: 32%;  animation-duration: 7.2s; animation-delay: 0.4s; }
+    .ff:nth-child(10) { top: 72%; right: 32%; animation-duration: 6.8s; animation-delay: 3.8s; }
   </style>
 </head>
 <body>
@@ -448,13 +491,17 @@
 
     <!-- 1 ─ Title -->
     <section>
+      <span class="ff"></span><span class="ff"></span><span class="ff"></span>
+      <span class="ff"></span><span class="ff"></span><span class="ff"></span>
+      <span class="ff"></span><span class="ff"></span><span class="ff"></span>
+      <span class="ff"></span>
       <div class="title-slide">
         <div class="cobrand">
           <img src="/brand/offon-logo-dark-color.svg" alt="OffOn">
           <span class="xsep">×</span>
           <span class="partner">Dynatrace</span>
         </div>
-        <h1>Open Source Talks</h1>
+        <h1 style="color: #ffc034;">Open Source Talks</h1>
         <p style="font-size: 0.7em; margin-top: 0.45em;">Open Source. Vendor Agnostic. Community Driven.</p>
         <p style="font-size: 0.52em; margin-top: 0.35em; opacity: 0.5;">Vienna and Linz, Austria</p>
         <p style="position: absolute; bottom: 1.8em; right: 2.2em; font-size: 0.38em; opacity: 0.28; letter-spacing: 0.04em;">Press S for speaker notes</p>
@@ -473,28 +520,28 @@
         <span class="label">The Event</span>
         <h2>What are Open Source Talks?</h2>
       </div>
-      <p style="font-size: 0.65em; margin-bottom: 0.6em;">A recurring in-person meetup for the Austrian open source community, organised by OffOn.dev and the Dynatrace OSPO team. We bring together people from different OSS projects and communities to share knowledge and find unexpected common ground.</p>
-      <div class="g3">
+      <div class="g3" style="margin-top: 0.65em;">
         <div class="card">
           <h4>Vienna and Linz</h4>
-          <p>Hosted at Dynatrace offices. About 6 events per year, last Thursday of the month.</p>
+          <p>Dynatrace offices. About 6 events per year, last Thursday of the month. Free to attend, always.</p>
         </div>
         <div class="card">
           <h4>Two Talks Per Evening</h4>
-          <p>Speakers from any open source project or community. 25 minutes each, followed by Q&amp;A.</p>
+          <p>Speakers from any open source project or community. 25 minutes plus Q&amp;A.</p>
         </div>
         <div class="card">
           <h4>Open Source Pub Quiz</h4>
-          <p>Three rounds, teams of 3 to 4. OSS history, tonight's topics, and a wildcard round. Fun, not competitive.</p>
+          <p>Teams of 3 to 4. Quick-fire questions, fun not competitive.</p>
         </div>
       </div>
       <aside class="notes">
-        - This is not a conference. No badge scanning, no lead gen, no product pitches.
-        - Two cities: Vienna at Rennweg, Linz at Freistädter Straße. Roughly 6 events per year, always last Thursday of the month.
-        - Format is fixed: two talks of 25 minutes each, followed by Q&amp;A. Then the pub quiz.
-        - Talks come from any open source project or community, not tied to Dynatrace or OffOn projects.
+        - A recurring in-person meetup for the Austrian open source community, organised by OffOn and the Dynatrace OSPO team.
+        - Not a conference. No badge scanning, no lead gen, no product pitches. Just people who care about open source.
+        - Two cities: Vienna (Rennweg) and Linz (Freistädter Straße). About 6 events per year, always last Thursday of the month.
+        - Format is fixed: two talks of 25 minutes plus Q&amp;A, then the pub quiz.
+        - Talks can come from any open source project or community. Not tied to Dynatrace or OffOn.
         - The quiz is the social glue. Teams form organically, people who don't know each other end up talking.
-        - Free to attend. Always. No registration wall, no ticket.
+        - Free to attend. No registration wall, no ticket, no email capture.
       </aside>
     </section>
 
@@ -519,7 +566,7 @@
         - Doors at 17:30. Talks start at 18:00. Everything is structured until 20:00, then open networking.
         - This intro runs 10 minutes: 18:00 to 18:10. Don't run over. Nico and Sinduri are up next.
         - The 15-minute break at 18:40 is real. People need to move, refill, talk.
-        - Pub quiz runs 19:40 to 19:55. Host reads each question twice, 30 seconds per answer. Score at the end.
+        - Pub quiz: 19:40 to 19:55. Two rounds, 15 minutes. Host reads each question twice, 30 seconds to answer, score at the end.
         - Wrap-up at 19:55: thank the speakers, tease the next event, mention how to sign up to speak.
       </aside>
     </section>
@@ -599,16 +646,16 @@
             <p style="font-size: 0.5em; color: rgba(210,130,130,0.9);">Not a good fit: product demos, vendor pitches, or talks that require a commercial tool to be relevant.</p>
           </div>
         </div>
-        <div>
+        <div style="display: flex; flex-direction: column;">
           <div class="sh">
             <span class="label">Speak at the next event</span>
             <h2>Want to present?</h2>
           </div>
-          <p style="font-size: 0.6em; margin-bottom: 0.6em;">We are always looking for speakers from any open source project or community. Talk length is 25 minutes plus 5 minutes Q&amp;A. Language is English.</p>
-          <div class="card">
+          <p style="font-size: 0.58em; margin-bottom: 0; opacity: 0.75;">25 min plus Q&amp;A. English. Any open source project. Slides optional.</p>
+          <div class="card" style="margin-top: auto; padding-top: 0.8em; padding-bottom: 0.8em;">
             <h4>Get in touch</h4>
-            <p>Send your name, talk title, and a 2 to 3 sentence description to:</p>
-            <p style="margin-top: 0.45em; color: var(--amber);"><a href="mailto:offondev@gmail.com">offondev@gmail.com</a></p>
+            <p>Your name, talk title, and a 2 to 3 sentence description:</p>
+            <p style="margin-top: 0.5em; font-size: 0.62em; color: var(--amber);"><a href="mailto:offondev@gmail.com">offondev@gmail.com</a></p>
           </div>
         </div>
       </div>
@@ -628,29 +675,24 @@
         <span class="label">The Quiz</span>
         <h2>Open Source Pub Quiz</h2>
       </div>
-      <p style="font-size: 0.6em; margin-bottom: 0.55em;">3 rounds, 18 questions, teams of 3 to 4, 25 minutes. Written answers. Fun, not competitive.</p>
+      <p style="font-size: 0.6em; margin-bottom: 0.55em;">Teams of 3 to 4. Written answers. 15 minutes. Fun, not competitive.</p>
       <div class="qrow">
         <span class="rnum">Round 1</span>
         <h4>OSS History and Culture</h4>
-        <p>General open source knowledge, accessible to all levels. Who created Linux? What does GPL stand for?</p>
+        <p>General open source knowledge, accessible to everyone.</p>
       </div>
       <div class="qrow">
         <span class="rnum">Round 2</span>
         <h4>Tonight's Topics</h4>
-        <p>6 questions based on the two talks from the evening. Rewards people who paid attention, kept accessible for all.</p>
-      </div>
-      <div class="qrow">
-        <span class="rnum">Round 3</span>
-        <h4>Wildcard</h4>
-        <p>Rotating format each month. Guess the project logo, whose commit message is this, name the project from its homepage.</p>
+        <p>Based on the two talks. Rewards people who were paying attention.</p>
       </div>
       <aside class="notes">
-        - 3 rounds, 6 questions each, 18 questions total. Teams of 3 to 4. Written answers on paper.
-        - Round 1: general OSS history and culture. Accessible to everyone, even if they don't code.
-        - Round 2: based on tonight's two talks. Rewards people who were paying attention. Keep questions fair: no trick questions, no obscure details.
-        - Round 3: wildcard format changes each month. Options: guess the project logo, name the project from its README first line, whose commit message is this.
-        - Host reads each question twice. 30 seconds per question. Host scores at the end.
+        - 15 minutes total. Two rounds, roughly 5 to 6 questions each. Teams of 3 to 4. Written answers on paper.
+        - Round 1: general OSS history and culture. Who created Linux? What does GPL stand for? Accessible to everyone, even if they don't code.
+        - Round 2: based on tonight's two talks (Drupal CMS 2.0 and OpenFeature). Keep questions fair: no trick questions, nothing obscure.
+        - Host reads each question twice. Roughly 30 seconds per question. Host scores at the end.
         - Prizes: stickers, OffOn swag, or whatever the organiser brings. Winning isn't the point. It's the excuse to talk to strangers.
+        - Keep energy up: this is the last structured segment before open networking.
       </aside>
     </section>
 
@@ -698,7 +740,7 @@
       <div class="split-even" style="margin-top: 0.5em;">
         <div>
           <span class="col-label">Adventures</span>
-          <p style="font-size: 0.6em; margin-bottom: 0.5em;">Hands-on scenario-driven challenges built around real open source tools. Each adventure runs entirely in GitHub Codespaces. No local setup, no Docker, no dependency conflicts.</p>
+          <p style="font-size: 0.56em; margin: 0.25em 0 0.45em; opacity: 0.75;">Hands-on challenges built around real open source tools. Runs entirely in GitHub Codespaces, no local setup required.</p>
           <div class="brow">
             <span class="dot">→</span>
             <span class="bt"><strong>Pick a scenario</strong> at the difficulty that fits where you are</span>
@@ -724,7 +766,7 @@
         </div>
         <div>
           <span class="col-label">Community</span>
-          <p style="font-size: 0.6em; margin-bottom: 0.5em;">A community hub at community.offon.dev, open to everyone who cares about open source.</p>
+          <p style="font-size: 0.56em; margin: 0.25em 0 0.45em; opacity: 0.75;">A discussion hub at community.offon.dev, open to everyone who cares about open source.</p>
           <div class="brow">
             <span class="dot">→</span>
             <span class="bt"><strong>Community Voices:</strong> tutorials, project showcases, open source news</span>
@@ -744,11 +786,11 @@
         </div>
       </div>
       <aside class="notes">
-        - Adventures are the challenge platform: real-world scenarios built around open source tools, run entirely in GitHub Codespaces.
-        - Current tools covered: OpenTelemetry, Kyverno, OpenFeature, ArgoCD, OpenTofu, Grafana. More in progress.
+        - Adventures are hands-on scenario-driven challenges built around real open source tools. Each one runs entirely in GitHub Codespaces: no local setup, no Docker, no dependency hell.
+        - Current tools covered: OpenTelemetry, Kyverno, OpenFeature, ArgoCD, OpenTofu, Grafana. More being built.
         - Each adventure has multiple difficulty levels. Completions earn Credly badges and leaderboard points.
         - The "your project?" tag is intentional. If you maintain or contribute to an open source project, this is an invitation to propose an adventure.
-        - Community is at community.offon.dev: Q&amp;A, tutorials, project showcases, event listings, and an intro thread. Discourse-based, open to all.
+        - Community is at community.offon.dev. Discourse-based, open to all. Intro thread, Q&amp;A, tutorials, project showcases, local event listings.
         - Both are free. No paywall, no account required to read, open registration to participate.
       </aside>
     </section>
