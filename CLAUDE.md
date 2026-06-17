@@ -103,8 +103,13 @@ e2e/
   smoke.spec.ts # Playwright smoke tests (requires npm run build first)
 public/
   fonts/        # Self-hosted fonts (Inter, Syne, JetBrains Mono)
+  brand/        # OffOn brand assets (SVG + PNG logos, Nyx illustrations). Referenced by deck.html and BrandGuidelines.tsx.
   team/         # Team and speaker photos (*.webp). Single source of truth — used by BoardSection and presentation decks. Do not duplicate into src/assets/.
+  solutions/    # Solution walkthrough screenshots, one subdirectory per adventure ID (e.g. solutions/echoes-lost-in-orbit/). Referenced by src/data/solutions/ with absolute paths.
+  reveal/       # Self-hosted Reveal.js 6.0.1 library. Used only by deck.html.
   deck.html     # Reveal.js presentation for Open Source Talks events. Not a React route; served directly by GitHub Pages.
+  nyx.webp      # Nyx mascot illustration. Referenced in BottomCTA and About via import.meta.env.BASE_URL.
+  nyx_peek.webp # Nyx peek variant. Referenced in About via import.meta.env.BASE_URL.
 .github/
   workflows/
     deploy.yml                    # Production deploy to GitHub Pages (push to main)
@@ -605,6 +610,14 @@ See [`ADVENTURES.md`](ADVENTURES.md) for the full sync process and PR checklist.
 - Open PRs trigger `preview.yml` and create a PR preview deployment.
 - Only static files in `dist/client/` are deployed. No server config is needed.
 - The base path is set via the `VITE_BASE_PATH` environment variable (defaults to `/`). Never change this without verifying GitHub Pages routing.
+
+### PR preview static assets
+
+The `preview.yml` copy step explicitly lists every static asset directory and root-level file type that needs to appear in the PR preview. Vite copies `public/` to `dist/client/` during the build, but `preview.yml` then copies those files into the `dist/client/pr-preview/pr-N/` subdirectory that `rossjrw/pr-preview-action` deploys.
+
+**When adding a new directory or root-level file type to `public/`, you must also add a corresponding copy line in the copy step of `.github/workflows/preview.yml`.** If you forget, the file will exist in production but return 404 in all PR previews.
+
+Current copy step covers: `assets/`, `fonts/`, `reveal/`, `team/`, `brand/`, `solutions/`, `deck.html`, and root-level `*.svg`, `*.png`, `*.ico`, `*.webmanifest`, `*.webp` files.
 
 ### GitHub Actions allowlist
 

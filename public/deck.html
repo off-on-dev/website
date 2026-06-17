@@ -4,38 +4,38 @@
   <meta charset="utf-8">
   <title>Open Source Talks by OffOn x Dynatrace</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/reveal/reset.css">
-  <link rel="stylesheet" href="/reveal/reveal.css">
+  <link rel="stylesheet" href="reveal/reset.css">
+  <link rel="stylesheet" href="reveal/reveal.css">
   <style>
     @font-face {
       font-family: 'Syne';
-      src: url('/fonts/syne-latin-700-normal.woff2') format('woff2');
+      src: url('fonts/syne-latin-700-normal.woff2') format('woff2');
       font-weight: 700;
     }
     @font-face {
       font-family: 'Inter';
-      src: url('/fonts/inter-latin-400-normal.woff2') format('woff2');
+      src: url('fonts/inter-latin-400-normal.woff2') format('woff2');
       font-weight: 400;
     }
     @font-face {
       font-family: 'Inter';
-      src: url('/fonts/inter-latin-500-normal.woff2') format('woff2');
+      src: url('fonts/inter-latin-500-normal.woff2') format('woff2');
       font-weight: 500;
     }
     @font-face {
       font-family: 'Inter';
-      src: url('/fonts/inter-latin-600-normal.woff2') format('woff2');
+      src: url('fonts/inter-latin-600-normal.woff2') format('woff2');
       font-weight: 600;
     }
 
     :root {
       --bg:         #0a0a0a;
       --card:       #141419;
-      --border:     #232c3d;
+      --border:     #2a3549;
       --fg:         #faf9f2;
-      --muted:      #b8b5a8;
+      --muted:      #ccc9bb;
       --amber:      #ffc034;
-      --amber-glow: rgba(255, 192, 52, 0.13);
+      --amber-glow: rgba(255, 192, 52, 0.18);
     }
 
     /* ── Base ── */
@@ -64,8 +64,8 @@
       margin: 0 0 0.3em;
     }
 
-    .reveal h1 { font-size: 2.1em; }
-    .reveal h2 { font-size: 1.25em; }
+    .reveal h1 { font-size: 2.5em; }
+    .reveal h2 { font-size: 1.35em; }
 
     .reveal p {
       color: var(--muted);
@@ -83,20 +83,20 @@
 
     /* ── Slide header ── */
     .sh {
-      border-left: 3px solid var(--amber);
+      border-left: 4px solid var(--amber);
       padding-left: 0.55em;
       margin-bottom: 0.7em;
     }
     .sh .label {
       display: block;
-      font-size: 0.37em;
+      font-size: 0.4em;
       font-weight: 600;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--amber);
       margin-bottom: 0.2em;
     }
-    .sh h2 { font-size: 1.2em; margin: 0; }
+    .sh h2 { font-size: 1.3em; margin: 0; }
 
     /* ── Grids ── */
     .g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5em; margin-top: 0.6em; }
@@ -378,8 +378,6 @@
       align-items: flex-start;
       height: 100%;
       padding: 3em 3.2em !important;
-      position: relative;
-      overflow: hidden;
     }
     .cobrand {
       display: flex;
@@ -443,25 +441,15 @@
     .pill:hover { border-color: var(--amber); color: var(--amber) !important; text-decoration: none !important; }
     .pill.hi { background: var(--amber-glow); border-color: rgba(255,192,52,0.38); color: var(--amber) !important; }
 
-    /* ── Fireflies (static scatter, title slide only) ── */
-    .ff {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      border-radius: 50%;
-      pointer-events: none;
-      background-color: #ffc034;
-      box-shadow:
-        0 0 2px 1px  #ffc034,
-        0 0 6px 2px  rgba(255,192,52,0.45),
-        0 0 12px 4px rgba(255,192,52,0.12);
+    /* Firefly scatter: edge-only dots on every slide via background-image */
+    .reveal .slides section {
+      background-image:
+        radial-gradient(circle 3px at  3%  8%, rgba(255,192,52,0.95) 0%, rgba(255,192,52,0.22) 55%, transparent 100%),
+        radial-gradient(circle 4px at 97% 18%, rgba(255,192,52,0.92) 0%, rgba(255,192,52,0.20) 55%, transparent 100%),
+        radial-gradient(circle 3px at  2% 68%, rgba(255,192,52,0.90) 0%, rgba(255,192,52,0.18) 55%, transparent 100%),
+        radial-gradient(circle 3px at 96% 82%, rgba(255,192,52,0.88) 0%, rgba(255,192,52,0.16) 55%, transparent 100%),
+        radial-gradient(circle 3px at 50%  2%, rgba(255,192,52,0.88) 0%, rgba(255,192,52,0.16) 55%, transparent 100%);
     }
-    .ff:nth-child(1) { top: 11%; left:  8%;  opacity: 0.7; }
-    .ff:nth-child(2) { top: 24%; right: 13%; opacity: 0.5; }
-    .ff:nth-child(3) { top: 68%; left: 14%;  opacity: 0.6; }
-    .ff:nth-child(4) { top: 42%; right: 19%; opacity: 0.45; }
-    .ff:nth-child(5) { top: 82%; left: 44%;  opacity: 0.55; }
-    .ff:nth-child(6) { top: 17%; left: 61%;  opacity: 0.5; }
   </style>
 </head>
 <body>
@@ -471,10 +459,8 @@
     <!-- 1 ─ Title -->
     <section>
       <div class="title-slide">
-        <span class="ff"></span><span class="ff"></span><span class="ff"></span>
-        <span class="ff"></span><span class="ff"></span><span class="ff"></span>
         <div class="cobrand">
-          <img src="/brand/offon-logo-dark-color.svg" alt="OffOn">
+          <img src="brand/offon-logo-dark-color.svg" alt="OffOn">
           <span class="xsep">×</span>
           <span class="partner">Dynatrace</span>
         </div>
@@ -557,7 +543,7 @@
       <div class="g3" style="margin-top: 0.55em;">
         <div class="speaker-card" style="flex-direction: column; gap: 0.55em;">
           <div style="display: flex; gap: 0.65em; align-items: center;">
-            <div class="sp-av"><img src="/team/nico.webp" alt="Nico Grienauer"></div>
+            <div class="sp-av"><img src="team/nico.webp" alt="Nico Grienauer"></div>
             <div>
               <p class="sp-name">Nico Grienauer</p>
               <p class="sp-talk" style="margin: 0;">Drupal CMS 2.0</p>
@@ -567,7 +553,7 @@
         </div>
         <div class="speaker-card" style="flex-direction: column; gap: 0.55em;">
           <div style="display: flex; gap: 0.65em; align-items: center;">
-            <div class="sp-av"><img src="/team/sinduri.webp" alt="Sinduri Guntupalli"></div>
+            <div class="sp-av"><img src="team/sinduri.webp" alt="Sinduri Guntupalli"></div>
             <div>
               <p class="sp-name">Sinduri Guntupalli</p>
               <p class="sp-talk" style="margin: 0;">Drupal CMS 2.0 (co-presenter)</p>
@@ -577,7 +563,7 @@
         </div>
         <div class="speaker-card" style="flex-direction: column; gap: 0.55em;">
           <div style="display: flex; gap: 0.65em; align-items: center;">
-            <div class="sp-av"><img src="/team/simon.webp" alt="Simon Schrottner"></div>
+            <div class="sp-av"><img src="team/simon.webp" alt="Simon Schrottner"></div>
             <div>
               <p class="sp-name">Simon Schrottner</p>
               <p class="sp-talk" style="margin: 0;">Feature Flags and Open Standards</p>
@@ -623,7 +609,7 @@
             <p style="font-size: 0.5em; color: rgba(210,130,130,0.9);">Not a good fit: product demos, vendor pitches, or talks that require a commercial tool to be relevant.</p>
           </div>
         </div>
-        <div style="display: flex; flex-direction: column;">
+        <div style="display: flex; flex-direction: column; align-self: stretch;">
           <div class="sh">
             <span class="label">Speak at the next event</span>
             <h2>Want to present?</h2>
@@ -696,7 +682,7 @@
           <p style="margin-top: 0.7em; font-size: 0.5em; opacity: 0.45;">always on. always open. always learning.</p>
         </div>
         <div style="display: flex; align-items: flex-end; justify-content: flex-end;">
-          <img src="/brand/offon-nyx-peek.png" alt="" aria-hidden="true" style="height: 230px; object-fit: contain; opacity: 0.6;">
+          <img src="brand/offon-nyx-peek.png" alt="" aria-hidden="true" style="height: 230px; object-fit: contain; opacity: 0.6;">
         </div>
       </div>
       <aside class="notes">
@@ -717,7 +703,7 @@
       <div class="split-even" style="margin-top: 0.5em;">
         <div>
           <span class="col-label">Adventures</span>
-          <p style="font-size: 0.56em; margin: 0.25em 0 0.45em; opacity: 0.75;">Hands-on challenges built around real open source tools. Runs entirely in GitHub Codespaces, no local setup required.</p>
+          <p style="font-size: 0.56em; margin: 0.25em 0 0.45em; opacity: 0.75;">Hands-on scenario-driven challenges built around real open source tools. Runs entirely in GitHub Codespaces. No local setup, no Docker, no dependency conflicts.</p>
           <div class="brow">
             <span class="dot">→</span>
             <span class="bt"><strong>Pick a scenario</strong> at the difficulty that fits where you are</span>
@@ -831,28 +817,28 @@
       </div>
       <div class="board">
         <div class="person">
-          <div class="av"><img src="/team/david.webp" alt="David Hirsch"></div>
+          <div class="av"><img src="team/david.webp" alt="David Hirsch"></div>
           <div class="pi">
             <p class="pn">David Hirsch</p>
             <p class="pr">Head of Community and Open Source, Dynatrace. Co-founder of KCD Austria.</p>
           </div>
         </div>
         <div class="person">
-          <div class="av"><img src="/team/katharina.webp" alt="Katharina Sick"></div>
+          <div class="av"><img src="team/katharina.webp" alt="Katharina Sick"></div>
           <div class="pi">
             <p class="pn">Katharina Sick</p>
             <p class="pr">DevRel, Dynatrace. Co-organiser of Cloud Native Linz. Adventure builder.</p>
           </div>
         </div>
         <div class="person">
-          <div class="av"><img src="/team/kenyatta.webp" alt="Kenyatta Forbes"></div>
+          <div class="av"><img src="team/kenyatta.webp" alt="Kenyatta Forbes"></div>
           <div class="pi">
             <p class="pn">Kenyatta Forbes</p>
             <p class="pr">Sr Program Manager, Dynatrace. Previously Google for Education and Mozilla.</p>
           </div>
         </div>
         <div class="person">
-          <div class="av"><img src="/team/sinduri.webp" alt="Sinduri Guntupalli"></div>
+          <div class="av"><img src="team/sinduri.webp" alt="Sinduri Guntupalli"></div>
           <div class="pi">
             <p class="pn">Sinduri Guntupalli</p>
             <p class="pr">Sr Developer Programs Engineer, Dynatrace. Drupal Austria Marketing Manager.</p>
@@ -942,7 +928,7 @@
     <section>
       <div class="final">
         <div class="cobrand">
-          <img src="/brand/offon-logo-dark-color.svg" alt="OffOn">
+          <img src="brand/offon-logo-dark-color.svg" alt="OffOn">
           <span class="xsep">×</span>
           <span class="partner">Dynatrace</span>
         </div>
@@ -971,8 +957,8 @@
   </div>
 </div>
 
-<script src="/reveal/reveal.js"></script>
-<script src="/reveal/plugin/notes.js"></script>
+<script src="reveal/reveal.js"></script>
+<script src="reveal/plugin/notes.js"></script>
 <script>
   Reveal.initialize({
     hash: true,
