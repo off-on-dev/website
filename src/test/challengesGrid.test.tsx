@@ -224,6 +224,15 @@ describe("ChallengesGrid", () => {
       fireEvent.keyDown(btns[0], { key: "Enter" });
       expect(document.activeElement).toBe(btns[0]);
     });
+
+    it("mobile dropdown triggers have aria-haspopup so AT announces them as popup controls", () => {
+      const { container } = renderGrid();
+      const triggers = Array.from(container.querySelectorAll<HTMLButtonElement>("button[aria-expanded]"));
+      expect(triggers.length).toBeGreaterThan(0);
+      triggers.forEach((trigger) => {
+        expect(trigger.getAttribute("aria-haspopup")).toBe("true");
+      });
+    });
   });
 
   describe("difficulty filter", () => {

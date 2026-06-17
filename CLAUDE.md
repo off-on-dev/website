@@ -4,21 +4,22 @@ Guidance for AI coding agents working in this repository.
 
 ---
 
-## Project Skills
+## Project Commands
 
-Project-level Claude Code skills live in `.claude/skills/`. Invoke them with `/skill-name` in Claude Code. These are committed to the repo and available to all contributors.
+Project-level Claude Code commands live in `.claude/commands/`. Invoke them with `/command-name` in Claude Code. These are committed to the repo and available to all contributors.
 
-| Skill | When to use |
+| Command | When to use |
 |---|---|
-| `/a11y-audit` | On-demand accessibility audit using the Red Team / Blue Team persona pipeline. Run against a component or page to get a severity-weighted report. Invokes sub-skills below as needed. |
-| &nbsp;&nbsp;`/keyboard` | Sub-skill: writing or reviewing any interactive element — buttons, modals, dropdowns, tabs, custom widgets. |
-| &nbsp;&nbsp;`/navigation` | Sub-skill: working on nav components — primary nav, skip links, breadcrumbs, pagination, mobile menus. |
-| &nbsp;&nbsp;`/progressive-enhancement` | Sub-skill: building any new feature or reviewing architecture. Ensures core content works without JS. |
-| &nbsp;&nbsp;`/user-personalization` | Sub-skill: working on theme toggle, consent state, or any user preference persistence. |
+| `/a11y-audit` | On-demand accessibility audit using the Red Team / Blue Team persona pipeline. Run against a component or page to get a severity-weighted report. Invokes sub-commands below as needed. |
+| &nbsp;&nbsp;`/keyboard` | Sub-command: writing or reviewing any interactive element — buttons, modals, dropdowns, tabs, custom widgets. |
+| &nbsp;&nbsp;`/navigation` | Sub-command: working on nav components — primary nav, skip links, breadcrumbs, pagination, mobile menus. |
+| &nbsp;&nbsp;`/progressive-enhancement` | Sub-command: building any new feature or reviewing architecture. Ensures core content works without JS. |
+| &nbsp;&nbsp;`/user-personalization` | Sub-command: working on theme toggle, consent state, or any user preference persistence. |
+| `/add-solution` | Generate a structured TypeScript solution file from any input format (md, YAML, HTML, plain text). Downloads and converts images to WebP. |
 
-The `spec-first-coding` skill is installed globally (`~/.claude/skills/`) and is not in this repo. It enforces W3C spec citations before generating any accessibility-related code.
+The `spec-first-coding` command is installed globally (`~/.claude/skills/`) and is not in this repo. It enforces W3C spec citations before generating any accessibility-related code.
 
-Use `/a11y-audit` for all accessibility audits in this repo. The four sub-skills can also be invoked directly when working in their specific domain.
+Use `/a11y-audit` for all accessibility audits in this repo. The four sub-commands can also be invoked directly when working in their specific domain.
 
 ---
 
@@ -723,6 +724,18 @@ Any file that renders or returns JSX must use the `.tsx` extension. Files that a
 ### React hooks
 
 Each `useEffect` must have a single responsibility. Never combine side effects with different trigger conditions into one effect. Split them.
+
+Every `useEffect` that creates a `setTimeout`, `setInterval`, or event listener must return a cleanup function that cancels it. Clear and reassign timer refs before setting a new one so rapid re-fires don't stack. Example:
+
+```tsx
+const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+useEffect(() => (): void => {
+  if (timerRef.current !== null) clearTimeout(timerRef.current);
+}, []);
+// in handler:
+if (timerRef.current !== null) clearTimeout(timerRef.current);
+timerRef.current = setTimeout(() => setState(false), 1500);
+```
 
 ### State machines
 

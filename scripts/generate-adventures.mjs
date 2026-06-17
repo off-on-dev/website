@@ -942,6 +942,10 @@ function buildSitemapBody(adventures) {
     lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
     for (const l of a.levels) {
       lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/levels/${l.level}/</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
+      const solutionFile = resolve(ROOT, `src/data/solutions/${a.slug}/${l.level}.ts`);
+      if (existsSync(solutionFile)) {
+        lines.push(`  <url><loc>https://offon.dev/adventures/${a.slug}/levels/${l.level}/solution/</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`);
+      }
     }
   }
   return lines.join("\n") + "\n  ";
@@ -1022,10 +1026,17 @@ function buildLeaderboardCategoriesBody(adventures) {
 }
 
 function buildLlmsTxtBody(adventures) {
-  const lines = adventures.map((a) => {
+  const lines = [];
+  for (const a of adventures) {
     const { title, story } = normalizeAdventureFields(a);
-    return `- [${title}](https://offon.dev/adventures/${a.slug}/): ${story}`;
-  });
+    lines.push(`- [${title}](https://offon.dev/adventures/${a.slug}/): ${story}`);
+    for (const l of a.levels) {
+      const solutionFile = resolve(ROOT, `src/data/solutions/${a.slug}/${l.level}.ts`);
+      if (existsSync(solutionFile)) {
+        lines.push(`  - [${l.name} solution](https://offon.dev/adventures/${a.slug}/levels/${l.level}/solution/)`);
+      }
+    }
+  }
   return "\n" + lines.join("\n") + "\n\n";
 }
 

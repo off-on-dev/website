@@ -17,6 +17,27 @@ const summary: AdventureCardSummary = {
 };
 
 describe("AdventureCard", () => {
+  it("aria-label combines title, difficulties, and tags for AT link navigation", () => {
+    const { container } = render(
+      <MemoryRouter>
+        <AdventureCard adventure={summary} />
+      </MemoryRouter>
+    );
+    const link = container.querySelector("a[href='/adventures/test-adventure/']");
+    expect(link?.getAttribute("aria-label")).toBe("Test Adventure: beginner, a, b");
+  });
+
+  it("aria-label omits tags section when adventure has no tags", () => {
+    const noTags = { ...summary, tags: [] };
+    const { container } = render(
+      <MemoryRouter>
+        <AdventureCard adventure={noTags} />
+      </MemoryRouter>
+    );
+    const link = container.querySelector("a[href='/adventures/test-adventure/']");
+    expect(link?.getAttribute("aria-label")).toBe("Test Adventure: beginner");
+  });
+
   it("never renders a nested <a> inside the outer card link, even when story contains a markdown link", () => {
     const { container } = render(
       <MemoryRouter>

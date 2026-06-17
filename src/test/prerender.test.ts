@@ -1,9 +1,10 @@
 // This test requires a production build to exist in dist/client/.
 // Run `npm run build` before running these tests.
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeAll } from "vitest";
 import * as fs from "fs";
 import * as path from "path";
+import { SOLUTIONS } from "@/data/solutions";
 
 const DIST_ROOT = path.resolve(__dirname, "../../dist/client");
 
@@ -135,6 +136,20 @@ const pages: PageSpec[] = [
     check: { type: "contains", value: "Hyperspace Operations &amp; Transport" },
   },
   // /GENERATED:adventures
+  // GENERATED:solutions
+  {
+    file: "adventures/echoes-lost-in-orbit/levels/beginner/solution/index.html",
+    check: { type: "contains", value: "Solution:" },
+  },
+  {
+    file: "adventures/echoes-lost-in-orbit/levels/expert/solution/index.html",
+    check: { type: "contains", value: "Solution:" },
+  },
+  {
+    file: "adventures/echoes-lost-in-orbit/levels/intermediate/solution/index.html",
+    check: { type: "contains", value: "Solution:" },
+  },
+  // /GENERATED:solutions
   {
     file: "challenges/index.html",
     check: { type: "exact", value: "Open Source Challenges | OffOn" },
@@ -194,6 +209,34 @@ describe("prerendered HTML title tags", () => {
       }
     });
   }
+});
+
+describe("prerendered solution page content", () => {
+  const solutionFile = "adventures/echoes-lost-in-orbit/levels/beginner/solution/index.html";
+  const solutionData = SOLUTIONS.find(
+    (s) => s.adventureId === "echoes-lost-in-orbit" && s.levelId === "beginner"
+  )!;
+  let html: string;
+
+  beforeAll(() => {
+    const fullPath = path.join(DIST_ROOT, solutionFile);
+    if (!fs.existsSync(fullPath)) {
+      throw new Error(`dist/client/${solutionFile} not found. Run npm run build first.`);
+    }
+    html = fs.readFileSync(fullPath, "utf-8");
+  });
+
+  it("contains the contributor name", () => {
+    expect(html).toContain(solutionData.contributor!.name);
+  });
+
+  it("contains the outro heading", () => {
+    expect(html).toContain(solutionData.outro!.heading);
+  });
+
+  it("contains the discussion link text", () => {
+    expect(html).toContain("Browse the discussion");
+  });
 });
 
 describe("prerendered challenge pages include all content sections", () => {

@@ -1,8 +1,9 @@
 import { type JSX } from "react";
-import { useParams, useLoaderData } from "react-router";
+import { useParams, useLoaderData, Link } from "react-router";
 import type { MetaFunction, LoaderFunctionArgs, LinksFunction } from "react-router";
-import { Check, Clock, ExternalLink } from "lucide-react";
+import { Check, Clock, ExternalLink, ArrowRight } from "lucide-react";
 import { ADVENTURES } from "@/data/adventures";
+import { SOLUTIONS } from "@/data/solutions";
 import { TagChips } from "@/components/TagChips";
 import { CodespacesButton } from "@/components/CodespacesButton";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
@@ -23,7 +24,7 @@ import { RewardsCard } from "@/components/RewardsCard";
 import { ChallengeShareLinks } from "@/components/ChallengeShareLinks";
 import { SITE_URL, BRAND_NAME, COMMUNITY_DISPLAY_NAME, COMMUNITY_URL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
-import { isDeadlinePast } from "@/lib/utils";
+import { isDeadlinePast, isSolutionUnlocked } from "@/lib/utils";
 import { InlineProse } from "@/components/InlineProse";
 
 export const links: LinksFunction = () => [
@@ -31,11 +32,15 @@ export const links: LinksFunction = () => [
   { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-600-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
 ];
 
-export function loader({ params }: LoaderFunctionArgs): { rewardsBelowFold: boolean } {
+export function loader({ params }: LoaderFunctionArgs): { rewardsBelowFold: boolean; hasSolution: boolean } {
   const adventure = ADVENTURES.find((a) => a.id === params.id);
   const level = adventure?.levels.find((l) => l.id === params.levelId);
   const deadline = level?.deadline ?? adventure?.rewards?.deadline;
-  return { rewardsBelowFold: isDeadlinePast(deadline) };
+  const rewardsBelowFold = isDeadlinePast(deadline);
+  const hasSolution = isSolutionUnlocked(deadline) && SOLUTIONS.some(
+    (s) => s.adventureId === params.id && s.levelId === params.levelId
+  );
+  return { rewardsBelowFold, hasSolution };
 }
 
 export const meta: MetaFunction = ({ params }) => {
@@ -96,9 +101,10 @@ type StructuredLayoutProps = {
   adventure: (typeof ADVENTURES)[number];
   level: (typeof ADVENTURES)[number]["levels"][number];
   rewardsBelowFold: boolean;
+  hasSolution: boolean;
 };
 
-const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayoutProps): JSX.Element => {
+const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: StructuredLayoutProps): JSX.Element => {
   const { intro, objective, toolbox, backstory, architecture, architectureDiagram, diagramAlt, architectureAscii, howToPlay, helpfulLinks, verification } = level;
   const levelUrl = `${SITE_URL}/adventures/${adventure.id}/levels/${level.id}/`;
   const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(levelUrl)}`;
@@ -275,6 +281,25 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
             </p>
           </section>
 
+          {/* Solution walkthrough link — shown after deadline passes and only when a solution is authored */}
+          {hasSolution && (
+            <section className="mb-6 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+              <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-1">
+                Check Out the Solution Walkthrough
+              </h2>
+              <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed mb-3">
+                See how we approached this challenge step by step. Found a better way? We&apos;d love to hear about it in the discussion.
+              </p>
+              <Link
+                to={`/adventures/${adventure.id}/levels/${level.id}/solution/`}
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+              >
+                View the solution walkthrough
+                <ArrowRight size={14} aria-hidden="true" />
+              </Link>
+            </section>
+          )}
+
           {/* Toolbox + Helpful Documentation side-by-side */}
           {((toolbox && toolbox.length > 0) || (helpfulLinks && helpfulLinks.length > 0)) && (
             <div className={`grid gap-5 mb-6${toolbox && toolbox.length > 0 && helpfulLinks && helpfulLinks.length > 0 ? " sm:grid-cols-2" : ""}`}>
@@ -374,7 +399,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold }: StructuredLayo
 
 const ChallengeDetail = (): JSX.Element => {
   const { id, levelId } = useParams<{ id: string; levelId: string }>();
-  const { rewardsBelowFold } = useLoaderData<{ rewardsBelowFold: boolean }>();
+  const { rewardsBelowFold, hasSolution } = useLoaderData<ReturnType<typeof loader>>();
   const adventure = ADVENTURES.find((adventure) => adventure.id === id);
   const level = adventure?.levels.find((level) => level.id === levelId);
 
@@ -401,7 +426,7 @@ const ChallengeDetail = (): JSX.Element => {
           />
 
           {hasStructuredContent ? (
-            <StructuredLayout adventure={adventure} level={level} rewardsBelowFold={rewardsBelowFold} />
+            <StructuredLayout adventure={adventure} level={level} rewardsBelowFold={rewardsBelowFold} hasSolution={hasSolution} />
           ) : (
             <>
               {/* Legacy layout for levels without structured content */}

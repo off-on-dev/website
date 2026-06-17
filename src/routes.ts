@@ -6,6 +6,7 @@ export default [
     route("adventures", "pages/Adventures.tsx"),
     route("adventures/:id", "pages/AdventureDetail.tsx"),
     route("adventures/:id/levels/:levelId", "pages/ChallengeDetail.tsx"),
+    route("adventures/:id/levels/:levelId/solution", "pages/SolutionDetail.tsx"),
     route("challenges/:tag?", "pages/Challenges.tsx", { id: "challenges" }),
     route("contribute", "pages/Contribute.tsx"),
     route("sponsors", "pages/Sponsors.tsx"),

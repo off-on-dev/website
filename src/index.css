@@ -523,7 +523,7 @@ html {
 
 /* Glowing card hover - add card-glow class to cards */
 .card-glow {
-  transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
 }
 .card-glow:hover {
   box-shadow:
@@ -828,6 +828,7 @@ html {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.85em;
   color: hsl(var(--foreground));
+  overflow-wrap: break-word;
 }
 .md-inline strong { font-weight: 600; color: hsl(var(--foreground)); }
 .md-inline em { font-style: italic; color: hsl(var(--text-secondary)); }
@@ -901,6 +902,7 @@ html {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.85em;
   color: hsl(var(--foreground));
+  overflow-wrap: break-word;
 }
 /* Code inside a link: only show link style, not code chip.
    Must appear after the generic code rules so it wins by source order
@@ -969,6 +971,21 @@ html {
 .md-content td { padding: 0.5rem 0.75rem; border: 1px solid hsl(var(--surface-border)); text-align: left; }
 .md-content th { font-weight: 600; color: hsl(var(--foreground)); background: hsl(var(--surface)); }
 .md-content td { color: hsl(var(--text-secondary)); }
+.md-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  border: 1px solid hsl(var(--surface-border));
+  margin: 1rem 0;
+  display: block;
+}
+.md-content h4 {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
 /* Links inside markdown content share docs-ext-link styling */
 .md-content a {
   display: inline-flex;
@@ -1010,6 +1027,9 @@ html {
 /* Copy button wrapper injected by MarkdownContent's useEffect */
 .md-pre-group { position: relative; margin-bottom: 1rem; }
 .md-pre-group pre { margin-bottom: 0; padding-right: 3.5rem; }
+/* CodeBlock header-bar pattern: pre and its wrapper attach flush to the header row above */
+.code-block-body pre { border-top-left-radius: 0; border-top-right-radius: 0; border-top: none; margin-bottom: 0; }
+.code-block-body .md-pre-group { margin-bottom: 0; }
 .md-copy-btn {
   position: absolute;
   top: 0.5rem;
@@ -1020,7 +1040,7 @@ html {
   border-radius: 0.375rem;
   border: 1px solid hsl(var(--surface-border));
   background: hsl(var(--background) / 0.8);
-  padding: 0.25rem 0.5rem;
+  padding: 0.375rem 0.5rem;
   font-size: 0.75rem;
   font-weight: 500;
   color: hsl(var(--text-secondary));
