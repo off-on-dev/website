@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'src/data/adventures/**'
+      - 'src/data/solutions/**'
       - 'react-router.config.ts'
       - 'public/sitemap.xml'
       - 'schemas/adventure.schema.json'
@@ -20,23 +21,36 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-          cache: 'npm'
+          cache: npm
 
-      - run: npm ci
+      - uses: actions/cache@v4
+        id: node-cache
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - if: steps.node-cache.outputs.cache-hit != 'true'
+        run: npm ci
 
       - name: Validate YAML schema
         run: node scripts/generate-adventures.mjs --validate-only
 
+      - name: Validate solution index is up-to-date
+        run: node scripts/generate-solutions.mjs --validate-only
+
       - name: Verify generated files are up-to-date
         run: |
           node scripts/generate-adventures.mjs
+          node scripts/generate-solutions.mjs
           GENERATED_PATHS=(
             src/data/adventures/
+            src/data/solutions/index.ts
+            src/data/solutions/manifest.ts
             public/llms.txt
             public/sitemap.xml
             react-router.config.ts
@@ -46,7 +60,7 @@ jobs:
             src/test/prerender.test.ts
           )
           if ! git diff --quiet "${GENERATED_PATHS[@]}"; then
-            echo "❌ Generated files are out of date. Run 'npm run generate' and commit the result."
+            echo "❌ Generated files are out of date. Run 'npm run generate' and 'npm run generate:solutions' and commit the result."
             git diff --stat "${GENERATED_PATHS[@]}"
             exit 1
           fi

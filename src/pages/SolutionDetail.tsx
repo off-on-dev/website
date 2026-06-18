@@ -1,12 +1,10 @@
-import { type JSX, useState, useRef, useEffect } from "react";
+import { type JSX, type ReactNode, useEffect } from "react";
 import { useLoaderData, Link } from "react-router";
-import type { MetaFunction, LoaderFunctionArgs } from "react-router";
+import type { MetaFunction, LoaderFunctionArgs, LinksFunction } from "react-router";
 import {
   ArrowLeft,
   ExternalLink,
   Lock,
-  Copy,
-  Check,
   Lightbulb,
   AlertTriangle,
   Info,
@@ -19,6 +17,7 @@ import { SOLUTIONS } from "@/data/solutions";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { CodeBlock } from "@/components/CodeBlock";
 import { ContributorBadge } from "@/components/ContributorBadge";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { CodespacesButton } from "@/components/CodespacesButton";
@@ -28,7 +27,12 @@ import {
   COMMUNITY_URL,
 } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
-import { isSolutionUnlocked, formatDeadline } from "@/lib/utils";
+import { isSolutionUnlocked, formatDeadline, resolveDiscussionUrl } from "@/lib/utils";
+
+export const links: LinksFunction = () => [
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-600-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+];
 
 type LoaderData = {
   adventure: (typeof ADVENTURES)[number] | null;
@@ -53,11 +57,7 @@ export function loader({ params }: LoaderFunctionArgs): LoaderData {
     adventure !== null && level !== null
       ? `/adventures/${adventure.id}/levels/${level.id}/`
       : "/adventures/";
-  const discussionUrl = level?.discussionUrl
-    ? level.discussionUrl.startsWith("http")
-      ? level.discussionUrl
-      : `${COMMUNITY_URL}${level.discussionUrl}`
-    : COMMUNITY_URL;
+  const discussionUrl = resolveDiscussionUrl(level?.discussionUrl, COMMUNITY_URL);
   return { adventure, level, solutionUnlocked, solution, challengeUrl, discussionUrl, deadline };
 }
 
@@ -109,70 +109,6 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 // ---------------------------------------------------------------------------
 // Sub-components
 // ---------------------------------------------------------------------------
-
-const CodeBlock = ({
-  language,
-  title,
-  code,
-}: {
-  language: string;
-  title?: string;
-  code: string;
-}): JSX.Element => {
-  const [copied, setCopied] = useState(false);
-  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => (): void => {
-    if (copyTimeoutRef.current !== null) clearTimeout(copyTimeoutRef.current);
-  }, []);
-
-  const handleCopy = (): void => {
-    navigator.clipboard?.writeText(code).then(() => {
-      setCopied(true);
-      if (copyTimeoutRef.current !== null) clearTimeout(copyTimeoutRef.current);
-      copyTimeoutRef.current = setTimeout(() => setCopied(false), 1500);
-    }).catch(() => {
-      // writeText can fail when the document loses focus
-    });
-  };
-
-  return (
-    <div>
-      {/* Header bar: label always visible, no copy button here */}
-      <div className="flex items-center justify-end rounded-t-lg border border-b-0 border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-3 py-2">
-        <span className="truncate text-xs font-mono text-[hsl(var(--text-faint))] select-none" aria-hidden="true">
-          {title ?? language}
-        </span>
-      </div>
-      {/* Same md-pre-group + md-copy-btn pattern as ChallengeDetail: hover-to-show */}
-      <div className="md-content code-block-body">
-        <div className="md-pre-group">
-          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- makes scrollable code block keyboard-reachable per WCAG 2.1 SC 2.1.1 */}
-          <pre tabIndex={0} aria-label={title ?? `${language} code block`}>
-            <code>{code}</code>
-          </pre>
-          <button
-            type="button"
-            className="md-copy-btn"
-            onClick={handleCopy}
-            aria-label={copied ? "Code copied" : "Copy code"}
-          >
-            {copied ? (
-              <Check size={12} aria-hidden="true" />
-            ) : (
-              <Copy size={12} aria-hidden="true" />
-            )}
-            {copied ? "Copied" : "Copy"}
-          </button>
-        </div>
-      </div>
-      {/* Live region announces copy confirmation to screen readers without moving focus */}
-      <span aria-live="polite" className="sr-only">
-        {copied ? "Code copied to clipboard" : ""}
-      </span>
-    </div>
-  );
-};
 
 const calloutConfig = {
   tip: {
@@ -252,25 +188,29 @@ const BlockRenderer = ({ blocks }: { blocks: SolutionBlock[] }): JSX.Element => 
   <div className="space-y-4">
     {blocks.map((block, i) => {
       const key = `${block.type}-${i}`;
-      if (block.type === "text") {
-        return (
-          <div key={key} className="md-content" dangerouslySetInnerHTML={{ __html: block.html }} />
-        );
+      switch (block.type) {
+        case "text":
+          return (
+            <div key={key} className="md-content" dangerouslySetInnerHTML={{ __html: block.html }} />
+          );
+        case "code":
+          return (
+            <CodeBlock key={key} language={block.language} title={block.title} code={block.code} />
+          );
+        case "image":
+          return (
+            <SolutionImage key={key} src={block.src} alt={block.alt} caption={block.caption} />
+          );
+        case "callout":
+          return <Callout key={key} variant={block.variant} html={block.html} />;
+        default: {
+          // TypeScript narrows `block` to `never` here — if a new SolutionBlock
+          // variant is added to the union, this line becomes a compile error.
+          const _exhaustive: never = block;
+          void _exhaustive;
+          return null;
+        }
       }
-      if (block.type === "code") {
-        return (
-          <CodeBlock key={key} language={block.language} title={block.title} code={block.code} />
-        );
-      }
-      if (block.type === "image") {
-        return (
-          <SolutionImage key={key} src={block.src} alt={block.alt} caption={block.caption} />
-        );
-      }
-      if (block.type === "callout") {
-        return <Callout key={key} variant={block.variant} html={block.html} />;
-      }
-      return null;
     })}
   </div>
 );
@@ -283,8 +223,8 @@ const TakeawaysList = ({ items }: { items?: string[] }): JSX.Element | null => {
         Key Takeaways
       </p>
       <ul className="space-y-2" role="list">
-        {items.map((item) => (
-          <li key={item} className="flex gap-2 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+        {items.map((item, index) => (
+          <li key={`${index}-${item}`} className="flex gap-2 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
             <span className="shrink-0 text-primary mt-0.5" aria-hidden="true">›</span>
             {item}
           </li>
@@ -349,47 +289,51 @@ const TopicPills = ({ topics }: { topics?: string[] }): JSX.Element | null => {
   );
 };
 
-const SolutionHero = ({ adventure, level, solution }: HeroProps): JSX.Element => (
-  <div className="rounded-2xl border border-[hsl(var(--surface-border))] overflow-hidden mb-8">
-    <div className="bg-[hsl(var(--surface))] px-6 md:px-8 pt-7 pb-6">
-      {/* backstory[0] is pre-rendered HTML from the markdown pipeline */}
-      {(level.backstory?.[0] ?? adventure.backstory?.[0]) && (
-        <div
-          role="note"
-          className="text-base italic text-[hsl(var(--text-secondary))] leading-relaxed [&>p]:mb-0"
-          dangerouslySetInnerHTML={{ __html: (level.backstory ?? adventure.backstory ?? [])[0] ?? "" }}
-        />
-      )}
-    </div>
-    <div className="h-0.5 bg-primary" aria-hidden="true" />
-    <div className="bg-background/40 px-6 md:px-8 py-6">
-      <div className="flex flex-wrap items-center gap-2 mb-3">
-        <DifficultyBadge difficulty={level.difficulty} showDot />
-        <span className="text-xs text-[hsl(var(--text-faint))] uppercase tracking-wider">
-          Solution
-        </span>
-      </div>
-      <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
-        {solution.title}
-      </h1>
-      {solution.intro && (
-        <p className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl">
-          {solution.intro}
-        </p>
-      )}
-      {solution.contributor && (
-        <div className="mt-3">
-          <ContributorBadge
-            name={solution.contributor.name}
-            url={solution.contributor.url}
-            label="Solution Contributor"
+const SolutionHero = ({ adventure, level, solution }: HeroProps): JSX.Element => {
+  // Level backstory takes precedence; fall back to the adventure-level backstory.
+  // Both are pre-rendered HTML from the markdown pipeline.
+  const backstory = level.backstory?.[0] ?? adventure.backstory?.[0];
+  return (
+    <div className="rounded-2xl border border-[hsl(var(--surface-border))] overflow-hidden mb-8">
+      <div className="bg-[hsl(var(--surface))] px-6 md:px-8 pt-7 pb-6">
+        {backstory && (
+          <div
+            role="note"
+            className="text-base italic text-[hsl(var(--text-secondary))] leading-relaxed md-content [&>p]:mb-0"
+            dangerouslySetInnerHTML={{ __html: backstory }}
           />
+        )}
+      </div>
+      <div className="h-0.5 bg-primary" aria-hidden="true" />
+      <div className="bg-background/40 px-6 md:px-8 py-6">
+        <div className="flex flex-wrap items-center gap-2 mb-3">
+          <DifficultyBadge difficulty={level.difficulty} showDot />
+          <span className="text-xs text-[hsl(var(--text-faint))] uppercase tracking-wider">
+            Solution
+          </span>
         </div>
-      )}
-      <TopicPills topics={level.topics} />
+        <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
+          {solution.title}
+        </h1>
+        {solution.intro && (
+          <p className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl">
+            {solution.intro}
+          </p>
+        )}
+        {solution.contributor && (
+          <div className="mt-3">
+            <ContributorBadge
+              name={solution.contributor.name}
+              url={solution.contributor.url}
+              label="Solution Contributor"
+            />
+          </div>
+        )}
+        <TopicPills topics={level.topics} />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 // ---------------------------------------------------------------------------
 // Sidebar
@@ -402,7 +346,7 @@ const SidebarCard = ({
 }: {
   label: string;
   labelSpacing?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }): JSX.Element => (
   <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
     <p className={`font-sans text-xs font-semibold tracking-wide text-primary uppercase ${labelSpacing}`}>
@@ -429,13 +373,13 @@ const StepNav = ({
   className?: string;
 }): JSX.Element => (
   <nav
-    aria-label="Steps in this solution"
+    aria-label="What was fixed"
     className={`rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5 ${className}`}
   >
     <p className="font-sans text-xs font-semibold tracking-wide text-primary uppercase mb-3">
       what was fixed
     </p>
-    <ol className="space-y-2" role="list">
+    <ul className="space-y-2" role="list">
       {steps.map((step, index) => (
         <li key={step.id} className="flex gap-2.5 items-baseline">
           <span
@@ -452,7 +396,7 @@ const StepNav = ({
           </a>
         </li>
       ))}
-    </ol>
+    </ul>
   </nav>
 );
 
@@ -523,9 +467,28 @@ const SolutionDetail = (): JSX.Element => {
   const { adventure, level, solutionUnlocked, solution, challengeUrl, discussionUrl, deadline } =
     useLoaderData<ReturnType<typeof loader>>();
 
+  // Open the <details> element that matches the URL hash on mount and on every
+  // in-page hash change (sidebar StepNav links). Without this, clicking a step
+  // link scrolls to the element but leaves it collapsed.
+  useEffect(() => {
+    const openMatchingStep = (hash: string): void => {
+      if (!hash) return;
+      const el = document.getElementById(hash.replace(/^#/, ""));
+      if (el instanceof HTMLDetailsElement) {
+        el.open = true;
+      }
+    };
+
+    openMatchingStep(window.location.hash);
+
+    const onHashChange = (): void => openMatchingStep(window.location.hash);
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
   if (!adventure || !level) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-dvh bg-background">
         <Navbar />
         <main id="main-content" tabIndex={-1} className="px-6 md:px-16 pt-28 pb-24">
           <div className="mx-auto max-w-2xl">
@@ -548,7 +511,7 @@ const SolutionDetail = (): JSX.Element => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       <Navbar />
       <main id="main-content" tabIndex={-1} className="px-6 md:px-16 pt-28 pb-24">
         <div className="mx-auto max-w-6xl">
@@ -661,7 +624,7 @@ const SolutionDetail = (): JSX.Element => {
                   )}
 
                   {/* Step cards */}
-                  <ol className="space-y-3 mt-3" role="list" aria-label="Solution steps">
+                  <ol className="space-y-3 mt-3" aria-label="Solution steps">
                     {solution.steps.map((step, index) => (
                       <li key={step.id}>
                         <details

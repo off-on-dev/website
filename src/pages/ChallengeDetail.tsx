@@ -3,7 +3,7 @@ import { useParams, useLoaderData, Link } from "react-router";
 import type { MetaFunction, LoaderFunctionArgs, LinksFunction } from "react-router";
 import { Check, Clock, ExternalLink, ArrowRight } from "lucide-react";
 import { ADVENTURES } from "@/data/adventures";
-import { SOLUTIONS } from "@/data/solutions";
+import { SOLUTION_IDS } from "@/data/solutions/manifest";
 import { TagChips } from "@/components/TagChips";
 import { CodespacesButton } from "@/components/CodespacesButton";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
@@ -24,7 +24,7 @@ import { RewardsCard } from "@/components/RewardsCard";
 import { ChallengeShareLinks } from "@/components/ChallengeShareLinks";
 import { SITE_URL, BRAND_NAME, COMMUNITY_DISPLAY_NAME, COMMUNITY_URL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
-import { isDeadlinePast, isSolutionUnlocked } from "@/lib/utils";
+import { isDeadlinePast, isSolutionUnlocked, resolveDiscussionUrl } from "@/lib/utils";
 import { InlineProse } from "@/components/InlineProse";
 
 export const links: LinksFunction = () => [
@@ -37,9 +37,9 @@ export function loader({ params }: LoaderFunctionArgs): { rewardsBelowFold: bool
   const level = adventure?.levels.find((l) => l.id === params.levelId);
   const deadline = level?.deadline ?? adventure?.rewards?.deadline;
   const rewardsBelowFold = isDeadlinePast(deadline);
-  const hasSolution = isSolutionUnlocked(deadline) && SOLUTIONS.some(
-    (s) => s.adventureId === params.id && s.levelId === params.levelId
-  );
+  const hasSolution =
+    isSolutionUnlocked(deadline) &&
+    SOLUTION_IDS.has(`${params.id}/${params.levelId}`);
   return { rewardsBelowFold, hasSolution };
 }
 
@@ -255,7 +255,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
                 <span>
                   Share your solutions in the{" "}
                   <a
-                    href={level.discussionUrl || COMMUNITY_URL}
+                    href={resolveDiscussionUrl(level.discussionUrl, COMMUNITY_URL)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="docs-ext-link font-medium"
@@ -412,7 +412,7 @@ const ChallengeDetail = (): JSX.Element => {
   );
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       <Navbar />
       <main id="main-content" tabIndex={-1} className="px-6 md:px-16 pt-28 pb-24">
         <div className="mx-auto max-w-6xl">

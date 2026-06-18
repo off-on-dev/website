@@ -225,6 +225,12 @@ Never add a `bg-primary` section button without adding or verifying the correspo
 
 Both use `px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none inline-flex items-center gap-1.5` and include `focus-visible` ring styles (`ring-ring`). The `min-h-[44px]` satisfies WCAG 2.5.5 target size; content is vertically centered via `items-center`.
 
+### cursor: pointer rule
+
+All `<button>`-based interactive elements must have `cursor: pointer` set explicitly in `src/index.css`. Browsers default `<button>` to `cursor: default`, so without this, AI agents doing visual analysis will not recognise the element as actionable. `<a>` / `<Link>` elements are exempt — browsers default those to pointer already.
+
+This applies to every new button utility class and every pill class used on `<button>` elements. Add `cursor: pointer` in the class definition in `src/index.css`, not inline via Tailwind.
+
 ### Difficulty Badges
 
 Badge colors use CSS tokens defined in `src/index.css`. All three difficulties use black text (`--difficulty-text`) on pastel backgrounds for WCAG AA compliance (minimum 4.5:1 contrast ratio).
@@ -636,7 +642,7 @@ Renders a single adventure level as a card: difficulty badge, level name, key le
 
 Navigation card used in tag-filtered level grids. The entire card is a `<Link>` to the challenge detail page. Renders a difficulty badge, level name, first three learnings, and a footer row with "Challenge" label, an optional estimated time pill (`Clock` icon + `level.estimatedTime`), and the parent adventure title.
 
-**Accessible name:** the link carries `aria-label` in the format `"{level.name} — {difficulty} — {adventureTitle}"` (e.g. `"The Observability Challenge — Beginner — Blind by Design"`). This replaces the verbose computed name that would otherwise include all three learning bullet points.
+**Accessible name:** the link carries `aria-label` in the format `"{level.name}: {difficulty}, {adventureTitle}"` (e.g. `"The Observability Challenge: Beginner, Blind by Design"`). This replaces the verbose computed name that would otherwise include all three learning bullet points.
 
 ```tsx
 <FilteredLevelCard
@@ -698,7 +704,7 @@ Two-row filter UI for the adventure catalog. Row 1 is a difficulty single-select
 | `onDifficultyChange` | `(diff: Difficulty \| null) => void` | Called when difficulty changes. |
 | `onTopicsChange` | `(topics: string[]) => void` | Called when tag selection changes. |
 
-**ARIA pattern:** all filter groups (mobile dropdowns and desktop pill rows) use `role="group"` with `aria-pressed` on each button. Mobile dropdowns are always in the DOM — the panel uses the HTML `hidden` attribute when closed so `aria-controls` on the trigger always resolves to a valid IDREF. Trigger buttons use `aria-expanded`, `aria-controls`, and `aria-haspopup="true"` so AT announces them as popup controls. Arrow-key navigation (Up/Down) is supported within each open panel via `onKeyDown` handlers on the panel buttons.
+**ARIA pattern:** all filter groups (mobile dropdowns and desktop pill rows) use `role="group"` with `aria-pressed` on each button. Mobile dropdowns are always in the DOM — the panel uses the HTML `hidden` attribute when closed so `aria-controls` on the trigger always resolves to a valid IDREF. Trigger buttons use `aria-expanded`, `aria-controls`, and `aria-haspopup="listbox"` so AT announces them as listbox controls. Arrow-key navigation (Up/Down) is supported within each open panel via `onKeyDown` handlers on the panel buttons.
 
 **Exported type:** `Difficulty = "Beginner" | "Intermediate" | "Expert"`. Import from `@/components/ChallengeFilters` where `activeDifficulty` state needs typing.
 
@@ -1190,13 +1196,35 @@ Renders a numbered walkthrough as a vertical stepper inside a `CollapsibleSectio
 
 ---
 
+### `CodeBlock`
+
+`src/components/CodeBlock.tsx`
+
+Renders a single fenced code block with a header bar (language/title label left, copy button right) and a code body. Used on solution pages wherever structured code blocks are needed.
+
+```tsx
+<CodeBlock language="bash" title="Install deps" code="npm install" />
+```
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `language` | `string` | Language identifier shown in the header label (e.g. `"bash"`, `"yaml"`). |
+| `title` | `string?` | Optional filename or custom label. Shown instead of `language` when provided. |
+| `code` | `string` | Raw code string (not HTML). |
+
+The header bar uses `.code-block-header` (CSS class) and the label uses `.code-lang-label`. The copy button uses `.code-header-btn`. The copy button border tints amber on hover/focus — no opacity tricks.
+
+Used by `SolutionDetail`.
+
+---
+
 ### `MarkdownContent`
 
 `src/components/MarkdownContent.tsx`
 
-Renders pre-compiled block HTML (generated at build time by `scripts/generate-adventures.mjs`) inside a `div.md-content` container. A `useEffect` attaches a "Copy" button to every `<pre>` element after mount.
+Renders pre-compiled block HTML (generated at build time by `scripts/generate-adventures.mjs`) inside a `div.md-content` container. A `useEffect` wraps every `<pre>` element in the same header-bar structure used by `CodeBlock` — language label on the left (extracted from the `language-*` class on the `<code>` element), copy button on the right.
 
-- Fenced code blocks get a hover/focus-visible "Copy" button via DOM injection (clipboard API, flips to "Copied" for 1.5 s, with proper `aria-label` updates).
+- Fenced code blocks get an always-visible "Copy" button in a header bar (clipboard API, flips to "Copied" for 1.5 s, with proper `aria-label` updates). Same `.code-block-header`, `.code-lang-label`, and `.code-header-btn` CSS classes as `CodeBlock`.
 - All element styles (headings, lists, code, blockquote, tables, links) are driven by `.md-content` rules in `src/index.css`.
 - External links get `target="_blank"`, `rel="noopener noreferrer"`, and a `<span class="sr-only"> (opens in new tab)</span>` injected by the generator. The external link icon is rendered purely via a CSS `::after` rule on `[target="_blank"]` in `src/index.css` — no inline SVG in the HTML.
 
@@ -1301,7 +1329,7 @@ Site-wide footer. No props. Contains two `<nav>` landmark regions (`aria-label="
 
 Navigation card linking to an adventure overview page. The entire card is a `<Link>` to `/adventures/:id/`. Renders a header row with an "Adventure" mono label, an optional `LivePill`, and a `.badge-levels` level-count pill; the adventure title (hover: amber); a two-line `story` snippet; a row of `DifficultyBadge` instances; up to four technology tag `<span>` chips; and an optional `ContributorBadge` pinned to the card footer via `mt-auto`. Card border is `border-primary/50` when `adventure.isLive`, otherwise `border-[hsl(var(--surface-border))]`. Uses `card-glow` for hover glow.
 
-**Accessible name:** the link carries `aria-label` in the format `"{title} — {difficulties} — {tags}"` (e.g. `"Blind by Design — Beginner, Intermediate, Expert — Prometheus, Grafana"`). Tags are omitted if the adventure has none. This gives screen reader users difficulty and technology context when navigating by links, without the verbosity of the full card content.
+**Accessible name:** the link carries `aria-label` in the format `"{title}: {difficulties}, {tags}"` (e.g. `"Blind by Design: Beginner, Intermediate, Expert, Prometheus, Grafana"`). Tags are omitted if the adventure has none. This gives screen reader users difficulty and technology context when navigating by links, without the verbosity of the full card content.
 
 ```tsx
 <AdventureCard adventure={adventureSummary} />
@@ -1460,10 +1488,11 @@ General-purpose utility functions.
 |---|---|---|
 | `cn` | `(...inputs: ClassValue[]) => string` | Merges Tailwind class names and resolves conflicts via `tailwind-merge`. Use everywhere class names are conditionally composed. |
 | `isDeadlinePast` | `(deadline: string \| undefined) => boolean` | Returns `true` if the ISO 8601 deadline string represents a date in the past. Returns `false` for `undefined` or unparseable values. |
+| `isSolutionUnlocked` | `(deadline: string \| undefined) => boolean` | Returns `true` when a solution is unlocked: no deadline set, or deadline has passed. Used in the `SolutionDetail` loader to gate access. |
 | `formatDeadline` | `(iso: string) => string` | Formats an ISO 8601 deadline string for human display, preserving the stored UTC offset rather than converting to the viewer's local timezone. `+01:00` renders as CET, `+02:00` as CEST. Returns the original string unchanged if it does not match the expected format. |
 
 ```ts
-import { cn, isDeadlinePast, formatDeadline } from "@/lib/utils";
+import { cn, isDeadlinePast, isSolutionUnlocked, formatDeadline } from "@/lib/utils";
 ```
 
 ---
@@ -1863,7 +1892,7 @@ Source files live at `src/data/solutions/<adventure-id>/<level-id>.ts`. Types ar
 The solution page uses a two-column layout: main article on the left, sticky sidebar on the right (collapses to a single column on mobile).
 
 - **Hero**: backstory quote (top band), then difficulty badge + "Solution" label, `h1` title, intro text, contributor pill (if present), topic tag pills.
-- **Sidebar**: "What Was Fixed" step nav, "Solve Along" Codespaces card (if `codespacesUrl` present), challenge back-link, discussion link, "Further Reading" card (from `solution.furtherReading`).
+- **Sidebar**: "What Was Fixed" step nav (`<nav aria-label="What was fixed">`), "Solve Along" Codespaces card (if `codespacesUrl` present), challenge back-link, discussion link, "Further Reading" card (from `solution.furtherReading`).
 - **Main column**: spoiler warning, context section (always-open, no toggle), step accordions (first step open by default), complete solution toggle, outro card.
 
 ### Adding a new solution

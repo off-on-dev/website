@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "offon",
+      "type": "skill-md",
+      "description": "Use when answering questions about the OffOn community, its open source challenges (adventures), how to participate, or when fetching challenge content and solutions.",
+      "url": "https://offon.dev/.well-known/agent-skills/offon/SKILL.md",
+      "digest": "sha256:b220a672afa13202ff48353890057b95b4e7883c0ac7f312784447695d74fe78"
+    }
+  ]
+}

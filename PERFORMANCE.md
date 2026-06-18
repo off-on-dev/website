@@ -17,7 +17,7 @@ This file applies to all work on offon.dev. Read it before adding fonts, images,
 Target these thresholds at the 75th percentile of real users:
 
 | Metric | Target | Description |
-|---|---|---|
+| --- | --- | --- |
 | LCP (Largest Contentful Paint) | ≤ 2.5 s | Time until the largest visible element is painted |
 | INP (Interaction to Next Paint) | ≤ 200 ms | Responsiveness of click, tap, and keyboard interactions |
 | CLS (Cumulative Layout Shift) | ≤ 0.1 | Visual stability; elements must not shift unexpectedly |
@@ -37,6 +37,7 @@ Target these thresholds at the 75th percentile of real users:
 - Do not lazy-load the LCP image. Remove `loading="lazy"` from any above-the-fold image.
 - Add `fetchpriority="high"` to the LCP image.
 - If bitmap images are added to the site, prefer WebP over JPEG/PNG. For maximum compression, serve AVIF with a WebP fallback via `<picture>`. `public/og.png` must stay as PNG -- Open Graph crawlers do not reliably support modern formats.
+- `public/og.png` is 1200 x 630 px (the standard OG image size). If the image is ever recreated, export at those exact dimensions and update `og:image:width`/`og:image:height` in `src/lib/meta.ts`, the tests in `src/test/meta.test.ts` and `src/test/seo.test.ts`, and the brand guidelines page `src/pages/BrandGuidelines.tsx`.
 
 ---
 
@@ -46,12 +47,14 @@ Target these thresholds at the 75th percentile of real users:
 - `font-display: optional` is set on all fonts. This means the browser has a very short (~100 ms) window to load a font before permanently falling back to the system font for that page visit. Preloading is therefore required for fonts to render correctly on throttled connections.
 - **Global preloads** go in the `links()` export in `src/root.tsx`. Use this for fonts that appear above the fold on every page. Currently preloaded globally: Inter 400, 500, 600, 700 (body text and semibold/bold labels); Syne 700 (h1–h6 via the `@layer base` rule).
 - **Route-level preloads** go in the `links()` export of a specific route module. Use this for fonts that are only used on certain pages to avoid "preloaded but not used" warnings and wasted bandwidth on other pages. JetBrains Mono (400 and 600) is preloaded at route level on `Index.tsx`, `Challenges.tsx`, `AdventureDetail.tsx`, and `ChallengeDetail.tsx`. These are the routes that render `font-mono` elements. Do not add JetBrains Mono to the global preloads.
+
   ```ts
   export const links: LinksFunction = () => [
     { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
     { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-600-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
   ];
   ```
+
 - The `src/index.css` `@font-face` declarations cover only the `latin` and `latin-ext` subsets. Non-English subset declarations (cyrillic, greek, vietnamese) were removed from CSS. The site is English-only and `unicode-range` already prevented those files from being fetched, but the declarations added unnecessary CSS weight. Note: the corresponding `.woff2` files remain in `public/fonts/` but are never declared in CSS and will never be fetched by the browser.
 - When adding a new route that uses JetBrains Mono (e.g. a page with code blocks or difficulty badges), add the JetBrains Mono preloads to that route's `links()` export.
 
@@ -105,6 +108,14 @@ Target these thresholds at the 75th percentile of real users:
 
 ---
 
+## Viewport units
+
+- Use `min-h-dvh` (dynamic viewport height) instead of `min-h-screen` (100vh) on hero sections and full-page wrappers. On mobile browsers, `100vh` includes the address bar height, causing the section to appear taller than the visible area. `dvh` tracks the actual visible viewport and shrinks when the browser chrome is visible.
+- Tailwind v4 exposes `min-h-dvh`, `min-h-svh`, and `min-h-lvh` as first-class utilities. Do not use `min-h-[100dvh]` arbitrary syntax -- use `min-h-dvh`.
+- Similarly, prefer `h-dvh` over `h-screen` for any element that should fill the exact visible viewport.
+
+---
+
 ## Prefetching
 
 - The site uses the Speculation Rules API to prefetch challenge and adventure pages. The rules are defined as `SPECULATION_RULES` in `src/root.tsx` and injected via DOM in a `useEffect`, not as static JSX.
@@ -124,6 +135,55 @@ Target these thresholds at the 75th percentile of real users:
 
 - Wrap all animations and transitions in `@media (prefers-reduced-motion: no-preference)` so they are disabled by default for users who prefer reduced motion.
 - See [ACCESSIBILITY.md](ACCESSIBILITY.md) for the full motion rule.
+
+---
+
+## Hosting: Cloudflare Migration
+
+The site is currently hosted on GitHub Pages. GitHub Pages cannot set arbitrary HTTP response headers, which blocks several security and performance improvements. Migrating to Cloudflare Pages (or proxying through Cloudflare) would unlock all of the following:
+
+### Security headers (currently missing, cannot be set on GitHub Pages)
+
+- `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload` (HSTS, Required per web spec)
+- `X-Content-Type-Options: nosniff` (Required per web spec)
+- `Permissions-Policy: camera=(), microphone=(), geolocation=()` (Recommended)
+- `Content-Security-Policy` as an HTTP header with `frame-ancestors 'none'` (meta-tag CSP cannot block framing)
+- `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: require-corp` (cross-origin isolation)
+- `Referrer-Policy: strict-origin-when-cross-origin` (currently only set as an HTML meta tag)
+- `Reporting-Endpoints` for CSP violation reporting
+
+### Performance (currently limited by GitHub Pages CDN)
+
+- **Brotli compression** — GitHub Pages only serves gzip. Brotli is 15-20% smaller on text assets. Cloudflare serves Brotli by default.
+- **Immutable Cache-Control** — GitHub Pages caps `max-age` at 600s even for content-hashed assets. Cloudflare allows `Cache-Control: public, max-age=31536000, immutable` on fingerprinted files, dramatically improving repeat-visit load times.
+- **HTTP/3 / QUIC** — Cloudflare enables HTTP/3 for all sites without configuration.
+- **`No-Vary-Search`** — Cloudflare supports custom response headers needed for this caching hint.
+
+### How to migrate
+
+1. Add the site to a Cloudflare account and point DNS to Cloudflare nameservers.
+2. In Cloudflare Pages, connect the GitHub repo and configure the build command (`npm run build`) and output directory (`dist/client`).
+3. Add a `_headers` file to `public/` (Cloudflare Pages reads it automatically) with the security and cache-control headers.
+4. Remove the `deploy.yml` GitHub Actions workflow or repurpose it to trigger a Cloudflare Pages deploy hook.
+5. Submit the domain to the HSTS preload list at <https://hstspreload.org> once HSTS is confirmed working.
+
+### Sample `public/_headers` for Cloudflare Pages
+
+```text
+/*
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Cross-Origin-Opener-Policy: same-origin
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://www.google-analytics.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+```
 
 ---
 

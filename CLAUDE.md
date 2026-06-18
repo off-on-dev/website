@@ -16,6 +16,7 @@ Project-level Claude Code commands live in `.claude/commands/`. Invoke them with
 | &nbsp;&nbsp;`/progressive-enhancement` | Sub-command: building any new feature or reviewing architecture. Ensures core content works without JS. |
 | &nbsp;&nbsp;`/user-personalization` | Sub-command: working on theme toggle, consent state, or any user preference persistence. |
 | `/add-solution` | Generate a structured TypeScript solution file from any input format (md, YAML, HTML, plain text). Downloads and converts images to WebP. |
+| `/create-presentation` | Create a Reveal.js presentation deck for an OffOn event or challenge. Follows the design system in `public/deck.html`. Outputs to `public/<filename>.html` with speaker notes. |
 
 The `spec-first-coding` command is installed globally (`~/.claude/skills/`) and is not in this repo. It enforces W3C spec citations before generating any accessibility-related code.
 
@@ -79,7 +80,7 @@ Community activity happens on a separate Discourse instance. Its display name is
 
 - The canonical domain for this site is https://offon.dev.
 - og:url, og:image, and all absolute URLs must use https://offon.dev.
-- The og:image file is public/og.png and its full URL is https://offon.dev/og.png.
+- The og:image file is public/og.png and its full URL is https://offon.dev/og.png. Its dimensions are 1200 x 630 px.
 - PR preview deployments are served from the gh-pages branch under /pr-preview/pr-{number}/.
 - The open source challenges content lives in a separate organisation at https://github.com/off-on-dev/open-source-challenges. This is an intentional external link and must never be changed or flagged as a violation.
 - The community Discourse instance is at https://community.offon.dev. Use the `COMMUNITY_URL` constant from `src/data/constants.ts`, never hardcode this URL.
@@ -102,6 +103,14 @@ e2e/
   smoke.spec.ts # Playwright smoke tests (requires npm run build first)
 public/
   fonts/        # Self-hosted fonts (Inter, Syne, JetBrains Mono)
+  brand/        # OffOn brand assets (SVG + PNG logos, Nyx illustrations). Referenced by deck.html and BrandGuidelines.tsx.
+  team/         # Board member photos (*.webp). Used by BoardSection and deck.html host slides. Do not duplicate into src/assets/.
+  speakers/     # Event speaker photos (*.webp). Used by presentation decks only. Speakers are per-event and distinct from board members.
+  solutions/    # Solution walkthrough screenshots, one subdirectory per adventure ID (e.g. solutions/echoes-lost-in-orbit/). Referenced by src/data/solutions/ with absolute paths.
+  reveal/       # Self-hosted Reveal.js 6.0.1 library. Used only by deck.html.
+  deck.html     # Reveal.js presentation for Open Source Talks events. Not a React route; served directly by GitHub Pages.
+  nyx.webp      # Nyx mascot illustration. Referenced in BottomCTA and About via import.meta.env.BASE_URL.
+  nyx_peek.webp # Nyx peek variant. Referenced in About via import.meta.env.BASE_URL.
 .github/
   workflows/
     deploy.yml                    # Production deploy to GitHub Pages (push to main)
@@ -563,7 +572,10 @@ All UI labels use **title case (Chicago style)**. Body copy uses **sentence case
 
 - `public/.well-known/security.txt` contains an `Expires` field. Update the date annually (current expiry: `2027-06-01`). An expired security.txt is treated as absent by scanners.
 - `public/llms.txt` lists key pages and all live adventures. Update it whenever a new adventure is added (step 7 in the adventure checklist above) or a page is significantly renamed.
+- `public/llms-full.txt` is the extended companion to `llms.txt`. It contains full level-by-level detail for every adventure. Update it whenever a new adventure or level is added, or a level's technologies/description changes.
 - `public/robots.txt` lists named AI crawler agents. No routine updates needed; add a new agent entry only when a major crawler publishes a new user-agent string.
+- `public/.well-known/agent-skills/offon/SKILL.md` describes the site to AI agents. Update it if the site's key URLs, adventure list, or technology list changes significantly. After editing it, recompute the SHA256 digest (`shasum -a 256 public/.well-known/agent-skills/offon/SKILL.md`) and update the `digest` field in `public/.well-known/agent-skills/index.json`. A stale digest makes the file unverifiable to compliant agents.
+- `public/.well-known/api-catalog` lists machine-readable resources. Update it if a new resource endpoint is added (e.g. a new feed or data file).
 
 ### Sitemap
 
@@ -602,6 +614,14 @@ See [`ADVENTURES.md`](ADVENTURES.md) for the full sync process and PR checklist.
 - Open PRs trigger `preview.yml` and create a PR preview deployment.
 - Only static files in `dist/client/` are deployed. No server config is needed.
 - The base path is set via the `VITE_BASE_PATH` environment variable (defaults to `/`). Never change this without verifying GitHub Pages routing.
+
+### PR preview static assets
+
+The `preview.yml` copy step explicitly lists every static asset directory and root-level file type that needs to appear in the PR preview. Vite copies `public/` to `dist/client/` during the build, but `preview.yml` then copies those files into the `dist/client/pr-preview/pr-N/` subdirectory that `rossjrw/pr-preview-action` deploys.
+
+**When adding a new directory or root-level file type to `public/`, you must also add a corresponding copy line in the copy step of `.github/workflows/preview.yml`.** If you forget, the file will exist in production but return 404 in all PR previews.
+
+Current copy step covers: `assets/`, `fonts/`, `reveal/`, `team/`, `speakers/`, `brand/`, `solutions/`, `deck.html`, and root-level `*.svg`, `*.png`, `*.ico`, `*.webmanifest`, `*.webp` files.
 
 ### GitHub Actions allowlist
 

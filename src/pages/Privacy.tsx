@@ -25,7 +25,7 @@ const Privacy = (): JSX.Element => {
   const list = "list-disc list-inside space-y-1 text-sm text-muted-foreground mb-4 ml-2";
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       <Navbar />
 
       <main id="main-content" tabIndex={-1} className="px-6 md:px-16 pt-28 pb-16">

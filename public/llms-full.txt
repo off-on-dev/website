@@ -1,0 +1,206 @@
+# OffOn — Full Content Index
+
+> OffOn is a vendor-neutral community for open source enthusiasts.
+> Learn through hands-on challenges, share knowledge, and build together.
+> The site is fully static with no backend; all content is prerendered at https://offon.dev.
+
+This document is the extended full-content companion to `/llms.txt`. It covers all key pages and adventures in detail for LLM consumption.
+
+---
+
+## About OffOn
+
+OffOn is an open source learning community built around real, hands-on challenges. It is vendor-neutral: challenges use open source tools and projects, not proprietary platforms.
+
+**What OffOn provides:**
+- Scenario-driven adventures with beginner, intermediate, and expert levels
+- Challenges that mirror real-world engineering problems
+- A community forum at https://community.offon.dev for discussion and leaderboards
+- Solution walkthroughs for completed challenges (where published)
+
+**Who it is for:** Software engineers, DevOps practitioners, platform engineers, and anyone who learns better by doing than by reading.
+
+**There is no sign-up required to start a challenge.** Challenges run entirely in a participant's own environment.
+
+---
+
+## How Adventures Work
+
+An adventure is a scenario-driven, multi-level challenge. Each adventure has:
+
+- A narrative framing (a fictional world or situation that gives the challenge context)
+- Two or three levels of increasing difficulty (Beginner, Intermediate, Expert)
+- A defined set of technologies and learning objectives per level
+- A community discussion thread on https://community.offon.dev for each level
+- Optional published solution walkthroughs at `https://offon.dev/adventures/<id>/levels/<difficulty>/solution/`
+
+Participants work in their own local environment. No account or subscription is needed.
+
+---
+
+## Adventures
+
+### Lex Imperfecta
+
+**URL:** https://offon.dev/adventures/lex-imperfecta/
+
+The Roman Republic has built a sophisticated legal system to protect its citizens, but the laws were written in haste and the exceptions were written too generously. Policies go unenforced, the wrong citizens are exempt, and something has slipped through the gates unnoticed. As a newly appointed Praetor, your mission is to restore order before chaos takes hold.
+
+**Technologies:** Kyverno, Kubernetes, Policy Reporter
+
+**Levels:**
+
+- **Beginner — The Twelve Tables** (https://offon.dev/adventures/lex-imperfecta/levels/beginner/)
+  Topics: Kyverno, Kubernetes
+  Learn to write and enforce Kubernetes admission policies using Kyverno.
+
+- **Intermediate — Governing the Provinces** (https://offon.dev/adventures/lex-imperfecta/levels/intermediate/)
+  Topics: Kyverno, Policy Reporter, Kubernetes
+  Layer exceptions and reporting onto your policy set; understand why policies fail silently.
+
+- **Expert — Quis Custodiet** (https://offon.dev/adventures/lex-imperfecta/levels/expert/)
+  Topics: Kyverno, Policy Reporter, Kubernetes
+  Harden policies against evasion; instrument and report on compliance at scale.
+
+---
+
+### Blind by Design
+
+**URL:** https://offon.dev/adventures/blind-by-design/
+
+Three levels of OpenFeature with flagd as the provider, in a Java + Spring Boot service. Wire the SDK against a flagd sidecar (Beginner), layer evaluation context to target by cohort (Intermediate), then instrument flag evaluations with OpenTelemetry and roll back a misbehaving fractional rollout (Expert). All without redeploying.
+
+**Technologies:** OpenFeature, flagd, Spring Boot, Java, OpenTelemetry, Grafana
+
+**Levels:**
+
+- **Beginner — Stand up the Lab** (https://offon.dev/adventures/blind-by-design/levels/beginner/)
+  Topics: OpenFeature, flagd, Spring Boot
+  Wire the OpenFeature SDK to a flagd sidecar and toggle behaviour with a flag.
+
+- **Intermediate — Outcome by Cohort** (https://offon.dev/adventures/blind-by-design/levels/intermediate/)
+  Topics: OpenFeature, flagd, Spring Boot, Java
+  Use evaluation context to target feature flags at specific user cohorts.
+
+- **Expert — Read the Chart** (https://offon.dev/adventures/blind-by-design/levels/expert/)
+  Topics: OpenFeature, OpenTelemetry, Grafana, Spring Boot
+  Instrument flag evaluations with OpenTelemetry; detect and roll back a fractional rollout causing errors.
+
+---
+
+### The AI Observatory
+
+**URL:** https://offon.dev/adventures/the-ai-observatory/
+
+Investigate a mysterious bandwidth anomaly at a remote research station by instrumenting its AI system with OpenTelemetry, OpenLLMetry, and Jaeger.
+
+**Technologies:** OpenTelemetry, OpenLLMetry, Jaeger, Prometheus
+
+**Levels:**
+
+- **Beginner — Calibrating the Lens** (https://offon.dev/adventures/the-ai-observatory/levels/beginner/)
+  Topics: OpenTelemetry, OpenLLMetry, Jaeger
+  Add observability to an LLM-based system using OpenLLMetry and trace requests through Jaeger.
+
+- **Intermediate — The Distracted Pilot** (https://offon.dev/adventures/the-ai-observatory/levels/intermediate/)
+  Topics: OpenTelemetry, OpenLLMetry, Jaeger, Prometheus
+  Correlate traces and metrics; identify the source of performance degradation.
+
+- **Expert — The Noise Filter** (https://offon.dev/adventures/the-ai-observatory/levels/expert/)
+  Topics: OpenTelemetry, OpenLLMetry, Jaeger
+  Implement sampling strategies; reduce telemetry noise without losing signal.
+
+---
+
+### Building CloudHaven
+
+**URL:** https://offon.dev/adventures/building-cloudhaven/
+
+Join the Infrastructure Guild and modernize CloudHaven's infrastructure from manual provisioning to a self-service platform using Infrastructure as Code with OpenTofu and GitHub Actions.
+
+**Technologies:** OpenTofu, TDD, GitHub Actions, Trivy
+
+**Levels:**
+
+- **Beginner — The Foundation Stones** (https://offon.dev/adventures/building-cloudhaven/levels/beginner/)
+  Topics: OpenTofu
+  Provision infrastructure with OpenTofu; understand state, resources, and the plan/apply cycle.
+
+- **Intermediate — The Modular Metropolis** (https://offon.dev/adventures/building-cloudhaven/levels/intermediate/)
+  Topics: OpenTofu, TDD
+  Refactor infrastructure into reusable modules; apply test-driven development to infrastructure code.
+
+- **Expert — The Guardian Protocols** (https://offon.dev/adventures/building-cloudhaven/levels/expert/)
+  Topics: OpenTofu, GitHub Actions, Trivy
+  Automate infrastructure delivery with CI/CD; scan for security misconfigurations with Trivy.
+
+---
+
+### Echoes Lost in Orbit
+
+**URL:** https://offon.dev/adventures/echoes-lost-in-orbit/
+
+Restore interstellar communications by fixing broken GitOps setups, progressive delivery systems, and observability pipelines across three galactic missions.
+
+**Technologies:** Argo CD, Argo Rollouts, OpenTelemetry, Jaeger, PromQL
+
+**Levels:**
+
+- **Beginner — Broken Echoes** (https://offon.dev/adventures/echoes-lost-in-orbit/levels/beginner/)
+  Topics: Argo CD
+  Fix a broken GitOps pipeline; restore continuous delivery via Argo CD.
+  Solution: https://offon.dev/adventures/echoes-lost-in-orbit/levels/beginner/solution/
+
+- **Intermediate — The Silent Canary** (https://offon.dev/adventures/echoes-lost-in-orbit/levels/intermediate/)
+  Topics: Argo Rollouts, PromQL
+  Diagnose a failed canary deployment using PromQL; configure automated rollback rules.
+  Solution: https://offon.dev/adventures/echoes-lost-in-orbit/levels/intermediate/solution/
+
+- **Expert — Hyperspace Operations & Transport** (https://offon.dev/adventures/echoes-lost-in-orbit/levels/expert/)
+  Topics: Argo Rollouts, OpenTelemetry, Jaeger, PromQL
+  Correlate traces with deployment events; instrument a progressive delivery pipeline end-to-end.
+  Solution: https://offon.dev/adventures/echoes-lost-in-orbit/levels/expert/solution/
+
+---
+
+## Community
+
+The OffOn community is hosted at https://community.offon.dev (a Discourse forum).
+
+- Each challenge level has a dedicated discussion thread for questions, tips, and solutions.
+- A leaderboard tracks participants who have completed challenges.
+- The Community Guide at https://offon.dev/handbook/ explains how to get started, how to submit a solution, and how the leaderboard works.
+
+---
+
+## Challenge Technologies (full list)
+
+Argo CD, Argo Rollouts, flagd, GitHub Actions, Grafana, Jaeger, Java, Kubernetes, Kyverno, OpenFeature, OpenLLMetry, OpenTelemetry, OpenTofu, Policy Reporter, Prometheus, PromQL, Python, Spring Boot, TDD, Terraform, Trivy.
+
+---
+
+## Key Pages
+
+| Page | URL | Description |
+|---|---|---|
+| Home | https://offon.dev/ | Community overview, featured challenges, leaderboard |
+| Adventures | https://offon.dev/adventures/ | All multi-level challenge adventures |
+| Challenges | https://offon.dev/challenges/ | All levels across all adventures; filter by tag |
+| Community Guide | https://offon.dev/handbook/ | How to participate, submit solutions, and use the community |
+| About | https://offon.dev/about/ | Mission, values, and team behind OffOn |
+| Sponsors | https://offon.dev/sponsors/ | Organisations supporting the platform |
+| Accessibility | https://offon.dev/accessibility/ | WCAG 2.2 AA commitment and known issues |
+| Brand Guidelines | https://offon.dev/brand/ | Logos, colours, typography, and voice |
+| Privacy Policy | https://offon.dev/privacy/ | GDPR-compliant; consent-gated analytics |
+
+---
+
+## Machine-Readable Resources
+
+- LLM index (summary): https://offon.dev/llms.txt
+- LLM index (full): https://offon.dev/llms-full.txt
+- XML sitemap: https://offon.dev/sitemap.xml
+- Community sitemap: https://offon.dev/community-sitemap.xml
+- Agent skills: https://offon.dev/.well-known/agent-skills/index.json
+- Security contact: https://offon.dev/.well-known/security.txt
+- API catalog: https://offon.dev/.well-known/api-catalog
