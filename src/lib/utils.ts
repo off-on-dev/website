@@ -21,7 +21,9 @@ export function isSolutionUnlocked(deadline: string | undefined): boolean {
 /**
  * Formats an ISO 8601 deadline string for human display.
  * Preserves the stored UTC offset rather than converting to the viewer's local timezone.
- * "+01:00" displays as CET, "+02:00" displays as CEST.
+ * "+01:00" displays as CET, "+02:00" displays as CEST. All other offsets display as "UTC±HH:MM".
+ * This covers current OffOn adventures (all European deadlines); extend the map if a future
+ * adventure uses a different timezone.
  */
 export function formatDeadline(iso: string): string {
   const match = iso.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):\d{2}([+-]\d{2}:\d{2})$/);

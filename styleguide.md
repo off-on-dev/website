@@ -1460,10 +1460,11 @@ General-purpose utility functions.
 |---|---|---|
 | `cn` | `(...inputs: ClassValue[]) => string` | Merges Tailwind class names and resolves conflicts via `tailwind-merge`. Use everywhere class names are conditionally composed. |
 | `isDeadlinePast` | `(deadline: string \| undefined) => boolean` | Returns `true` if the ISO 8601 deadline string represents a date in the past. Returns `false` for `undefined` or unparseable values. |
+| `isSolutionUnlocked` | `(deadline: string \| undefined) => boolean` | Returns `true` when a solution is unlocked: no deadline set, or deadline has passed. Used in the `SolutionDetail` loader to gate access. |
 | `formatDeadline` | `(iso: string) => string` | Formats an ISO 8601 deadline string for human display, preserving the stored UTC offset rather than converting to the viewer's local timezone. `+01:00` renders as CET, `+02:00` as CEST. Returns the original string unchanged if it does not match the expected format. |
 
 ```ts
-import { cn, isDeadlinePast, formatDeadline } from "@/lib/utils";
+import { cn, isDeadlinePast, isSolutionUnlocked, formatDeadline } from "@/lib/utils";
 ```
 
 ---
@@ -1863,7 +1864,7 @@ Source files live at `src/data/solutions/<adventure-id>/<level-id>.ts`. Types ar
 The solution page uses a two-column layout: main article on the left, sticky sidebar on the right (collapses to a single column on mobile).
 
 - **Hero**: backstory quote (top band), then difficulty badge + "Solution" label, `h1` title, intro text, contributor pill (if present), topic tag pills.
-- **Sidebar**: "What Was Fixed" step nav, "Solve Along" Codespaces card (if `codespacesUrl` present), challenge back-link, discussion link, "Further Reading" card (from `solution.furtherReading`).
+- **Sidebar**: "What Was Fixed" step nav (`<nav aria-label="What was fixed">`), "Solve Along" Codespaces card (if `codespacesUrl` present), challenge back-link, discussion link, "Further Reading" card (from `solution.furtherReading`).
 - **Main column**: spoiler warning, context section (always-open, no toggle), step accordions (first step open by default), complete solution toggle, outro card.
 
 ### Adding a new solution

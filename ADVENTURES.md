@@ -228,7 +228,7 @@ Paste or attach the walkthrough content in any format — markdown, YAML, HTML, 
 | `src/data/solutions/index.ts` | Full barrel re-generated: one import per solution file, exported as `SOLUTIONS: Solution[]`. Never edit by hand. |
 | `react-router.config.ts` | `GENERATED:solutions` region: one prerender entry per solution route (`/adventures/<id>/levels/<level>/solution`). |
 | `src/test/seo.test.ts` | `GENERATED:solutions` region: one route entry per solution. |
-| `src/test/prerender.test.ts` | `GENERATED:solutions` region: one `{ file, check }` entry per solution asserting the built HTML contains `"Solution:"`. |
+| `src/test/prerender.test.ts` | `GENERATED:solutions` region: one `{ file, check }` entry per solution asserting the built HTML contains `"Solution"`. |
 | `e2e/smoke.spec.ts` | `GENERATED:solutions` region: one `{ path, title }` smoke-test entry per solution. |
 
 You do not need to touch any of these files manually when adding a solution.

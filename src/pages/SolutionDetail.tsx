@@ -361,7 +361,7 @@ const SolutionHero = ({ adventure, level, solution }: HeroProps): JSX.Element =>
       {(level.backstory?.[0] ?? adventure.backstory?.[0]) && (
         <div
           role="note"
-          className="text-base italic text-[hsl(var(--text-secondary))] leading-relaxed [&>p]:mb-0"
+          className="text-base italic text-[hsl(var(--text-secondary))] leading-relaxed md-content [&>p]:mb-0"
           dangerouslySetInnerHTML={{ __html: (level.backstory ?? adventure.backstory ?? [])[0] ?? "" }}
         />
       )}
@@ -434,7 +434,7 @@ const StepNav = ({
   className?: string;
 }): JSX.Element => (
   <nav
-    aria-label="Steps in this solution"
+    aria-label="What was fixed"
     className={`rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5 ${className}`}
   >
     <p className="font-sans text-xs font-semibold tracking-wide text-primary uppercase mb-3">
