@@ -68,6 +68,56 @@ Pills are `0.44em` — slightly above label tier because they are interactive.
 
 Amber (`--amber`) signals two things only: **structure** (`.sh` overline label) and **active/current state** (highlighted rows, links, pills on hover). Do not use amber for bullet arrows or decorative dots — those use `var(--muted)` at 50% opacity.
 
+All inline URL references (e.g. `offon.dev/contribute`) must use `style="color: #ffc034;"`. Do not rely on opacity to style links — opacity dims the amber and makes it unreadable.
+
+---
+
+## Layout rules
+
+### `.sh` is always full-width — never nested inside a split column
+
+Every slide's primary heading block (`.sh`) must sit **outside** any split or grid container, spanning the full slide width. Content columns come after it.
+
+**Correct:**
+```html
+<div class="sh">
+  <span class="label">overline</span>
+  <h2>Slide Title</h2>
+</div>
+<div class="split-even">
+  <div><!-- left column content --></div>
+  <div><!-- right column content --></div>
+</div>
+```
+
+**Wrong — never do this:**
+```html
+<div class="split-even">
+  <div>
+    <div class="sh">...</div>  <!-- ← nested inside column -->
+    ...
+  </div>
+  <div>
+    <span class="col-label">...</span>
+    ...
+  </div>
+</div>
+```
+
+When a slide has two sub-sections (e.g. "What makes a good talk" left + "Want to present?" right), the **primary** `.sh` goes full-width above the split. Secondary section headings inside columns use their own `.sh` at the column level.
+
+### Section labels vs. content headings
+
+`col-label` is a section label above a column's content. It is always smaller (`0.38em`) than the content items below it (`0.6em` h4). This is intentional — amber uppercase provides the hierarchy, size does not. Do not try to make `col-label` bigger than the items it labels. Trust the color and spacing.
+
+The current CSS values (copied from `public/deck.html`):
+
+- `.sh .label { margin-bottom: 0.55em }` — gap before the h2
+- `.sh { margin-bottom: 1.1em }` — gap after the full header block
+- `.col-label { margin-bottom: 0.9em }` — gap before column content
+
+Do not override these inline unless there is a specific layout reason.
+
 ---
 
 ## Slide structure patterns
@@ -112,14 +162,34 @@ Overline label text is lowercase in HTML — CSS applies `text-transform: upperc
 
 The dot is muted, not amber. The `<strong>` inside `.bt` renders in `--fg` (near-white).
 
-### Value rows (for two-column feature lists)
+### Value rows (for feature lists in a column)
+
 ```html
-<div class="vrow hi">
+<div class="vrow">
   <h4>Feature name</h4>
-  <p>Description.</p>
 </div>
 ```
-Use `.hi` to highlight with amber left border. Omit `.hi` for muted items.
+
+Sub-text (`<p>`) inside a vrow is optional. Headings-only vrows are valid and intentional when the heading is self-explanatory — move the detail to speaker notes instead. Use `.hi` to highlight with amber left border.
+
+### Quiz topic cards
+
+Use `.g2` + `.card` for quiz topic categories. Do not use `.qrow` with round number badges — that pattern implies structured rounds and should not appear in event decks where rounds aren't the focus.
+
+```html
+<div class="g2" style="margin-top: 0.5em;">
+  <div class="card">
+    <h4>OSS History and Culture</h4>
+    <p>General open source knowledge.</p>
+  </div>
+  <div class="card">
+    <h4>Tonight's Topics</h4>
+    <p>Based on the two talks.</p>
+  </div>
+</div>
+```
+
+Do not add "accessible to everyone", "rewards people who were paying attention", or similar filler qualifiers to quiz card descriptions.
 
 ### Contribute-style cards (icon + title + arrow list)
 ```html
@@ -165,6 +235,9 @@ Use `.hi` to highlight with amber left border. Omit `.hi` for muted items.
 Photos go in `public/team/<name>.webp`. If a photo is not available, use initials as text inside the avatar div.
 
 ### Title slide
+
+`justify-content: flex-start` places cobrand and h1 at the top. The tagline paragraphs sit below with a fixed `margin-top` — do not use `flex: 1` spacers between the title and taglines, as that pushes them to the bottom of the slide.
+
 ```html
 <section>
   <div class="title-slide">
@@ -173,8 +246,8 @@ Photos go in `public/team/<name>.webp`. If a photo is not available, use initial
       <span class="xsep">×</span>
       <span class="partner">Partner Name</span>
     </div>
-    <h1>Presentation Title</h1>
-    <p style="font-size: 0.7em; margin-top: 0.45em;">Subtitle or tagline.</p>
+    <h1 style="color: #ffc034;">Presentation Title</h1>
+    <p style="font-size: 0.7em; margin-top: 2.8em;">Subtitle or tagline.</p>
     <p style="font-size: 0.52em; margin-top: 0.35em; opacity: 0.5;">Event or context.</p>
     <p style="position: absolute; bottom: 1.8em; right: 2.2em; font-size: 0.38em; opacity: 0.28; letter-spacing: 0.04em;">Press S for speaker notes</p>
   </div>
@@ -185,6 +258,9 @@ Photos go in `public/team/<name>.webp`. If a photo is not available, use initial
 If there is no co-brand partner, omit the `.cobrand` div and place the OffOn logo directly above the `h1`.
 
 ### Final / join slide
+
+Include a 3-column QR code grid for the three main links before the pill row. Generate QR code PNGs with `npx qrcode -t png -o public/qr/<name>.png "<url>"` and reference them via `src="qr/<name>.png"`. The `onerror` handler hides the image box gracefully if the file is missing.
+
 ```html
 <section>
   <div class="final">
@@ -194,31 +270,47 @@ If there is no co-brand partner, omit the `.cobrand` div and place the OffOn log
       <span class="partner">Partner</span>
     </div>
     <h2>Join us</h2>
-    <p style="font-size: 0.65em; max-width: 22em; margin: 0.35em auto 0;">CTA sentence.</p>
+    <p style="font-size: 0.65em; max-width: 26em; margin: 0.35em auto 0.8em;">CTA sentence.</p>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2em; margin-bottom: 0.8em; max-width: 28em;">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.4em;">
+        <div style="width: 5.5em; height: 5.5em; background: var(--card); border: 1px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+          <img src="qr/offon-dev.png" alt="QR code for offon.dev" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'; this.parentElement.style.opacity='0.3';">
+        </div>
+        <span style="font-size: 0.38em; color: #ffc034;">offon.dev</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.4em;">
+        <div style="width: 5.5em; height: 5.5em; background: var(--card); border: 1px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+          <img src="qr/community-offon-dev.png" alt="QR code for community.offon.dev" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'; this.parentElement.style.opacity='0.3';">
+        </div>
+        <span style="font-size: 0.38em; color: #ffc034;">community.offon.dev</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.4em;">
+        <div style="width: 5.5em; height: 5.5em; background: var(--card); border: 1px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+          <img src="qr/offon-dev-contribute.png" alt="QR code for offon.dev/contribute" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'; this.parentElement.style.opacity='0.3';">
+        </div>
+        <span style="font-size: 0.38em; color: #ffc034;">offon.dev/contribute</span>
+      </div>
+    </div>
     <div class="link-row">
-      <a href="https://offon.dev" class="pill hi">offon.dev</a>
-      <a href="https://community.offon.dev" class="pill">community.offon.dev</a>
+      <a href="mailto:offondev@gmail.com" class="pill">offondev@gmail.com</a>
+      <a href="https://bsky.app/profile/off-on-dev.bsky.social" class="pill">Bluesky</a>
+      <a href="https://www.linkedin.com/company/offondev" class="pill">LinkedIn</a>
+      <a href="https://x.com/OffonDev" class="pill">X</a>
     </div>
   </div>
   <aside class="notes">Speaker notes here.</aside>
 </section>
 ```
 
+After generating QR PNGs, add `cp -r dist/client/qr "${PREVIEW_DIR}/"` to the copy step in `.github/workflows/preview.yml` if it is not already there.
+
 ### Agenda table
+
 ```html
 <table class="agenda">
   <tr><td>18:00</td><td>Item</td><td>Duration</td></tr>
   <tr class="hi"><td>18:10</td><td>Highlighted item</td><td>25 min</td></tr>
 </table>
-```
-
-### Quiz rounds
-```html
-<div class="qrow">
-  <span class="rnum">Round 1</span>
-  <h4>Round title</h4>
-  <p>Round description.</p>
-</div>
 ```
 
 ### Column label (above a column in split layouts)
@@ -239,6 +331,8 @@ Column label text is lowercase in HTML — CSS applies `text-transform: uppercas
 - Brand is always "OffOn" (camelCase). Domain is always "offon.dev" (lowercase).
 - Do not enumerate difficulty levels by name.
 - Keep slides tight. One idea per slide. Fewer words per bullet are better.
+- Do not add filler qualifiers like "accessible to everyone" or "rewards people who were paying attention" to quiz or card descriptions.
+- Do not mention "Propose a sponsor" as a contribution action.
 
 ---
 
@@ -249,6 +343,7 @@ Every `<section>` must have an `<aside class="notes">` block. Notes should:
 - State what to say out loud that is not on the slide.
 - Flag transitions: "This leads into the demo on the next slide."
 - Call out anything time-sensitive or audience-dependent.
+- When slide content is intentionally sparse (e.g. vrow headings-only), expand in notes with the sub-text that was omitted from the slide.
 - Be written in plain sentences, not bullets.
 
 Press S in the browser opens Reveal.js speaker view (current + next slide, notes, timer).

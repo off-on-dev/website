@@ -104,7 +104,8 @@ e2e/
 public/
   fonts/        # Self-hosted fonts (Inter, Syne, JetBrains Mono)
   brand/        # OffOn brand assets (SVG + PNG logos, Nyx illustrations). Referenced by deck.html and BrandGuidelines.tsx.
-  team/         # Team and speaker photos (*.webp). Single source of truth — used by BoardSection and presentation decks. Do not duplicate into src/assets/.
+  team/         # Board member photos (*.webp). Used by BoardSection and deck.html host slides. Do not duplicate into src/assets/.
+  speakers/     # Event speaker photos (*.webp). Used by presentation decks only. Speakers are per-event and distinct from board members.
   solutions/    # Solution walkthrough screenshots, one subdirectory per adventure ID (e.g. solutions/echoes-lost-in-orbit/). Referenced by src/data/solutions/ with absolute paths.
   reveal/       # Self-hosted Reveal.js 6.0.1 library. Used only by deck.html.
   deck.html     # Reveal.js presentation for Open Source Talks events. Not a React route; served directly by GitHub Pages.
@@ -617,7 +618,7 @@ The `preview.yml` copy step explicitly lists every static asset directory and ro
 
 **When adding a new directory or root-level file type to `public/`, you must also add a corresponding copy line in the copy step of `.github/workflows/preview.yml`.** If you forget, the file will exist in production but return 404 in all PR previews.
 
-Current copy step covers: `assets/`, `fonts/`, `reveal/`, `team/`, `brand/`, `solutions/`, `deck.html`, and root-level `*.svg`, `*.png`, `*.ico`, `*.webmanifest`, `*.webp` files.
+Current copy step covers: `assets/`, `fonts/`, `reveal/`, `team/`, `speakers/`, `brand/`, `solutions/`, `deck.html`, and root-level `*.svg`, `*.png`, `*.ico`, `*.webmanifest`, `*.webp` files.
 
 ### GitHub Actions allowlist
 
