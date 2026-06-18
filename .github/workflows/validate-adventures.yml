@@ -50,6 +50,7 @@ jobs:
           GENERATED_PATHS=(
             src/data/adventures/
             src/data/solutions/index.ts
+            src/data/solutions/manifest.ts
             public/llms.txt
             public/sitemap.xml
             react-router.config.ts

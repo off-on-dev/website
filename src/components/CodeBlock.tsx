@@ -53,7 +53,7 @@ export const CodeBlock = ({ language, title, code }: CodeBlockProps): JSX.Elemen
           </pre>
         </div>
       </div>
-      <span aria-live="polite" className="sr-only">
+      <span aria-live="polite" aria-atomic="true" className="sr-only">
         {copied ? "Code copied to clipboard" : ""}
       </span>
     </div>

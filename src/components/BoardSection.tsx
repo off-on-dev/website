@@ -24,7 +24,7 @@ export const BoardSection = (): JSX.Element => {
             >
               {member.image ? (
                 <img
-                  src={member.image}
+                  src={`${import.meta.env.BASE_URL}${member.image}`}
                   alt={member.name}
                   width={AVATAR_SIZE}
                   height={AVATAR_SIZE}
