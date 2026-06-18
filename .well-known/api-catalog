@@ -14,6 +14,16 @@
           "title": "LLM content index"
         },
         {
+          "href": "https://offon.dev/llms-full.txt",
+          "type": "text/plain",
+          "title": "LLM full content index"
+        },
+        {
+          "href": "https://offon.dev/.well-known/agent-skills/index.json",
+          "type": "application/json",
+          "title": "Agent skills index"
+        },
+        {
           "href": "https://offon.dev/.well-known/security.txt",
           "type": "text/plain",
           "title": "Security contact"
