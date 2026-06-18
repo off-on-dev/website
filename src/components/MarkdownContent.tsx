@@ -19,39 +19,62 @@ export const MarkdownContent = ({ source }: MarkdownContentProps): JSX.Element =
     const cleanup: (() => void)[] = [];
 
     el.querySelectorAll("pre").forEach((pre) => {
-      const wrapper = document.createElement("div");
-      wrapper.className = "md-pre-group";
-      pre.parentNode?.insertBefore(wrapper, pre);
-      wrapper.appendChild(pre);
+      const code = pre.querySelector("code");
+      const langMatch = code?.className.match(/language-(\S+)/);
+      const langLabel = langMatch ? langMatch[1] : "";
+
+      // Header bar: language label left, copy button right
+      const header = document.createElement("div");
+      header.className = "code-block-header";
+
+      const label = document.createElement("span");
+      label.className = "code-lang-label";
+      label.setAttribute("aria-hidden", "true");
+      label.textContent = langLabel;
+      header.appendChild(label);
 
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.setAttribute("aria-label", "Copy code to clipboard");
-      btn.className = "md-copy-btn";
+      btn.setAttribute("aria-label", "Copy code");
+      btn.className = "code-header-btn";
       btn.innerHTML = `${COPY_SVG} Copy`;
+      header.appendChild(btn);
+
+      // Code body: md-content code-block-body so .md-content pre styles apply
+      const codeBody = document.createElement("div");
+      codeBody.className = "md-content code-block-body";
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "md-pre-group";
+      codeBody.appendChild(wrapper);
+
+      // Outer container replaces the pre in the DOM
+      const container = document.createElement("div");
+      container.appendChild(header);
+      container.appendChild(codeBody);
+
+      pre.parentNode?.insertBefore(container, pre);
+      wrapper.appendChild(pre);
 
       const onClick = (): void => {
-        void navigator.clipboard.writeText(pre.textContent ?? "").then(() => {
+        navigator.clipboard?.writeText(pre.textContent ?? "").then(() => {
           btn.innerHTML = `${CHECK_SVG} Copied`;
-          btn.setAttribute("aria-label", "Copied to clipboard");
-          // Announce via live region for screen readers that don't re-read
-          // a focused button's accessible name when it changes mid-focus.
-          if (liveRef.current) liveRef.current.textContent = "Copied to clipboard";
-          window.setTimeout(() => {
+          btn.setAttribute("aria-label", "Code copied");
+          if (liveRef.current) liveRef.current.textContent = "Code copied to clipboard";
+          setTimeout(() => {
             btn.innerHTML = `${COPY_SVG} Copy`;
-            btn.setAttribute("aria-label", "Copy code to clipboard");
+            btn.setAttribute("aria-label", "Copy code");
             if (liveRef.current) liveRef.current.textContent = "";
           }, 1500);
-        });
+        }).catch(() => {});
       };
       btn.addEventListener("click", onClick);
-      wrapper.appendChild(btn);
 
       cleanup.push(() => {
         btn.removeEventListener("click", onClick);
-        if (wrapper.parentNode) {
-          wrapper.parentNode.insertBefore(pre, wrapper);
-          wrapper.remove();
+        if (container.parentNode) {
+          container.parentNode.insertBefore(pre, container);
+          container.remove();
         }
       });
     });

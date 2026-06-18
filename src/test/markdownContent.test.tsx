@@ -8,7 +8,7 @@ const SOURCE_TWO = `<pre><code>one</code></pre><pre><code>two</code></pre>`;
 const SOURCE_PROSE = "<p>No code blocks here</p>";
 
 function clickCopyButton(): HTMLElement {
-  const btn = screen.getByRole("button", { name: "Copy code to clipboard" });
+  const btn = screen.getByRole("button", { name: "Copy code" });
   fireEvent.click(btn);
   return btn;
 }
@@ -39,15 +39,13 @@ describe("MarkdownContent: copy button", () => {
   it("injects a copy button for a single <pre> block", () => {
     render(<MarkdownContent source={SOURCE_ONE} />);
     expect(
-      screen.getByRole("button", { name: "Copy code to clipboard" })
+      screen.getByRole("button", { name: "Copy code" })
     ).toBeInTheDocument();
   });
 
   it("injects one copy button per <pre> block", () => {
     render(<MarkdownContent source={SOURCE_TWO} />);
-    const buttons = screen.getAllByRole("button", {
-      name: "Copy code to clipboard",
-    });
+    const buttons = screen.getAllByRole("button", { name: "Copy code" });
     expect(buttons).toHaveLength(2);
   });
 
@@ -65,13 +63,13 @@ describe("MarkdownContent: copy button", () => {
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(CODE);
   });
 
-  it("updates aria-label to 'Copied to clipboard' immediately after click", async () => {
+  it("updates aria-label to 'Code copied' immediately after click", async () => {
     render(<MarkdownContent source={SOURCE_ONE} />);
     await act(async () => {
       clickCopyButton();
     });
     expect(
-      screen.getByRole("button", { name: "Copied to clipboard" })
+      screen.getByRole("button", { name: "Code copied" })
     ).toBeInTheDocument();
   });
 
@@ -84,7 +82,7 @@ describe("MarkdownContent: copy button", () => {
     expect(btn).toHaveTextContent("Copied");
   });
 
-  it("resets button text and aria-label to 'Copy' after 1500ms", async () => {
+  it("resets button text and aria-label to 'Copy code' after 1500ms", async () => {
     render(<MarkdownContent source={SOURCE_ONE} />);
     await act(async () => {
       clickCopyButton();
@@ -93,7 +91,7 @@ describe("MarkdownContent: copy button", () => {
       vi.advanceTimersByTime(1500);
     });
     expect(
-      screen.getByRole("button", { name: "Copy code to clipboard" })
+      screen.getByRole("button", { name: "Copy code" })
     ).toBeInTheDocument();
     expect(screen.getByRole("button")).toHaveTextContent("Copy");
   });
@@ -107,7 +105,7 @@ describe("MarkdownContent: copy button", () => {
       vi.advanceTimersByTime(1000);
     });
     expect(
-      screen.getByRole("button", { name: "Copied to clipboard" })
+      screen.getByRole("button", { name: "Code copied" })
     ).toBeInTheDocument();
   });
 
@@ -118,7 +116,7 @@ describe("MarkdownContent: copy button", () => {
     await act(async () => {
       clickCopyButton();
     });
-    expect(live).toHaveTextContent("Copied to clipboard");
+    expect(live).toHaveTextContent("Code copied to clipboard");
   });
 
   it("clears live region after 1500ms", async () => {

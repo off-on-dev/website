@@ -22,7 +22,7 @@ const Sponsors = (): JSX.Element => {
   const { theme } = useTheme();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       <Navbar />
       <main id="main-content" tabIndex={-1}>
       <PageHero

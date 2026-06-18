@@ -9,7 +9,7 @@ export const Hero = (): JSX.Element => {
   );
 
   return (
-    <section aria-labelledby="hero-heading" className="relative flex min-h-screen items-center justify-center px-6 pt-20">
+    <section aria-labelledby="hero-heading" className="relative flex min-h-dvh items-center justify-center px-6 pt-20">
       {/* Firefly particles */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         {fireflies}

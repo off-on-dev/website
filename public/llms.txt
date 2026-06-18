@@ -38,4 +38,6 @@ TDD, Terraform, Trivy.
 ## Machine-Readable Resources
 
 - Sitemap: https://offon.dev/sitemap.xml
+- Full content index: https://offon.dev/llms-full.txt
+- Agent skills: https://offon.dev/.well-known/agent-skills/index.json
 - Security contact: https://offon.dev/.well-known/security.txt

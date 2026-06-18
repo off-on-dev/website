@@ -1,12 +1,10 @@
-import { type JSX, useState, useRef, useEffect, type ReactNode } from "react";
+import { type JSX, type ReactNode } from "react";
 import { useLoaderData, Link } from "react-router";
 import type { MetaFunction, LoaderFunctionArgs, LinksFunction } from "react-router";
 import {
   ArrowLeft,
   ExternalLink,
   Lock,
-  Copy,
-  Check,
   Lightbulb,
   AlertTriangle,
   Info,
@@ -19,6 +17,7 @@ import { SOLUTIONS } from "@/data/solutions";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { CodeBlock } from "@/components/CodeBlock";
 import { ContributorBadge } from "@/components/ContributorBadge";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { CodespacesButton } from "@/components/CodespacesButton";
@@ -114,70 +113,6 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 // ---------------------------------------------------------------------------
 // Sub-components
 // ---------------------------------------------------------------------------
-
-const CodeBlock = ({
-  language,
-  title,
-  code,
-}: {
-  language: string;
-  title?: string;
-  code: string;
-}): JSX.Element => {
-  const [copied, setCopied] = useState(false);
-  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => (): void => {
-    if (copyTimeoutRef.current !== null) clearTimeout(copyTimeoutRef.current);
-  }, []);
-
-  const handleCopy = (): void => {
-    navigator.clipboard?.writeText(code).then(() => {
-      setCopied(true);
-      if (copyTimeoutRef.current !== null) clearTimeout(copyTimeoutRef.current);
-      copyTimeoutRef.current = setTimeout(() => setCopied(false), 1500);
-    }).catch(() => {
-      // writeText can fail when the document loses focus
-    });
-  };
-
-  return (
-    <div>
-      {/* Header bar: label always visible, no copy button here */}
-      <div className="flex items-center justify-end rounded-t-lg border border-b-0 border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-3 py-2">
-        <span className="truncate text-xs font-mono text-[hsl(var(--text-faint))] select-none" aria-hidden="true">
-          {title ?? language}
-        </span>
-      </div>
-      {/* Same md-pre-group + md-copy-btn pattern as ChallengeDetail: hover-to-show */}
-      <div className="md-content code-block-body">
-        <div className="md-pre-group">
-          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- makes scrollable code block keyboard-reachable per WCAG 2.1 SC 2.1.1 */}
-          <pre tabIndex={0} aria-label={title ?? `${language} code block`}>
-            <code>{code}</code>
-          </pre>
-          <button
-            type="button"
-            className="md-copy-btn"
-            onClick={handleCopy}
-            aria-label={copied ? "Code copied" : "Copy code"}
-          >
-            {copied ? (
-              <Check size={12} aria-hidden="true" />
-            ) : (
-              <Copy size={12} aria-hidden="true" />
-            )}
-            {copied ? "Copied" : "Copy"}
-          </button>
-        </div>
-      </div>
-      {/* Live region announces copy confirmation to screen readers without moving focus */}
-      <span aria-live="polite" className="sr-only">
-        {copied ? "Code copied to clipboard" : ""}
-      </span>
-    </div>
-  );
-};
 
 const calloutConfig = {
   tip: {
@@ -530,7 +465,7 @@ const SolutionDetail = (): JSX.Element => {
 
   if (!adventure || !level) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-dvh bg-background">
         <Navbar />
         <main id="main-content" tabIndex={-1} className="px-6 md:px-16 pt-28 pb-24">
           <div className="mx-auto max-w-2xl">
@@ -553,7 +488,7 @@ const SolutionDetail = (): JSX.Element => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       <Navbar />
       <main id="main-content" tabIndex={-1} className="px-6 md:px-16 pt-28 pb-24">
         <div className="mx-auto max-w-6xl">

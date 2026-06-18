@@ -39,7 +39,7 @@ const HOW_IT_WORKS = [
 ];
 
 const Adventures = (): JSX.Element => (
-  <div className="min-h-screen bg-background">
+  <div className="min-h-dvh bg-background">
     <Navbar />
     <main id="main-content" tabIndex={-1}>
       <PageHero

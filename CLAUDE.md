@@ -80,7 +80,7 @@ Community activity happens on a separate Discourse instance. Its display name is
 
 - The canonical domain for this site is https://offon.dev.
 - og:url, og:image, and all absolute URLs must use https://offon.dev.
-- The og:image file is public/og.png and its full URL is https://offon.dev/og.png.
+- The og:image file is public/og.png and its full URL is https://offon.dev/og.png. Its dimensions are 1200 x 630 px.
 - PR preview deployments are served from the gh-pages branch under /pr-preview/pr-{number}/.
 - The open source challenges content lives in a separate organisation at https://github.com/off-on-dev/open-source-challenges. This is an intentional external link and must never be changed or flagged as a violation.
 - The community Discourse instance is at https://community.offon.dev. Use the `COMMUNITY_URL` constant from `src/data/constants.ts`, never hardcode this URL.
@@ -572,7 +572,10 @@ All UI labels use **title case (Chicago style)**. Body copy uses **sentence case
 
 - `public/.well-known/security.txt` contains an `Expires` field. Update the date annually (current expiry: `2027-06-01`). An expired security.txt is treated as absent by scanners.
 - `public/llms.txt` lists key pages and all live adventures. Update it whenever a new adventure is added (step 7 in the adventure checklist above) or a page is significantly renamed.
+- `public/llms-full.txt` is the extended companion to `llms.txt`. It contains full level-by-level detail for every adventure. Update it whenever a new adventure or level is added, or a level's technologies/description changes.
 - `public/robots.txt` lists named AI crawler agents. No routine updates needed; add a new agent entry only when a major crawler publishes a new user-agent string.
+- `public/.well-known/agent-skills/offon/SKILL.md` describes the site to AI agents. Update it if the site's key URLs, adventure list, or technology list changes significantly. After editing it, recompute the SHA256 digest (`shasum -a 256 public/.well-known/agent-skills/offon/SKILL.md`) and update the `digest` field in `public/.well-known/agent-skills/index.json`. A stale digest makes the file unverifiable to compliant agents.
+- `public/.well-known/api-catalog` lists machine-readable resources. Update it if a new resource endpoint is added (e.g. a new feed or data file).
 
 ### Sitemap
 

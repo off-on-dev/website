@@ -1196,13 +1196,35 @@ Renders a numbered walkthrough as a vertical stepper inside a `CollapsibleSectio
 
 ---
 
+### `CodeBlock`
+
+`src/components/CodeBlock.tsx`
+
+Renders a single fenced code block with a header bar (language/title label left, copy button right) and a code body. Used on solution pages wherever structured code blocks are needed.
+
+```tsx
+<CodeBlock language="bash" title="Install deps" code="npm install" />
+```
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `language` | `string` | Language identifier shown in the header label (e.g. `"bash"`, `"yaml"`). |
+| `title` | `string?` | Optional filename or custom label. Shown instead of `language` when provided. |
+| `code` | `string` | Raw code string (not HTML). |
+
+The header bar uses `.code-block-header` (CSS class) and the label uses `.code-lang-label`. The copy button uses `.code-header-btn`. The copy button border tints amber on hover/focus — no opacity tricks.
+
+Used by `SolutionDetail`.
+
+---
+
 ### `MarkdownContent`
 
 `src/components/MarkdownContent.tsx`
 
-Renders pre-compiled block HTML (generated at build time by `scripts/generate-adventures.mjs`) inside a `div.md-content` container. A `useEffect` attaches a "Copy" button to every `<pre>` element after mount.
+Renders pre-compiled block HTML (generated at build time by `scripts/generate-adventures.mjs`) inside a `div.md-content` container. A `useEffect` wraps every `<pre>` element in the same header-bar structure used by `CodeBlock` — language label on the left (extracted from the `language-*` class on the `<code>` element), copy button on the right.
 
-- Fenced code blocks get a hover/focus-visible "Copy" button via DOM injection (clipboard API, flips to "Copied" for 1.5 s, with proper `aria-label` updates).
+- Fenced code blocks get an always-visible "Copy" button in a header bar (clipboard API, flips to "Copied" for 1.5 s, with proper `aria-label` updates). Same `.code-block-header`, `.code-lang-label`, and `.code-header-btn` CSS classes as `CodeBlock`.
 - All element styles (headings, lists, code, blockquote, tables, links) are driven by `.md-content` rules in `src/index.css`.
 - External links get `target="_blank"`, `rel="noopener noreferrer"`, and a `<span class="sr-only"> (opens in new tab)</span>` injected by the generator. The external link icon is rendered purely via a CSS `::after` rule on `[target="_blank"]` in `src/index.css` — no inline SVG in the HTML.
 
