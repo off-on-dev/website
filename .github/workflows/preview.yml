@@ -12,6 +12,28 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  lint:
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - uses: actions/cache@v4
+        id: node-cache
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - if: steps.node-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - run: npm run lint
+
   build:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
@@ -23,9 +45,14 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
-      - run: npm ci
+      - uses: actions/cache@v4
+        id: node-cache
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
-      - run: npm run lint
+      - if: steps.node-cache.outputs.cache-hit != 'true'
+        run: npm ci
 
       - run: npm run build
 
@@ -53,22 +80,39 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
-      - run: npm ci
+      - uses: actions/cache@v4
+        id: node-cache
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - if: steps.node-cache.outputs.cache-hit != 'true'
+        run: npm ci
 
       - uses: actions/download-artifact@v8
         with:
           name: dist-client
           path: dist/client/
 
-      - run: npx playwright install --with-deps chromium
+      - uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
 
       - run: npm run test:e2e -- --shard=${{ matrix.shard }}/3
 
   preview:
-    needs: [build, e2e]
+    needs: [lint, e2e]
     # Run when both passed (normal PR update), or when build was skipped (PR closed, cleanup).
     # Never run when tests failed.
-    if: always() && ((needs.build.result == 'success' && needs.e2e.result == 'success') || needs.build.result == 'skipped')
+    if: always() && ((needs.lint.result == 'success' && needs.e2e.result == 'success') || needs.lint.result == 'skipped')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -79,6 +123,13 @@ jobs:
           cache: npm
 
       - if: github.event.action != 'closed'
+        uses: actions/cache@v4
+        id: node-cache
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - if: github.event.action != 'closed' && steps.node-cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - if: github.event.action != 'closed'
