@@ -131,6 +131,30 @@ describe("MarkdownContent: copy button", () => {
     expect(live).toHaveTextContent("");
   });
 
+  it("handles rapid re-clicks without stacking timeouts", async () => {
+    render(<MarkdownContent source={SOURCE_ONE} />);
+    await act(async () => { clickCopyButton(); });
+    await act(async () => { vi.advanceTimersByTime(500); });
+    // Second click while still in "Copied" state
+    const btn = screen.getByRole("button", { name: "Code copied" });
+    await act(async () => { fireEvent.click(btn); });
+    await act(async () => { vi.advanceTimersByTime(1500); });
+    // Only the second click's timer should have fired; button back to Copy
+    expect(screen.getByRole("button", { name: "Copy code" })).toBeInTheDocument();
+  });
+
+  it("clears live region and cancels timer on unmount", async () => {
+    const { unmount } = render(<MarkdownContent source={SOURCE_ONE} />);
+    const live = document.querySelector("[aria-live='polite']");
+    await act(async () => { clickCopyButton(); });
+    expect(live).toHaveTextContent("Code copied to clipboard");
+    act(() => { unmount(); });
+    // Timer should be cancelled — no stale writes after unmount
+    act(() => { vi.advanceTimersByTime(1500); });
+    // live region was cleared by cleanup
+    expect(live).toBeEmptyDOMElement();
+  });
+
   it("cleans up copy buttons and wrappers when source changes", async () => {
     const { rerender } = render(<MarkdownContent source={SOURCE_ONE} />);
     expect(document.querySelectorAll(".md-pre-group")).toHaveLength(1);

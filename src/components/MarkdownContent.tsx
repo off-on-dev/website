@@ -16,6 +16,7 @@ export const MarkdownContent = ({ source }: MarkdownContentProps): JSX.Element =
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    const liveEl = liveRef.current;
     const cleanup: (() => void)[] = [];
 
     el.querySelectorAll("pre").forEach((pre) => {
@@ -56,15 +57,19 @@ export const MarkdownContent = ({ source }: MarkdownContentProps): JSX.Element =
       pre.parentNode?.insertBefore(container, pre);
       wrapper.appendChild(pre);
 
+      let resetTimer: ReturnType<typeof setTimeout> | null = null;
+
       const onClick = (): void => {
         navigator.clipboard?.writeText(pre.textContent ?? "").then(() => {
           btn.innerHTML = `${CHECK_SVG} Copied`;
           btn.setAttribute("aria-label", "Code copied");
-          if (liveRef.current) liveRef.current.textContent = "Code copied to clipboard";
-          setTimeout(() => {
+          if (liveEl) liveEl.textContent = "Code copied to clipboard";
+          if (resetTimer !== null) clearTimeout(resetTimer);
+          resetTimer = setTimeout(() => {
             btn.innerHTML = `${COPY_SVG} Copy`;
             btn.setAttribute("aria-label", "Copy code");
-            if (liveRef.current) liveRef.current.textContent = "";
+            if (liveEl) liveEl.textContent = "";
+            resetTimer = null;
           }, 1500);
         }).catch(() => {});
       };
@@ -72,6 +77,11 @@ export const MarkdownContent = ({ source }: MarkdownContentProps): JSX.Element =
 
       cleanup.push(() => {
         btn.removeEventListener("click", onClick);
+        if (resetTimer !== null) {
+          clearTimeout(resetTimer);
+          resetTimer = null;
+        }
+        if (liveEl) liveEl.textContent = "";
         if (container.parentNode) {
           container.parentNode.insertBefore(pre, container);
           container.remove();
