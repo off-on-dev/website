@@ -35,7 +35,44 @@ If the user is creating an event deck, check `public/deck.html` for the existing
 
 ## Design system
 
-**Always copy the `<style>` block and `<head>` (fonts, Reveal.js links) verbatim from `public/deck.html`.** Do not reconstruct tokens or CSS from memory — the file is the source of truth and drifts over time.
+**Always copy the `<style>` block, `<head>` (fonts, Reveal.js links), `#ff-wave` div, `#ff-mist` div, and `<script>` init block verbatim from `public/deck.html`.** Do not reconstruct tokens, CSS, or config from memory — the file is the source of truth and drifts over time.
+
+The full `<body>` frame looks like this (copy the exact content):
+
+```html
+<body>
+<div id="ff-wave" aria-hidden="true">
+  <!-- firefly wave dots — copy all <span> elements verbatim from deck.html -->
+</div>
+<div id="ff-mist" aria-hidden="true" style="position:fixed;inset:0;pointer-events:none;z-index:0">
+  <!-- dense dim mist dots — copy all <span> elements verbatim from deck.html -->
+</div>
+<div class="reveal">
+  <div class="slides">
+    <!-- slides go here -->
+  </div>
+</div>
+<script src="reveal/reveal.js"></script>
+<script src="reveal/plugin/notes.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'slide',
+    backgroundTransition: 'fade',
+    controls: true,
+    progress: true,
+    center: false,
+    width: 1280,
+    height: 720,
+    margin: 0.04,
+    plugins: [ RevealNotes ]
+  });
+</script>
+</body>
+```
+
+Copy both the `#ff-wave` and `#ff-mist` span lists verbatim — do not regenerate positions or opacities by hand.
 
 Current token reference (verify against `public/deck.html` before use):
 
@@ -79,6 +116,7 @@ All inline URL references (e.g. `offon.dev/contribute`) must use `style="color: 
 Every slide's primary heading block (`.sh`) must sit **outside** any split or grid container, spanning the full slide width. Content columns come after it.
 
 **Correct:**
+
 ```html
 <div class="sh">
   <span class="label">overline</span>
@@ -91,6 +129,7 @@ Every slide's primary heading block (`.sh`) must sit **outside** any split or gr
 ```
 
 **Wrong — never do this:**
+
 ```html
 <div class="split-even">
   <div>
@@ -138,6 +177,7 @@ The `.sh` header uses amber on the overline label and bold Syne on the h2. No bo
 Overline label text is lowercase in HTML — CSS applies `text-transform: uppercase`.
 
 ### Layout grids
+
 - `.g2` — 2-column equal grid
 - `.g3` — 3-column equal grid
 - `.g4` — 4-column equal grid
@@ -145,6 +185,7 @@ Overline label text is lowercase in HTML — CSS applies `text-transform: upperc
 - `.split-even` — 1fr / 1fr
 
 ### Content cards
+
 ```html
 <div class="card">
   <h4>Card Title</h4>
@@ -152,7 +193,18 @@ Overline label text is lowercase in HTML — CSS applies `text-transform: upperc
 </div>
 ```
 
+To show an exclusion or "not a good fit" note without using red or warning colours, use a dimmed card:
+
+```html
+<div class="card" style="margin-top: 0.6em; opacity: 0.55;">
+  <p>Not a good fit: product demos, vendor pitches, or talks that require a commercial tool.</p>
+</div>
+```
+
+The `opacity: 0.55` visually recedes the card so the exclusion reads as secondary to the positive list above it. Do not use `rgba(200,80,80,...)` backgrounds or red-tinted text — there is no red colour token in the design system.
+
 ### Bullet rows (use this, not `<ul>/<li>`)
+
 ```html
 <div class="brow">
   <span class="dot">→</span>
@@ -170,7 +222,15 @@ The dot is muted, not amber. The `<strong>` inside `.bt` renders in `--fg` (near
 </div>
 ```
 
-Sub-text (`<p>`) inside a vrow is optional. Headings-only vrows are valid and intentional when the heading is self-explanatory — move the detail to speaker notes instead. Use `.hi` to highlight with amber left border.
+Each vrow has a `2px solid var(--border)` left border. Add `.hi` to turn that border amber, drawing the eye to one highlighted item:
+
+```html
+<div class="vrow hi">
+  <h4>Venue, food, and drinks</h4>
+</div>
+```
+
+Sub-text (`<p>`) inside a vrow is optional. Headings-only vrows are valid and intentional when the heading is self-explanatory — move the detail to speaker notes instead.
 
 ### Quiz topic cards
 
@@ -192,6 +252,7 @@ Use `.g2` + `.card` for quiz topic categories. Do not use `.qrow` with round num
 Do not add "accessible to everyone", "rewards people who were paying attention", or similar filler qualifiers to quiz card descriptions.
 
 ### Contribute-style cards (icon + title + arrow list)
+
 ```html
 <div class="contrib">
   <span class="ci">⚡</span>
@@ -201,6 +262,7 @@ Do not add "accessible to everyone", "rewards people who were paying attention",
 ```
 
 ### Tech tags
+
 ```html
 <div class="tags">
   <span class="tag">OpenTelemetry</span>
@@ -209,12 +271,15 @@ Do not add "accessible to everyone", "rewards people who were paying attention",
 ```
 
 ### Person / speaker cards
+
+Event speaker photos go in `public/speakers/<name>.webp`. Board member photos go in `public/team/<name>.webp`. Never mix the two directories. If a photo is not available, use initials as text inside the avatar div.
+
 ```html
-<!-- Speaker (used in "Who's presenting" slides) -->
+<!-- Event speaker (used in "Who's presenting" slides — photos from public/speakers/) -->
 <div class="speaker-card" style="flex-direction: column; gap: 0.55em;">
   <div style="display: flex; gap: 0.65em; align-items: center;">
-    <div class="sp-av"><img src="/team/name.webp" alt="Full Name"></div>
-    <div>
+    <div class="sp-av"><img src="speakers/name.webp" alt="Full Name"></div>
+    <div class="sp-info">
       <p class="sp-name">Full Name</p>
       <p class="sp-talk" style="margin: 0;">Talk title</p>
     </div>
@@ -222,9 +287,9 @@ Do not add "accessible to everyone", "rewards people who were paying attention",
   <p class="sp-bio">One or two sentence bio.</p>
 </div>
 
-<!-- Board member (used in team grids) -->
+<!-- Board member (used in team grids — photos from public/team/) -->
 <div class="person">
-  <div class="av"><img src="/team/name.webp" alt="Full Name"></div>
+  <div class="av"><img src="team/name.webp" alt="Full Name"></div>
   <div class="pi">
     <p class="pn">Full Name</p>
     <p class="pr">Role and affiliation.</p>
@@ -232,7 +297,31 @@ Do not add "accessible to everyone", "rewards people who were paying attention",
 </div>
 ```
 
-Photos go in `public/team/<name>.webp`. If a photo is not available, use initials as text inside the avatar div.
+### Team / board slide
+
+Wrap `.person` cards in `.board` for the team grid. The CSS provides a 3-column layout automatically.
+
+```html
+<div class="board">
+  <div class="person">
+    <div class="av"><img src="team/name.webp" alt="Full Name"></div>
+    <div class="pi">
+      <p class="pn">Full Name</p>
+      <p class="pr">Role and affiliation.</p>
+    </div>
+  </div>
+  <!-- repeat for each board member -->
+  <div class="person tba">
+    <div class="av">?</div>
+    <div class="pi">
+      <p class="pn">To be announced</p>
+      <p class="pr">Board seat open</p>
+    </div>
+  </div>
+</div>
+```
+
+Use `class="person tba"` for unfilled seats — this applies `opacity: 0.32` and a dashed border.
 
 ### Title slide
 
@@ -242,7 +331,7 @@ Photos go in `public/team/<name>.webp`. If a photo is not available, use initial
 <section>
   <div class="title-slide">
     <div class="cobrand">
-      <img src="/brand/offon-logo-dark-color.svg" alt="OffOn">
+      <img src="brand/offon-logo-dark-color.svg" alt="OffOn">
       <span class="xsep">×</span>
       <span class="partner">Partner Name</span>
     </div>
@@ -265,11 +354,11 @@ Include a 3-column QR code grid for the three main links before the pill row. Ge
 <section>
   <div class="final">
     <div class="cobrand">
-      <img src="/brand/offon-logo-dark-color.svg" alt="OffOn">
+      <img src="brand/offon-logo-dark-color.svg" alt="OffOn">
       <span class="xsep">×</span>
       <span class="partner">Partner</span>
     </div>
-    <h2>Join us</h2>
+    <h2>Join Us</h2>
     <p style="font-size: 0.65em; max-width: 26em; margin: 0.35em auto 0.8em;">CTA sentence.</p>
     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2em; margin-bottom: 0.8em; max-width: 28em;">
       <div style="display: flex; flex-direction: column; align-items: center; gap: 0.4em;">
@@ -308,17 +397,41 @@ After generating QR PNGs, add `cp -r dist/client/qr "${PREVIEW_DIR}/"` to the co
 
 ```html
 <table class="agenda">
-  <tr><td>18:00</td><td>Item</td><td>Duration</td></tr>
-  <tr class="hi"><td>18:10</td><td>Highlighted item</td><td>25 min</td></tr>
+  <tr><td>17:30</td><td>Doors open, networking</td><td>30 min</td></tr>
+  <tr class="hi"><td>18:00</td><td>Welcome, OffOn.dev intro</td><td>10 min</td></tr>
 </table>
 ```
 
+Rows without `.hi` render text in `var(--muted)` (dimmed). Rows with `.hi` render text in `var(--fg)` (bright/foregrounded) — use it for the active segments of the evening. The time column stays amber regardless. Note: `.hi` behaves differently on agenda rows (text brightness) vs `.vrow.hi` (border colour) — they share the class name but different CSS rules apply.
+
 ### Column label (above a column in split layouts)
+
 ```html
 <span class="col-label">column heading</span>
 ```
 
 Column label text is lowercase in HTML — CSS applies `text-transform: uppercase`.
+
+---
+
+## Brand and image assets
+
+All paths are relative to `public/` and must be written without a leading slash (e.g. `brand/offon-logo-dark-color.svg`, not `/brand/...`). Reveal.js is served directly from `public/` so relative paths resolve correctly.
+
+| Asset | Path | Where used |
+| --- | --- | --- |
+| OffOn logo (dark bg) | `brand/offon-logo-dark-color.svg` | `.cobrand` in title and final slides |
+| Nyx mascot (peek) | `brand/offon-nyx-peek.png` | About OffOn slide, right column, decorative |
+| Board member photos | `team/<name>.webp` | `.board .person .av img` |
+| Event speaker photos | `speakers/<name>.webp` | `.speaker-card .sp-av img` |
+| QR codes | `qr/<slug>.png` | Final slide QR grid |
+
+The Nyx mascot image is always decorative — use `alt=""` and `aria-hidden="true"`. Apply `opacity: 0.6` and a fixed `height` (e.g. `230px`) so it doesn't compete with the slide content:
+
+```html
+<img src="brand/offon-nyx-peek.png" alt="" aria-hidden="true"
+     style="height: 230px; object-fit: contain; opacity: 0.6;">
+```
 
 ---
 
@@ -338,15 +451,52 @@ Column label text is lowercase in HTML — CSS applies `text-transform: uppercas
 
 ## Speaker notes
 
-Every `<section>` must have an `<aside class="notes">` block. Notes should:
+Every `<section>` must have an `<aside class="notes">` block.
 
-- State what to say out loud that is not on the slide.
-- Flag transitions: "This leads into the demo on the next slide."
-- Call out anything time-sensitive or audience-dependent.
-- When slide content is intentionally sparse (e.g. vrow headings-only), expand in notes with the sub-text that was omitted from the slide.
-- Be written in plain sentences, not bullets.
+Use a `<ul><li>` list inside the notes block — Reveal.js renders the notes panel as HTML, so this produces real bullet points that are easy to read aloud:
+
+```html
+<aside class="notes">
+  <ul>
+    <li>First thing to say out loud that is not on the slide.</li>
+    <li>Second point — expand on something the slide left sparse.</li>
+    <li>End with a transition: "Next: what this means in practice."</li>
+  </ul>
+</aside>
+```
+
+Notes must:
+
+- State what to say out loud, not repeat what is already on the slide.
+- End every slide's notes with a transition line: "Next: …"
+- Expand on intentionally sparse content (e.g. vrow headings-only slides).
+- Call out anything time-sensitive, audience-dependent, or only relevant to the host.
 
 Press S in the browser opens Reveal.js speaker view (current + next slide, notes, timer).
+
+---
+
+## Event intro deck structure
+
+The canonical slide order for an Open Source Talks event intro deck. Follow this order unless there is a specific reason to deviate. `public/deck.html` is the reference implementation.
+
+| # | Title | Layout | Key content |
+| --- | ------- | --------- | ----------- |
+| 1 | Title slide | `.title-slide` + `.cobrand` | Event name, partners, tagline, city, "Press S" hint |
+| 2 | What are Open Source Talks? | `.g3` cards | Venues, format, quiz |
+| 3 | The Agenda | `.agenda` table | Full evening schedule with `.hi` on active rows |
+| 4 | Who's Presenting | `.g3` speaker cards | One `.speaker-card` per speaker |
+| 5 | About OffOn | `.split` | Mission bullets left, Nyx mascot image right |
+| 6 | Adventures | Bullet rows + `.tags` | Codespaces, difficulty, Credly badges, tool tags |
+| 7 | Community | Bullet rows | community.offon.dev, categories |
+| 8 | Every Contribution Counts | `.g4` `.contrib` cards | Community / Challenges / Content / Community Building |
+| 9 | What Makes a Good Talk | `.split` | Talk types left + dimmed exclusion card; "Want to present?" card right |
+| 10 | OffOn Board Members | `.board` | `.person` cards, `.person tba` for open seats |
+| 11 | Why Dynatrace Cares | `.split-even` | Rationale bullets left; `.vrow` list right with `.hi` on venue row |
+| 12 | Open Source Pub Quiz | `.g2` cards | Two round topics |
+| 13 | Join Us | `.final` | Cobrand, QR grid, `.link-row` pills |
+
+Slides 6 and 7 are intentionally split — don't merge Adventures and Community back into one slide. Each needs room to breathe.
 
 ---
 
@@ -367,5 +517,5 @@ For scenario and architecture text, pull from the adventure's generated TypeScri
 
 - Write to `public/<filename>.html`.
 - Do not add the file to `src/routes.ts`, `public/sitemap.xml`, or `react-router.config.ts`.
-- Copy the full `<style>` block and `<head>` (fonts, Reveal.js links) verbatim from `public/deck.html` to keep the decks in sync.
+- Copy the `<head>`, `<style>` block, `#ff-wave` div, `#ff-mist` div, and `<script>` init block verbatim from `public/deck.html` (see body frame in Design system section above).
 - After writing the file, confirm: `ls -lh public/<filename>.html` and open `http://localhost:8080/<filename>.html` if the dev server is running.

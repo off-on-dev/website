@@ -225,6 +225,12 @@ Never add a `bg-primary` section button without adding or verifying the correspo
 
 Both use `px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none inline-flex items-center gap-1.5` and include `focus-visible` ring styles (`ring-ring`). The `min-h-[44px]` satisfies WCAG 2.5.5 target size; content is vertically centered via `items-center`.
 
+### cursor: pointer rule
+
+All `<button>`-based interactive elements must have `cursor: pointer` set explicitly in `src/index.css`. Browsers default `<button>` to `cursor: default`, so without this, AI agents doing visual analysis will not recognise the element as actionable. `<a>` / `<Link>` elements are exempt — browsers default those to pointer already.
+
+This applies to every new button utility class and every pill class used on `<button>` elements. Add `cursor: pointer` in the class definition in `src/index.css`, not inline via Tailwind.
+
 ### Difficulty Badges
 
 Badge colors use CSS tokens defined in `src/index.css`. All three difficulties use black text (`--difficulty-text`) on pastel backgrounds for WCAG AA compliance (minimum 4.5:1 contrast ratio).
