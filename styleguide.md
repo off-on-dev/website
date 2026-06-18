@@ -636,7 +636,7 @@ Renders a single adventure level as a card: difficulty badge, level name, key le
 
 Navigation card used in tag-filtered level grids. The entire card is a `<Link>` to the challenge detail page. Renders a difficulty badge, level name, first three learnings, and a footer row with "Challenge" label, an optional estimated time pill (`Clock` icon + `level.estimatedTime`), and the parent adventure title.
 
-**Accessible name:** the link carries `aria-label` in the format `"{level.name} — {difficulty} — {adventureTitle}"` (e.g. `"The Observability Challenge — Beginner — Blind by Design"`). This replaces the verbose computed name that would otherwise include all three learning bullet points.
+**Accessible name:** the link carries `aria-label` in the format `"{level.name}: {difficulty}, {adventureTitle}"` (e.g. `"The Observability Challenge: Beginner, Blind by Design"`). This replaces the verbose computed name that would otherwise include all three learning bullet points.
 
 ```tsx
 <FilteredLevelCard
@@ -698,7 +698,7 @@ Two-row filter UI for the adventure catalog. Row 1 is a difficulty single-select
 | `onDifficultyChange` | `(diff: Difficulty \| null) => void` | Called when difficulty changes. |
 | `onTopicsChange` | `(topics: string[]) => void` | Called when tag selection changes. |
 
-**ARIA pattern:** all filter groups (mobile dropdowns and desktop pill rows) use `role="group"` with `aria-pressed` on each button. Mobile dropdowns are always in the DOM — the panel uses the HTML `hidden` attribute when closed so `aria-controls` on the trigger always resolves to a valid IDREF. Trigger buttons use `aria-expanded`, `aria-controls`, and `aria-haspopup="true"` so AT announces them as popup controls. Arrow-key navigation (Up/Down) is supported within each open panel via `onKeyDown` handlers on the panel buttons.
+**ARIA pattern:** all filter groups (mobile dropdowns and desktop pill rows) use `role="group"` with `aria-pressed` on each button. Mobile dropdowns are always in the DOM — the panel uses the HTML `hidden` attribute when closed so `aria-controls` on the trigger always resolves to a valid IDREF. Trigger buttons use `aria-expanded`, `aria-controls`, and `aria-haspopup="listbox"` so AT announces them as listbox controls. Arrow-key navigation (Up/Down) is supported within each open panel via `onKeyDown` handlers on the panel buttons.
 
 **Exported type:** `Difficulty = "Beginner" | "Intermediate" | "Expert"`. Import from `@/components/ChallengeFilters` where `activeDifficulty` state needs typing.
 
@@ -1301,7 +1301,7 @@ Site-wide footer. No props. Contains two `<nav>` landmark regions (`aria-label="
 
 Navigation card linking to an adventure overview page. The entire card is a `<Link>` to `/adventures/:id/`. Renders a header row with an "Adventure" mono label, an optional `LivePill`, and a `.badge-levels` level-count pill; the adventure title (hover: amber); a two-line `story` snippet; a row of `DifficultyBadge` instances; up to four technology tag `<span>` chips; and an optional `ContributorBadge` pinned to the card footer via `mt-auto`. Card border is `border-primary/50` when `adventure.isLive`, otherwise `border-[hsl(var(--surface-border))]`. Uses `card-glow` for hover glow.
 
-**Accessible name:** the link carries `aria-label` in the format `"{title} — {difficulties} — {tags}"` (e.g. `"Blind by Design — Beginner, Intermediate, Expert — Prometheus, Grafana"`). Tags are omitted if the adventure has none. This gives screen reader users difficulty and technology context when navigating by links, without the verbosity of the full card content.
+**Accessible name:** the link carries `aria-label` in the format `"{title}: {difficulties}, {tags}"` (e.g. `"Blind by Design: Beginner, Intermediate, Expert, Prometheus, Grafana"`). Tags are omitted if the adventure has none. This gives screen reader users difficulty and technology context when navigating by links, without the verbosity of the full card content.
 
 ```tsx
 <AdventureCard adventure={adventureSummary} />

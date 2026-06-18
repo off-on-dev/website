@@ -1,6 +1,6 @@
-import { type JSX, useState, useRef, useEffect } from "react";
+import { type JSX, useState, useRef, useEffect, type ReactNode } from "react";
 import { useLoaderData, Link } from "react-router";
-import type { MetaFunction, LoaderFunctionArgs } from "react-router";
+import type { MetaFunction, LoaderFunctionArgs, LinksFunction } from "react-router";
 import {
   ArrowLeft,
   ExternalLink,
@@ -29,6 +29,11 @@ import {
 } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 import { isSolutionUnlocked, formatDeadline } from "@/lib/utils";
+
+export const links: LinksFunction = () => [
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-600-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+];
 
 type LoaderData = {
   adventure: (typeof ADVENTURES)[number] | null;
@@ -402,7 +407,7 @@ const SidebarCard = ({
 }: {
   label: string;
   labelSpacing?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }): JSX.Element => (
   <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
     <p className={`font-sans text-xs font-semibold tracking-wide text-primary uppercase ${labelSpacing}`}>
