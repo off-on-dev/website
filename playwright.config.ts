@@ -32,10 +32,13 @@ export default defineConfig({
   webServer: {
     // Use preview (not bare serve) so the 404 fallback copy runs before serving.
     command: "npm run preview",
-    // Probe a deep prerendered route, not just the root, to confirm the static
-    // server is fully ready before tests start.
-    url: "http://localhost:3000/challenges/python/",
+    // Probe the root so the check works regardless of which adventures are
+    // prerendered. The root index.html is always present in dist/client/.
+    url: "http://localhost:3000/",
     reuseExistingServer: !process.env.CI,
-    timeout: 30000,
+    // 120s: CI runners are sometimes slow to start after Playwright browser
+    // install or artifact download, causing spurious "Timed out waiting 30000ms
+    // from config.webServer" failures on otherwise healthy shards.
+    timeout: 120000,
   },
 });
