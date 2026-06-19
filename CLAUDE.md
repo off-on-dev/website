@@ -16,7 +16,7 @@ Project-level Claude Code commands live in `.claude/commands/`. Invoke them with
 | &nbsp;&nbsp;`/progressive-enhancement` | Sub-command: building any new feature or reviewing architecture. Ensures core content works without JS. |
 | &nbsp;&nbsp;`/user-personalization` | Sub-command: working on theme toggle, consent state, or any user preference persistence. |
 | `/add-solution` | Generate a structured TypeScript solution file from any input format (md, YAML, HTML, plain text). Downloads and converts images to WebP. |
-| `/create-presentation` | Create a Reveal.js presentation deck for an OffOn event or challenge. Follows the design system in `public/deck.html`. Outputs to `public/<filename>.html` with speaker notes. |
+| `/create-presentation` | Create a presentation deck for an OffOn event or challenge. Supports three formats: Reveal.js HTML (`public/deck-template.html`), Slidev Markdown (`.claude/templates/slidev/deck-template.md`), and editable PowerPoint PPTX (edit and run `.claude/templates/generate-pptx.mjs`). Reveal.js output goes to `public/<filename>.html`; Slidev output goes to `.claude/templates/slidev/<filename>.md` (must be alongside `style.css`); PPTX outputs to `public/downloads/offon-deck-template.pptx`. |
 
 The `spec-first-coding` command is installed globally (`~/.claude/skills/`) and is not in this repo. It enforces W3C spec citations before generating any accessibility-related code.
 
@@ -107,8 +107,9 @@ public/
   team/         # Board member photos (*.webp). Used by BoardSection and deck.html host slides. Do not duplicate into src/assets/.
   speakers/     # Event speaker photos (*.webp). Used by presentation decks only. Speakers are per-event and distinct from board members.
   solutions/    # Solution walkthrough screenshots, one subdirectory per adventure ID (e.g. solutions/echoes-lost-in-orbit/). Referenced by src/data/solutions/ with absolute paths.
-  reveal/       # Self-hosted Reveal.js 6.0.1 library. Used only by deck.html.
+  reveal/       # Self-hosted Reveal.js 6.0.1 library. Used by deck.html, deck-template.html, and all generated Reveal.js decks.
   deck.html     # Reveal.js presentation for Open Source Talks events. Not a React route; served directly by GitHub Pages.
+  deck-template.html # Boilerplate template for /create-presentation (Reveal.js format). Edit here to update the design system for all future decks.
   nyx.webp      # Nyx mascot illustration. Referenced in BottomCTA and About via import.meta.env.BASE_URL.
   nyx_peek.webp # Nyx peek variant. Referenced in About via import.meta.env.BASE_URL.
 .github/
@@ -144,6 +145,12 @@ npm run generate     # Regenerate TypeScript from adventure YAML files
 npm run generate:validate  # Validate YAML against schema without writing files
 
 npx shadcn@latest add <component>   # Add a shadcn/ui component
+
+# Slidev presentations (run from .claude/templates/slidev/)
+cd .claude/templates/slidev
+pnpm install          # first time only (installs @slidev/cli + markdown-it-github-alerts)
+pnpm dev              # preview deck-template.md in the browser
+pnpm slidev <filename>.md  # preview a specific deck
 ```
 
 ---
@@ -621,7 +628,7 @@ The `preview.yml` copy step explicitly lists every static asset directory and ro
 
 **When adding a new directory or root-level file type to `public/`, you must also add a corresponding copy line in the copy step of `.github/workflows/preview.yml`.** If you forget, the file will exist in production but return 404 in all PR previews.
 
-Current copy step covers: `assets/`, `fonts/`, `reveal/`, `team/`, `speakers/`, `brand/`, `solutions/`, `deck.html`, and root-level `*.svg`, `*.png`, `*.ico`, `*.webmanifest`, `*.webp` files.
+Current copy step covers: `assets/`, `fonts/`, `reveal/`, `team/`, `speakers/`, `brand/`, `solutions/`, `deck.html`, `deck-template.html`, and root-level `*.svg`, `*.png`, `*.ico`, `*.webmanifest`, `*.webp` files.
 
 ### GitHub Actions allowlist
 

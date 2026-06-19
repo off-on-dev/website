@@ -1,0 +1,13 @@
+{
+  "name": "offon-slidev",
+  "private": true,
+  "scripts": {
+    "dev": "slidev deck-template.md --open",
+    "build": "slidev build deck-template.md"
+  },
+  "dependencies": {
+    "@slidev/cli": "^52.0.0",
+    "@slidev/theme-default": "^0.25.0",
+    "markdown-it-github-alerts": "^1.0.0"
+  }
+}

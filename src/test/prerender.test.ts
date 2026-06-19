@@ -43,6 +43,10 @@ const pages: PageSpec[] = [
     check: { type: "exact", value: "Brand Guidelines - OffOn" },
   },
   {
+    file: "presentation-templates/index.html",
+    check: { type: "exact", value: "Presentation Templates - OffOn" },
+  },
+  {
     file: "contribute/index.html",
     check: { type: "exact", value: "How to Contribute - OffOn" },
   },
