@@ -1,5 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /deck.html
+Disallow: /deck-template.html
+Disallow: /presentation-templates
 
 Sitemap: https://offon.dev/sitemap.xml
 Sitemap: https://offon.dev/community-sitemap.xml

@@ -18,6 +18,7 @@ const ROUTES = [
   "/privacy",
   "/accessibility",
   "/brand",
+  "/presentation-templates",
   // GENERATED:adventures
   "/adventures/lex-imperfecta",
   "/adventures/lex-imperfecta/levels/beginner",
@@ -137,11 +138,16 @@ describe("SEO: global head (root.tsx)", () => {
     expect(m![1]).not.toMatch(/maximum-scale\s*=\s*1(?!\d)/i);
   });
 
-  it("production build does not have a noindex meta tag", () => {
-    // noindex is injected only on PR preview deployments (BASE_URL starts with /pr-preview/).
-    // A production build uses BASE_URL=/ so noindex must be absent.
+  it("production build does not have a noindex meta tag on the home page", () => {
+    // noindex is injected on PR preview deployments and on intentionally unlisted pages
+    // (e.g. /presentation-templates). It must never appear on the home page.
     const html = readHtml("/");
     expect(html).not.toMatch(/<meta\b[^>]*\bname="robots"[^>]*\bcontent="noindex"/);
+  });
+
+  it("/presentation-templates has noindex (unlisted utility page)", () => {
+    const html = readHtml("/presentation-templates");
+    expect(html).toMatch(/<meta\b[^>]*\bname="robots"[^>]*\bcontent="noindex"/);
   });
 });
 

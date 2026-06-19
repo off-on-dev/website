@@ -1,22 +1,22 @@
 ---
 name: create-presentation
 description: >
-  Create a Reveal.js presentation deck for an OffOn event or challenge.
-  Follows the established design system from public/deck.html.
-  Outputs a self-contained HTML file in public/ with speaker notes.
+  Create a presentation deck for an OffOn event or challenge.
+  Supports Reveal.js HTML, Slidev Markdown, and editable PowerPoint PPTX.
+  Uses format-specific templates from public/ and .claude/templates/.
 ---
 
 # Create Presentation Command
 
-Generate a Reveal.js presentation that matches the OffOn design system.
+Generate a presentation that matches the OffOn design system, in the format of your choice.
 
 ## What this command does
 
-1. Gathers the presentation topic, audience, and slide outline from the user.
-2. Writes a self-contained HTML file to `public/<filename>.html`.
-3. Populates slides using the established CSS patterns and design tokens.
-4. Adds speaker notes to every slide.
-5. Does not touch `public/sitemap.xml`, `react-router.config.ts`, or `src/routes.ts` — these files are outside the React bundle.
+1. Asks which output format the user wants.
+2. Reads the appropriate template file.
+3. Generates slide content and fills in the placeholders.
+4. Writes the output file to `public/`.
+5. Does not touch `public/sitemap.xml`, `react-router.config.ts`, or `src/routes.ts`.
 
 ---
 
@@ -24,10 +24,14 @@ Generate a Reveal.js presentation that matches the OffOn design system.
 
 Ask for anything not already provided:
 
-- **Topic** — event intro, challenge walkthrough, or other
-- **Output filename** — e.g. `deck.html`, `challenge-intro.html`
-- **Slides outline** — list of topics to cover, or free-form description
-- **Speakers / contributors** — names and photos if applicable (photos go in `public/team/`)
+- **Format**: which output format?
+  - `html`: Reveal.js (self-contained HTML, opens in any browser, served from GitHub Pages)
+  - `slidev`: Slidev Markdown (run locally with `npx slidev <filename>.md`)
+  - `pptx`: Editable Microsoft PowerPoint (run `node .claude/templates/generate-pptx.mjs` and customise the output)
+- **Topic**: event intro, challenge walkthrough, or other
+- **Output filename**: e.g. `open-source-talks.html`, `challenge-intro.md`
+- **Slides outline**: list of topics to cover, or free-form description
+- **Speakers / contributors**: names and photos if applicable (photos go in `public/team/` for board members, `public/speakers/` for event speakers)
 
 If the user is creating an event deck, check `public/deck.html` for the existing event intro structure as a reference and to reuse already-written slide content where relevant.
 
@@ -35,83 +39,51 @@ If the user is creating an event deck, check `public/deck.html` for the existing
 
 ## Design system
 
-**Always copy the `<style>` block, `<head>` (fonts, Reveal.js links), `#ff-wave` div, `#ff-mist` div, and `<script>` init block verbatim from `public/deck.html`.** Do not reconstruct tokens, CSS, or config from memory — the file is the source of truth and drifts over time.
+Read the template for the chosen format; it contains all boilerplate. Do not reconstruct fonts, colors, or config from memory.
 
-The full `<body>` frame looks like this (copy the exact content):
+| Format | Template file |
+| --- | --- |
+| Reveal.js (`html`) | `public/deck-template.html` |
+| Slidev (`slidev`) | `.claude/templates/slidev/deck-template.md` |
+| PowerPoint (`pptx`) | `.claude/templates/generate-pptx.mjs` (edit and run to regenerate) |
 
-```html
-<body>
-<div id="ff-wave" aria-hidden="true">
-  <!-- firefly wave dots — copy all <span> elements verbatim from deck.html -->
-</div>
-<div id="ff-mist" aria-hidden="true" style="position:fixed;inset:0;pointer-events:none;z-index:0">
-  <!-- dense dim mist dots — copy all <span> elements verbatim from deck.html -->
-</div>
-<div class="reveal">
-  <div class="slides">
-    <!-- slides go here -->
-  </div>
-</div>
-<script src="reveal/reveal.js"></script>
-<script src="reveal/plugin/notes.js"></script>
-<script>
-  Reveal.initialize({
-    hash: true,
-    slideNumber: 'c/t',
-    transition: 'slide',
-    backgroundTransition: 'fade',
-    controls: true,
-    progress: true,
-    center: false,
-    width: 1280,
-    height: 720,
-    margin: 0.04,
-    plugins: [ RevealNotes ]
-  });
-</script>
-</body>
-```
+Brand token reference (for writing slide content):
 
-Copy both the `#ff-wave` and `#ff-mist` span lists verbatim — do not regenerate positions or opacities by hand.
-
-Current token reference (verify against `public/deck.html` before use):
-
-```css
---bg:         #0a0a0a;
---card:       #141419;
---border:     #1e2535;
---fg:         #faf9f2;          /* headings, Syne 700 */
---muted:      #f0ede5;          /* body text, Inter — matches site's hsl(43, 27%, 92%) */
---amber:      #ffc034;
---amber-glow: rgba(255, 192, 52, 0.14);
-```
-
-Fonts: Syne 700 (headings), Inter 400/500/600 (body). Self-hosted from `/fonts/`. No CDN links.
-
-Reveal.js: self-hosted from `/reveal/`. Initialize with `RevealNotes` plugin, `width: 1280`, `height: 720`.
+| Token | Value |
+| --- | --- |
+| Background | `#0a0a0a` |
+| Foreground | `#faf9f2` |
+| Muted text | `#f0ede5` |
+| Accent (amber) | `#ffc034` |
+| Card bg | `#141419` |
+| Border | `#1e2535` |
 
 ### Type scale
 
-Four tiers — do not introduce intermediate sizes:
+Four tiers; do not introduce intermediate sizes:
 
-- **Heading** — `2.2em` (h1), `1.4em` (h2): slide titles only
-- **Body** — `0.78em`: `.reveal p` baseline
-- **Component** — `0.6em` (h4 equivalents), `0.54em` (body): card titles, bullet text, bios, descriptions
-- **Label** — `0.38em`: overlines, tags, col-labels, metadata
+- **Heading** (`2.2em` h1, `1.4em` h2): slide titles only
+- **Body** (`0.78em`): `.reveal p` baseline
+- **Component** (`0.65em` h4, `0.58em` body): card titles, bullet text, bios, descriptions. Exception: `.ctext` inside `.contrib .citem` is `0.52em`, one step smaller so contribute-card lists read as secondary detail.
+- **Label** (`0.42em`): overlines, tags, col-labels, metadata
 
-Pills are `0.44em` — slightly above label tier because they are interactive.
+Pills are `0.44em`: slightly above label tier because they are interactive.
 
 ### Amber discipline
 
-Amber (`--amber`) signals two things only: **structure** (`.sh` overline label) and **active/current state** (highlighted rows, links, pills on hover). Do not use amber for bullet arrows or decorative dots — those use `var(--muted)` at 50% opacity.
+Amber (`--amber`) is used for: **structure labels** (`.sh` overline, `.col-label`), **active/current state** (highlighted rows, links, pills on hover), **category headings** (`.contrib h4` only), and **final slide CTA headings** (`.final h2`).
 
-All inline URL references (e.g. `offon.dev/contribute`) must use `style="color: #ffc034;"`. Do not rely on opacity to style links — opacity dims the amber and makes it unreadable.
+Do not use amber on `.card h4`, `.vrow h4`, or `.person .pn`: those are informational headings and names, not labels or CTAs. Using amber on them dilutes its signal.
+
+Do not use amber for bullet arrows or decorative dots; those use `var(--muted)` at 50% opacity.
+
+All inline URL references (e.g. `offon.dev/contribute`) must use `style="color: #ffc034;"`. Do not rely on opacity to style links; opacity dims the amber and makes it unreadable.
 
 ---
 
 ## Layout rules
 
-### `.sh` is always full-width — never nested inside a split column
+### `.sh` is always full-width; never nested inside a split column
 
 Every slide's primary heading block (`.sh`) must sit **outside** any split or grid container, spanning the full slide width. Content columns come after it.
 
@@ -128,7 +100,7 @@ Every slide's primary heading block (`.sh`) must sit **outside** any split or gr
 </div>
 ```
 
-**Wrong — never do this:**
+**Wrong; never do this:**
 
 ```html
 <div class="split-even">
@@ -147,13 +119,13 @@ When a slide has two sub-sections (e.g. "What makes a good talk" left + "Want to
 
 ### Section labels vs. content headings
 
-`col-label` is a section label above a column's content. It is always smaller (`0.38em`) than the content items below it (`0.6em` h4). This is intentional — amber uppercase provides the hierarchy, size does not. Do not try to make `col-label` bigger than the items it labels. Trust the color and spacing.
+`col-label` is a section label above a column's content. It is always smaller (`0.42em`) than the content items below it (`0.65em` h4). This is intentional; amber uppercase provides the hierarchy, size does not. Do not try to make `col-label` bigger than the items it labels. Trust the color and spacing.
 
 The current CSS values (copied from `public/deck.html`):
 
-- `.sh .label { margin-bottom: 0.55em }` — gap before the h2
-- `.sh { margin-bottom: 1.1em }` — gap after the full header block
-- `.col-label { margin-bottom: 0.9em }` — gap before column content
+- `.sh .label { font-size: 0.42em; margin-bottom: 0.6em }`: overline size and gap before the h2
+- `.sh { margin-bottom: 1.2em }`: gap after the full header block
+- `.col-label { font-size: 0.42em; margin-bottom: 0.9em }`: gap before column content
 
 Do not override these inline unless there is a specific layout reason.
 
@@ -165,7 +137,7 @@ Copy these patterns from `public/deck.html`. Do not invent new CSS.
 
 ### Slide header (every content slide)
 
-The `.sh` header uses amber on the overline label and bold Syne on the h2. No border or bar — the color and size contrast creates hierarchy on its own.
+The `.sh` header uses amber on the overline label and bold Syne on the h2. No border or bar; the color and size contrast creates hierarchy on its own.
 
 ```html
 <div class="sh">
@@ -174,15 +146,15 @@ The `.sh` header uses amber on the overline label and bold Syne on the h2. No bo
 </div>
 ```
 
-Overline label text is lowercase in HTML — CSS applies `text-transform: uppercase`.
+Overline label text is lowercase in HTML; CSS applies `text-transform: uppercase`.
 
 ### Layout grids
 
-- `.g2` — 2-column equal grid
-- `.g3` — 3-column equal grid
-- `.g4` — 4-column equal grid
-- `.split` — 1.15fr / 0.85fr (content + aside)
-- `.split-even` — 1fr / 1fr
+- `.g2`: 2-column equal grid
+- `.g3`: 3-column equal grid
+- `.g4`: 4-column equal grid
+- `.split`: 1.15fr / 0.85fr (content + aside)
+- `.split-even`: 1fr / 1fr
 
 ### Content cards
 
@@ -201,7 +173,7 @@ To show an exclusion or "not a good fit" note without using red or warning colou
 </div>
 ```
 
-The `opacity: 0.55` visually recedes the card so the exclusion reads as secondary to the positive list above it. Do not use `rgba(200,80,80,...)` backgrounds or red-tinted text — there is no red colour token in the design system.
+The `opacity: 0.55` visually recedes the card so the exclusion reads as secondary to the positive list above it. Do not use `rgba(200,80,80,...)` backgrounds or red-tinted text; there is no red colour token in the design system.
 
 ### Bullet rows (use this, not `<ul>/<li>`)
 
@@ -230,11 +202,11 @@ Each vrow has a `2px solid var(--border)` left border. Add `.hi` to turn that bo
 </div>
 ```
 
-Sub-text (`<p>`) inside a vrow is optional. Headings-only vrows are valid and intentional when the heading is self-explanatory — move the detail to speaker notes instead.
+Sub-text (`<p>`) inside a vrow is optional. Headings-only vrows are valid and intentional when the heading is self-explanatory; move the detail to speaker notes instead.
 
 ### Quiz topic cards
 
-Use `.g2` + `.card` for quiz topic categories. Do not use `.qrow` with round number badges — that pattern implies structured rounds and should not appear in event decks where rounds aren't the focus.
+Use `.g2` + `.card` for quiz topic categories. Do not use `.qrow` with round number badges; that pattern implies structured rounds and should not appear in event decks where rounds aren't the focus.
 
 ```html
 <div class="g2" style="margin-top: 0.5em;">
@@ -275,7 +247,7 @@ Do not add "accessible to everyone", "rewards people who were paying attention",
 Event speaker photos go in `public/speakers/<name>.webp`. Board member photos go in `public/team/<name>.webp`. Never mix the two directories. If a photo is not available, use initials as text inside the avatar div.
 
 ```html
-<!-- Event speaker (used in "Who's presenting" slides — photos from public/speakers/) -->
+<!-- Event speaker (used in "Who's presenting" slides; photos from public/speakers/) -->
 <div class="speaker-card" style="flex-direction: column; gap: 0.55em;">
   <div style="display: flex; gap: 0.65em; align-items: center;">
     <div class="sp-av"><img src="speakers/name.webp" alt="Full Name"></div>
@@ -287,7 +259,7 @@ Event speaker photos go in `public/speakers/<name>.webp`. Board member photos go
   <p class="sp-bio">One or two sentence bio.</p>
 </div>
 
-<!-- Board member (used in team grids — photos from public/team/) -->
+<!-- Board member (used in team grids; photos from public/team/) -->
 <div class="person">
   <div class="av"><img src="team/name.webp" alt="Full Name"></div>
   <div class="pi">
@@ -321,11 +293,11 @@ Wrap `.person` cards in `.board` for the team grid. The CSS provides a 3-column 
 </div>
 ```
 
-Use `class="person tba"` for unfilled seats — this applies `opacity: 0.32` and a dashed border.
+Use `class="person tba"` for unfilled seats; this applies `opacity: 0.55` and a dashed border.
 
 ### Title slide
 
-`justify-content: flex-start` places cobrand and h1 at the top. The tagline paragraphs sit below with a fixed `margin-top` — do not use `flex: 1` spacers between the title and taglines, as that pushes them to the bottom of the slide.
+`justify-content: flex-start` places cobrand and h1 at the top. The tagline paragraphs sit below with a fixed `margin-top`: do not use `flex: 1` spacers between the title and taglines, as that pushes them to the bottom of the slide.
 
 ```html
 <section>
@@ -337,7 +309,7 @@ Use `class="person tba"` for unfilled seats — this applies `opacity: 0.32` and
     </div>
     <h1 style="color: #ffc034;">Presentation Title</h1>
     <p style="font-size: 0.7em; margin-top: 2.8em;">Subtitle or tagline.</p>
-    <p style="font-size: 0.52em; margin-top: 0.35em; opacity: 0.5;">Event or context.</p>
+    <p style="font-size: 0.52em; margin-top: 0.35em; opacity: 0.7;">Event or context.</p>
     <p style="position: absolute; bottom: 1.8em; right: 2.2em; font-size: 0.38em; opacity: 0.28; letter-spacing: 0.04em;">Press S for speaker notes</p>
   </div>
   <aside class="notes">Speaker notes here.</aside>
@@ -348,7 +320,7 @@ If there is no co-brand partner, omit the `.cobrand` div and place the OffOn log
 
 ### Final / join slide
 
-Include a 3-column QR code grid for the three main links before the pill row. Generate QR code PNGs with `npx qrcode -t png -o public/qr/<name>.png "<url>"` and reference them via `src="qr/<name>.png"`. The `onerror` handler hides the image box gracefully if the file is missing.
+Include a centered QR code for the primary signup link before the pill row. The current reference deck (`public/deck.html`) uses a single QR for `community.offon.dev/signup`. Choose which URLs to show QR codes for based on the event; the `qr/` directory in `public/` contains the available PNGs. Generate new QR code PNGs with `npx qrcode -t png -o public/qr/<name>.png "<url>"`. The `onerror` handler on each image hides it gracefully if the file is missing. The `public/qr/` directory is already included in the preview copy step in `.github/workflows/preview.yml`.
 
 ```html
 <section>
@@ -360,25 +332,11 @@ Include a 3-column QR code grid for the three main links before the pill row. Ge
     </div>
     <h2>Join Us</h2>
     <p style="font-size: 0.65em; max-width: 26em; margin: 0.35em auto 0.8em;">CTA sentence.</p>
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2em; margin-bottom: 0.8em; max-width: 28em;">
-      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.4em;">
-        <div style="width: 5.5em; height: 5.5em; background: var(--card); border: 1px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
-          <img src="qr/offon-dev.png" alt="QR code for offon.dev" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'; this.parentElement.style.opacity='0.3';">
-        </div>
-        <span style="font-size: 0.38em; color: #ffc034;">offon.dev</span>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.4em; margin-bottom: 0.8em;">
+      <div style="width: 7em; height: 7em; background: var(--card); border: 1px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+        <img src="qr/community-offon-dev-signup.png" alt="QR code for community.offon.dev/signup" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'">
       </div>
-      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.4em;">
-        <div style="width: 5.5em; height: 5.5em; background: var(--card); border: 1px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
-          <img src="qr/community-offon-dev.png" alt="QR code for community.offon.dev" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'; this.parentElement.style.opacity='0.3';">
-        </div>
-        <span style="font-size: 0.38em; color: #ffc034;">community.offon.dev</span>
-      </div>
-      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.4em;">
-        <div style="width: 5.5em; height: 5.5em; background: var(--card); border: 1px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
-          <img src="qr/offon-dev-contribute.png" alt="QR code for offon.dev/contribute" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'; this.parentElement.style.opacity='0.3';">
-        </div>
-        <span style="font-size: 0.38em; color: #ffc034;">offon.dev/contribute</span>
-      </div>
+      <span style="font-size: 0.38em; color: #ffc034;">community.offon.dev/signup</span>
     </div>
     <div class="link-row">
       <a href="mailto:offondev@gmail.com" class="pill">offondev@gmail.com</a>
@@ -391,8 +349,6 @@ Include a 3-column QR code grid for the three main links before the pill row. Ge
 </section>
 ```
 
-After generating QR PNGs, add `cp -r dist/client/qr "${PREVIEW_DIR}/"` to the copy step in `.github/workflows/preview.yml` if it is not already there.
-
 ### Agenda table
 
 ```html
@@ -402,7 +358,7 @@ After generating QR PNGs, add `cp -r dist/client/qr "${PREVIEW_DIR}/"` to the co
 </table>
 ```
 
-Rows without `.hi` render text in `var(--muted)` (dimmed). Rows with `.hi` render text in `var(--fg)` (bright/foregrounded) — use it for the active segments of the evening. The time column stays amber regardless. Note: `.hi` behaves differently on agenda rows (text brightness) vs `.vrow.hi` (border colour) — they share the class name but different CSS rules apply.
+Rows without `.hi` render text in `var(--muted)` (dimmed). Rows with `.hi` render text in `var(--fg)` (bright/foregrounded); use it for the active segments of the evening. The time column stays amber regardless. Note: `.hi` behaves differently on agenda rows (text brightness) vs `.vrow.hi` (border colour); they share the class name but different CSS rules apply.
 
 ### Column label (above a column in split layouts)
 
@@ -410,7 +366,7 @@ Rows without `.hi` render text in `var(--muted)` (dimmed). Rows with `.hi` rende
 <span class="col-label">column heading</span>
 ```
 
-Column label text is lowercase in HTML — CSS applies `text-transform: uppercase`.
+Column label text is lowercase in HTML; CSS applies `text-transform: uppercase`.
 
 ---
 
@@ -421,12 +377,13 @@ All paths are relative to `public/` and must be written without a leading slash 
 | Asset | Path | Where used |
 | --- | --- | --- |
 | OffOn logo (dark bg) | `brand/offon-logo-dark-color.svg` | `.cobrand` in title and final slides |
+| OffOn favicon icon | `brand/offon-favicon.svg` | Persistent `#deck-logo` top-right corner |
 | Nyx mascot (peek) | `brand/offon-nyx-peek.png` | About OffOn slide, right column, decorative |
 | Board member photos | `team/<name>.webp` | `.board .person .av img` |
 | Event speaker photos | `speakers/<name>.webp` | `.speaker-card .sp-av img` |
 | QR codes | `qr/<slug>.png` | Final slide QR grid |
 
-The Nyx mascot image is always decorative — use `alt=""` and `aria-hidden="true"`. Apply `opacity: 0.6` and a fixed `height` (e.g. `230px`) so it doesn't compete with the slide content:
+The Nyx mascot image is always decorative; use `alt=""` and `aria-hidden="true"`. Apply `opacity: 0.6` and a fixed `height` (e.g. `230px`) so it doesn't compete with the slide content:
 
 ```html
 <img src="brand/offon-nyx-peek.png" alt="" aria-hidden="true"
@@ -435,10 +392,63 @@ The Nyx mascot image is always decorative — use `alt=""` and `aria-hidden="tru
 
 ---
 
+## Persistent elements (outside `.reveal`)
+
+Two elements sit outside the `.reveal` div and appear on every slide. Copy them verbatim from the template; do not move them inside `.reveal` or modify their structure.
+
+### Favicon logo (`#deck-logo`)
+
+```html
+<img id="deck-logo" src="brand/offon-favicon.svg" alt="" aria-hidden="true" width="34" height="44">
+```
+
+CSS (already in the template `<style>` block):
+
+```css
+#deck-logo { position: fixed; top: 20px; right: 28px; height: 44px; pointer-events: none; z-index: 200; }
+```
+
+`z-index: 200` is required; Reveal.js internal overlays go up to z-index 100. Use explicit `width`/`height` attributes so the browser sizes the SVG correctly (the source uses mm units which some browsers don't auto-scale from CSS alone).
+
+### Firefly particle effect (`#ff-wave`, `#ff-mist`)
+
+An amber particle cluster in the lower portion of the viewport, with an ambient glow gradient. All CSS and HTML is in the template. Key rules:
+
+```css
+html, body { background: var(--bg); }
+.reveal-viewport { background: transparent; }
+
+#ff-wave, #ff-mist { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+#ff-wave { background:
+  radial-gradient(ellipse 200% 28% at 50% 100%, rgba(255,192,52,.042) 0%, transparent 65%),
+  radial-gradient(ellipse 48% 52% at 14% 100%, rgba(255,192,52,.042) 0%, transparent 72%),
+  radial-gradient(ellipse 42% 42% at 48% 100%, rgba(255,192,52,.029) 0%, transparent 68%),
+  radial-gradient(ellipse 46% 50% at 80% 100%, rgba(255,192,52,.037) 0%, transparent 70%); }
+/* Wide base layer (200%) ensures full-width coverage; three narrower bumps at 14%, 48%, 80% create a mountain-range height variation. Do not replace with a single centred ellipse; the base+bumps structure is what prevents dark gaps at the edges. */
+
+.fw    { position: absolute; border-radius: 50%; background: #ffc034; }
+.fw-hi { width:2.5px; height:2.5px; box-shadow: 0 0 1.8px 0px rgba(255,192,52,.95), 0 0 4px 0px rgba(255,192,52,.28); }
+.fw-md { width:2px;   height:2px;   box-shadow: 0 0 1.2px 0px rgba(255,192,52,.80), 0 0 3.2px 0px rgba(255,192,52,.20); }
+.fw-lo { width:1.5px; height:1.5px; box-shadow: 0 0 0.8px 0px rgba(255,192,52,.65), 0 0 2.5px 0px rgba(255,192,52,.14); }
+```
+
+**Why `body` holds the background:** `.reveal-viewport` is added to `<body>` by Reveal.js at runtime. Setting `background: transparent` on `.reveal-viewport` lets the dark `html, body` background show through, while `#ff-wave` (position fixed, z-index 0) appears behind opaque slide content but shows through dark/empty slide areas.
+
+**Particle layout rules:**
+
+- Particles live in the `top: 85–94%` zone. `fw-hi` solos sit highest (85–87%); `fw-lo` can dip to 94%. Vary `top` values within each cluster across the full range so particles scatter vertically rather than aligning on a single horizontal line.
+- Use 5 clusters of 4 dots (2–4% apart horizontally) with deliberate gaps between clusters. Inter-cluster gaps should be irregular (not all ~20%); vary them so one gap reads as a wide clearing and others as tighter separations.
+- Place a lone `fw-hi` dot in each gap between clusters; the brighter solo reads as an individual firefly against the dark gap.
+- Do not arrange particles in a wave, arc, or any mathematically regular pattern.
+- `#ff-mist` holds 7–8 very faint (`opacity: .08–.11`) `fw-lo` particles in the 93–97% zone, grouped as pairs and solos with uneven spacing — not evenly distributed. They add depth without structure.
+- The ambient glow gradient is on `#ff-wave`'s `background` property (not on `.reveal .slides section`) so it always fills the full viewport width.
+
+---
+
 ## Copy and tone rules
 
 - No em dashes anywhere. Use commas or periods.
-- "always" is lowercase — never "Always" in the tagline.
+- "always" is lowercase; never "Always" in the tagline.
 - Overline labels and column labels: write source text in lowercase (CSS uppercases them).
 - Title case for slide titles and card headings. Sentence case for body copy.
 - Brand is always "OffOn" (camelCase). Domain is always "offon.dev" (lowercase).
@@ -453,13 +463,13 @@ The Nyx mascot image is always decorative — use `alt=""` and `aria-hidden="tru
 
 Every `<section>` must have an `<aside class="notes">` block.
 
-Use a `<ul><li>` list inside the notes block — Reveal.js renders the notes panel as HTML, so this produces real bullet points that are easy to read aloud:
+Use a `<ul><li>` list inside the notes block; Reveal.js renders the notes panel as HTML, so this produces real bullet points that are easy to read aloud:
 
 ```html
 <aside class="notes">
   <ul>
     <li>First thing to say out loud that is not on the slide.</li>
-    <li>Second point — expand on something the slide left sparse.</li>
+    <li>Second point; expand on something the slide left sparse.</li>
     <li>End with a transition: "Next: what this means in practice."</li>
   </ul>
 </aside>
@@ -496,7 +506,7 @@ The canonical slide order for an Open Source Talks event intro deck. Follow this
 | 12 | Open Source Pub Quiz | `.g2` cards | Two round topics |
 | 13 | Join Us | `.final` | Cobrand, QR grid, `.link-row` pills |
 
-Slides 6 and 7 are intentionally split — don't merge Adventures and Community back into one slide. Each needs room to breathe.
+Slides 6 and 7 are intentionally split; don't merge Adventures and Community back into one slide. Each needs room to breathe.
 
 ---
 
@@ -505,17 +515,111 @@ Slides 6 and 7 are intentionally split — don't merge Adventures and Community 
 When creating a deck for a challenge walkthrough:
 
 - Slide 1: Title + challenge name + difficulty badge (use a `.tag` styled pill inline).
-- Slide 2: Scenario — what problem the user is solving. Use `.split`: scenario text left, architecture diagram or screenshot right.
+- Slide 2: Scenario; what problem the user is solving. Use `.split`: scenario text left, architecture diagram or screenshot right.
 - Slides 3–N: One slide per major step. Use `.sh` header with step number as overline label.
 - Final slide: What the learner accomplished + link to the challenge on offon.dev.
 
-For scenario and architecture text, pull from the adventure's generated TypeScript in `src/data/adventures/<id>/<id>.generated.ts`. The `scenario`, `architecture`, `backstory`, and `objective` fields are pre-rendered HTML — strip tags or paraphrase for slide copy; do not paste raw HTML into the deck.
+For scenario and architecture text, pull from the adventure's generated TypeScript in `src/data/adventures/<id>/<id>.generated.ts`. The `scenario`, `architecture`, `backstory`, and `objective` fields are pre-rendered HTML; strip tags or paraphrase for slide copy; do not paste raw HTML into the deck.
 
 ---
 
 ## File output
 
-- Write to `public/<filename>.html`.
-- Do not add the file to `src/routes.ts`, `public/sitemap.xml`, or `react-router.config.ts`.
-- Copy the `<head>`, `<style>` block, `#ff-wave` div, `#ff-mist` div, and `<script>` init block verbatim from `public/deck.html` (see body frame in Design system section above).
-- After writing the file, confirm: `ls -lh public/<filename>.html` and open `http://localhost:8080/<filename>.html` if the dev server is running.
+1. Read the template for the chosen format.
+2. Generate all slide content (see slide structure patterns above for Reveal.js; see Slidev and Marp patterns below for those formats).
+3. In the output file, replace the example placeholder slides with the generated content. Keep the boilerplate (head, style, scripts for HTML; frontmatter for Markdown) intact.
+4. Update the title in `<title>` (Reveal.js) or the `title:` frontmatter field (Slidev).
+5. Write to:
+   - Reveal.js: `public/<filename>.html`
+   - Slidev: `.claude/templates/slidev/<filename>.md` (must be alongside `style.css` for styles to load)
+6. Do not add any of these files to `src/routes.ts`, `public/sitemap.xml`, or `react-router.config.ts`.
+7. Confirm: `ls -lh <output-path>`
+
+**To run Slidev locally:**
+
+```sh
+cd .claude/templates/slidev
+pnpm install          # first time only (installs @slidev/cli + markdown-it-github-alerts)
+pnpm dev              # opens deck-template.md, or:
+pnpm slidev <filename>.md
+```
+
+**For PowerPoint (`pptx`):** edit `.claude/templates/generate-pptx.mjs` with the presentation content, then run:
+
+```sh
+node .claude/templates/generate-pptx.mjs
+```
+
+This outputs `public/downloads/offon-deck-template.pptx`. Fonts (Inter 18pt, Syne) are embedded automatically. The slide background (`bg.png`) is the pre-rendered firefly gradient; do not regenerate it unless the design changes.
+
+---
+
+## Slidev slide patterns
+
+Each slide is separated by `---`. The first slide after frontmatter is the cover. Layout hints use Slidev's built-in frontmatter per slide.
+
+```markdown
+---
+layout: cover
+---
+
+# Presentation Title
+## Subtitle or tagline
+
+---
+layout: two-cols-header
+---
+
+<span class="label">section label</span>
+
+## Slide Title
+
+::left::
+
+- Left point one
+- **Amber emphasis**
+- Left point three
+
+::right::
+
+- Right point one
+- Right point two
+
+---
+
+<span class="label">section label</span>
+
+## Standard Slide
+
+Sentence case for body copy. **Bold for emphasis** in amber.
+
+- Bullet one
+- Bullet two
+
+---
+layout: center
+---
+
+# Join Us
+
+Call to action sentence.
+
+<div class="link-row">
+<a href="https://offon.dev" class="pill">offon.dev</a>
+</div>
+```
+
+Speaker notes go in multi-line HTML comment blocks directly after the slide content. Slidev parses these as presenter notes visible in speaker view (`S` key):
+
+```markdown
+---
+
+## Slide Title
+
+Content here.
+
+<!--
+Speaker note: expand on this point. This is what you say, not what is on the slide.
+Next: transition to the next slide.
+-->
+```

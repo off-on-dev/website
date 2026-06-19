@@ -22,6 +22,7 @@ export default {
     "/privacy",
     "/accessibility",
     "/brand",
+    "/presentation-templates",
     // GENERATED:adventures
     "/adventures/lex-imperfecta",
     "/adventures/lex-imperfecta/levels/beginner",

@@ -46,6 +46,9 @@ Node.js **24** is required. Version is pinned in `.nvmrc`, run `nvm use` to swit
 | `npm run test:visual:update` | Update visual regression baseline screenshots |
 | `npm run generate` | Regenerate TypeScript from adventure YAML files |
 | `npm run generate:validate` | Validate adventure YAML against schema without writing files |
+| `cd .claude/templates/slidev && pnpm install` | Install Slidev dependencies (first time only) |
+| `cd .claude/templates/slidev && pnpm dev` | Preview the Slidev deck template in the browser |
+| `cd .claude/templates/slidev && pnpm slidev <file>.md` | Preview a specific Slidev deck |
 
 Run `npm run lint` and `npm test` before marking any work done.
 
@@ -118,6 +121,7 @@ Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and
 | `/privacy` | `Privacy.tsx` | GDPR-compliant privacy policy |
 | `/accessibility` | `Accessibility.tsx` | WCAG accessibility statement |
 | `/brand` | `BrandGuidelines.tsx` | Brand guidelines: logos, colors, typography, voice |
+| `/presentation-templates` | `PresentationTemplates.tsx` | Slide template downloads (Slidev ZIP, PPTX); unlisted — noindex, excluded from sitemap and robots |
 | `/404` | `NotFound.tsx` | Prerendered 404 page |
 | `/community-guide` | redirects to `/handbook` | Legacy alias |
 | `/docs` | redirects to `/handbook` | Legacy alias |
