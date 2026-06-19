@@ -36,6 +36,9 @@ export default defineConfig({
     // server is fully ready before tests start.
     url: "http://localhost:3000/challenges/python/",
     reuseExistingServer: !process.env.CI,
-    timeout: 30000,
+    // 120s: CI runners are sometimes slow to start after Playwright browser
+    // install or artifact download, causing spurious "Timed out waiting 30000ms
+    // from config.webServer" failures on otherwise healthy shards.
+    timeout: 120000,
   },
 });
