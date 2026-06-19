@@ -22,7 +22,7 @@ export const LEX_IMPERFECTA: Adventure = {
     "The Republic's legal system is in disarray — workloads run unchecked, required labels go missing, and privileged containers slip through the gates. As a newly appointed Praetor, your mission is to restore order by fixing broken Kyverno policies and enforcing proper admission control.",
   ],
   rewards: {
-    deadline: "2026-06-23T23:59:00+01:00",
+    deadline: "2026-06-30T23:59:00+01:00",
     eligibility: "Complete all levels and post your solution in the community before the deadline to be eligible.",
     tiers: [
       { label: "1st place", description: "50% voucher for a Linux Foundation certification" },
@@ -46,7 +46,7 @@ export const LEX_IMPERFECTA: Adventure = {
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F05-lex-imperfecta_01-beginner%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: "https://community.offon.dev/t/restore-proper-admission-control-using-kyverno-june-2026-adventure-beginner/1576",
-      deadline: "2026-06-23T23:59:00+01:00",
+      deadline: "2026-06-30T23:59:00+01:00",
       intro: ["Fix broken Kyverno policies to restore proper admission control."],
       backstory: [
         "The Republic's legal scholars have been busy — perhaps too busy. In their haste to codify the Twelve Tables, the  foundation of the Republic's legal system, they introduced errors that now threaten the city's order. Workloads  that should be blocked are running freely, and workloads that should be allowed are being turned away at the gates.",
@@ -130,7 +130,7 @@ kyverno apply manifests/policies/stamp-travel-permit.yaml --resource manifests/p
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F05-lex-imperfecta_02-intermediate%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: "https://community.offon.dev/t/fix-a-broken-kyverno-policy-estate-june-2026-adventure-intermediate/1581",
-      deadline: "2026-06-23T23:59:00+01:00",
+      deadline: "2026-06-30T23:59:00+01:00",
       intro: [
         "Fix a misconfigured Kyverno policy estate and use Policy Reporter to restore proper governance across the Republic's provinces.",
       ],
@@ -226,7 +226,7 @@ policy reports, the OpenReports data behind Policy Reporter, as the audit of rec
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F05-lex-imperfecta_03-expert%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: "https://community.offon.dev/t/catch-the-intruder-the-guard-couldnt-see-june-2026-adventure-expert/1591",
-      deadline: "2026-06-23T23:59:00+01:00",
+      deadline: "2026-06-30T23:59:00+01:00",
       intro: [
         "An intruder is already inside the Republic, and the watchmen cannot see it. Fix the Praetorian Guard's broken detection rule, close the admission gap that let the intruder slip through, and seal the census archive against unauthorized access.",
       ],
