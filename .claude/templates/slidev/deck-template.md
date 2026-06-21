@@ -9,6 +9,7 @@ fonts:
   sans: Inter
   display: Syne
   weights: '400,500,600,700'
+  provider: none
 ---
 
 <div class="offon-logo" role="img" aria-label="OffOn" style="margin-bottom: 1.2em;"></div>

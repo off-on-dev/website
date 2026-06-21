@@ -366,11 +366,19 @@ console.log('PPTX written, embedding fonts...');
 
 // ── Font embedding via JSZip (OOXML) ─────────────────────────────────────────
 
-// OOXML obfuscation: XOR first 32 bytes of font with reversed GUID bytes
+// OOXML obfuscation: XOR first 32 bytes of font with GUID bytes per ECMA-376 §15.2.1.
+// The GUID's first three components are stored little-endian, so each component's bytes
+// must be reversed individually (Data1: 4 bytes, Data2: 2 bytes, Data3: 2 bytes).
+// Data4 (8 bytes) is stored in order and is not reversed.
 function obfuscateFont(fontBuffer, guid) {
-  const hex     = guid.replace(/-/g, '');
-  const keyBytes = Buffer.from(hex, 'hex').reverse(); // 16 bytes, reversed
-  const out      = Buffer.from(fontBuffer);
+  const allBytes = Buffer.from(guid.replace(/-/g, ''), 'hex'); // 16 bytes
+  const keyBytes = Buffer.concat([
+    Buffer.from(allBytes.subarray(0, 4)).reverse(), // Data1
+    Buffer.from(allBytes.subarray(4, 6)).reverse(), // Data2
+    Buffer.from(allBytes.subarray(6, 8)).reverse(), // Data3
+    allBytes.subarray(8, 16),                        // Data4 — in order
+  ]);
+  const out = Buffer.from(fontBuffer);
   for (let i = 0; i < Math.min(32, out.length); i++) {
     out[i] ^= keyBytes[i % 16];
   }

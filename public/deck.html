@@ -294,6 +294,11 @@
     }
     .person .pr { font-size: 0.52em; color: var(--muted); line-height: 1.4; margin: 0; }
     .person.tba { opacity: 0.55; border-style: dashed; }
+    .board-sm { gap: 0.35em; margin-top: 0.3em; }
+    .board-sm .person { padding: 0.4em 0.6em; gap: 0.4em; }
+    .board-sm .person .av { width: 1.4em; height: 1.4em; }
+    .board-sm .person .pn { font-size: 0.55em; margin-bottom: 0.08em; }
+    .board-sm .person .pr { font-size: 0.44em; }
 
     /* ── Value rows ── */
     .vrow {
@@ -428,7 +433,7 @@
       gap: 0.45em;
       margin-top: 0.6em;
     }
-    /* Pills sit slightly above label tier — they are interactive */
+    /* Pills sit slightly above label tier; they are interactive */
     .pill {
       background: var(--card);
       border: 1px solid var(--border);
@@ -558,9 +563,9 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Guest cards are single use — please return them at the entrance when you leave, security requires it.</li>
+          <li>Guest cards are single use; please return them at the entrance when you leave, security requires it.</li>
           <li>Elevators: just touch the screen, no card needed inside the building.</li>
-          <li>Please don't open the windows — the AC is controlled centrally.</li>
+          <li>Please don't open the windows; the AC is controlled centrally.</li>
           <li>Toilets are on this floor.</li>
           <li>We'll be taking photos for social media. If you'd prefer not to be in them, just let one of the organisers know.</li>
           <li>WiFi: username vvienna, password td1y59.</li>
@@ -591,11 +596,11 @@
       <aside class="notes">
         <ul>
           <li>Open Source Talks is a recurring in-person meetup for the Austrian open source community.</li>
-          <li>Not a conference — no badge scanning, no lead gen, no product pitches.</li>
+          <li>Not a conference: no badge scanning, no lead gen, no product pitches.</li>
           <li>Two cities: Vienna here at the Rennweg office, and Linz at Freistädter Straße.</li>
           <li>About 6 events per year, always the last Thursday of the month.</li>
           <li>Format: two 25-minute talks plus Q&amp;A, then the pub quiz.</li>
-          <li>Talks come from any open source project — nothing has to be tied to Dynatrace or OffOn.</li>
+          <li>Talks come from any open source project. Nothing has to be tied to Dynatrace or OffOn.</li>
           <li>Always free to attend. No registration wall, no ticket, no email capture.</li>
         </ul>
       </aside>
@@ -620,9 +625,9 @@
       </table>
       <aside class="notes">
         <ul>
-          <li>Doors opened at 17:30. Talks start now — we're structured until 20:00, then open networking.</li>
+          <li>Doors opened at 17:30. Talks start now. We're structured until 20:00, then open networking.</li>
           <li>This intro runs until 18:10, then Nico and Sinduri are up first.</li>
-          <li>The 15-minute break at 18:40 is real — time to move around and refill.</li>
+          <li>The 15-minute break at 18:40 is real; take the time to move around and refill.</li>
           <li>Pub quiz at 19:40, about 15 minutes. Two rounds: open source history, then questions based on tonight's two talks.</li>
           <li>Wrap-up at 19:55, then open networking.</li>
         </ul>
@@ -689,15 +694,19 @@
         <div>
           <div class="brow">
             <span class="dot">→</span>
-            <span class="bt">A vendor-neutral, community-driven space built around one goal: sustaining the people behind open source and creating the maintainers of tomorrow</span>
+            <span class="bt">Sustain the people behind open source and grow the maintainers of tomorrow</span>
           </div>
           <div class="brow">
             <span class="dot">→</span>
-            <span class="bt">From curious learners to first-time contributors to long-term maintainers, regardless of background or project</span>
+            <span class="bt">Everyone belongs here: learners, engineers, contributors, maintainers, writers, designers, translators, organisers</span>
           </div>
           <div class="brow">
             <span class="dot">→</span>
-            <span class="bt">Open to everyone: developers, writers, designers, translators, organisers. Sponsors fund the work, they do not shape the mission</span>
+            <span class="bt">Learn through real challenges, share what you know, help the next generation find their footing</span>
+          </div>
+          <div class="brow">
+            <span class="dot">→</span>
+            <span class="bt">Community knowledge that is preserved, passed on, and built to grow</span>
           </div>
           <p style="margin-top: 1.4em; font-size: 0.38em; opacity: 0.45;">always on. always open. always learning.</p>
         </div>
@@ -707,10 +716,10 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>OffOn exists to sustain the people behind open source, not just the projects.</li>
-          <li>Most platforms are built for enterprises or foundations. OffOn is built for the individuals who do the work.</li>
-          <li>Vendor-neutral: sponsors fund the work, not the mission. Dynatrace does not control what OffOn builds or says.</li>
-          <li>Open to everyone — developers, writers, designers, translators, event organisers. If you care about open source, you belong here.</li>
+          <li>OffOn exists to sustain the people behind open source and to develop the maintainers of tomorrow. Most platforms and foundations are built with enterprises and legal teams in mind. OffOn is built for the individuals who actually write the code, review the pull requests, and keep projects alive day to day.</li>
+          <li>The community is open to everyone who cares about open source, whether you write code or not. Developers, SREs, writers, designers, translators, organisers, OSPO members, first-time contributors, and long-time maintainers all belong here. If you are anywhere on that journey, from curious about open source to running a project with thousands of users, this space is for you.</li>
+          <li>The way OffOn works is through hands-on challenges built around real tools and real scenarios. Not tutorials, not marketing content. Things you can apply, fork, and build on.</li>
+          <li>And one of the things we care most about is making sure knowledge does not disappear. Chat threads lose context the moment they scroll away. OffOn is designed to structure and preserve what the community learns, so it can be passed on to the next person who needs it.</li>
         </ul>
       </aside>
     </section>
@@ -760,10 +769,10 @@
       <aside class="notes">
         <ul>
           <li>Adventures are hands-on, scenario-driven challenges built around real open source tools.</li>
-          <li>Everything runs in GitHub Codespaces — no local setup, no Docker, no "works on my machine."</li>
+          <li>Everything runs in GitHub Codespaces; no local setup, no Docker, no "works on my machine."</li>
           <li>Current tools: OpenTelemetry, Kyverno, OpenFeature, ArgoCD, OpenTofu, Grafana. More being built.</li>
           <li>Each adventure has multiple difficulty levels. Completions earn Credly badges and leaderboard points.</li>
-          <li>The "your project?" tag is an open invitation — if you maintain or contribute to an OSS project, you can propose a challenge.</li>
+          <li>The "your project?" tag is an open invitation. If you maintain or contribute to an OSS project, you can propose a challenge.</li>
         </ul>
       </aside>
     </section>
@@ -793,7 +802,7 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>The other platform is community.offon.dev — a discussion hub open to everyone who cares about open source.</li>
+          <li>The other platform is community.offon.dev, a discussion hub open to everyone who cares about open source.</li>
           <li>Discourse-based. Intro threads, Q&amp;A, tutorials, project showcases, local event listings.</li>
           <li>No paywall, no account required to read. Jump in, introduce yourself.</li>
           <li>Both adventures and the community are free.</li>
@@ -843,11 +852,11 @@
       <p style="margin-top: 0.5em; font-size: 0.38em;"><a href="https://offon.dev/contribute" style="color: #ffc034;">offon.dev/contribute</a></p>
       <aside class="notes">
         <ul>
-          <li>No contribution is too small — introducing yourself, answering one Q&amp;A question, fixing a typo.</li>
+          <li>No contribution is too small: introducing yourself, answering one Q&amp;A question, fixing a typo.</li>
           <li>Code is not the only way in. Writers, designers, translators, organisers are all first-class contributors.</li>
           <li>The easiest starting point: community.offon.dev, introduce yourself.</li>
           <li>If you want to build an adventure or propose a challenge, there's a full guide at offon.dev/contribute.</li>
-          <li>And if you want to speak at a future event — the next slide is about that.</li>
+          <li>And if you want to speak at a future event, the next slide is about that.</li>
         </ul>
       </aside>
     </section>
@@ -897,74 +906,87 @@
       <aside class="notes">
         <ul>
           <li>The vendor-neutral rule is non-negotiable. A talk about an OSS project backed by a company: fine. A talk that exists to sell a product: not fine.</li>
-          <li>The frame that works: what you maintain or contribute to, personal, specific, grounded in real experience.</li>
+          <li>The talks that land are personal, specific, and grounded in real experience. What you maintain or contribute to, what broke, what you learned.</li>
           <li>Honest talks about failure are more useful to the room than polished success stories.</li>
           <li>Format: 25 minutes plus Q&amp;A, in English, slides optional.</li>
-          <li>To speak: name, talk title, 2–3 sentence description to offondev@gmail.com. We reply within a week.</li>
+          <li>To speak: send your name, talk title, and a 2 to 3 sentence description to offondev@gmail.com.</li>
           <li>If anyone in this room has something to share, this is the place. We'd love to hear from you.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- 11 ─ Board -->
+    <!-- 11 ─ Who's Behind OffOn -->
     <section>
       <div class="sh">
         <span class="label">The Team</span>
-        <h2>OffOn Board Members</h2>
+        <h2>Who Is Behind OffOn</h2>
       </div>
-      <div class="board">
+      <div class="brow" style="margin-top: 0.5em;">
+        <span class="dot">→</span>
+        <span class="bt">OffOn is a new community, founded and currently run by a team at Dynatrace, who also fund the platform, provide the engineering time, and make these events free to attend.</span>
+      </div>
+      <div class="brow">
+        <span class="dot">→</span>
+        <span class="bt">Every challenge, tool, and piece of content is built around open source. Sponsors fund the work; they do not shape the mission.</span>
+      </div>
+      <div class="brow">
+        <span class="dot">→</span>
+        <span class="bt">We are a new community and we are actively planning to add non-Dynatrace board members as it grows.</span>
+      </div>
+      <p style="font-family: 'Syne', sans-serif; font-size: 0.5em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0.5em 0 0.3em;">Board</p>
+      <div class="board board-sm">
         <div class="person">
           <div class="av"><img src="team/david.webp" alt="David Hirsch"></div>
           <div class="pi">
             <p class="pn">David Hirsch</p>
-            <p class="pr">Head of Community and Open Source, Dynatrace. Co-founder of KCD Austria.</p>
+            <p class="pr">Head of Community and Open Source, Dynatrace</p>
           </div>
         </div>
         <div class="person">
           <div class="av"><img src="team/katharina.webp" alt="Katharina Sick"></div>
           <div class="pi">
             <p class="pn">Katharina Sick</p>
-            <p class="pr">DevRel, Dynatrace. Co-organiser of Cloud Native Linz. Adventure builder.</p>
+            <p class="pr">Senior Developer Programs Engineer, Dynatrace</p>
           </div>
         </div>
         <div class="person">
           <div class="av"><img src="team/kenyatta.webp" alt="Kenyatta Forbes"></div>
           <div class="pi">
             <p class="pn">Kenyatta Forbes</p>
-            <p class="pr">Sr Program Manager, Dynatrace. Previously Google for Education and Mozilla.</p>
+            <p class="pr">Sr Program Manager, Dynatrace</p>
           </div>
         </div>
         <div class="person">
           <div class="av"><img src="team/sinduri.webp" alt="Sinduri Guntupalli"></div>
           <div class="pi">
             <p class="pn">Sinduri Guntupalli</p>
-            <p class="pr">Sr Developer Programs Engineer, Dynatrace. Drupal Austria Marketing Manager.</p>
+            <p class="pr">Sr Developer Programs Engineer, Dynatrace</p>
           </div>
         </div>
         <div class="person tba">
           <div class="av">?</div>
           <div class="pi">
-            <p class="pn">To be announced</p>
-            <p class="pr">Board seat open</p>
+            <p class="pn">Open seat</p>
+            <p class="pr">Non-Dynatrace voice welcome</p>
           </div>
         </div>
         <div class="person tba">
           <div class="av">?</div>
           <div class="pi">
-            <p class="pn">To be announced</p>
-            <p class="pr">Board seat open</p>
+            <p class="pn">Open seat</p>
+            <p class="pr">Non-Dynatrace voice welcome</p>
           </div>
         </div>
       </div>
       <aside class="notes">
         <ul>
-          <li>Four confirmed members, two seats still open.</li>
-          <li>All four are currently at Dynatrace — acknowledged openly. The goal is to bring in outside voices as the community grows.</li>
+          <li>All four current board members are at Dynatrace. That's intentional for now; they're building and funding it. Governance will expand as the community grows.</li>
+          <li>Two seats are open. We're looking for people outside Dynatrace who want to help shape what this community becomes.</li>
+          <li>Board members shape the platform direction, community governance, and event organisation. If you're interested, reach out.</li>
           <li>David Hirsch: Head of Community and Open Source at Dynatrace, co-founder of KCD Austria.</li>
-          <li>Katharina Sick: DevRel at Dynatrace, co-organiser of Cloud Native Linz, adventure builder.</li>
+          <li>Katharina Sick: Senior Developer Programs Engineer at Dynatrace, co-organiser of Cloud Native Linz, adventure builder.</li>
           <li>Kenyatta Forbes: Sr Program Manager, previously Google for Education and Mozilla.</li>
           <li>Sinduri Guntupalli: Sr Developer Programs Engineer, Drupal Austria Marketing Manager.</li>
-          <li>Board seats involve real work: platform direction, community governance, event organisation. If you're interested, reach out.</li>
         </ul>
       </aside>
     </section>
@@ -979,15 +1001,15 @@
         <div>
           <div class="brow">
             <span class="dot">→</span>
-            <span class="bt">Dynatrace builds on open source, contributes to it, and depends on its long-term health. Supporting the ecosystem is part of how they operate, not a side activity.</span>
+            <span class="bt">Dynatrace builds on open source, contributes to it, and has relied on it for years. Investing in the ecosystem is part of how the company operates.</span>
           </div>
           <div class="brow">
             <span class="dot">→</span>
-            <span class="bt">Most corporate OSS investment flows toward foundations and large strategic projects. Far less of it reaches the individuals who write the code and keep projects alive day to day.</span>
+            <span class="bt">As founding sponsor, they bring funding, engineering time, developer advocacy, infrastructure, and free events like this one.</span>
           </div>
           <div class="brow">
             <span class="dot">→</span>
-            <span class="bt">Sponsoring OffOn is about being a responsible participant in the ecosystem they all rely on. Not a marketing exercise.</span>
+            <span class="bt">The goal is a thriving ecosystem where contributors are supported, maintainers are recognised, and knowledge reaches the next generation.</span>
           </div>
         </div>
         <div>
@@ -1011,10 +1033,9 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Dynatrace is the founding sponsor. No ticket price, no sponsor logos on every slide, no sales angle.</li>
-          <li>The OSPO — Open Source Programs Office — at Dynatrace is behind this. Their mandate: invest in the ecosystem, not just consume it.</li>
-          <li>In practice: funding the platform, engineering time on challenges, and this venue, food, and drinks so the event is free.</li>
-          <li>Most corporate OSS investment goes to foundations and big strategic projects. This is investment in the individuals.</li>
+          <li>Dynatrace has been part of the open source world for a long time. They build on it, they contribute to it, and the health of that ecosystem directly affects what they can build. Sponsoring OffOn is part of how they think about participating responsibly in the ecosystem they rely on.</li>
+          <li>As founding sponsor, Dynatrace provides the funding that keeps the platform running, the engineering and developer advocacy time that goes into building challenges and supporting the community, and the infrastructure behind the events. Tonight is free because of that investment.</li>
+          <li>What they want in return is straightforward: a stronger ecosystem. More contributors who know what they are doing. More maintainers who are supported and not burning out. Knowledge that reaches people who would not otherwise have access to it.</li>
         </ul>
       </aside>
     </section>
@@ -1033,7 +1054,7 @@
           </div>
           <div class="brow">
             <span class="dot">→</span>
-            <span class="bt">Positions in Vienna, Linz, and remote — international team</span>
+            <span class="bt">Positions in Vienna, Linz, and remote. International team.</span>
           </div>
           <div class="brow">
             <span class="dot">→</span>
@@ -1049,11 +1070,11 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Dynatrace is hiring, and this is a relevant crowd — engineers and open source people who might be looking or know someone who is.</li>
+          <li>Dynatrace is hiring, and this is a relevant crowd: engineers and open source people who might be looking or know someone who is.</li>
           <li>Positions across engineering, DevRel, product management, and more.</li>
           <li>Vienna and Linz offices, plus remote. International team.</li>
           <li>Open source contribution and community involvement are genuinely valued, not just a nice-to-have on the CV.</li>
-          <li>careers.dynatrace.com — scan the QR code to go straight there.</li>
+          <li>careers.dynatrace.com; scan the QR code to go straight there.</li>
         </ul>
       </aside>
     </section>
@@ -1077,8 +1098,7 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Last structured segment before open networking.</li>
-          <li>Two rounds: open source history and culture, then questions based on tonight's two talks.</li>
+          <li>Time for the pub quiz. Two rounds: open source history and culture, then questions based on tonight's two talks.</li>
           <li>Everyone plays individually on their phone. Scan the QR code on the next slide to join.</li>
         </ul>
       </aside>
@@ -1126,7 +1146,7 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>That's the intro — about 10 minutes. Thank you for being here.</li>
+          <li>That's the intro, about 10 minutes. Thank you for being here.</li>
           <li>If you want to speak at a future event, find one of us tonight or email offondev@gmail.com.</li>
           <li>Head to community.offon.dev to introduce yourself, ask questions, or follow what we're building.</li>
           <li>Now over to Nico and Sinduri for the first talk.</li>
@@ -1183,7 +1203,7 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>The next Open Source Talks is coming up — follow the community category to get the announcement first.</li>
+          <li>The next Open Source Talks is coming up; follow the community category to get the announcement first.</li>
           <li>If you're thinking about speaking, get in touch: offondev@gmail.com. Name, talk title, and two or three sentences about what you'd cover.</li>
           <li>Thank you for coming out tonight. See you at the next one.</li>
         </ul>

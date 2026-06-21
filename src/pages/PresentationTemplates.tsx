@@ -148,7 +148,7 @@ const PresentationTemplates = (): JSX.Element => (
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <div>
-              <h3 className="text-sm font-semibold text-foreground mb-3">Included slide layouts</h3>
+              <h3 className="text-sm font-semibold text-foreground mb-3">Included Slide Layouts</h3>
               <ul className="space-y-1.5" role="list">
                 {REVEAL_SLIDES.map((slide) => (
                   <li key={slide} className="text-xs text-muted-foreground flex gap-2">
@@ -160,7 +160,7 @@ const PresentationTemplates = (): JSX.Element => (
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold text-foreground mb-3">How to create a new deck</h3>
+              <h3 className="text-sm font-semibold text-foreground mb-3">How to Create a New Deck</h3>
               <ol className="space-y-3 list-none" role="list">
                 {REVEAL_STEPS.map(({ step, text }) => (
                   <li key={step} className="flex gap-3 text-xs text-muted-foreground">
@@ -178,7 +178,7 @@ const PresentationTemplates = (): JSX.Element => (
             rel="noopener noreferrer"
             className="btn-ghost inline-flex items-center gap-2"
           >
-            Preview the template
+            Preview the Template
             <ExternalLink size={14} aria-hidden="true" />
           </a>
         </section>
