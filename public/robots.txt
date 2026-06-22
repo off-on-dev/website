@@ -10,27 +10,54 @@ Sitemap: https://offon.dev/community-sitemap.xml
 # AI content crawlers — allow discovery; content may not be used for training
 User-agent: GPTBot
 Allow: /
+Disallow: /deck.html
+Disallow: /deck-template.html
+Disallow: /presentation-templates
 
 User-agent: ChatGPT-User
 Allow: /
+Disallow: /deck.html
+Disallow: /deck-template.html
+Disallow: /presentation-templates
 
 User-agent: ClaudeBot
 Allow: /
+Disallow: /deck.html
+Disallow: /deck-template.html
+Disallow: /presentation-templates
 
 User-agent: anthropic-ai
 Allow: /
+Disallow: /deck.html
+Disallow: /deck-template.html
+Disallow: /presentation-templates
 
 User-agent: CCBot
 Allow: /
+Disallow: /deck.html
+Disallow: /deck-template.html
+Disallow: /presentation-templates
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /deck.html
+Disallow: /deck-template.html
+Disallow: /presentation-templates
 
 User-agent: cohere-ai
 Allow: /
+Disallow: /deck.html
+Disallow: /deck-template.html
+Disallow: /presentation-templates
 
 User-agent: meta-externalagent
 Allow: /
+Disallow: /deck.html
+Disallow: /deck-template.html
+Disallow: /presentation-templates
 
 User-agent: Applebot-Extended
 Allow: /
+Disallow: /deck.html
+Disallow: /deck-template.html
+Disallow: /presentation-templates
