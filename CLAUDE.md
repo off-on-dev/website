@@ -16,7 +16,7 @@ Project-level Claude Code commands live in `.claude/commands/`. Invoke them with
 | &nbsp;&nbsp;`/progressive-enhancement` | Sub-command: building any new feature or reviewing architecture. Ensures core content works without JS. |
 | &nbsp;&nbsp;`/user-personalization` | Sub-command: working on theme toggle, consent state, or any user preference persistence. |
 | `/add-solution` | Generate a structured TypeScript solution file from any input format (md, YAML, HTML, plain text). Downloads and converts images to WebP. |
-| `/create-presentation` | Create a presentation deck for an OffOn event or challenge. Supports three formats: Reveal.js HTML (`public/deck-template.html`), Slidev Markdown (`.claude/templates/slidev/deck-template.md`), and editable PowerPoint PPTX (edit and run `.claude/templates/generate-pptx.mjs`). Reveal.js output goes to `public/<filename>.html`; Slidev output goes to `.claude/templates/slidev/<filename>.md` (theme lives in the `offon/` subdirectory alongside the deck); PPTX outputs to `public/downloads/offon-deck-template.pptx`. |
+| `/create-presentation` | Create a presentation deck for an OffOn event or challenge. Supports two formats: Reveal.js HTML (`public/deck-template.html`) and editable PowerPoint PPTX (edit and run `.claude/templates/generate-pptx.mjs`). Reveal.js output goes to `public/<filename>.html`; PPTX outputs to `public/downloads/offon-deck-template.pptx`. |
 
 The `spec-first-coding` command is installed globally (`~/.claude/skills/`) and is not in this repo. It enforces W3C spec citations before generating any accessibility-related code.
 
@@ -146,15 +146,8 @@ npm run generate:validate  # Validate YAML against schema without writing files
 
 npx shadcn@latest add <component>   # Add a shadcn/ui component
 
-# Slidev presentations (run from .claude/templates/slidev/)
-cd .claude/templates/slidev
-pnpm install          # first time only (installs @slidev/cli + markdown-it-github-alerts)
-pnpm dev              # preview deck-template.md in the browser
-pnpm slidev <filename>.md  # preview a specific deck
-
 # Regenerate downloadable presentation ZIPs and PPTX (run from repo root)
 node .claude/templates/generate-reveal-zip.mjs   # → public/downloads/offon-reveal-template.zip
-node .claude/templates/generate-slidev-zip.mjs   # → public/downloads/offon-slidev-template.zip
 node .claude/templates/generate-pptx.mjs         # → public/downloads/offon-deck-template.pptx
 ```
 

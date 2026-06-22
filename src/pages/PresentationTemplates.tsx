@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import type { MetaFunction } from "react-router";
-import { Download, FileText, Presentation, Globe, ExternalLink } from "lucide-react";
+import { Download, Presentation, Globe, ExternalLink } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { BRAND_NAME, SITE_URL } from "@/data/constants";
@@ -9,7 +9,7 @@ import { buildPageMeta } from "@/lib/meta";
 export const meta: MetaFunction = () =>
   buildPageMeta({
     title: `Presentation Templates - ${BRAND_NAME}`,
-    description: `Download slide templates for ${BRAND_NAME} events. Available as Reveal.js HTML, a Slidev Markdown project, or an editable PowerPoint file.`,
+    description: `Download slide templates for ${BRAND_NAME} events. Available as Reveal.js HTML or an editable PowerPoint file.`,
     url: `${SITE_URL}/presentation-templates`,
     extra: [{ name: "robots", content: "noindex" }],
   });
@@ -27,22 +27,6 @@ type Template = {
 };
 
 const TEMPLATES: readonly Template[] = [
-  {
-    icon: <FileText size={24} aria-hidden="true" />,
-    title: "Slidev Template",
-    format: "ZIP archive",
-    description:
-      "A Slidev Markdown project with the OffOn design system pre-wired. Open in your editor, run the dev server, and write slides in Markdown.",
-    includes: [
-      "deck-template.md: main slide file",
-      "offon/style.css: OffOn colors, fonts, and utility classes",
-      "offon/components/GlobalTop.vue: header component",
-      "public/brand/offon-logo-dark-color.svg",
-      "package.json: pinned Slidev version",
-    ],
-    filename: "offon-slidev-template.zip",
-    label: "Download Slidev ZIP",
-  },
   {
     icon: <Presentation size={24} aria-hidden="true" />,
     title: "PowerPoint Template",
@@ -98,46 +82,7 @@ const PresentationTemplates = (): JSX.Element => (
           Slide templates for OffOn events and talks. Choose the format that fits your workflow.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {TEMPLATES.map((t) => (
-            <div
-              key={t.filename}
-              className="rounded-xl border border-surface-border bg-card p-6 flex flex-col gap-5"
-            >
-              <div className="flex items-start gap-3">
-                <span className="text-primary mt-0.5">{t.icon}</span>
-                <div>
-                  <h2 className="font-heading text-lg font-bold text-foreground">{t.title}</h2>
-                  <span className="text-xs text-muted-foreground">{t.format}</span>
-                </div>
-              </div>
-
-              <p className="text-sm text-muted-foreground leading-relaxed">{t.description}</p>
-
-              <ul className="space-y-1" role="list">
-                {t.includes.map((item) => (
-                  <li key={item} className="text-xs text-muted-foreground flex gap-2">
-                    <span className="text-primary shrink-0 mt-px" aria-hidden="true">–</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-auto">
-                <a
-                  href={`${BASE}downloads/${t.filename}`}
-                  download={t.filename}
-                  className="btn-primary inline-flex items-center gap-2 w-full justify-center"
-                >
-                  <Download size={16} aria-hidden="true" />
-                  {t.label}
-                </a>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <section aria-labelledby="reveal-heading" className="mt-6">
+        <section aria-labelledby="reveal-heading">
           <div className="rounded-xl border border-surface-border bg-card p-6 flex flex-col gap-5">
             <div className="flex items-start gap-3">
               <span className="text-primary mt-0.5"><Globe size={24} aria-hidden="true" /></span>
@@ -181,7 +126,7 @@ const PresentationTemplates = (): JSX.Element => (
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-3 mt-auto">
+            <div className="flex flex-wrap gap-3 mt-auto justify-end">
               <a
                 href={`${BASE}downloads/offon-reveal-template.zip`}
                 download="offon-reveal-template.zip"
@@ -202,6 +147,45 @@ const PresentationTemplates = (): JSX.Element => (
             </div>
           </div>
         </section>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          {TEMPLATES.map((t) => (
+            <div
+              key={t.filename}
+              className="rounded-xl border border-surface-border bg-card p-6 flex flex-col gap-5"
+            >
+              <div className="flex items-start gap-3">
+                <span className="text-primary mt-0.5">{t.icon}</span>
+                <div>
+                  <h2 className="font-heading text-lg font-bold text-foreground">{t.title}</h2>
+                  <span className="text-xs text-muted-foreground">{t.format}</span>
+                </div>
+              </div>
+
+              <p className="text-sm text-muted-foreground leading-relaxed">{t.description}</p>
+
+              <ul className="space-y-1" role="list">
+                {t.includes.map((item) => (
+                  <li key={item} className="text-xs text-muted-foreground flex gap-2">
+                    <span className="text-primary shrink-0 mt-px" aria-hidden="true">–</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-auto">
+                <a
+                  href={`${BASE}downloads/${t.filename}`}
+                  download={t.filename}
+                  className="btn-primary inline-flex items-center gap-2 w-full justify-center"
+                >
+                  <Download size={16} aria-hidden="true" />
+                  {t.label}
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </main>
 
