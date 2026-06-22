@@ -7,7 +7,6 @@
   },
   "dependencies": {
     "@slidev/cli": "^52.0.0",
-    "@slidev/theme-default": "^0.25.0",
     "markdown-it-github-alerts": "^1.0.0"
   }
 }

@@ -1,4 +1,6 @@
-/* OffOn design system — global styles for Slidev */
+/* OffOn design system — global styles for Slidev.
+ * Class names and values mirror deck-template.html exactly so both formats
+ * share the same visual vocabulary. */
 
 :root {
   --bg: #0a0a0a;
@@ -41,6 +43,10 @@ body,
   min-height: 100% !important;
   box-sizing: border-box !important;
   position: relative;
+  /* Reveal uses font-size: 36px on a 1280×720 canvas.
+   * Slidev renders in a 980×552 coordinate space, so the proportional equivalent
+   * is 36 × (552/720) ≈ 28px. All em-relative component values stay unchanged. */
+  font-size: 28px !important;
   padding: 2.2em 2.8em !important;
   color: #f0ede5;
   background:
@@ -48,6 +54,12 @@ body,
     #0a0a0a !important;
 }
 
+
+/* Center layout (join/final slide) has more content stacked vertically;
+ * reduce base so the QR codes, heading, and pills all fit on the 552px canvas. */
+.slidev-layout.center {
+  font-size: 24px !important;
+}
 
 /* Favicon logo — top-right corner of every slide (mirrors #deck-logo in deck.html) */
 .slidev-layout::before {
@@ -238,7 +250,7 @@ body,
   border: 1px solid #1e2535;
   border-radius: 6px;
   padding: 0.24em 0.62em;
-  font-size: 0.75em;
+  font-size: 0.56em;
   color: #f0ede5 !important;
   text-decoration: none !important;
   margin: 0.2em 0.1em;
@@ -273,6 +285,232 @@ body,
 
 /* Slidev controls tint */
 .slidev-nav { color: #ffc034; }
+
+/* ── Slide header (.sh) ── */
+.sh { margin-bottom: 1.2em; }
+.sh h2 { font-size: 1.4em !important; margin: 0 !important; }
+.sh .label { margin-bottom: 0.6em; }
+
+/* ── Grids ── */
+.g2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75em; margin-top: 0.6em; }
+.g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75em; margin-top: 0.6em; }
+.g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75em; margin-top: 0.6em; }
+.split      { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 1.3em; align-items: start; }
+.split-even { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2em; align-items: start; }
+
+/* ── Card children ── */
+.card h4 {
+  font-family: 'Syne', system-ui, sans-serif !important;
+  font-size: 0.65em !important;
+  font-weight: 700 !important;
+  color: var(--fg) !important;
+  margin: 0 0 0.3em !important;
+}
+.card p { font-size: 0.58em !important; margin: 0 !important; line-height: 1.5 !important; }
+.card p + p { margin-top: 0.4em !important; }
+
+/* ── Agenda table ── */
+.slidev-layout .agenda {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5em;
+  font-size: 0.58em;
+}
+.slidev-layout .agenda tr { border-bottom: 1px solid var(--border) !important; }
+.slidev-layout .agenda tr:last-child { border-bottom: none !important; }
+.slidev-layout .agenda td {
+  padding: 0.32em 0.5em !important;
+  color: var(--muted) !important;
+  background: transparent !important;
+  border-bottom: none !important;
+  vertical-align: middle !important;
+  font-size: 1em !important;
+}
+.slidev-layout .agenda td:first-child {
+  color: var(--amber) !important;
+  font-weight: 600;
+  white-space: nowrap;
+  padding-right: 0.9em !important;
+  font-variant-numeric: tabular-nums;
+  width: 3.8em;
+}
+.slidev-layout .agenda td:last-child {
+  opacity: 0.65;
+  font-size: 0.9em !important;
+  text-align: right;
+  white-space: nowrap;
+}
+.slidev-layout .agenda .hi td { color: var(--fg) !important; }
+.slidev-layout .agenda .hi td:first-child { color: var(--amber) !important; }
+.slidev-layout .agenda .hi td:last-child { color: var(--muted) !important; opacity: 0.75; }
+
+/* ── Bullet rows ── */
+.brow {
+  display: flex;
+  gap: 0.55em;
+  align-items: flex-start;
+  margin-bottom: 0.52em;
+}
+.brow .dot {
+  flex-shrink: 0;
+  color: var(--muted);
+  opacity: 0.5;
+  font-size: 0.58em;
+  margin-top: 0.28em;
+  line-height: 1;
+  width: 0.8em;
+}
+.brow .bt { font-size: 0.58em; color: var(--muted); line-height: 1.45; }
+.brow .bt strong { color: var(--fg) !important; font-weight: 600; }
+
+/* ── Column label ── */
+.col-label {
+  display: block;
+  font-size: 0.42em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.9em;
+}
+
+/* ── Value rows ── */
+.vrow {
+  border-left: 2px solid var(--border);
+  padding: 0.2em 0 0.2em 0.7em;
+  margin-bottom: 0.6em;
+}
+.vrow.hi { border-left-color: var(--amber); }
+.vrow h4 {
+  font-family: 'Syne', system-ui, sans-serif !important;
+  font-size: 0.65em !important;
+  font-weight: 700 !important;
+  color: var(--fg) !important;
+  margin: 0 0 0.1em !important;
+}
+.vrow p { font-size: 0.58em !important; margin: 0 !important; }
+
+/* ── Speaker cards ── */
+.speaker-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.8em 1em;
+  display: flex;
+  gap: 0.8em;
+  align-items: flex-start;
+}
+.speaker-card .sp-av {
+  flex-shrink: 0;
+  width: 2.4em;
+  height: 2.4em;
+  border-radius: 50%;
+  background: var(--amber-glow);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 0.58em;
+  color: var(--amber);
+  overflow: hidden;
+}
+.speaker-card .sp-av img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.speaker-card .sp-info { flex: 1; }
+.speaker-card .sp-name {
+  font-family: 'Syne', system-ui, sans-serif !important;
+  font-size: 0.65em !important;
+  font-weight: 700 !important;
+  color: var(--fg) !important;
+  margin: 0 0 0.1em !important;
+  line-height: 1.2;
+}
+.speaker-card .sp-talk {
+  font-size: 0.58em !important;
+  color: var(--amber) !important;
+  font-weight: 600;
+  margin: 0 0 0.25em !important;
+  line-height: 1.3;
+}
+.speaker-card .sp-bio { font-size: 0.58em !important; color: var(--muted) !important; margin: 0 !important; line-height: 1.45; }
+
+/* ── Board ── */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65em;
+  margin-top: 0.6em;
+}
+.person {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.8em 1em;
+  display: flex;
+  gap: 0.55em;
+  align-items: flex-start;
+}
+.person .av {
+  flex-shrink: 0;
+  width: 1.8em;
+  height: 1.8em;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--amber-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 0.58em;
+  color: var(--amber);
+  overflow: hidden;
+}
+.person .av img { width: 100%; height: 100%; object-fit: cover; }
+.person .pi { flex: 1; min-width: 0; }
+.person .pn {
+  font-family: 'Syne', system-ui, sans-serif !important;
+  font-size: 0.65em !important;
+  font-weight: 700 !important;
+  color: var(--fg) !important;
+  margin: 0 0 0.12em !important;
+  line-height: 1.2;
+}
+.person .pr { font-size: 0.52em !important; color: var(--muted) !important; line-height: 1.4; margin: 0 !important; }
+.person.tba { opacity: 0.55; border-style: dashed; }
+
+/* ── Contribute cards ── */
+.contrib {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.8em 1em;
+}
+.contrib .ci { font-size: 0.9em; margin-bottom: 0.22em; display: block; }
+.contrib h4 {
+  font-family: 'Syne', system-ui, sans-serif !important;
+  font-size: 0.65em !important;
+  font-weight: 700 !important;
+  color: var(--amber) !important;
+  margin: 0 0 0.28em !important;
+}
+.contrib .citem {
+  display: flex;
+  gap: 0.45em;
+  align-items: flex-start;
+  margin-bottom: 0.22em;
+}
+.contrib .citem .cdot {
+  flex-shrink: 0;
+  color: var(--muted);
+  opacity: 0.5;
+  font-size: 0.52em;
+  margin-top: 0.3em;
+  line-height: 1;
+  width: 0.8em;
+}
+.contrib .citem .ctext { font-size: 0.52em; color: var(--muted); line-height: 1.4; }
 
 /* OffOn logo — embedded as base64, no external path needed */
 .offon-logo {

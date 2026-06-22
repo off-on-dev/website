@@ -319,44 +319,38 @@ function cardBg(s, x, y, w, h) {
     { x: PX + 0.8, y: PY + 1.38, w: CW - 1.6, h: 0.5, fontFace: INTER, fontSize: 13, color: MUTED, align: 'center', wrap: true },
   );
 
-  const pills = [
+  const mainPills   = [
     { text: 'Join the community', hi: true },
     { text: 'offon.dev' },
     { text: 'offondev@gmail.com' },
+  ];
+  const socialPills = [
     { text: '@off-on-dev.bsky.social' },
     { text: 'offondev (LinkedIn)' },
     { text: '@OffonDev (X)' },
   ];
 
-  // Center-aligned pill layout
-  const ROW_H = 0.42;
+  const ROW_H = 0.38;
   const GAP   = 0.14;
-  let rows = [[]];
-  let rowW  = 0;
-  pills.forEach(p => {
-    const pw = Math.max(p.text.length * 0.082 + 0.36, 1.0);
-    p.pw = pw;
-    if (rowW + pw + (rows[rows.length - 1].length ? GAP : 0) > CW) { rows.push([]); rowW = 0; }
-    rows[rows.length - 1].push(p);
-    rowW += pw + (rows[rows.length - 1].length > 1 ? GAP : 0);
-  });
 
-  let py2 = PY + 2.08;
-  rows.forEach(row => {
-    const totalW = row.reduce((s, p) => s + p.pw, 0) + (row.length - 1) * GAP;
+  function renderPillRow(pills, py2) {
+    pills.forEach(p => { p.pw = Math.max(p.text.length * 0.082 + 0.32, 0.9); });
+    const totalW = pills.reduce((acc, p) => acc + p.pw, 0) + (pills.length - 1) * GAP;
     let px2 = (W - totalW) / 2;
-    row.forEach(({ text, hi, pw }) => {
+    pills.forEach(({ text, hi, pw }) => {
       s.addShape(pptx.ShapeType.roundRect, {
-        x: px2, y: py2, w: pw, h: 0.3,
+        x: px2, y: py2, w: pw, h: 0.28,
         fill: { color: hi ? '120e00' : CARD },
         line: { color: hi ? AMBER : BORD, width: hi ? 1 : 0.75 },
         rectRadius: 0.06,
       });
-      s.addText(text, { x: px2, y: py2, w: pw, h: 0.3, fontFace: INTER, fontSize: 10, color: hi ? AMBER : MUTED, align: 'center' });
+      s.addText(text, { x: px2, y: py2, w: pw, h: 0.28, fontFace: INTER, fontSize: 8, color: hi ? AMBER : MUTED, align: 'center' });
       px2 += pw + GAP;
     });
-    py2 += ROW_H;
-  });
+  }
+
+  renderPillRow(mainPills,   PY + 2.08);
+  renderPillRow(socialPills, PY + 2.08 + ROW_H + 0.1);
 }
 
 // ── Write initial PPTX ────────────────────────────────────────────────────────

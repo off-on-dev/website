@@ -49,6 +49,9 @@ Node.js **24** is required. Version is pinned in `.nvmrc`, run `nvm use` to swit
 | `cd .claude/templates/slidev && pnpm install` | Install Slidev dependencies (first time only) |
 | `cd .claude/templates/slidev && pnpm dev` | Preview the Slidev deck template in the browser |
 | `cd .claude/templates/slidev && pnpm slidev <file>.md` | Preview a specific Slidev deck |
+| `node .claude/templates/generate-reveal-zip.mjs` | Regenerate `public/downloads/offon-reveal-template.zip` |
+| `node .claude/templates/generate-slidev-zip.mjs` | Regenerate `public/downloads/offon-slidev-template.zip` |
+| `node .claude/templates/generate-pptx.mjs` | Regenerate `public/downloads/offon-deck-template.pptx` |
 
 Run `npm run lint` and `npm test` before marking any work done.
 

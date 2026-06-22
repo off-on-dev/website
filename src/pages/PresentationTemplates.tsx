@@ -35,8 +35,8 @@ const TEMPLATES: readonly Template[] = [
       "A Slidev Markdown project with the OffOn design system pre-wired. Open in your editor, run the dev server, and write slides in Markdown.",
     includes: [
       "deck-template.md: main slide file",
-      "style.css: OffOn colors, fonts, and utility classes",
-      "components/GlobalTop.vue: header component",
+      "offon/style.css: OffOn colors, fonts, and utility classes",
+      "offon/components/GlobalTop.vue: header component",
       "public/brand/: OffOn logo SVG",
       "package.json: pinned Slidev version",
     ],
@@ -78,10 +78,10 @@ const REVEAL_SLIDES: readonly string[] = [
 type RevealStep = { readonly step: number; readonly text: string };
 
 const REVEAL_STEPS: readonly RevealStep[] = [
-  { step: 1, text: "Copy deck-template.html from the public/ directory in the offon.dev repo and rename it (e.g. my-talk.html)." },
+  { step: 1, text: "Download and unzip the template. Rename deck-template.html to your talk name (e.g. my-talk.html)." },
   { step: 2, text: 'Replace TITLE_PLACEHOLDER in the <title> tag with your event or talk name.' },
   { step: 3, text: "Edit the slide sections directly in the HTML. Each <section> is one slide. Delete layouts you don't need." },
-  { step: 4, text: "Place the file in public/ and push. GitHub Pages serves it automatically at offon.dev/my-talk.html, with all fonts and assets resolving from the same origin." },
+  { step: 4, text: "Open in any browser — all assets are bundled in the zip. To publish on offon.dev, place the HTML in public/ and push." },
 ];
 
 const PresentationTemplates = (): JSX.Element => (
@@ -172,15 +172,25 @@ const PresentationTemplates = (): JSX.Element => (
             </div>
           </div>
 
-          <a
-            href={`${BASE}deck-template.html`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-ghost inline-flex items-center gap-2"
-          >
-            Preview the Template
-            <ExternalLink size={14} aria-hidden="true" />
-          </a>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href={`${BASE}downloads/offon-reveal-template.zip`}
+              download="offon-reveal-template.zip"
+              className="btn-primary inline-flex items-center gap-2"
+            >
+              <Download size={16} aria-hidden="true" />
+              Download Reveal.js ZIP
+            </a>
+            <a
+              href={`${BASE}deck-template.html`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-ghost inline-flex items-center gap-2"
+            >
+              Preview the Template
+              <ExternalLink size={14} aria-hidden="true" />
+            </a>
+          </div>
         </section>
       </div>
     </main>
