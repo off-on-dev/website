@@ -9,7 +9,7 @@ The domain `offon.dev` is always lowercase (it is a URL, not a brand mention).
 All brand copy constants live in `src/data/constants.ts`. Use them instead of hardcoding strings:
 
 | Constant | Value / purpose |
-|---|---|
+| --- | --- |
 | `BRAND_NAME` | `"OffOn"`: the brand name |
 | `BRAND_SLOGAN_PARTS` | `["Vendor-Neutral", "Open Source", "Community-Driven"]`. Slogan as an array, used to render with icon separators |
 | `BRAND_SLOGAN` | The three parts joined with `". "`. Use for plain-text contexts (page titles, meta) |
@@ -25,7 +25,7 @@ All brand copy constants live in `src/data/constants.ts`. Use them instead of ha
 ### Fonts
 
 | Role | Family | Key weights | Format |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Headings / display (`font-heading`) | Syne | 700 | WOFF2 only (`public/fonts/syne-*.woff2`) |
 | Body & UI (`font-sans`) | Inter | 400, 500, 600 | WOFF2 only (`public/fonts/inter-*.woff2`) |
 | Code / mono (`font-mono`, `code`, `pre`) | JetBrains Mono | 400 primary (500, 600 available) | WOFF2 only (`public/fonts/jetbrains-mono-*.woff2`) |
@@ -35,7 +35,7 @@ All fonts are fully self-hosted as WOFF2. No TTF fallbacks. No external network 
 Subset coverage (via `unicode-range` in `src/index.css` -- only the needed subset downloads per user):
 
 | Family | Subsets |
-|---|---|
+| --- | --- |
 | Inter | latin, latin-ext, cyrillic-ext, cyrillic, greek-ext, greek, vietnamese |
 | Syne | latin, latin-ext, greek |
 | JetBrains Mono | latin, latin-ext |
@@ -45,6 +45,7 @@ Subset coverage (via `unicode-range` in `src/index.css` -- only the needed subse
 Fonts are preloaded to avoid the three-level font discovery delay (HTML parse → CSS parse → font file request). All preloads live in `src/root.tsx` and fire on every page load:
 
 **Global (`src/root.tsx`), preloaded on every page:**
+
 - `inter-latin-400-normal.woff2`: body text (Navbar, paragraphs)
 - `inter-latin-500-normal.woff2`: medium-weight body text (Navbar links)
 - `inter-latin-600-normal.woff2`: semibold text (section labels, card titles)
@@ -55,7 +56,7 @@ Only Latin subset variants are preloaded. Other subsets are served from `public/
 ### Tailwind font utilities
 
 | Utility | Resolves to |
-|---|---|
+| --- | --- |
 | `font-sans` | Inter |
 | `font-mono` | JetBrains Mono |
 | `font-heading` | Syne |
@@ -63,7 +64,7 @@ Only Latin subset variants are preloaded. Other subsets are served from `public/
 ### Scale (Tailwind defaults)
 
 | Element | Class example | Notes |
-|---|---|---|
+| --- | --- | --- |
 | H1 | `text-4xl font-bold` md:`text-5xl` | Syne, weight 700 |
 | H2 | `text-3xl font-bold` md:`text-4xl` | Syne, weight 700 |
 | H3 | `text-lg font-semibold` | Inter, weight 700 (base layer); apply `font-semibold` to override to 600 |
@@ -79,7 +80,7 @@ Only Latin subset variants are preloaded. Other subsets are served from `public/
 Title case rule: capitalise every word except articles (a, an, the), prepositions under five letters (by, in, on, of, to, for, at), and coordinating conjunctions (and, but, or, nor), unless they open the label.
 
 | Context | Case | Example |
-|---|---|---|
+| --- | --- | --- |
 | Button / CTA label | Title case | `"Join the Community"`, `"Start a Challenge"` |
 | Section heading (h2/h3) | Title case | `"Find Challenges by Technology"`, `"Share and Learn Together"` |
 | Card / value title | Title case | `"Learn by Doing"`, `"Open Source First"` |
@@ -100,7 +101,7 @@ All color tokens are CSS custom properties defined in `src/index.css` (in `:root
 > **Heading color in dark mode:** `h1`–`h6` receive `color: hsl(var(--primary))` (amber) via a `@layer base` rule in `src/index.css`. This is intentional: headings stand out from body text in the dark theme. Light mode overrides this to `hsl(var(--foreground))` via `.light h1–h6` in the unlayered section.
 
 | Token | HSL | Approx hex | Usage |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `--background` | `0 0% 4%` | `#0a0a0a` | Page background |
 | `--foreground` | `47 54% 98%` | `#faf8f3` | Primary text |
 | `--card` | `240 9% 9%` | `#141416` | Card / panel background |
@@ -125,7 +126,7 @@ All color tokens are CSS custom properties defined in `src/index.css` (in `:root
 #### Custom text tokens (dark)
 
 | Token | HSL | Approx | Usage |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `--text-primary` | `47 54% 98%` | `#faf8f3` | Main content |
 | `--text-secondary` | `43 27% 92%` | `#ece8de` | Supporting text, nav links |
 | `--text-tertiary` | `43 36% 94%` | `#f5eedf` | Tertiary text |
@@ -135,7 +136,7 @@ All color tokens are CSS custom properties defined in `src/index.css` (in `:root
 #### Surface tokens (dark)
 
 | Token | HSL | Usage |
-|---|---|---|
+| --- | --- | --- |
 | `--surface` | `240 9% 9%` | Card / section backgrounds |
 | `--surface-border` | `219 36% 18%` | Surface borders |
 | `--surface-hover` | `0 0% 10%` | Hover states on surfaces |
@@ -145,7 +146,7 @@ All color tokens are CSS custom properties defined in `src/index.css` (in `:root
 #### Accent / effect palette (dark)
 
 | Token | HSL | Usage |
-|---|---|---|
+| --- | --- | --- |
 | `--electric` | `41 100% 60%` | Primary glow / electric yellow |
 | `--emerald` | `41 100% 60%` | Warm accent (same as electric) |
 | `--teal` | `38 100% 58%` | Secondary warm accent |
@@ -156,7 +157,7 @@ All color tokens are CSS custom properties defined in `src/index.css` (in `:root
 Used for avatar tints in `DiscussionSection` (at `/0.2` opacity) and as semantic color anchors for the difficulty visual language. The `-bg` and `-border` tokens (used by `DifficultyBadge`) share the same hue families.
 
 | Token | Dark HSL | Light HSL | Color |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `--difficulty-starter` | `41 100% 60%` | `41 100% 80%` | Amber/yellow |
 | `--difficulty-builder` | `85 48% 56%` | `85 48% 75%` | Green |
 | `--difficulty-architect` | `245 45% 79%` | `245 45% 85%` | Lavender/purple |
@@ -168,7 +169,7 @@ Used for avatar tints in `DiscussionSection` (at `/0.2` opacity) and as semantic
 The light mode uses a barely-cool background palette. The slight cool/warm contrast between the background and amber accents is intentional: it mirrors how dark mode works (near-black vs warm amber), just inverted and far more subtle. `bg-primary` sections (PageHero, BottomCTA) stay amber in light mode. They do not flip to black.
 
 | Token | Value | Approx hex | Notes |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Background | `hsl(220 12% 98%)` | `#F8F9FB` | Barely-cool off-white |
 | Surface/card | `hsl(220 10% 96%)` | `#F4F5F7` | Slightly deeper card |
 | Surface hover | `hsl(220 8% 93%)` | `#ECEEF1` | Hover state |
@@ -201,7 +202,7 @@ In light mode, `bg-primary` sections (PageHero, BottomCTA) stay amber. Do **not*
 ### Buttons
 
 | Class | Style | Usage |
-|---|---|---|
+| --- | --- | --- |
 | `.btn-primary` | Filled amber, `rounded-md px-5 py-3 text-sm font-semibold`, `brightness-110` on hover | Default CTA on page background |
 | `.btn-ghost` | Outlined, `border-foreground/35`, amber border and text on hover | Secondary CTA on page background |
 | `.btn-soft` | Tinted `bg-primary/10 border-primary/30`, no glow | Tertiary / low-emphasis action |
@@ -219,7 +220,7 @@ Never add a `bg-primary` section button without adding or verifying the correspo
 ### Pills (filter toggles)
 
 | Class | Style |
-|---|---|
+| --- | --- |
 | `.pill-active` | `rounded-full bg-primary/10 border-primary/50 text-primary` |
 | `.pill-inactive` | `rounded-full bg-transparent border-surface-border text-text-secondary`; hover: `border-primary/60 text-primary bg-primary/5` with electric glow |
 
@@ -236,7 +237,7 @@ This applies to every new button utility class and every pill class used on `<bu
 Badge colors use CSS tokens defined in `src/index.css`. All three difficulties use black text (`--difficulty-text`) on pastel backgrounds for WCAG AA compliance (minimum 4.5:1 contrast ratio).
 
 | Difficulty | Dark mode bg token | Light mode bg token | Color |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Beginner | `--difficulty-starter-bg` | `--difficulty-starter-bg` | Pastel amber |
 | Intermediate | `--difficulty-builder-bg` | `--difficulty-builder-bg` | Pastel sage green |
 | Expert | `--difficulty-architect-bg` | `--difficulty-architect-bg` | Pastel lavender |
@@ -248,7 +249,7 @@ Tokens are defined in the `:root, .dark` block and overridden in the `.light` un
 Link hover and active states use an underline that is always rendered in the DOM but invisible by default. This avoids layout shift on hover.
 
 | State | Classes |
-|---|---|
+| --- | --- |
 | Default | `underline decoration-transparent decoration-[3px] underline-offset-4 transition-colors` |
 | Hover | `hover:text-primary` |
 | Active / current route | `text-primary underline decoration-primary underline-offset-4` |
@@ -294,7 +295,7 @@ Light mode: no background texture.
 All animation classes are defined inside `@media (prefers-reduced-motion: no-preference)`. Under `prefers-reduced-motion: reduce` the animation property is absent, so elements render at their natural styles (fully visible, no transform).
 
 | Class | Keyframe | Duration |
-|---|---|---|
+| --- | --- | --- |
 | `.animate-fade-up` | fadeUp (slide up 8px, no opacity change) | 0.35s ease-out |
 | `.animate-fade-up-delay-1` | fadeUp | 0.35s, 0.05s delay |
 | `.animate-fade-up-delay-2` | fadeUp | 0.35s, 0.10s delay |
@@ -327,7 +328,7 @@ Sidebar uses the same token namespace (`--sidebar-*`) mirroring the main tokens.
 
 All interactive elements use the standard focus-visible pattern for keyboard accessibility:
 
-```
+```css
 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
 ```
 
@@ -378,7 +379,7 @@ const { theme, toggle } = useTheme();
 ```
 
 | Return | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `theme` | `"light" \| "dark"` | Current active theme |
 | `toggle()` | `() => void` | Toggle between light and dark and persist the choice |
 
@@ -399,7 +400,7 @@ const { consent, grant, deny, reset } = useConsent();
 ```
 
 | Return | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `consent` | `"granted" \| "denied" \| null` | `null` = not yet decided (show banner) |
 | `grant()` | `() => void` | Injects gtag.js (once per session), pushes `analytics_storage: granted`, writes localStorage |
 | `deny()` | `() => void` | Pushes `analytics_storage: denied`, clears `_ga*` cookies, writes localStorage |
@@ -424,7 +425,7 @@ useClickTracking();
 Returns nothing. Reads consent via `useConsent`, so the call site must be inside `ConsentProvider`. Currently mounted via the `ClickTracker` sibling in `Layout.tsx`. Gating exists because pushing events to `dataLayer` while gtag.js is not loaded would queue them, and a later Accept would drain the queue and retroactively send clicks for actions the user took while consent was undecided or denied.
 
 | Event property | Source | Fallback |
-|---|---|---|
+| --- | --- | --- |
 | `click_text` | `tracked.getAttribute("aria-label")` when non-empty, otherwise `tracked.textContent?.trim()`, sliced to 100 chars | `"unknown"` |
 | `click_url` | `<a>`: `href`. `<button>`: `data-url` attribute. | `"no-url"` |
 | `click_element` | `tracked.tagName.toLowerCase()` (`"a"` or `"button"`) | none |
@@ -478,7 +479,7 @@ const { posts, totalReplies, solvers, loaded } = useDiscussionPosts(adventureId,
 ```
 
 | Argument | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `adventureId` | `string` | Adventure slug (e.g. `"echoes-lost-in-orbit"`). |
 | `levelId` | `string` | Level slug (e.g. `"beginner"`). |
 | `loader` | `DiscussionDataLoader` (optional) | Async function that returns `{ discussionPosts?, totalReplies?, solvers? }`. Defaults to a `import.meta.glob` import of the per-level JSON. Pass a `vi.fn().mockResolvedValue(data)` in tests; see the Testing section of `CLAUDE.md` for the injectable-loader pattern. |
@@ -502,7 +503,7 @@ const { rows, updatedAt } = useAdventureLeaderboard(adventureId, mockLoader);
 ```
 
 | Argument | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `adventureId` | `string` | Adventure slug (e.g. `"blind-by-design"`). |
 | `loader` | `LeaderboardLoader` (optional) | Async function that returns `{ updatedAt, rows }`. Defaults to a dynamic `import.meta.glob` import. Pass `vi.fn().mockResolvedValue(data)` in tests. |
 
@@ -525,7 +526,7 @@ Renders `<p className="md-inline …">` when the HTML is inline-only, and `<div 
 **Exception:** `rewards.rankingNote` renders inside a `<span>` inside a `<p>`, so `InlineProse` cannot be used there. The generator enforces that `rankingNote` is inline-only and fails the build if block markup is detected.
 
 | Prop | Type | Default | Description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `html` | `string` | required | Sanitised HTML from the generator |
 | `className` | `string?` | `""` | Tailwind utilities appended before `md-inline`/`md-content` |
 
@@ -579,7 +580,7 @@ A thin wrapper around React Router's `NavLink` that normalises the `className` A
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `className` | `string?` | Always-applied class |
 | `activeClassName` | `string?` | Applied when the route is active |
 | `pendingClassName` | `string?` | Applied during navigation pending state |
@@ -606,7 +607,7 @@ Full-width amber (`bg-primary`) hero banner used at the top of inner pages. Rend
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `eyebrow` | `string?` | Small overline label above the title |
 | `title` | `string` | Page `<h1>` text |
 | `description` | `string` | Supporting paragraph |
@@ -630,7 +631,7 @@ Renders a single adventure level as a card: difficulty badge, level name, key le
 ```
 
 | Prop | Type | Default | Description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `level` | `AdventureLevel` | required | Level data from `src/data/adventures` |
 | `headingLevel` | `"h2" \| "none"` | `"h2"` | Pass `"none"` when the parent page already renders the level name as `<h1>` to avoid duplicate heading in the document outline. When `"none"`, the level name renders as a `<p>`. The "Key Learnings" label always renders as a `<p>` regardless of this prop. It is a decorative sub-label, not a structural heading. |
 
@@ -653,7 +654,7 @@ Navigation card used in tag-filtered level grids. The entire card is a `<Link>` 
 ```
 
 | Prop | Type | Default | Description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `level` | `AdventureLevelSummary` | required | Level data. Accepts both `AdventureLevelSummary` (from `summaries.ts`) and full `AdventureLevel` (from `index.ts`), since the summary is a structural subset |
 | `adventureId` | `string` | required | Used to build the link href: `/adventures/:id/levels/:levelId` |
 | `adventureTitle` | `string` | required | Shown in the card footer as a tag label |
@@ -697,7 +698,7 @@ Two-row filter UI for the adventure catalog. Row 1 is a difficulty single-select
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `activeTopics` | `string[]` | Currently selected technology tags (multi-select). Empty = no tag filter. |
 | `activeDifficulty` | `string \| null` | Currently selected difficulty. `null` = all levels. |
 | `tags` | `string[]` | Full list of technology tags to render. Pass `SUMMARY_TAGS` from `@/data/adventures/summaries`. |
@@ -717,7 +718,7 @@ Two-row filter UI for the adventure catalog. Row 1 is a difficulty single-select
 A slim 3-column feature strip placed directly after `ChallengesGrid`, separated by a top border. Answers "why are these challenges worth doing" without a full card section. Each item is an icon + bold title + one-line description, no card borders.
 
 | Item | Icon | Size |
-|---|---|---|
+| --- | --- | --- |
 | Learn by Doing | `BookOpen` | `size={22}` |
 | Build Real Skills | `TrendingUp` | `size={22}` |
 | Open Source | `Shield` | `size={22}` |
@@ -737,13 +738,13 @@ Sidebar card displaying community leaders fetched daily from Discourse Data Expl
 Data source: `src/data/community-leaders.json` (refreshed daily by `.github/workflows/refresh-community-leaders.yml`).
 
 | Prop | Type | Default | Description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `sections` | `string[]` | all | Filter to show only specific section IDs |
 
 Section IDs: `top-contributors`, `top-challenge-solvers`, `challenge-grand-builders`, `challenge-builders`, `most-liked`, `most-replies`, `most-supportive`.
 
 | Section | Icon |
-|---|---|
+| --- | --- |
 | Top Contributors | `Trophy` |
 | Top Challenge Solvers | `Target` |
 | Challenge Grand Builders | `Building2` |
@@ -763,14 +764,14 @@ Used in: `Index.tsx` (via CommunitySection aside), `Adventures.tsx` (via Challen
 Merged replacement for the former `CommunityVoicesSection` and `ConnectSection`. Renders a 4-card 2-column grid covering all community participation paths: share, ask, introduce, and attend. Section label: "community", h2: "Get Involved".
 
 | Card | Icon | Destination |
-|---|---|---|
+| --- | --- | --- |
 | Community Voices | `Megaphone` | `COMMUNITY_URL/c/community-voices/38` |
 | Q&A | `CircleHelp` | `COMMUNITY_URL/c/general/q-a/10` |
 | Introduce Yourself | `UserPlus` | `COMMUNITY_URL/c/general/introductions/18` |
 | Events & Meetups | `CalendarDays` | `COMMUNITY_URL/c/events-and-talks/12` |
 
 | Prop | Type | Default | Description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `aside` | `ReactNode` | (none) | Optional sidebar content rendered in a sticky column at lg breakpoint |
 
 Used in `Index.tsx`.
@@ -798,7 +799,7 @@ Uppercased eyebrow label rendered above section h2s. Wraps a `<span className="s
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `children` | `ReactNode` | Label text (write lowercase). |
 
 ---
@@ -823,7 +824,7 @@ Renders a vertical list with one of three marker styles (`dot`, `check`, `x`) an
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `items` | `(string \| { lead: string; desc: string })[]` | One entry per bullet. |
 | `marker` | `"dot" \| "check" \| "x"` (default `"dot"`) | Bullet marker style. |
 | `spacing` | `"tight" \| "loose"` (default `"tight"`) | List density. |
@@ -861,7 +862,7 @@ No props. Self-contained section component.
 Renders the Challenge Builders section, used on both the About page (mounted directly after `BoardSection`, sharing the "the people" eyebrow group) and the Adventures page (mounted between `ChallengesGrid` and `BottomCTA`). Has no eyebrow of its own; on the About page, the visual grouping is provided by the eyebrow on the preceding `BoardSection`. Reads `ADVENTURE_CONTRIBUTORS` from `src/data/adventures` and renders a card grid (`sm:grid-cols-2`) thanking everyone who has contributed an adventure. Each card shows the contributor name rendered via `PersonNameLink`, a short bio, and a list of their adventures linked via React Router `<Link>` to each detail page. Returns `null` if `ADVENTURE_CONTRIBUTORS` is empty.
 
 | Prop | Type | Default | Description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `aside` | `ReactNode` | (none) | Optional sidebar content rendered in a sticky column at lg breakpoint |
 
 Used in `Adventures.tsx` and `About.tsx`.
@@ -879,7 +880,7 @@ Renders a person's name with consistent styling, used for board members and adve
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `name` | `string` | Person's display name. |
 | `url` | `string` (optional) | When set, renders the name as an external link with new-tab affordance. |
 
@@ -908,7 +909,7 @@ Displays up to three community posts for an adventure level, fetched at build ti
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `adventureId` | `string` | Adventure slug used to locate the per-level JSON file. |
 | `levelId` | `string` | Level slug used to locate the per-level JSON file. |
 | `discussionUrl` | `string` | Full Discourse topic URL. Used as the fallback link when no posts are loaded. |
@@ -930,7 +931,7 @@ Sidebar panel for the structured challenge detail layout. Shows the challenge bu
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `adventureId` | `string` | Adventure slug for loading discussion data and leaderboard points lookup. |
 | `levelId` | `string` | Level slug for loading discussion data. |
 | `discussionUrl` | `string` | Full Discourse topic URL. Used for the "Join the discussion" link. |
@@ -956,7 +957,7 @@ Renders a user avatar followed by a plain-text username. The avatar is either an
 ```
 
 | Prop | Type | Default | Description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `username` | `string` | required | Discourse username. Used as display text and for the initials fallback. |
 | `avatarUrl` | `string` (optional) | (none) | Avatar image URL. Falls back to initials when omitted. |
 | `size` | `24 \| 28` | `24` | Avatar diameter in pixels. |
@@ -978,7 +979,7 @@ Shared primitive for rendering a ranked list of players with avatar, username, a
 ```
 
 | Prop | Type | Default | Description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `rows` | `LeaderboardEntry[]` | required | Ranked entries to render. |
 | `label` | `string` | `"Ranked players"` | Accessible `aria-label` for the `<ol>`. |
 
@@ -999,7 +1000,7 @@ Layout primitive that renders a two-column grid (`1fr 300px`) on `lg+` when `asi
 ```
 
 | Prop | Type | Default | Description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `children` | `ReactNode` | required | Main content (left column). |
 | `aside` | `ReactNode` (optional) | (none) | Sidebar content (right column, sticky). When omitted, children render without a grid wrapper. |
 
@@ -1016,7 +1017,7 @@ Sidebar card for the adventure detail page. Loads ranked player data via `useAdv
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `adventureId` | `string` | Adventure slug. Passed directly to `useAdventureLeaderboard`. |
 
 ---
@@ -1036,7 +1037,7 @@ Displays the rewards for an adventure (trophy tiers, eligibility text, deadline,
 ```
 
 | Prop | Type | Default | Description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `rewards` | `AdventureRewards` | required | Reward tiers, eligibility, deadline, and optional ranking rules. |
 | `compact` | `boolean` | `false` | Hides eligibility text and ranking note; shows per-level deadline instead of adventure-wide deadline. |
 | `levelDeadline` | `string \| undefined` | (none) | Per-level deadline string shown only in compact mode. |
@@ -1057,7 +1058,7 @@ Small amber pill with an animated ping dot indicating that an adventure currentl
 ```
 
 | Prop | Type | Default | Description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `className` | `string?` | (none) | Merged onto the root `<span>` via `cn()`. |
 
 ---
@@ -1074,7 +1075,7 @@ Small pill identifying the adventure or challenge builder. Renders a `Hammer` ic
 ```
 
 | Prop | Type | Default | Description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `name` | `string` | required | Contributor display name. |
 | `url` | `string \| undefined` | (none) | External profile URL. Omit to render as a non-interactive pill. |
 | `glow` | `boolean` | `false` | Adds `contributor-pill-glow` amber box-shadow. Use on `ChallengeDetail` only. |
@@ -1095,7 +1096,7 @@ A headed list of external links, each rendered as a `docs-ext-link` anchor with 
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `heading` | `string` | Section heading rendered as `<h3>`. |
 | `links` | `{ label: string; href: string }[]` | List of external links. All open in a new tab. |
 
@@ -1112,7 +1113,7 @@ Sidebar card listing sibling levels in the same adventure (excluding the current
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `adventure` | `Adventure` | Full adventure object (provides `levels` and `upcomingLevels`). |
 | `currentLevelId` | `string` | ID of the current level to exclude from the list. |
 
@@ -1131,7 +1132,7 @@ A native `<details>/<summary>` wrapper with consistent card styling, chevron ani
 ```
 
 | Prop | Type | Default | Description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `id` | `string` | required | Sets the `id` attribute on the `<details>` element for anchor linking. |
 | `title` | `string` | required | Text shown in the `<summary>` as a heading. |
 | `children` | `ReactNode` | required | Content revealed when open. |
@@ -1151,7 +1152,7 @@ Renders the narrative backstory for a challenge level inside a `CollapsibleSecti
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `backstory` | `string[]` | Array of narrative paragraphs. |
 
 ---
@@ -1172,7 +1173,7 @@ Renders architecture content inside a `CollapsibleSection` titled "Architecture"
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `diagram` | `string` (optional) | URL of an architecture diagram image (SVG or raster). Takes precedence over `ascii` when both are present. |
 | `diagramAlt` | `string` (optional) | Alt text for the diagram image. Defaults to `"Architecture diagram"` when omitted. |
 | `ascii` | `string` (optional) | Inline ASCII art rendered as a `<pre>` block. Shown only when `diagram` is absent. |
@@ -1191,7 +1192,7 @@ Renders a numbered walkthrough as a vertical stepper inside a `CollapsibleSectio
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `steps` | `WalkthroughStep[]` | Array of `{ title: string; content: string }`. Both fields contain pre-rendered HTML generated at build time. `content` is rendered via `MarkdownContent`; `title` is rendered inline with links stripped (it sits inside a `<button>`). |
 
 ---
@@ -1233,7 +1234,7 @@ Renders pre-compiled block HTML (generated at build time by `scripts/generate-ad
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `source` | `string` | Pre-rendered HTML string. Never pass raw Markdown; convert it in the generator first. |
 
 Used by `WalkthroughSection` (step content) and `ArchitectureSection`. Both fields come from the generated adventure data files and already contain sanitised HTML.
@@ -1256,7 +1257,7 @@ Renders the full adventure listing with two-dimensional filtering. Used on the h
 **Props:**
 
 | prop | type | description |
-|---|---|---|
+| --- | --- | --- |
 | `limit` | `number?` | Optional. Caps how many adventure cards render in the default (All) view. When the total exceeds `limit`, a "See all adventures" link to `/challenges` appears below the grid. Omit to show every adventure. Used on `Index.tsx` (home page) with `limit={6}`; not used on `Adventures.tsx`. Does not affect the filtered level card view. |
 
 Adventure cards render newest first, ordered by the `month` field on each adventure. Delegates filter UI to `ChallengeFilters`. Owns `activeTopics: string[]` and `activeDifficulty: string | null` state internally.
@@ -1283,7 +1284,7 @@ Renders a row of icon-only share links (LinkedIn, X, Bluesky, Mastodon) for a ch
 **Props:**
 
 | prop | type | description |
-|---|---|---|
+| --- | --- | --- |
 | `url` | `string` | Canonical URL of the level page. |
 | `levelName` | `string` | Display name used in the pre-composed share text. |
 
@@ -1336,7 +1337,7 @@ Navigation card linking to an adventure overview page. The entire card is a `<Li
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `adventure` | `AdventureCardSummary` | Summary data from `ADVENTURE_SUMMARIES`. Includes `id`, `title`, `story`, `tags`, `levels`, `contributor`, and `isLive`. |
 
 Distinct from `FilteredLevelCard`: `AdventureCard` links to the adventure overview; `FilteredLevelCard` links to an individual level.
@@ -1355,7 +1356,7 @@ Renders a difficulty level as a styled pill using the shadcn `Badge` primitive. 
 ```
 
 | Prop | Type | Default | Description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `difficulty` | `"Beginner" \| "Intermediate" \| "Expert"` | required | Determines token set and badge label. |
 | `showDot` | `boolean` | `false` | When true, renders a small filled circle in the badge's text color before the label. Used by `LevelCard` to add a visual status indicator. |
 
@@ -1375,7 +1376,7 @@ Never hardcode HSL values in this component. Use `hsl(var(--difficulty-*))` refe
 ```
 
 | Prop | Type | Default | Description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `href` | `string` | required | GitHub Codespaces launch URL. |
 | `fullWidth` | `boolean` | `false` | When true, applies `w-full justify-center` to the button and centers the helper note. Used in mobile-oriented `LevelCard` layouts. |
 
@@ -1392,7 +1393,7 @@ Renders a flat list of technology tag `<Link>` chips, each linking to `/challeng
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `tags` | `readonly string[]` | Technology tag display names. URL slugs are derived at render time via `tagToSlug`. |
 
 Used in `ChallengeDetail` and `AdventureDetail` to render the level's technology stack as navigable filter links.
@@ -1410,7 +1411,7 @@ Reusable 404 page shell used by both `NotFound.tsx` (prerendered `/404` route) a
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `title` | `string` | `<h1>` text. |
 | `message` | `string` | Body text below the heading. |
 
@@ -1466,7 +1467,7 @@ Navigation trail component. Renders a `<nav aria-label="Breadcrumb">` with an or
 ```
 
 | Prop | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `items` | `BreadcrumbItem[]` | Ordered list of crumbs; last item has no `href` |
 | `className` | `string?` | Class applied to the wrapping `<nav>`; defaults to `"mb-5"` |
 
@@ -1485,7 +1486,7 @@ Used in `ChallengeDetail.tsx` (adventure level pages) and `AdventureDetail.tsx` 
 General-purpose utility functions.
 
 | Export | Signature | Description |
-|---|---|---|
+| --- | --- | --- |
 | `cn` | `(...inputs: ClassValue[]) => string` | Merges Tailwind class names and resolves conflicts via `tailwind-merge`. Use everywhere class names are conditionally composed. |
 | `isDeadlinePast` | `(deadline: string \| undefined) => boolean` | Returns `true` if the ISO 8601 deadline string represents a date in the past. Returns `false` for `undefined` or unparseable values. |
 | `isSolutionUnlocked` | `(deadline: string \| undefined) => boolean` | Returns `true` when a solution is unlocked: no deadline set, or deadline has passed. Used in the `SolutionDetail` loader to gate access. |
@@ -1515,7 +1516,7 @@ export const meta: MetaFunction = () =>
 ```
 
 | Option | Type | Default | Description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `title` | `string` | required | Page title and `og:title` / `twitter:title` |
 | `description` | `string` | required | Meta description and `og:description` / `twitter:description` |
 | `url` | `string` | required | Canonical URL and `og:url`. Normalized to end with `/` to match GitHub Pages' 301 redirects for directory routes. |
@@ -1533,7 +1534,7 @@ Every page's `meta()` must use this function. Do not inline the og/twitter tag b
 Converts between tag display names (e.g. `"OpenTelemetry"`) and URL-safe slugs (e.g. `"opentelemetry"`). Built from `SUMMARY_TAGS` in `summaries.ts` so it does not import the full generated adventure detail files. Use this module (not `@/data/adventures`) in any component or page that only needs tag conversion.
 
 | Export | Signature | Description |
-|---|---|---|
+| --- | --- | --- |
 | `tagToSlug` | `(tag: string) => string` | Lowercases and replaces non-alphanumeric runs with `-`. Strips leading/trailing hyphens. |
 | `slugToTag` | `(slug: string) => string \| undefined` | Reverse lookup from slug to original tag name. Returns `undefined` for unknown slugs. |
 
@@ -1552,7 +1553,7 @@ Do not import these from `@/data/adventures` in card or filter components. That 
 Filtering logic for the adventure catalog. Built from `ADVENTURE_SUMMARIES` so it does not import the full generated detail files.
 
 | Export | Signature | Description |
-|---|---|---|
+| --- | --- | --- |
 | `getLevelSummariesByFilters` | `(tags: string[], difficulty: string \| null) => RelatedLevelSummary[]` | Returns all level summaries matching any of the provided tags (OR logic) and/or the difficulty. Pass `[]` and `null` to get all levels. |
 | `ALL_LEVEL_SUMMARIES` | `RelatedLevelSummary[]` | Pre-computed result of `getLevelSummariesByFilters([], null)`. Use this constant instead of calling the function with empty args. |
 | `DIFFICULTIES` | `readonly ["Beginner", "Intermediate", "Expert"]` | Ordered difficulty array. Use for rendering difficulty filter options. |
@@ -1573,7 +1574,7 @@ Used by `ChallengesGrid` and `Challenges`. Do not call `getLevelSummariesByFilte
 Helper functions for processing discussion posts in `DiscussionSection` and `CommunitySidebar`.
 
 | Export | Signature | Description |
-|---|---|---|
+| --- | --- | --- |
 | `isCertificatePost` | `(post: PostWithAge) => boolean` | Returns true when `post.challengeSolved === true`. The `challengeSolved` flag is set by the refresh script when it identifies a completion post. |
 | `displaySnippet` | `(post: PostWithAge) => string` | Returns the display text for a post. For certificate posts, strips the `CERTIFICATE START … CERTIFICATE END` block from `cooked` and falls back to `"Completed the challenge."` if nothing else remains. |
 
@@ -1586,7 +1587,7 @@ Helper functions for processing discussion posts in `DiscussionSection` and `Com
 Helper functions for the `MarkdownContent` component.
 
 | Export | Signature | Description |
-|---|---|---|
+| --- | --- | --- |
 | `slugify` | `(text: string) => string` | Converts heading text to a URL-safe slug for `id` attributes. |
 | `getSectionIcon` | `(slug: string) => LucideIcon \| undefined` | Maps known section slugs (`architecture`, `toolbox`, `how-to-play`) to their lucide-react icon. Returns `undefined` for unrecognised slugs. |
 | `stripLinks` | `(html: string) => string` | Strips `<a>` tags from sanitised HTML while preserving link text. Also removes `sr-only` new-tab spans injected by the generator. Call before passing any author-prose HTML to `dangerouslySetInnerHTML` inside an interactive element (`<Link>`, `<button>`) to prevent invalid nested anchors. |
@@ -1600,7 +1601,7 @@ All icons use **lucide-react** (already a project dependency; no other icon libr
 ### Sizes
 
 | Context | Size prop |
-|---|---|
+| --- | --- |
 | Inline with `text-sm` body or link text | `size={13}` |
 | Inline with `text-base` or larger | `size={16}` |
 | Section card icon (standalone, above heading) | `size={28}` |
@@ -1637,7 +1638,7 @@ Never put a raw SVG icon next to text inside a plain `inline` or `block` element
 ### Icon map (current usage)
 
 | Icon | Lucide name | Where used |
-|---|---|---|
+| --- | --- | --- |
 | External link (opens in new tab) | `ExternalLink` | All `<a target="_blank">` links: Navbar, BottomCTA, Hero, CommunityGuide, LevelCard, DiscussionSection, LinkSection, LeaderboardList, Privacy, and more |
 | Navigate forward / CTA | `ArrowRight` | Internal `<Link>` navigation only (OtherLevelsCard, SponsorStrip, AdventureDetail) |
 | Breadcrumb separator | `ChevronRight` | `Breadcrumb.tsx` — rendered between each breadcrumb item |
@@ -1656,7 +1657,7 @@ Never put a raw SVG icon next to text inside a plain `inline` or `block` element
 Some official brand marks have no equivalent in lucide-react and must use the brand's own SVG. These are the only permitted exceptions to the lucide-react-only rule.
 
 | Brand | Where used | Notes |
-|---|---|---|
+| --- | --- | --- |
 | LinkedIn "in" rounded-rectangle mark | `Footer.tsx` bottom strip | Inline SVG, `aria-hidden="true"` on `<svg>`, `aria-label="LinkedIn (opens in new tab)"` on parent `<a>`, `fill="currentColor"`, `className="w-3.5 h-3.5"` (14 px, matching surrounding icon size) |
 | Bluesky butterfly mark | `Footer.tsx` bottom strip | Inline SVG, `aria-hidden="true"` on `<svg>`, `aria-label="Bluesky (opens in new tab)"` on parent `<a>`, `fill="currentColor"`, `className="w-3.5 h-3.5"`. URL from `BLUESKY_URL` constant. |
 | X (Twitter) mark | `Footer.tsx` bottom strip | Inline SVG, `aria-hidden="true"` on `<svg>`, `aria-label="X / Twitter (opens in new tab)"` on parent `<a>`, `target="_blank"`, `rel="noopener noreferrer"`, `fill="currentColor"`, `className="w-3.5 h-3.5"`. URL from `X_URL` constant. |
@@ -1664,8 +1665,6 @@ Some official brand marks have no equivalent in lucide-react and must use the br
 When adding a new brand SVG: place it inline, set `aria-hidden="true"` on the `<svg>`, put the accessible label on the parent interactive element, use `fill="currentColor"`, and add a row to this table.
 
 ---
-
-## Utilities
 
 ## CSS Class Patterns
 
@@ -1714,6 +1713,7 @@ CSS class for icon-only social media `<a>` links. Used in the Spread the Word ca
 Includes `padding: 0.25rem` (equivalent to `p-1`) to improve tap target size and `border-radius: 2px` for focus ring containment.
 
 Usage pattern:
+
 ```tsx
 <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (opens in new tab)" className="social-icon-link">
   <svg aria-hidden="true" ...>...</svg>
@@ -1732,6 +1732,7 @@ CSS class applied to tag/technology chip `<Link>` elements in `ChallengeDetail` 
 **Light mode:** `.light .tag-chip-link` overrides border to `hsl(220 12% 55%)` (~3.25:1) and text to `--text-secondary`. Hover shifts to `hsl(220 12% 38%)` border and `hsl(220 12% 20%)` text (dark slate), avoiding amber which is below 3:1 on light backgrounds.
 
 Usage pattern:
+
 ```tsx
 <Link
   to={`/challenges/${tagToSlug(tag)}`}
@@ -1778,6 +1779,7 @@ Never place a `bg-primary` section without verifying that focusable children inh
 Located at the end of `src/index.css`. Fires when the user enables "Increase Contrast" on macOS/iOS or equivalent OS settings.
 
 Overrides:
+
 - `.btn-ghost` border: full-opacity foreground color (removes `border-foreground/35` opacity)
 - `.btn-ghost-inverse` border: full-opacity background color
 - `.pill-inactive` border and text: full-opacity foreground
@@ -1814,7 +1816,7 @@ A public-facing reference for how to use the OffOn brand. Linked from the footer
 All downloadable brand assets live at `public/brand/`. File naming convention: `offon-<asset>.<ext>` with no size suffix in the filename.
 
 | File | Purpose |
-|---|---|
+| --- | --- |
 | `offon-logo-dark-color.svg` / `.png` | Color wordmark for dark backgrounds |
 | `offon-logo-light-mono.svg` / `.png` | Mono wordmark for light and amber backgrounds |
 | `offon-logo-dark-mono.svg` / `.png` | Mono wordmark for single-color print on dark |
@@ -1837,7 +1839,7 @@ Mascot WebP sources (`nyx.webp`, `nyx_peek.webp`) live in `public/` (not `public
 Measured against the production build locally (`npm run build && npm run preview`). Minimum acceptable score: 95 for performance and 100 for the rest of the categories.
 
 | Category | Score |
-|---|---|
+| --- | --- |
 | Performance | 95 |
 | Accessibility | 100 |
 | Best Practices | 100 |

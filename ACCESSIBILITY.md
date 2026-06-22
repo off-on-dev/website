@@ -128,7 +128,7 @@ Use these commands to run through a changed flow without a full-session setup.
 #### VoiceOver on macOS (VO = Caps Lock or Ctrl+Option)
 
 | Task | Keys |
-|---|---|
+| --- | --- |
 | Toggle VoiceOver on/off | Cmd+F5 |
 | Read next / previous item | VO+→ / VO+← |
 | Navigate to next heading | VO+Cmd+H (and Shift to go back) |
@@ -142,7 +142,7 @@ Use these commands to run through a changed flow without a full-session setup.
 #### NVDA on Windows (NVDA key = Insert by default)
 
 | Task | Keys |
-|---|---|
+| --- | --- |
 | Toggle NVDA on/off | Ctrl+Alt+N (installer default) |
 | Read next / previous item | ↓ / ↑ (browse mode) |
 | Navigate to next heading | H (and Shift+H to go back) |
@@ -153,6 +153,7 @@ Use these commands to run through a changed flow without a full-session setup.
 | Stop speaking | Ctrl |
 
 **What to verify in every changed flow:**
+
 1. Every interactive element is announced with its role (button, link, etc.) and accessible name.
 2. Dynamic content updates (state changes, filter results) are announced without forcibly moving focus.
 3. No phantom tab stops appear (e.g. from SVGs missing `focusable="false"` or decorative elements missing `aria-hidden`).
@@ -165,14 +166,14 @@ Use these commands to run through a changed flow without a full-session setup.
 If something on offon.dev blocks you or is hard to use, please tell us.
 
 - **Preferred:** [Open an accessibility issue](https://github.com/off-on-dev/website/issues/new?template=accessibility.yml). The form prompts for the page, your assistive technology, and severity, which helps us reproduce and prioritize.
-- **Email:** offondev@gmail.com if you cannot or prefer not to use GitHub.
+- **Email:** <offondev@gmail.com> if you cannot or prefer not to use GitHub.
 
 We aim to acknowledge accessibility reports within five working days and to provide a workaround or fix timeline in the same response.
 
 ### Severity
 
 | Severity | Definition |
-|---|---|
+| --- | --- |
 | Critical | Blocks a user from completing a core task (reading content, navigating to a challenge, accepting consent). |
 | High | Significant difficulty, but a workaround exists. |
 | Medium | Inconsistent or annoying experience that does not block the task. |
@@ -215,7 +216,7 @@ Apply this to every component you write or modify.
 Use the correct keys for each control type:
 
 | Control | Required keys |
-|---|---|
+| --- | --- |
 | Button | `Enter`, `Space` |
 | Link | `Enter` |
 | Checkbox | `Space` to toggle |
@@ -287,12 +288,14 @@ Use the correct keys for each control type:
 - Always add `focusable="false"` to inline `<svg>` elements. Without it, Internet Explorer and some Edge versions make every SVG tab-focusable, creating phantom tab stops.
 - Decorative SVGs (icons next to text, or purely visual): `aria-hidden="true"` and `focusable="false"`. No `<title>`.
 - Meaningful SVGs conveying information without adjacent text (e.g. standalone infographics): add `role="img"`, a `<title>` as the first child with a unique `id`, and `aria-labelledby` pointing to that `id`.
+
   ```tsx
   <svg role="img" aria-labelledby="chart-title" focusable="false">
     <title id="chart-title">Monthly active contributors: 142</title>
     ...
   </svg>
   ```
+
 - Never use `aria-label` directly on `<svg>`. Support across assistive technologies is inconsistent. Use the `<title>` + `aria-labelledby` pattern instead.
 - For lucide-react icons: always pass `aria-hidden={true}` when the icon is decorative (next to visible text). For icon-only buttons, put `aria-label` on the parent `<button>` or `<a>`, not on the `<svg>`.
 - Brand SVGs (e.g. LinkedIn in `Footer.tsx`): set `aria-hidden="true"` on the `<svg>` and `aria-label` on the parent interactive element. Use `fill="currentColor"` so hover and theme color changes apply. See the Icons section of `styleguide.md`.
@@ -343,6 +346,7 @@ This site uses Radix UI's `<Tooltip>` primitive (via `src/components/ui/tooltip.
 - Test all interactive components with forced colors enabled.
 - Never rely solely on `background-color` or `border-color` with opacity to communicate interactive state.
 - Use `@media (forced-colors: active)` to restore visible borders where needed:
+
   ```css
   @media (forced-colors: active) {
     .your-component { border: 1px solid ButtonText; }
@@ -365,7 +369,7 @@ This site uses Radix UI's `<Tooltip>` primitive (via `src/components/ui/tooltip.
 Use this to identify which criterion applies before writing or reviewing code.
 
 | Principle | Criterion | What to verify |
-|---|---|---|
+| --- | --- | --- |
 | **Perceivable (1.x)** | 1.1.1 Non-text Content (A) | Every image, icon, and non-text element has a text alternative or `aria-hidden`. |
 | | 1.3.1 Info and Relationships (A) | Structure conveyed visually is also in markup (headings, lists, tables). |
 | | 1.4.3 Contrast (AA) | Normal text 4.5:1, large text 3:1 against background. |
