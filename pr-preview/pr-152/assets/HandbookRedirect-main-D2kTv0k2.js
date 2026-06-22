@@ -1,0 +1,1 @@
+import{h as e}from"./vendor-router-C9styIZ5.js";var t=e(function(){return null});export{t as default};

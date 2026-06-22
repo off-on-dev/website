@@ -1,0 +1,1 @@
+import{l as e}from"./vendor-router-C9styIZ5.js";function t(){return e(`/handbook`)}export{t as clientLoader};
