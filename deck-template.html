@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title><!-- TITLE_PLACEHOLDER --></title>
+  <title>TITLE_PLACEHOLDER</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="reveal/reset.css">
   <link rel="stylesheet" href="reveal/reveal.css">
@@ -294,6 +294,11 @@
     }
     .person .pr { font-size: 0.52em; color: var(--muted); line-height: 1.4; margin: 0; }
     .person.tba { opacity: 0.55; border-style: dashed; }
+    .board-sm { gap: 0.35em; margin-top: 0.3em; }
+    .board-sm .person { padding: 0.4em 0.6em; gap: 0.4em; }
+    .board-sm .person .av { width: 1.4em; height: 1.4em; }
+    .board-sm .person .pn { font-size: 0.55em; margin-bottom: 0.08em; }
+    .board-sm .person .pr { font-size: 0.44em; }
 
     /* ── Value rows ── */
     .vrow {
@@ -434,7 +439,7 @@
       border: 1px solid var(--border);
       border-radius: 6px;
       padding: 0.24em 0.62em;
-      font-size: 0.44em;
+      font-size: 0.38em;
       color: var(--muted) !important;
       font-family: 'Inter', sans-serif;
     }
@@ -519,7 +524,7 @@
         <h1 style="color: #ffc034;">Presentation Title</h1>
         <p style="font-size: 0.7em; margin-top: 2.8em;">Subtitle or tagline goes here.</p>
         <p style="font-size: 0.52em; margin-top: 0.35em; opacity: 0.7;">DD Month YYYY, Venue</p>
-        <p style="position: absolute; bottom: 1.8em; right: 2.2em; font-size: 0.38em; opacity: 0.28; letter-spacing: 0.04em;">Press S for speaker notes</p>
+        <p style="position: absolute; bottom: 1.8em; right: 2.2em; font-size: 0.38em; opacity: 0.5; letter-spacing: 0.04em;">Press S for speaker notes</p>
       </div>
       <aside class="notes">
         <ul>
@@ -842,31 +847,31 @@
       </div>
       <div class="board">
         <div class="person">
-          <div class="av"><img src="team/name.webp" alt="Full Name"></div>
+          <div class="av"><img src="team/david.webp" alt="David Hirsch"></div>
           <div class="pi">
-            <p class="pn">Full Name</p>
-            <p class="pr">Role, Organisation.</p>
+            <p class="pn">David Hirsch</p>
+            <p class="pr">Head of Community and Open Source, Dynatrace.</p>
           </div>
         </div>
         <div class="person">
-          <div class="av"><img src="team/name.webp" alt="Full Name"></div>
+          <div class="av"><img src="team/katharina.webp" alt="Katharina Sick"></div>
           <div class="pi">
-            <p class="pn">Full Name</p>
-            <p class="pr">Role, Organisation.</p>
+            <p class="pn">Katharina Sick</p>
+            <p class="pr">Senior Developer Programs Engineer, Dynatrace.</p>
           </div>
         </div>
         <div class="person">
-          <div class="av"><img src="team/name.webp" alt="Full Name"></div>
+          <div class="av"><img src="team/kenyatta.webp" alt="Kenyatta Forbes"></div>
           <div class="pi">
-            <p class="pn">Full Name</p>
-            <p class="pr">Role, Organisation.</p>
+            <p class="pn">Kenyatta Forbes</p>
+            <p class="pr">Sr Program Manager, Dynatrace.</p>
           </div>
         </div>
         <div class="person">
-          <div class="av"><img src="team/name.webp" alt="Full Name"></div>
+          <div class="av"><img src="team/sinduri.webp" alt="Sinduri Guntupalli"></div>
           <div class="pi">
-            <p class="pn">Full Name</p>
-            <p class="pr">Role, Organisation.</p>
+            <p class="pn">Sinduri Guntupalli</p>
+            <p class="pr">Sr Developer Programs Engineer, Dynatrace.</p>
           </div>
         </div>
         <div class="person tba">
@@ -918,6 +923,8 @@
         <div class="link-row">
           <a href="https://community.offon.dev" class="pill hi">Join the community</a>
           <a href="mailto:offondev@gmail.com" class="pill">offondev@gmail.com</a>
+        </div>
+        <div class="link-row">
           <a href="https://bsky.app/profile/off-on-dev.bsky.social" class="pill" style="display: inline-flex; align-items: center; gap: 0.3em;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.422 4.308 4.973-4.718 1.142-6.496-2.553-7.078a13.335 13.335 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.204-.659-.3-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8Z"/></svg>
             @off-on-dev.bsky.social
