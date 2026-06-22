@@ -16,34 +16,6 @@ export const meta: MetaFunction = () =>
 
 const BASE = import.meta.env.BASE_URL;
 
-type Template = {
-  readonly icon: JSX.Element;
-  readonly title: string;
-  readonly format: string;
-  readonly description: string;
-  readonly includes: readonly string[];
-  readonly filename: string;
-  readonly label: string;
-};
-
-const TEMPLATES: readonly Template[] = [
-  {
-    icon: <Presentation size={24} aria-hidden="true" />,
-    title: "PowerPoint Template",
-    format: "PPTX file",
-    description:
-      "An editable PowerPoint file with OffOn branding applied. Open in PowerPoint or Keynote and edit slides directly.",
-    includes: [
-      "Title slide with OffOn branding",
-      "Section and content slide layouts",
-      "OffOn color palette and typography",
-      "Speaker notes placeholder",
-    ],
-    filename: "offon-deck-template.pptx",
-    label: "Download PPTX",
-  },
-];
-
 const REVEAL_SLIDES: readonly string[] = [
   "Title slide with co-brand area",
   "Agenda table",
@@ -59,14 +31,19 @@ const REVEAL_SLIDES: readonly string[] = [
   "Final / join slide",
 ];
 
-type RevealStep = { readonly step: number; readonly text: string };
-
-const REVEAL_STEPS: readonly RevealStep[] = [
+const REVEAL_STEPS: readonly { readonly step: number; readonly text: string }[] = [
   { step: 1, text: "Download and unzip the template. Rename deck-template.html to your talk name (e.g. my-talk.html)." },
   { step: 2, text: 'Replace TITLE_PLACEHOLDER in the <title> tag with your event or talk name.' },
   { step: 3, text: "Edit the slide sections directly in the HTML. Each <section> is one slide. Delete layouts you don't need." },
   { step: 4, text: "Open the HTML file in any browser for local use. All assets are bundled in the ZIP, so no server is needed." },
   { step: 5, text: "To publish: upload the HTML and asset folders to any web host, or place the file in offon.dev's public/ folder and push to main." },
+];
+
+const PPTX_INCLUDES: readonly string[] = [
+  "Title slide with OffOn branding",
+  "Section and content slide layouts",
+  "OffOn color palette and typography",
+  "Speaker notes placeholder",
 ];
 
 const PresentationTemplates = (): JSX.Element => (
@@ -115,26 +92,18 @@ const PresentationTemplates = (): JSX.Element => (
 
               <div>
                 <h3 className="text-sm font-semibold text-foreground mb-3">How to Create a New Deck</h3>
-                <ol className="space-y-3 list-none" role="list">
+                <ul className="space-y-3" role="list">
                   {REVEAL_STEPS.map(({ step, text }) => (
                     <li key={step} className="flex gap-3 text-xs text-muted-foreground">
                       <span className="text-primary font-semibold shrink-0 w-4" aria-hidden="true">{step}.</span>
                       <span>{text}</span>
                     </li>
                   ))}
-                </ol>
+                </ul>
               </div>
             </div>
 
             <div className="flex flex-wrap gap-3 mt-auto justify-end">
-              <a
-                href={`${BASE}downloads/offon-reveal-template.zip`}
-                download="offon-reveal-template.zip"
-                className="btn-primary inline-flex items-center gap-2"
-              >
-                <Download size={16} aria-hidden="true" />
-                Download Reveal.js ZIP
-              </a>
               <a
                 href={`${BASE}deck-template.html`}
                 target="_blank"
@@ -144,48 +113,55 @@ const PresentationTemplates = (): JSX.Element => (
                 Preview the Template
                 <ExternalLink size={14} aria-hidden="true" />
               </a>
+              <a
+                href={`${BASE}downloads/offon-reveal-template.zip`}
+                download="offon-reveal-template.zip"
+                className="btn-primary inline-flex items-center gap-2"
+              >
+                <Download size={16} aria-hidden="true" />
+                Download Reveal.js ZIP
+              </a>
             </div>
           </div>
         </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          {TEMPLATES.map((t) => (
-            <div
-              key={t.filename}
-              className="rounded-xl border border-surface-border bg-card p-6 flex flex-col gap-5"
-            >
-              <div className="flex items-start gap-3">
-                <span className="text-primary mt-0.5">{t.icon}</span>
-                <div>
-                  <h2 className="font-heading text-lg font-bold text-foreground">{t.title}</h2>
-                  <span className="text-xs text-muted-foreground">{t.format}</span>
-                </div>
-              </div>
-
-              <p className="text-sm text-muted-foreground leading-relaxed">{t.description}</p>
-
-              <ul className="space-y-1" role="list">
-                {t.includes.map((item) => (
-                  <li key={item} className="text-xs text-muted-foreground flex gap-2">
-                    <span className="text-primary shrink-0 mt-px" aria-hidden="true">–</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-auto">
-                <a
-                  href={`${BASE}downloads/${t.filename}`}
-                  download={t.filename}
-                  className="btn-primary inline-flex items-center gap-2 w-full justify-center"
-                >
-                  <Download size={16} aria-hidden="true" />
-                  {t.label}
-                </a>
+        <section aria-labelledby="pptx-heading" className="mt-6">
+          <div className="rounded-xl border border-surface-border bg-card p-6 flex flex-col gap-5">
+            <div className="flex items-start gap-3">
+              <span className="text-primary mt-0.5"><Presentation size={24} aria-hidden="true" /></span>
+              <div>
+                <h2 id="pptx-heading" className="font-heading text-lg font-bold text-foreground">
+                  PowerPoint Template
+                </h2>
+                <span className="text-xs text-muted-foreground">PPTX file</span>
               </div>
             </div>
-          ))}
-        </div>
+
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              An editable PowerPoint file with OffOn branding applied. Open in PowerPoint or Keynote and edit slides directly.
+            </p>
+
+            <ul className="space-y-1" role="list">
+              {PPTX_INCLUDES.map((item) => (
+                <li key={item} className="text-xs text-muted-foreground flex gap-2">
+                  <span className="text-primary shrink-0 mt-px" aria-hidden="true">–</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="flex mt-auto justify-end">
+              <a
+                href={`${BASE}downloads/offon-deck-template.pptx`}
+                download="offon-deck-template.pptx"
+                className="btn-primary inline-flex items-center gap-2"
+              >
+                <Download size={16} aria-hidden="true" />
+                Download PPTX
+              </a>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
 
