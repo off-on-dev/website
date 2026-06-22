@@ -9,14 +9,14 @@ Guidance for AI coding agents working in this repository.
 Project-level Claude Code commands live in `.claude/commands/`. Invoke them with `/command-name` in Claude Code. These are committed to the repo and available to all contributors.
 
 | Command | When to use |
-|---|---|
+| --- | --- |
 | `/a11y-audit` | On-demand accessibility audit using the Red Team / Blue Team persona pipeline. Run against a component or page to get a severity-weighted report. Invokes sub-commands below as needed. |
 | &nbsp;&nbsp;`/keyboard` | Sub-command: writing or reviewing any interactive element — buttons, modals, dropdowns, tabs, custom widgets. |
 | &nbsp;&nbsp;`/navigation` | Sub-command: working on nav components — primary nav, skip links, breadcrumbs, pagination, mobile menus. |
 | &nbsp;&nbsp;`/progressive-enhancement` | Sub-command: building any new feature or reviewing architecture. Ensures core content works without JS. |
 | &nbsp;&nbsp;`/user-personalization` | Sub-command: working on theme toggle, consent state, or any user preference persistence. |
 | `/add-solution` | Generate a structured TypeScript solution file from any input format (md, YAML, HTML, plain text). Downloads and converts images to WebP. |
-| `/create-presentation` | Create a Reveal.js presentation deck for an OffOn event or challenge. Follows the design system in `public/deck.html`. Outputs to `public/<filename>.html` with speaker notes. |
+| `/create-presentation` | Create a presentation deck for an OffOn event or challenge. Supports two formats: Reveal.js HTML (`public/deck-template.html`) and editable PowerPoint PPTX (edit and run `.claude/templates/generate-pptx.mjs`). Reveal.js output goes to `public/<filename>.html`; PPTX outputs to `public/downloads/offon-deck-template.pptx`. |
 
 The `spec-first-coding` command is installed globally (`~/.claude/skills/`) and is not in this repo. It enforces W3C spec citations before generating any accessibility-related code.
 
@@ -62,7 +62,7 @@ Community activity happens on a separate Discourse instance. Its display name is
 ### Naming
 
 | Thing | Convention | Example |
-|---|---|---|
+| --- | --- | --- |
 | Component files and exports | PascalCase | `FilteredLevelCard.tsx`, `export const FilteredLevelCard` |
 | Hook files and exports | camelCase, `use` prefix | `useTheme.tsx`, `export function useTheme` |
 | Module-level constants from static data | SCREAMING_SNAKE_CASE | `ADVENTURES`, `ALL_TAGS` |
@@ -78,19 +78,19 @@ Community activity happens on a separate Discourse instance. Its display name is
 
 ## URLs and External Organisations
 
-- The canonical domain for this site is https://offon.dev.
-- og:url, og:image, and all absolute URLs must use https://offon.dev.
-- The og:image file is public/og.png and its full URL is https://offon.dev/og.png. Its dimensions are 1200 x 630 px.
+- The canonical domain for this site is <https://offon.dev>.
+- og:url, og:image, and all absolute URLs must use <https://offon.dev>.
+- The og:image file is public/og.png and its full URL is <https://offon.dev/og.png>. Its dimensions are 1200 x 630 px.
 - PR preview deployments are served from the gh-pages branch under /pr-preview/pr-{number}/.
-- The open source challenges content lives in a separate organisation at https://github.com/off-on-dev/open-source-challenges. This is an intentional external link and must never be changed or flagged as a violation.
-- The community Discourse instance is at https://community.offon.dev. Use the `COMMUNITY_URL` constant from `src/data/constants.ts`, never hardcode this URL.
+- The open source challenges content lives in a separate organisation at <https://github.com/off-on-dev/open-source-challenges>. This is an intentional external link and must never be changed or flagged as a violation.
+- The community Discourse instance is at <https://community.offon.dev>. Use the `COMMUNITY_URL` constant from `src/data/constants.ts`, never hardcode this URL.
 - `COMMUNITY_DISPLAY_NAME` is defined in `src/data/constants.ts` as the user-facing display name for the community URL. Use it for visible text, use `COMMUNITY_URL` for href attributes.
 
 ---
 
 ## Repository Layout
 
-```
+```text
 src/
   components/   # Reusable UI components (named exports, PascalCase files)
   pages/        # Route-level page components
@@ -107,8 +107,9 @@ public/
   team/         # Board member photos (*.webp). Used by BoardSection and deck.html host slides. Do not duplicate into src/assets/.
   speakers/     # Event speaker photos (*.webp). Used by presentation decks only. Speakers are per-event and distinct from board members.
   solutions/    # Solution walkthrough screenshots, one subdirectory per adventure ID (e.g. solutions/echoes-lost-in-orbit/). Referenced by src/data/solutions/ with absolute paths.
-  reveal/       # Self-hosted Reveal.js 6.0.1 library. Used only by deck.html.
+  reveal/       # Self-hosted Reveal.js 6.0.1 library. Used by deck.html, deck-template.html, and all generated Reveal.js decks.
   deck.html     # Reveal.js presentation for Open Source Talks events. Not a React route; served directly by GitHub Pages.
+  deck-template.html # Boilerplate template for /create-presentation (Reveal.js format). Edit here to update the design system for all future decks.
   nyx.webp      # Nyx mascot illustration. Referenced in BottomCTA and About via import.meta.env.BASE_URL.
   nyx_peek.webp # Nyx peek variant. Referenced in About via import.meta.env.BASE_URL.
 .github/
@@ -144,6 +145,10 @@ npm run generate     # Regenerate TypeScript from adventure YAML files
 npm run generate:validate  # Validate YAML against schema without writing files
 
 npx shadcn@latest add <component>   # Add a shadcn/ui component
+
+# Regenerate downloadable presentation ZIPs and PPTX (run from repo root)
+node .claude/templates/generate-reveal-zip.mjs   # → public/downloads/offon-reveal-template.zip
+node .claude/templates/generate-pptx.mjs         # → public/downloads/offon-deck-template.pptx
 ```
 
 ---
@@ -296,7 +301,7 @@ After Accept, only `analytics_storage` flips to `granted`. The three ad signals 
 All analytics-related constants live in `src/data/constants.ts`:
 
 | Constant | Purpose |
-|---|---|
+| --- | --- |
 | `GA_MEASUREMENT_ID` | GA4 Measurement ID. Used by `useConsent.tsx` only, when it injects `gtag.js` on Accept. The inline bootstrap in `src/root.tsx` does not reference it. |
 | `CONSENT_STORAGE_KEY` | `localStorage` key for the consent decision (`analytics_consent`). |
 | `CONSENT_EXPIRY_MS` | Stored consent expiry (180 days). Re-prompt the user on the next visit after this. |
@@ -324,7 +329,7 @@ All analytics-related constants live in `src/data/constants.ts`:
 ### Consent state machine: enumerate all transitions before touching this code
 
 | From | To | Trigger | localStorage | React state | gtag.js | dataLayer / cookies |
-|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- |
 | `null` | `"granted"` | User clicks Accept | write `granted` | `setConsent("granted")` | injected if not already | push `consent update granted` + `js` + `config` |
 | `null` | `"denied"` | User clicks Decline | write `denied` | `setConsent("denied")` | not injected | push `consent update denied`, clear `_ga*` cookies (no-op if none) |
 | `"granted"` | `"denied"` | Decline after grant | write `denied` | `setConsent("denied")` | unchanged (still loaded) | push `consent update denied`, clear `_ga*` cookies |
@@ -552,7 +557,7 @@ All UI labels use **title case (Chicago style)**. Body copy uses **sentence case
 ### Commit types
 
 | Type | When to use |
-|---|---|
+| --- | --- |
 | `feat` | New feature |
 | `fix` | Bug fix |
 | `docs` | Documentation only |
@@ -573,7 +578,7 @@ All UI labels use **title case (Chicago style)**. Body copy uses **sentence case
 - `public/.well-known/security.txt` contains an `Expires` field. Update the date annually (current expiry: `2027-06-01`). An expired security.txt is treated as absent by scanners.
 - `public/llms.txt` lists key pages and all live adventures. Update it whenever a new adventure is added (step 7 in the adventure checklist above) or a page is significantly renamed.
 - `public/llms-full.txt` is the extended companion to `llms.txt`. It contains full level-by-level detail for every adventure. Update it whenever a new adventure or level is added, or a level's technologies/description changes.
-- `public/robots.txt` lists named AI crawler agents. No routine updates needed; add a new agent entry only when a major crawler publishes a new user-agent string.
+- `public/robots.txt` lists named AI crawler agents. No routine updates needed; add a new agent entry only when a major crawler publishes a new user-agent string. Note: robots.txt does not support inheritance — named `User-agent` groups do not inherit `Disallow` rules from `User-agent: *`. When adding a new path to exclude, repeat the `Disallow` line in every group.
 - `public/.well-known/agent-skills/offon/SKILL.md` describes the site to AI agents. Update it if the site's key URLs, adventure list, or technology list changes significantly. After editing it, recompute the SHA256 digest (`shasum -a 256 public/.well-known/agent-skills/offon/SKILL.md`) and update the `digest` field in `public/.well-known/agent-skills/index.json`. A stale digest makes the file unverifiable to compliant agents.
 - `public/.well-known/api-catalog` lists machine-readable resources. Update it if a new resource endpoint is added (e.g. a new feed or data file).
 
@@ -621,14 +626,14 @@ The `preview.yml` copy step explicitly lists every static asset directory and ro
 
 **When adding a new directory or root-level file type to `public/`, you must also add a corresponding copy line in the copy step of `.github/workflows/preview.yml`.** If you forget, the file will exist in production but return 404 in all PR previews.
 
-Current copy step covers: `assets/`, `fonts/`, `reveal/`, `team/`, `speakers/`, `brand/`, `solutions/`, `deck.html`, and root-level `*.svg`, `*.png`, `*.ico`, `*.webmanifest`, `*.webp` files.
+Current copy step covers: `assets/`, `fonts/`, `reveal/`, `team/`, `speakers/`, `brand/`, `solutions/`, `downloads/`, `qr/`, `deck.html`, `deck-template.html`, and root-level `*.svg`, `*.png`, `*.ico`, `*.webmanifest`, `*.webp` files.
 
 ### GitHub Actions allowlist
 
 The `off-on-dev` organisation restricts which third-party actions can run. Only the following are permitted:
 
 | Action | Pinned version |
-|---|---|
+| --- | --- |
 | `actions/checkout` | `@v4` only |
 | `actions/setup-node` | `@v4` only |
 | `actions/create-github-app-token` | `@v3` only |
@@ -718,7 +723,7 @@ A task is not done until the relevant docs are updated.
 After completing any task, explicitly state which checks applied, what was updated, or why it was skipped.
 
 | Change | Update |
-|---|---|
+| --- | --- |
 | New component | styleguide.md: component entry with props and usage |
 | New hook | styleguide.md: hook entry with return type and behavior |
 | New utility function | styleguide.md: brief entry if it affects patterns |

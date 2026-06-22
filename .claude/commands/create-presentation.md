@@ -2,7 +2,7 @@
 name: create-presentation
 description: >
   Create a presentation deck for an OffOn event or challenge.
-  Supports Reveal.js HTML, Slidev Markdown, and editable PowerPoint PPTX.
+  Supports Reveal.js HTML and editable PowerPoint PPTX.
   Uses format-specific templates from public/ and .claude/templates/.
 ---
 
@@ -26,7 +26,6 @@ Ask for anything not already provided:
 
 - **Format**: which output format?
   - `html`: Reveal.js (self-contained HTML, opens in any browser, served from GitHub Pages)
-  - `slidev`: Slidev Markdown (run locally with `npx slidev <filename>.md`)
   - `pptx`: Editable Microsoft PowerPoint (run `node .claude/templates/generate-pptx.mjs` and customise the output)
 - **Topic**: event intro, challenge walkthrough, or other
 - **Output filename**: e.g. `open-source-talks.html`, `challenge-intro.md`
@@ -44,7 +43,6 @@ Read the template for the chosen format; it contains all boilerplate. Do not rec
 | Format | Template file |
 | --- | --- |
 | Reveal.js (`html`) | `public/deck-template.html` |
-| Slidev (`slidev`) | `.claude/templates/slidev/deck-template.md` |
 | PowerPoint (`pptx`) | `.claude/templates/generate-pptx.mjs` (edit and run to regenerate) |
 
 Brand token reference (for writing slide content):
@@ -527,22 +525,12 @@ For scenario and architecture text, pull from the adventure's generated TypeScri
 
 1. Read the template for the chosen format.
 2. Generate all slide content (see slide structure patterns above for Reveal.js; see Slidev and Marp patterns below for those formats).
-3. In the output file, replace the example placeholder slides with the generated content. Keep the boilerplate (head, style, scripts for HTML; frontmatter for Markdown) intact.
-4. Update the title in `<title>` (Reveal.js) or the `title:` frontmatter field (Slidev).
+3. In the output file, replace the example placeholder slides with the generated content. Keep the boilerplate (head, style, scripts for HTML) intact.
+4. Update the title in `<title>` (Reveal.js).
 5. Write to:
    - Reveal.js: `public/<filename>.html`
-   - Slidev: `.claude/templates/slidev/<filename>.md` (must be alongside `style.css` for styles to load)
 6. Do not add any of these files to `src/routes.ts`, `public/sitemap.xml`, or `react-router.config.ts`.
 7. Confirm: `ls -lh <output-path>`
-
-**To run Slidev locally:**
-
-```sh
-cd .claude/templates/slidev
-pnpm install          # first time only (installs @slidev/cli + markdown-it-github-alerts)
-pnpm dev              # opens deck-template.md, or:
-pnpm slidev <filename>.md
-```
 
 **For PowerPoint (`pptx`):** edit `.claude/templates/generate-pptx.mjs` with the presentation content, then run:
 
@@ -551,75 +539,3 @@ node .claude/templates/generate-pptx.mjs
 ```
 
 This outputs `public/downloads/offon-deck-template.pptx`. Fonts (Inter 18pt, Syne) are embedded automatically. The slide background (`bg.png`) is the pre-rendered firefly gradient; do not regenerate it unless the design changes.
-
----
-
-## Slidev slide patterns
-
-Each slide is separated by `---`. The first slide after frontmatter is the cover. Layout hints use Slidev's built-in frontmatter per slide.
-
-```markdown
----
-layout: cover
----
-
-# Presentation Title
-## Subtitle or tagline
-
----
-layout: two-cols-header
----
-
-<span class="label">section label</span>
-
-## Slide Title
-
-::left::
-
-- Left point one
-- **Amber emphasis**
-- Left point three
-
-::right::
-
-- Right point one
-- Right point two
-
----
-
-<span class="label">section label</span>
-
-## Standard Slide
-
-Sentence case for body copy. **Bold for emphasis** in amber.
-
-- Bullet one
-- Bullet two
-
----
-layout: center
----
-
-# Join Us
-
-Call to action sentence.
-
-<div class="link-row">
-<a href="https://offon.dev" class="pill">offon.dev</a>
-</div>
-```
-
-Speaker notes go in multi-line HTML comment blocks directly after the slide content. Slidev parses these as presenter notes visible in speaker view (`S` key):
-
-```markdown
----
-
-## Slide Title
-
-Content here.
-
-<!--
-Speaker note: expand on this point. This is what you say, not what is on the slide.
-Next: transition to the next slide.
--->
-```

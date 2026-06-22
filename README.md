@@ -32,8 +32,8 @@ Node.js **24** is required. Version is pinned in `.nvmrc`, run `nvm use` to swit
 ## Scripts
 
 | Script | Description |
-|---|---|
-| `npm run dev` | Start local dev server at http://localhost:8080 |
+| --- | --- |
+| `npm run dev` | Start local dev server at <http://localhost:8080> |
 | `npm run build` | SSG prerender build to `dist/client/` (React Router v7) |
 | `npm run build:dev` | Dev-mode build (source maps, no minification) |
 | `npm run preview` | Serve the production build locally |
@@ -46,6 +46,8 @@ Node.js **24** is required. Version is pinned in `.nvmrc`, run `nvm use` to swit
 | `npm run test:visual:update` | Update visual regression baseline screenshots |
 | `npm run generate` | Regenerate TypeScript from adventure YAML files |
 | `npm run generate:validate` | Validate adventure YAML against schema without writing files |
+| `node .claude/templates/generate-reveal-zip.mjs` | Regenerate `public/downloads/offon-reveal-template.zip` |
+| `node .claude/templates/generate-pptx.mjs` | Regenerate `public/downloads/offon-deck-template.pptx` |
 
 Run `npm run lint` and `npm test` before marking any work done.
 
@@ -53,7 +55,7 @@ All UI changes must be verified at mobile (375px), tablet (768px), and desktop (
 
 ## Project Structure
 
-```
+```text
 src/
   components/     # Reusable UI components (named exports, PascalCase files)
   components/ui/  # shadcn/ui primitives, do not edit directly
@@ -105,7 +107,7 @@ Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and
 ## Routes
 
 | Path | Page | Purpose |
-|---|---|---|
+| --- | --- | --- |
 | `/` | `Index.tsx` | Home page |
 | `/adventures` | `Adventures.tsx` | Adventure landing hub (links to /challenges) |
 | `/adventures/:id` | `AdventureDetail.tsx` | Adventure landing |
@@ -118,6 +120,7 @@ Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and
 | `/privacy` | `Privacy.tsx` | GDPR-compliant privacy policy |
 | `/accessibility` | `Accessibility.tsx` | WCAG accessibility statement |
 | `/brand` | `BrandGuidelines.tsx` | Brand guidelines: logos, colors, typography, voice |
+| `/presentation-templates` | `PresentationTemplates.tsx` | Slide template downloads (Reveal.js ZIP, PPTX); unlisted — noindex, excluded from sitemap and robots |
 | `/404` | `NotFound.tsx` | Prerendered 404 page |
 | `/community-guide` | redirects to `/handbook` | Legacy alias |
 | `/docs` | redirects to `/handbook` | Legacy alias |
@@ -131,17 +134,22 @@ Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and
 ## SEO and Metadata
 
 ### Web Manifest
+
 `public/site.webmanifest` defines the web app identity, used by browsers and PWA tools. It includes:
+
 - App name, short name, and description
 - Icon references (favicon and apple-touch-icon)
 - Theme and background colors
 - Display mode (standalone)
 
 ### Schema.org Structured Data
+
 `src/root.tsx` includes two JSON-LD `<script>` blocks: one with `@type: "WebSite"` and one with `@type: "Organization"`. These help search engines understand the site's identity and content.
 
 ### Open Graph Tags
+
 All pages include complete OG tags:
+
 - `og:title`, `og:description`, `og:url`, `og:image`
 - `og:image:width`, `og:image:height`, `og:image:alt` (required for proper image rendering in social previews)
 - `og:site_name` (brand), `og:locale` (en_GB)
@@ -150,14 +158,18 @@ All pages include complete OG tags:
 All dynamic pages (adventure & challenge details) generate page-specific OG tags via React Router v7 `meta()` exports.
 
 ### Twitter Card Tags
+
 All pages include:
+
 - `twitter:card` (summary_large_image)
 - `twitter:title`, `twitter:description`, `twitter:image`, `twitter:image:alt`
 
 ### Canonical Links
+
 Each page declares its canonical URL to prevent duplicate indexing. Handled via React Router v7 `meta()` exports on each route module.
 
 ### Sitemap and Robots
+
 - `public/sitemap.xml` lists all static routes with change frequency and priority.
 - `public/robots.txt` points search engines to the sitemap.
 
@@ -172,7 +184,7 @@ The site uses Google Analytics 4 with Consent Mode v2 in **gated-load mode**. No
 The following constants in `src/data/constants.ts` drive the analytics setup:
 
 | Constant | Purpose |
-|---|---|
+| --- | --- |
 | `GA_MEASUREMENT_ID` | GA4 Measurement ID. Used by `useConsent.tsx` only, when it injects `gtag.js` on Accept. |
 | `CONSENT_STORAGE_KEY` | `localStorage` key for the consent decision. |
 | `CONSENT_EXPIRY_MS` | Stored consent expiry (180 days). |
@@ -184,7 +196,7 @@ The following constants in `src/data/constants.ts` drive the analytics setup:
 - `src/components/ConsentBanner.tsx` renders a fixed bottom bar until the user makes a choice. Once consent is set, it renders a floating cookie icon button (bottom-right) that calls `reset()` to reopen the banner.
 - `src/Layout.tsx` fires `page_view` on every route change and `click_event` for every `<a>`/`<button>` click via `useClickTracking`. Both gate on `consent === "granted"` so events do not accumulate in `dataLayer` while gtag.js is not loaded.
 - On Decline or Reset, the hook clears any `_ga*` cookies that gtag.js may have set during a prior granted session. The script tag is not removed.
-- `/privacy` (`src/pages/Privacy.tsx`) is the GDPR Art. 13 privacy policy. Contact: offondev@gmail.com and `${COMMUNITY_URL}/groups/moderators`.
+- `/privacy` (`src/pages/Privacy.tsx`) is the GDPR Art. 13 privacy policy. Contact: <offondev@gmail.com> and `${COMMUNITY_URL}/groups/moderators`.
 
 ---
 
@@ -192,7 +204,7 @@ The following constants in `src/data/constants.ts` drive the analytics setup:
 
 Deployment is automated via GitHub Actions:
 
-- **Push to `main`** triggers [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which builds and deploys to GitHub Pages. Production URL: **https://offon.dev**.
+- **Push to `main`** triggers [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which builds and deploys to GitHub Pages. Production URL: **<https://offon.dev>**.
 - **Open a PR** triggers [`.github/workflows/preview.yml`](.github/workflows/preview.yml), which runs lint, build, unit tests, and the full Playwright suite (axe, a11y, smoke) before deploying a preview at `/pr-preview/pr-<n>/`.
 - **PRs touching adventure data** also trigger [`.github/workflows/validate-adventures.yml`](.github/workflows/validate-adventures.yml), which validates YAML schema, checks that generated files are up-to-date (including `public/llms.txt`), and verifies sitemap/prerender/leaderboard consistency.
 - **PRs adding components, hooks, utilities, constants, scripts, or workflows** trigger [`.github/workflows/validate-docs.yml`](.github/workflows/validate-docs.yml), which runs `scripts/check-docs.sh` and fails if the relevant documentation (`styleguide.md` or `README.md`) was not updated in the same PR.

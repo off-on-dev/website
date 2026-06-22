@@ -21,7 +21,7 @@ npm install
 npm run dev        # http://localhost:8080
 ```
 
-2. Add the upstream remote so you can pull in future changes:
+1. Add the upstream remote so you can pull in future changes:
 
 ```sh
 git remote add upstream https://github.com/off-on-dev/website.git
