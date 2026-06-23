@@ -25,7 +25,17 @@ async function collectDataFiles(dir) {
 }
 
 const buildDir = "dist/client";
-const dataFiles = await collectDataFiles(buildDir);
+
+let dataFiles;
+try {
+  dataFiles = await collectDataFiles(buildDir);
+} catch (err) {
+  if (err.code === "ENOENT") {
+    console.error(`create-data-aliases: '${buildDir}' not found — run 'npm run build' first`);
+    process.exit(1);
+  }
+  throw err;
+}
 
 await Promise.all(
   dataFiles.map(async (file) => {
