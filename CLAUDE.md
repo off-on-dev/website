@@ -38,7 +38,7 @@ Use `/a11y-audit` for all accessibility audits in this repo. The four sub-comman
 ## Project Overview
 
 **offon.dev** is the main website for OffOn, a platform for open source enthusiasts.
-It is fully static with no backend and no database. Pages are prerendered at build time using React Router v7 framework mode (`ssr: false`).
+It is fully static with no backend and no database. Pages are prerendered at build time using React Router v8 framework mode (`ssr: false`).
 
 Community activity happens on a separate Discourse instance. Its display name is **community.offon.dev**, but the real URL is managed via the `COMMUNITY_URL` constant in `src/data/constants.ts`. Do not hardcode it. Do not attempt to replicate or integrate Discourse functionality here.
 
@@ -49,7 +49,7 @@ Community activity happens on a separate Discourse instance. Its display name is
 - **Framework:** React 19 with TypeScript, bundled via Vite. Check `package.json` for current versions.
 - **Styling:** Tailwind CSS 4, configured CSS-first via `src/index.css` (`@theme` block). There is no `tailwind.config.ts`; it was deleted as part of the Tailwind 4 migration.
 - **Components:** Minimal shadcn/ui surface. `src/components/ui/` contains only `badge.tsx` and `tooltip.tsx`. Most Radix UI packages were intentionally removed.
-- **Routing:** React Router v7 framework mode (static prerendering with `ssr: false`)
+- **Routing:** React Router v8 framework mode (static prerendering with `ssr: false`)
 - **Testing:** Vitest + @testing-library/react (unit/component); Playwright (smoke tests in `e2e/`)
 - **Hosting:** GitHub Pages
 - **PR previews:** pr-preview-action
@@ -131,7 +131,7 @@ public/
 ```sh
 nvm use              # Switch to Node 24 (required)
 npm run dev          # Start local dev server (http://localhost:8080)
-npm run build        # Production SSG build (React Router v7) -> dist/client/
+npm run build        # Production SSG build (React Router v8) -> dist/client/
 npm run build:dev    # Dev-mode build
 npm run lint         # ESLint
 npm test             # Run tests once (Vitest)
@@ -454,7 +454,7 @@ This is a fully static React site. Apply these practices on every page.
 - Every page must have a `<meta name="description">` under 160 characters.
 - Add Open Graph tags to every page: `og:title`, `og:description`, `og:url`, `og:type`, and `og:image` where an image is available.
 - Add Twitter meta tags: always include `twitter:card` (use `summary_large_image` for pages with images), `twitter:title`, `twitter:description`, and `twitter:image`.
-- Use React Router v7's `meta()` export on each route module to manage head tags per page. Use the `buildPageMeta` helper from `src/lib/meta.ts`.
+- Use React Router v8's `meta()` export on each route module to manage head tags per page. Use the `buildPageMeta` helper from `src/lib/meta.ts`.
 
 ### Heading hierarchy
 
@@ -591,7 +591,7 @@ All UI labels use **title case (Chicago style)**. Body copy uses **sentence case
 
 ### SSG prerendered routes
 
-- The list of routes React Router v7 prerenders is in the `prerender` array inside `react-router.config.ts`.
+- The list of routes React Router v8 prerenders is in the `prerender` array inside `react-router.config.ts`.
 - When adding a new static route, add it to **all three** of: `src/routes.ts`, `public/sitemap.xml`, and the `prerender` array in `react-router.config.ts`.
 
 When adding a new route to `src/routes.ts`, follow these rules by route type:
@@ -636,7 +636,7 @@ The `off-on-dev` organisation restricts which third-party actions can run. Only 
 | --- | --- |
 | `actions/checkout` | `@v7` only |
 | `actions/cache` | any (GitHub-created, covered by org checkbox) |
-| `actions/setup-node` | `@v4` only |
+| `actions/setup-node` | `@v6` only |
 | `actions/create-github-app-token` | `@v3` only |
 | `JamesIves/github-pages-deploy-action` | any tag |
 | `marocchino/sticky-pull-request-comment` | any tag |
