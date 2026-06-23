@@ -61,26 +61,26 @@ export function loader({ params }: LoaderFunctionArgs): LoaderData {
   return { adventure, level, solutionUnlocked, solution, challengeUrl, discussionUrl, deadline };
 }
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  if (!data?.adventure || !data?.level) {
+export const meta: MetaFunction<typeof loader> = ({ loaderData }) => {
+  if (!loaderData?.adventure || !loaderData?.level) {
     return [
       { title: `Solution Not Found - ${BRAND_NAME}` },
       { name: "robots", content: "noindex, nofollow" },
     ];
   }
-  if (!data.solutionUnlocked) {
+  if (!loaderData.solutionUnlocked) {
     return [
-      { title: `${data.level.name} Solution - ${data.adventure.title} - ${BRAND_NAME}` },
+      { title: `${loaderData.level.name} Solution - ${loaderData.adventure.title} - ${BRAND_NAME}` },
       { name: "robots", content: "noindex, nofollow" },
     ];
   }
-  if (!data.solution) {
+  if (!loaderData.solution) {
     return [
       { title: `Solution Not Found - ${BRAND_NAME}` },
       { name: "robots", content: "noindex, nofollow" },
     ];
   }
-  const { adventure, level, solution } = data;
+  const { adventure, level, solution } = loaderData;
   const title = `${solution.title} - ${adventure.title} - ${BRAND_NAME}`;
   const description = `Step-by-step solution walkthrough for the ${level.name} challenge in ${adventure.title}.`;
   return buildPageMeta({

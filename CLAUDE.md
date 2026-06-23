@@ -634,7 +634,8 @@ The `off-on-dev` organisation restricts which third-party actions can run. Only 
 
 | Action | Pinned version |
 | --- | --- |
-| `actions/checkout` | `@v4` only |
+| `actions/checkout` | `@v7` only |
+| `actions/cache` | any (GitHub-created, covered by org checkbox) |
 | `actions/setup-node` | `@v4` only |
 | `actions/create-github-app-token` | `@v3` only |
 | `JamesIves/github-pages-deploy-action` | any tag |
