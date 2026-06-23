@@ -21,7 +21,8 @@
     "generate:validate": "node scripts/generate-adventures.mjs --validate-only",
     "generate:solutions": "node scripts/generate-solutions.mjs",
     "generate:solutions:validate": "node scripts/generate-solutions.mjs --validate-only",
-    "prebuild": "node scripts/generate-adventures.mjs && node scripts/generate-solutions.mjs"
+    "prebuild": "node scripts/generate-adventures.mjs && node scripts/generate-solutions.mjs",
+    "postbuild": "node scripts/create-data-aliases.mjs"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

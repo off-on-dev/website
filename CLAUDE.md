@@ -620,6 +620,23 @@ See [`ADVENTURES.md`](ADVENTURES.md) for the full sync process and PR checklist.
 - Only static files in `dist/client/` are deployed. No server config is needed.
 - The base path is set via the `VITE_BASE_PATH` environment variable (defaults to `/`). Never change this without verifying GitHub Pages routing.
 
+### Trailing slashes and `_.data` aliases
+
+GitHub Pages normalises every URL to a trailing slash (e.g. `/adventures/lex-imperfecta` becomes `/adventures/lex-imperfecta/`). All internal `Link to` props use trailing slashes to stay consistent with the URL the browser shows.
+
+React Router v8 defaults to `trailingSlashAwareDataRequests`. When the current URL has a trailing slash, single-fetch data requests use `<path>/_.data` instead of `<path>.data`. The prerender only generates `<path>.data` files, so a `_.data` request would 404.
+
+The `postbuild` script (`scripts/create-data-aliases.mjs`) runs automatically after every `npm run build`. It copies each `*.data` file to `<name>/_.data` so both URL formats resolve. Example:
+
+```text
+dist/client/adventures/lex-imperfecta.data          # non-trailing-slash request
+dist/client/adventures/lex-imperfecta/_.data         # trailing-slash request (GitHub Pages)
+```
+
+`public/serve.json` sets `trailingSlash: true` so `npm run preview` mirrors GitHub Pages behaviour locally.
+
+**Never remove trailing slashes from `Link to` props.** That would make client-side navigation inconsistent with the URL GitHub Pages shows in the browser.
+
 ### PR preview static assets
 
 The `preview.yml` copy step explicitly lists every static asset directory and root-level file type that needs to appear in the PR preview. Vite copies `public/` to `dist/client/` during the build, but `preview.yml` then copies those files into the `dist/client/pr-preview/pr-N/` subdirectory that `rossjrw/pr-preview-action` deploys.
