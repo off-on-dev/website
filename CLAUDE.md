@@ -53,7 +53,7 @@ Community activity happens on a separate Discourse instance. Its display name is
 - **Testing:** Vitest + @testing-library/react (unit/component); Playwright (smoke tests in `e2e/`)
 - **Hosting:** GitHub Pages
 - **PR previews:** pr-preview-action
-- **Node.js:** 24 is required. Version is pinned in `.nvmrc`. Run `nvm use` to switch automatically.
+- **Node.js:** 26 is required. Version is pinned in `.nvmrc`. Run `nvm use` to switch automatically.
 
 ---
 
@@ -129,7 +129,7 @@ public/
 ## Commands
 
 ```sh
-nvm use              # Switch to Node 24 (required)
+nvm use              # Switch to Node 26 (required)
 npm run dev          # Start local dev server (http://localhost:8080)
 npm run build        # Production SSG build (React Router v8) -> dist/client/
 npm run build:dev    # Dev-mode build
