@@ -7,8 +7,8 @@
  * This script copies every `*.data` file to `<name>/_.data` so both formats
  * resolve correctly without changing any Link `to` props.
  */
-import { readdir, cp, mkdir } from "fs/promises";
-import { join, dirname, basename } from "path";
+import { readdir, cp, mkdir } from "node:fs/promises";
+import { join, dirname, basename } from "node:path";
 
 async function collectDataFiles(dir) {
   const entries = await readdir(dir, { withFileTypes: true });

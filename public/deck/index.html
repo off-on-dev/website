@@ -77,6 +77,8 @@
 
     .reveal a { color: var(--amber); text-decoration: none; }
     .reveal a:hover { text-decoration: underline; }
+    .reveal a:focus-visible,
+    .pill:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; border-radius: 3px; }
 
     .reveal .controls { color: var(--amber); }
     .reveal .progress span { background: var(--amber); }
@@ -753,7 +755,7 @@
             <div style="width: 3.5em; height: 3.5em; background: var(--card); border: 1px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
               <img src="../qr/challenges.png" alt="QR code for offon.dev/challenges" style="width: 100%; height: 100%; object-fit: contain;" onerror="this.style.display='none'">
             </div>
-            <p style="font-size: 0.38em; color: #ffc034; margin: 0;">Play challenges</p>
+            <p style="font-size: 0.38em; color: #ffc034; margin: 0;">offon.dev/challenges</p>
           </div>
         </div>
         <div style="flex: 1; display: flex; flex-direction: column; gap: 0.5em; min-width: 0; overflow: hidden; margin-top: 1.8em;">
@@ -802,8 +804,8 @@
           </div>
         </div>
         <div style="flex: 1; display: flex; flex-direction: column; gap: 0.5em; min-width: 0; overflow: hidden; margin-top: 1.8em;">
-          <img src="../screenshots/community-threads.webp" alt="Community Voices thread list" style="width: 100%; height: 320px; object-fit: cover; object-position: top; border-radius: 6px; flex-shrink: 0;">
-          <img src="../screenshots/community-post.webp" alt="Example community post" style="width: 100%; border-radius: 6px; flex-shrink: 0;">
+          <img src="../screenshots/community-threads.webp" alt="Community Voices thread list" loading="lazy" style="width: 100%; height: 320px; object-fit: cover; object-position: top; border-radius: 6px; flex-shrink: 0;">
+          <img src="../screenshots/community-post.webp" alt="Example community post" loading="lazy" style="width: 100%; border-radius: 6px; flex-shrink: 0;">
         </div>
       </div>
       <aside class="notes">

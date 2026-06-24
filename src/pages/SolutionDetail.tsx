@@ -6,7 +6,7 @@ import {
   ExternalLink,
   Lock,
   Lightbulb,
-  AlertTriangle,
+  TriangleAlert,
   Info,
   ChevronDown,
   Sparkles,
@@ -118,7 +118,7 @@ const calloutConfig = {
     iconClass: "text-primary",
   },
   warning: {
-    icon: AlertTriangle,
+    icon: TriangleAlert,
     label: "Warning",
     className: "border-orange-500/30 bg-orange-500/5",
     iconClass: "text-orange-400",
@@ -593,7 +593,7 @@ const SolutionDetail = (): JSX.Element => {
                   {/* Spoiler warning */}
                   {solution.spoilerWarning && (
                     <div className="flex gap-3 rounded-xl border border-primary/25 bg-primary/5 p-4 mb-6" role="note">
-                      <AlertTriangle
+                      <TriangleAlert
                         size={16}
                         className="shrink-0 mt-0.5 text-primary"
                         aria-hidden="true"

@@ -151,7 +151,6 @@ jobs:
           cp -r dist/client/deck "${PREVIEW_DIR}/"
           cp dist/client/deck-template.html "${PREVIEW_DIR}/"
           find dist/client -maxdepth 1 -type f \( -name "*.svg" -o -name "*.png" -o -name "*.ico" -o -name "*.webmanifest" -o -name "*.webp" \) -exec cp {} "${PREVIEW_DIR}/" \;
-          cp dist/client/serve.json "${PREVIEW_DIR}/"
           cp "${PREVIEW_DIR}/index.html" "${PREVIEW_DIR}/404.html"
 
       - uses: rossjrw/pr-preview-action@v1

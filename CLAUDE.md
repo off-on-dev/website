@@ -633,7 +633,7 @@ dist/client/adventures/lex-imperfecta.data          # non-trailing-slash request
 dist/client/adventures/lex-imperfecta/_.data         # trailing-slash request (GitHub Pages)
 ```
 
-`public/serve.json` sets `trailingSlash: true` so `npm run preview` mirrors GitHub Pages behaviour locally.
+`serve.json` at the repo root sets `trailingSlash: true` so `npm run preview` mirrors GitHub Pages behaviour locally. It is not in `public/` and is not served in production.
 
 **Never remove trailing slashes from `Link to` props.** That would make client-side navigation inconsistent with the URL GitHub Pages shows in the browser.
 
@@ -643,7 +643,7 @@ The `preview.yml` copy step explicitly lists every static asset directory and ro
 
 **When adding a new directory or root-level file type to `public/`, you must also add a corresponding copy line in the copy step of `.github/workflows/preview.yml`.** If you forget, the file will exist in production but return 404 in all PR previews.
 
-Current copy step covers: `assets/`, `fonts/`, `reveal/`, `team/`, `speakers/`, `brand/`, `solutions/`, `downloads/`, `qr/`, `screenshots/`, `deck/`, `deck-template.html`, and root-level `*.svg`, `*.png`, `*.ico`, `*.webmanifest`, `*.webp` files.
+Current copy step covers: `assets/`, `fonts/`, `reveal/`, `team/`, `speakers/`, `brand/`, `solutions/`, `downloads/`, `qr/`, `screenshots/`, `deck/`, `deck-template.html`, and root-level `*.svg`, `*.png`, `*.ico`, `*.webmanifest`, `*.webp` files. `serve.json` lives at the repo root, not in `public/`, and is not copied here.
 
 ### GitHub Actions allowlist
 
