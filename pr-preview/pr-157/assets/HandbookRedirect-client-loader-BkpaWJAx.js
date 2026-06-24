@@ -1,1 +1,0 @@
-import{l as e}from"./vendor-router-0lM7Klue.js";function t(){return e(`/handbook`)}export{t as clientLoader};
