@@ -243,6 +243,30 @@ describe("prerendered solution page content", () => {
   });
 });
 
+describe("_.data aliases for trailing-slash GitHub Pages compatibility", () => {
+  // Routes with loaders produce <path>.data for non-trailing-slash requests.
+  // create-data-aliases.mjs (postbuild) copies each to <path>/_.data so
+  // trailing-slash GitHub Pages URLs also resolve single-fetch data requests.
+  const loaderRoutes = [
+    "adventures/blind-by-design",
+    "adventures/echoes-lost-in-orbit/levels/beginner/solution",
+    "adventures/echoes-lost-in-orbit/levels/intermediate/solution",
+    "adventures/echoes-lost-in-orbit/levels/expert/solution",
+  ];
+
+  for (const route of loaderRoutes) {
+    it(`dist/client/${route}/_.data exists`, () => {
+      const aliasPath = path.join(DIST_ROOT, route, "_.data");
+      const dataPath = path.join(DIST_ROOT, `${route}.data`);
+      if (!fs.existsSync(dataPath)) {
+        throw new Error(`dist/client/${route}.data not found — run npm run build first`);
+      }
+      expect(fs.existsSync(aliasPath), `Missing _.data alias at ${aliasPath}`).toBe(true);
+      expect(fs.readFileSync(aliasPath)).toEqual(fs.readFileSync(dataPath));
+    });
+  }
+});
+
 describe("prerendered challenge pages include all content sections", () => {
   const challengePage = "adventures/echoes-lost-in-orbit/levels/beginner/index.html";
   const requiredSections = ["objective", "backstory", "toolbox", "learnings", "walkthrough", "completion"];
