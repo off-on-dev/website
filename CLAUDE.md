@@ -643,7 +643,7 @@ The `preview.yml` copy step explicitly lists every static asset directory and ro
 
 **When adding a new directory or root-level file type to `public/`, you must also add a corresponding copy line in the copy step of `.github/workflows/preview.yml`.** If you forget, the file will exist in production but return 404 in all PR previews.
 
-Current copy step covers: `assets/`, `fonts/`, `reveal/`, `team/`, `speakers/`, `brand/`, `solutions/`, `downloads/`, `qr/`, `deck.html`, `deck-template.html`, and root-level `*.svg`, `*.png`, `*.ico`, `*.webmanifest`, `*.webp` files.
+Current copy step covers: `assets/`, `fonts/`, `reveal/`, `team/`, `speakers/`, `brand/`, `solutions/`, `downloads/`, `qr/`, `screenshots/`, `deck.html`, `deck-template.html`, and root-level `*.svg`, `*.png`, `*.ico`, `*.webmanifest`, `*.webp` files.
 
 ### GitHub Actions allowlist
 
