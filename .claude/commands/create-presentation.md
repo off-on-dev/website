@@ -32,7 +32,7 @@ Ask for anything not already provided:
 - **Slides outline**: list of topics to cover, or free-form description
 - **Speakers / contributors**: names and photos if applicable (photos go in `public/team/` for board members, `public/speakers/` for event speakers)
 
-If the user is creating an event deck, check `public/deck.html` for the existing event intro structure as a reference and to reuse already-written slide content where relevant.
+If the user is creating an event deck, check `public/deck/index.html` for the existing event intro structure as a reference and to reuse already-written slide content where relevant.
 
 ---
 
@@ -119,7 +119,7 @@ When a slide has two sub-sections (e.g. "What makes a good talk" left + "Want to
 
 `col-label` is a section label above a column's content. It is always smaller (`0.42em`) than the content items below it (`0.65em` h4). This is intentional; amber uppercase provides the hierarchy, size does not. Do not try to make `col-label` bigger than the items it labels. Trust the color and spacing.
 
-The current CSS values (copied from `public/deck.html`):
+The current CSS values (copied from `public/deck/index.html`):
 
 - `.sh .label { font-size: 0.42em; margin-bottom: 0.6em }`: overline size and gap before the h2
 - `.sh { margin-bottom: 1.2em }`: gap after the full header block
@@ -131,7 +131,7 @@ Do not override these inline unless there is a specific layout reason.
 
 ## Slide structure patterns
 
-Copy these patterns from `public/deck.html`. Do not invent new CSS.
+Copy these patterns from `public/deck/index.html`. Do not invent new CSS.
 
 ### Slide header (every content slide)
 
@@ -318,7 +318,7 @@ If there is no co-brand partner, omit the `.cobrand` div and place the OffOn log
 
 ### Final / join slide
 
-Include a centered QR code for the primary signup link before the pill row. The current reference deck (`public/deck.html`) uses a single QR for `community.offon.dev/signup`. Choose which URLs to show QR codes for based on the event; the `qr/` directory in `public/` contains the available PNGs. Generate new QR code PNGs with `npx qrcode -t png -o public/qr/<name>.png "<url>"`. The `onerror` handler on each image hides it gracefully if the file is missing. The `public/qr/` directory is already included in the preview copy step in `.github/workflows/preview.yml`.
+Include a centered QR code for the primary signup link before the pill row. The current reference deck (`public/deck/index.html`) uses a single QR for `community.offon.dev/signup`. Choose which URLs to show QR codes for based on the event; the `qr/` directory in `public/` contains the available PNGs. Generate new QR code PNGs with `npx qrcode -t png -o public/qr/<name>.png "<url>"`. The `onerror` handler on each image hides it gracefully if the file is missing. The `public/qr/` directory is already included in the preview copy step in `.github/workflows/preview.yml`.
 
 ```html
 <section>
@@ -486,7 +486,7 @@ Press S in the browser opens Reveal.js speaker view (current + next slide, notes
 
 ## Event intro deck structure
 
-The canonical slide order for an Open Source Talks event intro deck. Follow this order unless there is a specific reason to deviate. `public/deck.html` is the reference implementation.
+The canonical slide order for an Open Source Talks event intro deck. Follow this order unless there is a specific reason to deviate. `public/deck/index.html` is the reference implementation.
 
 | # | Title | Layout | Key content |
 | --- | ------- | --------- | ----------- |
