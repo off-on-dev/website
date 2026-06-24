@@ -148,7 +148,7 @@ jobs:
           cp -r dist/client/qr "${PREVIEW_DIR}/"
           cp -r dist/client/downloads "${PREVIEW_DIR}/"
           cp -r dist/client/screenshots "${PREVIEW_DIR}/"
-          cp dist/client/deck.html "${PREVIEW_DIR}/"
+          cp -r dist/client/deck "${PREVIEW_DIR}/"
           cp dist/client/deck-template.html "${PREVIEW_DIR}/"
           find dist/client -maxdepth 1 -type f \( -name "*.svg" -o -name "*.png" -o -name "*.ico" -o -name "*.webmanifest" -o -name "*.webp" \) -exec cp {} "${PREVIEW_DIR}/" \;
           cp dist/client/serve.json "${PREVIEW_DIR}/"

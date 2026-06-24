@@ -103,12 +103,12 @@ e2e/
   smoke.spec.ts # Playwright smoke tests (requires npm run build first)
 public/
   fonts/        # Self-hosted fonts (Inter, Syne, JetBrains Mono)
-  brand/        # OffOn brand assets (SVG + PNG logos, Nyx illustrations). Referenced by deck.html and BrandGuidelines.tsx.
-  team/         # Board member photos (*.webp). Used by BoardSection and deck.html host slides. Do not duplicate into src/assets/.
+  brand/        # OffOn brand assets (SVG + PNG logos, Nyx illustrations). Referenced by deck/index.html and BrandGuidelines.tsx.
+  team/         # Board member photos (*.webp). Used by BoardSection and deck/index.html host slides. Do not duplicate into src/assets/.
   speakers/     # Event speaker photos (*.webp). Used by presentation decks only. Speakers are per-event and distinct from board members.
   solutions/    # Solution walkthrough screenshots, one subdirectory per adventure ID (e.g. solutions/echoes-lost-in-orbit/). Referenced by src/data/solutions/ with absolute paths.
-  reveal/       # Self-hosted Reveal.js 6.0.1 library. Used by deck.html, deck-template.html, and all generated Reveal.js decks.
-  deck.html     # Reveal.js presentation for Open Source Talks events. Not a React route; served directly by GitHub Pages.
+  reveal/       # Self-hosted Reveal.js 6.0.1 library. Used by deck/index.html, deck-template.html, and all generated Reveal.js decks.
+  deck/         # Reveal.js presentation for Open Source Talks events (public/deck/index.html). Served at /deck/. All asset paths use ../ to resolve sibling directories correctly regardless of trailing-slash normalization.
   deck-template.html # Boilerplate template for /create-presentation (Reveal.js format). Edit here to update the design system for all future decks.
   nyx.webp      # Nyx mascot illustration. Referenced in BottomCTA and About via import.meta.env.BASE_URL.
   nyx_peek.webp # Nyx peek variant. Referenced in About via import.meta.env.BASE_URL.
@@ -643,7 +643,7 @@ The `preview.yml` copy step explicitly lists every static asset directory and ro
 
 **When adding a new directory or root-level file type to `public/`, you must also add a corresponding copy line in the copy step of `.github/workflows/preview.yml`.** If you forget, the file will exist in production but return 404 in all PR previews.
 
-Current copy step covers: `assets/`, `fonts/`, `reveal/`, `team/`, `speakers/`, `brand/`, `solutions/`, `downloads/`, `qr/`, `screenshots/`, `deck.html`, `deck-template.html`, and root-level `*.svg`, `*.png`, `*.ico`, `*.webmanifest`, `*.webp` files.
+Current copy step covers: `assets/`, `fonts/`, `reveal/`, `team/`, `speakers/`, `brand/`, `solutions/`, `downloads/`, `qr/`, `screenshots/`, `deck/`, `deck-template.html`, and root-level `*.svg`, `*.png`, `*.ico`, `*.webmanifest`, `*.webp` files.
 
 ### GitHub Actions allowlist
 
