@@ -38,7 +38,7 @@ Use `/a11y-audit` for all accessibility audits in this repo. The four sub-comman
 ## Project Overview
 
 **offon.dev** is the main website for OffOn, a platform for open source enthusiasts.
-It is fully static with no backend and no database. Pages are prerendered at build time using React Router v7 framework mode (`ssr: false`).
+It is fully static with no backend and no database. Pages are prerendered at build time using React Router v8 framework mode (`ssr: false`).
 
 Community activity happens on a separate Discourse instance. Its display name is **community.offon.dev**, but the real URL is managed via the `COMMUNITY_URL` constant in `src/data/constants.ts`. Do not hardcode it. Do not attempt to replicate or integrate Discourse functionality here.
 
@@ -49,11 +49,11 @@ Community activity happens on a separate Discourse instance. Its display name is
 - **Framework:** React 19 with TypeScript, bundled via Vite. Check `package.json` for current versions.
 - **Styling:** Tailwind CSS 4, configured CSS-first via `src/index.css` (`@theme` block). There is no `tailwind.config.ts`; it was deleted as part of the Tailwind 4 migration.
 - **Components:** Minimal shadcn/ui surface. `src/components/ui/` contains only `badge.tsx` and `tooltip.tsx`. Most Radix UI packages were intentionally removed.
-- **Routing:** React Router v7 framework mode (static prerendering with `ssr: false`)
+- **Routing:** React Router v8 framework mode (static prerendering with `ssr: false`)
 - **Testing:** Vitest + @testing-library/react (unit/component); Playwright (smoke tests in `e2e/`)
 - **Hosting:** GitHub Pages
 - **PR previews:** pr-preview-action
-- **Node.js:** 24 is required. Version is pinned in `.nvmrc`. Run `nvm use` to switch automatically.
+- **Node.js:** 26 is required. Version is pinned in `.nvmrc`. Run `nvm use` to switch automatically.
 
 ---
 
@@ -103,12 +103,12 @@ e2e/
   smoke.spec.ts # Playwright smoke tests (requires npm run build first)
 public/
   fonts/        # Self-hosted fonts (Inter, Syne, JetBrains Mono)
-  brand/        # OffOn brand assets (SVG + PNG logos, Nyx illustrations). Referenced by deck.html and BrandGuidelines.tsx.
-  team/         # Board member photos (*.webp). Used by BoardSection and deck.html host slides. Do not duplicate into src/assets/.
+  brand/        # OffOn brand assets (SVG + PNG logos, Nyx illustrations). Referenced by deck/index.html and BrandGuidelines.tsx.
+  team/         # Board member photos (*.webp). Used by BoardSection and deck/index.html host slides. Do not duplicate into src/assets/.
   speakers/     # Event speaker photos (*.webp). Used by presentation decks only. Speakers are per-event and distinct from board members.
   solutions/    # Solution walkthrough screenshots, one subdirectory per adventure ID (e.g. solutions/echoes-lost-in-orbit/). Referenced by src/data/solutions/ with absolute paths.
-  reveal/       # Self-hosted Reveal.js 6.0.1 library. Used by deck.html, deck-template.html, and all generated Reveal.js decks.
-  deck.html     # Reveal.js presentation for Open Source Talks events. Not a React route; served directly by GitHub Pages.
+  reveal/       # Self-hosted Reveal.js 6.0.1 library. Used by deck/index.html, deck-template.html, and all generated Reveal.js decks.
+  deck/         # Reveal.js presentation for Open Source Talks events (public/deck/index.html). Served at /deck/. All asset paths use ../ to resolve sibling directories correctly regardless of trailing-slash normalization.
   deck-template.html # Boilerplate template for /create-presentation (Reveal.js format). Edit here to update the design system for all future decks.
   nyx.webp      # Nyx mascot illustration. Referenced in BottomCTA and About via import.meta.env.BASE_URL.
   nyx_peek.webp # Nyx peek variant. Referenced in About via import.meta.env.BASE_URL.
@@ -129,9 +129,9 @@ public/
 ## Commands
 
 ```sh
-nvm use              # Switch to Node 24 (required)
+nvm use              # Switch to Node 26 (required)
 npm run dev          # Start local dev server (http://localhost:8080)
-npm run build        # Production SSG build (React Router v7) -> dist/client/
+npm run build        # Production SSG build (React Router v8) -> dist/client/
 npm run build:dev    # Dev-mode build
 npm run lint         # ESLint
 npm test             # Run tests once (Vitest)
@@ -454,7 +454,7 @@ This is a fully static React site. Apply these practices on every page.
 - Every page must have a `<meta name="description">` under 160 characters.
 - Add Open Graph tags to every page: `og:title`, `og:description`, `og:url`, `og:type`, and `og:image` where an image is available.
 - Add Twitter meta tags: always include `twitter:card` (use `summary_large_image` for pages with images), `twitter:title`, `twitter:description`, and `twitter:image`.
-- Use React Router v7's `meta()` export on each route module to manage head tags per page. Use the `buildPageMeta` helper from `src/lib/meta.ts`.
+- Use React Router v8's `meta()` export on each route module to manage head tags per page. Use the `buildPageMeta` helper from `src/lib/meta.ts`.
 
 ### Heading hierarchy
 
@@ -591,7 +591,7 @@ All UI labels use **title case (Chicago style)**. Body copy uses **sentence case
 
 ### SSG prerendered routes
 
-- The list of routes React Router v7 prerenders is in the `prerender` array inside `react-router.config.ts`.
+- The list of routes React Router v8 prerenders is in the `prerender` array inside `react-router.config.ts`.
 - When adding a new static route, add it to **all three** of: `src/routes.ts`, `public/sitemap.xml`, and the `prerender` array in `react-router.config.ts`.
 
 When adding a new route to `src/routes.ts`, follow these rules by route type:
@@ -620,13 +620,30 @@ See [`ADVENTURES.md`](ADVENTURES.md) for the full sync process and PR checklist.
 - Only static files in `dist/client/` are deployed. No server config is needed.
 - The base path is set via the `VITE_BASE_PATH` environment variable (defaults to `/`). Never change this without verifying GitHub Pages routing.
 
+### Trailing slashes and `_.data` aliases
+
+GitHub Pages normalises every URL to a trailing slash (e.g. `/adventures/lex-imperfecta` becomes `/adventures/lex-imperfecta/`). All internal `Link to` props use trailing slashes to stay consistent with the URL the browser shows.
+
+React Router v8 defaults to `trailingSlashAwareDataRequests`. When the current URL has a trailing slash, single-fetch data requests use `<path>/_.data` instead of `<path>.data`. The prerender only generates `<path>.data` files, so a `_.data` request would 404.
+
+The `postbuild` script (`scripts/create-data-aliases.mjs`) runs automatically after every `npm run build`. It copies each `*.data` file to `<name>/_.data` so both URL formats resolve. Example:
+
+```text
+dist/client/adventures/lex-imperfecta.data          # non-trailing-slash request
+dist/client/adventures/lex-imperfecta/_.data         # trailing-slash request (GitHub Pages)
+```
+
+`serve.json` at the repo root sets `trailingSlash: true` so `npm run preview` mirrors GitHub Pages behaviour locally. It is not in `public/` and is not served in production.
+
+**Never remove trailing slashes from `Link to` props.** That would make client-side navigation inconsistent with the URL GitHub Pages shows in the browser.
+
 ### PR preview static assets
 
 The `preview.yml` copy step explicitly lists every static asset directory and root-level file type that needs to appear in the PR preview. Vite copies `public/` to `dist/client/` during the build, but `preview.yml` then copies those files into the `dist/client/pr-preview/pr-N/` subdirectory that `rossjrw/pr-preview-action` deploys.
 
 **When adding a new directory or root-level file type to `public/`, you must also add a corresponding copy line in the copy step of `.github/workflows/preview.yml`.** If you forget, the file will exist in production but return 404 in all PR previews.
 
-Current copy step covers: `assets/`, `fonts/`, `reveal/`, `team/`, `speakers/`, `brand/`, `solutions/`, `downloads/`, `qr/`, `deck.html`, `deck-template.html`, and root-level `*.svg`, `*.png`, `*.ico`, `*.webmanifest`, `*.webp` files.
+Current copy step covers: `assets/`, `fonts/`, `reveal/`, `team/`, `speakers/`, `brand/`, `solutions/`, `downloads/`, `qr/`, `screenshots/`, `deck/`, `deck-template.html`, and root-level `*.svg`, `*.png`, `*.ico`, `*.webmanifest`, `*.webp` files. `serve.json` lives at the repo root, not in `public/`, and is not copied here.
 
 ### GitHub Actions allowlist
 
@@ -634,8 +651,9 @@ The `off-on-dev` organisation restricts which third-party actions can run. Only 
 
 | Action | Pinned version |
 | --- | --- |
-| `actions/checkout` | `@v4` only |
-| `actions/setup-node` | `@v4` only |
+| `actions/checkout` | `@v7` only |
+| `actions/cache` | any (GitHub-created, covered by org checkbox) |
+| `actions/setup-node` | `@v6` only |
 | `actions/create-github-app-token` | `@v3` only |
 | `JamesIves/github-pages-deploy-action` | any tag |
 | `marocchino/sticky-pull-request-comment` | any tag |
