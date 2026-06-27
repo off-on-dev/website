@@ -1,0 +1,1 @@
+import{t as e}from"./createLucideIcon-CpOOuHCr.js";var t=e(`clock`,[[`circle`,{cx:`12`,cy:`12`,r:`10`,key:`1mglay`}],[`path`,{d:`M12 6v6l4 2`,key:`mmk7yg`}]]),n=e=>e.replace(/<a\b[^>]*>([\s\S]*?)<\/a>/gi,`$1`).replace(/<span\s+class="sr-only">[\s\S]*?<\/span>/gi,``);export{t as n,n as t};
