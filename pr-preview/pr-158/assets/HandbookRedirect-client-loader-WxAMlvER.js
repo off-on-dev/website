@@ -1,1 +1,0 @@
-import{l as e}from"./vendor-router-Crc-J4UR.js";function t(){return e(`/handbook`)}export{t as clientLoader};
