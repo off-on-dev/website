@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-27T11:39:52.373Z",
+  "lastUpdated": "2026-06-28T10:05:52.156Z",
   "sections": [
     {
       "id": "top-contributors",
@@ -37,19 +37,14 @@
       "title": "Top Challenge Solvers",
       "users": [
         {
-          "username": "gsigmund",
-          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/gsigmund/40/99_2.png",
-          "count": 8
-        },
-        {
           "username": "theharithsa",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
           "count": 8
         },
         {
-          "username": "enri-kapaj",
-          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/enri-kapaj/40/165_2.png",
-          "count": 6
+          "username": "gsigmund",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/gsigmund/40/99_2.png",
+          "count": 8
         },
         {
           "username": "iw4p",
@@ -59,6 +54,11 @@
         {
           "username": "justinrand",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/justinrand/40/140_2.png",
+          "count": 6
+        },
+        {
+          "username": "enri-kapaj",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/enri-kapaj/40/165_2.png",
           "count": 6
         }
       ]
