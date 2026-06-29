@@ -1,6 +1,6 @@
 /**
- * Bundles deck-template.html with all local assets into a self-contained zip.
- * Users download, unzip, and open deck-template.html in any browser — no server needed.
+ * Bundles deck-template/index.html with all local assets into a self-contained zip.
+ * Users download, unzip, rename the deck-template folder, and open index.html in any browser.
  *
  * Run: node .claude/templates/generate-reveal-zip.mjs
  */

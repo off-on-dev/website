@@ -47,6 +47,7 @@ import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import rehypeStringify from "rehype-stringify";
+import Ajv2020 from "ajv/dist/2020.js";
 import { LEVEL_DIFFICULTY_BY_EMOJI } from "./lib/level-constants.mjs";
 import { parseDeadline } from "./lib/deadline.mjs";
 
@@ -59,6 +60,14 @@ const SCHEMA_PATH = resolve(ROOT, "schemas/adventure.schema.json");
 const TODAY = new Date().toISOString().slice(0, 10);
 
 const validateOnly = process.argv.includes("--validate-only");
+
+// JSON Schema validator — catches structural issues the custom validateAdventure()
+// doesn't check: unknown fields (additionalProperties), pattern mismatches (month
+// format, slug format), enum violations, and length constraints.
+const adventureSchema = JSON.parse(readFileSync(SCHEMA_PATH, "utf8"));
+const ajv = new Ajv2020({ allErrors: true, strict: false });
+ajv.addFormat("uri", true); // suppress "unknown format" warnings; URI syntax is not enforced here
+const schemaValidate = ajv.compile(adventureSchema);
 
 // Maps emoji shorthand to Lucide React icon names used in AdventureDetail.
 const EMOJI_ICON_MAP = {
@@ -382,8 +391,81 @@ function autoCorrectDevcontainerPaths(data, id, yamlPath, validFolders) {
   return corrections;
 }
 
-function validateAdventure(data, id, validDevcontainerFolders) {
+/**
+ * Convert an Ajv instancePath ("/levels/0/unknown_field") to the display
+ * format used by the custom validator ("levels[0].unknown_field").
+ */
+function ajvPathToDisplay(instancePath) {
+  return instancePath
+    .replace(/^\//, "")
+    .replace(/\/(\d+)(\/|$)/g, (_, n, sep) => `[${n}]${sep === "/" ? "." : ""}`)
+    .replace(/\//g, ".");
+}
+
+/**
+ * Run JSON Schema validation and return errors for structural issues not
+ * already covered by the custom validateAdventure() checks below.
+ * Skips "required", "type", and "minItems" keywords — those produce better
+ * messages from the custom validator.
+ */
+function schemaErrors(data) {
+  schemaValidate(data);
+  const SKIP = new Set(["required", "type", "minItems", "if", "then", "else"]);
+  return (schemaValidate.errors ?? [])
+    .filter((e) => !SKIP.has(e.keyword))
+    .map((e) => {
+      const path = ajvPathToDisplay(e.instancePath) || "adventure";
+      if (e.keyword === "additionalProperties") {
+        return `${path}: Unknown field "${e.params.additionalProperty}"`;
+      }
+      return `${path}: ${e.message}`;
+    });
+}
+
+function validateLevel(level, index, adventureId, validDevcontainerFolders) {
   const errors = [];
+  const prefix = `levels[${index}]`;
+
+  if (!level.level) errors.push(`${prefix}: Missing level`);
+  if (!level.name && !level.title) errors.push(`${prefix}: Missing name (or title)`);
+  if (level.deadline && !isValidISODeadline(level.deadline)) {
+    warn(`${adventureId} ${prefix}: deadline "${level.deadline}" is not ISO 8601 — update before publishing`);
+  }
+
+  const difficulty = level.difficulty || LEVEL_DIFFICULTY_BY_EMOJI[level.emoji];
+  if (!difficulty) errors.push(`${prefix}: Missing difficulty (or emoji 🟢/🟡/🔴)`);
+  else if (!["Beginner", "Intermediate", "Expert"].includes(difficulty)) {
+    errors.push(`${prefix}: Invalid difficulty "${difficulty}"`);
+  }
+
+  if (!level.topics || level.topics.length === 0) errors.push(`${prefix}: Missing topics`);
+  if (!level.learnings && !level.what_you_learn) errors.push(`${prefix}: Missing learnings (or what_you_learn)`);
+
+  if (!level.devcontainer) {
+    errors.push(`${prefix}: Missing devcontainer`);
+  } else if (validDevcontainerFolders && !validDevcontainerFolders.has(level.devcontainer)) {
+    errors.push(`${prefix}: devcontainer "${level.devcontainer}" not found in off-on-dev/open-source-challenges/.devcontainer — check https://github.com/off-on-dev/open-source-challenges/tree/main/.devcontainer`);
+  }
+
+  const discussionUrl = level.discussion_url ?? level.community_url;
+  if (discussionUrl === undefined || discussionUrl === null) {
+    errors.push(`${prefix}: Missing discussion_url (or community_url)`);
+  } else if (discussionUrl === "") {
+    warn(`${adventureId} ${prefix}: discussion_url/community_url is empty — update with Discourse thread URL before publishing`);
+  }
+
+  if (!level.intro && !level.summary) errors.push(`${prefix}: Missing intro (or summary)`);
+  if (!level.objective || level.objective.length === 0) errors.push(`${prefix}: Missing objective`);
+  if (!level.toolbox || level.toolbox.length === 0) errors.push(`${prefix}: Missing toolbox`);
+  if (!level.how_to_play || level.how_to_play.length === 0) errors.push(`${prefix}: Missing how_to_play`);
+  if (!level.verification) errors.push(`${prefix}: Missing verification`);
+
+  return errors;
+}
+
+function validateAdventure(data, id, validDevcontainerFolders) {
+  const errors = [...schemaErrors(data)];
+
   if (!data.slug) errors.push("Missing required field: slug");
   else if (data.slug !== id) errors.push(`slug "${data.slug}" does not match folder name "${id}"`);
   if (!data.title && !data.name) errors.push("Missing required field: title (or name)");
@@ -400,41 +482,9 @@ function validateAdventure(data, id, validDevcontainerFolders) {
   if (!data.levels || !Array.isArray(data.levels) || data.levels.length === 0) {
     errors.push("Missing or empty required field: levels");
   } else {
-    for (let i = 0; i < data.levels.length; i++) {
-      const level = data.levels[i];
-      const prefix = `levels[${i}]`;
-      if (!level.level) errors.push(`${prefix}: Missing level`);
-      if (!level.name && !level.title) errors.push(`${prefix}: Missing name (or title)`);
-      if (level.deadline && !isValidISODeadline(level.deadline)) {
-        warn(`${id} ${prefix}: deadline "${level.deadline}" is not ISO 8601 — update before publishing`);
-      }
-      const difficulty = level.difficulty || LEVEL_DIFFICULTY_BY_EMOJI[level.emoji];
-      if (!difficulty) errors.push(`${prefix}: Missing difficulty (or emoji 🟢/🟡/🔴)`);
-      else if (!["Beginner", "Intermediate", "Expert"].includes(difficulty)) {
-        errors.push(`${prefix}: Invalid difficulty "${difficulty}"`);
-      }
-      if (!level.topics || level.topics.length === 0) errors.push(`${prefix}: Missing topics`);
-      if (!level.learnings && !level.what_you_learn) {
-        errors.push(`${prefix}: Missing learnings (or what_you_learn)`);
-      }
-      if (!level.devcontainer) {
-        errors.push(`${prefix}: Missing devcontainer`);
-      } else if (validDevcontainerFolders && !validDevcontainerFolders.has(level.devcontainer)) {
-        errors.push(`${prefix}: devcontainer "${level.devcontainer}" not found in off-on-dev/open-source-challenges/.devcontainer — check https://github.com/off-on-dev/open-source-challenges/tree/main/.devcontainer`);
-      }
-      const discussionUrl = level.discussion_url ?? level.community_url;
-      if (discussionUrl === undefined || discussionUrl === null) {
-        errors.push(`${prefix}: Missing discussion_url (or community_url)`);
-      } else if (discussionUrl === "") {
-        warn(`${id} ${prefix}: discussion_url/community_url is empty — update with Discourse thread URL before publishing`);
-      }
-      if (!level.intro && !level.summary) errors.push(`${prefix}: Missing intro (or summary)`);
-      if (!level.objective || level.objective.length === 0) errors.push(`${prefix}: Missing objective`);
-      if (!level.toolbox || level.toolbox.length === 0) errors.push(`${prefix}: Missing toolbox`);
-      if (!level.how_to_play || level.how_to_play.length === 0) errors.push(`${prefix}: Missing how_to_play`);
-      if (!level.verification) errors.push(`${prefix}: Missing verification`);
-    }
+    data.levels.forEach((level, i) => errors.push(...validateLevel(level, i, id, validDevcontainerFolders)));
   }
+
   return errors;
 }
 
