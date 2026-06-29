@@ -35,7 +35,11 @@ if git diff "$BASE"...HEAD -- src/data/constants.ts | grep -qE '^\+export const 
 fi
 
 # New npm scripts require a README.md entry.
-if git diff "$BASE"...HEAD -- package.json | grep -qE '^\+\s+"[a-z][a-z:]+"\s*:'; then
+# Compare only the "scripts" object — not the whole file — to avoid false positives
+# when dependency names (e.g. "eslint") match the key pattern.
+BASE_SCRIPTS=$(git show "$BASE":package.json 2>/dev/null | jq -r '.scripts // {} | keys[]' | sort)
+HEAD_SCRIPTS=$(jq -r '.scripts // {} | keys[]' package.json | sort)
+if comm -13 <(echo "$BASE_SCRIPTS") <(echo "$HEAD_SCRIPTS") | grep -q .; then
   NEEDS_README=1
   REASONS_README+=("New script(s) in package.json")
 fi
