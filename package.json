@@ -39,7 +39,7 @@
     "node": ">=26.0.0"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.11.2",
+    "@axe-core/playwright": "^4.12.1",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.61.1",
     "@react-router/dev": "^8.0.1",
