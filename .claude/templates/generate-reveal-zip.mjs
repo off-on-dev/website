@@ -22,8 +22,8 @@ function add(zipPath, fsPath) {
   dir.file(zipPath, readFileSync(fsPath));
 }
 
-// Main template
-add('deck-template.html', resolve(PUB, 'deck-template.html'));
+// Main template (in its own subfolder to match the /deck-template/ URL; paths inside use ../)
+add('deck-template/index.html', resolve(PUB, 'deck-template/index.html'));
 
 // Reveal.js library (only files the template actually uses)
 add('reveal/reset.css',       resolve(PUB, 'reveal/reset.css'));

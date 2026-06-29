@@ -263,6 +263,7 @@ describe("_.data aliases for trailing-slash GitHub Pages compatibility", () => {
     }
 
     for (const entry of dataFiles) {
+      // Dirent.parentPath requires Node >= 21.4; enforced by .nvmrc (Node 26).
       const file = path.join(entry.parentPath, entry.name);
       const alias = path.join(path.dirname(file), path.basename(file, ".data"), "_.data");
       const rel = path.relative(DIST_ROOT, file);

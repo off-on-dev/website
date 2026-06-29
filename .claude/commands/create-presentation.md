@@ -42,7 +42,7 @@ Read the template for the chosen format; it contains all boilerplate. Do not rec
 
 | Format | Template file |
 | --- | --- |
-| Reveal.js (`html`) | `public/deck-template.html` |
+| Reveal.js (`html`) | `public/deck-template/index.html` |
 | PowerPoint (`pptx`) | `.claude/templates/generate-pptx.mjs` (edit and run to regenerate) |
 
 Brand token reference (for writing slide content):
