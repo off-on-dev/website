@@ -230,3 +230,14 @@ OffOn targets WCAG 2.2 Level AA across every page, in both light and dark mode. 
 - [`PERFORMANCE.md`](PERFORMANCE.md): performance targets, image rules, font preloading, and bundle size guidance.
 - [`styleguide.md`](styleguide.md): design system, color tokens, typography, component patterns, and light/dark mode rules.
 - [`CLAUDE.md`](CLAUDE.md): contributor conventions, code quality rules, commit format, testing requirements, and accessibility standards.
+
+## License
+
+- Source code — [MIT](LICENSE)
+- Written content (docs, copy, curriculum data) — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+- Bundled fonts (Inter, Syne, JetBrains Mono) — [SIL OFL 1.1](https://openfontlicense.org/)
+
+Per-file licensing is declared via the [REUSE](https://reuse.software) spec (`REUSE.toml`, `LICENSES/`).
+The **OffOn** name and logo are reserved — see [TRADEMARK.md](TRADEMARK.md).
+
+[![REUSE status](https://api.reuse.software/badge/github.com/off-on-dev/website)](https://api.reuse.software/info/github.com/off-on-dev/website)
