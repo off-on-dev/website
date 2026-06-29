@@ -60,7 +60,7 @@
     "reveal.js": "^6.0.1",
     "tailwindcss": "^4.2.4",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.59.2",
+    "typescript-eslint": "^8.62.0",
     "unified": "^11.0.5",
     "vite": "^8.0.10",
     "vitest": "^4.1.5",
