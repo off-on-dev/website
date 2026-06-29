@@ -1,8 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /deck/
-Disallow: /deck-template.html
-Disallow: /presentation-templates
+Disallow: /deck-template/
+Disallow: /presentation-templates/
 
 Sitemap: https://offon.dev/sitemap.xml
 Sitemap: https://offon.dev/community-sitemap.xml
@@ -11,53 +11,53 @@ Sitemap: https://offon.dev/community-sitemap.xml
 User-agent: GPTBot
 Allow: /
 Disallow: /deck/
-Disallow: /deck-template.html
-Disallow: /presentation-templates
+Disallow: /deck-template/
+Disallow: /presentation-templates/
 
 User-agent: ChatGPT-User
 Allow: /
 Disallow: /deck/
-Disallow: /deck-template.html
-Disallow: /presentation-templates
+Disallow: /deck-template/
+Disallow: /presentation-templates/
 
 User-agent: ClaudeBot
 Allow: /
 Disallow: /deck/
-Disallow: /deck-template.html
-Disallow: /presentation-templates
+Disallow: /deck-template/
+Disallow: /presentation-templates/
 
 User-agent: anthropic-ai
 Allow: /
 Disallow: /deck/
-Disallow: /deck-template.html
-Disallow: /presentation-templates
+Disallow: /deck-template/
+Disallow: /presentation-templates/
 
 User-agent: CCBot
 Allow: /
 Disallow: /deck/
-Disallow: /deck-template.html
-Disallow: /presentation-templates
+Disallow: /deck-template/
+Disallow: /presentation-templates/
 
 User-agent: Google-Extended
 Allow: /
 Disallow: /deck/
-Disallow: /deck-template.html
-Disallow: /presentation-templates
+Disallow: /deck-template/
+Disallow: /presentation-templates/
 
 User-agent: cohere-ai
 Allow: /
 Disallow: /deck/
-Disallow: /deck-template.html
-Disallow: /presentation-templates
+Disallow: /deck-template/
+Disallow: /presentation-templates/
 
 User-agent: meta-externalagent
 Allow: /
 Disallow: /deck/
-Disallow: /deck-template.html
-Disallow: /presentation-templates
+Disallow: /deck-template/
+Disallow: /presentation-templates/
 
 User-agent: Applebot-Extended
 Allow: /
 Disallow: /deck/
-Disallow: /deck-template.html
-Disallow: /presentation-templates
+Disallow: /deck-template/
+Disallow: /presentation-templates/
