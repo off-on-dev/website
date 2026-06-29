@@ -29,10 +29,16 @@ SPDX-FileCopyrightText = "OffOn.dev contributors"
 SPDX-License-Identifier = "MIT"
 
 # --- Written content & docs: CC BY 4.0 ---
-# README, ACCESSIBILITY, ADVENTURES, PERFORMANCE, CLAUDE, styleguide, src/data, images.
+# Docs, images, authored adventure YAML, generated TS derived from YAML,
+# solution walkthroughs, and downloadable templates.
+# Utility/structural TS in src/data/ (types, utils, constants) stays MIT via block 1.
 [[annotations]]
 path = [
-  "**/*.md", "**/*.mdx", "src/data/**", "**/*.jpg", "**/*.jpeg", "**/*.webp",
+  "**/*.md", "**/*.mdx", "**/*.jpg", "**/*.jpeg", "**/*.webp",
+  "src/data/adventures/*/adventure.yaml",
+  "src/data/adventures/*.generated.ts",
+  "src/data/community-leaders.json",
+  "src/data/solutions/*/*.ts",
   "public/.well-known/security.txt", "public/llms.txt", "public/llms-full.txt",
   "public/downloads/**",
 ]
