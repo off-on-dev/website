@@ -21,7 +21,8 @@ path = [
   "**/*.json", "**/*.yml", "**/*.yaml", "**/*.toml",
   "**/*.config.js", "**/*.config.ts", "components.json",
   ".gitignore", ".npmrc", ".nvmrc", ".markdownlintignore",
-  "**/*.xml", "**/*.ico", "public/robots.txt",
+  "**/*.xml", "**/*.ico", "**/*.webmanifest", "public/robots.txt",
+  "public/.well-known/api-catalog",
   ".claude/**", ".github/**", "schemas/**", "scripts/**", "e2e/**",
 ]
 SPDX-FileCopyrightText = "OffOn.dev contributors"
@@ -30,7 +31,11 @@ SPDX-License-Identifier = "MIT"
 # --- Written content & docs: CC BY 4.0 ---
 # README, ACCESSIBILITY, ADVENTURES, PERFORMANCE, CLAUDE, styleguide, src/data, images.
 [[annotations]]
-path = ["**/*.md", "**/*.mdx", "src/data/**", "**/*.jpg", "**/*.jpeg", "**/*.webp"]
+path = [
+  "**/*.md", "**/*.mdx", "src/data/**", "**/*.jpg", "**/*.jpeg", "**/*.webp",
+  "public/.well-known/security.txt", "public/llms.txt", "public/llms-full.txt",
+  "public/downloads/**",
+]
 SPDX-FileCopyrightText = "OffOn.dev contributors"
 SPDX-License-Identifier = "CC-BY-4.0"
 
