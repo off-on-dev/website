@@ -11,4 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: REUSE lint
-        uses: fsfe/reuse-action@v5
+        run: |
+          pip install reuse
+          reuse lint
