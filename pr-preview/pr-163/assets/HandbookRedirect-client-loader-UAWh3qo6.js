@@ -1,0 +1,1 @@
+import{g as e}from"./vendor-router-Ck9GUke7.js";function t(){return e(`/handbook`)}export{t as clientLoader};
