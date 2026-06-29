@@ -235,6 +235,7 @@ OffOn targets WCAG 2.2 Level AA across every page, in both light and dark mode. 
 
 - Source code — [MIT](LICENSE)
 - Written content (docs, copy, curriculum data) — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+- Factual scraped data (community-leaders.json) — [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
 - Bundled fonts (Inter, Syne, JetBrains Mono) — [SIL OFL 1.1](https://openfontlicense.org/)
 
 Per-file licensing is declared via the [REUSE](https://reuse.software) spec (`REUSE.toml`, `LICENSES/`).
