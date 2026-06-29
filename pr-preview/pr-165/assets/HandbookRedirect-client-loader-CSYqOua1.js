@@ -1,1 +1,0 @@
-import{l as e}from"./vendor-router-_t3d_5JV.js";function t(){return e(`/handbook`)}export{t as clientLoader};
