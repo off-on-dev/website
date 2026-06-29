@@ -390,3 +390,11 @@ Use this to identify which criterion applies before writing or reviewing code.
 | | 3.3.1 Error Identification (A) | Error messages identify the field and describe the error. |
 | | 3.3.2 Labels or Instructions (A) | Form fields have labels; placeholders are not substitutes. |
 | **Robust (4.x)** | 4.1.2 Name, Role, Value (A) | ARIA roles and attributes are valid. Dynamic state (`aria-expanded`, `aria-current`) is kept in sync. |
+
+---
+
+## Acknowledgements
+
+Portions of this document are adapted from [The Website Specification](https://specification.website) by Joost de Valk and contributors, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Changes have been made.
+
+Structure and approach informed by [ACCESSIBILITY.md](https://github.com/mgifford/ACCESSIBILITY.md) by Mike Gifford and contributors, licensed under [MIT](https://opensource.org/licenses/MIT).

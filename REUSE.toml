@@ -2,7 +2,7 @@
 # Code = MIT, written content/docs = CC BY 4.0, bundled fonts = OFL-1.1.
 # The OffOn name/logo are reserved separately — see TRADEMARK.md.
 #
-# License texts live in ./LICENSES/ (MIT.txt, CC-BY-4.0.txt, OFL-1.1.txt).
+# License texts live in ./LICENSES/ (MIT.txt, CC-BY-4.0.txt, OFL-1.1.txt, BSD-3-Clause.txt).
 # The reuse.yml Action runs `reuse lint` on every push/PR; if it flags a file,
 # add that path to the closest block below.
 
@@ -45,12 +45,38 @@ path = [
 SPDX-FileCopyrightText = "OffOn.dev contributors"
 SPDX-License-Identifier = "CC-BY-4.0"
 
+# --- ACCESSIBILITY.md: adapted from The Website Specification (CC BY 4.0) ---
+[[annotations]]
+path = ["ACCESSIBILITY.md"]
+SPDX-FileCopyrightText = [
+  "OffOn.dev contributors",
+  "Joost de Valk and contributors (https://specification.website)",
+  "Mike Gifford and contributors (https://github.com/mgifford/ACCESSIBILITY.md)",
+]
+SPDX-License-Identifier = "CC-BY-4.0"
+
 # --- PNG/SVG assets (incl. e2e visual-regression snapshots): MIT ---
 # These are mostly generated test artifacts and UI assets; MIT keeps it simple.
 [[annotations]]
 path = ["**/*.png", "**/*.svg"]
 SPDX-FileCopyrightText = "OffOn.dev contributors"
 SPDX-License-Identifier = "MIT"
+
+# --- Reveal.js highlight plugin: MIT (Reveal wrapper) + BSD-3-Clause (bundled highlight.js) ---
+# highlight.js is BSD-3-Clause (Ivan Sagalaev). The other Reveal plugins (markdown, math,
+# notes, zoom, search) bundle only MIT-licensed code (marked, KaTeX) so MIT alone covers them.
+[[annotations]]
+path = [
+  "public/reveal/plugin/highlight.js",
+  "public/reveal/plugin/highlight.mjs",
+  "public/reveal/plugin/highlight.d.ts",
+  "public/reveal/plugin/highlight/**",
+]
+SPDX-FileCopyrightText = [
+  "Copyright (C) 2011-2026 Hakim El Hattab, https://hakim.se",
+  "Copyright (c) 2006, Ivan Sagalaev",
+]
+SPDX-License-Identifier = "MIT AND BSD-3-Clause"
 
 # --- Bundled fonts: upstream OFL-1.1 (replace copyright with each OFL.txt's lines) ---
 [[annotations]]
