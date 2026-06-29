@@ -23,7 +23,7 @@ path = [
   ".gitignore", ".npmrc", ".nvmrc", ".markdownlintignore",
   "**/*.xml", "**/*.ico", "**/*.webmanifest", "public/robots.txt",
   "public/.well-known/api-catalog",
-  ".claude/**", ".github/**", "schemas/**", "scripts/**", "e2e/**",
+  ".github/**", "schemas/**", "scripts/**", "e2e/**",
 ]
 SPDX-FileCopyrightText = "OffOn.dev contributors"
 SPDX-License-Identifier = "MIT"
