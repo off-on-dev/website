@@ -2,7 +2,7 @@
 # Code = MIT, written content/docs = CC BY 4.0, bundled fonts = OFL-1.1.
 # The OffOn name/logo are reserved separately — see TRADEMARK.md.
 #
-# License texts live in ./LICENSES/ (MIT.txt, CC-BY-4.0.txt, OFL-1.1.txt, BSD-3-Clause.txt).
+# License texts live in ./LICENSES/ (MIT.txt, CC-BY-4.0.txt, OFL-1.1.txt).
 # The reuse.yml Action runs `reuse lint` on every push/PR; if it flags a file,
 # add that path to the closest block below.
 
@@ -62,21 +62,13 @@ path = ["**/*.png", "**/*.svg"]
 SPDX-FileCopyrightText = "OffOn.dev contributors"
 SPDX-License-Identifier = "MIT"
 
-# --- Reveal.js highlight plugin: MIT (Reveal wrapper) + BSD-3-Clause (bundled highlight.js) ---
-# highlight.js is BSD-3-Clause (Ivan Sagalaev). The other Reveal plugins (markdown, math,
-# notes, zoom, search) bundle only MIT-licensed code (marked, KaTeX) so MIT alone covers them.
+# --- Reveal.js vendored library: MIT (Hakim El Hattab) ---
+# Four-file subset of reveal.js@6.0.1: reset.css, reveal.css, reveal.js, plugin/notes.js.
+# Overrides the blanket **/*.js|css rules from blocks 1 and 5 for this subtree.
 [[annotations]]
-path = [
-  "public/reveal/plugin/highlight.js",
-  "public/reveal/plugin/highlight.mjs",
-  "public/reveal/plugin/highlight.d.ts",
-  "public/reveal/plugin/highlight/**",
-]
-SPDX-FileCopyrightText = [
-  "Copyright (C) 2011-2026 Hakim El Hattab, https://hakim.se",
-  "Copyright (c) 2006, Ivan Sagalaev",
-]
-SPDX-License-Identifier = "MIT AND BSD-3-Clause"
+path = ["public/reveal/**"]
+SPDX-FileCopyrightText = "Copyright (C) 2011-2026 Hakim El Hattab, https://hakim.se"
+SPDX-License-Identifier = "MIT"
 
 # --- Bundled fonts: upstream OFL-1.1 (replace copyright with each OFL.txt's lines) ---
 [[annotations]]
@@ -87,3 +79,57 @@ SPDX-FileCopyrightText = [
   "Copyright 2017 The Syne Project Authors (https://gitlab.com/bonjour-monde/fonderie/syne-typeface)",
 ]
 SPDX-License-Identifier = "OFL-1.1"
+
+# --- shadcn/ui generated components: MIT (OffOn.dev contributors + upstream origin) ---
+[[annotations]]
+path = ["src/components/ui/badge.tsx", "src/components/ui/tooltip.tsx"]
+SPDX-FileCopyrightText = [
+  "OffOn.dev contributors",
+  "shadcn (https://ui.shadcn.com)",
+]
+SPDX-License-Identifier = "MIT"
+
+# --- Adventure content: per-contributor attribution (CC BY 4.0) ---
+# These blocks override the global adventure YAML and generated.ts blocks above
+# to name the individual who authored each adventure.
+[[annotations]]
+path = [
+  "src/data/adventures/blind-by-design/adventure.yaml",
+  "src/data/adventures/blind-by-design.generated.ts",
+]
+SPDX-FileCopyrightText = [
+  "OffOn.dev contributors",
+  "Simon Schrottner (https://schrottner.at/)",
+]
+SPDX-License-Identifier = "CC-BY-4.0"
+
+[[annotations]]
+path = [
+  "src/data/adventures/building-cloudhaven/adventure.yaml",
+  "src/data/adventures/building-cloudhaven.generated.ts",
+  "src/data/adventures/echoes-lost-in-orbit/adventure.yaml",
+  "src/data/adventures/echoes-lost-in-orbit.generated.ts",
+  "src/data/adventures/lex-imperfecta/adventure.yaml",
+  "src/data/adventures/lex-imperfecta.generated.ts",
+  "src/data/adventures/the-ai-observatory/adventure.yaml",
+  "src/data/adventures/the-ai-observatory.generated.ts",
+]
+SPDX-FileCopyrightText = [
+  "OffOn.dev contributors",
+  "Katharina Sick (https://ksick.dev/)",
+]
+SPDX-License-Identifier = "CC-BY-4.0"
+
+# --- Solution walkthroughs and screenshots: Katharina Sick (CC BY 4.0) ---
+[[annotations]]
+path = [
+  "src/data/solutions/echoes-lost-in-orbit/beginner.ts",
+  "src/data/solutions/echoes-lost-in-orbit/expert.ts",
+  "src/data/solutions/echoes-lost-in-orbit/intermediate.ts",
+  "public/solutions/echoes-lost-in-orbit/**",
+]
+SPDX-FileCopyrightText = [
+  "OffOn.dev contributors",
+  "Katharina Sick (https://ksick.dev/)",
+]
+SPDX-License-Identifier = "CC-BY-4.0"

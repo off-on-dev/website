@@ -3,6 +3,13 @@
  * Users download, unzip, rename the deck-template folder, and open index.html in any browser.
  *
  * Run: node .claude/templates/generate-reveal-zip.mjs
+ *
+ * Re-vendor note: public/reveal/ is a hand-vendored four-file subset of reveal.js@6.0.1.
+ * The full dist/ tree is NOT copied. When updating Reveal, copy only these four files from
+ * node_modules/reveal.js/dist/ to public/reveal/ — do not copy the whole directory, as
+ * that would restore deleted themes and plugins along with their OFL and BSD attribution
+ * obligations. The four required files are: reset.css, reveal.css, reveal.js,
+ * plugin/notes.js.
  */
 
 import JSZip from 'jszip';
