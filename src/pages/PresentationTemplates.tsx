@@ -32,11 +32,11 @@ const REVEAL_SLIDES: readonly string[] = [
 ];
 
 const REVEAL_STEPS: readonly { readonly step: number; readonly text: string }[] = [
-  { step: 1, text: "Download and unzip the template. Rename deck-template.html to your talk name (e.g. my-talk.html)." },
+  { step: 1, text: "Download and unzip the template. Rename the deck-template folder to your talk name (e.g. my-talk), then edit index.html inside it." },
   { step: 2, text: 'Replace TITLE_PLACEHOLDER in the <title> tag with your event or talk name.' },
-  { step: 3, text: "Edit the slide sections directly in the HTML. Each <section> is one slide. Delete layouts you don't need." },
-  { step: 4, text: "Open the HTML file in any browser for local use. All assets are bundled in the ZIP, so no server is needed." },
-  { step: 5, text: "To publish: upload the HTML and asset folders to any web host, or place the file in offon.dev's public/ folder and push to main." },
+  { step: 3, text: "Edit the slide sections directly in index.html. Each <section> is one slide. Delete layouts you don't need." },
+  { step: 4, text: "Open index.html in any browser for local use. All assets are bundled in the ZIP, so no server is needed." },
+  { step: 5, text: "To publish: upload your renamed folder along with the sibling asset folders to any web host. For offon.dev, drop the folder into public/ and push to main, since the asset folders already live there." },
 ];
 
 const PPTX_INCLUDES: readonly string[] = [
@@ -72,9 +72,8 @@ const PresentationTemplates = (): JSX.Element => (
             </div>
 
             <p className="text-sm text-muted-foreground leading-relaxed">
-              A single HTML file with no build step. The ZIP bundles all assets so it works
-              locally, on offon.dev, or on any other web host. Preview the live version on
-              offon.dev before downloading.
+              One HTML file plus bundled assets, no build step. The ZIP works locally, on offon.dev,
+              or on any other web host. Preview the live version on offon.dev before downloading.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -105,7 +104,7 @@ const PresentationTemplates = (): JSX.Element => (
 
             <div className="flex flex-wrap gap-3 mt-auto justify-end">
               <a
-                href={`${BASE}deck-template.html`}
+                href={`${BASE}deck-template/`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-ghost inline-flex items-center gap-2"

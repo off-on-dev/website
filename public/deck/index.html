@@ -4,27 +4,27 @@
   <meta charset="utf-8">
   <title>Open Source Talks by OffOn x Dynatrace</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="reveal/reset.css">
-  <link rel="stylesheet" href="reveal/reveal.css">
+  <link rel="stylesheet" href="../reveal/reset.css">
+  <link rel="stylesheet" href="../reveal/reveal.css">
   <style>
     @font-face {
       font-family: 'Syne';
-      src: url('fonts/syne-latin-700-normal.woff2') format('woff2');
+      src: url('../fonts/syne-latin-700-normal.woff2') format('woff2');
       font-weight: 700;
     }
     @font-face {
       font-family: 'Inter';
-      src: url('fonts/inter-latin-400-normal.woff2') format('woff2');
+      src: url('../fonts/inter-latin-400-normal.woff2') format('woff2');
       font-weight: 400;
     }
     @font-face {
       font-family: 'Inter';
-      src: url('fonts/inter-latin-500-normal.woff2') format('woff2');
+      src: url('../fonts/inter-latin-500-normal.woff2') format('woff2');
       font-weight: 500;
     }
     @font-face {
       font-family: 'Inter';
-      src: url('fonts/inter-latin-600-normal.woff2') format('woff2');
+      src: url('../fonts/inter-latin-600-normal.woff2') format('woff2');
       font-weight: 600;
     }
 
@@ -77,6 +77,8 @@
 
     .reveal a { color: var(--amber); text-decoration: none; }
     .reveal a:hover { text-decoration: underline; }
+    .reveal a:focus-visible,
+    .pill:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; border-radius: 3px; }
 
     .reveal .controls { color: var(--amber); }
     .reveal .progress span { background: var(--amber); }
@@ -123,6 +125,7 @@
     .agenda {
       width: 100%;
       border-collapse: collapse;
+      table-layout: fixed;
       margin-top: 0.5em;
       font-size: 0.58em;
     }
@@ -146,6 +149,7 @@
       font-size: 0.9em;
       text-align: right;
       white-space: nowrap;
+      width: 7em;
     }
     .agenda .hi td { color: var(--fg); }
     .agenda .hi td:first-child { color: var(--amber); }
@@ -446,6 +450,9 @@
     .pill:hover { border-color: var(--amber); color: var(--amber) !important; text-decoration: none !important; }
     .pill.hi { background: var(--amber-glow); border-color: rgba(255,192,52,0.38); color: var(--amber) !important; }
 
+    /* ── Speaker notes: hidden in slide view ── */
+    .reveal aside.notes { display: none !important; }
+
     /* ── Firefly ── */
     #ff-wave, #ff-mist { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
     #ff-wave { background:
@@ -511,7 +518,7 @@
   <span class="fw fw-lo" style="left:76%; top:93%; opacity:.09"></span>
   <span class="fw fw-lo" style="left:81%; top:95%; opacity:.11"></span>
 </div>
-<img id="deck-logo" src="brand/offon-favicon.svg" alt="" aria-hidden="true" width="34" height="44">
+<img id="deck-logo" src="../brand/offon-favicon.svg" alt="" aria-hidden="true" width="34" height="44">
 <div class="reveal">
   <div class="slides">
 
@@ -519,7 +526,7 @@
     <section>
       <div class="title-slide">
         <div class="cobrand">
-          <img src="brand/offon-logo-dark-color.svg" alt="OffOn">
+          <img src="../brand/offon-logo-dark-color.svg" alt="OffOn">
           <span class="xsep">×</span>
           <span class="partner">Dynatrace</span>
         </div>
@@ -532,8 +539,8 @@
         <ul>
           <li>Welcome to the first Open Source Talks by OffOn and Dynatrace.</li>
           <li>The hosts for this evening are Kenyatta Forbes and me, Sinduri Guntupalli. Please come to us if you have any questions.</li>
-          <li>This intro is about 10 minutes. I'll cover what this event is, who OffOn is, what we've built, and how you can get involved.</li>
-          <li>After the intro: two talks, a break, and then the pub quiz.</li>
+          <li>This intro should take about 10 minutes. I will go over what Open Source Talks is, what OffOn is about, what we are building and how you can get involved.</li>
+          <li>After the intro, there will be 2 talks with breaks in between, then we have a pub quiz.</li>
         </ul>
       </aside>
     </section>
@@ -557,20 +564,20 @@
         <div>
           <div class="card">
             <h4>WiFi</h4>
-            <p style="margin-top: 0.35em;">Username: <strong style="color: var(--fg); font-weight: 600;">osource</strong></p>
-            <p>Password: <strong style="color: var(--fg); font-weight: 600;">qs44w6</strong></p>
+            <p style="margin-top: 0.35em;">Network: <strong style="color: var(--fg); font-weight: 600;">Dynatrace-Guest</strong></p>
+            <p>Username: <strong style="color: var(--fg); font-weight: 600;">[Username]</strong></p>
+            <p>Password: <strong style="color: var(--fg); font-weight: 600;">[Password]</strong></p>
           </div>
         </div>
       </div>
       <aside class="notes">
         <ul>
-          <li>Guest cards are single use; please return them at the entrance when you leave, security requires it.</li>
-          <li>Elevators: just touch the screen, no card needed inside the building.</li>
-          <li>Please don't open the windows; the AC is controlled centrally.</li>
-          <li>Toilets are to the left on this floor.</li>
-          <li>We'll be taking photos for social media. If you'd prefer not to be in them, just let one of the organisers know.</li>
-          <li>WiFi: username osource, password qs44w6.</li>
-          <li>Food: there are gluten-free, vegan, and vegetarian options. Drinks are in the fridge. Help yourself and have fun!</li>
+          <li>Guest cards are single use. If you haven't already, please return them at the entrance when you leave.</li>
+          <li>When you are ready to leave, just touch the screen to exit.</li>
+          <li>Please absolutely do not open the windows. The AC is controlled centrally and if a window is opened, the ACs will stop working.</li>
+          <li>We will be taking photos for social media. If you prefer to not be in them, please let one of the organizers know.</li>
+          <li>Here is the wifi username and password. You will also find it on the cards on the table.</li>
+          <li>Please use the right recycling bins to throw away your empty drinks.</li>
         </ul>
       </aside>
     </section>
@@ -583,8 +590,12 @@
       </div>
       <div class="g3" style="margin-top: 0.65em;">
         <div class="card">
+          <h4>The Community</h4>
+          <p>For the Austrian open source community to present their projects and network with other open source enthusiasts.</p>
+        </div>
+        <div class="card">
           <h4>Vienna and Linz</h4>
-          <p>Dynatrace offices. About 6 events per year, 3rd or 4th Thursday of the month. Free to attend, always.</p>
+          <p>Dynatrace offices. About 6 events per year, 3rd or 4th Thursday of the month.</p>
         </div>
         <div class="card">
           <h4>Two Talks Per Evening</h4>
@@ -597,8 +608,8 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Open Source Talks is a recurring in-person meetup for the Austrian open source community.</li>
-          <li>There will be no product pitches, only talks about open source projects.</li>
+          <li>Open Source Talks is a space for the Austrian open source community to share their projects and meet other enthusiasts in person.</li>
+          <li>These evenings are purely about open source. No product pitches, just people sharing the open source projects they care about.</li>
           <li>Two cities: Vienna at the Dynatrace Vienna office, and Linz at the Dynatrace Linz office.</li>
           <li>About 6 events per year, on the third or fourth Thursday of the month.</li>
           <li>Format: two 25-minute talks plus Q&amp;A, then the pub quiz.</li>
@@ -626,11 +637,9 @@
       </table>
       <aside class="notes">
         <ul>
-          <li>Doors opened at 17:30. Talks start now. We're structured until 20:00, then open networking.</li>
-          <li>This intro runs until 18:10, then Nico and Sinduri are up first.</li>
-          <li>Use the breaks to refill your drinks, eat, and network with others.</li>
-          <li>Pub quiz at 19:40, about 15 minutes. One round of 15 questions.</li>
-          <li>Wrap-up at 19:55, then open networking.</li>
+          <li>Talks start after this introduction. We hope to finish the talks and quiz by 20:00 and then we would love for you to network and have fun.</li>
+          <li>Our first talk is about Drupal CMS by Nico and Sinduri. Second talk is by Simon about Open Feature.</li>
+          <li>We will have breaks in between and then have a quiz.</li>
         </ul>
       </aside>
     </section>
@@ -644,7 +653,7 @@
       <div class="g3" style="margin-top: 0.55em;">
         <div class="speaker-card" style="flex-direction: column; gap: 0.55em;">
           <div style="display: flex; gap: 0.65em; align-items: center;">
-            <div class="sp-av"><img src="speakers/nico.webp" alt="Nico Grienauer"></div>
+            <div class="sp-av"><img src="../speakers/nico.webp" alt="Nico Grienauer"></div>
             <div class="sp-info">
               <p class="sp-name">Nico Grienauer</p>
               <p class="sp-talk" style="margin: 0;">Drupal CMS</p>
@@ -654,7 +663,7 @@
         </div>
         <div class="speaker-card" style="flex-direction: column; gap: 0.55em;">
           <div style="display: flex; gap: 0.65em; align-items: center;">
-            <div class="sp-av"><img src="team/sinduri.webp" alt="Sinduri Guntupalli"></div>
+            <div class="sp-av"><img src="../team/sinduri.webp" alt="Sinduri Guntupalli"></div>
             <div class="sp-info">
               <p class="sp-name">Sinduri Guntupalli</p>
               <p class="sp-talk" style="margin: 0;">Drupal CMS</p>
@@ -664,7 +673,7 @@
         </div>
         <div class="speaker-card" style="flex-direction: column; gap: 0.55em;">
           <div style="display: flex; gap: 0.65em; align-items: center;">
-            <div class="sp-av"><img src="speakers/simon.webp" alt="Simon Schrottner"></div>
+            <div class="sp-av"><img src="../speakers/simon.webp" alt="Simon Schrottner"></div>
             <div class="sp-info">
               <p class="sp-name">Simon Schrottner</p>
               <p class="sp-talk" style="margin: 0;">Feature Flags and Open Standards</p>
@@ -675,12 +684,11 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Tonight we have three speakers.</li>
-          <li>Nico Grienauer: Drupal Austria board member, founder of acolono GmbH, initiator of the Austrian Open Source Award.</li>
-          <li>Sinduri Guntupalli: OffOn board member, Sr Developer Programs Engineer at Dynatrace, Drupal Austria Marketing Manager, Women in Drupal Award recipient.</li>
-          <li>Together they're presenting on Drupal CMS.</li>
-          <li>Simon Schrottner: OpenFeature maintainer, CNCF Ambassador. Regular speaker at KubeCon, Devoxx, ContainerDays. Built OffOn's OpenFeature challenge. His talk covers feature flags and open standards.</li>
-          <li>Both talks are 25 minutes plus Q&amp;A.</li>
+          <li>Tonight we have 3 speakers and 2 talks.</li>
+          <li>Our first speaker Nico has been working with Drupal for almost 20 years. He is a Drupal Austria Association Board Member, Maintainer of several Drupal modules, Organizer for several Drupal events, CodeWeek EU Ambassador, Initiator of the Austrian Open Source Award, Co-Founder of Acoono and creator of Drupical.</li>
+          <li>Sinduri, me, am also part of the Drupal Austrian board, have been working with Drupal for more than 5 years, currently working at Dynatrace.</li>
+          <li>Simon who will be giving us a talk about Open Feature is an Open Feature maintainer and CNCF Ambassador. He regularly speaks at KubeCon, Devoxx, and Container Days. He is also one of OffOn's Challenge builders which I will talk about more later.</li>
+          <li>Both talks are 25 minutes with 5 minutes for questions.</li>
         </ul>
       </aside>
     </section>
@@ -712,15 +720,16 @@
           <p style="margin-top: 1.4em; font-size: 0.38em; color: #ffc034;">always on. always open. always learning.</p>
         </div>
         <div style="display: flex; align-items: flex-end; justify-content: flex-end;">
-          <img src="brand/offon-nyx-peek.png" alt="" aria-hidden="true" style="height: 230px; object-fit: contain; opacity: 0.6;">
+          <img src="../brand/offon-nyx-peek.png" alt="" aria-hidden="true" style="height: 230px; object-fit: contain; opacity: 0.6;">
         </div>
       </div>
       <aside class="notes">
         <ul>
+          <li>So, what is OffOn?</li>
           <li>OffOn was started as a Dynatrace OSPO initiative. It was created to support the people behind open source and help build the open source contributors of tomorrow.</li>
-          <li>The community is open to everyone who cares about open source, whether you write code or not. Developers, writers, designers, translators, first-time contributors, and long-time maintainers all belong here.</li>
+          <li>The community is open to everyone who cares about open source, whether you write code or not. Developers, writers, designers, translators, first-time contributors, and long-time maintainers are all welcome here.</li>
           <li>One of the core offerings of OffOn is hands-on challenges built around real tools and real scenarios. Things you can fork, learn through doing, and build on.</li>
-          <li>We also want to make sure community knowledge is preserved and passed on, not lost in chat threads.</li>
+          <li>We want to create a space to preserve community knowledge, give a safe space for people to ask questions and share their knowledge.</li>
         </ul>
       </aside>
     </section>
@@ -748,16 +757,16 @@
           </div>
           <div style="display: flex; align-items: center; gap: 0.6em; margin-top: 1em;">
             <div style="width: 3.5em; height: 3.5em; background: var(--card); border: 1px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
-              <img src="qr/challenges.png" alt="QR code for offon.dev/challenges" style="width: 100%; height: 100%; object-fit: contain;" onerror="this.style.display='none'">
+              <img src="../qr/challenges.png" alt="QR code for offon.dev/challenges" style="width: 100%; height: 100%; object-fit: contain;" onerror="this.style.display='none'">
             </div>
-            <p style="font-size: 0.38em; color: #ffc034; margin: 0;">Play challenges</p>
+            <p style="font-size: 0.38em; color: #ffc034; margin: 0;">offon.dev/challenges</p>
           </div>
         </div>
         <div style="flex: 1; display: flex; flex-direction: column; gap: 0.5em; min-width: 0; overflow: hidden; margin-top: 1.8em;">
-          <img src="screenshots/challenges-grid.webp" alt="Adventure challenges grid" style="width: 100%; height: 290px; object-fit: cover; object-position: top; border-radius: 6px; flex-shrink: 0;">
+          <img src="../screenshots/challenges-grid.webp" alt="Adventure challenges grid" style="width: 100%; height: 290px; object-fit: cover; object-position: top; border-radius: 6px; flex-shrink: 0;">
           <div style="display: flex; gap: 0.5em; overflow: hidden;">
-            <img src="screenshots/challenge-detail.webp" alt="Challenge detail view" style="flex: 1; height: 210px; object-fit: cover; object-position: top left; border-radius: 6px; min-width: 0;">
-            <img src="screenshots/challenge-rewards.webp" alt="Challenge rewards and leaderboard" style="height: 210px; width: auto; border-radius: 6px; flex-shrink: 0;">
+            <img src="../screenshots/challenge-detail.webp" alt="Challenge detail view" style="flex: 1; height: 210px; object-fit: cover; object-position: top left; border-radius: 6px; min-width: 0;">
+            <img src="../screenshots/challenge-rewards.webp" alt="Challenge rewards and leaderboard" style="height: 210px; width: auto; border-radius: 6px; flex-shrink: 0;">
           </div>
         </div>
       </div>
@@ -765,9 +774,9 @@
         <ul>
           <li>Adventures are monthly themed challenges, each with usually three difficulty levels so new users can learn in a structured way.</li>
           <li>Everything runs in GitHub Codespaces; no local setup, no Docker, no "works on my machine."</li>
-          <li>Current tools: OpenTelemetry, Kyverno, OpenFeature, ArgoCD, OpenTofu, Grafana. More being built.</li>
+          <li>The existing adventures have been built on open source tools like OpenTelemetry, Kyverno, OpenFeature, ArgoCD, OpenTofu, and Grafana. More are being built.</li>
           <li>After completing an adventure, we now offer Credly badges and Linux Foundation vouchers as rewards.</li>
-          <li>Check out the challenges at offon.dev/challenges, or propose an adventure around an open source tool you are an expert in.</li>
+          <li>Check out the challenges at offon.dev/challenges.</li>
         </ul>
       </aside>
     </section>
@@ -799,17 +808,16 @@
           </div>
         </div>
         <div style="flex: 1; display: flex; flex-direction: column; gap: 0.5em; min-width: 0; overflow: hidden; margin-top: 1.8em;">
-          <img src="screenshots/community-threads.webp" alt="Community Voices thread list" style="width: 100%; height: 320px; object-fit: cover; object-position: top; border-radius: 6px; flex-shrink: 0;">
-          <img src="screenshots/community-post.webp" alt="Example community post" style="width: 100%; border-radius: 6px; flex-shrink: 0;">
+          <img src="../screenshots/community-threads.webp" alt="Community Voices thread list" loading="lazy" style="width: 100%; height: 320px; object-fit: cover; object-position: top; border-radius: 6px; flex-shrink: 0;">
+          <img src="../screenshots/community-post.webp" alt="Example community post" loading="lazy" style="width: 100%; border-radius: 6px; flex-shrink: 0;">
         </div>
       </div>
       <aside class="notes">
         <ul>
-          <li>The community is live at community.offon.dev. Open to everyone, no invite needed.</li>
-          <li>Community Voices: post tutorials, project showcases, open source news, or share your podcast or blog.</li>
-          <li>Q&amp;A: ask anything, answer what you know. No question is too basic.</li>
-          <li>Events: find meetups near you or add your own local event.</li>
-          <li>Start tonight: scan the QR on the final slide and introduce yourself in the introductions thread.</li>
+          <li>The community is hosted on Discourse at community.offon.dev. The goal is to build a safe space for the open source community to connect, share knowledge, and support each other.</li>
+          <li>Community Voices is where people post tutorials, project showcases, and open source news.</li>
+          <li>Q&amp;A is for getting unstuck and sharing what you know. No question is too basic.</li>
+          <li>There is also an introductions category where you can tell us who you are and what you are building.</li>
         </ul>
       </aside>
     </section>
@@ -852,17 +860,17 @@
           <div class="citem"><span class="cdot">→</span><span class="ctext">Organise meetups</span></div>
           <div class="citem"><span class="cdot">→</span><span class="ctext">Advocate on social media</span></div>
           <div class="citem"><span class="cdot">→</span><span class="ctext">Speak at an event</span></div>
-          <div class="citem"><span class="cdot">→</span><span class="ctext">Join the OffOn board</span></div>
+          <div class="citem"><span class="cdot">→</span><span class="ctext">Share on social media</span></div>
         </div>
       </div>
       <p style="margin-top: 0.5em; font-size: 0.38em;"><a href="https://offon.dev/contribute" style="color: #ffc034;">offon.dev/contribute</a></p>
       <aside class="notes">
         <ul>
-          <li>No contribution is too small: introducing yourself, answering one Q&amp;A question, fixing a typo.</li>
-          <li>Code is not the only way in. Writers, designers, translators, organisers are all first-class contributors.</li>
-          <li>The easiest starting point: community.offon.dev, introduce yourself.</li>
-          <li>If you want to build an adventure or propose a challenge, there's a full guide at offon.dev/contribute.</li>
-          <li>And if you want to speak at a future event, the next slide is about that.</li>
+          <li>How can you get involved and contribute?</li>
+          <li>No contribution is too small. Introduce yourself, tell us about your open source journey, your pain points working in open source, share some tips.</li>
+          <li>All kinds of contributions are welcome. Mentor open source newcomers, answer a question. If you see a way to improve the website or content for offon.dev, whether that is through writing, designing, or just giving feedback, open a GitHub issue.</li>
+          <li>All kinds of open source content are accepted on community.offon.dev.</li>
+          <li>You can also help us with community building. Share on social media, speak at our events, or organise meetups using community.offon.dev.</li>
         </ul>
       </aside>
     </section>
@@ -911,12 +919,11 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>The vendor-neutral rule is non-negotiable. A talk about an OSS project backed by a company: fine. A talk that exists to sell a product: not fine.</li>
-          <li>Great talks are an intro to a project you maintain or contribute to, a demo of something you built including what broke, a concept explained clearly for a mixed audience, or a contribution story.</li>
-          <li>Not a good fit: product demos, vendor pitches, or anything that requires a commercial tool to be relevant.</li>
-          <li>Format: 25 minutes plus Q&amp;A, in English, slides optional.</li>
-          <li>To speak: send your name, talk title, and a 2 to 3 sentence description to offondev@gmail.com.</li>
-          <li>If anyone in this room has something to share, this is the place. We'd love to hear from you.</li>
+          <li>If you are in this room, you are most probably interested in open source and have worked with it. You do not need to be an expert, you just need to have something to share.</li>
+          <li>A good talk could be an intro to an open source project you maintain or contribute to, a demo including what went wrong, a concept you explain well, or a story from your contribution journey.</li>
+          <li>The only rule: it has to be about open source. No product pitches or vendor talks.</li>
+          <li>Each talk is 25 minutes followed by Q&amp;A. No formal structure required, slides are optional.</li>
+          <li>If you are interested, send your name, talk title, and a short 2 to 3 sentence description to offondev@gmail.com.</li>
         </ul>
       </aside>
     </section>
@@ -937,33 +944,33 @@
       </div>
       <div class="brow">
         <span class="dot">→</span>
-        <span class="bt">We are actively growing the board with voices from the wider open source community. If you want to help shape what this becomes, reach out.</span>
+        <span class="bt">We are planning to grow the board with voices from the wider open source community. If you want to help shape what this becomes, reach out.</span>
       </div>
       <p style="font-family: 'Syne', sans-serif; font-size: 0.5em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0.5em 0 0.3em;">Board</p>
       <div class="board board-sm">
         <div class="person">
-          <div class="av"><img src="team/david.webp" alt="David Hirsch"></div>
+          <div class="av"><img src="../team/david.webp" alt="David Hirsch"></div>
           <div class="pi">
             <p class="pn">David Hirsch</p>
             <p class="pr">Head of Community and Open Source, Dynatrace</p>
           </div>
         </div>
         <div class="person">
-          <div class="av"><img src="team/katharina.webp" alt="Katharina Sick"></div>
+          <div class="av"><img src="../team/katharina.webp" alt="Katharina Sick"></div>
           <div class="pi">
             <p class="pn">Katharina Sick</p>
             <p class="pr">Senior Developer Programs Engineer, Dynatrace</p>
           </div>
         </div>
         <div class="person">
-          <div class="av"><img src="team/kenyatta.webp" alt="Kenyatta Forbes"></div>
+          <div class="av"><img src="../team/kenyatta.webp" alt="Kenyatta Forbes"></div>
           <div class="pi">
             <p class="pn">Kenyatta Forbes</p>
             <p class="pr">Sr Program Manager, Dynatrace</p>
           </div>
         </div>
         <div class="person">
-          <div class="av"><img src="team/sinduri.webp" alt="Sinduri Guntupalli"></div>
+          <div class="av"><img src="../team/sinduri.webp" alt="Sinduri Guntupalli"></div>
           <div class="pi">
             <p class="pn">Sinduri Guntupalli</p>
             <p class="pr">Sr Developer Programs Engineer, Dynatrace</p>
@@ -986,12 +993,13 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>All four board members are from the Dynatrace OSPO team. We are actively planning to expand the board with open source community members who are not part of Dynatrace.</li>
-          <li>We are open to as many board members as needed. If you are interested in helping shape what this community becomes, reach out.</li>
-          <li>David leads Open Source and Community at Dynatrace, built the OSPO and governance frameworks behind OpenFeature and Keptn entering the CNCF, and co-founded KCD Austria.</li>
-          <li>Katharina is a Senior Developer Programs Engineer focused on Cloud Native and Kubernetes and co-organises Cloud Native Linz.</li>
-          <li>Kenyatta brings program leadership experience from Google for Education (189 million users) and Mozilla, and was formerly an educator in Chicago Public Schools.</li>
-          <li>Sinduri is a Senior Developer Programs Engineer and Drupal Austria Marketing Manager.</li>
+          <li>OffOn started as a Dynatrace OSPO initiative.</li>
+          <li>Every challenge, tool, and piece of content is built around open source. Sponsors fund the work; they do not shape the mission.</li>
+          <li>We are planning to grow the board with voices from the wider open source community. If you want to help shape what this becomes, reach out to us.</li>
+          <li>David is Head of Community and Open Source at Dynatrace, leading the OSPO team. He built the governance frameworks behind OpenFeature and Keptn entering the CNCF and co-founded KCD Austria.</li>
+          <li>Katharina is a Senior Developer Programs Engineer at Dynatrace and co-organiser of Cloud Native Linz. Passionate about Cloud Native and Kubernetes, with a background in mobile and backend development.</li>
+          <li>Kenyatta is Sr Program Manager at Dynatrace, bringing program leadership experience from Google for Education, where she led pilots reaching 189 million users, and Mozilla. She was formerly an educator in Chicago Public Schools.</li>
+          <li>Sinduri is Sr Developer Programs Engineer at Dynatrace with a background in web development, web analytics, and SEO. Marketing Manager for Drupal Austria and recipient of the Women in Drupal Award.</li>
         </ul>
       </aside>
     </section>
@@ -1038,7 +1046,7 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Dynatrace builds on open source and has contributed to it for years. Sponsoring OffOn is part of how they participate responsibly in the ecosystem they rely on.</li>
+          <li>Why did Dynatrace start this initiative? The answer is simple: they build on open source, they contribute to it, and they believe investing in the community is the right thing to do.</li>
           <li>As founding sponsor, they provide funding, engineering time, developer advocacy, infrastructure, and the venue, food, and drinks for events.</li>
           <li>What they want in return is a stronger ecosystem: more supported contributors, recognised maintainers, and knowledge that reaches the next generation.</li>
         </ul>
@@ -1064,16 +1072,16 @@
         </div>
         <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5em;">
           <div style="width: 7em; height: 7em; background: var(--card); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-            <img src="qr/dynatrace-careers.png" alt="QR code for careers.dynatrace.com" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'">
+            <img src="../qr/dynatrace-careers.png" alt="QR code for careers.dynatrace.com" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'">
           </div>
           <span style="font-size: 0.38em; color: #ffc034;">careers.dynatrace.com</span>
         </div>
       </div>
       <aside class="notes">
         <ul>
-          <li>Dynatrace runs a full OSPO, maintains projects like OpenFeature and Keptn in the CNCF, and has contributed to the open source ecosystem for years.</li>
-          <li>Roles across engineering, developer advocacy, and product management. Vienna, Linz, and remote.</li>
-          <li>Scan the QR code or go to careers.dynatrace.com.</li>
+          <li>If you are looking for a new role, Dynatrace is hiring. There are open positions in Austria, both Vienna and Linz, as well as other countries.</li>
+          <li>Roles span engineering, developer advocacy, product management, and more.</li>
+          <li>Scan the QR code or visit careers.dynatrace.com to see current openings.</li>
         </ul>
       </aside>
     </section>
@@ -1094,11 +1102,16 @@
           <h4>Tonight's Topics</h4>
           <p>Based on the two talks.</p>
         </div>
+        <div class="card">
+          <h4>Prizes</h4>
+          <p>Goodie bags with Dynatrace swag for the top 5 scorers.</p>
+        </div>
       </div>
       <aside class="notes">
         <ul>
           <li>The pub quiz happens after the second talk and the break, and will be hosted by our lovely Kenyatta.</li>
           <li>15 questions played on your phone, no sign-up needed. We will show the QR code when we start playing.</li>
+          <li>The top 5 scorers win goodie bags with Dynatrace swag.</li>
         </ul>
       </aside>
     </section>
@@ -1124,7 +1137,7 @@
           <h2>Scan to Play</h2>
         </div>
         <div style="width: 9em; height: 9em; background: var(--card); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-          <img src="qr/ahaslides-qrcode.png" alt="QR code for the pub quiz on AhaSlides" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;" onerror="this.style.display='none'">
+          <img src="../qr/ahaslides-qrcode.png" alt="QR code for the pub quiz on AhaSlides" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;" onerror="this.style.display='none'">
         </div>
       </div>
       <aside class="notes">
@@ -1158,14 +1171,14 @@
         </div>
         <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5em;">
           <div style="width: 7em; height: 7em; background: var(--card); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-            <img src="qr/meetup-community.png" alt="QR code for Open Source Talks community category" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'">
+            <img src="../qr/meetup-community.png" alt="QR code for Open Source Talks community category" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'">
           </div>
           <p style="font-size: 0.38em; text-align: center; max-width: 8em; color: #ffc034;">Follow this category for the next event</p>
         </div>
       </div>
       <aside class="notes">
         <ul>
-          <li>I hope you enjoyed the talks today. We would love to get your feedback.</li>
+          <li>I hope you enjoyed the talks today.</li>
           <li>The next Open Source Talks is coming up. Follow the community category to get the announcement first.</li>
           <li>If you are thinking about speaking, get in touch at offondev@gmail.com with your name, talk title, and two or three sentences about what you would cover.</li>
         </ul>
@@ -1180,7 +1193,7 @@
         <p style="font-size: 0.6em; max-width: 24em; margin: 0.35em auto 0.9em;">Takes two minutes. Helps us improve every event.</p>
         <div style="display: flex; flex-direction: column; align-items: center; gap: 0.4em; margin-bottom: 0.8em;">
           <div style="width: 9em; height: 9em; background: var(--card); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-            <img src="qr/feedback-form.png" alt="QR code for event feedback form" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;" onerror="this.style.display='none'">
+            <img src="../qr/feedback-form.png" alt="QR code for event feedback form" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;" onerror="this.style.display='none'">
           </div>
           <span style="font-size: 0.38em; color: #ffc034;">Scan to leave feedback</span>
         </div>
@@ -1197,7 +1210,7 @@
     <section>
       <div class="final">
         <div class="cobrand">
-          <img src="brand/offon-logo-dark-color.svg" alt="OffOn">
+          <img src="../brand/offon-logo-dark-color.svg" alt="OffOn">
           <span class="xsep">×</span>
           <span class="partner">Dynatrace</span>
         </div>
@@ -1205,7 +1218,7 @@
         <p style="font-size: 0.65em; max-width: 26em; margin: 0.35em auto 0.8em;">Attend an event, propose a talk, start a challenge, or just say hello in the community.</p>
         <div style="display: flex; flex-direction: column; align-items: center; gap: 0.4em; margin-bottom: 0.8em;">
           <div style="width: 7em; height: 7em; background: var(--card); border: 1px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
-            <img src="qr/community-offon-dev-signup.png" alt="QR code to sign up at community.offon.dev" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'">
+            <img src="../qr/community-offon-dev-signup.png" alt="QR code to sign up at community.offon.dev" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'">
           </div>
           <span style="font-size: 0.38em; color: #ffc034;">Signup on community.offon.dev</span>
         </div>
@@ -1229,6 +1242,7 @@
       </div>
       <aside class="notes">
         <ul>
+          <li>We are just getting started and we would love for you to be part of it. Whether you want to attend events, ask questions, share knowledge, or speak, there is a place for you.</li>
           <li>Scan the QR code on screen to sign up at community.offon.dev. Takes about a minute.</li>
           <li>The easiest first step tonight: introduce yourself in the introductions thread. Tell us who you are and what you're working on.</li>
           <li>If you want to get more involved, whether that is speaking at a future event, proposing a challenge, or joining the board, reach out at offondev@gmail.com.</li>
@@ -1239,8 +1253,8 @@
   </div>
 </div>
 
-<script src="reveal/reveal.js"></script>
-<script src="reveal/plugin/notes.js"></script>
+<script src="../reveal/reveal.js"></script>
+<script src="../reveal/plugin/notes.js"></script>
 <script>
   Reveal.initialize({
     hash: true,

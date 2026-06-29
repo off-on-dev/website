@@ -243,6 +243,38 @@ describe("prerendered solution page content", () => {
   });
 });
 
+describe("_.data aliases for trailing-slash GitHub Pages compatibility", () => {
+  // Routes with loaders produce <path>.data for non-trailing-slash requests.
+  // create-data-aliases.mjs (postbuild) copies each to <path>/_.data so
+  // trailing-slash GitHub Pages URLs also resolve single-fetch data requests.
+  // Derived dynamically so new loader routes are covered without manual updates.
+  it("every *.data file has a matching _.data alias with identical content", () => {
+    if (!fs.existsSync(DIST_ROOT)) {
+      throw new Error("dist/client not found — run npm run build first");
+    }
+
+    const entries = fs.readdirSync(DIST_ROOT, { withFileTypes: true, recursive: true });
+    const dataFiles = entries.filter(
+      (e) => e.isFile() && e.name.endsWith(".data") && e.name !== "_.data"
+    );
+
+    if (dataFiles.length === 0) {
+      throw new Error("No .data files found in dist/client — run npm run build first");
+    }
+
+    for (const entry of dataFiles) {
+      // Dirent.parentPath requires Node >= 21.4; enforced by .nvmrc (Node 26).
+      const file = path.join(entry.parentPath, entry.name);
+      const alias = path.join(path.dirname(file), path.basename(file, ".data"), "_.data");
+      const rel = path.relative(DIST_ROOT, file);
+      expect(fs.existsSync(alias), `Missing _.data alias for ${rel}`).toBe(true);
+      expect(fs.readFileSync(alias, "utf-8"), `_.data content mismatch for ${rel}`).toEqual(
+        fs.readFileSync(file, "utf-8")
+      );
+    }
+  });
+});
+
 describe("prerendered challenge pages include all content sections", () => {
   const challengePage = "adventures/echoes-lost-in-orbit/levels/beginner/index.html";
   const requiredSections = ["objective", "backstory", "toolbox", "learnings", "walkthrough", "completion"];

@@ -1,8 +1,15 @@
 /**
- * Bundles deck-template.html with all local assets into a self-contained zip.
- * Users download, unzip, and open deck-template.html in any browser — no server needed.
+ * Bundles deck-template/index.html with all local assets into a self-contained zip.
+ * Users download, unzip, rename the deck-template folder, and open index.html in any browser.
  *
  * Run: node .claude/templates/generate-reveal-zip.mjs
+ *
+ * Re-vendor note: public/reveal/ is a hand-vendored four-file subset of reveal.js@6.0.1.
+ * The full dist/ tree is NOT copied. When updating Reveal, copy only these four files from
+ * node_modules/reveal.js/dist/ to public/reveal/ — do not copy the whole directory, as
+ * that would restore deleted themes and plugins along with their OFL and BSD attribution
+ * obligations. The four required files are: reset.css, reveal.css, reveal.js,
+ * plugin/notes.js.
  */
 
 import JSZip from 'jszip';
@@ -22,8 +29,8 @@ function add(zipPath, fsPath) {
   dir.file(zipPath, readFileSync(fsPath));
 }
 
-// Main template
-add('deck-template.html', resolve(PUB, 'deck-template.html'));
+// Main template (in its own subfolder to match the /deck-template/ URL; paths inside use ../)
+add('deck-template/index.html', resolve(PUB, 'deck-template/index.html'));
 
 // Reveal.js library (only files the template actually uses)
 add('reveal/reset.css',       resolve(PUB, 'reveal/reset.css'));

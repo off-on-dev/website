@@ -28,11 +28,11 @@ Ask for anything not already provided:
   - `html`: Reveal.js (self-contained HTML, opens in any browser, served from GitHub Pages)
   - `pptx`: Editable Microsoft PowerPoint (run `node .claude/templates/generate-pptx.mjs` and customise the output)
 - **Topic**: event intro, challenge walkthrough, or other
-- **Output filename**: e.g. `open-source-talks.html`, `challenge-intro.md`
+- **Output filename**: Reveal.js — an event slug that becomes the folder name, e.g. `open-source-talks` (written to `public/open-source-talks/index.html`). PPTX — a `.md` outline is not written as a file; edit `.claude/templates/generate-pptx.mjs` directly.
 - **Slides outline**: list of topics to cover, or free-form description
 - **Speakers / contributors**: names and photos if applicable (photos go in `public/team/` for board members, `public/speakers/` for event speakers)
 
-If the user is creating an event deck, check `public/deck.html` for the existing event intro structure as a reference and to reuse already-written slide content where relevant.
+If the user is creating an event deck, check `public/deck/index.html` for the existing event intro structure as a reference and to reuse already-written slide content where relevant.
 
 ---
 
@@ -42,7 +42,7 @@ Read the template for the chosen format; it contains all boilerplate. Do not rec
 
 | Format | Template file |
 | --- | --- |
-| Reveal.js (`html`) | `public/deck-template.html` |
+| Reveal.js (`html`) | `public/deck-template/index.html` |
 | PowerPoint (`pptx`) | `.claude/templates/generate-pptx.mjs` (edit and run to regenerate) |
 
 Brand token reference (for writing slide content):
@@ -119,7 +119,7 @@ When a slide has two sub-sections (e.g. "What makes a good talk" left + "Want to
 
 `col-label` is a section label above a column's content. It is always smaller (`0.42em`) than the content items below it (`0.65em` h4). This is intentional; amber uppercase provides the hierarchy, size does not. Do not try to make `col-label` bigger than the items it labels. Trust the color and spacing.
 
-The current CSS values (copied from `public/deck.html`):
+The current CSS values (copied from `public/deck/index.html`):
 
 - `.sh .label { font-size: 0.42em; margin-bottom: 0.6em }`: overline size and gap before the h2
 - `.sh { margin-bottom: 1.2em }`: gap after the full header block
@@ -131,7 +131,7 @@ Do not override these inline unless there is a specific layout reason.
 
 ## Slide structure patterns
 
-Copy these patterns from `public/deck.html`. Do not invent new CSS.
+Copy these patterns from `public/deck/index.html`. Do not invent new CSS.
 
 ### Slide header (every content slide)
 
@@ -248,7 +248,7 @@ Event speaker photos go in `public/speakers/<name>.webp`. Board member photos go
 <!-- Event speaker (used in "Who's presenting" slides; photos from public/speakers/) -->
 <div class="speaker-card" style="flex-direction: column; gap: 0.55em;">
   <div style="display: flex; gap: 0.65em; align-items: center;">
-    <div class="sp-av"><img src="speakers/name.webp" alt="Full Name"></div>
+    <div class="sp-av"><img src="../speakers/name.webp" alt="Full Name"></div>
     <div class="sp-info">
       <p class="sp-name">Full Name</p>
       <p class="sp-talk" style="margin: 0;">Talk title</p>
@@ -259,7 +259,7 @@ Event speaker photos go in `public/speakers/<name>.webp`. Board member photos go
 
 <!-- Board member (used in team grids; photos from public/team/) -->
 <div class="person">
-  <div class="av"><img src="team/name.webp" alt="Full Name"></div>
+  <div class="av"><img src="../team/name.webp" alt="Full Name"></div>
   <div class="pi">
     <p class="pn">Full Name</p>
     <p class="pr">Role and affiliation.</p>
@@ -274,7 +274,7 @@ Wrap `.person` cards in `.board` for the team grid. The CSS provides a 3-column 
 ```html
 <div class="board">
   <div class="person">
-    <div class="av"><img src="team/name.webp" alt="Full Name"></div>
+    <div class="av"><img src="../team/name.webp" alt="Full Name"></div>
     <div class="pi">
       <p class="pn">Full Name</p>
       <p class="pr">Role and affiliation.</p>
@@ -301,7 +301,7 @@ Use `class="person tba"` for unfilled seats; this applies `opacity: 0.55` and a 
 <section>
   <div class="title-slide">
     <div class="cobrand">
-      <img src="brand/offon-logo-dark-color.svg" alt="OffOn">
+      <img src="../brand/offon-logo-dark-color.svg" alt="OffOn">
       <span class="xsep">×</span>
       <span class="partner">Partner Name</span>
     </div>
@@ -318,13 +318,13 @@ If there is no co-brand partner, omit the `.cobrand` div and place the OffOn log
 
 ### Final / join slide
 
-Include a centered QR code for the primary signup link before the pill row. The current reference deck (`public/deck.html`) uses a single QR for `community.offon.dev/signup`. Choose which URLs to show QR codes for based on the event; the `qr/` directory in `public/` contains the available PNGs. Generate new QR code PNGs with `npx qrcode -t png -o public/qr/<name>.png "<url>"`. The `onerror` handler on each image hides it gracefully if the file is missing. The `public/qr/` directory is already included in the preview copy step in `.github/workflows/preview.yml`.
+Include a centered QR code for the primary signup link before the pill row. The current reference deck (`public/deck/index.html`) uses a single QR for `community.offon.dev/signup`. Choose which URLs to show QR codes for based on the event; the `qr/` directory in `public/` contains the available PNGs. Generate new QR code PNGs with `npx qrcode -t png -o public/qr/<name>.png "<url>"`. The `onerror` handler on each image hides it gracefully if the file is missing. The `public/qr/` directory is already included in the preview copy step in `.github/workflows/preview.yml`.
 
 ```html
 <section>
   <div class="final">
     <div class="cobrand">
-      <img src="brand/offon-logo-dark-color.svg" alt="OffOn">
+      <img src="../brand/offon-logo-dark-color.svg" alt="OffOn">
       <span class="xsep">×</span>
       <span class="partner">Partner</span>
     </div>
@@ -332,7 +332,7 @@ Include a centered QR code for the primary signup link before the pill row. The 
     <p style="font-size: 0.65em; max-width: 26em; margin: 0.35em auto 0.8em;">CTA sentence.</p>
     <div style="display: flex; flex-direction: column; align-items: center; gap: 0.4em; margin-bottom: 0.8em;">
       <div style="width: 7em; height: 7em; background: var(--card); border: 1px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
-        <img src="qr/community-offon-dev-signup.png" alt="QR code for community.offon.dev/signup" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'">
+        <img src="../qr/community-offon-dev-signup.png" alt="QR code for community.offon.dev/signup" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'">
       </div>
       <span style="font-size: 0.38em; color: #ffc034;">community.offon.dev/signup</span>
     </div>
@@ -370,21 +370,21 @@ Column label text is lowercase in HTML; CSS applies `text-transform: uppercase`.
 
 ## Brand and image assets
 
-All paths are relative to `public/` and must be written without a leading slash (e.g. `brand/offon-logo-dark-color.svg`, not `/brand/...`). Reveal.js is served directly from `public/` so relative paths resolve correctly.
+The deck lives in a subfolder (`public/<event-slug>/index.html`), so all asset paths must be prefixed with `../` to resolve the sibling directories in `public/`. This matches how `deck/index.html` and `deck-template/index.html` already work, and ensures paths resolve correctly regardless of trailing-slash normalisation. Never use bare paths (e.g. `brand/...`) — they would resolve relative to the deck's own subfolder, which contains no assets.
 
 | Asset | Path | Where used |
 | --- | --- | --- |
-| OffOn logo (dark bg) | `brand/offon-logo-dark-color.svg` | `.cobrand` in title and final slides |
-| OffOn favicon icon | `brand/offon-favicon.svg` | Persistent `#deck-logo` top-right corner |
-| Nyx mascot (peek) | `brand/offon-nyx-peek.png` | About OffOn slide, right column, decorative |
-| Board member photos | `team/<name>.webp` | `.board .person .av img` |
-| Event speaker photos | `speakers/<name>.webp` | `.speaker-card .sp-av img` |
-| QR codes | `qr/<slug>.png` | Final slide QR grid |
+| OffOn logo (dark bg) | `../brand/offon-logo-dark-color.svg` | `.cobrand` in title and final slides |
+| OffOn favicon icon | `../brand/offon-favicon.svg` | Persistent `#deck-logo` top-right corner |
+| Nyx mascot (peek) | `../nyx_peek.webp` | About OffOn slide, right column, decorative |
+| Board member photos | `../team/<name>.webp` | `.board .person .av img` |
+| Event speaker photos | `../speakers/<name>.webp` | `.speaker-card .sp-av img` |
+| QR codes | `../qr/<slug>.png` | Final slide QR grid |
 
 The Nyx mascot image is always decorative; use `alt=""` and `aria-hidden="true"`. Apply `opacity: 0.6` and a fixed `height` (e.g. `230px`) so it doesn't compete with the slide content:
 
 ```html
-<img src="brand/offon-nyx-peek.png" alt="" aria-hidden="true"
+<img src="../nyx_peek.webp" alt="" aria-hidden="true"
      style="height: 230px; object-fit: contain; opacity: 0.6;">
 ```
 
@@ -397,7 +397,7 @@ Two elements sit outside the `.reveal` div and appear on every slide. Copy them 
 ### Favicon logo (`#deck-logo`)
 
 ```html
-<img id="deck-logo" src="brand/offon-favicon.svg" alt="" aria-hidden="true" width="34" height="44">
+<img id="deck-logo" src="../brand/offon-favicon.svg" alt="" aria-hidden="true" width="34" height="44">
 ```
 
 CSS (already in the template `<style>` block):
@@ -486,7 +486,7 @@ Press S in the browser opens Reveal.js speaker view (current + next slide, notes
 
 ## Event intro deck structure
 
-The canonical slide order for an Open Source Talks event intro deck. Follow this order unless there is a specific reason to deviate. `public/deck.html` is the reference implementation.
+The canonical slide order for an Open Source Talks event intro deck. Follow this order unless there is a specific reason to deviate. `public/deck/index.html` is the reference implementation.
 
 | # | Title | Layout | Key content |
 | --- | ------- | --------- | ----------- |
@@ -528,7 +528,7 @@ For scenario and architecture text, pull from the adventure's generated TypeScri
 3. In the output file, replace the example placeholder slides with the generated content. Keep the boilerplate (head, style, scripts for HTML) intact.
 4. Update the title in `<title>` (Reveal.js).
 5. Write to:
-   - Reveal.js: `public/<filename>.html`
+   - Reveal.js: `public/<event-slug>/index.html` (create the subfolder if it does not exist)
 6. Do not add any of these files to `src/routes.ts`, `public/sitemap.xml`, or `react-router.config.ts`.
 7. Confirm: `ls -lh <output-path>`
 

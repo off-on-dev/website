@@ -1,6 +1,6 @@
 # offon.dev
 
-Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for open source enthusiasts. The site is fully static with no backend. Pages are prerendered at build time using React Router v7 framework mode with `ssr: false`. It hosts hands-on open source challenges, community documentation, and links to the OffOn community.
+Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for open source enthusiasts. The site is fully static with no backend. Pages are prerendered at build time using React Router v8 framework mode with `ssr: false`. It hosts hands-on open source challenges, community documentation, and links to the OffOn community.
 
 ## Tech Stack
 
@@ -8,7 +8,7 @@ Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for op
 - **Vite**: build tooling and dev server
 - **Tailwind CSS**: utility-first styling
 - **shadcn/ui**: minimal component surface (`badge.tsx`, `tooltip.tsx`); most Radix UI packages were intentionally removed
-- **React Router v7**: client-side routing with static prerendering
+- **React Router v8**: client-side routing with static prerendering
 - **Vitest**: unit and component testing
 - **Playwright**: browser smoke tests (`e2e/`)
 - **GitHub Pages**: hosting and deployment
@@ -27,17 +27,18 @@ npm install
 npm run dev
 ```
 
-Node.js **24** is required. Version is pinned in `.nvmrc`, run `nvm use` to switch automatically.
+Node.js **26** is required. Version is pinned in `.nvmrc`, run `nvm use` to switch automatically.
 
 ## Scripts
 
 | Script | Description |
 | --- | --- |
 | `npm run dev` | Start local dev server at <http://localhost:8080> |
-| `npm run build` | SSG prerender build to `dist/client/` (React Router v7) |
+| `npm run build` | SSG prerender build to `dist/client/` (React Router v8); postbuild creates `_.data` aliases for GitHub Pages trailing-slash compatibility |
 | `npm run build:dev` | Dev-mode build (source maps, no minification) |
-| `npm run preview` | Serve the production build locally |
+| `npm run preview` | Serve the production build locally — `serve.json` at the repo root sets `trailingSlash: true` to mirror GitHub Pages URL behaviour |
 | `npm run lint` | Run ESLint across the project |
+| `npm run lint:reuse` | REUSE licence compliance check (requires `pip install reuse` once) |
 | `npm test` | Run the full test suite once (Vitest) |
 | `npm run test:watch` | Run tests in watch mode |
 | `npm run test:coverage` | Run tests with v8 coverage report |
@@ -65,8 +66,8 @@ src/
   hooks/          # Custom React hooks
   lib/            # Shared utilities
   test/           # Vitest + Testing Library unit and component tests
-  root.tsx        # HTML shell rendered by React Router v7 (replaces index.html)
-  routes.ts       # Route definitions (React Router v7 config-based routing)
+  root.tsx        # HTML shell rendered by React Router v8 (replaces index.html)
+  routes.ts       # Route definitions (React Router v8 config-based routing)
   entry.client.tsx  # Client entry: hydrates the full document via HydratedRouter
   entry.server.tsx  # Server/prerender entry: renderToPipeableStream for static HTML generation
   Layout.tsx      # App shell with all providers and Outlet
@@ -127,7 +128,7 @@ Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and
 | `/docs/community-guide` | redirects to `/handbook` | Legacy alias |
 | `/challenges` | `Challenges.tsx` | All challenges across all adventures; filter by technology tag |
 | `/challenges/:tag` | `Challenges.tsx` | Challenges filtered by technology tag (SEO-friendly slug) |
-| `*` | `CatchAll.tsx` | Client-side 404 fallback (re-exports `NotFound.tsx`; required because React Router v7 needs unique files per route) |
+| `*` | `CatchAll.tsx` | Client-side 404 fallback (re-exports `NotFound.tsx`; required because React Router v8 needs unique files per route) |
 
 > **Technology tag filtering** is handled inline on the home page via local `useState`. Adventure detail and challenge detail pages link tags to `/challenges/:tag`. The `/challenges` page uses URL params for shareable filtered views.
 
@@ -155,7 +156,7 @@ All pages include complete OG tags:
 - `og:site_name` (brand), `og:locale` (en_GB)
 - `og:type` (website or article, depending on page)
 
-All dynamic pages (adventure & challenge details) generate page-specific OG tags via React Router v7 `meta()` exports.
+All dynamic pages (adventure & challenge details) generate page-specific OG tags via React Router v8 `meta()` exports.
 
 ### Twitter Card Tags
 
@@ -166,7 +167,7 @@ All pages include:
 
 ### Canonical Links
 
-Each page declares its canonical URL to prevent duplicate indexing. Handled via React Router v7 `meta()` exports on each route module.
+Each page declares its canonical URL to prevent duplicate indexing. Handled via React Router v8 `meta()` exports on each route module.
 
 ### Sitemap and Robots
 
@@ -235,6 +236,7 @@ OffOn targets WCAG 2.2 Level AA across every page, in both light and dark mode. 
 
 - Source code — [MIT](LICENSE)
 - Written content (docs, copy, curriculum data) — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+- Factual scraped data (community-leaders.json) — [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
 - Bundled fonts (Inter, Syne, JetBrains Mono) — [SIL OFL 1.1](https://openfontlicense.org/)
 
 Per-file licensing is declared via the [REUSE](https://reuse.software) spec (`REUSE.toml`, `LICENSES/`).

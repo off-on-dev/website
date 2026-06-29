@@ -5,12 +5,6 @@ export default {
   appDirectory: "src",
   buildDirectory: "dist",
   basename: process.env.VITE_BASE_PATH ?? "/",
-  future: {
-    v8_middleware: true,
-    v8_splitRouteModules: true,
-    v8_viteEnvironmentApi: true,
-    v8_passThroughRequests: true,
-  },
   prerender: [
     "/",
     "/adventures",
