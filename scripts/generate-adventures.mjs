@@ -405,12 +405,13 @@ function ajvPathToDisplay(instancePath) {
 /**
  * Run JSON Schema validation and return errors for structural issues not
  * already covered by the custom validateAdventure() checks below.
- * Skips "required", "type", and "minItems" keywords — those produce better
- * messages from the custom validator.
+ * Skips keywords whose violations are already reported with better messages by
+ * the custom validator: "required", "type", "minItems", and "enum" (difficulty
+ * is re-checked in validateLevel with a clearer message that includes the value).
  */
 function schemaErrors(data) {
   schemaValidate(data);
-  const SKIP = new Set(["required", "type", "minItems", "if", "then", "else"]);
+  const SKIP = new Set(["required", "type", "minItems", "enum", "if", "then", "else"]);
   return (schemaValidate.errors ?? [])
     .filter((e) => !SKIP.has(e.keyword))
     .map((e) => {
