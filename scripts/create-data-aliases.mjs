@@ -7,28 +7,14 @@
  * This script copies every `*.data` file to `<name>/_.data` so both formats
  * resolve correctly without changing any Link `to` props.
  */
-import { readdir, cp, mkdir } from "node:fs/promises";
+import { readdir, copyFile, mkdir } from "node:fs/promises";
 import { join, dirname, basename } from "node:path";
-
-async function collectDataFiles(dir) {
-  const entries = await readdir(dir, { withFileTypes: true });
-  const files = [];
-  for (const entry of entries) {
-    const full = join(dir, entry.name);
-    if (entry.isDirectory()) {
-      files.push(...(await collectDataFiles(full)));
-    } else if (entry.isFile() && entry.name.endsWith(".data")) {
-      files.push(full);
-    }
-  }
-  return files;
-}
 
 const buildDir = "dist/client";
 
-let dataFiles;
+let entries;
 try {
-  dataFiles = await collectDataFiles(buildDir);
+  entries = await readdir(buildDir, { withFileTypes: true, recursive: true });
 } catch (err) {
   if (err.code === "ENOENT") {
     console.error(`create-data-aliases: '${buildDir}' not found — run 'npm run build' first`);
@@ -37,12 +23,17 @@ try {
   throw err;
 }
 
+// Exclude _.data files so repeated runs don't create _/_.data chains.
+const dataFiles = entries
+  .filter((e) => e.isFile() && e.name.endsWith(".data") && e.name !== "_.data")
+  .map((e) => join(e.parentPath, e.name));
+
 await Promise.all(
   dataFiles.map(async (file) => {
     const aliasDir = join(dirname(file), basename(file, ".data"));
     const alias = join(aliasDir, "_.data");
     await mkdir(aliasDir, { recursive: true });
-    await cp(file, alias);
+    await copyFile(file, alias);
   })
 );
 

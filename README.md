@@ -36,7 +36,7 @@ Node.js **26** is required. Version is pinned in `.nvmrc`, run `nvm use` to swit
 | `npm run dev` | Start local dev server at <http://localhost:8080> |
 | `npm run build` | SSG prerender build to `dist/client/` (React Router v8) |
 | `npm run build:dev` | Dev-mode build (source maps, no minification) |
-| `npm run preview` | Serve the production build locally |
+| `npm run preview` | Serve the production build locally — `serve.json` at the repo root sets `trailingSlash: true` to mirror GitHub Pages URL behaviour |
 | `npm run lint` | Run ESLint across the project |
 | `npm test` | Run the full test suite once (Vitest) |
 | `npm run test:watch` | Run tests in watch mode |

@@ -247,24 +247,31 @@ describe("_.data aliases for trailing-slash GitHub Pages compatibility", () => {
   // Routes with loaders produce <path>.data for non-trailing-slash requests.
   // create-data-aliases.mjs (postbuild) copies each to <path>/_.data so
   // trailing-slash GitHub Pages URLs also resolve single-fetch data requests.
-  const loaderRoutes = [
-    "adventures/blind-by-design",
-    "adventures/echoes-lost-in-orbit/levels/beginner/solution",
-    "adventures/echoes-lost-in-orbit/levels/intermediate/solution",
-    "adventures/echoes-lost-in-orbit/levels/expert/solution",
-  ];
+  // Derived dynamically so new loader routes are covered without manual updates.
+  it("every *.data file has a matching _.data alias with identical content", () => {
+    if (!fs.existsSync(DIST_ROOT)) {
+      throw new Error("dist/client not found — run npm run build first");
+    }
 
-  for (const route of loaderRoutes) {
-    it(`dist/client/${route}/_.data exists`, () => {
-      const aliasPath = path.join(DIST_ROOT, route, "_.data");
-      const dataPath = path.join(DIST_ROOT, `${route}.data`);
-      if (!fs.existsSync(dataPath)) {
-        throw new Error(`dist/client/${route}.data not found — run npm run build first`);
-      }
-      expect(fs.existsSync(aliasPath), `Missing _.data alias at ${aliasPath}`).toBe(true);
-      expect(fs.readFileSync(aliasPath)).toEqual(fs.readFileSync(dataPath));
-    });
-  }
+    const entries = fs.readdirSync(DIST_ROOT, { withFileTypes: true, recursive: true });
+    const dataFiles = entries.filter(
+      (e) => e.isFile() && e.name.endsWith(".data") && e.name !== "_.data"
+    );
+
+    if (dataFiles.length === 0) {
+      throw new Error("No .data files found in dist/client — run npm run build first");
+    }
+
+    for (const entry of dataFiles) {
+      const file = path.join(entry.parentPath, entry.name);
+      const alias = path.join(path.dirname(file), path.basename(file, ".data"), "_.data");
+      const rel = path.relative(DIST_ROOT, file);
+      expect(fs.existsSync(alias), `Missing _.data alias for ${rel}`).toBe(true);
+      expect(fs.readFileSync(alias, "utf-8"), `_.data content mismatch for ${rel}`).toEqual(
+        fs.readFileSync(file, "utf-8")
+      );
+    }
+  });
 });
 
 describe("prerendered challenge pages include all content sections", () => {
