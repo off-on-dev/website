@@ -66,8 +66,13 @@ const validateOnly = process.argv.includes("--validate-only");
 // format, slug format), enum violations, and length constraints.
 const adventureSchema = JSON.parse(readFileSync(SCHEMA_PATH, "utf8"));
 const ajv = new Ajv2020({ allErrors: true, strict: false });
-ajv.addFormat("uri", true); // suppress "unknown format" warnings; URI syntax is not enforced here
+ajv.addFormat("uri", (value) => { try { new URL(value); return true; } catch { return false; } });
 const schemaValidate = ajv.compile(adventureSchema);
+
+// Keywords whose AJV violations are reported with better messages by the custom validator.
+// "enum" is handled separately in schemaErrors(): only difficulty paths are skipped, so any
+// future enum field added to the schema still gets AJV coverage.
+const SCHEMA_SKIP_KEYWORDS = new Set(["required", "type", "minItems", "if", "then", "else"]);
 
 // Maps emoji shorthand to Lucide React icon names used in AdventureDetail.
 const EMOJI_ICON_MAP = {
@@ -394,26 +399,32 @@ function autoCorrectDevcontainerPaths(data, id, yamlPath, validFolders) {
 /**
  * Convert an Ajv instancePath ("/levels/0/unknown_field") to the display
  * format used by the custom validator ("levels[0].unknown_field").
+ * Uses a split-reduce to handle adjacent numeric indices correctly
+ * (e.g. "/tools/1/2" → "tools[1][2]" rather than "tools[1]2").
  */
 function ajvPathToDisplay(instancePath) {
-  return instancePath
-    .replace(/^\//, "")
-    .replace(/\/(\d+)(\/|$)/g, (_, n, sep) => `[${n}]${sep === "/" ? "." : ""}`)
-    .replace(/\//g, ".");
+  if (!instancePath) return "";
+  return instancePath.slice(1).split("/").reduce((acc, seg) =>
+    /^\d+$/.test(seg) ? `${acc}[${seg}]` : acc ? `${acc}.${seg}` : seg, "");
 }
 
 /**
  * Run JSON Schema validation and return errors for structural issues not
  * already covered by the custom validateAdventure() checks below.
- * Skips keywords whose violations are already reported with better messages by
- * the custom validator: "required", "type", "minItems", and "enum" (difficulty
- * is re-checked in validateLevel with a clearer message that includes the value).
+ * Skips keywords whose violations are reported with better messages by the
+ * custom validator (see SCHEMA_SKIP_KEYWORDS). "enum" is special: only
+ * difficulty enum errors are skipped (re-checked in validateLevel); any other
+ * enum field added to the schema in future will still produce AJV errors here.
  */
 function schemaErrors(data) {
-  schemaValidate(data);
-  const SKIP = new Set(["required", "type", "minItems", "enum", "if", "then", "else"]);
+  const valid = schemaValidate(data);
+  if (valid) return [];
   return (schemaValidate.errors ?? [])
-    .filter((e) => !SKIP.has(e.keyword))
+    .filter((e) => {
+      if (SCHEMA_SKIP_KEYWORDS.has(e.keyword)) return false;
+      if (e.keyword === "enum" && e.instancePath.endsWith("/difficulty")) return false;
+      return true;
+    })
     .map((e) => {
       const path = ajvPathToDisplay(e.instancePath) || "adventure";
       if (e.keyword === "additionalProperties") {

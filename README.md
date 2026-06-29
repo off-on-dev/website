@@ -34,10 +34,11 @@ Node.js **26** is required. Version is pinned in `.nvmrc`, run `nvm use` to swit
 | Script | Description |
 | --- | --- |
 | `npm run dev` | Start local dev server at <http://localhost:8080> |
-| `npm run build` | SSG prerender build to `dist/client/` (React Router v8) |
+| `npm run build` | SSG prerender build to `dist/client/` (React Router v8); postbuild creates `_.data` aliases for GitHub Pages trailing-slash compatibility |
 | `npm run build:dev` | Dev-mode build (source maps, no minification) |
 | `npm run preview` | Serve the production build locally — `serve.json` at the repo root sets `trailingSlash: true` to mirror GitHub Pages URL behaviour |
 | `npm run lint` | Run ESLint across the project |
+| `npm run lint:reuse` | REUSE licence compliance check (requires `pip install reuse` once) |
 | `npm test` | Run the full test suite once (Vitest) |
 | `npm run test:watch` | Run tests in watch mode |
 | `npm run test:coverage` | Run tests with v8 coverage report |

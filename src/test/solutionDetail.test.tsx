@@ -1,11 +1,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
+import type { Location } from "react-router";
 import { ConsentProvider } from "@/hooks/useConsent";
-import SolutionDetail from "@/pages/SolutionDetail";
+import SolutionDetail, { meta } from "@/pages/SolutionDetail";
 import { ADVENTURES } from "@/data/adventures";
 import { SOLUTIONS } from "@/data/solutions";
-import { COMMUNITY_URL } from "@/data/constants";
+import { BRAND_NAME, COMMUNITY_URL } from "@/data/constants";
 
 vi.mock("react-router", async () => {
   const actual = await vi.importActual<typeof import("react-router")>("react-router");
@@ -117,6 +118,45 @@ describe("SolutionDetail — not found", () => {
     });
     renderPage();
     expect(screen.getByRole("heading", { level: 1, name: /Solution not found/i })).toBeTruthy();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// meta() — called server-side; does not use useLoaderData
+// ---------------------------------------------------------------------------
+
+const STUB_LOCATION: Location = { pathname: "/", search: "", hash: "", state: null, key: "default" };
+
+function callMeta(loaderData: unknown): ReturnType<typeof meta> {
+  return meta({ loaderData, params: {}, location: STUB_LOCATION, matches: [] } as Parameters<typeof meta>[0]);
+}
+
+describe("SolutionDetail — meta()", () => {
+  it("returns noindex and a 'Not Found' title when adventure is missing", () => {
+    const result = callMeta({ adventure: null, level: null, solutionUnlocked: false, solution: null });
+    expect(result).toContainEqual({ title: `Solution Not Found - ${BRAND_NAME}` });
+    expect(result).toContainEqual({ name: "robots", content: "noindex, nofollow" });
+  });
+
+  it("returns noindex when the solution is locked (deadline not passed)", () => {
+    const result = callMeta({ adventure, level, solutionUnlocked: false, solution: null });
+    expect(result).toContainEqual({ name: "robots", content: "noindex, nofollow" });
+    expect(result).toContainEqual({
+      title: `${level.name} Solution - ${adventure.title} - ${BRAND_NAME}`,
+    });
+  });
+
+  it("returns noindex and a 'Not Found' title when unlocked but no solution authored", () => {
+    const result = callMeta({ adventure, level, solutionUnlocked: true, solution: null });
+    expect(result).toContainEqual({ title: `Solution Not Found - ${BRAND_NAME}` });
+    expect(result).toContainEqual({ name: "robots", content: "noindex, nofollow" });
+  });
+
+  it("returns a full meta set with correct title when solution is available", () => {
+    const result = callMeta({ adventure, level, solutionUnlocked: true, solution });
+    const expected = `${solution.title} - ${adventure.title} - ${BRAND_NAME}`;
+    expect(result).toContainEqual({ title: expected });
+    expect(result?.find((d) => "name" in d && d.name === "robots")).toBeUndefined();
   });
 });
 

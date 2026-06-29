@@ -37,4 +37,9 @@ await Promise.all(
   })
 );
 
+if (dataFiles.length === 0) {
+  console.error("create-data-aliases: no *.data files found in dist/client — loaders may have been accidentally removed");
+  process.exit(1);
+}
+
 console.log(`Created ${dataFiles.length} _.data alias${dataFiles.length === 1 ? "" : "es"}`);
