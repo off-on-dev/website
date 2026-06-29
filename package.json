@@ -10,6 +10,7 @@
     "build": "react-router build",
     "build:dev": "react-router build --mode development",
     "lint": "eslint .",
+    "lint:reuse": "reuse lint",
     "preview": "cp dist/client/404/index.html dist/client/404.html && npx serve dist/client",
     "test": "vitest run",
     "test:watch": "vitest",

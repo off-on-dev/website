@@ -134,6 +134,7 @@ npm run dev          # Start local dev server (http://localhost:8080)
 npm run build        # Production SSG build (React Router v8) -> dist/client/
 npm run build:dev    # Dev-mode build
 npm run lint         # ESLint
+npm run lint:reuse   # REUSE licence compliance (requires: pip install reuse)
 npm test             # Run tests once (Vitest)
 npm run test:watch   # Tests in watch mode
 npm run test:coverage  # Run tests with v8 coverage (uses @vitest/coverage-v8)
@@ -673,14 +674,15 @@ Every code change must pass all of these checks before being considered done. St
 ### Mandatory checks
 
 1. **Run lint:** `npm run lint` must exit with zero errors.
-2. **Run tests:** `npm test` must pass with zero failures.
-3. **Run e2e and a11y tests:** `npm run build && npm run test:e2e` must pass with zero failures. The axe audit runs tags `["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"]` in both light and dark mode. Never reduce this tag set. Axe catches roughly 30–40% of real issues — treat it as ground truth for mechanical violations, but manual persona testing (see ACCESSIBILITY.md) is always required.
-4. **Run build:** `npm run build` must complete with no TypeScript errors or bundling failures.
-5. **Re-read every file you changed:** verify the final state is correct. Never assume an edit landed correctly without checking.
-6. **Check all call sites:** if you changed a function signature, component props, or exported type, search for all usages and confirm they are updated.
-7. **Check imports:** every import must resolve. No unused imports. No circular dependencies introduced.
-8. **Verify at three viewports:** 375px, 768px, and 1280px. Always test against the production build, never the dev server.
-9. **Check discussion data on every PR:** if the PR adds or modifies adventure levels, verify that a per-level discussion JSON file exists with the correct `discussionUrl`.
+2. **Run REUSE lint:** `npm run lint:reuse` must pass. Requires `pip install reuse` once. Run whenever a new file type or extension is added to the repo.
+3. **Run tests:** `npm test` must pass with zero failures.
+4. **Run e2e and a11y tests:** `npm run build && npm run test:e2e` must pass with zero failures. The axe audit runs tags `["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"]` in both light and dark mode. Never reduce this tag set. Axe catches roughly 30–40% of real issues — treat it as ground truth for mechanical violations, but manual persona testing (see ACCESSIBILITY.md) is always required.
+5. **Run build:** `npm run build` must complete with no TypeScript errors or bundling failures.
+6. **Re-read every file you changed:** verify the final state is correct. Never assume an edit landed correctly without checking.
+7. **Check all call sites:** if you changed a function signature, component props, or exported type, search for all usages and confirm they are updated.
+8. **Check imports:** every import must resolve. No unused imports. No circular dependencies introduced.
+9. **Verify at three viewports:** 375px, 768px, and 1280px. Always test against the production build, never the dev server.
+10. **Check discussion data on every PR:** if the PR adds or modifies adventure levels, verify that a per-level discussion JSON file exists with the correct `discussionUrl`.
 
 ### Before writing any code
 
