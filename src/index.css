@@ -470,25 +470,25 @@ html {
 @layer components {
   /* Primary filled button: py-3 gives 12+20+12 = 44px (WCAG 2.5.5) */
   .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.97] focus-ring;
     cursor: pointer;
   }
 
   /* Ghost/outline button */
   .btn-ghost {
-    @apply inline-flex items-center gap-2 rounded-md border border-foreground/35 bg-transparent px-5 py-3 text-sm font-semibold text-foreground transition-all duration-200 hover:border-primary/60 hover:text-primary active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md border border-foreground/35 bg-transparent px-5 py-3 text-sm font-semibold text-foreground transition-all duration-200 hover:border-primary/60 hover:text-primary active:scale-[0.97] focus-ring;
     cursor: pointer;
   }
 
   /* Soft tinted button */
   .btn-soft {
-    @apply inline-flex items-center justify-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-5 py-3 text-sm font-semibold text-primary transition-all duration-200 hover:bg-primary/20 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-5 py-3 text-sm font-semibold text-primary transition-all duration-200 hover:bg-primary/20 active:scale-[0.97] focus-ring;
     cursor: pointer;
   }
 
   /* Inverse button - for use on primary-colored section backgrounds */
   .btn-inverse {
-    @apply inline-flex items-center gap-2 rounded-md bg-background text-primary font-semibold text-sm px-5 py-3 border-2 border-primary transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md bg-background text-primary font-semibold text-sm px-5 py-3 border-2 border-primary transition-all active:scale-[0.97] focus-ring;
     cursor: pointer;
   }
   .btn-inverse:hover {
@@ -499,7 +499,7 @@ html {
 
   /* Ghost inverse button - for use on primary-colored section backgrounds */
   .btn-ghost-inverse {
-    @apply inline-flex items-center gap-2 rounded-md bg-transparent text-background font-semibold text-sm px-5 py-3 border-2 border-background/70 transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md bg-transparent text-background font-semibold text-sm px-5 py-3 border-2 border-background/70 transition-all active:scale-[0.97] focus-ring;
     cursor: pointer;
   }
   .btn-ghost-inverse:hover {
@@ -510,26 +510,25 @@ html {
 
   /* Filter pills - min-h-[44px] meets WCAG 2.5.5; text is centered inside */
   .pill-active {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-primary/50 bg-primary/10 px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-primary/50 bg-primary/10 px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none text-primary transition-colors focus-ring;
     cursor: pointer;
   }
 
   .pill-inactive {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-border bg-transparent px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none text-dim hover:border-primary/60 hover:text-primary hover:bg-primary/5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-border bg-transparent px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none text-dim hover:border-primary/60 hover:text-primary hover:bg-primary/5 transition-all duration-200 focus-ring;
     cursor: pointer;
   }
 
 }
 
-@layer utilities {
-  /* Shorthand for the standard focus ring — replaces the 4-class chain */
-  .focus-ring {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
-  }
-  /* Tighter variant for small inline elements (links, topic pills) */
-  .focus-ring-tight {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1;
-  }
+/* @utility registers these as first-class Tailwind utilities, making them
+   usable in both JSX className and @apply (unlike @layer utilities classes). */
+@utility focus-ring {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+}
+
+@utility focus-ring-tight {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1;
 }
 
 /* ─── Electric glow effects ──────────────────────────────── */

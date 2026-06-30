@@ -15,6 +15,9 @@ export const useFocusTrap = (containerRef: RefObject<HTMLElement | null>, enable
     // even when enabled is true (e.g. after a viewport resize). Skip silently.
     if (window.getComputedStyle(container).display === "none") return;
     container.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)?.focus();
+  // containerRef is included for ESLint exhaustive-deps compliance. Ref objects
+  // have stable identity (same object reference across renders), so this dep never
+  // actually triggers a re-run — only changes to enabled do.
   }, [containerRef, enabled]);
 
   // Register the Tab/Shift+Tab handler. Re-queries the DOM on every keypress
@@ -47,5 +50,6 @@ export const useFocusTrap = (containerRef: RefObject<HTMLElement | null>, enable
 
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
+  // containerRef: see note on the first effect above.
   }, [containerRef, enabled]);
 };

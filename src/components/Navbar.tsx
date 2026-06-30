@@ -75,8 +75,10 @@ export const Navbar = (): JSX.Element => {
     triggerRef.current?.focus();
   };
 
+  // Two keydown listeners are registered while the menu is open: useEscapeKey
+  // handles Escape, useFocusTrap handles Tab wrapping. Keeping them separate
+  // preserves each hook's single responsibility and reusability elsewhere.
   useEscapeKey(closeMenu, menuOpen);
-
   useFocusTrap(menuRef, menuOpen);
 
   // Hide page content from assistive technologies while the menu is open.
