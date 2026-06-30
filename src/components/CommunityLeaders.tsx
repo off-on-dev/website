@@ -35,7 +35,7 @@ const ALL_SECTIONS: LeaderSection[] = communityLeadersData.sections;
 const LeaderRow = ({ user, rank }: { user: LeaderUser; rank: number }): JSX.Element => (
   <li className="flex items-center gap-3">
     <span
-      className="font-mono text-xs text-[hsl(var(--text-faint))] w-4 shrink-0 text-right"
+      className="font-mono text-xs text-faint w-4 shrink-0 text-right"
       aria-hidden="true"
     >
       {rank}
@@ -47,7 +47,7 @@ const LeaderRow = ({ user, rank }: { user: LeaderUser; rank: number }): JSX.Elem
       className="text-sm font-medium text-foreground min-w-0 flex-1"
     />
     <span
-      className="text-xs font-mono text-[hsl(var(--text-secondary))] tabular-nums shrink-0"
+      className="text-xs font-mono text-dim tabular-nums shrink-0"
       aria-label={`${user.count} contributions`}
     >
       {user.count}
@@ -78,7 +78,7 @@ export const CommunityLeaders = ({
 
   return (
     <div
-      className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5"
+      className="rounded-xl border border-border bg-[hsl(var(--surface))] p-5"
     >
       <h2 className="font-sans text-base font-semibold text-foreground mb-5">
         Community Leaders
@@ -87,7 +87,7 @@ export const CommunityLeaders = ({
         {visibleSections.map((section) => (
           <div
             key={section.id}
-            className="pb-5 border-b border-[hsl(var(--surface-border))] last:border-b-0 last:pb-0"
+            className="pb-5 border-b border-border last:border-b-0 last:pb-0"
           >
             <LeaderCategory section={section} />
           </div>

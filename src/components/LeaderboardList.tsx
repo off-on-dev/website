@@ -26,7 +26,7 @@ export const LeaderboardList = ({ rows, label = "Ranked players" }: LeaderboardL
     {rows.map((row) => (
       <li key={row.username} className="flex items-center gap-3 text-sm">
         <span
-          className="font-mono text-xs text-[hsl(var(--text-faint))] w-4 shrink-0 text-right"
+          className="font-mono text-xs text-faint w-4 shrink-0 text-right"
           aria-hidden="true"
         >
           {row.rank}

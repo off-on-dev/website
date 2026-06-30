@@ -50,7 +50,7 @@ const Contribute = (): JSX.Element => {
                 {/* Row 1: discover, learn */}
                 <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
                   <h3 className="font-semibold text-foreground">Explore OffOn</h3>
-                  <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
+                  <p className="text-sm text-dim leading-relaxed flex-1">
                     Browse the forum, see what the community is building, and sign up to get started. Introduce yourself and get a feel for how OffOn works.
                   </p>
                   <a href={`${COMMUNITY_URL}/signup`} target="_blank" rel="noopener noreferrer" className={extLink}>
@@ -60,7 +60,7 @@ const Contribute = (): JSX.Element => {
 
                 <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
                   <h3 className="font-semibold text-foreground">Play an Adventure</h3>
-                  <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
+                  <p className="text-sm text-dim leading-relaxed flex-1">
                     Take on a hands-on challenge, debug a broken environment, and learn by doing. Tell us what worked, what confused you, and where you got stuck. Your experience helps us improve the challenges.
                   </p>
                   <Link to="/challenges/" className={extLink}>
@@ -71,7 +71,7 @@ const Contribute = (): JSX.Element => {
                 {/* Row 2: shape, engage */}
                 <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
                   <h3 className="font-semibold text-foreground">Shape the Challenges</h3>
-                  <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
+                  <p className="text-sm text-dim leading-relaxed flex-1">
                     Have a scenario that would make a great challenge? Submit your idea on GitHub. Ready to go further? Pick up an approved idea and implement the full adventure.
                   </p>
                   <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea" target="_blank" rel="noopener noreferrer" className={extLink}>
@@ -84,7 +84,7 @@ const Contribute = (): JSX.Element => {
 
                 <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
                   <h3 className="font-semibold text-foreground">Join the Conversation</h3>
-                  <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
+                  <p className="text-sm text-dim leading-relaxed flex-1">
                     <a href={`${COMMUNITY_URL}/c/public-categories/q-a/10`} target="_blank" rel="noopener noreferrer" className={extLink}>Ask a question <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>{" "}or answer one, take part in discussions, and support newcomers getting started. Share tutorials, post tips, and write about what you have learned. Introduce the community to open source tools you use or maintain.
                   </p>
                   <a href={`${COMMUNITY_URL}/c/community-voices/38`} target="_blank" rel="noopener noreferrer" className={extLink}>
@@ -95,7 +95,7 @@ const Contribute = (): JSX.Element => {
                 {/* Row 3: stay informed, local community */}
                 <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
                   <h3 className="font-semibold text-foreground">Follow the Weekly Digest</h3>
-                  <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
+                  <p className="text-sm text-dim leading-relaxed flex-1">
                     Stay up to date with what is happening across the open source community. Answer the question of the week and tell us what topics you would like to see covered next.
                   </p>
                   <a href={`${COMMUNITY_URL}/tag/weekly-digest/95`} target="_blank" rel="noopener noreferrer" className={extLink}>
@@ -105,7 +105,7 @@ const Contribute = (): JSX.Element => {
 
                 <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
                   <h3 className="font-semibold text-foreground">Meetups and Groups</h3>
-                  <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
+                  <p className="text-sm text-dim leading-relaxed flex-1">
                     Running a local meetup, user group, or open source community? Use OffOn as a vendor-agnostic home for your discussions and announcements. Find existing groups, join as a speaker, or bring open source to your local community.
                   </p>
                   <a href={`${COMMUNITY_URL}/c/local-meetups-and-groups/19`} target="_blank" rel="noopener noreferrer" className={extLink}>
@@ -116,7 +116,7 @@ const Contribute = (): JSX.Element => {
                 {/* Row 4: advocate, improve */}
                 <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
                   <h3 className="font-semibold text-foreground">Spread the Word</h3>
-                  <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
+                  <p className="text-sm text-dim leading-relaxed flex-1">
                     Follow us, repost what we share, and mention {BRAND_NAME} to your network. Writing about us in a blog post or podcast episode? Share it with us <a href={`mailto:${CONTACT_EMAIL}`} className={extLink}>via email</a> or mention us on social media and we would love to repost.
                   </p>
                   <div className="flex flex-wrap gap-4">
@@ -140,7 +140,7 @@ const Contribute = (): JSX.Element => {
 
                 <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
                   <h3 className="font-semibold text-foreground">Fix Bugs and Improve Docs</h3>
-                  <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed flex-1">
+                  <p className="text-sm text-dim leading-relaxed flex-1">
                     Each adventure has level guides and missing solution walkthroughs. If you have solved a level, write it up. You can also improve this website by reporting an issue or contributing to the site. Typos and broken links across either repo need no issue, just open a PR.
                   </p>
                   <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" className={extLink}>
@@ -172,7 +172,7 @@ const Contribute = (): JSX.Element => {
         </div>
 
         {/* Sponsor callout */}
-        <div className="bg-card border-y border-[hsl(var(--surface-border))] px-6 md:px-16 py-16">
+        <div className="bg-card border-y border-border px-6 md:px-16 py-16">
           <div className="mx-auto max-w-6xl">
             <section aria-labelledby="sponsor-callout">
               <div className="max-w-2xl">

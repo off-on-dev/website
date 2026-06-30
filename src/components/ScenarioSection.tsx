@@ -13,7 +13,7 @@ export const ScenarioSection = ({ backstory }: ScenarioSectionProps): JSX.Elemen
         <InlineProse
           key={i}
           html={para}
-          className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed"
+          className="text-sm text-dim leading-relaxed"
         />
       ))}
     </div>

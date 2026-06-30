@@ -20,7 +20,7 @@ export const BoardSection = (): JSX.Element => {
           {BOARD_MEMBERS.map((member, index) => (
             <div
               key={`${member.name}-${index}`}
-              className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6"
+              className="card-glow rounded-xl border border-border bg-[hsl(var(--surface))] p-6"
             >
               {member.image ? (
                 <img
@@ -35,7 +35,7 @@ export const BoardSection = (): JSX.Element => {
               ) : (
                 <div
                   aria-hidden="true"
-                  className="flex h-20 w-20 items-center justify-center rounded-full border border-[hsl(var(--surface-border))] bg-[hsl(var(--muted))]"
+                  className="flex h-20 w-20 items-center justify-center rounded-full border border-border bg-[hsl(var(--muted))]"
                 >
                   <User size={28} className="text-muted-foreground" />
                 </div>

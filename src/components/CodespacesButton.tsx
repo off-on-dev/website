@@ -17,7 +17,7 @@ export const CodespacesButton = ({ href, fullWidth = false }: CodespacesButtonPr
       Open in Codespaces <ExternalLink size={14} aria-hidden="true" />
       <span className="sr-only"> (opens in new tab)</span>
     </a>
-    <p className={`mt-2.5 text-xs text-[hsl(var(--text-faint))] font-mono${fullWidth ? " text-center" : ""}`}>
+    <p className={`mt-2.5 text-xs text-faint font-mono${fullWidth ? " text-center" : ""}`}>
       Free GitHub account required
     </p>
   </>

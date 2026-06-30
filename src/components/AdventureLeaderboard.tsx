@@ -17,7 +17,7 @@ export const AdventureLeaderboard = ({ adventureId }: AdventureLeaderboardProps)
   if (rows.length === 0) return null;
 
   return (
-    <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+    <div className="rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
       <h2 className="font-sans text-base font-semibold text-foreground mb-4">Leaderboard</h2>
       <LeaderboardList rows={rows} label="Adventure leaderboard" />
     </div>

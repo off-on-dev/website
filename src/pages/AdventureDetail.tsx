@@ -93,12 +93,12 @@ type UpcomingLevelTileProps = { name: string; difficulty: AdventureLevel["diffic
 
 const UpcomingLevelTile = ({ name, difficulty }: UpcomingLevelTileProps): JSX.Element => {
   return (
-    <div className="relative rounded-xl border border-dashed border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 flex flex-col">
+    <div className="relative rounded-xl border border-dashed border-border bg-[hsl(var(--surface))] p-6 flex flex-col">
       <div className="mb-3">
         <DifficultyBadge difficulty={difficulty} showDot />
       </div>
       <h3 className="text-lg font-semibold text-foreground mb-3">{name}</h3>
-      <span className="mt-auto inline-flex items-center gap-1 text-xs font-mono uppercase tracking-widest text-[hsl(var(--text-secondary))]">
+      <span className="mt-auto inline-flex items-center gap-1 text-xs font-mono uppercase tracking-widest text-dim">
         Coming Soon
       </span>
     </div>
@@ -112,12 +112,12 @@ const AdventureLevelLink = ({ level, adventureId }: AdventureLevelLinkProps): JS
   return (
     <Link
       to={`/adventures/${adventureId}/levels/${level.id}/`}
-      className="group card-glow relative rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      className="group card-glow relative rounded-xl border border-border bg-[hsl(var(--surface))] p-6 flex flex-col focus-ring"
     >
       <div className="flex flex-wrap items-center gap-2 mb-3">
         <DifficultyBadge difficulty={level.difficulty} showDot />
         {level.estimatedTime && (
-          <span className="inline-flex items-center gap-1 rounded-full border border-[hsl(var(--surface-border))] px-2.5 py-1 font-mono text-xs text-[hsl(var(--text-secondary))]">
+          <span className="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 font-mono text-xs text-dim">
             <Clock size={11} aria-hidden="true" />
             {level.estimatedTime}
           </span>
@@ -127,7 +127,7 @@ const AdventureLevelLink = ({ level, adventureId }: AdventureLevelLinkProps): JS
         {level.name}
       </h3>
       {descHtml && (
-        <p className="text-xs text-[hsl(var(--text-secondary))] leading-relaxed line-clamp-4 mb-4 flex-1 md-inline"
+        <p className="text-xs text-dim leading-relaxed line-clamp-4 mb-4 flex-1 md-inline"
           dangerouslySetInnerHTML={{ __html: stripLinks(descHtml) }}
         />
       )}
@@ -173,7 +173,7 @@ const AdventureDetail = (): JSX.Element => {
               {adventure.contributor && (
                 <ContributorBadge name={adventure.contributor.name} url={adventure.contributor.url} label="Adventure Builder" />
               )}
-              <span className="font-mono text-xs uppercase tracking-widest text-[hsl(var(--text-faint))]">
+              <span className="font-mono text-xs uppercase tracking-widest text-faint">
                 {adventure.month}
               </span>
             </div>
@@ -181,7 +181,7 @@ const AdventureDetail = (): JSX.Element => {
               {isLive && <LivePill />}
               <TagChips tags={adventure.tags} />
             </div>
-            <InlineProse html={adventure.story} className="text-[hsl(var(--text-secondary))] leading-relaxed max-w-3xl" />
+            <InlineProse html={adventure.story} className="text-dim leading-relaxed max-w-3xl" />
           </div>
 
           {/* Two-column layout */}
@@ -197,7 +197,7 @@ const AdventureDetail = (): JSX.Element => {
                     {adventure.overview.map((para, i) => (
                       <li key={i} className="flex items-start gap-2.5">
                         <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                        <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed">{para}</p>
+                        <p className="text-sm text-dim leading-relaxed">{para}</p>
                       </li>
                     ))}
                   </ul>
@@ -240,7 +240,7 @@ const AdventureDetail = (): JSX.Element => {
                       <InlineProse
                         key={i}
                         html={para}
-                        className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed"
+                        className="text-sm text-dim leading-relaxed"
                       />
                     ))}
                   </div>
@@ -259,15 +259,15 @@ const AdventureDetail = (): JSX.Element => {
             <aside className="mt-10 lg:mt-0 space-y-6 lg:sticky lg:top-28 lg:self-start">
               <AdventureLeaderboard adventureId={adventure.id} />
               {adventure.contributor && (
-                <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] px-5 py-4">
-                  <p className="font-mono text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] mb-2">
+                <div className="rounded-xl border border-border bg-[hsl(var(--surface))] px-5 py-4">
+                  <p className="font-mono text-xs uppercase tracking-widest text-faint mb-2">
                     Adventure by
                   </p>
                   <PersonNameLink name={adventure.contributor.name} url={adventure.contributor.url} />
                   {adventure.contributor.aboutHtml && (
                     <InlineProse
                       html={adventure.contributor.aboutHtml}
-                      className="mt-2 text-sm text-[hsl(var(--text-secondary))] leading-relaxed"
+                      className="mt-2 text-sm text-dim leading-relaxed"
                     />
                   )}
                 </div>

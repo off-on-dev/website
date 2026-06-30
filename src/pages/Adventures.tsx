@@ -52,7 +52,7 @@ const Adventures = (): JSX.Element => (
       {/* How Adventures Work */}
       <section
         aria-labelledby="how-it-works-heading"
-        className="bg-card py-16 px-6 md:px-16 border-y border-[hsl(var(--surface-border))]"
+        className="bg-card py-16 px-6 md:px-16 border-y border-border"
       >
         <div className="mx-auto max-w-6xl">
           <h2 id="how-it-works-heading" className="text-xl font-bold text-foreground mb-8">

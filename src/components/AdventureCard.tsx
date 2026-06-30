@@ -22,10 +22,10 @@ export const AdventureCard = ({ adventure }: AdventureCardProps): JSX.Element =>
       to={`/adventures/${adventure.id}/`}
       aria-label={label}
       className={cn(
-        "group card-glow relative rounded-xl border-2 bg-[hsl(var(--surface))] p-6 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "group card-glow relative rounded-xl border-2 bg-[hsl(var(--surface))] p-6 flex flex-col focus-ring",
         adventure.isLive
           ? "border-primary/50"
-          : "border-[hsl(var(--surface-border))]"
+          : "border-border"
       )}
     >
       <div className="flex items-center justify-between mb-3">
@@ -52,7 +52,7 @@ export const AdventureCard = ({ adventure }: AdventureCardProps): JSX.Element =>
 
       <div className="mt-4 flex flex-wrap gap-1.5">
         {adventure.tags.slice(0, 4).map((tag) => (
-          <span key={tag} className="rounded-sm border border-[hsl(var(--surface-border))] px-2 py-0.5 text-xs text-[hsl(var(--text-faint))]">
+          <span key={tag} className="rounded-sm border border-border px-2 py-0.5 text-xs text-faint">
             {tag}
           </span>
         ))}

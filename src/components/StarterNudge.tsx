@@ -42,7 +42,7 @@ export const StarterNudge = (): JSX.Element | null => {
         type="button"
         onClick={dismissNudge}
         aria-label="Dismiss suggestion"
-        className="shrink-0 inline-flex min-h-6 min-w-6 items-center justify-center text-primary-foreground/60 hover:text-primary-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+        className="shrink-0 inline-flex min-h-6 min-w-6 items-center justify-center text-primary-foreground/60 hover:text-primary-foreground transition-colors focus-ring rounded-sm"
       >
         <X size={14} aria-hidden="true" />
       </button>

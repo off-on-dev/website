@@ -29,7 +29,7 @@ export const ContributorBadge = ({ name, url, glow = false, label = "Challenge B
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className={`${pillClass} hover:border-primary/40 hover:bg-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1`}
+        className={`${pillClass} hover:border-primary/40 hover:bg-primary/10 transition-colors focus-ring-tight`}
       >
         {content}
         <ExternalLink size={11} aria-hidden="true" />

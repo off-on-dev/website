@@ -141,7 +141,7 @@ const SectionBlock = ({ id, eyebrow, heading, children }: {
 }): JSX.Element => (
   <section id={id} aria-labelledby={`${id}-heading`}>
     <div className="mb-10 pt-16">
-      <span className="text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] block mb-2">{eyebrow}</span>
+      <span className="text-xs uppercase tracking-widest text-faint block mb-2">{eyebrow}</span>
       <h2 id={`${id}-heading`} className="font-heading text-3xl md:text-4xl font-bold text-foreground">
         {heading}
       </h2>
@@ -174,7 +174,7 @@ const DownloadBadge = ({ href, filename, label }: DownloadSpec): JSX.Element => 
     href={href}
     download={filename}
     aria-label={`Download ${filename}`}
-    className="inline-flex items-center gap-1 font-sans text-[11px] font-semibold tracking-wide text-[hsl(var(--text-secondary))] hover:text-foreground border border-foreground/25 hover:border-foreground/50 rounded-full px-2.5 py-0.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+    className="inline-flex items-center gap-1 font-sans text-[11px] font-semibold tracking-wide text-dim hover:text-foreground border border-foreground/25 hover:border-foreground/50 rounded-full px-2.5 py-0.5 transition-colors focus-ring-tight"
   >
     <Download size={10} aria-hidden="true" />
     {label}
@@ -191,7 +191,7 @@ const DownloadBadgeGroup = ({ downloads, center }: { downloads: DownloadSpec[]; 
 
 const TableOfContents = ({ activeId }: { activeId: string }): JSX.Element => (
   <nav aria-label="On this page">
-    <p className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(var(--text-faint))] mb-4">
+    <p className="font-sans text-xs font-semibold uppercase tracking-widest text-faint mb-4">
       On this page
     </p>
     <ul className="space-y-0.5" role="list">
@@ -200,10 +200,10 @@ const TableOfContents = ({ activeId }: { activeId: string }): JSX.Element => (
           <a
             href={`#${id}`}
             aria-current={activeId === id ? "location" : undefined}
-            className={`block font-sans text-sm py-1.5 pl-3 border-l-2 transition-colors rounded-r-sm cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${
+            className={`block font-sans text-sm py-1.5 pl-3 border-l-2 transition-colors rounded-r-sm cursor-pointer focus-ring-tight ${
               activeId === id
                 ? "border-primary text-foreground dark:text-primary font-medium"
-                : "border-transparent text-[hsl(var(--text-secondary))] hover:text-foreground hover:border-[hsl(var(--surface-border))]"
+                : "border-transparent text-dim hover:text-foreground hover:border-border"
             }`}
           >
             {label}
@@ -268,17 +268,17 @@ const BrandGuidelines = (): JSX.Element => {
 
                 {/* Mission and Values */}
                 <SectionBlock id="mission" eyebrow="Foundation" heading="Mission and Values">
-                  <p className="font-sans text-base text-[hsl(var(--text-secondary))] leading-relaxed max-w-prose mb-8">
+                  <p className="font-sans text-base text-dim leading-relaxed max-w-prose mb-8">
                     {BRAND_SHORT_DESCRIPTION}
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {VALUES.map((v) => (
-                      <div key={v.name} className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+                      <div key={v.name} className="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
                         <div className="flex items-center gap-2 mb-3">
                           <Zap size={14} className="text-primary shrink-0" aria-hidden="true" />
                           <h3 className="font-sans font-semibold text-sm text-foreground">{v.name}</h3>
                         </div>
-                        <p className="font-sans text-xs text-[hsl(var(--text-secondary))] leading-relaxed">{v.description}</p>
+                        <p className="font-sans text-xs text-dim leading-relaxed">{v.description}</p>
                       </div>
                     ))}
                   </div>
@@ -289,19 +289,19 @@ const BrandGuidelines = (): JSX.Element => {
 
                   {/* Project Mark */}
                   <h3 className="font-sans text-base font-semibold text-foreground mb-3">Project Mark</h3>
-                  <p className="font-sans text-sm text-[hsl(var(--text-secondary))] max-w-prose mb-6">
+                  <p className="font-sans text-sm text-dim max-w-prose mb-6">
                     The horizontal wordmark is the preferred form. Use the icon mark alone only when the wordmark won't fit (minimum 24 px icon height).
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
                     {LOGO_CARDS.map((card) => (
-                      <div key={card.label} className="rounded-lg border border-[hsl(var(--surface-border))] overflow-hidden">
+                      <div key={card.label} className="rounded-lg border border-border overflow-hidden">
                         <div className={`${card.bg} h-32 flex items-center justify-center px-8`}>
                           <img src={card.src} alt={card.alt} width={200} height={48} className="h-12 w-auto max-w-[200px]" loading="lazy" decoding="async" />
                         </div>
-                        <div className="bg-[hsl(var(--surface))] border-t border-[hsl(var(--surface-border))] px-4 py-3">
+                        <div className="bg-[hsl(var(--surface))] border-t border-border px-4 py-3">
                           <p className="font-sans text-sm font-semibold text-foreground leading-tight mb-2.5">{card.label}</p>
                           <div className="flex items-center justify-between gap-2">
-                            <p className="font-sans text-xs text-[hsl(var(--text-faint))]">{card.note}</p>
+                            <p className="font-sans text-xs text-faint">{card.note}</p>
                             <DownloadBadgeGroup downloads={card.downloads} />
                           </div>
                         </div>
@@ -311,7 +311,7 @@ const BrandGuidelines = (): JSX.Element => {
 
                   {/* Icon Mark */}
                   <h3 className="font-sans text-base font-semibold text-foreground mb-3">Icon Mark</h3>
-                  <p className="font-sans text-sm text-[hsl(var(--text-secondary))] max-w-prose mb-5">
+                  <p className="font-sans text-sm text-dim max-w-prose mb-5">
                     A geometric amber firefly bolt. Use it at 24 px minimum. Never rotate, recolor, or distort it.
                   </p>
                   <div className="flex flex-wrap gap-4">
@@ -320,7 +320,7 @@ const BrandGuidelines = (): JSX.Element => {
                       { bg: "bg-[#f8f9fb]", label: "On light" },
                       { bg: "bg-primary", label: "On amber" },
                     ].map(({ bg, label }) => (
-                      <div key={label} className="rounded-lg border border-[hsl(var(--surface-border))] overflow-hidden w-36">
+                      <div key={label} className="rounded-lg border border-border overflow-hidden w-36">
                         <div className={`${bg} h-24 flex items-center justify-center p-5`}>
                           <img
                             src={`${BASE}brand/offon-favicon.svg`}
@@ -332,13 +332,13 @@ const BrandGuidelines = (): JSX.Element => {
                             decoding="async"
                           />
                         </div>
-                        <div className="bg-[hsl(var(--surface))] border-t border-[hsl(var(--surface-border))] px-3 pt-2 pb-2.5">
+                        <div className="bg-[hsl(var(--surface))] border-t border-border px-3 pt-2 pb-2.5">
                           <p className="font-sans text-sm font-semibold text-foreground leading-tight">{label}</p>
                         </div>
                       </div>
                     ))}
                     {/* Single download card for all icon mark variants */}
-                    <div className="rounded-lg border border-[hsl(var(--surface-border))] overflow-hidden w-36 bg-[hsl(var(--surface))] flex flex-col items-center justify-center px-3 py-2.5 text-center">
+                    <div className="rounded-lg border border-border overflow-hidden w-36 bg-[hsl(var(--surface))] flex flex-col items-center justify-center px-3 py-2.5 text-center">
                       <p className="font-sans text-sm font-semibold text-foreground leading-tight mb-2.5">Download</p>
                       <DownloadBadgeGroup downloads={ICON_DOWNLOADS} center />
                     </div>
@@ -352,7 +352,7 @@ const BrandGuidelines = (): JSX.Element => {
                         <Check size={13} className="text-[#15803d] shrink-0" aria-hidden="true" />
                         Do
                       </h4>
-                      <ul role="list" className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
+                      <ul role="list" className="font-sans text-sm text-dim space-y-1.5">
                         <li>Use the correct variant for the background color</li>
                         <li>Maintain clear space equal to the "O" height on all sides</li>
                         <li>Scale proportionally</li>
@@ -365,7 +365,7 @@ const BrandGuidelines = (): JSX.Element => {
                         <X size={13} className="text-destructive shrink-0" aria-hidden="true" />
                         Don't
                       </h4>
-                      <ul role="list" className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
+                      <ul role="list" className="font-sans text-sm text-dim space-y-1.5">
                         <li>Don't recolor, outline, or add drop shadows</li>
                         <li>Don't use the dark logo on light backgrounds</li>
                         <li>Don't stretch, skew, or rotate</li>
@@ -378,9 +378,9 @@ const BrandGuidelines = (): JSX.Element => {
 
                 {/* Colors */}
                 <SectionBlock id="colors" eyebrow="Identity" heading="Colors">
-                  <p className="font-sans text-sm text-[hsl(var(--text-secondary))] max-w-prose mb-6">
+                  <p className="font-sans text-sm text-dim max-w-prose mb-6">
                     All colors are CSS custom properties in{" "}
-                    <code className="font-mono text-xs bg-[hsl(var(--surface))] px-1.5 py-0.5 rounded border border-[hsl(var(--surface-border))]">
+                    <code className="font-mono text-xs bg-[hsl(var(--surface))] px-1.5 py-0.5 rounded border border-border">
                       src/index.css
                     </code>
                     . Reference tokens, not hardcoded hex values.
@@ -425,21 +425,21 @@ const BrandGuidelines = (): JSX.Element => {
 
                 {/* Typography */}
                 <SectionBlock id="typography" eyebrow="Identity" heading="Typography">
-                  <p className="font-sans text-sm text-[hsl(var(--text-secondary))] max-w-prose mb-8">
+                  <p className="font-sans text-sm text-dim max-w-prose mb-8">
                     All fonts are self-hosted as WOFF2. No external requests. Use the{" "}
-                    <code className="font-mono text-xs bg-[hsl(var(--surface))] px-1.5 py-0.5 rounded border border-[hsl(var(--surface-border))]">font-heading</code>,{" "}
-                    <code className="font-mono text-xs bg-[hsl(var(--surface))] px-1.5 py-0.5 rounded border border-[hsl(var(--surface-border))]">font-sans</code>, and{" "}
-                    <code className="font-mono text-xs bg-[hsl(var(--surface))] px-1.5 py-0.5 rounded border border-[hsl(var(--surface-border))]">font-mono</code>{" "}
+                    <code className="font-mono text-xs bg-[hsl(var(--surface))] px-1.5 py-0.5 rounded border border-border">font-heading</code>,{" "}
+                    <code className="font-mono text-xs bg-[hsl(var(--surface))] px-1.5 py-0.5 rounded border border-border">font-sans</code>, and{" "}
+                    <code className="font-mono text-xs bg-[hsl(var(--surface))] px-1.5 py-0.5 rounded border border-border">font-mono</code>{" "}
                     Tailwind utilities.
                   </p>
 
                   <div className="mb-10">
                     <div className="flex flex-wrap items-baseline gap-3 mb-3">
                       <h3 className="font-sans text-sm font-semibold text-foreground">Syne</h3>
-                      <span className="font-mono text-xs text-[hsl(var(--text-faint))]">font-heading / 700 / Headings and display</span>
+                      <span className="font-mono text-xs text-faint">font-heading / 700 / Headings and display</span>
                     </div>
                     <div
-                      className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8 space-y-3"
+                      className="rounded-lg border border-border bg-[hsl(var(--surface))] p-8 space-y-3"
                       role="img"
                       aria-label="Syne typeface specimen at sizes 48, 36, 30, 24, and 20px"
                     >
@@ -454,12 +454,12 @@ const BrandGuidelines = (): JSX.Element => {
                   <div className="mb-10">
                     <div className="flex flex-wrap items-baseline gap-3 mb-3">
                       <h3 className="font-sans text-sm font-semibold text-foreground">Inter</h3>
-                      <span className="font-mono text-xs text-[hsl(var(--text-faint))]">font-sans / 400-600 / Body and UI</span>
+                      <span className="font-mono text-xs text-faint">font-sans / 400-600 / Body and UI</span>
                     </div>
-                    <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8 space-y-5">
+                    <div className="rounded-lg border border-border bg-[hsl(var(--surface))] p-8 space-y-5">
                       {FONT_WEIGHTS.map(({ weight, label, sample }) => (
                         <div key={weight} className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6">
-                          <span className="font-mono text-xs text-[hsl(var(--text-faint))] shrink-0 sm:w-32">{weight} {label}</span>
+                          <span className="font-mono text-xs text-faint shrink-0 sm:w-32">{weight} {label}</span>
                           <p className="font-sans text-base text-foreground" style={{ fontWeight: weight }}>{sample}</p>
                         </div>
                       ))}
@@ -469,10 +469,10 @@ const BrandGuidelines = (): JSX.Element => {
                   <div>
                     <div className="flex flex-wrap items-baseline gap-3 mb-3">
                       <h3 className="font-sans text-sm font-semibold text-foreground">JetBrains Mono</h3>
-                      <span className="font-mono text-xs text-[hsl(var(--text-faint))]">font-mono / 400-600 / Code and tokens</span>
+                      <span className="font-mono text-xs text-faint">font-mono / 400-600 / Code and tokens</span>
                     </div>
-                    <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8">
-                      <pre className="font-mono text-sm text-[hsl(var(--text-secondary))] leading-relaxed overflow-x-auto">
+                    <div className="rounded-lg border border-border bg-[hsl(var(--surface))] p-8">
+                      <pre className="font-mono text-sm text-dim leading-relaxed overflow-x-auto">
                         <code>{`--primary: 41 100% 60%;
 --font-heading: Syne, 'Syne Fallback', sans-serif;
 --background: 0 0% 4%;
@@ -486,11 +486,11 @@ hsl(var(--foreground))`}</code>
                 <SectionBlock id="design-elements" eyebrow="Visual Identity" heading="Design Elements">
 
                   <h3 className="font-sans text-base font-semibold text-foreground mb-3">Mascot: Nyx</h3>
-                  <p className="font-sans text-sm text-[hsl(var(--text-secondary))] max-w-prose mb-6">
+                  <p className="font-sans text-sm text-dim max-w-prose mb-6">
                     Nyx is the {BRAND_NAME} firefly mascot. Nyx is gender neutral, so avoid gendered pronouns. Use Nyx in event materials, swag, and community campaigns. Don't alter the colors, proportions, or shape.
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
-                    <div className="rounded-lg border border-[hsl(var(--surface-border))] overflow-hidden">
+                    <div className="rounded-lg border border-border overflow-hidden">
                       <div className="bg-primary h-56 flex items-center justify-center">
                         <img
                           src={`${BASE}nyx.webp`}
@@ -502,15 +502,15 @@ hsl(var(--foreground))`}</code>
                           decoding="async"
                         />
                       </div>
-                      <div className="bg-[hsl(var(--surface))] border-t border-[hsl(var(--surface-border))] px-4 py-3">
+                      <div className="bg-[hsl(var(--surface))] border-t border-border px-4 py-3">
                         <p className="font-sans text-sm font-semibold text-foreground leading-tight mb-2.5">Nyx: Full</p>
                         <div className="flex items-center justify-between gap-2">
-                          <p className="font-sans text-xs text-[hsl(var(--text-faint))]">Hero sections, event banners, swag.</p>
+                          <p className="font-sans text-xs text-faint">Hero sections, event banners, swag.</p>
                           <DownloadBadgeGroup downloads={NYX_FULL_DOWNLOADS} />
                         </div>
                       </div>
                     </div>
-                    <div className="rounded-lg border border-[hsl(var(--surface-border))] overflow-hidden">
+                    <div className="rounded-lg border border-border overflow-hidden">
                       <div className="bg-primary h-56 flex items-center justify-center">
                         <img
                           src={`${BASE}nyx_peek.webp`}
@@ -522,10 +522,10 @@ hsl(var(--foreground))`}</code>
                           decoding="async"
                         />
                       </div>
-                      <div className="bg-[hsl(var(--surface))] border-t border-[hsl(var(--surface-border))] px-4 py-3">
+                      <div className="bg-[hsl(var(--surface))] border-t border-border px-4 py-3">
                         <p className="font-sans text-sm font-semibold text-foreground leading-tight mb-2.5">Nyx: Peek</p>
                         <div className="flex items-center justify-between gap-2">
-                          <p className="font-sans text-xs text-[hsl(var(--text-faint))]">Page hero backgrounds, corner decorations.</p>
+                          <p className="font-sans text-xs text-faint">Page hero backgrounds, corner decorations.</p>
                           <DownloadBadgeGroup downloads={NYX_PEEK_DOWNLOADS} />
                         </div>
                       </div>
@@ -533,10 +533,10 @@ hsl(var(--foreground))`}</code>
                   </div>
 
                   <h3 className="font-sans text-base font-semibold text-foreground mb-3">Open Graph Image</h3>
-                  <p className="font-sans text-sm text-[hsl(var(--text-secondary))] max-w-prose mb-4">
+                  <p className="font-sans text-sm text-dim max-w-prose mb-4">
                     Used as the social media preview when {BRAND_NAME} links are shared. Dimensions: 1200 x 630 px.
                   </p>
-                  <div className="rounded-lg border border-[hsl(var(--surface-border))] overflow-hidden max-w-sm">
+                  <div className="rounded-lg border border-border overflow-hidden max-w-sm">
                     <img
                       src={`${BASE}og.png`}
                       alt="OffOn Open Graph preview image, 1200 by 630 pixels"
@@ -546,8 +546,8 @@ hsl(var(--foreground))`}</code>
                       loading="lazy"
                       decoding="async"
                     />
-                    <div className="bg-[hsl(var(--surface))] border-t border-[hsl(var(--surface-border))] px-4 py-3 flex items-center justify-between gap-2">
-                      <p className="font-sans text-sm font-semibold text-foreground">og.png <span className="font-normal text-[hsl(var(--text-faint))]">· 1200 × 630</span></p>
+                    <div className="bg-[hsl(var(--surface))] border-t border-border px-4 py-3 flex items-center justify-between gap-2">
+                      <p className="font-sans text-sm font-semibold text-foreground">og.png <span className="font-normal text-faint">· 1200 × 630</span></p>
                       <DownloadBadgeGroup downloads={OG_DOWNLOADS} />
                     </div>
                   </div>
@@ -555,7 +555,7 @@ hsl(var(--foreground))`}</code>
 
                 {/* Photography */}
                 <SectionBlock id="photography" eyebrow="Visual Identity" heading="Photography">
-                  <p className="font-sans text-sm text-[hsl(var(--text-secondary))] max-w-prose mb-8">
+                  <p className="font-sans text-sm text-dim max-w-prose mb-8">
                     When photography appears in {BRAND_NAME} materials, it should feel raw and technical, not polished stock imagery.
                   </p>
 
@@ -565,7 +565,7 @@ hsl(var(--foreground))`}</code>
                         <Check size={13} className="text-[#15803d] shrink-0" aria-hidden="true" />
                         Use
                       </h3>
-                      <ul role="list" className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
+                      <ul role="list" className="font-sans text-sm text-dim space-y-1.5">
                         <li>Real developers at real terminals</li>
                         <li>Dark environments that echo the dark mode palette</li>
                         <li>Collaborative scenes with multiple contributors</li>
@@ -579,7 +579,7 @@ hsl(var(--foreground))`}</code>
                         <X size={13} className="text-destructive shrink-0" aria-hidden="true" />
                         Avoid
                       </h3>
-                      <ul role="list" className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
+                      <ul role="list" className="font-sans text-sm text-dim space-y-1.5">
                         <li>Stock photos of people smiling at laptops</li>
                         <li>Bright, corporate-feeling environments</li>
                         <li>Heavily retouched or filtered images</li>
@@ -590,9 +590,9 @@ hsl(var(--foreground))`}</code>
                     </div>
                   </div>
 
-                  <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+                  <div className="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
                     <h3 className="font-sans text-sm font-semibold text-foreground mb-1">When photos aren't available</h3>
-                    <p className="font-sans text-sm text-[hsl(var(--text-secondary))]">
+                    <p className="font-sans text-sm text-dim">
                       Use the Nyx mascot or abstract dark/amber compositions. A clean empty section is better than a distracting stock photo.
                     </p>
                   </div>
@@ -603,11 +603,11 @@ hsl(var(--foreground))`}</code>
 
                   <div className="mb-10">
                     <h3 className="font-sans text-base font-semibold text-foreground mb-3">Brand Name</h3>
-                    <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 max-w-md">
+                    <div className="rounded-lg border border-border bg-[hsl(var(--surface))] p-6 max-w-md">
                       <p className="font-heading text-4xl font-bold text-foreground mb-4" aria-hidden="true">{BRAND_NAME}</p>
-                      <p className="font-sans text-sm text-[hsl(var(--text-secondary))] mb-5">
+                      <p className="font-sans text-sm text-dim mb-5">
                         Always camelCase. Domain is always lowercase:{" "}
-                        <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-[hsl(var(--surface-border))]">offon.dev</code>
+                        <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">offon.dev</code>
                       </p>
                       <div className="grid grid-cols-2 gap-2">
                         {[
@@ -623,7 +623,7 @@ hsl(var(--foreground))`}</code>
                               ? <Check size={11} className="text-[#15803d] shrink-0" aria-hidden="true" />
                               : <X size={11} className="text-destructive shrink-0" aria-hidden="true" />
                             }
-                            <span className={`font-mono text-xs ${ok ? "text-foreground" : "text-[hsl(var(--text-faint))] line-through"}`}>
+                            <span className={`font-mono text-xs ${ok ? "text-foreground" : "text-faint line-through"}`}>
                               {text}
                             </span>
                             <span className="sr-only">{ok ? "(correct)" : "(incorrect)"}</span>
@@ -636,21 +636,21 @@ hsl(var(--foreground))`}</code>
                   <div className="mb-10">
                     <h3 className="font-sans text-base font-semibold text-foreground mb-4">Slogans</h3>
                     <div className="space-y-3">
-                      <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-                        <p className="font-sans text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] mb-2">Primary</p>
+                      <div className="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
+                        <p className="font-sans text-xs uppercase tracking-widest text-faint mb-2">Primary</p>
                         <p className="font-heading text-xl font-bold text-foreground">
                           {BRAND_SLOGAN_PARTS.join(". ")}.
                         </p>
                       </div>
-                      <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
-                        <p className="font-sans text-xs uppercase tracking-widest text-[hsl(var(--text-faint))] mb-2">Secondary</p>
+                      <div className="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
+                        <p className="font-sans text-xs uppercase tracking-widest text-faint mb-2">Secondary</p>
                         <p className="font-heading text-xl font-bold text-foreground">{BRAND_SECONDARY_LINE}</p>
-                        <p className="font-sans text-xs text-[hsl(var(--text-faint))] mt-2">
+                        <p className="font-sans text-xs text-faint mt-2">
                           The lowercase "always" is intentional.
                         </p>
                         <div className="flex flex-wrap gap-x-2 gap-y-0.5 mt-3">
                           {BRAND_SECONDARY_LINE_PARTS.map((part) => (
-                            <span key={part} className="font-mono text-xs text-[hsl(var(--text-faint))]">{part}</span>
+                            <span key={part} className="font-mono text-xs text-faint">{part}</span>
                           ))}
                         </div>
                       </div>
@@ -660,9 +660,9 @@ hsl(var(--foreground))`}</code>
                   <div>
                     <h3 className="font-sans text-base font-semibold text-foreground mb-4">Tone</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                      <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+                      <div className="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
                         <h4 className="font-sans text-sm font-semibold text-foreground mb-3">We are</h4>
-                        <ul role="list" className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
+                        <ul role="list" className="font-sans text-sm text-dim space-y-1.5">
                           <li>Direct and to the point</li>
                           <li>Focused on the community, not the brand</li>
                           <li>Inclusive and welcoming</li>
@@ -670,9 +670,9 @@ hsl(var(--foreground))`}</code>
                           <li>Active voice wherever possible</li>
                         </ul>
                       </div>
-                      <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+                      <div className="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
                         <h4 className="font-sans text-sm font-semibold text-foreground mb-3">We are not</h4>
-                        <ul role="list" className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
+                        <ul role="list" className="font-sans text-sm text-dim space-y-1.5">
                           <li>Corporate or formal</li>
                           <li>Hype-driven or hollow</li>
                           <li>Exclusive or gatekeeping</li>
@@ -686,30 +686,30 @@ hsl(var(--foreground))`}</code>
 
                 {/* Accessibility */}
                 <SectionBlock id="accessibility" eyebrow="Standards" heading="Accessibility">
-                  <p className="font-sans text-sm text-[hsl(var(--text-secondary))] max-w-prose mb-8">
+                  <p className="font-sans text-sm text-dim max-w-prose mb-8">
                     Every page on {BRAND_NAME} targets WCAG 2.2 Level AA for structure and interaction. Body text contrast targets AAA (7:1) in both light and dark mode. The full statement, testing approach, and how to report a barrier are in the{" "}
                     <Link to="/accessibility/" className="docs-ext-link">Accessibility Statement</Link>.
                   </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+                    <div className="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
                       <h3 className="font-sans text-sm font-semibold text-foreground mb-3">Color and contrast</h3>
-                      <ul role="list" className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
+                      <ul role="list" className="font-sans text-sm text-dim space-y-1.5">
                         <li>Body text: minimum 7:1 contrast (WCAG AAA) in both modes</li>
                         <li>Large text (18pt+ or bold 14pt+): minimum 4.5:1 (WCAG AAA)</li>
                         <li>UI controls and focus indicators: minimum 3:1</li>
-                        <li>Never use amber <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-[hsl(var(--surface-border))]">#ffc034</code> as text in light mode</li>
+                        <li>Never use amber <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">#ffc034</code> as text in light mode</li>
                         <li>Hover states must meet contrast in both light and dark</li>
                         <li>Never convey meaning through color alone</li>
                       </ul>
                     </div>
-                    <div className="rounded-lg border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+                    <div className="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
                       <h3 className="font-sans text-sm font-semibold text-foreground mb-3">Interaction and motion</h3>
-                      <ul role="list" className="font-sans text-sm text-[hsl(var(--text-secondary))] space-y-1.5">
+                      <ul role="list" className="font-sans text-sm text-dim space-y-1.5">
                         <li>Every interactive element is keyboard reachable</li>
                         <li>Focus rings visible in both modes on all elements</li>
                         <li>Touch targets minimum 24 x 24 px (prefer 44 x 44 px)</li>
-                        <li>Animations respect <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-[hsl(var(--surface-border))]">prefers-reduced-motion</code></li>
+                        <li>Animations respect <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">prefers-reduced-motion</code></li>
                         <li>All images have descriptive alt text</li>
                       </ul>
                     </div>

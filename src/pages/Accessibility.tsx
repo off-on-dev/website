@@ -221,21 +221,21 @@ const Accessibility = (): JSX.Element => {
             <div className="overflow-x-auto mb-6">
               <table className="w-full text-sm text-muted-foreground border-collapse">
                 <thead>
-                  <tr className="border-b border-[hsl(var(--surface-border))]">
+                  <tr className="border-b border-border">
                     <th scope="col" className="text-left font-semibold text-foreground py-2 pr-6 w-28">Severity</th>
                     <th scope="col" className="text-left font-semibold text-foreground py-2">Definition</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b border-[hsl(var(--surface-border))]">
+                  <tr className="border-b border-border">
                     <td className="py-2 pr-6 align-top font-medium text-foreground">Critical</td>
                     <td className="py-2 align-top">Blocks a user from completing a core task (reading content, navigating to a challenge, accepting consent).</td>
                   </tr>
-                  <tr className="border-b border-[hsl(var(--surface-border))]">
+                  <tr className="border-b border-border">
                     <td className="py-2 pr-6 align-top font-medium text-foreground">High</td>
                     <td className="py-2 align-top">Significant difficulty, but a workaround exists.</td>
                   </tr>
-                  <tr className="border-b border-[hsl(var(--surface-border))]">
+                  <tr className="border-b border-border">
                     <td className="py-2 pr-6 align-top font-medium text-foreground">Medium</td>
                     <td className="py-2 align-top">Inconsistent or annoying experience that does not block the task.</td>
                   </tr>
@@ -270,7 +270,7 @@ const Accessibility = (): JSX.Element => {
               <Link to="/about/" className={link}>Reach out to the team</Link>.
             </p>
 
-            <hr className="my-8 border-t border-[hsl(var(--surface-border))]" />
+            <hr className="my-8 border-t border-border" />
             <p className={`${paragraph} text-xs`}>
               The accessibility audit that informed this statement used guidance from{" "}
               <a

@@ -197,6 +197,20 @@ In light mode, `bg-primary` sections (PageHero, BottomCTA) stay amber. Do **not*
 
 ---
 
+### Tailwind Utility Shortcuts
+
+The `@theme` block in `src/index.css` maps design tokens to named Tailwind utilities. Use these instead of arbitrary values:
+
+| Pattern to avoid | Named utility | Token |
+| --- | --- | --- |
+| `border-[hsl(var(--surface-border))]` | `border-border` | `--border` / `--surface-border` (identical values) |
+| `text-[hsl(var(--text-secondary))]` | `text-dim` | `--text-secondary` via `--color-dim` in `@theme` |
+| `text-[hsl(var(--text-faint))]` | `text-faint` | `--text-faint` via `--color-faint` in `@theme` |
+
+For focus ring classes see the [Focus Visible Styling](#focus-visible-styling) section.
+
+---
+
 ## Component Classes
 
 ### Buttons
@@ -326,13 +340,12 @@ Sidebar uses the same token namespace (`--sidebar-*`) mirroring the main tokens.
 
 ## Focus Visible Styling
 
-All interactive elements use the standard focus-visible pattern for keyboard accessibility:
+All interactive elements use the standard focus-visible pattern for keyboard accessibility. Use the shorthand CSS utilities defined in `src/index.css` (`@layer utilities`):
 
-```css
-focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-```
-
-Adjust `ring-offset-1` for inline elements or `ring-offset-2` for block elements as appropriate.
+| Class | Expands to | When to use |
+| --- | --- | --- |
+| `focus-ring` | `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2` | Block and card-level interactive elements (buttons, toggle, hamburger, skip link, logo) |
+| `focus-ring-tight` | `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1` | Small inline elements (topic pill links, inline text links) |
 
 Always use `ring-ring`, never `ring-primary/xx`. The `--ring` token is theme-aware: dark mode amber (`41 100% 60%`), light mode dark amber (`41 100% 35%`, hex `#B37700`) for WCAG AA contrast in both modes.
 
@@ -511,6 +524,46 @@ const { rows, updatedAt } = useAdventureLeaderboard(adventureId, mockLoader);
 
 ---
 
+### `useEscapeKey`
+
+`src/hooks/useEscapeKey.ts`
+
+Attaches a `keydown` listener on `document` that calls `onEscape` when `Escape` is pressed, and removes it when `enabled` is `false` or the component unmounts. Uses a ref to always call the latest `onEscape` without re-registering the listener on every render.
+
+```ts
+useEscapeKey(onEscape, enabled);
+```
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `onEscape` | `() => void` | Called when Escape is pressed. Always reads the latest version; no need to `useCallback` the argument. |
+| `enabled` | `boolean` | Pass the open/active state of the overlay or dropdown. The listener is only registered while this is `true`. |
+
+Used in `Navbar` (mobile menu) and `ChallengeFilters` (both dropdowns). When `enabled` is `difficultyOpen || tagsOpen`, the callback reads the latest values of both to determine which dropdown to close.
+
+---
+
+### `useFocusTrap`
+
+`src/hooks/useFocusTrap.ts`
+
+Traps Tab/Shift+Tab focus within a container while `enabled` is `true`. Focuses the first focusable element immediately when enabled. Removes all listeners when `enabled` flips to `false` or the component unmounts.
+
+```ts
+useFocusTrap(containerRef, enabled);
+```
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `containerRef` | `RefObject<HTMLElement \| null>` | Ref pointing to the container that should trap focus. Must be attached to the DOM element before `enabled` becomes `true`. |
+| `enabled` | `boolean` | Pass the open state of the drawer or modal. The listener and initial focus move are only active while this is `true`. |
+
+Focusable selector: `a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])`.
+
+Used in `Navbar` (mobile menu drawer). The ref is attached to the menu `<div>` which is always in the DOM (hidden via the `hidden` attribute), so `containerRef.current` is non-null before the hook first runs.
+
+---
+
 ## Components
 
 ### `InlineProse`
@@ -531,7 +584,7 @@ Renders `<p className="md-inline …">` when the HTML is inline-only, and `<div 
 | `className` | `string?` | `""` | Tailwind utilities appended before `md-inline`/`md-content` |
 
 ```tsx
-<InlineProse html={tier.description} className="text-xs text-[hsl(var(--text-secondary))]" />
+<InlineProse html={tier.description} className="text-xs text-dim" />
 ```
 
 `BLOCK_ELEMENT_RE` is also exported for the rare case where callers need to perform the same check without rendering (e.g. server-side generator scripts).
@@ -835,7 +888,7 @@ Renders a vertical list with one of three marker styles (`dot`, `check`, `x`) an
 
 `src/components/AboutSection.tsx`
 
-Renders the About page content: Our Mission, Our Vision, Who It's For, and What We Stand For. Section is wrapped with the "our foundation" eyebrow at the top (using the standard `section-label` overline pattern) and carries `id="approach"`. Each of the four h2s also has its own id (`mission`, `vision`, `audience`, `values`) for deep-linking. The opening Mission paragraph is rendered as a `text-lg text-foreground` lead so the page has a clear thesis statement; subsequent paragraphs use `text-[hsl(var(--text-secondary))]`. Mission and Vision render as flowing paragraphs; Who It's For and What We Stand For use `BulletList` (the latter with `{ lead, desc }` items so each bullet leads with a bold headline phrase).
+Renders the About page content: Our Mission, Our Vision, Who It's For, and What We Stand For. Section is wrapped with the "our foundation" eyebrow at the top (using the standard `section-label` overline pattern) and carries `id="approach"`. Each of the four h2s also has its own id (`mission`, `vision`, `audience`, `values`) for deep-linking. The opening Mission paragraph is rendered as a `text-lg text-foreground` lead so the page has a clear thesis statement; subsequent paragraphs use `text-dim`. Mission and Vision render as flowing paragraphs; Who It's For and What We Stand For use `BulletList` (the latter with `{ lead, desc }` items so each bullet leads with a bold headline phrase).
 
 No props. Self-contained section component.
 
@@ -890,7 +943,7 @@ Renders a person's name with consistent styling, used for board members and adve
 
 `src/components/BrandStory.tsx`
 
-Renders the "The Story Behind the Firefly" section on the About page (mounted between `AboutSection` and `BoardSection`). Carries the "our story" eyebrow above its h2. Three short paragraphs covering: the rebrand process and the question the team kept returning to; how the firefly mascot (Nyx) came to life; and what Nyx represents for the community. Uses `text-[hsl(var(--text-secondary))] leading-relaxed` body text within `max-w-3xl` to match the prose blocks in `AboutSection`.
+Renders the "The Story Behind the Firefly" section on the About page (mounted between `AboutSection` and `BoardSection`). Carries the "our story" eyebrow above its h2. Three short paragraphs covering: the rebrand process and the question the team kept returning to; how the firefly mascot (Nyx) came to life; and what Nyx represents for the community. Uses `text-dim leading-relaxed` body text within `max-w-3xl` to match the prose blocks in `AboutSection`.
 
 Section uses `pb-16` only (no top padding), since `AboutSection` above it already terminates with its own `py-16`. The `id="story"` anchor is reserved for future in-page navigation.
 
@@ -1328,7 +1381,7 @@ Site-wide footer. No props. Contains two `<nav>` landmark regions (`aria-label="
 
 `src/components/AdventureCard.tsx`
 
-Navigation card linking to an adventure overview page. The entire card is a `<Link>` to `/adventures/:id/`. Renders a header row with an "Adventure" mono label, an optional `LivePill`, and a `.badge-levels` level-count pill; the adventure title (hover: amber); a two-line `story` snippet; a row of `DifficultyBadge` instances; up to four technology tag `<span>` chips; and an optional `ContributorBadge` pinned to the card footer via `mt-auto`. Card border is `border-primary/50` when `adventure.isLive`, otherwise `border-[hsl(var(--surface-border))]`. Uses `card-glow` for hover glow.
+Navigation card linking to an adventure overview page. The entire card is a `<Link>` to `/adventures/:id/`. Renders a header row with an "Adventure" mono label, an optional `LivePill`, and a `.badge-levels` level-count pill; the adventure title (hover: amber); a two-line `story` snippet; a row of `DifficultyBadge` instances; up to four technology tag `<span>` chips; and an optional `ContributorBadge` pinned to the card footer via `mt-auto`. Card border is `border-primary/50` when `adventure.isLive`, otherwise `border-border`. Uses `card-glow` for hover glow.
 
 **Accessible name:** the link carries `aria-label` in the format `"{title}: {difficulties}, {tags}"` (e.g. `"Blind by Design: Beginner, Intermediate, Expert, Prometheus, Grafana"`). Tags are omitted if the adventure has none. This gives screen reader users difficulty and technology context when navigating by links, without the verbosity of the full card content.
 
@@ -1580,6 +1633,27 @@ Helper functions for processing discussion posts in `DiscussionSection` and `Com
 
 ---
 
+### `avatar-utils`
+
+`src/lib/avatar-utils.ts`
+
+Generates the avatar fallback colour palette used by `DiscussionSection` and `CommunitySidebar`.
+
+| Export | Signature | Description |
+| --- | --- | --- |
+| `makeAvatarPalette` | `(opacity: number) => CSSProperties[]` | Returns a five-entry array of `{ backgroundColor, color }` style objects. Each entry uses a design token from the `@theme` block with the provided opacity. The `color` is always `hsl(var(--foreground))` to satisfy contrast requirements in both light and dark mode. |
+
+```ts
+import { makeAvatarPalette } from "@/lib/avatar-utils";
+
+const avatarPalette = makeAvatarPalette(0.2);
+// style={avatarPalette[index % avatarPalette.length]}
+```
+
+The opacity argument lets each call site tune the background fill for its surface context. `DiscussionSection` uses `0.2`; `CommunitySidebar` uses `0.25`.
+
+---
+
 ### `markdown`
 
 `src/lib/markdown.ts`
@@ -1707,7 +1781,7 @@ className="docs-ext-link text-sm font-medium mt-4"
 
 CSS class for icon-only social media `<a>` links. Used in the Spread the Word card on `/contribute` and in `ChallengeShareLinks` on challenge detail pages.
 
-**Dark mode:** base `text-[hsl(var(--text-secondary))]`, hover `hsl(var(--primary))` (amber, fine on dark backgrounds).
+**Dark mode:** base `text-dim`, hover `hsl(var(--primary))` (amber, fine on dark backgrounds).
 **Light mode:** `.light .social-icon-link:hover` overrides to `hsl(var(--link-hover-light))` (~7.5:1 dark amber on bg-card), avoiding `#ffc034` which is ~1.6:1 on near-white and fails WCAG 1.4.11.
 
 Includes `padding: 0.25rem` (equivalent to `p-1`) to improve tap target size and `border-radius: 2px` for focus ring containment.
@@ -1728,7 +1802,7 @@ Always use `aria-label` on the parent `<a>` (not the svg) for icon-only links. D
 
 CSS class applied to tag/technology chip `<Link>` elements in `ChallengeDetail` and `AdventureDetail`. Added alongside the standard Tailwind border and text utilities to provide light mode overrides that meet WCAG 1.4.11 (3:1 border contrast for interactive components).
 
-**Dark mode:** inherits border from `border-[hsl(var(--surface-border))]` and text from `text-[hsl(var(--text-faint))]`; hover shifts to `border-primary` / `text-primary` (amber).
+**Dark mode:** inherits border from `border-border` and text from `text-faint`; hover shifts to `border-primary` / `text-primary` (amber).
 **Light mode:** `.light .tag-chip-link` overrides border to `hsl(220 12% 55%)` (~3.25:1) and text to `--text-secondary`. Hover shifts to `hsl(220 12% 38%)` border and `hsl(220 12% 20%)` text (dark slate), avoiding amber which is below 3:1 on light backgrounds.
 
 Usage pattern:
@@ -1736,7 +1810,7 @@ Usage pattern:
 ```tsx
 <Link
   to={`/challenges/${tagToSlug(tag)}`}
-  className="tag-chip-link rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary hover:text-primary transition-colors"
+  className="tag-chip-link rounded-sm border border-border px-2.5 py-1 text-xs text-faint hover:border-primary hover:text-primary transition-colors"
 >
   {tag}
 </Link>

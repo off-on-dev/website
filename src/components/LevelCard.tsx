@@ -11,7 +11,7 @@ type LevelCardProps = {
 }
 
 export const LevelCard = ({ level, headingLevel = "h2" }: LevelCardProps): JSX.Element => (
-  <div className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6">
+  <div className="card-glow rounded-xl border border-border bg-[hsl(var(--surface))] p-6">
     <span className="font-mono text-xs text-muted-foreground block mb-3">Challenge</span>
     <div className="flex items-center gap-3 mb-4">
       <DifficultyBadge difficulty={level.difficulty} showDot />
@@ -43,7 +43,7 @@ export const LevelCard = ({ level, headingLevel = "h2" }: LevelCardProps): JSX.E
       Open in GitHub Codespaces <ExternalLink size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
     </a>
     <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-      <p className="text-xs text-[hsl(var(--text-faint))] font-mono">
+      <p className="text-xs text-faint font-mono">
         Free GitHub account required
       </p>
       <a

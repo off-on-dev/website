@@ -16,8 +16,8 @@ export const ChallengeShareLinks = ({ url, levelName }: Props): JSX.Element => {
   const mastodonHref = `https://mastodon.social/share?text=${encodeURIComponent(`Check out "${levelName}" on ${SITE_NAME}, an open source challenge!\n${url}`)}`;
 
   return (
-    <div className="flex flex-wrap items-center gap-1 pt-4 border-t border-[hsl(var(--surface-border))]">
-      <span className="text-xs text-[hsl(var(--text-faint))] mr-1">Know someone who'd enjoy this?</span>
+    <div className="flex flex-wrap items-center gap-1 pt-4 border-t border-border">
+      <span className="text-xs text-faint mr-1">Know someone who'd enjoy this?</span>
       <a
         href={linkedinHref}
         target="_blank"

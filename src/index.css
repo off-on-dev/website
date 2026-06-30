@@ -166,6 +166,9 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 
+  --color-dim: hsl(var(--text-secondary));
+  --color-faint: hsl(var(--text-faint));
+
 }
 
 /* WCAG 2.4.11 Focus Not Obscured: prevent fixed navbar and consent banner from fully hiding focused elements */
@@ -512,10 +515,21 @@ html {
   }
 
   .pill-inactive {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-[hsl(var(--surface-border))] bg-transparent px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none text-[hsl(var(--text-secondary))] hover:border-primary/60 hover:text-primary hover:bg-primary/5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-border bg-transparent px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none text-dim hover:border-primary/60 hover:text-primary hover:bg-primary/5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
     cursor: pointer;
   }
 
+}
+
+@layer utilities {
+  /* Shorthand for the standard focus ring — replaces the 4-class chain */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+  /* Tighter variant for small inline elements (links, topic pills) */
+  .focus-ring-tight {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1;
+  }
 }
 
 /* ─── Electric glow effects ──────────────────────────────── */

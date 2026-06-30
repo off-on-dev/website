@@ -15,13 +15,13 @@ export const AboutSection = (): JSX.Element => {
             <p className="text-lg text-foreground leading-relaxed">
               {BRAND_NAME} exists to sustain the people behind open source and create the maintainers of tomorrow.
             </p>
-            <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
+            <p className="text-dim leading-relaxed">
               We are a vendor-neutral, community-driven space built around one goal: supporting open source contributors and maintainers at every stage of their journey, from the first pull request to long-term stewardship.
             </p>
-            <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
+            <p className="text-dim leading-relaxed">
               Most platforms, foundations, and content formats today are designed with enterprises, legal teams, or marketing goals in mind. Far fewer are built for the individuals who actually keep open source alive.
             </p>
-            <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
+            <p className="text-dim leading-relaxed">
               As the ecosystem navigates new realities around regulation, digital sovereignty, and AI, {BRAND_NAME} gives the community a place to learn, share, mentor, and grow, from curious users to confident contributors, and from contributors to sustainable maintainers.
             </p>
           </div>
@@ -30,10 +30,10 @@ export const AboutSection = (): JSX.Element => {
         <div className="mb-8">
           <h2 id="vision" className="text-2xl font-bold text-foreground">Our Vision</h2>
           <div className="mt-4 flex flex-col gap-4 max-w-3xl">
-            <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
+            <p className="text-dim leading-relaxed">
               A future where open source is not only widely used, but actively sustained by a new generation of contributors and maintainers who are trained, supported, and connected, regardless of which company, country, or project they come from.
             </p>
-            <p className="text-[hsl(var(--text-secondary))] leading-relaxed">
+            <p className="text-dim leading-relaxed">
               We believe a real community has to be open. Open in its tooling, open in its governance, and open in how knowledge is preserved and passed on. {BRAND_NAME} is our attempt to put that belief into practice.
             </p>
           </div>

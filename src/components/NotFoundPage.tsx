@@ -16,7 +16,7 @@ export const NotFoundPage = ({ title, message }: NotFoundPageProps): JSX.Element
       <p className="text-muted-foreground mb-6">{message}</p>
       <Link
         to="/"
-        className="text-sm font-medium text-primary underline decoration-2 underline-offset-2 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+        className="text-sm font-medium text-primary underline decoration-2 underline-offset-2 hover:text-foreground transition-colors focus-ring-tight rounded-sm"
       >
         Go to Homepage
       </Link>
