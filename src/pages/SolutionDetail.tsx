@@ -650,7 +650,7 @@ const SolutionDetail = (): JSX.Element => {
             </p>
             <Link
               to="/adventures/"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline focus-ring-tight rounded-sm"
             >
               <ArrowLeft size={14} aria-hidden="true" />
               Browse adventures

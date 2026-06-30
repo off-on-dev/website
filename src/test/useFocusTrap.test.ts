@@ -116,6 +116,45 @@ describe("useFocusTrap", () => {
     cleanup();
   });
 
+  it("does nothing when containerRef.current is null", () => {
+    const containerRef: { current: HTMLElement | null } = { current: null };
+    const before = document.activeElement;
+    const { unmount } = renderHook(() => useFocusTrap(containerRef, true));
+    expect(document.activeElement).toBe(before);
+    fireEvent.keyDown(document, { key: "Tab", shiftKey: false });
+    expect(document.activeElement).toBe(before);
+    unmount();
+  });
+
+  it("lets Tab pass through when the container has no focusable elements", () => {
+    const container = document.createElement("div");
+    container.textContent = "No interactive children";
+    document.body.appendChild(container);
+    const containerRef = { current: container };
+    const externalBtn = document.createElement("button");
+    document.body.appendChild(externalBtn);
+    externalBtn.focus();
+    const { unmount } = renderHook(() => useFocusTrap(containerRef, true));
+    fireEvent.keyDown(document, { key: "Tab", shiftKey: false });
+    expect(document.activeElement).toBe(externalBtn);
+    unmount();
+    document.body.removeChild(container);
+    document.body.removeChild(externalBtn);
+  });
+
+  it("does not trap focus when the container is display:none", () => {
+    const { container, btn3, cleanup } = setupContainer();
+    container.style.display = "none";
+    const containerRef = { current: container };
+    const { unmount } = renderHook(() => useFocusTrap(containerRef, true));
+    expect(document.activeElement).not.toBe(container.querySelector("button"));
+    btn3.focus();
+    fireEvent.keyDown(document, { key: "Tab", shiftKey: false });
+    expect(document.activeElement).toBe(btn3);
+    unmount();
+    cleanup();
+  });
+
   it("reflects focusable elements added after the trap activates", () => {
     const { container, btn1, btn3, cleanup } = setupContainer();
     const containerRef = { current: container };
@@ -125,12 +164,12 @@ describe("useFocusTrap", () => {
     btn4.textContent = "Fourth";
     container.appendChild(btn4);
 
-    // btn3 is no longer the last element — Tab from btn3 should NOT wrap.
+    // btn3 is no longer the last element; Tab from btn3 should NOT wrap.
     btn3.focus();
     fireEvent.keyDown(document, { key: "Tab", shiftKey: false });
     expect(document.activeElement).toBe(btn3);
 
-    // btn4 is now the last element — Tab from btn4 SHOULD wrap to first.
+    // btn4 is now the last element; Tab from btn4 SHOULD wrap to first.
     btn4.focus();
     fireEvent.keyDown(document, { key: "Tab", shiftKey: false });
     expect(document.activeElement).toBe(btn1);

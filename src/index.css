@@ -791,6 +791,17 @@ html {
   color: hsl(var(--foreground-hover));
 }
 
+/* text-dim and text-faint on block elements (<p>, <li>, etc.) are overridden by
+   the unlayered .light p/.light li rule above (higher specificity wins over @layer utilities).
+   These two-class selectors restore the intended secondary-text color in light mode. */
+.light .text-dim {
+  color: var(--color-dim);
+}
+
+.light .text-faint {
+  color: var(--color-faint);
+}
+
 /* Tailwind group-hover:* utilities are not matched by .light .classname selectors.
    Explicit unlayered overrides are required for group-hover heading color in light mode. */
 .light .group:hover h2 { color: hsl(var(--foreground-hover)); }
@@ -1173,9 +1184,10 @@ html {
 }
 
 /* ─── Tag chip links ─────────────────────────────────────── */
+/* outline escapes overflow:hidden parents; box-shadow does not. */
 .tag-chip-link:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
 }
 
 /* Light mode: --surface-border is hsl(220 12% 87%), only 1.30:1 on near-white.

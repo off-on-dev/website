@@ -225,12 +225,12 @@ describe("ChallengesGrid", () => {
       expect(document.activeElement).toBe(btns[0]);
     });
 
-    it("mobile dropdown triggers have aria-haspopup='listbox' so AT announces them as listbox controls", () => {
+    it("mobile dropdown triggers have aria-haspopup='true' so AT announces them as popup controls", () => {
       const { container } = renderGrid();
       const triggers = Array.from(container.querySelectorAll<HTMLButtonElement>("button[aria-expanded]"));
       expect(triggers.length).toBeGreaterThan(0);
       triggers.forEach((trigger) => {
-        expect(trigger.getAttribute("aria-haspopup")).toBe("listbox");
+        expect(trigger.getAttribute("aria-haspopup")).toBe("true");
       });
     });
   });

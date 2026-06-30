@@ -17,7 +17,7 @@ export const useFocusTrap = (containerRef: RefObject<HTMLElement | null>, enable
     container.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)?.focus();
   // containerRef is included for ESLint exhaustive-deps compliance. Ref objects
   // have stable identity (same object reference across renders), so this dep never
-  // actually triggers a re-run — only changes to enabled do.
+  // actually triggers a re-run; only changes to enabled do.
   }, [containerRef, enabled]);
 
   // Register the Tab/Shift+Tab handler. Re-queries the DOM on every keypress

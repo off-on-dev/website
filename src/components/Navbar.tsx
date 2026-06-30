@@ -85,8 +85,8 @@ export const Navbar = (): JSX.Element => {
   useEffect(() => {
     if (!menuOpen) return;
     const main = document.getElementById("main-content");
-    const footer = document.querySelector<HTMLElement>("footer");
     if (!main) return;
+    const footer = document.querySelector<HTMLElement>("footer");
     main.setAttribute("inert", "");
     main.setAttribute("aria-hidden", "true");
     footer?.setAttribute("inert", "");
