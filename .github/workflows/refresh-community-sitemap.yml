@@ -39,6 +39,7 @@ jobs:
         run: node scripts/generate-community-sitemap.mjs
 
       - name: Commit if changed
+        id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -50,8 +51,30 @@ jobs:
             git push
           fi
 
-      - name: Open issue on failure
-        if: failure()
+      - name: Open issue on push failure
+        if: failure() && steps.commit.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TITLE="Refresh community sitemap: push to main failed"
+          OPEN=$(gh issue list \
+            --state open \
+            --search "\"${TITLE}\" in:title" \
+            --json number \
+            --jq 'length' 2>/dev/null || echo "0")
+          if [ "$OPEN" -eq 0 ]; then
+            gh issue create \
+              --title "${TITLE}" \
+              --label "bug" \
+              --body "The scheduled \`refresh-community-sitemap\` workflow generated a new sitemap but failed to push to \`main\`.
+
+          **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          This is usually caused by a branch ruleset blocking direct pushes. Check that the \`offon-data-refresh\` GitHub App is in the bypass list for all active rulesets on \`main\`."
+          fi
+
+      - name: Open issue on generation failure
+        if: failure() && steps.commit.outcome != 'failure'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
