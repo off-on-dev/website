@@ -390,7 +390,7 @@ const StepNav = ({
           </span>
           <a
             href={`#${step.id}`}
-            className="text-sm text-dim hover:text-foreground transition-colors leading-snug focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+            className="text-sm text-dim hover:text-foreground transition-colors leading-snug focus-ring-tight rounded-sm"
           >
             {step.title}
           </a>
