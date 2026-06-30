@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T12:14:09.077Z",
+  "lastUpdated": "2026-06-30T08:10:25.831Z",
   "sections": [
     {
       "id": "top-contributors",
@@ -11,6 +11,11 @@
           "count": 21
         },
         {
+          "username": "SinduriGuntupalli",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/SinduriGuntupalli/40/194_2.png",
+          "count": 14
+        },
+        {
           "username": "adrianamvillela",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/adrianamvillela/40/46_2.png",
           "count": 14
@@ -19,11 +24,6 @@
           "username": "DavidHirsch",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/DavidHirsch/40/8_2.png",
           "count": 14
-        },
-        {
-          "username": "SinduriGuntupalli",
-          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/SinduriGuntupalli/40/194_2.png",
-          "count": 13
         },
         {
           "username": "theharithsa",
@@ -37,13 +37,13 @@
       "title": "Top Challenge Solvers",
       "users": [
         {
-          "username": "gsigmund",
-          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/gsigmund/40/99_2.png",
+          "username": "theharithsa",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
           "count": 8
         },
         {
-          "username": "theharithsa",
-          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
+          "username": "gsigmund",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/gsigmund/40/99_2.png",
           "count": 8
         },
         {
@@ -164,7 +164,7 @@
         {
           "username": "SinduriGuntupalli",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/SinduriGuntupalli/40/194_2.png",
-          "count": 34
+          "count": 35
         },
         {
           "username": "theharithsa",
