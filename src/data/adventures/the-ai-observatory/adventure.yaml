@@ -23,6 +23,7 @@ backstory:
   - Recently, the station's bandwidth usage has spiked to 847% above baseline, but no one knows why. As the systems
     engineer, it's your job to instrument the AI, trace its activities, and uncover the root cause of the anomaly.
   - "Your mission: bring visibility to the station's AI and solve the mystery."
+  - "> **Credits:** The characters of this adventure are borrowed from the Murderbot Diaries series by [Martha Wells](https://www.marthawells.com/murderbot.htm), a brilliant series that is funny, action-packed, and surprisingly heartwarming. It follows a security unit that hacked its own governor module and now just wants to be left alone to watch media, but keeps getting pulled into human nonsense."
 levels:
   - level: beginner
     name: Calibrating the Lens
@@ -51,11 +52,7 @@ levels:
         what's consuming all that bandwidth?"
       - As the station's systems engineer, you decide to investigate. Time to instrument HubSystem with OpenTelemetry
         and find out what's really going on.
-      - >-
-        Credits: The characters of this adventure are borrowed from the Murderbot Diaries series by Martha Wells,
-        a brilliant series that is funny, action-packed, and surprisingly heartwarming. It follows a security unit
-        that hacked its own governor module and now just wants to be left alone to watch media, but keeps getting
-        pulled into human nonsense.
+      - "> **Credits:** The characters of this adventure are borrowed from the Murderbot Diaries series by [Martha Wells](https://www.marthawells.com/murderbot.htm), a brilliant series that is funny, action-packed, and surprisingly heartwarming. It follows a security unit that hacked its own governor module and now just wants to be left alone to watch media, but keeps getting pulled into human nonsense."
     objective:
       - Enable OpenTelemetry instrumentation for HubSystem using OpenLLMetry
       - Send traces to the OpenTelemetry Collector at http://localhost:30107
@@ -142,11 +139,7 @@ levels:
 
         That's not normal. ART is never vague. You access the ship's diagnostic systems (something you're not supposed to be able to do, but ART hasn't locked you out yet).
       - "Your mission: diagnose ART's distraction using OpenTelemetry and fix the navigation system before you miss your jump."
-      - >-
-        Credits: The characters of this adventure are borrowed from the Murderbot Diaries series by Martha Wells,
-        a brilliant series that is funny, action-packed, and surprisingly heartwarming. It follows a security unit
-        that hacked its own governor module and now just wants to be left alone to watch media, but keeps getting
-        pulled into human nonsense.
+      - "> **Credits:** The characters of this adventure are borrowed from the Murderbot Diaries series by [Martha Wells](https://www.marthawells.com/murderbot.htm), a brilliant series that is funny, action-packed, and surprisingly heartwarming. It follows a security unit that hacked its own governor module and now just wants to be left alone to watch media, but keeps getting pulled into human nonsense."
     objective:
       - Instrument the full RAG pipeline with OpenLLMetry (add a span named rag.context_assembly with attribute
         context.categories)
@@ -256,11 +249,7 @@ levels:
         ART: "...Fine."
       - The engineer hands you access to the collector config and the application code, then walks away. Two problems
         to fix. ART's spans don't follow OTel GenAI semantic conventions, and the collector is forwarding everything.
-      - >-
-        Credits: The characters of this adventure are borrowed from the Murderbot Diaries series by Martha Wells,
-        a brilliant series that is funny, action-packed, and surprisingly heartwarming. It follows a security unit
-        that hacked its own governor module and now just wants to be left alone to watch media, but keeps getting
-        pulled into human nonsense.
+      - "> **Credits:** The characters of this adventure are borrowed from the Murderbot Diaries series by [Martha Wells](https://www.marthawells.com/murderbot.htm), a brilliant series that is funny, action-packed, and surprisingly heartwarming. It follows a security unit that hacked its own governor module and now just wants to be left alone to watch media, but keeps getting pulled into human nonsense."
     objective:
       - Fix ART's chat span to follow OpenTelemetry GenAI semantic conventions, including token usage attributes
       - Configure tail sampling in the OpenTelemetry Collector to keep only traces that contain errors or take longer

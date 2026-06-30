@@ -18,6 +18,9 @@ export const THE_AI_OBSERVATORY: Adventure = {
     "You are stationed at Perimeter Alpha, a research outpost on the newly discovered planet HB-7742. The station is run by HubSystem, a central AI that manages everything from life support to data analysis.",
     "Recently, the station's bandwidth usage has spiked to 847% above baseline, but no one knows why. As the systems engineer, it's your job to instrument the AI, trace its activities, and uncover the root cause of the anomaly.",
     "Your mission: bring visibility to the station's AI and solve the mystery.",
+    `<blockquote>
+<p><strong>Credits:</strong> The characters of this adventure are borrowed from the Murderbot Diaries series by <a href="https://www.marthawells.com/murderbot.htm" target="_blank" rel="noopener noreferrer">Martha Wells<span class="sr-only"> (opens in new tab)</span></a>, a brilliant series that is funny, action-packed, and surprisingly heartwarming. It follows a security unit that hacked its own governor module and now just wants to be left alone to watch media, but keeps getting pulled into human nonsense.</p>
+</blockquote>`,
   ],
   levels: [
     {
@@ -39,7 +42,9 @@ export const THE_AI_OBSERVATORY: Adventure = {
         "You're a researcher stationed at Perimeter Alpha, a remote research outpost on the newly discovered planet HB-7742. Your team of six scientists is protected by a single SecUnit, assigned by the corporation to ensure your safety during the survey mission. All station queries flow through HubSystem, the central AI that manages everything from data analysis to status reports.",
         "Three weeks in, you notice something odd in your morning diagnostics: communication module usage at 847% above baseline. Nobody's streaming. Nobody's running large data transfers. The planet surveys are on schedule. So what's consuming all that bandwidth?",
         "As the station's systems engineer, you decide to investigate. Time to instrument HubSystem with OpenTelemetry and find out what's really going on.",
-        "Credits: The characters of this adventure are borrowed from the Murderbot Diaries series by Martha Wells, a brilliant series that is funny, action-packed, and surprisingly heartwarming. It follows a security unit that hacked its own governor module and now just wants to be left alone to watch media, but keeps getting pulled into human nonsense.",
+        `<blockquote>
+<p><strong>Credits:</strong> The characters of this adventure are borrowed from the Murderbot Diaries series by <a href="https://www.marthawells.com/murderbot.htm" target="_blank" rel="noopener noreferrer">Martha Wells<span class="sr-only"> (opens in new tab)</span></a>, a brilliant series that is funny, action-packed, and surprisingly heartwarming. It follows a security unit that hacked its own governor module and now just wants to be left alone to watch media, but keeps getting pulled into human nonsense.</p>
+</blockquote>`,
       ],
       objective: [
         "Enable OpenTelemetry instrumentation for HubSystem using OpenLLMetry",
@@ -105,7 +110,9 @@ interact with Kubernetes directly. The cluster is already running, so focus on t
 <p>ART: "I'm multitasking. The coordinates are... being compiled."</p>
 <p>That's not normal. ART is never vague. You access the ship's diagnostic systems (something you're not supposed to be able to do, but ART hasn't locked you out yet).</p>`,
         "Your mission: diagnose ART's distraction using OpenTelemetry and fix the navigation system before you miss your jump.",
-        "Credits: The characters of this adventure are borrowed from the Murderbot Diaries series by Martha Wells, a brilliant series that is funny, action-packed, and surprisingly heartwarming. It follows a security unit that hacked its own governor module and now just wants to be left alone to watch media, but keeps getting pulled into human nonsense.",
+        `<blockquote>
+<p><strong>Credits:</strong> The characters of this adventure are borrowed from the Murderbot Diaries series by <a href="https://www.marthawells.com/murderbot.htm" target="_blank" rel="noopener noreferrer">Martha Wells<span class="sr-only"> (opens in new tab)</span></a>, a brilliant series that is funny, action-packed, and surprisingly heartwarming. It follows a security unit that hacked its own governor module and now just wants to be left alone to watch media, but keeps getting pulled into human nonsense.</p>
+</blockquote>`,
       ],
       objective: [
         "Instrument the full RAG pipeline with OpenLLMetry (add a span named rag.context_assembly with attribute context.categories)",
@@ -177,7 +184,9 @@ make traffic
 <p>SecUnit: "ART. Fix it."</p>
 <p>ART: "...Fine."</p>`,
         "The engineer hands you access to the collector config and the application code, then walks away. Two problems to fix. ART's spans don't follow OTel GenAI semantic conventions, and the collector is forwarding everything.",
-        "Credits: The characters of this adventure are borrowed from the Murderbot Diaries series by Martha Wells, a brilliant series that is funny, action-packed, and surprisingly heartwarming. It follows a security unit that hacked its own governor module and now just wants to be left alone to watch media, but keeps getting pulled into human nonsense.",
+        `<blockquote>
+<p><strong>Credits:</strong> The characters of this adventure are borrowed from the Murderbot Diaries series by <a href="https://www.marthawells.com/murderbot.htm" target="_blank" rel="noopener noreferrer">Martha Wells<span class="sr-only"> (opens in new tab)</span></a>, a brilliant series that is funny, action-packed, and surprisingly heartwarming. It follows a security unit that hacked its own governor module and now just wants to be left alone to watch media, but keeps getting pulled into human nonsense.</p>
+</blockquote>`,
       ],
       objective: [
         "Fix ART's chat span to follow OpenTelemetry GenAI semantic conventions, including token usage attributes",
