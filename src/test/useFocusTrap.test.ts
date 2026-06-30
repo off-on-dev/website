@@ -100,4 +100,26 @@ describe("useFocusTrap", () => {
     expect(document.activeElement).toBe(btn3);
     cleanup();
   });
+
+  it("reflects focusable elements added after the trap activates", () => {
+    const { container, btn1, btn3, cleanup } = setupContainer();
+    const containerRef = { current: container };
+    renderHook(() => useFocusTrap(containerRef, true));
+
+    const btn4 = document.createElement("button");
+    btn4.textContent = "Fourth";
+    container.appendChild(btn4);
+
+    // btn3 is no longer the last element — Tab from btn3 should NOT wrap.
+    btn3.focus();
+    fireEvent.keyDown(document, { key: "Tab", shiftKey: false });
+    expect(document.activeElement).toBe(btn3);
+
+    // btn4 is now the last element — Tab from btn4 SHOULD wrap to first.
+    btn4.focus();
+    fireEvent.keyDown(document, { key: "Tab", shiftKey: false });
+    expect(document.activeElement).toBe(btn1);
+
+    cleanup();
+  });
 });

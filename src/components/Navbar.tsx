@@ -70,7 +70,10 @@ export const Navbar = (): JSX.Element => {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const closeMenu = (): void => setMenuOpen(false);
+  const closeMenu = (): void => {
+    setMenuOpen(false);
+    triggerRef.current?.focus();
+  };
 
   useEscapeKey(() => {
     setMenuOpen(false);

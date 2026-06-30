@@ -558,7 +558,15 @@ useFocusTrap(containerRef, enabled);
 | `containerRef` | `RefObject<HTMLElement \| null>` | Ref pointing to the container that should trap focus. Must be attached to the DOM element before `enabled` becomes `true`. |
 | `enabled` | `boolean` | Pass the open state of the drawer or modal. The listener and initial focus move are only active while this is `true`. |
 
-Focusable selector: `a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])`.
+Focusable selector:
+
+```css
+a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]),
+textarea:not([disabled]), [contenteditable]:not([contenteditable="false"]),
+[tabindex]:not([tabindex="-1"])
+```
+
+The Tab handler re-queries the DOM on every keypress, so elements added or removed while the trap is active are reflected immediately.
 
 Used in `Navbar` (mobile menu drawer). The ref is attached to the menu `<div>` which is always in the DOM (hidden via the `hidden` attribute), so `containerRef.current` is non-null before the hook first runs.
 
