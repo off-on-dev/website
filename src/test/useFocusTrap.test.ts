@@ -101,6 +101,21 @@ describe("useFocusTrap", () => {
     cleanup();
   });
 
+  it("focuses the first element when re-enabled after being disabled", () => {
+    const { container, btn1, btn3, cleanup } = setupContainer();
+    const containerRef = { current: container };
+    const { rerender } = renderHook(
+      ({ enabled }: { enabled: boolean }) => useFocusTrap(containerRef, enabled),
+      { initialProps: { enabled: true } }
+    );
+    btn3.focus();
+    rerender({ enabled: false });
+    expect(document.activeElement).toBe(btn3);
+    rerender({ enabled: true });
+    expect(document.activeElement).toBe(btn1);
+    cleanup();
+  });
+
   it("reflects focusable elements added after the trap activates", () => {
     const { container, btn1, btn3, cleanup } = setupContainer();
     const containerRef = { current: container };

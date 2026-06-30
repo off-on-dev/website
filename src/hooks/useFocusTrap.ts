@@ -5,11 +5,15 @@ const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [contenteditable]:not([contenteditable="false"]), [tabindex]:not([tabindex="-1"])';
 
 export const useFocusTrap = (containerRef: RefObject<HTMLElement | null>, enabled: boolean): void => {
-  // Move focus to the first focusable element when the trap activates.
+  // This effect intentionally appears before the Tab-handler effect so that
+  // initial focus is set before any keydown listener is active.
   useEffect(() => {
     if (!enabled) return;
     const container = containerRef.current;
     if (!container) return;
+    // Guard: the container may be hidden by CSS (e.g. md:hidden at desktop widths)
+    // even when enabled is true (e.g. after a viewport resize). Skip silently.
+    if (window.getComputedStyle(container).display === "none") return;
     container.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)?.focus();
   }, [containerRef, enabled]);
 
@@ -22,6 +26,8 @@ export const useFocusTrap = (containerRef: RefObject<HTMLElement | null>, enable
 
     const handler = (e: KeyboardEvent): void => {
       if (e.key !== "Tab") return;
+      // Guard: if CSS hides the container (e.g. md:hidden on resize), let Tab pass through.
+      if (window.getComputedStyle(container).display === "none") return;
       const focusable = Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
       if (focusable.length === 0) return;
       const first = focusable[0];

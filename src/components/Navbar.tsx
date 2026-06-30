@@ -72,12 +72,10 @@ export const Navbar = (): JSX.Element => {
 
   const closeMenu = (): void => {
     setMenuOpen(false);
+    triggerRef.current?.focus();
   };
 
-  useEscapeKey(() => {
-    setMenuOpen(false);
-    triggerRef.current?.focus();
-  }, menuOpen);
+  useEscapeKey(closeMenu, menuOpen);
 
   useFocusTrap(menuRef, menuOpen);
 
