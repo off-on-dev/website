@@ -949,6 +949,7 @@ html {
   position: relative;
   margin-bottom: 1.5rem;
   padding: 0.25rem 0.75rem 0.25rem 2.25rem;
+  margin-top: 1rem;
   font-style: italic;
   color: hsl(var(--text-secondary));
 }
