@@ -364,9 +364,10 @@ Every page must support keyboard bypass of the navigation bar (WCAG 2.4.1).
 
 ### Route effect components in `Layout.tsx`
 
-`Layout.tsx` mounts three sibling components that each handle a single route-level side effect:
+`Layout.tsx` mounts four sibling components that each handle a single route-level side effect:
 
 - **`<ScrollToTop />`**: on every route change, scrolls to the top of the page. When the URL has a hash, it instead scrolls the matching element into view via `requestAnimationFrame` so the target is mounted before the scroll runs. Required because React Router does not handle hash-anchor scrolling on client-side navigation.
+- **`<FocusReset />`**: on every route change (skipping initial mount), moves focus to `#main-content` via `requestAnimationFrame` so keyboard and AT users land in the main content area rather than on `<body>`. Uses `{ preventScroll: true }` so the scroll position set by `<ScrollToTop />` is not overridden. All page `<main>` elements carry `id="main-content" tabIndex={-1}`.
 - **`<PageViewTracker />`**: fires GA4 `page_view` on every navigation when consent is `"granted"`. Reads pathname, full URL, and `document.title`. Was previously combined with `<ScrollToTop />`; split so each component has a single responsibility.
 - **`<ClickTracker />`**: wraps `useClickTracking` so the document-level click listener attaches when the consent context changes.
 
@@ -618,6 +619,16 @@ Touch target is 44×44 px (`h-11 w-11`) to meet WCAG 2.5.5 (minimum 44×44 px).
 The banner uses `role="region"` with `aria-labelledby="consent-banner-title"` (pointing to the visible title paragraph). When the banner first mounts, focus is moved to the Decline button so keyboard users immediately know a decision is available.
 
 No props. Uses `useConsent` context internally.
+
+---
+
+### `FocusReset` (internal, `src/Layout.tsx`)
+
+Moves keyboard focus to `#main-content` on every SPA route change (WCAG 2.4.3). Skips the initial mount so users do not receive an intrusive focus jump on first page load. Deferred via `requestAnimationFrame` so the incoming route's DOM is committed before focus is attempted. Calls `element.focus({ preventScroll: true })` so `<ScrollToTop />`'s `scrollTo(0, 0)` is not overridden by the browser scrolling `#main-content` into view.
+
+All page `<main>` elements must carry `id="main-content" tabIndex={-1}` for this to work. If the element is absent (e.g., a redirect page that renders `null`), the optional-chain short-circuits silently.
+
+No props. Internal to `Layout.tsx`. Do not extract or reuse elsewhere.
 
 ---
 
