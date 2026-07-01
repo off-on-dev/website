@@ -63,6 +63,28 @@ const ClickTracker = (): null => {
   return null;
 };
 
+// Moves focus to #main-content after each SPA route change so keyboard and
+// AT users land in the main content area rather than on <body>.
+// All page <main> elements already carry id="main-content" tabIndex={-1}.
+// Skips the initial mount (same pattern as RouteAnnouncer) to avoid an
+// intrusive focus jump on first page load.
+const FocusReset = (): null => {
+  const { pathname } = useLocation();
+  const hasMounted = useRef(false);
+
+  useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
+    const raf = requestAnimationFrame(() => {
+      (document.getElementById("main-content") as HTMLElement | null)?.focus();
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [pathname]);
+  return null;
+};
+
 // Announces page title to screen readers on SPA navigation. Skips the initial
 // mount so users don't hear an announcement when they first load the page.
 const RouteAnnouncer = (): JSX.Element => {
@@ -120,6 +142,7 @@ export function Layout(): JSX.Element {
           Skip to main content
         </a>
         <ScrollToTop />
+        <FocusReset />
         <RouteAnnouncer />
         <ThemeAnnouncer />
         <PageViewTracker />

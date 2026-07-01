@@ -169,6 +169,61 @@ describe("Layout", () => {
 });
 
 // ---------------------------------------------------------------------------
+// FocusReset: route-change focus management
+// ---------------------------------------------------------------------------
+
+function renderLayoutWithMain(initialPath = "/"): ReturnType<typeof render> {
+  return render(
+    <MemoryRouter initialEntries={[initialPath]}>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route
+            index
+            element={
+              <>
+                <NavButton to="/about" />
+                <main id="main-content" tabIndex={-1}>home</main>
+              </>
+            }
+          />
+          <Route
+            path="about"
+            element={<main id="main-content" tabIndex={-1}>about</main>}
+          />
+        </Route>
+      </Routes>
+    </MemoryRouter>
+  );
+}
+
+describe("FocusReset", () => {
+  it("does not move focus on initial mount", () => {
+    renderLayoutWithMain("/");
+    const main = document.getElementById("main-content");
+    expect(document.activeElement).not.toBe(main);
+  });
+
+  it("moves focus to #main-content after route change", async () => {
+    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
+      cb(0);
+      return 0;
+    });
+    const { getByTestId } = renderLayoutWithMain("/");
+    await act(async () => {
+      fireEvent.click(getByTestId("nav-btn"));
+    });
+    expect(document.activeElement).toBe(document.getElementById("main-content"));
+  });
+
+  it("does not throw when #main-content is absent in the route", async () => {
+    const { getByTestId } = renderLayout("/");
+    await expect(
+      act(async () => { fireEvent.click(getByTestId("nav-btn")); })
+    ).resolves.not.toThrow();
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Layout regression: file content
 // ---------------------------------------------------------------------------
 
