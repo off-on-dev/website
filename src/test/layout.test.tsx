@@ -215,6 +215,23 @@ describe("FocusReset", () => {
     expect(document.activeElement).toBe(document.getElementById("main-content"));
   });
 
+  it("passes { preventScroll: true } to focus() so ScrollToTop scroll position is not overridden", async () => {
+    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
+      cb(0);
+      return 0;
+    });
+    const focusSpy = vi.spyOn(HTMLElement.prototype, "focus");
+    const { getByTestId } = renderLayoutWithMain("/");
+    await act(async () => {
+      fireEvent.click(getByTestId("nav-btn"));
+    });
+    const mainFocusCall = focusSpy.mock.calls.find(
+      (_, i) => focusSpy.mock.instances[i] === document.getElementById("main-content")
+    );
+    expect(mainFocusCall).toBeDefined();
+    expect(mainFocusCall![0]).toEqual({ preventScroll: true });
+  });
+
   it("does not throw when #main-content is absent in the route", async () => {
     const { getByTestId } = renderLayout("/");
     await expect(
