@@ -166,6 +166,9 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 
+  /* These tokens already include hsl(). Use var(--color-dim) directly.
+     Never write hsl(var(--color-dim)) — that produces invalid double-hsl
+     and silently renders as transparent. */
   --color-dim: hsl(var(--text-secondary));
   --color-faint: hsl(var(--text-faint));
 
@@ -529,6 +532,10 @@ html {
 
 @utility focus-ring-tight {
   @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1;
+}
+
+@utility focus-ring-subtle {
+  @apply focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring;
 }
 
 /* ─── Electric glow effects ──────────────────────────────── */

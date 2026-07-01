@@ -142,7 +142,7 @@ const Callout = ({
   const Icon = config.icon;
   return (
     <div
-      className={`flex gap-3 rounded-lg border p-4 text-[hsl(var(--foreground))] ${config.className}`}
+      className={`flex gap-3 rounded-lg border p-4 text-foreground ${config.className}`}
       role="note"
     >
       <Icon size={16} className={`shrink-0 mt-0.5 ${config.iconClass}`} aria-hidden="true" />
@@ -480,7 +480,7 @@ const SolutionArticle = ({ solution, discussionUrl }: SolutionArticleProps): JSX
       </div>
     )}
 
-    {/* What Was Fixed — mobile only; desktop shows this in the sidebar */}
+    {/* What Was Fixed: mobile only; desktop shows this in the sidebar */}
     <StepNav steps={solution.steps} className="lg:hidden mb-4" />
 
     {/* Context */}
@@ -513,7 +513,7 @@ const SolutionArticle = ({ solution, discussionUrl }: SolutionArticleProps): JSX
               className={`${summaryBase} gap-4 rounded-xl border border-border bg-[hsl(var(--surface))] px-5 py-4 group-open:rounded-b-none group-open:border-b-0`}
             >
               <span
-                className="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-primary text-[hsl(var(--primary-foreground))] text-sm font-bold tabular-nums"
+                className="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-primary text-primary-foreground text-sm font-bold tabular-nums"
                 aria-hidden="true"
               >
                 {String(index + 1).padStart(2, "0")}

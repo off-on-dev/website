@@ -1,7 +1,18 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, afterEach } from "vitest";
 import { renderHook } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
+
+// Track all containers appended to body so afterEach can remove any that
+// were not cleaned up by a test that failed mid-assertion.
+const _bodyNodes: HTMLElement[] = [];
+
+afterEach(() => {
+  _bodyNodes.forEach((el) => {
+    if (el.parentNode === document.body) document.body.removeChild(el);
+  });
+  _bodyNodes.length = 0;
+});
 
 function setupContainer(): { container: HTMLDivElement; btn1: HTMLButtonElement; btn2: HTMLButtonElement; btn3: HTMLButtonElement; cleanup: () => void } {
   const container = document.createElement("div");
@@ -15,7 +26,15 @@ function setupContainer(): { container: HTMLDivElement; btn1: HTMLButtonElement;
   container.appendChild(btn2);
   container.appendChild(btn3);
   document.body.appendChild(container);
-  return { container, btn1, btn2, btn3, cleanup: () => document.body.removeChild(container) };
+  _bodyNodes.push(container);
+  return {
+    container, btn1, btn2, btn3,
+    cleanup: () => {
+      if (container.parentNode === document.body) document.body.removeChild(container);
+      const idx = _bodyNodes.indexOf(container);
+      if (idx !== -1) _bodyNodes.splice(idx, 1);
+    },
+  };
 }
 
 describe("useFocusTrap", () => {
@@ -130,9 +149,10 @@ describe("useFocusTrap", () => {
     const container = document.createElement("div");
     container.textContent = "No interactive children";
     document.body.appendChild(container);
-    const containerRef = { current: container };
     const externalBtn = document.createElement("button");
     document.body.appendChild(externalBtn);
+    _bodyNodes.push(container, externalBtn);
+    const containerRef = { current: container };
     externalBtn.focus();
     const { unmount } = renderHook(() => useFocusTrap(containerRef, true));
     fireEvent.keyDown(document, { key: "Tab", shiftKey: false });
@@ -140,6 +160,7 @@ describe("useFocusTrap", () => {
     unmount();
     document.body.removeChild(container);
     document.body.removeChild(externalBtn);
+    _bodyNodes.length = 0;
   });
 
   it("does not trap focus when the container is display:none", () => {

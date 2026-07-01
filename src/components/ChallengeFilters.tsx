@@ -101,7 +101,6 @@ export const ChallengeFilters = ({
             onClick={() => { setDifficultyOpen((o) => !o); setTagsOpen(false); }}
             aria-expanded={difficultyOpen}
             aria-controls={difficultyGroupId}
-            aria-haspopup="true"
             className={cn(
               activeDifficulty !== null ? "pill-active" : "pill-inactive",
               "px-6 gap-2"
@@ -153,7 +152,6 @@ export const ChallengeFilters = ({
             onClick={() => { setTagsOpen((o) => !o); setDifficultyOpen(false); }}
             aria-expanded={tagsOpen}
             aria-controls={tagsGroupId}
-            aria-haspopup="true"
             className={cn(
               activeTopics.length > 0 ? "pill-active" : "pill-inactive",
               "px-6 gap-2"

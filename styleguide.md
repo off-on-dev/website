@@ -346,6 +346,7 @@ All interactive elements use the standard focus-visible pattern for keyboard acc
 | --- | --- | --- |
 | `focus-ring` | `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2` | Block and card-level interactive elements (buttons, toggle, hamburger, skip link, logo) |
 | `focus-ring-tight` | `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1` | Small inline elements (topic pill links, inline text links) |
+| `focus-ring-subtle` | `focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring` | Compact inline links where a full ring-2 ring would visually overwhelm the element (breadcrumb links) |
 
 Always use `ring-ring`, never `ring-primary/xx`. The `--ring` token is theme-aware: dark mode amber (`41 100% 60%`), light mode dark amber (`41 100% 35%`, hex `#B37700`) for WCAG AA contrast in both modes.
 
@@ -536,7 +537,7 @@ useEscapeKey(onEscape, enabled);
 
 | Argument | Type | Description |
 | --- | --- | --- |
-| `onEscape` | `() => void` | Called when Escape is pressed. Always reads the latest version; no need to `useCallback` the argument. |
+| `onEscape` | `() => void` | Called when Escape is pressed. Always reads the latest version via an internal ref — do **not** wrap in `useCallback` with an empty `deps` array. A memoised closure with `deps: []` is never regenerated, so the ref always holds that stale first-render closure; state captured inside it will be wrong after any re-render. |
 | `enabled` | `boolean` | Pass the open/active state of the overlay or dropdown. The listener is only registered while this is `true`. |
 
 Used in `Navbar` (mobile menu) and `ChallengeFilters` (both dropdowns). When `enabled` is `difficultyOpen || tagsOpen`, the callback reads the latest values of both to determine which dropdown to close.
@@ -567,6 +568,8 @@ textarea:not([disabled]), [contenteditable]:not([contenteditable="false"]),
 ```
 
 The Tab handler re-queries the DOM on every keypress, so elements added or removed while the trap is active are reflected immediately.
+
+**`display:none` guard:** if the container is `display:none` when `enabled` becomes `true` (e.g. the container has the `hidden` HTML attribute or is hidden by a Tailwind responsive class like `md:hidden`), the initial-focus move is silently skipped and no Tab events are intercepted. This is intentional — the hook does nothing when the container is not rendered. There is no automatic retry when the container later becomes visible; if the open state persists through a viewport resize that reveals the container, focus must be set by the caller. Do not use `visibility:hidden` as a visibility toggle — only `display:none` (or the HTML `hidden` attribute) is checked.
 
 Used in `Navbar` (mobile menu drawer). The ref is attached to the menu `<div>` which is always in the DOM (hidden via the `hidden` attribute), so `containerRef.current` is non-null before the hook first runs.
 
@@ -766,7 +769,7 @@ Two-row filter UI for the adventure catalog. Row 1 is a difficulty single-select
 | `onDifficultyChange` | `(diff: Difficulty \| null) => void` | Called when difficulty changes. |
 | `onTopicsChange` | `(topics: string[]) => void` | Called when tag selection changes. |
 
-**ARIA pattern:** all filter groups (mobile dropdowns and desktop pill rows) use `role="group"` with `aria-pressed` on each button. Mobile dropdowns are always in the DOM — the panel uses the HTML `hidden` attribute when closed so `aria-controls` on the trigger always resolves to a valid IDREF. Trigger buttons use `aria-expanded`, `aria-controls`, and `aria-haspopup="listbox"` so AT announces them as listbox controls. Arrow-key navigation (Up/Down) is supported within each open panel via `onKeyDown` handlers on the panel buttons.
+**ARIA pattern:** all filter groups (mobile dropdowns and desktop pill rows) use `role="group"` with `aria-pressed` on each button. Mobile dropdowns are always in the DOM — the panel uses the HTML `hidden` attribute when closed so `aria-controls` on the trigger always resolves to a valid IDREF. Trigger buttons use `aria-expanded` and `aria-controls` to signal disclosure state; `aria-haspopup` is intentionally omitted because none of the valid ARIA values (`menu`, `listbox`, `tree`, `grid`, `dialog`) accurately describe a `role="group"` panel, and using an incorrect value misleads screen readers about expected interaction semantics. Arrow-key navigation (Up/Down) is supported within each open panel via `onKeyDown` handlers on the panel buttons.
 
 **Exported type:** `Difficulty = "Beginner" | "Intermediate" | "Expert"`. Import from `@/components/ChallengeFilters` where `activeDifficulty` state needs typing.
 
@@ -1373,7 +1376,11 @@ Full-width `bg-primary` amber section at the bottom of the home page. No props. 
 
 `src/components/Navbar.tsx`
 
-Site-wide sticky navigation bar. No props. Contains: logo `<Link>` (`logo-link` class), desktop nav links via the internal `NavLinks` component, a theme toggle via `NavThemeToggle`, and a mobile hamburger drawer. The mobile menu (`id="mobile-menu"`) is always in the DOM and uses the HTML `hidden` attribute so `aria-controls` on the trigger always resolves to a valid element. Three `useEffect` hooks handle Escape key close, Tab focus trap, and `inert`/`aria-hidden` on `#main-content` and `footer` while the drawer is open.
+Site-wide sticky navigation bar. No props. Contains: logo `<Link>` (`logo-link` class), desktop nav links via the internal `NavLinks` component, a theme toggle via `NavThemeToggle`, and a mobile hamburger drawer. The mobile menu (`id="mobile-menu"`) is always in the DOM and uses the HTML `hidden` attribute so `aria-controls` on the trigger always resolves to a valid element. Escape key close is delegated to `useEscapeKey`; Tab focus trapping to `useFocusTrap`; one `useEffect` handles background-content isolation while the drawer is open.
+
+**Mobile menu close behaviour:** `closeMenu(restoreFocus = true)` accepts an optional parameter. Escape close calls `closeMenu()` (default `true`) — focus returns to the hamburger button, as required by WAI-ARIA APG Disclosure Navigation. Navigation link clicks call `closeMenu(false)` — focus is left for the router/page to manage on the new route, since the trigger is no longer the meaningful focus destination after navigation. Never pass `restoreFocus: true` from an `onNavigate` handler or the hamburger will steal focus from the incoming page.
+
+**Background-content isolation:** When the drawer opens, every direct child of `<body>` except the `<nav>` receives `inert` and `aria-hidden="true"`. This covers all landmarks, overlays, and the consent banner — not just `#main-content` and `footer`. The effect walks from `menuRef.current` up to its nearest body-child ancestor to find the element to exclude, so it works correctly in both production and test environments. `aria-hidden` is kept alongside `inert` for older JAWS/VoiceOver versions that do not yet fully honour the `inert` attribute.
 
 ---
 
@@ -1825,6 +1832,8 @@ Usage pattern:
 ```
 
 Always add `tag-chip-link` to interactive tag chip links. Do not use `hover:border-primary hover:text-primary` alone. In light mode those produce amber, which fails 1.4.11.
+
+**Focus indicator:** `.tag-chip-link:focus-visible` uses `outline` rather than `box-shadow` for the focus ring. `box-shadow` is clipped by `overflow:hidden` on ancestor elements (the chip sits inside card containers), silently hiding the focus indicator. `outline` is not clipped by `overflow:hidden` and escapes those containers. Do not revert to `box-shadow` for this element.
 
 ---
 

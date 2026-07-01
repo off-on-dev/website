@@ -70,9 +70,9 @@ export const Navbar = (): JSX.Element => {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const closeMenu = (): void => {
+  const closeMenu = (restoreFocus = true): void => {
     setMenuOpen(false);
-    triggerRef.current?.focus();
+    if (restoreFocus) triggerRef.current?.focus();
   };
 
   // Two keydown listeners are registered while the menu is open: useEscapeKey
@@ -81,21 +81,32 @@ export const Navbar = (): JSX.Element => {
   useEscapeKey(closeMenu, menuOpen);
   useFocusTrap(menuRef, menuOpen);
 
-  // Hide page content from assistive technologies while the menu is open.
+  // Hide all body siblings from AT while the menu overlay is open.
+  // Iterating document.body.children covers every sibling (main, footer,
+  // consent banner, skip-nav, etc.) rather than only named landmarks.
+  // Walking from the menu element to its nearest body-child ancestor
+  // correctly excludes the nav in production and the React Testing Library
+  // container in tests, so the menu stays operable while the rest is inert.
+  // aria-hidden alongside inert provides defence in depth for AT that does
+  // not yet fully honour the inert attribute (older JAWS/VoiceOver versions).
   useEffect(() => {
     if (!menuOpen) return;
-    const main = document.getElementById("main-content");
-    if (!main) return;
-    const footer = document.querySelector<HTMLElement>("footer");
-    main.setAttribute("inert", "");
-    main.setAttribute("aria-hidden", "true");
-    footer?.setAttribute("inert", "");
-    footer?.setAttribute("aria-hidden", "true");
+    let host: Element | null = menuRef.current;
+    while (host && host.parentElement !== document.body) {
+      host = host.parentElement;
+    }
+    const siblings = Array.from(document.body.children).filter(
+      (el) => el !== host
+    ) as HTMLElement[];
+    siblings.forEach((el) => {
+      el.setAttribute("inert", "");
+      el.setAttribute("aria-hidden", "true");
+    });
     return () => {
-      main.removeAttribute("inert");
-      main.removeAttribute("aria-hidden");
-      footer?.removeAttribute("inert");
-      footer?.removeAttribute("aria-hidden");
+      siblings.forEach((el) => {
+        el.removeAttribute("inert");
+        el.removeAttribute("aria-hidden");
+      });
     };
   }, [menuOpen]);
 
@@ -145,7 +156,7 @@ export const Navbar = (): JSX.Element => {
           menuOpen && "flex flex-col gap-1"
         )}
       >
-        <NavLinks onNavigate={closeMenu} />
+        <NavLinks onNavigate={() => closeMenu(false)} />
       </div>
     </nav>
   );
