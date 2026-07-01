@@ -1,0 +1,1 @@
+import{d as e}from"./vendor-router-CP6S-BdV.js";var t=e(function(){return null});export{t as default};
