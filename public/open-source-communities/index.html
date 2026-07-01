@@ -50,14 +50,14 @@
 
     .reveal .slides section {
       text-align: left;
-      padding: 2.2em 2.8em;
+      padding: 1.8em 2.5em 2.8em;
       box-sizing: border-box;
       height: 100%;
     }
 
     .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
       font-family: 'Lexend', sans-serif;
-      font-weight: 700;
+      font-weight: 900;
       color: var(--fg);
       text-transform: none;
       letter-spacing: -0.02em;
@@ -66,7 +66,7 @@
     }
 
     .reveal h1 { font-size: 2.2em; }
-    .reveal h2 { font-size: 1.4em; }
+    .reveal h2 { font-size: 1.45em; }
 
     .reveal p {
       color: var(--muted);
@@ -85,17 +85,17 @@
     .reveal .slide-number { color: var(--muted); font-size: 0.38em; background: none; }
 
     /* ── Slide header ── */
-    .sh { margin-bottom: 1.2em; }
+    .sh { margin-bottom: 1em; }
     .sh .label {
       display: block;
-      font-size: 0.42em;
-      font-weight: 600;
+      font-size: 0.46em;
+      font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--amber);
-      margin-bottom: 0.6em;
+      margin-bottom: 0.55em;
     }
-    .sh h2 { font-size: 1.4em; margin: 0; }
+    .sh h2 { font-size: 1.45em; margin: 0; }
 
     /* ── Grids ── */
     .g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75em; margin-top: 0.6em; }
@@ -107,19 +107,19 @@
     /* ── Card ── */
     .card {
       background: var(--card);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(255,255,255,0.1);
       border-radius: 8px;
-      padding: 0.8em 1em;
+      padding: 0.7em 0.9em;
     }
     .card h4 {
       font-family: 'Lexend', sans-serif;
-      font-size: 0.65em;
-      font-weight: 700;
+      font-size: 0.68em;
+      font-weight: 900;
       color: var(--fg);
-      margin: 0 0 0.3em;
+      margin: 0 0 0.25em;
     }
-    .card p { font-size: 0.65em; margin: 0; line-height: 1.5; }
-    .card p + p { margin-top: 0.4em; }
+    .card p { font-size: 0.63em; margin: 0; line-height: 1.5; }
+    .card p + p { margin-top: 0.35em; }
 
     /* ── Agenda ── */
     .agenda {
@@ -160,19 +160,19 @@
       display: flex;
       gap: 0.55em;
       align-items: flex-start;
-      margin-bottom: 0.72em;
+      margin-bottom: 0.5em;
     }
     .brow .dot {
       flex-shrink: 0;
-      color: var(--muted);
-      opacity: 0.5;
-      font-size: 0.65em;
-      margin-top: 0.28em;
+      color: var(--amber);
+      opacity: 0.75;
+      font-size: 0.70em;
+      margin-top: 0.24em;
       line-height: 1;
       width: 0.8em;
     }
-    .brow .bt { font-size: 0.65em; color: var(--muted); line-height: 1.5; }
-    .brow .bt strong { color: var(--fg); font-weight: 600; }
+    .brow .bt { font-size: 0.70em; color: var(--fg); line-height: 1.5; }
+    .brow .bt strong { color: var(--amber); font-weight: 700; }
 
     /* ── Quiz rows ── */
     .qrow {
@@ -306,19 +306,19 @@
 
     /* ── Value rows ── */
     .vrow {
-      border-left: 2px solid var(--border);
+      border-left: 3px solid var(--border);
       padding: 0.2em 0 0.2em 0.7em;
       margin-bottom: 0.6em;
     }
     .vrow.hi { border-left-color: var(--amber); }
     .vrow h4 {
       font-family: 'Lexend', sans-serif;
-      font-size: 0.65em;
-      font-weight: 700;
+      font-size: 0.70em;
+      font-weight: 900;
       color: var(--fg);
       margin: 0 0 0.1em;
     }
-    .vrow p { font-size: 0.58em; margin: 0; }
+    .vrow p { font-size: 0.62em; margin: 0; }
 
     /* ── Contribute cards ── */
     .contrib {
@@ -370,8 +370,8 @@
     /* ── Column label ── */
     .col-label {
       display: block;
-      font-size: 0.42em;
-      font-weight: 600;
+      font-size: 0.46em;
+      font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--amber);
@@ -455,10 +455,10 @@
 
     /* ── Glow ── */
     #ff-wave { position: fixed; inset: 0; pointer-events: none; z-index: 0; background:
-      radial-gradient(ellipse 200% 20% at 50% 100%, rgba(255,192,52,.022) 0%, transparent 65%),
-      radial-gradient(ellipse 48% 38% at 14% 100%, rgba(255,192,52,.018) 0%, transparent 72%),
-      radial-gradient(ellipse 42% 32% at 48% 100%, rgba(255,192,52,.014) 0%, transparent 68%),
-      radial-gradient(ellipse 46% 36% at 80% 100%, rgba(255,192,52,.018) 0%, transparent 70%); }
+      radial-gradient(ellipse 200% 28% at 50% 100%, rgba(255,192,52,.038) 0%, transparent 65%),
+      radial-gradient(ellipse 48% 48% at 14% 100%, rgba(255,192,52,.032) 0%, transparent 72%),
+      radial-gradient(ellipse 42% 40% at 48% 100%, rgba(255,192,52,.024) 0%, transparent 68%),
+      radial-gradient(ellipse 46% 44% at 80% 100%, rgba(255,192,52,.030) 0%, transparent 70%); }
     #ff-mist { display: none; }
     #deck-logo { position: fixed; top: 20px; right: 28px; height: 44px; pointer-events: none; z-index: 200; }
   </style>
@@ -539,7 +539,7 @@
         <span class="label">context</span>
         <h2>The Comfortable Myth</h2>
       </div>
-      <div class="brow">
+      <div class="brow" style="margin-top: 1.2em;">
         <span class="dot">→</span>
         <span class="bt">We assume projects succeed or fail on code quality</span>
       </div>
@@ -566,7 +566,7 @@
         <span class="label">reality</span>
         <h2>What Actually Kills Projects</h2>
       </div>
-      <div class="brow">
+      <div class="brow" style="margin-top: 1.2em;">
         <span class="dot">→</span>
         <span class="bt">Contribution paths are unclear, so people don't contribute</span>
       </div>
@@ -597,7 +597,7 @@
         <span class="label">reframe</span>
         <h2>A Socio-Technical System</h2>
       </div>
-      <div class="brow">
+      <div class="brow" style="margin-top: 1.2em;">
         <span class="dot">→</span>
         <span class="bt">Open source is a <strong>socio-technical system</strong></span>
       </div>
@@ -624,7 +624,7 @@
         <span class="label">problem</span>
         <h2>The Maintainer Trap</h2>
       </div>
-      <div class="brow">
+      <div class="brow" style="margin-top: 1.2em;">
         <span class="dot">→</span>
         <span class="bt">Responsibility concentrates instead of distributing</span>
       </div>
@@ -636,7 +636,7 @@
         <span class="dot">→</span>
         <span class="bt"><strong>Single points of failure are a community design flaw, not a personality flaw</strong></span>
       </div>
-      <div class="card" style="margin-top: 0.9em; border-color: rgba(255,192,52,0.28);">
+      <div class="card" style="margin-top: 1em; border-color: rgba(255,192,52,0.28);">
         <h4>Example: Rust</h4>
         <p>Topic-focused teams (compiler, language, libraries, tooling, infrastructure) each own their area independently. A leadership council coordinates across teams. Ownership is spread by design, so no single person carries the whole project.</p>
       </div>
@@ -706,7 +706,7 @@
         <span class="dot">→</span>
         <span class="bt">Give conflict a defined path, so disputes don't become flame wars</span>
       </div>
-      <div class="card" style="margin-top: 0.9em; border-color: rgba(255,192,52,0.28);">
+      <div class="card" style="margin-top: 0.75em; border-color: rgba(255,192,52,0.28);">
         <h4>Example: Apache Software Foundation</h4>
         <p>Project management committees elect committers based on merit. Individuals represent themselves, not employers. Decisions happen in the open on mailing lists: if it wasn't recorded, it didn't happen.</p>
       </div>
@@ -742,7 +742,7 @@
         <span class="dot">→</span>
         <span class="bt">When contributing is confusing, people leave quietly. You never know why.</span>
       </div>
-      <div class="card" style="margin-top: 0.9em; border-color: rgba(255,192,52,0.28);">
+      <div class="card" style="margin-top: 0.75em; border-color: rgba(255,192,52,0.28);">
         <h4>Example: Kubernetes</h4>
         <p>Published contributor ladder: member to reviewer to approver, with clear expectations at each step. Good first issues. Mentoring cohorts. A graceful way to step back when life gets busy.</p>
       </div>
@@ -763,7 +763,7 @@
         <span class="label">lever 3</span>
         <h2>Recognition</h2>
       </div>
-      <div class="brow">
+      <div class="brow" style="margin-top: 1.2em;">
         <span class="dot">→</span>
         <span class="bt">Most community labor is <strong>invisible</strong>: reviews, triage, docs, mentoring</span>
       </div>
@@ -775,7 +775,7 @@
         <span class="dot">→</span>
         <span class="bt">Record who actually did what, and let credit extend to the companies that fund that work</span>
       </div>
-      <div class="card" style="margin-top: 0.9em; border-color: rgba(255,192,52,0.28);">
+      <div class="card" style="margin-top: 1em; border-color: rgba(255,192,52,0.28);">
         <h4>Example: Drupal Contribution Credit System</h4>
         <p>Records contribution at scale. Individuals get recognition tied to real work. Companies get visible standing for the work they fund. Commercial incentives align with community health.</p>
       </div>
@@ -795,7 +795,7 @@
         <span class="label">lever 3</span>
         <h2>Why Recognition Changes Behavior</h2>
       </div>
-      <div class="brow">
+      <div class="brow" style="margin-top: 1.2em;">
         <span class="dot">→</span>
         <span class="bt">Individuals get recognition tied to <strong>real contribution</strong>, not just visibility or self-promotion</span>
       </div>
@@ -807,7 +807,7 @@
         <span class="dot">→</span>
         <span class="bt">Recognition becomes a <strong>renewable resource</strong>, not a favor</span>
       </div>
-      <div class="card" style="margin-top: 0.9em; border-color: rgba(255,192,52,0.28);">
+      <div class="card" style="margin-top: 1em; border-color: rgba(255,192,52,0.28);">
         <p>When a company treats contribution as part of the actual work, with real time and budget behind it, the alignment becomes real and it lasts. <strong>Good incentive design beats good intentions every time.</strong></p>
       </div>
       <aside class="notes">
@@ -843,7 +843,7 @@
         <span class="dot">→</span>
         <span class="bt">"Come for the code, stay for the community" is a <strong>design goal</strong>, not a slogan</span>
       </div>
-      <div class="card" style="margin-top: 0.9em; border-color: rgba(255,192,52,0.28);">
+      <div class="card" style="margin-top: 0.75em; border-color: rgba(255,192,52,0.28);">
         <h4>Example: Drupal</h4>
         <p>Pairs DrupalCon globally with local, volunteer-run camps. Small and accessible by design. That's where new people get pulled in and where most new organizers learn the ropes.</p>
       </div>
@@ -863,19 +863,19 @@
         <span class="label">priorities</span>
         <h2>What to Do Now vs Later</h2>
       </div>
-      <div class="split-even" style="align-items: stretch; margin-top: 0.9em;">
-        <div class="card" style="border-color: rgba(255,192,52,0.45); display: flex; flex-direction: column; gap: 0.55em;">
+      <div class="split-even" style="align-items: stretch; margin-top: 0.7em;">
+        <div class="card" style="border-color: rgba(255,192,52,0.45); display: flex; flex-direction: column; gap: 0.3em;">
           <span class="col-label" style="margin-bottom: 0.1em;">optimize early</span>
-          <div class="brow"><span class="dot">→</span><span class="bt">Clear contribution paths and onboarding</span></div>
-          <div class="brow"><span class="dot">→</span><span class="bt">Explicit, written expectations</span></div>
-          <div class="brow"><span class="dot">→</span><span class="bt">Distributing authority before the load gets heavy</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">Clear contribution paths and onboarding</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">Explicit, written expectations</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">Distributing authority before the load gets heavy</span></div>
           <p style="font-size: 0.52em; color: var(--muted); margin: auto 0 0; opacity: 0.8;">Cheap now. Expensive to fix later.</p>
         </div>
-        <div class="card" style="display: flex; flex-direction: column; gap: 0.55em; opacity: 0.65;">
+        <div class="card" style="display: flex; flex-direction: column; gap: 0.3em; opacity: 0.65;">
           <span class="col-label" style="margin-bottom: 0.1em;">safe to delay</span>
-          <div class="brow"><span class="dot">→</span><span class="bt">Heavy formal governance and elaborate process</span></div>
-          <div class="brow"><span class="dot">→</span><span class="bt">Complex tooling and automation</span></div>
-          <div class="brow"><span class="dot">→</span><span class="bt">Over-structuring a community that is still small</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">Heavy formal governance and elaborate process</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">Complex tooling and automation</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">Over-structuring a community that is still small</span></div>
           <p style="font-size: 0.52em; color: var(--muted); margin: auto 0 0; opacity: 0.8;">Heavy process on a tiny project can strangle it before it grows.</p>
         </div>
       </div>
@@ -909,7 +909,7 @@
           <p>Works when paired with <strong>clear ownership</strong>, so the docs stay current.</p>
         </div>
       </div>
-      <p style="font-size: 0.58em; margin-top: 0.8em; opacity: 0.75;">Context decides whether a practice helps. The practices aren't the problem; the pairing is.</p>
+      <p style="font-size: 0.58em; margin-top: 1.6em; opacity: 0.75;">Context decides whether a practice helps. The practices aren't the problem; the pairing is.</p>
       <aside class="notes">
         <ul>
           <li>One nuance about best practices. The same advice can help or hurt depending on what you pair it with.</li>
@@ -927,39 +927,21 @@
         <span class="label">the ai question</span>
         <h2>Help and Hazard</h2>
       </div>
-      <div class="split-even">
-        <div>
-          <span class="col-label">where ai helps</span>
-          <div class="brow">
-            <span class="dot">→</span>
-            <span class="bt">Lowers the barrier to a first contribution</span>
-          </div>
-          <div class="brow">
-            <span class="dot">→</span>
-            <span class="bt">Speeds up docs, translation, and issue triage</span>
-          </div>
-          <div class="brow">
-            <span class="dot">→</span>
-            <span class="bt">Could ease the "privilege of free time" open source has always depended on</span>
-          </div>
+      <div class="split-even" style="align-items: stretch; margin-top: 0.7em;">
+        <div class="card" style="border-color: rgba(255,192,52,0.45); display: flex; flex-direction: column; gap: 0.3em;">
+          <span class="col-label" style="margin-bottom: 0.1em;">where ai helps</span>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">Lowers the barrier to a first contribution</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">Speeds up docs, translation, and issue triage</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">Could ease the "privilege of free time" open source has always depended on</span></div>
         </div>
-        <div>
-          <span class="col-label">where ai strains</span>
-          <div class="brow">
-            <span class="dot">→</span>
-            <span class="bt">A flood of low-effort contributions can overwhelm reviewers</span>
-          </div>
-          <div class="brow">
-            <span class="dot">→</span>
-            <span class="bt">The cost shifts from author to maintainer</span>
-          </div>
-          <div class="brow">
-            <span class="dot">→</span>
-            <span class="bt">Access is unequal. AI can become a new privilege.</span>
-          </div>
+        <div class="card" style="display: flex; flex-direction: column; gap: 0.3em; opacity: 0.75;">
+          <span class="col-label" style="margin-bottom: 0.1em;">where ai strains</span>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">A flood of low-effort contributions can overwhelm reviewers</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">The cost shifts from author to maintainer</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">Access is unequal. AI can become a new privilege.</span></div>
         </div>
       </div>
-      <div class="card" style="margin-top: 0.65em; border-color: rgba(255,192,52,0.28);">
+      <div class="card" style="margin-top: 0.7em; border-color: rgba(255,192,52,0.28); font-size: 0.9em;">
         <p><strong>AI doesn't replace community design. It raises the stakes on it.</strong> Share the cost and skill of using AI well. Build it into the contributor experience. The same levers still apply.</p>
       </div>
       <aside class="notes">
@@ -980,23 +962,23 @@
         <span class="label">mental model</span>
         <h2>Thrive vs Decay</h2>
       </div>
-      <div class="split-even" style="align-items: stretch; margin-top: 0.9em;">
-        <div class="card" style="border-color: rgba(255,192,52,0.45); display: flex; flex-direction: column; gap: 0.65em;">
+      <div class="split-even" style="align-items: stretch; margin-top: 0.7em;">
+        <div class="card" style="border-color: rgba(255,192,52,0.45); display: flex; flex-direction: column; gap: 0.3em;">
           <span class="col-label" style="margin-bottom: 0.1em;">thriving projects</span>
-          <div class="brow"><span class="dot">→</span><span class="bt">Share decisions</span></div>
-          <div class="brow"><span class="dot">→</span><span class="bt">Make it easy to help</span></div>
-          <div class="brow"><span class="dot">→</span><span class="bt">Recognize the work</span></div>
-          <div class="brow"><span class="dot">→</span><span class="bt">Build local belonging</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">Share decisions</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">Make it easy to help</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">Recognize the work</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">Build local belonging</span></div>
         </div>
-        <div class="card" style="display: flex; flex-direction: column; gap: 0.65em; opacity: 0.55;">
+        <div class="card" style="display: flex; flex-direction: column; gap: 0.3em; opacity: 0.55;">
           <span class="col-label" style="margin-bottom: 0.1em;">decaying projects</span>
-          <div class="brow"><span class="dot">→</span><span class="bt">Concentrate decisions</span></div>
-          <div class="brow"><span class="dot">→</span><span class="bt">Leave contributors guessing</span></div>
-          <div class="brow"><span class="dot">→</span><span class="bt">Let invisible work go unseen</span></div>
-          <div class="brow"><span class="dot">→</span><span class="bt">Stay purely global</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">Concentrate decisions</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">Leave contributors guessing</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">Let invisible work go unseen</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">→</span><span class="bt">Stay purely global</span></div>
         </div>
       </div>
-      <p style="font-size: 0.52em; color: var(--muted); margin-top: 0.7em; opacity: 0.75;">The drift is slow and quiet. That's exactly why it's easy to miss.</p>
+      <p style="font-size: 0.52em; color: var(--muted); margin-top: 1.2em; opacity: 0.75;">The drift is slow and quiet. That's exactly why it's easy to miss.</p>
       <aside class="notes">
         <ul>
           <li>If you take one mental model from this talk, take this one. It maps straight onto the four levers.</li>
@@ -1013,7 +995,7 @@
         <span class="label">your turn</span>
         <h2>What You Can Realistically Influence</h2>
       </div>
-      <p style="font-size: 0.62em; margin-bottom: 0.8em; opacity: 0.8;">You don't need to become a full-time maintainer.</p>
+      <p style="font-size: 0.62em; margin-top: 1.2em; margin-bottom: 0.8em; opacity: 0.8;">You don't need to become a full-time maintainer.</p>
       <div class="brow">
         <span class="dot">→</span>
         <span class="bt">Document one unclear process</span>
@@ -1047,7 +1029,7 @@
         <span class="label">close</span>
         <h2>Open Source Is Not Just Code</h2>
       </div>
-      <div class="brow">
+      <div class="brow" style="margin-top: 1.2em;">
         <span class="dot">→</span>
         <span class="bt">The system around the code is the thing that scales, or doesn't</span>
       </div>
