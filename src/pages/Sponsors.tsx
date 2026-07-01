@@ -50,7 +50,7 @@ const Sponsors = (): JSX.Element => {
                       href={sponsor.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+                      className="group inline-flex items-center focus-ring rounded-sm"
                     >
                       {logoSrc ? (
                         <img src={logoSrc} alt={sponsor.name} width={200} height={36} className="h-10 w-auto max-w-full group-hover:opacity-80 transition-opacity" loading="lazy" decoding="async" />
@@ -111,7 +111,7 @@ const Sponsors = (): JSX.Element => {
       </div>
 
       {/* How Sponsorship Works */}
-      <div className="bg-card border-y border-[hsl(var(--surface-border))] px-6 md:px-16 py-16">
+      <div className="bg-card border-y border-border px-6 md:px-16 py-16">
         <div className="mx-auto max-w-6xl">
           <section aria-labelledby="how-sponsorship-works">
             <h2 id="how-sponsorship-works" className="text-2xl font-bold text-foreground mb-4">How Sponsorship Works</h2>
@@ -181,7 +181,7 @@ const Sponsors = (): JSX.Element => {
               {SUPPORT_WAYS.map((way) => (
                 <div
                   key={way.title}
-                  className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6"
+                  className="card-glow rounded-xl border border-border bg-[hsl(var(--surface))] p-6"
                 >
                   <h3 className="text-lg font-semibold text-foreground mb-2">{way.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{way.description}</p>

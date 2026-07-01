@@ -14,7 +14,7 @@ type BreadcrumbProps = {
 
 export const Breadcrumb = ({ items, className = "mb-5" }: BreadcrumbProps): JSX.Element => (
   <nav aria-label="Breadcrumb" className={className}>
-    <ol className="flex flex-wrap items-center gap-1 text-xs text-[hsl(var(--text-faint))]">
+    <ol className="flex flex-wrap items-center gap-1 text-xs text-faint">
       {items.map((item, index) => (
         <li key={item.label} className="flex items-center gap-1">
           {index > 0 && (
@@ -23,7 +23,7 @@ export const Breadcrumb = ({ items, className = "mb-5" }: BreadcrumbProps): JSX.
           {item.href ? (
             <Link
               to={item.href}
-              className="inline-flex min-h-6 items-center hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm"
+              className="inline-flex min-h-6 items-center hover:text-foreground transition-colors focus-ring-subtle rounded-sm"
             >
               {item.label}
             </Link>

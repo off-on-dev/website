@@ -228,20 +228,69 @@ describe("Navbar - mobile menu", () => {
     expect(document.activeElement).toBe(focusable[focusable.length - 1]);
   });
 
-  it("sets aria-hidden on main content when menu is open", () => {
+  it("inerts and hides all body siblings of the navbar when the menu is open", () => {
+    // Verifies that coverage is not limited to named landmarks: any body-level
+    // sibling (main, footer, aside, consent banner, etc.) gets inerted.
     const main = document.createElement("main");
     main.id = "main-content";
+    const footer = document.createElement("footer");
+    const aside = document.createElement("aside");
     document.body.appendChild(main);
+    document.body.appendChild(footer);
+    document.body.appendChild(aside);
 
+    try {
+      renderNavbar();
+      fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
+      expect(main.hasAttribute("inert")).toBe(true);
+      expect(main.getAttribute("aria-hidden")).toBe("true");
+      expect(footer.hasAttribute("inert")).toBe(true);
+      expect(footer.getAttribute("aria-hidden")).toBe("true");
+      expect(aside.hasAttribute("inert")).toBe(true);
+      expect(aside.getAttribute("aria-hidden")).toBe("true");
+
+      fireEvent.click(screen.getByRole("button", { name: /Close menu/i }));
+      expect(main.hasAttribute("inert")).toBe(false);
+      expect(main.getAttribute("aria-hidden")).toBeNull();
+      expect(footer.hasAttribute("inert")).toBe(false);
+      expect(footer.getAttribute("aria-hidden")).toBeNull();
+      expect(aside.hasAttribute("inert")).toBe(false);
+      expect(aside.getAttribute("aria-hidden")).toBeNull();
+    } finally {
+      document.body.removeChild(main);
+      document.body.removeChild(footer);
+      document.body.removeChild(aside);
+    }
+  });
+
+  it("inerts body siblings even when some named landmarks are absent", () => {
+    // No #main-content — only a footer. The body-children loop must still
+    // cover whatever siblings exist rather than bailing out on a missing ID.
+    const footer = document.createElement("footer");
+    document.body.appendChild(footer);
+
+    try {
+      renderNavbar();
+      fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
+      expect(footer.hasAttribute("inert")).toBe(true);
+      expect(footer.getAttribute("aria-hidden")).toBe("true");
+
+      fireEvent.click(screen.getByRole("button", { name: /Close menu/i }));
+      expect(footer.hasAttribute("inert")).toBe(false);
+      expect(footer.getAttribute("aria-hidden")).toBeNull();
+    } finally {
+      document.body.removeChild(footer);
+    }
+  });
+
+  it("clicking a nav link closes the menu without moving focus to the hamburger", () => {
     renderNavbar();
     fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
-    expect(main.getAttribute("aria-hidden")).toBe("true");
-    expect(main.hasAttribute("inert")).toBe(true);
-
-    fireEvent.click(screen.getByRole("button", { name: /Close menu/i }));
-    expect(main.getAttribute("aria-hidden")).toBeNull();
-    expect(main.hasAttribute("inert")).toBe(false);
-
-    document.body.removeChild(main);
+    const links = screen.getAllByRole("link", { name: /About/i });
+    const mobileLink = links.find((l) => l.closest("#mobile-menu"));
+    expect(mobileLink).toBeTruthy();
+    fireEvent.click(mobileLink!);
+    expect(document.getElementById("mobile-menu")?.hasAttribute("hidden")).toBe(true);
+    expect(document.activeElement).not.toBe(screen.queryByRole("button", { name: /Open menu/i }));
   });
 });

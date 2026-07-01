@@ -22,7 +22,7 @@ const ulClass = (spacing: Spacing): string =>
 const liClass = (spacing: Spacing): string =>
   spacing === "loose"
     ? "flex items-start gap-3 text-sm text-muted-foreground leading-relaxed"
-    : "flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))]";
+    : "flex items-start gap-2.5 text-sm text-dim";
 
 function MarkerIcon({ marker }: { marker: Marker }): JSX.Element {
   if (marker === "check") {

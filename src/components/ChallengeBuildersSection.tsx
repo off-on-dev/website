@@ -20,7 +20,7 @@ export const ChallengeBuildersSection = ({ aside }: { aside?: ReactNode }): JSX.
         {ADVENTURE_CONTRIBUTORS.map((contributor) => (
           <div
             key={contributor.name}
-            className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6"
+            className="card-glow rounded-xl border border-border bg-[hsl(var(--surface))] p-6"
           >
             <PersonNameLink name={contributor.name} url={contributor.url} />
             {contributor.aboutHtml && (

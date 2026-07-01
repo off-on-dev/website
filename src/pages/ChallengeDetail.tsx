@@ -117,7 +117,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
         <div className="flex flex-wrap items-center gap-2 mb-5">
           <DifficultyBadge difficulty={level.difficulty} showDot />
           {level.estimatedTime && (
-            <span className="inline-flex items-center gap-1 rounded-full border border-[hsl(var(--surface-border))] px-2.5 py-1 font-mono text-xs text-[hsl(var(--text-secondary))]">
+            <span className="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 font-mono text-xs text-dim">
               <Clock size={11} aria-hidden="true" />
               {level.estimatedTime}
             </span>
@@ -129,7 +129,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
         {intro && intro.length > 0 && (
           <div className="space-y-3 mb-5 max-w-3xl">
             {intro.map((p, i) => (
-              <InlineProse key={i} html={p} className="text-[hsl(var(--text-secondary))] leading-relaxed" />
+              <InlineProse key={i} html={p} className="text-dim leading-relaxed" />
             ))}
           </div>
         )}
@@ -141,13 +141,13 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
           {/* Objective + Key Learnings side-by-side */}
           <div className="grid gap-5 sm:grid-cols-2 mb-6">
             {objective && objective.length > 0 && (
-              <section id="objective" className="scroll-mt-28 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+              <section id="objective" className="scroll-mt-28 rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
                 <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
                   Mission Objective
                 </h2>
                 <ul role="list" className="space-y-2">
                   {objective.map((item) => (
-                    <li key={item} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+                    <li key={item} className="flex items-start gap-2.5 text-sm text-dim leading-relaxed">
                       <Check size={14} className="mt-0.5 shrink-0 text-primary" aria-hidden="true" />
                       <span className="min-w-0 md-inline" dangerouslySetInnerHTML={{ __html: item }} />
                     </li>
@@ -156,13 +156,13 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
               </section>
             )}
 
-            <section id="learnings" className="scroll-mt-28 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+            <section id="learnings" className="scroll-mt-28 rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
               <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
                 Key Learnings
               </h2>
               <ul role="list" className="space-y-2">
                 {level.learnings.map((learning) => (
-                  <li key={learning} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+                  <li key={learning} className="flex items-start gap-2.5 text-sm text-dim leading-relaxed">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                     <span className="min-w-0 md-inline" dangerouslySetInnerHTML={{ __html: learning }} />
                   </li>
@@ -174,7 +174,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
           {/* Audience */}
           {level.audience && (
             <CollapsibleSection id="audience" title="Best Suited For">
-              <InlineProse html={level.audience} className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed" />
+              <InlineProse html={level.audience} className="text-sm text-dim leading-relaxed" />
             </CollapsibleSection>
           )}
 
@@ -192,13 +192,13 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
           )}
 
           {/* CTA card */}
-          <section className="mb-6 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+          <section className="mb-6 rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
             <div className="lg:grid lg:grid-cols-2 lg:gap-6 lg:items-center">
               <div>
                 <h3 className="text-sm font-semibold text-foreground mb-1">
                   Ready to start?
                 </h3>
-                <p className="text-xs text-[hsl(var(--text-secondary))]">
+                <p className="text-xs text-dim">
                   Launch in a preconfigured devcontainer
                 </p>
               </div>
@@ -224,33 +224,33 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
           )}
 
           {/* Completion section */}
-          <section id="completion" className="mb-6 scroll-mt-28 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+          <section id="completion" className="mb-6 scroll-mt-28 rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
             <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
               Complete Your Challenge
             </h2>
             <ul role="list" className="space-y-3">
-              <li className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+              <li className="flex items-start gap-2.5 text-sm text-dim leading-relaxed">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                 <span>
                   When you push from Codespaces, GitHub forks the repository to your account automatically. If you are working locally, fork the repository on GitHub before pushing.
                 </span>
               </li>
-              <li className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+              <li className="flex items-start gap-2.5 text-sm text-dim leading-relaxed">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                 {verification ? (
                   <span>
                     Verify your solution:
                     {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- tabIndex={0} makes this scrollable code block keyboard-reachable per WCAG 2.1 SC 2.1.1 */}
-                    <pre tabIndex={0} aria-label="Verification command (scroll left or right to see the full command)" className="mt-2 overflow-x-auto rounded-lg border border-[hsl(var(--surface-border))] bg-background/60 px-4 py-3 font-mono text-sm text-foreground">
+                    <pre tabIndex={0} aria-label="Verification command (scroll left or right to see the full command)" className="mt-2 overflow-x-auto rounded-lg border border-border bg-background/60 px-4 py-3 font-mono text-sm text-foreground">
                       <code>{verification.command}</code>
                     </pre>
-                    <span className="mt-2 block text-[hsl(var(--text-faint))]">If it passes, it generates a Certificate of Completion you can paste into the discussion.</span>
+                    <span className="mt-2 block text-faint">If it passes, it generates a Certificate of Completion you can paste into the discussion.</span>
                   </span>
                 ) : (
                   <span>Commit and push your changes, then trigger the verification workflow on GitHub Actions.</span>
                 )}
               </li>
-              <li className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+              <li className="flex items-start gap-2.5 text-sm text-dim leading-relaxed">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                 <span>
                   Share your solutions in the{" "}
@@ -266,7 +266,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
                 </span>
               </li>
             </ul>
-            <p className="mt-4 pt-4 border-t border-[hsl(var(--surface-border))] text-xs text-[hsl(var(--text-faint))]">
+            <p className="mt-4 pt-4 border-t border-border text-xs text-faint">
               Completed the challenge?{" "}
               <a
                 href={linkedinShareUrl}
@@ -283,16 +283,16 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
 
           {/* Solution walkthrough link — shown after deadline passes and only when a solution is authored */}
           {hasSolution && (
-            <section className="mb-6 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+            <section className="mb-6 rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
               <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-1">
                 Check Out the Solution Walkthrough
               </h2>
-              <p className="text-sm text-[hsl(var(--text-secondary))] leading-relaxed mb-3">
+              <p className="text-sm text-dim leading-relaxed mb-3">
                 See how we approached this challenge step by step. Found a better way? We&apos;d love to hear about it in the discussion.
               </p>
               <Link
                 to={`/adventures/${adventure.id}/levels/${level.id}/solution/`}
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline focus-ring-tight rounded-sm"
               >
                 View the solution walkthrough
                 <ArrowRight size={14} aria-hidden="true" />
@@ -304,13 +304,13 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
           {((toolbox && toolbox.length > 0) || (helpfulLinks && helpfulLinks.length > 0)) && (
             <div className={`grid gap-5 mb-6${toolbox && toolbox.length > 0 && helpfulLinks && helpfulLinks.length > 0 ? " sm:grid-cols-2" : ""}`}>
               {toolbox && toolbox.length > 0 && (
-                <section id="toolbox" className="scroll-mt-28 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+                <section id="toolbox" className="scroll-mt-28 rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
                   <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
                     Toolbox
                   </h2>
                   <ul role="list" className="space-y-2">
                     {toolbox.map((tool) => (
-                      <li key={tool.name} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+                      <li key={tool.name} className="flex items-start gap-2.5 text-sm text-dim leading-relaxed">
                         <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                         <span>
                           {tool.url ? (
@@ -336,13 +336,13 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
               )}
 
               {helpfulLinks && helpfulLinks.length > 0 && (
-                <section aria-labelledby="helpful-links-heading" className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+                <section aria-labelledby="helpful-links-heading" className="rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
                   <h2 id="helpful-links-heading" className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
                     Helpful Documentation
                   </h2>
                   <ul role="list" className="space-y-2">
                     {helpfulLinks.map((link) => (
-                      <li key={link.url} className="flex items-start gap-2.5 text-sm text-[hsl(var(--text-secondary))] leading-relaxed">
+                      <li key={link.url} className="flex items-start gap-2.5 text-sm text-dim leading-relaxed">
                         <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                         <span>
                           <a
@@ -376,7 +376,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
           )}
 
           {/* CTA panel - hidden on mobile where inline CTA is shown */}
-          <div className="hidden lg:block rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+          <div className="hidden lg:block rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
             <CodespacesButton href={level.codespacesUrl} fullWidth />
           </div>
           <CommunitySidebar

@@ -1,16 +1,11 @@
-import { type CSSProperties, type JSX } from "react";
+import { type JSX } from "react";
 import { ExternalLink, Heart, Trophy } from "lucide-react";
 import { COMMUNITY_URL, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
 import { useDiscussionPosts } from "@/hooks/useDiscussionPosts";
 import { isCertificatePost, displaySnippet } from "@/lib/discussion-utils";
+import { makeAvatarPalette } from "@/lib/avatar-utils";
 
-const avatarPalette: CSSProperties[] = [
-  { backgroundColor: "hsl(var(--primary) / 0.2)", color: "hsl(var(--foreground))" },
-  { backgroundColor: "hsl(var(--difficulty-architect) / 0.2)", color: "hsl(var(--foreground))" },
-  { backgroundColor: "hsl(var(--teal) / 0.2)", color: "hsl(var(--foreground))" },
-  { backgroundColor: "hsl(var(--difficulty-builder) / 0.2)", color: "hsl(var(--foreground))" },
-  { backgroundColor: "hsl(var(--destructive) / 0.2)", color: "hsl(var(--foreground))" },
-];
+const avatarPalette = makeAvatarPalette(0.2);
 
 type DiscussionSectionProps = {
   adventureId: string;
@@ -46,7 +41,7 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
       <div>
       {loaded && posts.length === 0 ? (
         <>
-          <div className="card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8 text-center">
+          <div className="card-glow rounded-xl border border-border bg-[hsl(var(--surface))] p-8 text-center">
             <p className="text-muted-foreground text-sm">
               No community posts yet. Be the first to share!
             </p>
@@ -61,7 +56,7 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
               href={post.topicUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="block card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="block card-glow rounded-xl border border-border bg-[hsl(var(--surface))] p-5 transition-all focus-ring"
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
@@ -87,7 +82,7 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
                   )}
                   <span className="sr-only">{post.username}: </span>
                   {post.age && (
-                    <span className="text-xs text-[hsl(var(--text-faint))]" aria-hidden="true">{post.age}</span>
+                    <span className="text-xs text-faint" aria-hidden="true">{post.age}</span>
                   )}
                 </div>
                 {(post.like_count ?? 0) > 0 && (

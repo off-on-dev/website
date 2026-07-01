@@ -23,7 +23,7 @@ export const ArchitectureSection = ({ architecture, diagram, diagramAlt, ascii }
           className="w-full h-auto max-h-[560px] object-contain block rounded-lg"
         />
       ) : ascii ? (
-        <pre className="overflow-x-auto rounded-lg border border-[hsl(var(--surface-border))] bg-background/60 px-4 py-3 font-mono text-xs text-foreground leading-relaxed whitespace-pre">
+        <pre className="overflow-x-auto rounded-lg border border-border bg-background/60 px-4 py-3 font-mono text-xs text-foreground leading-relaxed whitespace-pre">
           {ascii}
         </pre>
       ) : null}

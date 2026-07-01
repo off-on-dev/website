@@ -26,7 +26,7 @@ export const FilteredLevelCard = ({
     to={`/adventures/${adventureId}/levels/${level.id}/`}
     aria-label={`${level.name}: ${level.difficulty}, ${adventureTitle}`}
     className={cn(
-      "group card-glow rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-6 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      "group card-glow rounded-xl border border-border bg-[hsl(var(--surface))] p-6 flex flex-col focus-ring",
       className
     )}
   >
@@ -49,13 +49,13 @@ export const FilteredLevelCard = ({
       <div className="flex items-center gap-1.5">
         <span className="font-mono text-xs text-muted-foreground">Challenge</span>
         {level.estimatedTime && (
-          <span className="inline-flex items-center gap-1 rounded-full border border-[hsl(var(--surface-border))] px-2 py-0.5 font-mono text-xs text-[hsl(var(--text-faint))]">
+          <span className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 font-mono text-xs text-faint">
             <Clock size={10} aria-hidden="true" />
             {level.estimatedTime}
           </span>
         )}
       </div>
-      <span className="rounded-sm border border-[hsl(var(--surface-border))] px-2 py-0.5 text-xs text-[hsl(var(--text-faint))]">
+      <span className="rounded-sm border border-border px-2 py-0.5 text-xs text-faint">
         {adventureTitle}
       </span>
     </div>

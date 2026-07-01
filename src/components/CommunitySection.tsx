@@ -50,14 +50,14 @@ export const CommunitySection = ({ aside }: { aside?: ReactNode }): JSX.Element 
       <h2 id="community-section-heading" className="mb-6 text-3xl font-bold text-primary md:text-4xl">
         Get Involved
       </h2>
-      <p className="mb-12 max-w-xl text-[hsl(var(--text-secondary))] leading-relaxed">
+      <p className="mb-12 max-w-xl text-dim leading-relaxed">
         The community is where open source comes alive. Share what you know, ask for help, meet the people behind the projects, and find events near you.
       </p>
       <div className="grid gap-6 sm:grid-cols-2">
         {cards.map((card) => (
           <div
             key={card.title}
-            className="card-glow flex flex-col rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-8"
+            className="card-glow flex flex-col rounded-xl border border-border bg-[hsl(var(--surface))] p-8"
           >
             <span className="mb-4 text-primary">{card.icon}</span>
             <h3 className="text-xl font-semibold text-foreground">{card.title}</h3>

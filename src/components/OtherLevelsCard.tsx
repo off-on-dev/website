@@ -38,7 +38,7 @@ export const OtherLevelsCard = ({
   if (otherLevels.length === 0 && upcoming.length === 0) return null;
 
   return (
-    <div className="rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-5">
+    <div className="rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
       <h2 className="font-sans text-base font-semibold text-foreground mb-4">
         More Levels
       </h2>
@@ -48,7 +48,7 @@ export const OtherLevelsCard = ({
           <li key={level.id}>
             <Link
               to={`/adventures/${adventure.id}/levels/${level.id}/`}
-              className="group inline-flex w-full items-center gap-2 rounded-sm border px-2.5 py-1.5 text-xs no-underline hover:brightness-95 transition-[filter] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+              className="group inline-flex w-full items-center gap-2 rounded-sm border px-2.5 py-1.5 text-xs no-underline hover:brightness-95 transition-[filter] focus-ring-tight"
               style={pillStyle[level.difficulty]}
             >
               <span className="shrink-0 uppercase font-medium">{level.difficulty}</span>

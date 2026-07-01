@@ -166,6 +166,12 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 
+  /* These tokens already include hsl(). Use var(--color-dim) directly.
+     Never write hsl(var(--color-dim)) — that produces invalid double-hsl
+     and silently renders as transparent. */
+  --color-dim: hsl(var(--text-secondary));
+  --color-faint: hsl(var(--text-faint));
+
 }
 
 /* WCAG 2.4.11 Focus Not Obscured: prevent fixed navbar and consent banner from fully hiding focused elements */
@@ -467,25 +473,25 @@ html {
 @layer components {
   /* Primary filled button: py-3 gives 12+20+12 = 44px (WCAG 2.5.5) */
   .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.97] focus-ring;
     cursor: pointer;
   }
 
   /* Ghost/outline button */
   .btn-ghost {
-    @apply inline-flex items-center gap-2 rounded-md border border-foreground/35 bg-transparent px-5 py-3 text-sm font-semibold text-foreground transition-all duration-200 hover:border-primary/60 hover:text-primary active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md border border-foreground/35 bg-transparent px-5 py-3 text-sm font-semibold text-foreground transition-all duration-200 hover:border-primary/60 hover:text-primary active:scale-[0.97] focus-ring;
     cursor: pointer;
   }
 
   /* Soft tinted button */
   .btn-soft {
-    @apply inline-flex items-center justify-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-5 py-3 text-sm font-semibold text-primary transition-all duration-200 hover:bg-primary/20 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-5 py-3 text-sm font-semibold text-primary transition-all duration-200 hover:bg-primary/20 active:scale-[0.97] focus-ring;
     cursor: pointer;
   }
 
   /* Inverse button - for use on primary-colored section backgrounds */
   .btn-inverse {
-    @apply inline-flex items-center gap-2 rounded-md bg-background text-primary font-semibold text-sm px-5 py-3 border-2 border-primary transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md bg-background text-primary font-semibold text-sm px-5 py-3 border-2 border-primary transition-all active:scale-[0.97] focus-ring;
     cursor: pointer;
   }
   .btn-inverse:hover {
@@ -496,7 +502,7 @@ html {
 
   /* Ghost inverse button - for use on primary-colored section backgrounds */
   .btn-ghost-inverse {
-    @apply inline-flex items-center gap-2 rounded-md bg-transparent text-background font-semibold text-sm px-5 py-3 border-2 border-background/70 transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-2 rounded-md bg-transparent text-background font-semibold text-sm px-5 py-3 border-2 border-background/70 transition-all active:scale-[0.97] focus-ring;
     cursor: pointer;
   }
   .btn-ghost-inverse:hover {
@@ -507,15 +513,29 @@ html {
 
   /* Filter pills - min-h-[44px] meets WCAG 2.5.5; text is centered inside */
   .pill-active {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-primary/50 bg-primary/10 px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-primary/50 bg-primary/10 px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none text-primary transition-colors focus-ring;
     cursor: pointer;
   }
 
   .pill-inactive {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-[hsl(var(--surface-border))] bg-transparent px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none text-[hsl(var(--text-secondary))] hover:border-primary/60 hover:text-primary hover:bg-primary/5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-border bg-transparent px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none text-dim hover:border-primary/60 hover:text-primary hover:bg-primary/5 transition-all duration-200 focus-ring;
     cursor: pointer;
   }
 
+}
+
+/* @utility registers these as first-class Tailwind utilities, making them
+   usable in both JSX className and @apply (unlike @layer utilities classes). */
+@utility focus-ring {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+}
+
+@utility focus-ring-tight {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1;
+}
+
+@utility focus-ring-subtle {
+  @apply focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring;
 }
 
 /* ─── Electric glow effects ──────────────────────────────── */
@@ -776,6 +796,17 @@ html {
 
 .light a.text-primary {
   color: hsl(var(--foreground-hover));
+}
+
+/* text-dim and text-faint on block elements (<p>, <li>, etc.) are overridden by
+   the unlayered .light p/.light li rule above (higher specificity wins over @layer utilities).
+   These two-class selectors restore the intended secondary-text color in light mode. */
+.light .text-dim {
+  color: var(--color-dim);
+}
+
+.light .text-faint {
+  color: var(--color-faint);
 }
 
 /* Tailwind group-hover:* utilities are not matched by .light .classname selectors.
@@ -1160,9 +1191,10 @@ html {
 }
 
 /* ─── Tag chip links ─────────────────────────────────────── */
+/* outline escapes overflow:hidden parents; box-shadow does not. */
 .tag-chip-link:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
 }
 
 /* Light mode: --surface-border is hsl(220 12% 87%), only 1.30:1 on near-white.

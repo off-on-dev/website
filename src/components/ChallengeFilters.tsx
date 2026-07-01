@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useId, type JSX } from "react";
+import { useEscapeKey } from "@/hooks/useEscapeKey";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { ChevronDown, Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -44,21 +45,15 @@ export const ChallengeFilters = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent): void => {
-      if (e.key === "Escape") {
-        if (difficultyOpen) {
-          setDifficultyOpen(false);
-          difficultyTriggerRef.current?.focus();
-        } else if (tagsOpen) {
-          setTagsOpen(false);
-          tagsTriggerRef.current?.focus();
-        }
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [difficultyOpen, tagsOpen]);
+  useEscapeKey(() => {
+    if (difficultyOpen) {
+      setDifficultyOpen(false);
+      difficultyTriggerRef.current?.focus();
+    } else if (tagsOpen) {
+      setTagsOpen(false);
+      tagsTriggerRef.current?.focus();
+    }
+  }, difficultyOpen || tagsOpen);
 
   const handleDifficultyClick = (diff: Difficulty): void => {
     onDifficultyChange(activeDifficulty === diff ? null : diff);
@@ -86,10 +81,10 @@ export const ChallengeFilters = ({
   };
 
   const dropdownItemClass = (isActive: boolean): string => cn(
-    "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+    "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-left transition-colors focus-ring",
     isActive
       ? "text-primary bg-primary/10"
-      : "text-[hsl(var(--text-secondary))] hover:bg-primary/5 hover:text-foreground dark:hover:text-primary"
+      : "text-dim hover:bg-primary/5 hover:text-foreground dark:hover:text-primary"
   );
 
   return (
@@ -106,7 +101,6 @@ export const ChallengeFilters = ({
             onClick={() => { setDifficultyOpen((o) => !o); setTagsOpen(false); }}
             aria-expanded={difficultyOpen}
             aria-controls={difficultyGroupId}
-            aria-haspopup="listbox"
             className={cn(
               activeDifficulty !== null ? "pill-active" : "pill-inactive",
               "px-6 gap-2"
@@ -124,7 +118,7 @@ export const ChallengeFilters = ({
               role="group"
               aria-label="Filter by difficulty"
               hidden={!difficultyOpen}
-              className="absolute top-full left-0 z-20 mt-2 min-w-[160px] rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-1.5 shadow-lg"
+              className="absolute top-full left-0 z-20 mt-2 min-w-[160px] rounded-xl border border-border bg-[hsl(var(--surface))] p-1.5 shadow-lg"
             >
               <button type="button" aria-pressed={activeDifficulty === null}
                 onClick={() => { onDifficultyChange(null); setDifficultyOpen(false); difficultyTriggerRef.current?.focus(); }}
@@ -158,7 +152,6 @@ export const ChallengeFilters = ({
             onClick={() => { setTagsOpen((o) => !o); setDifficultyOpen(false); }}
             aria-expanded={tagsOpen}
             aria-controls={tagsGroupId}
-            aria-haspopup="listbox"
             className={cn(
               activeTopics.length > 0 ? "pill-active" : "pill-inactive",
               "px-6 gap-2"
@@ -176,7 +169,7 @@ export const ChallengeFilters = ({
               role="group"
               aria-label="Filter by technology"
               hidden={!tagsOpen}
-              className="absolute top-full left-0 z-20 mt-2 min-w-[200px] rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] p-1.5 shadow-lg"
+              className="absolute top-full left-0 z-20 mt-2 min-w-[200px] rounded-xl border border-border bg-[hsl(var(--surface))] p-1.5 shadow-lg"
             >
               <button type="button" aria-pressed={activeTopics.length === 0}
                 onClick={() => { onTopicsChange([]); setTagsOpen(false); tagsTriggerRef.current?.focus(); }}
@@ -207,7 +200,7 @@ export const ChallengeFilters = ({
       {/* Desktop: two pill rows */}
       <div className="hidden lg:block space-y-3">
 
-        <div role="group" aria-label="Filter by difficulty" className="flex flex-wrap items-center gap-2 pb-3 border-b border-[hsl(var(--surface-border))]">
+        <div role="group" aria-label="Filter by difficulty" className="flex flex-wrap items-center gap-2 pb-3 border-b border-border">
           <button type="button" onClick={() => onDifficultyChange(null)} aria-pressed={activeDifficulty === null}
             className={`${activeDifficulty === null ? "pill-active" : "pill-inactive"} px-6`}
           >

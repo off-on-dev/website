@@ -21,7 +21,7 @@ export const RewardsCard = ({ rewards, compact = false, levelDeadline, deadlineP
 
     {!compact && (
       deadlinePast ? (
-        <div className="text-xs text-[hsl(var(--text-secondary))] leading-relaxed mb-4 space-y-2">
+        <div className="text-xs text-dim leading-relaxed mb-4 space-y-2">
           <p>The deadline has passed, but the adventure is still open. Play it, post your solution in the community.</p>
           <p>
             If you enjoyed the adventure and want to share what you learned, write a tutorial in{" "}
@@ -39,14 +39,14 @@ export const RewardsCard = ({ rewards, compact = false, levelDeadline, deadlineP
           </p>
         </div>
       ) : (
-        <p className="text-xs text-[hsl(var(--text-secondary))] leading-relaxed mb-4">
+        <p className="text-xs text-dim leading-relaxed mb-4">
           <span className="md-inline" dangerouslySetInnerHTML={{ __html: rewards.eligibility }} />
         </p>
       )
     )}
 
     {compact && deadlinePast && (
-      <p className="text-xs text-[hsl(var(--text-secondary))] leading-relaxed mb-3">
+      <p className="text-xs text-dim leading-relaxed mb-3">
         Deadline passed. Adventure still open.
       </p>
     )}
@@ -55,13 +55,13 @@ export const RewardsCard = ({ rewards, compact = false, levelDeadline, deadlineP
       {rewards.tiers.map((tier) => (
         <div key={tier.label}>
           <p className="text-xs font-semibold text-foreground">{tier.label}</p>
-          <InlineProse html={tier.description} className="text-xs text-[hsl(var(--text-secondary))]" />
+          <InlineProse html={tier.description} className="text-xs text-dim" />
         </div>
       ))}
     </div>
 
     {!compact && rewards.rankingNote && (
-      <p className="text-xs text-[hsl(var(--text-faint))] leading-relaxed mt-4">
+      <p className="text-xs text-faint leading-relaxed mt-4">
         <span className="md-inline" dangerouslySetInnerHTML={{ __html: rewards.rankingNote }} />{" "}
         {rewards.rankingRulesUrl && (
           <a
@@ -80,8 +80,8 @@ export const RewardsCard = ({ rewards, compact = false, levelDeadline, deadlineP
 
     {(compact ? levelDeadline : rewards.deadline) && (
       <>
-        <div className="border-t border-[hsl(var(--surface-border))] my-3" />
-        <p className="text-xs text-[hsl(var(--text-faint))]">
+        <div className="border-t border-border my-3" />
+        <p className="text-xs text-faint">
           Deadline:{" "}
           <span className="font-medium text-foreground">
             {compact ? (levelDeadline ? formatDeadline(levelDeadline) : null) : formatDeadline(rewards.deadline)}

@@ -63,7 +63,7 @@ const NotFound = (): JSX.Element => {
                 <li key={link.label}>
                   <Link
                     to={link.to}
-                    className="flex flex-col gap-2 rounded-xl bg-primary p-7 h-full hover:bg-primary/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    className="flex flex-col gap-2 rounded-xl bg-primary p-7 h-full hover:bg-primary/90 transition-colors focus-ring"
                   >
                     <span className="text-base font-semibold text-primary-foreground">{link.label}</span>
                     <span className="text-sm text-background/90 leading-relaxed">{link.desc}</span>

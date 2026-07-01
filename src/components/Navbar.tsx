@@ -5,10 +5,12 @@ import { NavLink } from "@/components/NavLink";
 import { useTheme } from "@/hooks/useTheme";
 import { COMMUNITY_URL } from "@/data/constants";
 import { cn } from "@/lib/utils";
+import { useEscapeKey } from "@/hooks/useEscapeKey";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 const logoDark = `${import.meta.env.BASE_URL}brand/offon-logo-dark-color.svg`;
 const logoLight = `${import.meta.env.BASE_URL}brand/offon-logo-light-mono.svg`;
 
-const linkCls = "inline-flex items-center gap-1 min-h-[44px] text-sm font-medium text-[hsl(var(--text-secondary))] hover:text-foreground dark:hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent rounded px-1.5 -mx-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+const linkCls = "inline-flex items-center gap-1 min-h-[44px] text-sm font-medium text-dim hover:text-foreground dark:hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent rounded px-1.5 -mx-1.5 focus-ring";
 const activeCls = "text-foreground dark:text-primary underline decoration-foreground dark:decoration-primary underline-offset-4";
 
 type NavThemeToggleProps = { theme: "dark" | "light"; onToggle: () => void; className?: string };
@@ -17,7 +19,7 @@ const NavThemeToggle = ({ theme, onToggle, className }: NavThemeToggleProps): JS
   <button
     onClick={onToggle}
     className={cn(
-      "flex h-11 w-11 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      "flex h-11 w-11 items-center justify-center rounded-md border border-border bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-ring",
       className
     )}
     aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
@@ -66,80 +68,55 @@ export const Navbar = (): JSX.Element => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
-  const closeMenu = (): void => setMenuOpen(false);
+  const closeMenu = (restoreFocus = true): void => {
+    setMenuOpen(false);
+    if (restoreFocus) triggerRef.current?.focus();
+  };
 
+  // Two keydown listeners are registered while the menu is open: useEscapeKey
+  // handles Escape, useFocusTrap handles Tab wrapping. Keeping them separate
+  // preserves each hook's single responsibility and reusability elsewhere.
+  useEscapeKey(closeMenu, menuOpen);
+  useFocusTrap(menuRef, menuOpen);
+
+  // Hide all body siblings from AT while the menu overlay is open.
+  // Iterating document.body.children covers every sibling (main, footer,
+  // consent banner, skip-nav, etc.) rather than only named landmarks.
+  // Walking from the menu element to its nearest body-child ancestor
+  // correctly excludes the nav in production and the React Testing Library
+  // container in tests, so the menu stays operable while the rest is inert.
+  // aria-hidden alongside inert provides defence in depth for AT that does
+  // not yet fully honour the inert attribute (older JAWS/VoiceOver versions).
   useEffect(() => {
     if (!menuOpen) return;
-    const onKeyDown = (e: KeyboardEvent): void => {
-      if (e.key === "Escape") {
-        setMenuOpen(false);
-        triggerRef.current?.focus();
-      }
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [menuOpen]);
-
-  // Trap Tab focus within the mobile menu so keyboard users cannot navigate
-  // to obscured content while the drawer is open.
-  useEffect(() => {
-    if (!menuOpen) return;
-    const menu = document.getElementById("mobile-menu");
-    if (!menu) return;
-    const focusable = Array.from(
-      menu.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-      )
-    );
-    if (focusable.length > 0) focusable[0].focus();
-
-    const onKeyDown = (e: KeyboardEvent): void => {
-      if (e.key !== "Tab") return;
-      if (focusable.length === 0) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (e.shiftKey) {
-        if (document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        }
-      } else {
-        if (document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [menuOpen]);
-
-  // Hide page content from assistive technologies while the menu is open.
-  useEffect(() => {
-    if (!menuOpen) return;
-    const main = document.getElementById("main-content");
-    const footer = document.querySelector<HTMLElement>("footer");
-    if (!main) return;
-    main.setAttribute("inert", "");
-    main.setAttribute("aria-hidden", "true");
-    footer?.setAttribute("inert", "");
-    footer?.setAttribute("aria-hidden", "true");
+    let host: Element | null = menuRef.current;
+    while (host && host.parentElement !== document.body) {
+      host = host.parentElement;
+    }
+    const siblings = Array.from(document.body.children).filter(
+      (el) => el !== host
+    ) as HTMLElement[];
+    siblings.forEach((el) => {
+      el.setAttribute("inert", "");
+      el.setAttribute("aria-hidden", "true");
+    });
     return () => {
-      main.removeAttribute("inert");
-      main.removeAttribute("aria-hidden");
-      footer?.removeAttribute("inert");
-      footer?.removeAttribute("aria-hidden");
+      siblings.forEach((el) => {
+        el.removeAttribute("inert");
+        el.removeAttribute("aria-hidden");
+      });
     };
   }, [menuOpen]);
 
   return (
     <nav
       aria-label="Main"
-      className="fixed top-0 left-0 right-0 z-50 border-b border-[hsl(var(--surface-border))] bg-background"
+      className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background"
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-1.5">
-        <Link to="/" aria-label="offon.dev home" className="logo-link flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm">
+        <Link to="/" aria-label="offon.dev home" className="logo-link flex items-center focus-ring rounded-sm">
           {/* Dark logo is high-priority: it's visible in the default (dark) theme. Light logo uses auto priority since it's hidden until the user switches theme. */}
           <img src={logoDark} alt="" width={130} height={33} loading="eager" fetchPriority="high" className="h-8 dark:block hidden" />
           <img src={logoLight} alt="" aria-hidden="true" width={130} height={33} loading="eager" className="h-8 block dark:hidden" />
@@ -157,7 +134,7 @@ export const Navbar = (): JSX.Element => {
           <button
             ref={triggerRef}
             onClick={() => setMenuOpen((o) => !o)}
-            className="flex h-11 w-11 items-center justify-center rounded-md border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="flex h-11 w-11 items-center justify-center rounded-md border border-border bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-ring"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
@@ -171,14 +148,15 @@ export const Navbar = (): JSX.Element => {
           Plain <div>, not <nav>: this sits inside the outer <nav aria-label="Main">
           and a nested nav landmark would create two overlapping navigation regions. */}
       <div
+        ref={menuRef}
         id="mobile-menu"
         hidden={!menuOpen}
         className={cn(
-          "md:hidden border-t border-[hsl(var(--surface-border))] bg-background px-6 py-2",
+          "md:hidden border-t border-border bg-background px-6 py-2",
           menuOpen && "flex flex-col gap-1"
         )}
       >
-        <NavLinks onNavigate={closeMenu} />
+        <NavLinks onNavigate={() => closeMenu(false)} />
       </div>
     </nav>
   );

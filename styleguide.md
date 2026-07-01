@@ -197,6 +197,20 @@ In light mode, `bg-primary` sections (PageHero, BottomCTA) stay amber. Do **not*
 
 ---
 
+### Tailwind Utility Shortcuts
+
+The `@theme` block in `src/index.css` maps design tokens to named Tailwind utilities. Use these instead of arbitrary values:
+
+| Pattern to avoid | Named utility | Token |
+| --- | --- | --- |
+| `border-[hsl(var(--surface-border))]` | `border-border` | `--border` / `--surface-border` (identical values) |
+| `text-[hsl(var(--text-secondary))]` | `text-dim` | `--text-secondary` via `--color-dim` in `@theme` |
+| `text-[hsl(var(--text-faint))]` | `text-faint` | `--text-faint` via `--color-faint` in `@theme` |
+
+For focus ring classes see the [Focus Visible Styling](#focus-visible-styling) section.
+
+---
+
 ## Component Classes
 
 ### Buttons
@@ -326,13 +340,13 @@ Sidebar uses the same token namespace (`--sidebar-*`) mirroring the main tokens.
 
 ## Focus Visible Styling
 
-All interactive elements use the standard focus-visible pattern for keyboard accessibility:
+All interactive elements use the standard focus-visible pattern for keyboard accessibility. Use the shorthand CSS utilities defined in `src/index.css` (`@layer utilities`):
 
-```css
-focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-```
-
-Adjust `ring-offset-1` for inline elements or `ring-offset-2` for block elements as appropriate.
+| Class | Expands to | When to use |
+| --- | --- | --- |
+| `focus-ring` | `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2` | Block and card-level interactive elements (buttons, toggle, hamburger, skip link, logo) |
+| `focus-ring-tight` | `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1` | Small inline elements (topic pill links, inline text links) |
+| `focus-ring-subtle` | `focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring` | Compact inline links where a full ring-2 ring would visually overwhelm the element (breadcrumb links) |
 
 Always use `ring-ring`, never `ring-primary/xx`. The `--ring` token is theme-aware: dark mode amber (`41 100% 60%`), light mode dark amber (`41 100% 35%`, hex `#B37700`) for WCAG AA contrast in both modes.
 
@@ -350,9 +364,10 @@ Every page must support keyboard bypass of the navigation bar (WCAG 2.4.1).
 
 ### Route effect components in `Layout.tsx`
 
-`Layout.tsx` mounts three sibling components that each handle a single route-level side effect:
+`Layout.tsx` mounts four sibling components that each handle a single route-level side effect:
 
 - **`<ScrollToTop />`**: on every route change, scrolls to the top of the page. When the URL has a hash, it instead scrolls the matching element into view via `requestAnimationFrame` so the target is mounted before the scroll runs. Required because React Router does not handle hash-anchor scrolling on client-side navigation.
+- **`<FocusReset />`**: on every route change (skipping initial mount), moves focus to `#main-content` via `requestAnimationFrame` so keyboard and AT users land in the main content area rather than on `<body>`. Uses `{ preventScroll: true }` so the scroll position set by `<ScrollToTop />` is not overridden. All page `<main>` elements carry `id="main-content" tabIndex={-1}`.
 - **`<PageViewTracker />`**: fires GA4 `page_view` on every navigation when consent is `"granted"`. Reads pathname, full URL, and `document.title`. Was previously combined with `<ScrollToTop />`; split so each component has a single responsibility.
 - **`<ClickTracker />`**: wraps `useClickTracking` so the document-level click listener attaches when the consent context changes.
 
@@ -511,6 +526,56 @@ const { rows, updatedAt } = useAdventureLeaderboard(adventureId, mockLoader);
 
 ---
 
+### `useEscapeKey`
+
+`src/hooks/useEscapeKey.ts`
+
+Attaches a `keydown` listener on `document` that calls `onEscape` when `Escape` is pressed, and removes it when `enabled` is `false` or the component unmounts. Uses a ref to always call the latest `onEscape` without re-registering the listener on every render.
+
+```ts
+useEscapeKey(onEscape, enabled);
+```
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `onEscape` | `() => void` | Called when Escape is pressed. Always reads the latest version via an internal ref — do **not** wrap in `useCallback` with an empty `deps` array. A memoised closure with `deps: []` is never regenerated, so the ref always holds that stale first-render closure; state captured inside it will be wrong after any re-render. |
+| `enabled` | `boolean` | Pass the open/active state of the overlay or dropdown. The listener is only registered while this is `true`. |
+
+Used in `Navbar` (mobile menu) and `ChallengeFilters` (both dropdowns). When `enabled` is `difficultyOpen || tagsOpen`, the callback reads the latest values of both to determine which dropdown to close.
+
+---
+
+### `useFocusTrap`
+
+`src/hooks/useFocusTrap.ts`
+
+Traps Tab/Shift+Tab focus within a container while `enabled` is `true`. Focuses the first focusable element immediately when enabled. Removes all listeners when `enabled` flips to `false` or the component unmounts.
+
+```ts
+useFocusTrap(containerRef, enabled);
+```
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `containerRef` | `RefObject<HTMLElement \| null>` | Ref pointing to the container that should trap focus. Must be attached to the DOM element before `enabled` becomes `true`. |
+| `enabled` | `boolean` | Pass the open state of the drawer or modal. The listener and initial focus move are only active while this is `true`. |
+
+Focusable selector:
+
+```css
+a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]),
+textarea:not([disabled]), [contenteditable]:not([contenteditable="false"]),
+[tabindex]:not([tabindex="-1"])
+```
+
+The Tab handler re-queries the DOM on every keypress, so elements added or removed while the trap is active are reflected immediately.
+
+**`display:none` guard:** if the container is `display:none` when `enabled` becomes `true` (e.g. the container has the `hidden` HTML attribute or is hidden by a Tailwind responsive class like `md:hidden`), the initial-focus move is silently skipped and no Tab events are intercepted. This is intentional — the hook does nothing when the container is not rendered. There is no automatic retry when the container later becomes visible; if the open state persists through a viewport resize that reveals the container, focus must be set by the caller. Do not use `visibility:hidden` as a visibility toggle — only `display:none` (or the HTML `hidden` attribute) is checked.
+
+Used in `Navbar` (mobile menu drawer). The ref is attached to the menu `<div>` which is always in the DOM (hidden via the `hidden` attribute), so `containerRef.current` is non-null before the hook first runs.
+
+---
+
 ## Components
 
 ### `InlineProse`
@@ -531,7 +596,7 @@ Renders `<p className="md-inline …">` when the HTML is inline-only, and `<div 
 | `className` | `string?` | `""` | Tailwind utilities appended before `md-inline`/`md-content` |
 
 ```tsx
-<InlineProse html={tier.description} className="text-xs text-[hsl(var(--text-secondary))]" />
+<InlineProse html={tier.description} className="text-xs text-dim" />
 ```
 
 `BLOCK_ELEMENT_RE` is also exported for the rare case where callers need to perform the same check without rendering (e.g. server-side generator scripts).
@@ -554,6 +619,16 @@ Touch target is 44×44 px (`h-11 w-11`) to meet WCAG 2.5.5 (minimum 44×44 px).
 The banner uses `role="region"` with `aria-labelledby="consent-banner-title"` (pointing to the visible title paragraph). When the banner first mounts, focus is moved to the Decline button so keyboard users immediately know a decision is available.
 
 No props. Uses `useConsent` context internally.
+
+---
+
+### `FocusReset` (internal, `src/Layout.tsx`)
+
+Moves keyboard focus to `#main-content` on every SPA route change (WCAG 2.4.3). Skips the initial mount so users do not receive an intrusive focus jump on first page load. Deferred via `requestAnimationFrame` so the incoming route's DOM is committed before focus is attempted. Calls `element.focus({ preventScroll: true })` so `<ScrollToTop />`'s `scrollTo(0, 0)` is not overridden by the browser scrolling `#main-content` into view.
+
+All page `<main>` elements must carry `id="main-content" tabIndex={-1}` for this to work. If the element is absent (e.g., a redirect page that renders `null`), the optional-chain short-circuits silently.
+
+No props. Internal to `Layout.tsx`. Do not extract or reuse elsewhere.
 
 ---
 
@@ -705,7 +780,7 @@ Two-row filter UI for the adventure catalog. Row 1 is a difficulty single-select
 | `onDifficultyChange` | `(diff: Difficulty \| null) => void` | Called when difficulty changes. |
 | `onTopicsChange` | `(topics: string[]) => void` | Called when tag selection changes. |
 
-**ARIA pattern:** all filter groups (mobile dropdowns and desktop pill rows) use `role="group"` with `aria-pressed` on each button. Mobile dropdowns are always in the DOM — the panel uses the HTML `hidden` attribute when closed so `aria-controls` on the trigger always resolves to a valid IDREF. Trigger buttons use `aria-expanded`, `aria-controls`, and `aria-haspopup="listbox"` so AT announces them as listbox controls. Arrow-key navigation (Up/Down) is supported within each open panel via `onKeyDown` handlers on the panel buttons.
+**ARIA pattern:** all filter groups (mobile dropdowns and desktop pill rows) use `role="group"` with `aria-pressed` on each button. Mobile dropdowns are always in the DOM — the panel uses the HTML `hidden` attribute when closed so `aria-controls` on the trigger always resolves to a valid IDREF. Trigger buttons use `aria-expanded` and `aria-controls` to signal disclosure state; `aria-haspopup` is intentionally omitted because none of the valid ARIA values (`menu`, `listbox`, `tree`, `grid`, `dialog`) accurately describe a `role="group"` panel, and using an incorrect value misleads screen readers about expected interaction semantics. Arrow-key navigation (Up/Down) is supported within each open panel via `onKeyDown` handlers on the panel buttons.
 
 **Exported type:** `Difficulty = "Beginner" | "Intermediate" | "Expert"`. Import from `@/components/ChallengeFilters` where `activeDifficulty` state needs typing.
 
@@ -835,7 +910,7 @@ Renders a vertical list with one of three marker styles (`dot`, `check`, `x`) an
 
 `src/components/AboutSection.tsx`
 
-Renders the About page content: Our Mission, Our Vision, Who It's For, and What We Stand For. Section is wrapped with the "our foundation" eyebrow at the top (using the standard `section-label` overline pattern) and carries `id="approach"`. Each of the four h2s also has its own id (`mission`, `vision`, `audience`, `values`) for deep-linking. The opening Mission paragraph is rendered as a `text-lg text-foreground` lead so the page has a clear thesis statement; subsequent paragraphs use `text-[hsl(var(--text-secondary))]`. Mission and Vision render as flowing paragraphs; Who It's For and What We Stand For use `BulletList` (the latter with `{ lead, desc }` items so each bullet leads with a bold headline phrase).
+Renders the About page content: Our Mission, Our Vision, Who It's For, and What We Stand For. Section is wrapped with the "our foundation" eyebrow at the top (using the standard `section-label` overline pattern) and carries `id="approach"`. Each of the four h2s also has its own id (`mission`, `vision`, `audience`, `values`) for deep-linking. The opening Mission paragraph is rendered as a `text-lg text-foreground` lead so the page has a clear thesis statement; subsequent paragraphs use `text-dim`. Mission and Vision render as flowing paragraphs; Who It's For and What We Stand For use `BulletList` (the latter with `{ lead, desc }` items so each bullet leads with a bold headline phrase).
 
 No props. Self-contained section component.
 
@@ -890,7 +965,7 @@ Renders a person's name with consistent styling, used for board members and adve
 
 `src/components/BrandStory.tsx`
 
-Renders the "The Story Behind the Firefly" section on the About page (mounted between `AboutSection` and `BoardSection`). Carries the "our story" eyebrow above its h2. Three short paragraphs covering: the rebrand process and the question the team kept returning to; how the firefly mascot (Nyx) came to life; and what Nyx represents for the community. Uses `text-[hsl(var(--text-secondary))] leading-relaxed` body text within `max-w-3xl` to match the prose blocks in `AboutSection`.
+Renders the "The Story Behind the Firefly" section on the About page (mounted between `AboutSection` and `BoardSection`). Carries the "our story" eyebrow above its h2. Three short paragraphs covering: the rebrand process and the question the team kept returning to; how the firefly mascot (Nyx) came to life; and what Nyx represents for the community. Uses `text-dim leading-relaxed` body text within `max-w-3xl` to match the prose blocks in `AboutSection`.
 
 Section uses `pb-16` only (no top padding), since `AboutSection` above it already terminates with its own `py-16`. The `id="story"` anchor is reserved for future in-page navigation.
 
@@ -1312,7 +1387,11 @@ Full-width `bg-primary` amber section at the bottom of the home page. No props. 
 
 `src/components/Navbar.tsx`
 
-Site-wide sticky navigation bar. No props. Contains: logo `<Link>` (`logo-link` class), desktop nav links via the internal `NavLinks` component, a theme toggle via `NavThemeToggle`, and a mobile hamburger drawer. The mobile menu (`id="mobile-menu"`) is always in the DOM and uses the HTML `hidden` attribute so `aria-controls` on the trigger always resolves to a valid element. Three `useEffect` hooks handle Escape key close, Tab focus trap, and `inert`/`aria-hidden` on `#main-content` and `footer` while the drawer is open.
+Site-wide sticky navigation bar. No props. Contains: logo `<Link>` (`logo-link` class), desktop nav links via the internal `NavLinks` component, a theme toggle via `NavThemeToggle`, and a mobile hamburger drawer. The mobile menu (`id="mobile-menu"`) is always in the DOM and uses the HTML `hidden` attribute so `aria-controls` on the trigger always resolves to a valid element. Escape key close is delegated to `useEscapeKey`; Tab focus trapping to `useFocusTrap`; one `useEffect` handles background-content isolation while the drawer is open.
+
+**Mobile menu close behaviour:** `closeMenu(restoreFocus = true)` accepts an optional parameter. Escape close calls `closeMenu()` (default `true`) — focus returns to the hamburger button, as required by WAI-ARIA APG Disclosure Navigation. Navigation link clicks call `closeMenu(false)` — focus is left for the router/page to manage on the new route, since the trigger is no longer the meaningful focus destination after navigation. Never pass `restoreFocus: true` from an `onNavigate` handler or the hamburger will steal focus from the incoming page.
+
+**Background-content isolation:** When the drawer opens, every direct child of `<body>` except the `<nav>` receives `inert` and `aria-hidden="true"`. This covers all landmarks, overlays, and the consent banner — not just `#main-content` and `footer`. The effect walks from `menuRef.current` up to its nearest body-child ancestor to find the element to exclude, so it works correctly in both production and test environments. `aria-hidden` is kept alongside `inert` for older JAWS/VoiceOver versions that do not yet fully honour the `inert` attribute.
 
 ---
 
@@ -1328,7 +1407,7 @@ Site-wide footer. No props. Contains two `<nav>` landmark regions (`aria-label="
 
 `src/components/AdventureCard.tsx`
 
-Navigation card linking to an adventure overview page. The entire card is a `<Link>` to `/adventures/:id/`. Renders a header row with an "Adventure" mono label, an optional `LivePill`, and a `.badge-levels` level-count pill; the adventure title (hover: amber); a two-line `story` snippet; a row of `DifficultyBadge` instances; up to four technology tag `<span>` chips; and an optional `ContributorBadge` pinned to the card footer via `mt-auto`. Card border is `border-primary/50` when `adventure.isLive`, otherwise `border-[hsl(var(--surface-border))]`. Uses `card-glow` for hover glow.
+Navigation card linking to an adventure overview page. The entire card is a `<Link>` to `/adventures/:id/`. Renders a header row with an "Adventure" mono label, an optional `LivePill`, and a `.badge-levels` level-count pill; the adventure title (hover: amber); a two-line `story` snippet; a row of `DifficultyBadge` instances; up to four technology tag `<span>` chips; and an optional `ContributorBadge` pinned to the card footer via `mt-auto`. Card border is `border-primary/50` when `adventure.isLive`, otherwise `border-border`. Uses `card-glow` for hover glow.
 
 **Accessible name:** the link carries `aria-label` in the format `"{title}: {difficulties}, {tags}"` (e.g. `"Blind by Design: Beginner, Intermediate, Expert, Prometheus, Grafana"`). Tags are omitted if the adventure has none. This gives screen reader users difficulty and technology context when navigating by links, without the verbosity of the full card content.
 
@@ -1580,6 +1659,27 @@ Helper functions for processing discussion posts in `DiscussionSection` and `Com
 
 ---
 
+### `avatar-utils`
+
+`src/lib/avatar-utils.ts`
+
+Generates the avatar fallback colour palette used by `DiscussionSection` and `CommunitySidebar`.
+
+| Export | Signature | Description |
+| --- | --- | --- |
+| `makeAvatarPalette` | `(opacity: number) => CSSProperties[]` | Returns a five-entry array of `{ backgroundColor, color }` style objects. Each entry uses a design token from the `@theme` block with the provided opacity. The `color` is always `hsl(var(--foreground))` to satisfy contrast requirements in both light and dark mode. |
+
+```ts
+import { makeAvatarPalette } from "@/lib/avatar-utils";
+
+const avatarPalette = makeAvatarPalette(0.2);
+// style={avatarPalette[index % avatarPalette.length]}
+```
+
+The opacity argument lets each call site tune the background fill for its surface context. `DiscussionSection` uses `0.2`; `CommunitySidebar` uses `0.25`.
+
+---
+
 ### `markdown`
 
 `src/lib/markdown.ts`
@@ -1707,7 +1807,7 @@ className="docs-ext-link text-sm font-medium mt-4"
 
 CSS class for icon-only social media `<a>` links. Used in the Spread the Word card on `/contribute` and in `ChallengeShareLinks` on challenge detail pages.
 
-**Dark mode:** base `text-[hsl(var(--text-secondary))]`, hover `hsl(var(--primary))` (amber, fine on dark backgrounds).
+**Dark mode:** base `text-dim`, hover `hsl(var(--primary))` (amber, fine on dark backgrounds).
 **Light mode:** `.light .social-icon-link:hover` overrides to `hsl(var(--link-hover-light))` (~7.5:1 dark amber on bg-card), avoiding `#ffc034` which is ~1.6:1 on near-white and fails WCAG 1.4.11.
 
 Includes `padding: 0.25rem` (equivalent to `p-1`) to improve tap target size and `border-radius: 2px` for focus ring containment.
@@ -1728,7 +1828,7 @@ Always use `aria-label` on the parent `<a>` (not the svg) for icon-only links. D
 
 CSS class applied to tag/technology chip `<Link>` elements in `ChallengeDetail` and `AdventureDetail`. Added alongside the standard Tailwind border and text utilities to provide light mode overrides that meet WCAG 1.4.11 (3:1 border contrast for interactive components).
 
-**Dark mode:** inherits border from `border-[hsl(var(--surface-border))]` and text from `text-[hsl(var(--text-faint))]`; hover shifts to `border-primary` / `text-primary` (amber).
+**Dark mode:** inherits border from `border-border` and text from `text-faint`; hover shifts to `border-primary` / `text-primary` (amber).
 **Light mode:** `.light .tag-chip-link` overrides border to `hsl(220 12% 55%)` (~3.25:1) and text to `--text-secondary`. Hover shifts to `hsl(220 12% 38%)` border and `hsl(220 12% 20%)` text (dark slate), avoiding amber which is below 3:1 on light backgrounds.
 
 Usage pattern:
@@ -1736,13 +1836,15 @@ Usage pattern:
 ```tsx
 <Link
   to={`/challenges/${tagToSlug(tag)}`}
-  className="tag-chip-link rounded-sm border border-[hsl(var(--surface-border))] px-2.5 py-1 text-xs text-[hsl(var(--text-faint))] hover:border-primary hover:text-primary transition-colors"
+  className="tag-chip-link rounded-sm border border-border px-2.5 py-1 text-xs text-faint hover:border-primary hover:text-primary transition-colors"
 >
   {tag}
 </Link>
 ```
 
 Always add `tag-chip-link` to interactive tag chip links. Do not use `hover:border-primary hover:text-primary` alone. In light mode those produce amber, which fails 1.4.11.
+
+**Focus indicator:** `.tag-chip-link:focus-visible` uses `outline` rather than `box-shadow` for the focus ring. `box-shadow` is clipped by `overflow:hidden` on ancestor elements (the chip sits inside card containers), silently hiding the focus indicator. `outline` is not clipped by `overflow:hidden` and escapes those containers. Do not revert to `box-shadow` for this element.
 
 ---
 
