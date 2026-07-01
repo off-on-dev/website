@@ -35,7 +35,7 @@ export const BoardSection = (): JSX.Element => {
               ) : (
                 <div
                   aria-hidden="true"
-                  className="flex h-20 w-20 items-center justify-center rounded-full border border-border bg-[hsl(var(--muted))]"
+                  className="flex h-20 w-20 items-center justify-center rounded-full border border-border bg-muted"
                 >
                   <User size={28} className="text-muted-foreground" />
                 </div>

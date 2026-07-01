@@ -78,7 +78,7 @@ const FocusReset = (): null => {
       return;
     }
     const raf = requestAnimationFrame(() => {
-      (document.getElementById("main-content") as HTMLElement | null)?.focus();
+      (document.getElementById("main-content") as HTMLElement | null)?.focus({ preventScroll: true });
     });
     return () => cancelAnimationFrame(raf);
   }, [pathname]);
