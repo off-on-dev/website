@@ -150,6 +150,7 @@ jobs:
           cp -r dist/client/screenshots "${PREVIEW_DIR}/"
           cp -r dist/client/deck "${PREVIEW_DIR}/"
           cp -r dist/client/deck-template "${PREVIEW_DIR}/"
+          cp -r dist/client/open-source-communities "${PREVIEW_DIR}/"
           find dist/client -maxdepth 1 -type f \( -name "*.svg" -o -name "*.png" -o -name "*.ico" -o -name "*.webmanifest" -o -name "*.webp" \) -exec cp {} "${PREVIEW_DIR}/" \;
           cp "${PREVIEW_DIR}/index.html" "${PREVIEW_DIR}/404.html"
 
