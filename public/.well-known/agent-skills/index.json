@@ -6,7 +6,7 @@
       "type": "skill-md",
       "description": "Use when answering questions about the OffOn community, its open source challenges (adventures), how to participate, or when fetching challenge content and solutions.",
       "url": "https://offon.dev/.well-known/agent-skills/offon/SKILL.md",
-      "digest": "sha256:b220a672afa13202ff48353890057b95b4e7883c0ac7f312784447695d74fe78"
+      "digest": "sha256:e1328b7e28b5c20f27f2a39e784aecc97effb9bbe8379a94a26fa3bed630b132"
     }
   ]
 }

@@ -37,31 +37,29 @@ const Sponsors = (): JSX.Element => {
         <div className="mx-auto max-w-6xl">
           {/* Founding Sponsor */}
           <section aria-labelledby="founding-sponsor">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-              <h2 id="founding-sponsor" className="text-2xl font-bold text-foreground">Founding Sponsor</h2>
-              <div>
-                {SPONSORS.map((sponsor) => {
-                  const logoSrc = sponsor.logoDark && sponsor.logoLight
-                    ? (theme === "dark" ? sponsor.logoDark : sponsor.logoLight)
-                    : null;
-                  return (
-                    <a
-                      key={sponsor.name}
-                      href={sponsor.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group inline-flex items-center focus-ring rounded-sm"
-                    >
-                      {logoSrc ? (
-                        <img src={logoSrc} alt={sponsor.name} width={200} height={36} className="h-10 w-auto max-w-full group-hover:opacity-80 transition-opacity" loading="lazy" decoding="async" />
-                      ) : (
-                        <span className="text-base font-semibold text-foreground group-hover:text-foreground/80 transition-colors">{sponsor.name}</span>
-                      )}
-                      <span className="sr-only"> (opens in new tab)</span>
-                    </a>
-                  );
-                })}
-              </div>
+            <h2 id="founding-sponsor" className="text-2xl font-bold text-foreground mb-6">Founding Sponsor</h2>
+            <div className="mb-8">
+              {SPONSORS.map((sponsor) => {
+                const logoSrc = sponsor.logoDark && sponsor.logoLight
+                  ? (theme === "dark" ? sponsor.logoDark : sponsor.logoLight)
+                  : null;
+                return (
+                  <a
+                    key={sponsor.name}
+                    href={sponsor.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="card-glow inline-flex items-center rounded-xl border border-border bg-[hsl(var(--surface))] px-8 py-6 focus-ring"
+                  >
+                    {logoSrc ? (
+                      <img src={logoSrc} alt={sponsor.name} width={240} height={44} className="h-12 w-auto max-w-full" loading="lazy" decoding="async" />
+                    ) : (
+                      <span className="text-xl font-semibold text-foreground group-hover:text-foreground/80 transition-colors">{sponsor.name}</span>
+                    )}
+                    <span className="sr-only"> (opens in new tab)</span>
+                  </a>
+                );
+              })}
             </div>
 
             <div className="space-y-4 max-w-2xl mb-8">

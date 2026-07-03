@@ -358,7 +358,7 @@ Focus indicators must meet a minimum 3:1 contrast ratio against adjacent colors 
 
 Every page must support keyboard bypass of the navigation bar (WCAG 2.4.1).
 
-- The skip link is rendered as the first child inside `<ConsentProvider>` in `Layout.tsx` and always targets `#main-content`. Routing is handled by React Router v7 framework mode (no `<BrowserRouter>` in the codebase).
+- The skip link is rendered as the first child inside `<ConsentProvider>` in `Layout.tsx` and always targets `#main-content`. Routing is handled by React Router v8 framework mode (no `<BrowserRouter>` in the codebase).
 - It is styled with the `.skip-nav` class defined in `src/index.css`: visually hidden (`top: -100%`) until focused, at which point it appears at `top: 1rem`.
 - Every page's `<main>` element must have `id="main-content"`. Do not omit this on new pages.
 
@@ -1160,23 +1160,6 @@ CSS classes: `contributor-pill` (scopes light mode overrides), `contributor-pill
 
 ---
 
-### `LinkSection`
-
-`src/components/LinkSection.tsx`
-
-A headed list of external links, each rendered as a `docs-ext-link` anchor with an `ExternalLink` icon and a screen-reader new-tab notice. Used in `ChallengeDetail` for the "Helpful Documentation" block.
-
-```tsx
-<LinkSection heading="Helpful Documentation" links={[{ label: "Kyverno Docs", href: "https://kyverno.io/docs/" }]} />
-```
-
-| Prop | Type | Description |
-| --- | --- | --- |
-| `heading` | `string` | Section heading rendered as `<h3>`. |
-| `links` | `{ label: string; href: string }[]` | List of external links. All open in a new tab. |
-
----
-
 ### `OtherLevelsCard`
 
 `src/components/OtherLevelsCard.tsx`
@@ -1570,9 +1553,10 @@ General-purpose utility functions.
 | `isDeadlinePast` | `(deadline: string \| undefined) => boolean` | Returns `true` if the ISO 8601 deadline string represents a date in the past. Returns `false` for `undefined` or unparseable values. |
 | `isSolutionUnlocked` | `(deadline: string \| undefined) => boolean` | Returns `true` when a solution is unlocked: no deadline set, or deadline has passed. Used in the `SolutionDetail` loader to gate access. |
 | `formatDeadline` | `(iso: string) => string` | Formats an ISO 8601 deadline string for human display, preserving the stored UTC offset rather than converting to the viewer's local timezone. `+01:00` renders as CET, `+02:00` as CEST. Returns the original string unchanged if it does not match the expected format. |
+| `resolveDiscussionUrl` | `(rawUrl: string \| null \| undefined, communityUrl: string) => string` | Resolves a raw `discussionUrl` field to an absolute URL. Full URLs pass through unchanged; relative paths are prepended with `communityUrl`; missing or empty values fall back to `communityUrl`. |
 
 ```ts
-import { cn, isDeadlinePast, isSolutionUnlocked, formatDeadline } from "@/lib/utils";
+import { cn, isDeadlinePast, isSolutionUnlocked, formatDeadline, resolveDiscussionUrl } from "@/lib/utils";
 ```
 
 ---
@@ -1739,7 +1723,7 @@ Never put a raw SVG icon next to text inside a plain `inline` or `block` element
 
 | Icon | Lucide name | Where used |
 | --- | --- | --- |
-| External link (opens in new tab) | `ExternalLink` | All `<a target="_blank">` links: Navbar, BottomCTA, Hero, CommunityGuide, LevelCard, DiscussionSection, LinkSection, LeaderboardList, Privacy, and more |
+| External link (opens in new tab) | `ExternalLink` | All `<a target="_blank">` links: Navbar, BottomCTA, Hero, CommunityGuide, LevelCard, DiscussionSection, LeaderboardList, Privacy, and more |
 | Navigate forward / CTA | `ArrowRight` | Internal `<Link>` navigation only (OtherLevelsCard, SponsorStrip, AdventureDetail) |
 | Breadcrumb separator | `ChevronRight` | `Breadcrumb.tsx` — rendered between each breadcrumb item |
 | Scroll down / anchor | `ArrowDown` | Hero primary CTA |

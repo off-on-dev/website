@@ -22,7 +22,10 @@ They do not grant any right to use the Marks.
   written permission.
 - Alter the logo or use the Marks in a misleading manner.
 
-If you rebrand a fork, please remove the OffOn name and logo and choose a
-distinct identity.
+If you rebrand a fork, please remove the OffOn name, logo, and Nyx mascot, and
+choose a distinct identity. The protected logo assets in `public/brand/` are:
+`offon-logo-dark-color.{png,svg}`, `offon-logo-dark-mono.{png,svg}`,
+`offon-logo-light-mono.{png,svg}`, `offon-favicon.{png,svg}`, `offon-nyx.png`,
+and `offon-nyx-peek.png`.
 
-Permission requests: offondev@gmail.com
+Permission requests: <offondev@gmail.com>

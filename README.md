@@ -47,6 +47,8 @@ Node.js **26** is required. Version is pinned in `.nvmrc`, run `nvm use` to swit
 | `npm run test:visual:update` | Update visual regression baseline screenshots |
 | `npm run generate` | Regenerate TypeScript from adventure YAML files |
 | `npm run generate:validate` | Validate adventure YAML against schema without writing files |
+| `npm run generate:solutions` | Regenerate solution barrel index from `src/data/solutions/` TypeScript files |
+| `npm run generate:solutions:validate` | Validate solution TypeScript files without writing the barrel index |
 | `node .claude/templates/generate-reveal-zip.mjs` | Regenerate `public/downloads/offon-reveal-template.zip` |
 | `node .claude/templates/generate-pptx.mjs` | Regenerate `public/downloads/offon-deck-template.pptx` |
 
