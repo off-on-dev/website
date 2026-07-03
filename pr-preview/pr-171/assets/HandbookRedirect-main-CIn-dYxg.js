@@ -1,0 +1,1 @@
+import{d as e}from"./vendor-router-BAjr0h5X.js";var t=e(function(){return null});export{t as default};
