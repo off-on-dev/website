@@ -324,7 +324,7 @@ const BrandGuidelines = (): JSX.Element => {
                         <div className={`${bg} h-24 flex items-center justify-center p-5`}>
                           <img
                             src={`${BASE}brand/offon-favicon.svg`}
-                            alt={`OffOn icon mark ${label.toLowerCase()}`}
+                            alt={`${BRAND_NAME} icon mark ${label.toLowerCase()}`}
                             width={56}
                             height={56}
                             className="w-14 h-14 object-contain"
@@ -494,7 +494,7 @@ hsl(var(--foreground))`}</code>
                       <div className="bg-primary h-56 flex items-center justify-center">
                         <img
                           src={`${BASE}nyx.webp`}
-                          alt="Nyx, the OffOn firefly mascot, full view"
+                          alt={`Nyx, the ${BRAND_NAME} firefly mascot, full view`}
                           width={180}
                           height={180}
                           className="object-contain w-44 h-44"
@@ -514,7 +514,7 @@ hsl(var(--foreground))`}</code>
                       <div className="bg-primary h-56 flex items-center justify-center">
                         <img
                           src={`${BASE}nyx_peek.webp`}
-                          alt="Nyx the OffOn firefly mascot, peeking variant"
+                          alt={`Nyx the ${BRAND_NAME} firefly mascot, peeking variant`}
                           width={180}
                           height={180}
                           className="object-contain w-44 h-44"
@@ -539,7 +539,7 @@ hsl(var(--foreground))`}</code>
                   <div className="rounded-lg border border-border overflow-hidden max-w-sm">
                     <img
                       src={`${BASE}og.png`}
-                      alt="OffOn Open Graph preview image, 1200 by 630 pixels"
+                      alt={`${BRAND_NAME} Open Graph preview image, 1200 by 630 pixels`}
                       width={1200}
                       height={630}
                       className="w-full h-auto block"

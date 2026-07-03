@@ -49,9 +49,9 @@ const Contribute = (): JSX.Element => {
 
                 {/* Row 1: discover, learn */}
                 <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
-                  <h3 className="font-semibold text-foreground">Explore OffOn</h3>
+                  <h3 className="font-semibold text-foreground">Explore {BRAND_NAME}</h3>
                   <p className="text-sm text-dim leading-relaxed flex-1">
-                    Browse the forum, see what the community is building, and sign up to get started. Introduce yourself and get a feel for how OffOn works.
+                    Browse the forum, see what the community is building, and sign up to get started. Introduce yourself and get a feel for how {BRAND_NAME} works.
                   </p>
                   <a href={`${COMMUNITY_URL}/signup`} target="_blank" rel="noopener noreferrer" className={extLink}>
                     Create an account <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
@@ -106,7 +106,7 @@ const Contribute = (): JSX.Element => {
                 <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
                   <h3 className="font-semibold text-foreground">Meetups and Groups</h3>
                   <p className="text-sm text-dim leading-relaxed flex-1">
-                    Running a local meetup, user group, or open source community? Use OffOn as a vendor-agnostic home for your discussions and announcements. Find existing groups, join as a speaker, or bring open source to your local community.
+                    Running a local meetup, user group, or open source community? Use {BRAND_NAME} as a vendor-agnostic home for your discussions and announcements. Find existing groups, join as a speaker, or bring open source to your local community.
                   </p>
                   <a href={`${COMMUNITY_URL}/c/local-meetups-and-groups/19`} target="_blank" rel="noopener noreferrer" className={extLink}>
                     Explore meetups and groups <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
