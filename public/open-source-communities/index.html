@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Open Source Is Not Just Code — Sinduri Guntupalli</title>
+  <title>Open Source Is Not Just Code - Sinduri Guntupalli</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../reveal/reset.css">
   <link rel="stylesheet" href="../reveal/reveal.css">
@@ -96,17 +96,6 @@
       margin-bottom: 0.55em;
     }
     .sh h2 { font-size: 1.45em; margin: 0; }
-    /* plain concept subtitle under a themed heading */
-    .sh .concept {
-      display: block;
-      font-size: 0.5em;
-      font-weight: 400;
-      color: var(--muted);
-      opacity: 0.6;
-      margin-top: 0.35em;
-      letter-spacing: 0;
-      text-transform: none;
-    }
 
     /* ── Grids ── */
     .g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75em; margin-top: 0.6em; }
@@ -131,40 +120,6 @@
     }
     .card p { font-size: 0.63em; margin: 0; line-height: 1.5; }
     .card p + p { margin-top: 0.35em; }
-
-    /* ── Agenda ── */
-    .agenda {
-      width: 100%;
-      border-collapse: collapse;
-      table-layout: fixed;
-      margin-top: 0.5em;
-      font-size: 0.58em;
-    }
-    .agenda tr { border-bottom: 1px solid var(--border); }
-    .agenda tr:last-child { border-bottom: none; }
-    .agenda td {
-      padding: 0.32em 0.5em;
-      color: var(--muted);
-      vertical-align: middle;
-    }
-    .agenda td:first-child {
-      color: var(--amber);
-      font-weight: 600;
-      white-space: nowrap;
-      padding-right: 0.9em;
-      font-variant-numeric: tabular-nums;
-      width: 3.8em;
-    }
-    .agenda td:last-child {
-      opacity: 0.65;
-      font-size: 0.9em;
-      text-align: right;
-      white-space: nowrap;
-      width: 7em;
-    }
-    .agenda .hi td { color: var(--fg); }
-    .agenda .hi td:first-child { color: var(--amber); }
-    .agenda .hi td:last-child { color: var(--muted); opacity: 0.75; }
 
     /* ── Bullet rows ── */
     .brow {
@@ -192,40 +147,6 @@
     }
     .brow .bt { font-size: 0.70em; color: var(--fg); line-height: 1.5; }
     .brow .bt strong { color: var(--amber); font-weight: 700; }
-
-    /* ── Quiz rows ── */
-    .qrow {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      column-gap: 0.65em;
-      align-items: start;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.8em 1em;
-      margin-bottom: 0.4em;
-    }
-    .qrow .rnum {
-      grid-row: span 2;
-      font-family: 'Lexend', sans-serif;
-      font-size: 0.58em;
-      font-weight: 700;
-      color: var(--amber);
-      background: var(--amber-glow);
-      border: 1px solid rgba(255,192,52,0.22);
-      border-radius: 4px;
-      padding: 0.3em 0.55em;
-      white-space: nowrap;
-      align-self: center;
-    }
-    .qrow h4 {
-      font-family: 'Lexend', sans-serif;
-      font-size: 0.65em;
-      font-weight: 700;
-      color: var(--fg);
-      margin: 0 0 0.12em;
-    }
-    .qrow p { font-size: 0.58em; margin: 0; }
 
     /* ── Speaker cards ── */
     .speaker-card {
@@ -271,120 +192,6 @@
       margin: 0 0 0.25em;
       line-height: 1.3;
     }
-    .speaker-card .sp-bio { font-size: 0.58em; color: var(--muted); margin: 0; line-height: 1.45; }
-
-    /* ── Board ── */
-    .board {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.65em;
-      margin-top: 0.6em;
-    }
-    .person {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.8em 1em;
-      display: flex;
-      gap: 0.55em;
-      align-items: flex-start;
-    }
-    .person .av {
-      flex-shrink: 0;
-      width: 1.8em;
-      height: 1.8em;
-      border-radius: 50%;
-      border: 2px solid var(--border);
-      background: var(--amber-glow);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Lexend', sans-serif;
-      font-weight: 700;
-      font-size: 0.58em;
-      color: var(--amber);
-      overflow: hidden;
-    }
-    .person .av img { width: 100%; height: 100%; object-fit: cover; }
-    .person .pi { flex: 1; min-width: 0; }
-    .person .pn {
-      font-family: 'Lexend', sans-serif;
-      font-size: 0.65em;
-      font-weight: 700;
-      color: var(--fg);
-      margin: 0 0 0.12em;
-      line-height: 1.2;
-    }
-    .person .pr { font-size: 0.52em; color: var(--muted); line-height: 1.4; margin: 0; }
-    .person.tba { opacity: 0.55; border-style: dashed; }
-    .board-sm { gap: 0.35em; margin-top: 0.3em; }
-    .board-sm .person { padding: 0.4em 0.6em; gap: 0.4em; }
-    .board-sm .person .av { width: 1.4em; height: 1.4em; }
-    .board-sm .person .pn { font-size: 0.55em; margin-bottom: 0.08em; }
-    .board-sm .person .pr { font-size: 0.44em; }
-
-    /* ── Value rows ── */
-    .vrow {
-      border-left: 3px solid var(--border);
-      padding: 0.2em 0 0.2em 0.7em;
-      margin-bottom: 0.6em;
-    }
-    .vrow.hi { border-left-color: var(--amber); }
-    .vrow h4 {
-      font-family: 'Lexend', sans-serif;
-      font-size: 0.70em;
-      font-weight: 900;
-      color: var(--fg);
-      margin: 0 0 0.1em;
-    }
-    .vrow p { font-size: 0.62em; margin: 0; }
-
-    /* ── Contribute cards ── */
-    .contrib {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.8em 1em;
-    }
-    .contrib .ci { font-size: 0.9em; margin-bottom: 0.22em; display: block; }
-    .contrib h4 {
-      font-family: 'Lexend', sans-serif;
-      font-size: 0.65em;
-      font-weight: 700;
-      color: var(--amber);
-      margin: 0 0 0.28em;
-    }
-    .contrib .citem {
-      display: flex;
-      gap: 0.45em;
-      align-items: flex-start;
-      margin-bottom: 0.22em;
-    }
-    .contrib .citem .cdot {
-      flex-shrink: 0;
-      color: var(--muted);
-      opacity: 0.5;
-      font-size: 0.52em;
-      margin-top: 0.3em;
-      line-height: 1;
-      width: 0.8em;
-    }
-    .contrib .citem .ctext {
-      font-size: 0.52em;
-      color: var(--muted);
-      line-height: 1.4;
-    }
-
-    /* ── Tech tags ── */
-    .tags { display: flex; flex-wrap: wrap; gap: 0.3em; margin-top: 0.5em; }
-    .tag {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.16em 0.48em;
-      font-size: 0.42em;
-      color: var(--muted);
-    }
 
     /* ── Column label ── */
     .col-label {
@@ -406,43 +213,6 @@
       height: 100%;
       padding: 3em 3.2em !important;
     }
-    .cobrand {
-      display: flex;
-      align-items: center;
-      gap: 0.65em;
-      margin-bottom: 0.85em;
-    }
-    .cobrand img { height: 36px; width: auto; }
-    .cobrand .xsep {
-      font-family: 'Lexend', sans-serif;
-      font-weight: 700;
-      font-size: 1.1em;
-      color: #ffc034;
-      line-height: 1;
-    }
-    .cobrand .partner {
-      font-family: 'Lexend', sans-serif;
-      font-weight: 700;
-      font-size: 0.8em;
-      color: var(--fg);
-      letter-spacing: -0.02em;
-    }
-
-    /* Title slide gets a much larger cobrand */
-    .title-slide .cobrand img { height: 84px; }
-    .title-slide .cobrand .xsep { font-size: 2em; }
-    .title-slide .cobrand .partner { font-size: 1.5em; }
-    .title-slide .cobrand { gap: 0.8em; margin-bottom: 1em; }
-
-    /* epigraph: italic amber quote used on title and chapter dividers */
-    .epigraph {
-      font-size: 0.62em;
-      font-style: italic;
-      color: var(--amber);
-      opacity: 0.85;
-      margin-top: 1.3em;
-      letter-spacing: 0.01em;
-    }
 
     /* ── Final slide ── */
     .final {
@@ -453,30 +223,7 @@
       text-align: center;
       height: 100%;
     }
-    .final .cobrand { justify-content: center; margin-bottom: 0.6em; }
-    .final .cobrand img { height: 36px; }
-    .final .cobrand .partner { font-size: 0.72em; }
-    .final .cobrand .xsep { font-size: 0.85em; }
     .final h2 { font-size: 1.4em; margin-bottom: 0.3em; color: var(--amber); }
-
-    .link-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.45em;
-      margin-top: 0.6em;
-    }
-    .pill {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.24em 0.62em;
-      font-size: 0.38em;
-      color: var(--muted) !important;
-      font-family: 'Lexend', sans-serif;
-    }
-    .pill:hover { border-color: var(--amber); color: var(--amber) !important; text-decoration: none !important; }
-    .pill.hi { background: var(--amber-glow); border-color: rgba(255,192,52,0.38); color: var(--amber) !important; }
 
     /* ── Speaker notes: hidden in slide view ── */
     .reveal aside.notes { display: none !important; }
@@ -494,13 +241,16 @@
     .gif-overlay.top { bottom: auto; top: 3.8em; }
     .gif-overlay img { width: 100%; display: block; }
 
+    /* ── Screenshot frame ── */
+    .shot { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .shot img { width: 100%; display: block; }
+
     /* ── Glow ── */
     #ff-wave { position: fixed; inset: 0; pointer-events: none; z-index: 0; background:
       radial-gradient(ellipse 200% 28% at 50% 100%, rgba(255,192,52,.038) 0%, transparent 65%),
       radial-gradient(ellipse 48% 48% at 14% 100%, rgba(255,192,52,.032) 0%, transparent 72%),
       radial-gradient(ellipse 42% 40% at 48% 100%, rgba(255,192,52,.024) 0%, transparent 68%),
       radial-gradient(ellipse 46% 44% at 80% 100%, rgba(255,192,52,.030) 0%, transparent 70%); }
-    #ff-mist { display: none; }
     #deck-logo { position: fixed; top: 20px; right: 28px; height: 44px; pointer-events: none; z-index: 200; }
 
     /* ── Chapter divider ── */
@@ -529,36 +279,35 @@
     .chapter .sep span { font-size: 0.5em; opacity: 0.8; }
     .chapter .epi {
       font-style: italic; font-size: 0.66em; color: var(--muted);
-      opacity: 0.82; margin-top: 1em; max-width: 20em; line-height: 1.5;
+      opacity: 0.82; margin-top: 1em; max-width: 22em; line-height: 1.5;
     }
   </style>
 </head>
 <body>
 <div id="ff-wave" aria-hidden="true"></div>
-<div id="ff-mist" aria-hidden="true"></div>
 <img id="deck-logo" src="../brand/offon-favicon.svg" alt="" aria-hidden="true" width="34" height="44">
 <div class="reveal">
   <div class="slides">
 
-    <!-- ─ 1: Title ──────────────────────────────────────────────────────── -->
+    <!-- 1: Title -->
     <section>
       <div class="title-slide" style="justify-content: flex-start; align-items: center; text-align: center;">
         <h1 style="color: #ffc034; margin-top: 0.4em;">Open Source Is Not Just Code</h1>
         <p style="font-size: 0.9em; margin-top: 1em;">Designing Communities That Actually Scale</p>
-<p style="font-size: 0.72em; margin-top: 1em; opacity: 0.7;">Sinduri Guntupalli</p>
+        <p style="font-size: 0.72em; margin-top: 1em; opacity: 0.7;">Sinduri Guntupalli</p>
         <p style="position: absolute; bottom: 1.8em; right: 2.2em; font-size: 0.38em; opacity: 0.28; letter-spacing: 0.04em;">Press S for speaker notes</p>
       </div>
       <aside class="notes">
         <ul>
-          <li>Open source is not just code. We treat it like it is, but the projects that fall apart usually don't fall apart because of bad engineering.</li>
-          <li>They fall apart because of how the people around the code are organized.</li>
-          <li>That's what this talk is about: designing communities that actually scale.</li>
-          <li>Next: a quick word on who I am.</li>
+          <li>Open source is not just code. We treat it that way, but the projects that fall apart usually do not fail because of bad engineering.</li>
+          <li>They fail because of how the people around the code are organized.</li>
+          <li>That is what today is about, designing communities that actually scale.</li>
+          <li>Next, a quick word on who I am.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ 2: About me ────────────────────────────────────────────────────── -->
+    <!-- 2: About me -->
     <section>
       <div class="sh">
         <span class="label">speaker</span>
@@ -570,160 +319,164 @@
             <div class="sp-av" style="width: 10em; height: 10em;"><img src="sinduri.webp" alt="Sinduri Guntupalli"></div>
             <div class="sp-info" style="text-align: center;">
               <p class="sp-name">Sinduri Guntupalli</p>
-              <p class="sp-talk" style="margin: 0;">Sr Developer Programs Engineer, Dynatrace</p>
+              <p class="sp-talk" style="margin: 0;">Sr Developer Programs Engineer, OSPO team at Dynatrace</p>
             </div>
           </div>
         </div>
         <div>
           <div class="brow">
-            <span class="dot">✦</span>
-            <span class="bt">Years of community work through Drupal, including the Drupal Austria board</span>
+            <span class="dot">✷</span>
+            <span class="bt">5+ years in Drupal: developer, then Product Manager</span>
           </div>
           <div class="brow">
-            <span class="dot">✦</span>
-            <span class="bt">Women in Drupal Award (Build)</span>
+            <span class="dot">✷</span>
+            <span class="bt">Volunteer organizer across Drupal Austria, Drupal Switzerland, and beyond</span>
           </div>
           <div class="brow">
-            <span class="dot">✦</span>
-            <span class="bt">Open source enthusiast, positivity advocate, continuous learner</span>
+            <span class="dot">✷</span>
+            <span class="bt">Now in the OSPO team at Dynatrace</span>
           </div>
           <div class="brow">
-            <span class="dot">✦</span>
+            <span class="dot">✷</span>
             <span class="bt">Building <span style="color: #ffc034;">offon.dev</span>, a vendor-neutral community to sustain open source contributors and grow the maintainers of tomorrow</span>
           </div>
         </div>
       </div>
       <aside class="notes">
         <ul>
-          <li>I'm a Senior Developer Programs Engineer at Dynatrace. A big part of my focus is OffOn, a vendor-neutral community we're building to support open source contributors and help grow the maintainers of tomorrow.</li>
-          <li>I've spent years in community work, mostly through Drupal, including a seat on the Drupal Austria board.</li>
-          <li>Most of what I'm sharing today is based on what I've seen work, and not work, across these communities. It's a perspective, not a rulebook, so I'd genuinely welcome your pushback and feedback.</li>
-          <li>Next: the comfortable story we tell ourselves about open source.</li>
+          <li>I started as a Drupal developer about five and a half years ago, then spent two and a half years as a product manager.</li>
+          <li>Since January 2026 I am on the OSPO team at Dynatrace, building offon.dev.</li>
+          <li>Open source is what I love, and I really believe in open source communities. Most evenings and weekends I am organizing Drupal events, with Drupal Austria, Drupal Switzerland, and others.</li>
+          <li>What I share today comes from what I have seen work, and not work. It is a perspective, not a rulebook, so please push back.</li>
+          <li>Next, the comfortable story we tell ourselves.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ Part I divider ─────────────────────────────────────────────────── -->
+    <!-- Part I divider -->
     <section>
       <div class="chapter">
         <div class="part">Part I</div>
         <div class="numeral">I</div>
         <h2>The Burden</h2>
         <div class="sep"><span>&#9670;</span></div>
-        <p class="epi">Every road begins light. It is the miles that reveal the weight.</p>
+        <p class="epi">Most projects don't fail on code. They fail under invisible weight.</p>
       </div>
       <aside class="notes">
         <ul>
-          <li>Act one: the problem. Let me show you how a project that looks healthy quietly starts to buckle under a weight nobody named.</li>
+          <li>This section is about the problem. Most projects do not fail on code. They fail under weight nobody names. We will look at what that weight actually is and where it comes from.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ 3: The comfortable myth ────────────────────────────────────────── -->
+    <!-- 3: The comfortable myth -->
     <section>
       <div class="sh">
         <span class="label">context</span>
         <h2>The Comfortable Myth</h2>
       </div>
       <div class="brow" style="margin-top: 1.2em;">
-        <span class="dot">✦</span>
-        <span class="bt">We assume projects succeed or fail on code quality</span>
+        <span class="dot">✷</span>
+        <span class="bt">The myth: success comes from code quality</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Better architecture, cleaner tests, faster releases, and the rest takes care of itself</span>
+        <span class="dot">✷</span>
+        <span class="bt">Just ship better code, and the rest follows</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">That story is <strong>mostly wrong</strong></span>
+        <span class="dot">✷</span>
+        <span class="bt"><strong>Mostly wrong</strong></span>
       </div>
       <aside class="notes">
         <ul>
-          <li>There's a comfortable story we tell ourselves in open source. Projects succeed because the code is good. Better architecture, cleaner tests, faster releases, and the rest takes care of itself.</li>
-          <li>It's a tidy story. It's also mostly wrong.</li>
-          <li>Next: what actually kills projects.</li>
+          <li>There is a comfortable story we tell ourselves. Projects succeed because the code is good. Ship better code, and the rest sorts itself out.</li>
+          <li>It is tidy. It is also mostly wrong.</li>
+          <li>Next, what actually ends a project.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ 4: What actually kills projects ───────────────────────────────── -->
+    <!-- 4: What actually kills projects -->
     <section>
       <div class="sh">
         <span class="label">reality</span>
         <h2>What Actually Kills Projects</h2>
       </div>
       <div class="brow" style="margin-top: 1.2em;">
-        <span class="dot">✦</span>
-        <span class="bt">Contribution paths are unclear, so people don't contribute</span>
+        <span class="dot">✷</span>
+        <span class="bt">Unclear contribution paths</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Expectations are implicit, never written down, so everyone guesses</span>
+        <span class="dot">✷</span>
+        <span class="bt">Expectations never written down</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">A small group quietly absorbs all the work and all the pressure</span>
+        <span class="dot">✷</span>
+        <span class="bt">A few absorb all the pressure</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt"><strong>Then burnout hits, and the project stalls</strong></span>
+        <span class="dot">✷</span>
+        <span class="bt"><strong>Fragile, then it stalls</strong></span>
       </div>
       <div class="gif-overlay" aria-hidden="true">
         <img data-gif-src="https://media.giphy.com/media/smW5FBep69d3q/giphy.gif" src="" alt="">
       </div>
       <aside class="notes">
         <ul>
-          <li>Here's what actually kills projects. Nobody knows how to contribute, so they don't. Expectations live in people's heads instead of in writing, so everyone guesses.</li>
-          <li>A small group ends up absorbing all the work and all the pressure. That holds for a while, until someone burns out, and then the whole thing stalls.</li>
-          <li>Next: a better way to think about this.</li>
+          <li>Here is what actually ends projects. Nobody knows how to contribute, so they do not.</li>
+          <li>Expectations are never written down, so everyone guesses.</li>
+          <li>A few people end up carrying all the work and all the pressure.</li>
+          <li>It holds for a while, then it gets fragile and stalls.</li>
+          <li>Next, a better way to look at this.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ 5: Reframe ─────────────────────────────────────────────────────── -->
+    <!-- 5: Reframe -->
     <section>
       <div class="sh">
         <span class="label">reframe</span>
         <h2>A Socio-Technical System</h2>
       </div>
       <div class="brow" style="margin-top: 1.2em;">
-        <span class="dot">✦</span>
-        <span class="bt">Open source is a <strong>socio-technical system</strong></span>
+        <span class="dot">✷</span>
+        <span class="bt">A <strong>socio-technical system</strong></span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">The code and the community are one system, not two</span>
+        <span class="dot">✷</span>
+        <span class="bt">Code and community are one system</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt"><strong>Community design decisions matter as much as technical ones</strong></span>
+        <span class="dot">✷</span>
+        <span class="bt"><strong>Community design matters as much as code</strong></span>
       </div>
       <aside class="notes">
         <ul>
-          <li>So I want to reframe how we look at this. Open source is a socio-technical system. The code and the community are not two separate things you manage separately. They're one system.</li>
-          <li>That means your community design decisions matter just as much as your technical ones.</li>
-          <li>Next: what that looks like when it goes wrong.</li>
+          <li>Here is the reframe. Open source is a socio-technical system.</li>
+          <li>The code and the community are not two things you manage separately. They are one system.</li>
+          <li>So community design matters as much as the code.</li>
+          <li>Next, what this looks like when it goes wrong.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ 6: The maintainer trap ─────────────────────────────────────────── -->
+    <!-- 6: The maintainer trap -->
     <section>
       <div class="sh">
         <span class="label">problem</span>
         <h2>The Maintainer Trap</h2>
       </div>
       <div class="brow" style="margin-top: 1.2em;">
-        <span class="dot">✦</span>
-        <span class="bt">Responsibility concentrates instead of distributing</span>
+        <span class="dot">✷</span>
+        <span class="bt">Work piles onto a few people</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Heroic maintainers feel good, until they don't</span>
+        <span class="dot">✷</span>
+        <span class="bt">The hero maintainer burns out</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt"><strong>Single points of failure are a community design flaw, not a personality flaw</strong></span>
+        <span class="dot">✷</span>
+        <span class="bt"><strong>A single point of failure is a design flaw</strong></span>
       </div>
       <div class="card" style="margin-top: 1em; border-color: rgba(255,192,52,0.28);">
         <h4>Example: Rust</h4>
@@ -731,31 +484,32 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>This leads to what I call the maintainer trap. Responsibility concentrates instead of spreading out. We celebrate the heroic maintainer who carries everything, and it feels great, right up until it doesn't.</li>
-          <li>When one person becomes a single point of failure, that's a design flaw in the community, not a weakness in that person.</li>
-          <li>Rust is a nice example of designing against this. Instead of one or two heroes, the project is run by topic-focused teams. Each team owns its own area and sends a representative to a leadership council that looks after the project as a whole. Ownership is spread out by design.</li>
-          <li>Next: if burnout is structural, we can design against it. Here are four levers.</li>
+          <li>This is the maintainer trap. The work piles onto a few people.</li>
+          <li>We celebrate the hero who carries everything, and it feels great, right until it does not. That is burnout.</li>
+          <li>When one person becomes a single point of failure, that is a design flaw in the community, not a weakness in the person.</li>
+          <li>Rust is a good counter example. Instead of one or two heroes, it runs on topic focused teams. Each team owns its area and sends someone to a leadership council. Ownership is spread on purpose.</li>
+          <li>Next, the good news is this is fixable. Four levers.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ Part II divider ────────────────────────────────────────────────── -->
+    <!-- Part II divider -->
     <section>
       <div class="chapter">
         <div class="part">Part II</div>
         <div class="numeral">II</div>
         <h2>The Fellowship</h2>
         <div class="sep"><span>&#9670;</span></div>
-        <p class="epi">No one carries the whole way. That is the point of a fellowship.</p>
+        <p class="epi">The work is too much for one person. It has to be shared.</p>
       </div>
       <aside class="notes">
         <ul>
-          <li>Act two: if the burden is structural, we can share it. Four companions carry the load together, four levers.</li>
+          <li>This section covers what you can actually do about it. The work is too much for one person, so it has to be shared. We will walk through four levers that decide whether a project lasts, with a real example for each one.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ 7: Four levers ─────────────────────────────────────────────────── -->
+    <!-- 7: Four levers -->
     <section>
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1em;">
         <div class="sh">
@@ -786,35 +540,35 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>If burnout is structural, then we can design against it. Here are four levers that decide whether a project lasts, the fellowship that carries the load together.</li>
-          <li>Governance: who decides and how. Contributor experience: how easy and rewarding it is to help. Recognition: whether the work people do actually gets seen and valued. Local community: where people feel like they belong.</li>
-          <li>We'll walk through each one, with an example of a community that does it well.</li>
-          <li>Next: Lever 1, Governance.</li>
+          <li>Here are four levers that decide whether a project lasts.</li>
+          <li>Governance, who decides and how. Contributor experience, how easy it is to help. Recognition, whether the work gets seen. Local community, where people feel they belong.</li>
+          <li>We will walk through each one with an example of a community that does it well.</li>
+          <li>Next, lever one, governance.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ 8: Lever 1 — Governance ────────────────────────────────────────── -->
+    <!-- 8: Lever 1 - Governance -->
     <section>
       <div class="sh">
         <span class="label">lever 1</span>
         <h2>Governance</h2>
       </div>
-      <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Make decision-making explicit <strong>before</strong> you're in a crisis</span>
+      <div class="brow" style="margin-top: 1.2em;">
+        <span class="dot">✷</span>
+        <span class="bt">Decide how you will decide, <strong>early</strong></span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Shared functions (funding, events, infrastructure) under a neutral body, not individuals</span>
+        <span class="dot">✷</span>
+        <span class="bt">Put shared functions under a neutral body</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Define maintainer roles so authority is distributed, not concentrated</span>
+        <span class="dot">✷</span>
+        <span class="bt">Spread maintainer roles across people</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Give conflict a defined path, so disputes don't become flame wars</span>
+        <span class="dot">✷</span>
+        <span class="bt">Give conflict a clear path</span>
       </div>
       <div class="card" style="margin-top: 0.75em; border-color: rgba(255,192,52,0.28);">
         <h4>Example: Apache Software Foundation</h4>
@@ -822,35 +576,36 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>The point of governance is to make decision-making explicit before you're in a crisis. Put the shared functions under a neutral body so they don't land on individual coders. Define maintainer roles so authority is spread out. Give conflict an actual path to resolution.</li>
-          <li>Apache is a good model. Each project is run by a committee that votes on releases and elects new committers based on merit. People participate as individuals, not as employer representatives, so no single company can buy control of a project's direction.</li>
-          <li>Governance is boring until the day you desperately need it.</li>
-          <li>Next: Lever 2, Contributor Experience.</li>
+          <li>Governance is about deciding how you will decide, before you are in a crisis.</li>
+          <li>Put shared functions under a neutral body so they do not land on individuals. Spread maintainer roles. Give conflict a clear path.</li>
+          <li>Apache is a good model. Each project is run by a committee that elects committers on merit. People take part as individuals, not as their employer, so no single company can buy control.</li>
+          <li>Governance is boring until the day you badly need it.</li>
+          <li>Next, lever two, contributor experience.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ 9: Lever 2 — Contributor experience ───────────────────────────── -->
+    <!-- 9: Lever 2 - Contributor experience -->
     <section>
       <div class="sh">
         <span class="label">lever 2</span>
         <h2>Contributor Experience</h2>
       </div>
-      <div class="brow">
-        <span class="dot">✦</span>
+      <div class="brow" style="margin-top: 1.2em;">
+        <span class="dot">✷</span>
         <span class="bt">Lower the cost of a first contribution</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Give newcomers a clear, structured place to start</span>
+        <span class="dot">✷</span>
+        <span class="bt">Give newcomers a clear place to start</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Make the path from first contribution to trusted contributor <strong>visible</strong></span>
+        <span class="dot">✷</span>
+        <span class="bt"><strong>Visible</strong> path to trusted contributor</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">When contributing is confusing, people leave quietly. You never know why.</span>
+        <span class="dot">✷</span>
+        <span class="bt">If it is confusing, they quietly leave</span>
       </div>
       <div class="card" style="margin-top: 0.75em; border-color: rgba(255,192,52,0.28);">
         <h4>Example: Kubernetes</h4>
@@ -858,100 +613,137 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>The goal is to lower the cost of someone's first contribution. Give newcomers a structured place to start instead of dropping them in front of a repo to figure out where they fit. Make the path from first contribution to trusted contributor visible.</li>
-          <li>Kubernetes does this well. They publish an actual contributor ladder, where you move from member to reviewer to approver, and each step has clear expectations. They tag good first issues, run mentoring cohorts, and have a graceful way for people to step back when life gets busy.</li>
-          <li>When contributing is confusing, people don't complain. They quietly leave, and you never find out why.</li>
-          <li>A personal note: I came in through a person, not a process. Someone experienced reached out and pulled me in before I really understood the project. A lot of people enter that way. Both matter.</li>
-          <li>Next: Lever 3, Recognition.</li>
+          <li>The goal is to lower the cost of a first contribution. Give newcomers a clear place to start. Make the path to trusted contributor visible.</li>
+          <li>Kubernetes does this well. A published ladder from member to reviewer to approver, good first issues, mentoring, and a graceful way to step back.</li>
+          <li>When it is confusing, people do not complain. They quietly leave, and you never find out why.</li>
+          <li>Next, let me show you my own first contribution.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ 10: Lever 3 — Recognition ─────────────────────────────────────── -->
+    <!-- 9b: My first contribution -->
+    <section>
+      <div class="split" style="grid-template-columns: 1.15fr 0.85fr; gap: 1.3em; height: 100%;">
+        <div style="align-self: start;">
+          <div class="sh">
+            <span class="label">lever 2 · from experience</span>
+            <h2>My First Contribution</h2>
+          </div>
+          <div class="brow">
+            <span class="dot">✷</span>
+            <span class="bt">2021, during Covid, new to the community</span>
+          </div>
+          <div class="brow">
+            <span class="dot">✷</span>
+            <span class="bt"><strong>45 min</strong> just to open the issue, scared of being judged</span>
+          </div>
+          <div class="brow">
+            <span class="dot">✷</span>
+            <span class="bt">Nobody judged. Community was welcoming</span>
+          </div>
+          <p style="font-size: 0.5em; margin-top: 0.7em;"><a href="https://www.drupal.org/node/3227702">drupal.org/node/3227702</a></p>
+        </div>
+        <div style="height: 100%;">
+          <a href="https://www.drupal.org/node/3227702"><img src="first-contribution-screenshot.png" alt="My first Drupal issue, 2021" style="width: 100%; display: block; max-height: 80%; object-fit: contain; object-position: top; border-radius: 8px;"></a>
+        </div>
+      </div>
+      <aside class="notes">
+        <ul>
+          <li>This is my own first contribution, back in 2021.</li>
+          <li>I started during Covid and did not know the community yet. It took me forty five minutes just to open the issue, because I was scared of being judged.</li>
+          <li>Nobody judged. The community was welcoming the whole time.</li>
+          <li>That gap, between how scary it felt and how kind it was, is what good contributor experience should close.</li>
+          <li>Next, lever three, recognition.</li>
+        </ul>
+      </aside>
+    </section>
+
+    <!-- 10: Lever 3 - Recognition -->
     <section>
       <div class="sh">
         <span class="label">lever 3</span>
         <h2>Recognition</h2>
       </div>
       <div class="brow" style="margin-top: 1.2em;">
-        <span class="dot">✦</span>
-        <span class="bt">Most community labor is <strong>invisible</strong>: reviews, triage, docs, mentoring</span>
+        <span class="dot">✷</span>
+        <span class="bt">Most labor is <strong>invisible</strong>: review, triage, docs, mentoring</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Invisible work becomes undervalued work</span>
+        <span class="dot">✷</span>
+        <span class="bt">Invisible work gets undervalued</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Record who actually did what, and let credit extend to the companies that fund that work</span>
+        <span class="dot">✷</span>
+        <span class="bt">Record who did the work, sponsors included</span>
       </div>
       <div class="card" style="margin-top: 1em; border-color: rgba(255,192,52,0.28);">
         <h4>Example: Drupal Contribution Credit System</h4>
-        <p>Records contribution at scale. Individuals get recognition tied to real work. Companies get visible standing for the work they fund. Commercial incentives align with community health.</p>
+        <p>A public record of who did what, across code and the invisible work. Contribution becomes visible instead of assumed.</p>
       </div>
       <aside class="notes">
         <ul>
-          <li>Most of the labor in a community is invisible. Code review, triage, documentation, mentoring. None of it shows up the way a flashy feature does. And invisible work becomes undervalued work.</li>
-          <li>The fix is to make contribution visible by actually recording who did what, and to let that recognition extend to the companies sponsoring the work, not just individuals.</li>
-          <li>Drupal is a good example, with a contribution credit system that records this at scale.</li>
-          <li>Next: why recognition actually changes behavior.</li>
+          <li>Most of the work in a community is invisible. Review, triage, docs, mentoring. It does not show up like a shiny feature, so it gets undervalued.</li>
+          <li>The fix is to make it visible. Record who did the work, and let that credit reach the sponsors too.</li>
+          <li>Drupal does this with a contribution credit system that records it at scale.</li>
+          <li>Next, why that changes behavior.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ 11: Why recognition changes behavior ───────────────────────────── -->
+    <!-- 11: Why recognition changes behavior -->
     <section>
       <div class="sh">
         <span class="label">lever 3</span>
         <h2>Why Recognition Changes Behavior</h2>
       </div>
       <div class="brow" style="margin-top: 1.2em;">
-        <span class="dot">✦</span>
-        <span class="bt">Individuals get recognition tied to <strong>real contribution</strong>, not just visibility or self-promotion</span>
+        <span class="dot">✷</span>
+        <span class="bt">Tie recognition to <strong>real work</strong></span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Companies get visible standing for the work they fund, aligning commercial incentives with community health</span>
+        <span class="dot">✷</span>
+        <span class="bt">Companies get visible standing for what they fund</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Recognition becomes a <strong>renewable resource</strong>, not a favor</span>
+        <span class="dot">✷</span>
+        <span class="bt">It becomes routine, not a favor</span>
       </div>
-      <div class="card" style="margin-top: 1em; border-color: rgba(255,192,52,0.28);">
+      <div class="card" style="margin-top: 1em; border-color: rgba(255,192,52,0.28); font-size: 0.9em;">
         <p>When a company treats contribution as part of the actual work, with real time and budget behind it, the alignment becomes real and it lasts. <strong>Good incentive design beats good intentions every time.</strong></p>
       </div>
       <aside class="notes">
         <ul>
-          <li>Here's why that recognition changes behavior. Individuals get recognition tied to real contribution, not just visibility or self-promotion. Companies get visible standing for the work they fund, which means their commercial interest lines up with the health of the community.</li>
-          <li>Recognition stops being a favor you do for people and becomes a renewable resource the system produces.</li>
-          <li>The pattern I've seen hold up: when a company treats contribution as part of the actual work, with real time and budget behind it, instead of a side hobby people squeeze in after hours, the alignment becomes real and it lasts.</li>
+          <li>Here is why it changes behavior. People get recognition tied to real work, not just self promotion.</li>
+          <li>Companies get visible standing for what they fund, so their interest lines up with the health of the community.</li>
+          <li>Recognition stops being a favor and becomes routine, something the system produces.</li>
+          <li>The pattern I keep seeing, when a company treats contribution as real work with time and budget behind it, the alignment lasts.</li>
           <li>Good incentive design beats good intentions every time.</li>
-          <li>Next: Lever 4, Local Community.</li>
+          <li>Next, lever four, local community.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ 12: Lever 4 — Local community ─────────────────────────────────── -->
+    <!-- 12: Lever 4 - Local community -->
     <section>
       <div class="sh">
         <span class="label">lever 4</span>
         <h2>Local Community</h2>
       </div>
-      <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Global projects still need <strong>local belonging</strong></span>
+      <div class="brow" style="margin-top: 1.2em;">
+        <span class="dot">✷</span>
+        <span class="bt">Global projects need <strong>local belonging</strong></span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Pair big global gatherings with small local ones</span>
+        <span class="dot">✷</span>
+        <span class="bt">Pair global events with local ones</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Local events lower the barrier to showing up and meeting people</span>
+        <span class="dot">✷</span>
+        <span class="bt">Local events lower the barrier</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">"Come for the code, stay for the community" is a <strong>design goal</strong>, not a slogan</span>
+        <span class="dot">✷</span>
+        <span class="bt">"Come for the code, stay for the community"</span>
       </div>
       <div class="card" style="margin-top: 0.75em; border-color: rgba(255,192,52,0.28);">
         <h4>Example: Drupal</h4>
@@ -959,31 +751,31 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Fourth lever, local community. Even a global project needs places where people feel they belong locally. The pattern that works is pairing the big global gathering with small local ones. The local events are where the real barrier drops, where it's easy to just show up and meet people.</li>
-          <li>This is the one I know best from the inside. Drupal has DrupalCon as the big global moment, but the real engine is the local camps, run by volunteers, kept small and accessible on purpose. That's where new people actually get pulled in, and it's where most new organizers, myself included, learn the ropes.</li>
-          <li>There's a phrase I love: come for the code, stay for the community. That's not a slogan, it's a design goal. People commit to projects through other people, not through repositories.</li>
-          <li>Next: trade-offs and what to prioritize.</li>
+          <li>Even a global project needs places that feel local. Pair the big global event with small local ones. The local events are where the barrier really drops.</li>
+          <li>This is the one I know best. Drupal has DrupalCon globally, but the real engine is the local camps, run by volunteers, kept small on purpose. That is where new people get pulled in, and where most new organizers, including me, learn how it works.</li>
+          <li>There is a line I love, come for the code, stay for the community. That is a design goal, not a slogan. People commit through other people, not through repositories.</li>
+          <li>Next, what to prioritize.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ Part III divider ───────────────────────────────────────────────── -->
+    <!-- Part III divider -->
     <section>
       <div class="chapter">
         <div class="part">Part III</div>
         <div class="numeral">III</div>
         <h2>The Road Ahead</h2>
         <div class="sep"><span>&#9670;</span></div>
-        <p class="epi">New powers, hard climbs, and the small choices that decide the end.</p>
+        <p class="epi">What to prioritize, what AI changes, and what you can actually do.</p>
       </div>
       <aside class="notes">
         <ul>
-          <li>Act three: what to prioritize, the new power of AI, and the small things you can actually do from wherever you stand.</li>
+          <li>This section is about looking ahead. We will cover what to prioritize and when, how AI is changing the picture, and what you can realistically do in your own corner of the community.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ 13: Trade-offs ─────────────────────────────────────────────────── -->
+    <!-- 13: Trade-offs -->
     <section>
       <div class="sh">
         <span class="label">priorities</span>
@@ -992,30 +784,31 @@
       <div class="split-even" style="align-items: stretch; margin-top: 0.7em;">
         <div class="card" style="border-color: rgba(255,192,52,0.45); display: flex; flex-direction: column; gap: 0.3em;">
           <span class="col-label" style="margin-bottom: 0.1em;">optimize early</span>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">Clear contribution paths and onboarding</span></div>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">Explicit, written expectations</span></div>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">Distributing authority before the load gets heavy</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Clear contribution paths and onboarding</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Explicit, written expectations</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Distributing authority before the load gets heavy</span></div>
           <p style="font-size: 0.52em; color: var(--muted); margin: auto 0 0; opacity: 0.8;">Cheap now. Expensive to fix later.</p>
         </div>
         <div class="card" style="display: flex; flex-direction: column; gap: 0.3em; opacity: 0.65;">
           <span class="col-label" style="margin-bottom: 0.1em;">safe to delay</span>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">Heavy formal governance and elaborate process</span></div>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">Complex tooling and automation</span></div>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">Over-structuring a community that is still small</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Heavy formal governance and elaborate process</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Complex tooling and automation</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Over-structuring a community that is still small</span></div>
           <p style="font-size: 0.52em; color: var(--muted); margin: auto 0 0; opacity: 0.8;">Heavy process on a tiny project can strangle it before it grows.</p>
         </div>
       </div>
       <aside class="notes">
         <ul>
-          <li>Not everything deserves your attention at once. Clear contribution paths, written expectations, and distributing authority are worth doing early. These are cheap now and expensive to fix later.</li>
-          <li>Heavy formal governance, complex tooling, and over-structuring a community that's still small can safely wait.</li>
-          <li>Putting heavy process on a tiny project is its own kind of failure. You can strangle something before it ever gets a chance to grow.</li>
-          <li>Next: a nuance about best practices.</li>
+          <li>Not everything deserves attention at once.</li>
+          <li>Do these early, clear paths and onboarding, written expectations, and spreading authority before the load gets heavy. Cheap now, expensive later.</li>
+          <li>These can wait, heavy governance, complex tooling, and over structuring a community that is still small.</li>
+          <li>Heavy process on a tiny project can strangle it before it grows.</li>
+          <li>Next, a quick nuance about best practices.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ 14: Good advice needs the right partner ────────────────────────── -->
+    <!-- 14: Good advice needs the right partner -->
     <section>
       <div class="sh">
         <span class="label">nuance</span>
@@ -1038,51 +831,51 @@
       <p style="font-size: 0.58em; margin-top: 1.6em; opacity: 0.75;">Context decides whether a practice helps. The practices aren't the problem; the pairing is.</p>
       <aside class="notes">
         <ul>
-          <li>One nuance about best practices. The same advice can help or hurt depending on what you pair it with.</li>
-          <li>Be welcoming to everyone is great, as long as it comes with triage. Move fast is great, as long as it comes with shared decision rights. Document everything is great, as long as it comes with clear ownership.</li>
-          <li>The practices themselves aren't the problem. The lesson is to pair each one with the thing that makes it work at scale.</li>
-          <li>Note: if running long, this is the safe slide to skip. It's a nice-to-have, not load-bearing.</li>
-          <li>Next: the AI question.</li>
+          <li>The same advice can help or hurt depending on what you pair it with.</li>
+          <li>Be welcoming to everyone works with triage. Move fast works with shared decision rights. Document everything works with clear ownership.</li>
+          <li>The practices are not the problem. Pair each one with the thing that makes it work at scale.</li>
+          <li>If I am running long, this is the slide to skip.</li>
+          <li>Next, the AI question.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ 15: The AI question ────────────────────────────────────────────── -->
+    <!-- 15: The AI question -->
     <section>
       <div class="sh">
-        <span class="label">the ai question</span>
+        <span class="label">AI</span>
         <h2>Help and Hazard</h2>
       </div>
       <div class="split-even" style="align-items: stretch; margin-top: 0.7em;">
         <div class="card" style="border-color: rgba(255,192,52,0.45); display: flex; flex-direction: column; gap: 0.3em;">
           <span class="col-label" style="margin-bottom: 0.1em;">where ai helps</span>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">Lowers the barrier to a first contribution</span></div>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">Speeds up docs, translation, and issue triage</span></div>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">Could ease the "privilege of free time" open source has always depended on</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Lowers the barrier to a first contribution</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Speeds up docs, translation, and issue triage</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Could ease the "privilege of free time" open source depends on</span></div>
         </div>
         <div class="card" style="display: flex; flex-direction: column; gap: 0.3em; opacity: 0.75;">
           <span class="col-label" style="margin-bottom: 0.1em;">where ai strains</span>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">A flood of low-effort contributions can overwhelm reviewers</span></div>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">The cost shifts from author to maintainer</span></div>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">Access is unequal. AI can become a new privilege.</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Low-effort contributions can overwhelm reviewers</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">The cost shifts from author to maintainer</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Access is unequal. AI can become a new privilege.</span></div>
         </div>
       </div>
       <div class="card" style="margin-top: 0.7em; border-color: rgba(255,192,52,0.28); font-size: 0.9em;">
-        <p><strong>AI doesn't replace community design. It raises the stakes on it.</strong> Share the cost and skill of using AI well. Build it into the contributor experience. The same levers still apply.</p>
+        <p><strong>AI doesn't replace community design. It raises the stakes.</strong> Share the cost and skill. Build it into contributor experience.</p>
       </div>
       <aside class="notes">
         <ul>
-          <li>On the good side, AI lowers the barrier to a first contribution. It helps newcomers navigate an unfamiliar codebase, speeds up docs, translation, and triage, and supports people who don't write English as a first language.</li>
-          <li>There's a deeper promise: Dries Buytaert put it well recently, AI can compress the time it takes to understand a codebase enough to act, so it could ease the privilege of free time that open source has always quietly depended on.</li>
-          <li>But AI access isn't equal. The best tools cost real money and real skill. If we want AI to reduce privilege rather than reinforce it, projects have to share two things: the cost, by making lower-cost and open-weight models practical, and the skill, by building AI know-how into the contributor experience.</li>
-          <li>And the strain is real: it's cheap to generate a change, but a maintainer still has to understand it. The test is simple: does AI help more people get from an issue to a tested patch, while making it easier for maintainers to trust and merge?</li>
-          <li>AI doesn't replace community design. It raises the stakes on the same levers: clear paths, recognition for real understanding, and governance that prevents bottlenecks.</li>
-          <li>Next: a mental model to take with you.</li>
+          <li>I have to talk about AI. On the good side, it lowers the barrier to a first contribution, speeds up docs, translation, and triage, and helps people who do not write English as a first language.</li>
+          <li>There is a deeper promise. Dries Buytaert put it well, AI can shorten the time it takes to understand a codebase enough to act, so it could ease the privilege of free time that open source has always leaned on.</li>
+          <li>But access is not equal. The best tools cost money and skill. So we have to share two things, the cost, with lower cost and open models, and the skill, by building AI know how into the contributor experience.</li>
+          <li>The strain is real. It is cheap to generate a change, but a maintainer still has to understand it. The test is simple, does it help more people go from issue to tested patch, and make it easier to trust and merge.</li>
+          <li>AI does not replace community design. It raises the stakes on the same levers.</li>
+          <li>Next, a mental model to take home.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ 16: Thrive vs decay ────────────────────────────────────────────── -->
+    <!-- 16: Thrive vs decay -->
     <section>
       <div class="sh">
         <span class="label">mental model</span>
@@ -1091,31 +884,32 @@
       <div class="split-even" style="align-items: stretch; margin-top: 0.7em;">
         <div class="card" style="border-color: rgba(255,192,52,0.45); display: flex; flex-direction: column; gap: 0.3em;">
           <span class="col-label" style="margin-bottom: 0.1em;">thriving projects</span>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">Share decisions</span></div>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">Make it easy to help</span></div>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">Recognize the work</span></div>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">Build local belonging</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Share decisions</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Make it easy to help</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Recognize the work</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Build local belonging</span></div>
         </div>
         <div class="card" style="display: flex; flex-direction: column; gap: 0.3em; opacity: 0.55;">
           <span class="col-label" style="margin-bottom: 0.1em;">decaying projects</span>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">Concentrate decisions</span></div>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">Leave contributors guessing</span></div>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">Let invisible work go unseen</span></div>
-          <div class="brow" style="margin-bottom: 0;"><span class="dot">✦</span><span class="bt">Stay purely global</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Concentrate decisions</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Leave contributors guessing</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Let invisible work go unseen</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Stay purely global</span></div>
         </div>
       </div>
       <p style="font-size: 0.52em; color: var(--muted); margin-top: 1.2em; opacity: 0.75;">The drift is slow and quiet. That's exactly why it's easy to miss.</p>
       <aside class="notes">
         <ul>
-          <li>If you take one mental model from this talk, take this one. It maps straight onto the four levers.</li>
-          <li>Thriving projects share decisions, make it easy to help, recognize the work people do, and build local belonging. Projects that drift do the opposite: decisions pile onto a few people, contributors are left guessing, invisible work goes unseen, and the project never feels local to anyone.</li>
-          <li>The hard part is that the drift is slow and quiet. There's no alarm. That's exactly why it's so easy to miss until it's far along.</li>
-          <li>Next: what you can realistically do about it.</li>
+          <li>If you take one thing home, take this. It maps onto the four levers.</li>
+          <li>Thriving projects share decisions, make it easy to help, recognize the work, and build local belonging.</li>
+          <li>Fading projects do the opposite. Decisions pile onto a few people, contributors are left guessing, invisible work goes unseen, and it never feels local.</li>
+          <li>The hard part is the drift is slow and quiet. There is no alarm, so it is easy to miss until it is far along.</li>
+          <li>Next, what you can actually do.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ 17: What you can realistically influence ───────────────────────── -->
+    <!-- 17: What you can realistically influence -->
     <section>
       <div class="sh">
         <span class="label">your turn</span>
@@ -1123,20 +917,20 @@
       </div>
       <p style="font-size: 0.62em; margin-top: 1.2em; margin-bottom: 0.8em; opacity: 0.8;">You don't need to become a full-time maintainer.</p>
       <div class="brow">
-        <span class="dot">✦</span>
+        <span class="dot">✷</span>
         <span class="bt">Document one unclear process</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Review someone else's first contribution</span>
+        <span class="dot">✷</span>
+        <span class="bt">Review a first contribution</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Credit invisible work out loud in a channel where people see it</span>
+        <span class="dot">✷</span>
+        <span class="bt">Credit invisible work out loud</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
-        <span class="bt">Help one local event happen</span>
+        <span class="dot">✷</span>
+        <span class="bt">Help one local event</span>
       </div>
       <p style="font-size: 0.58em; margin-top: 0.8em; color: var(--muted); opacity: 0.85;">These are small structural acts. <strong>They compound.</strong></p>
       <div class="gif-overlay" aria-hidden="true">
@@ -1144,15 +938,16 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>You might be thinking this is a lot, and you don't want to become a full-time maintainer. Good news: you don't have to.</li>
-          <li>You can document one unclear process. Review someone's first contribution. Credit invisible work out loud in a channel where people see it. Help one local event happen. These are small structural acts, and they compound.</li>
-          <li>That's roughly my own story. I started by volunteering at one event in 2023, then said yes to a few more organizing committees, and that eventually led to me winning the Women in Drupal Award. None of it was a master plan. It was just one small yes at a time.</li>
-          <li>Next: closing thoughts.</li>
+          <li>You do not need to become a full time maintainer.</li>
+          <li>Document one unclear process. Review someone's first contribution. Credit invisible work out loud where people can see it. Help one local event happen.</li>
+          <li>These are small acts, and they add up.</li>
+          <li>That is basically my story. I said yes to one event in 2023, then a few more committees, and it led to the Women in Drupal Award. No master plan, just one small yes at a time.</li>
+          <li>Next, closing thoughts.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ 18: Close ───────────────────────────────────────────────────────── -->
+    <!-- 18: Close -->
     <section>
       <div class="sh">
         <span class="label">close</span>
@@ -1160,30 +955,30 @@
       </div>
       <div style="padding-right: 14em;">
       <div class="brow" style="margin-top: 1.2em;">
-        <span class="dot">✦</span>
-        <span class="bt">The system around the code is the thing that scales, or doesn't</span>
+        <span class="dot">✷</span>
+        <span class="bt">The system around the code is what scales</span>
       </div>
       <div class="brow">
-        <span class="dot">✦</span>
+        <span class="dot">✷</span>
         <span class="bt"><strong>Design it on purpose</strong></span>
       </div>
       <div style="margin-top: 0.85em; font-size: 0.82em;">
         <span class="col-label">reality check</span>
         <div class="brow" style="opacity: 0.72;">
-          <span class="dot">✦</span>
-          <span class="bt">None of this is a quick fix. You won't get it all right.</span>
+          <span class="dot">✷</span>
+          <span class="bt">No quick fix</span>
         </div>
         <div class="brow" style="opacity: 0.72;">
-          <span class="dot">✦</span>
-          <span class="bt">You rarely control the whole system, just your corner of it</span>
+          <span class="dot">✷</span>
+          <span class="bt">You control your corner, not the whole</span>
         </div>
         <div class="brow" style="opacity: 0.72;">
-          <span class="dot">✦</span>
-          <span class="bt">Changing a community's defaults is slow work. That's normal.</span>
+          <span class="dot">✷</span>
+          <span class="bt">Changing defaults is slow, and that is normal</span>
         </div>
         <div class="brow" style="opacity: 0.72;">
-          <span class="dot">✦</span>
-          <span class="bt"><strong>Start with one lever, not all four</strong></span>
+          <span class="dot">✷</span>
+          <span class="bt"><strong>Start with one lever</strong></span>
         </div>
       </div>
       </div>
@@ -1192,14 +987,98 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>To land where we started. Open source is not just code. The system around the code is the thing that scales, or the thing that decays. Either way, you're designing it. The only question is whether you're doing it on purpose.</li>
-          <li>Quick reality check: none of this is a quick fix, and you will not get it all right. Most of the time you don't control the whole system, just your corner of it, and shifting a community's defaults is slow work. So don't try to pull all four levers at once. Pick one, the one that's hurting most, and start there.</li>
-          <li>Open the floor: what's the hardest part of this in your world? Questions, pushback, your own examples, all welcome.</li>
+          <li>To land where we started. Open source is not just code. The system around the code is what scales, or fades. Either way you are designing it. The only question is whether you do it on purpose.</li>
+          <li>A quick reality check. This is not a quick fix, and you will not get it all right. You control your corner, not the whole. Changing defaults is slow, and that is normal.</li>
+          <li>So do not pull all four levers at once. Pick the one that hurts most and start there.</li>
+          <li>Then open the floor. What is the hardest part of this where you are.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- ─ 19: Q&A ────────────────────────────────────────────────────────── -->
+    <!-- 19: offon.dev -->
+    <section>
+      <div class="split" style="grid-template-columns: 1.1fr 0.9fr; gap: 1.4em; align-items: start; height: 100%;">
+        <div style="align-self: start;">
+          <div class="sh">
+            <span class="label">community</span>
+            <h2>Join OffOn.dev</h2>
+          </div>
+          <div class="brow">
+            <span class="dot">✷</span>
+            <span class="bt">A welcoming space for everyone who loves open source: learners, contributors, maintainers, writers, designers, translators, and organizers</span>
+          </div>
+          <div class="brow">
+            <span class="dot">✷</span>
+            <span class="bt">Built to sustain the people behind open source and grow the maintainers of tomorrow</span>
+          </div>
+          <div class="brow">
+            <span class="dot">✷</span>
+            <span class="bt"><strong>Play Challenges:</strong> hands-on, scenario-driven challenges built around real open source tools. Runs entirely in GitHub Codespaces.</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.8em; padding-bottom: 2em;">
+          <img src="challenges-grid.webp" alt="OffOn challenges grid" style="width: 100%; border-radius: 8px; display: block; border: 1px solid var(--border);">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0.3em; margin-top: 0.4em;">
+            <img src="../qr/offon-dev.png" alt="QR code for offon.dev" style="width: 6em; border-radius: 6px; display: block;">
+            <p style="font-size: 0.46em; opacity: 0.6; text-align: center; margin: 0;">offon.dev</p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">
+        <ul>
+          <li>If anything from today resonated, offon.dev is a good next step.</li>
+          <li>It is a vendor-neutral community for open source contributors, built around the idea that people who sustain open source deserve a place to grow and find each other.</li>
+          <li>The challenges are hands-on and scenario-driven, built around real open source tools, and everything runs in GitHub Codespaces so there is nothing to install.</li>
+        </ul>
+      </aside>
+    </section>
+
+    <!-- 20: Sources -->
+    <section>
+      <div class="sh">
+        <span class="label">sources</span>
+        <h2>Sources &amp; Further Reading</h2>
+      </div>
+      <div style="margin-top: 0.7em;">
+        <span class="col-label">primary reading</span>
+        <div class="brow">
+          <span class="dot">✷</span>
+          <span class="bt">David Hirsch, <a href="https://www.linkedin.com/pulse/open-source-communities-david-hirsch/">Open Source Communities</a></span>
+        </div>
+        <div class="brow">
+          <span class="dot">✷</span>
+          <span class="bt">Dries Buytaert, <a href="https://dri.es/the-privilege-of-ai-in-open-source">The Privilege of AI in Open Source</a></span>
+        </div>
+      </div>
+      <div style="margin-top: 1.8em; font-size: 0.88em;">
+        <span class="col-label">community examples</span>
+        <div class="brow">
+          <span class="dot">✷</span>
+          <span class="bt">Rust, <a href="https://www.rust-lang.org/governance">Governance and teams</a></span>
+        </div>
+        <div class="brow">
+          <span class="dot">✷</span>
+          <span class="bt">Apache, <a href="https://www.apache.org/theapacheway/">The Apache Way</a></span>
+        </div>
+        <div class="brow">
+          <span class="dot">✷</span>
+          <span class="bt">Kubernetes, <a href="https://github.com/kubernetes/community/blob/master/community-membership.md">Contributor ladder</a></span>
+        </div>
+        <div class="brow">
+          <span class="dot">✷</span>
+          <span class="bt">Drupal, <a href="https://www.drupal.org/docs/develop/issues/fields-and-other-parts-of-an-issue/getting-credit-for-work-on-issues">Contribution credit</a></span>
+        </div>
+      </div>
+      <aside class="notes">
+        <ul>
+          <li>These are the sources behind the talk.</li>
+          <li>David Hirsch and Dries Buytaert shaped the framing and the AI section.</li>
+          <li>The community examples, Rust, Apache, Kubernetes, and Drupal, come from their own governance and contribution docs.</li>
+        </ul>
+      </aside>
+    </section>
+
+    <!-- 21: Q&A -->
     <section>
       <div class="final">
         <p style="font-size: 1.8em; font-family: 'Lexend', sans-serif; font-weight: 700; color: var(--fg); margin-bottom: 0.5em;">Thank you</p>
