@@ -36,13 +36,13 @@ Node.js **26** is required. Version is pinned in `.nvmrc`, run `nvm use` to swit
 | `npm run dev` | Start local dev server at <http://localhost:8080> |
 | `npm run build` | SSG prerender build to `dist/client/` (React Router v8); postbuild creates `_.data` aliases for GitHub Pages trailing-slash compatibility |
 | `npm run build:dev` | Dev-mode build (source maps, no minification) |
-| `npm run preview` | Serve the production build locally — `serve.json` at the repo root sets `trailingSlash: true` to mirror GitHub Pages URL behaviour |
+| `npm run preview` | Serve the production build locally. `serve.json` at the repo root sets `trailingSlash: true` to mirror GitHub Pages URL behaviour |
 | `npm run lint` | Run ESLint across the project |
 | `npm run lint:reuse` | REUSE licence compliance check (requires `pip install reuse` once) |
 | `npm test` | Run the full test suite once (Vitest) |
 | `npm run test:watch` | Run tests in watch mode |
 | `npm run test:coverage` | Run tests with v8 coverage report |
-| `npm run test:e2e` | Playwright smoke, WSG, accessibility, and hydration tests (requires `npm run build` first) |
+| `npm run test:e2e` | Playwright smoke, SSG, accessibility, and hydration tests (requires `npm run build` first) |
 | `npm run test:visual` | Visual regression tests against baseline screenshots (requires `npm run build` first) |
 | `npm run test:visual:update` | Update visual regression baseline screenshots |
 | `npm run generate` | Regenerate TypeScript from adventure YAML files |
@@ -121,7 +121,7 @@ Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and
 | `/privacy` | `Privacy.tsx` | GDPR-compliant privacy policy |
 | `/accessibility` | `Accessibility.tsx` | WCAG accessibility statement |
 | `/brand` | `BrandGuidelines.tsx` | Brand guidelines: logos, colors, typography, voice |
-| `/presentation-templates` | `PresentationTemplates.tsx` | Slide template downloads (Reveal.js ZIP, PPTX); unlisted — noindex, excluded from sitemap and robots |
+| `/presentation-templates` | `PresentationTemplates.tsx` | Slide template downloads (Reveal.js ZIP, PPTX); unlisted, noindex, excluded from sitemap and robots |
 | `/404` | `NotFound.tsx` | Prerendered 404 page |
 | `/community-guide` | redirects to `/handbook` | Legacy alias |
 | `/docs` | redirects to `/handbook` | Legacy alias |
@@ -234,12 +234,12 @@ OffOn targets WCAG 2.2 Level AA across every page, in both light and dark mode. 
 
 ## License
 
-- Source code — [MIT](LICENSE)
-- Written content (docs, copy, curriculum data) — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
-- Factual scraped data (community-leaders.json) — [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
-- Bundled fonts (Inter, Syne, JetBrains Mono) — [SIL OFL 1.1](https://openfontlicense.org/)
+- Source code: [MIT](LICENSE)
+- Written content (docs, copy, curriculum data): [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+- Factual scraped data (community-leaders.json): [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
+- Bundled fonts (Inter, Syne, JetBrains Mono): [SIL OFL 1.1](https://openfontlicense.org/)
 
 Per-file licensing is declared via the [REUSE](https://reuse.software) spec (`REUSE.toml`, `LICENSES/`).
-The **OffOn** name and logo are reserved — see [TRADEMARK.md](TRADEMARK.md).
+The **OffOn** name and logo are reserved. See [TRADEMARK.md](TRADEMARK.md).
 
 [![REUSE status](https://api.reuse.software/badge/github.com/off-on-dev/website)](https://api.reuse.software/info/github.com/off-on-dev/website)

@@ -154,10 +154,10 @@ The site is currently hosted on GitHub Pages. GitHub Pages cannot set arbitrary 
 
 ### Performance (currently limited by GitHub Pages CDN)
 
-- **Brotli compression** — GitHub Pages only serves gzip. Brotli is 15-20% smaller on text assets. Cloudflare serves Brotli by default.
-- **Immutable Cache-Control** — GitHub Pages caps `max-age` at 600s even for content-hashed assets. Cloudflare allows `Cache-Control: public, max-age=31536000, immutable` on fingerprinted files, dramatically improving repeat-visit load times.
-- **HTTP/3 / QUIC** — Cloudflare enables HTTP/3 for all sites without configuration.
-- **`No-Vary-Search`** — Cloudflare supports custom response headers needed for this caching hint.
+- **Brotli compression:** GitHub Pages only serves gzip. Brotli is 15-20% smaller on text assets. Cloudflare serves Brotli by default.
+- **Immutable Cache-Control:** GitHub Pages caps `max-age` at 600s even for content-hashed assets. Cloudflare allows `Cache-Control: public, max-age=31536000, immutable` on fingerprinted files, dramatically improving repeat-visit load times.
+- **HTTP/3 / QUIC:** Cloudflare enables HTTP/3 for all sites without configuration.
+- **`No-Vary-Search`:** Cloudflare supports custom response headers needed for this caching hint.
 
 ### How to migrate
 

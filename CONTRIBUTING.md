@@ -6,7 +6,7 @@ Thanks for your interest in contributing. This guide covers everything you need 
 
 ## Prerequisites
 
-- **Node.js 24** (pinned in `.nvmrc`). Run `nvm use` to switch automatically.
+- **Node.js 26** (pinned in `.nvmrc`). Run `nvm use` to switch automatically.
 - No backend setup required. The site is fully static.
 
 ## Local setup
@@ -34,7 +34,7 @@ Open PRs from your fork against `main` on the upstream repo.
 ```sh
 npm run lint             # ESLint
 npm test                 # Vitest unit tests
-npm run build && npm run test:e2e  # Playwright smoke, WSG, a11y, and hydration tests
+npm run build && npm run test:e2e  # Playwright smoke, SSG, a11y, and hydration tests
 ```
 
 All three must pass with zero failures before opening a PR.
