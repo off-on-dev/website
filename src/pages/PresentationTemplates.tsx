@@ -40,9 +40,9 @@ const REVEAL_STEPS: readonly { readonly step: number; readonly text: string }[] 
 ];
 
 const PPTX_INCLUDES: readonly string[] = [
-  "Title slide with OffOn branding",
+  `Title slide with ${BRAND_NAME} branding`,
   "Section and content slide layouts",
-  "OffOn color palette and typography",
+  `${BRAND_NAME} color palette and typography`,
   "Speaker notes placeholder",
 ];
 
@@ -56,7 +56,7 @@ const PresentationTemplates = (): JSX.Element => (
           Presentation Templates
         </h1>
         <p className="text-muted-foreground mb-12 max-w-2xl">
-          Slide templates for OffOn events and talks. Choose the format that fits your workflow.
+          Slide templates for {BRAND_NAME} events and talks. Choose the format that fits your workflow.
         </p>
 
         <section aria-labelledby="reveal-heading">
@@ -137,7 +137,7 @@ const PresentationTemplates = (): JSX.Element => (
             </div>
 
             <p className="text-sm text-muted-foreground leading-relaxed">
-              An editable PowerPoint file with OffOn branding applied. Open in PowerPoint or Keynote and edit slides directly.
+              An editable PowerPoint file with {BRAND_NAME} branding applied. Open in PowerPoint or Keynote and edit slides directly.
             </p>
 
             <ul className="space-y-1" role="list">

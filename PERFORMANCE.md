@@ -45,7 +45,7 @@ Target these thresholds at the 75th percentile of real users:
 
 - All fonts are self-hosted under `public/fonts/`. Never add an external font CDN link.
 - `font-display: optional` is set on all fonts. This means the browser has a very short (~100 ms) window to load a font before permanently falling back to the system font for that page visit. Preloading is therefore required for fonts to render correctly on throttled connections.
-- **Global preloads** go in the `links()` export in `src/root.tsx`. Use this for fonts that appear above the fold on every page. Currently preloaded globally: Inter 400, 500, 600, 700 (body text and semibold/bold labels); Syne 700 (h1–h6 via the `@layer base` rule).
+- **Global preloads** go in the `links()` export in `src/root.tsx`. Use this for fonts that appear above the fold on every page. Currently preloaded globally: Inter 400, 500, 600 (body text and semibold/bold labels); Syne 700 (h1–h6 via the `@layer base` rule).
 - **Route-level preloads** go in the `links()` export of a specific route module. Use this for fonts that are only used on certain pages to avoid "preloaded but not used" warnings and wasted bandwidth on other pages. JetBrains Mono (400 and 600) is preloaded at route level on `Index.tsx`, `Challenges.tsx`, `AdventureDetail.tsx`, and `ChallengeDetail.tsx`. These are the routes that render `font-mono` elements. Do not add JetBrains Mono to the global preloads.
 
   ```ts
@@ -62,10 +62,10 @@ Target these thresholds at the 75th percentile of real users:
 
 ## JavaScript and bundle size
 
-- Route-level code splitting is handled automatically by React Router v7. No manual `React.lazy` or `Suspense` wrappers are needed or should be added.
+- Route-level code splitting is handled automatically by React Router v8. No manual `React.lazy` or `Suspense` wrappers are needed or should be added.
 - Never use `will-change` on more than 3 elements simultaneously.
 - Before adding any new dependency, run `npm run build` and check the bundle output.
-- **`react-markdown` must not appear in the home page or `/challenges` bundle.** `AdventureCard` renders `adventure.story` as plain text (not through `MarkdownInline`) to keep the `react-markdown` + `remark-gfm` dependency (~46 kB gz) off the home page critical path. The generator warns at build time if any story contains markdown syntax. If `MarkdownInline` is ever imported in `AdventureCard`, `ChallengesGrid`, or any component they transitively import, verify the home page `index.html` does not reference the `MarkdownInline` chunk.
+- **Do not introduce a runtime markdown-rendering component into `AdventureCard`, `ChallengesGrid`, or any component they transitively import.** All Markdown is pre-rendered at build time by `scripts/generate-adventures.mjs`. Adventure story fields render as plain text. Adding a runtime renderer (e.g. one wrapping `react-markdown`) would pull `react-markdown` + `remark-gfm` (~46 kB gz) into the home page bundle. The generator warns at build time if any story field contains markdown syntax.
 
 ---
 
@@ -82,7 +82,7 @@ Target these thresholds at the 75th percentile of real users:
 - Use `defer` for app scripts that depend on the DOM and on relative execution order.
 - Use `async` for independent third-party scripts (analytics loaders, chat widgets) that have no execution-order dependencies.
 - Never place a bare `<script src="...">` in `<head>` without `defer` or `async`.
-- React Router v7 generates `type="module"` scripts automatically. Do not override this.
+- React Router v8 generates `type="module"` scripts automatically. Do not override this.
 - See the Analytics and Consent section in `CLAUDE.md` for the pattern used by the `gtag.js` injector. It is appended to `<body>` after consent, never blocking.
 
 ---
@@ -154,10 +154,10 @@ The site is currently hosted on GitHub Pages. GitHub Pages cannot set arbitrary 
 
 ### Performance (currently limited by GitHub Pages CDN)
 
-- **Brotli compression** — GitHub Pages only serves gzip. Brotli is 15-20% smaller on text assets. Cloudflare serves Brotli by default.
-- **Immutable Cache-Control** — GitHub Pages caps `max-age` at 600s even for content-hashed assets. Cloudflare allows `Cache-Control: public, max-age=31536000, immutable` on fingerprinted files, dramatically improving repeat-visit load times.
-- **HTTP/3 / QUIC** — Cloudflare enables HTTP/3 for all sites without configuration.
-- **`No-Vary-Search`** — Cloudflare supports custom response headers needed for this caching hint.
+- **Brotli compression:** GitHub Pages only serves gzip. Brotli is 15-20% smaller on text assets. Cloudflare serves Brotli by default.
+- **Immutable Cache-Control:** GitHub Pages caps `max-age` at 600s even for content-hashed assets. Cloudflare allows `Cache-Control: public, max-age=31536000, immutable` on fingerprinted files, dramatically improving repeat-visit load times.
+- **HTTP/3 / QUIC:** Cloudflare enables HTTP/3 for all sites without configuration.
+- **`No-Vary-Search`:** Cloudflare supports custom response headers needed for this caching hint.
 
 ### How to migrate
 

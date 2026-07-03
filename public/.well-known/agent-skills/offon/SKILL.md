@@ -45,4 +45,4 @@ The OffOn community forum is at https://community.offon.dev. It is a separate Di
 
 ## Technologies covered by challenges
 
-ArgoCD, Argo Rollouts, flagd, GitHub Actions, Grafana, Jaeger, Java, OpenFeature, OpenLLMetry, OpenTelemetry, OpenTofu, Prometheus, PromQL, Python, Spring Boot, TDD, Terraform, Trivy.
+Argo CD, Argo Rollouts, flagd, GitHub Actions, Grafana, Jaeger, Java, Kubernetes, Kyverno, OpenFeature, OpenLLMetry, OpenTelemetry, OpenTofu, Policy Reporter, Prometheus, PromQL, Python, Spring Boot, TDD, Terraform, Trivy.

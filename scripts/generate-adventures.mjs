@@ -56,6 +56,9 @@ const ROOT = resolve(__dirname, "..");
 const ADVENTURES_DIR = resolve(ROOT, "src/data/adventures");
 const SCHEMA_PATH = resolve(ROOT, "schemas/adventure.schema.json");
 
+// Duplicated from src/data/constants.ts — scripts run in Node outside the Vite build and cannot import from src/.
+const BRAND_NAME = "OffOn";
+
 // Computed once at startup so all date comparisons within a single run are consistent.
 const TODAY = new Date().toISOString().slice(0, 10);
 
@@ -200,7 +203,7 @@ function buildLevelMetaDescription(level) {
   const intro = stripMarkdown(rawIntro);
   const topics = (level.topics || []).join(", ");
   const base = `${name}: ${intro}`;
-  const suffix = ` A ${difficulty.toLowerCase()} ${topics} challenge on OffOn.`;
+  const suffix = ` A ${difficulty.toLowerCase()} ${topics} challenge on ${BRAND_NAME}.`;
   if (base.length + suffix.length <= 160) return base + suffix;
   return truncate(base, 160);
 }
@@ -213,7 +216,7 @@ function buildAdventureMetaDescription(data) {
     return truncate(clean, 160);
   }
   const tags = (data.tags || []).slice(0, 3).join(", ");
-  return truncate(`${title}: a hands-on ${tags} adventure on OffOn.`, 160);
+  return truncate(`${title}: a hands-on ${tags} adventure on ${BRAND_NAME}.`, 160);
 }
 
 function fail(msg) {

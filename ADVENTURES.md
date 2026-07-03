@@ -13,7 +13,7 @@ off-on-dev/open-source-challenges          offon.dev website repo
   adventures/<id>/docs/
     index.yaml          ──── Sync Adventure workflow ────►  src/data/adventures/<slug>/adventure.yaml
     beginner.yaml                                            src/data/adventures/<slug>/<level>-posts.json
-    intermediate.yaml   ──── npm run generate (prebuild) ──►  <slug>.generated.ts
+    intermediate.yaml   ──── npm run generate (prebuild) ──►  src/data/adventures/<slug>.generated.ts
     ...                                                       src/data/adventures/index.ts
                                                               src/data/adventures/summaries.ts
 ```
@@ -39,7 +39,7 @@ Go to **Actions → Sync Adventure from Challenges Repo → Run workflow**.
 2. If a PR branch (`feat/adventure-<slug>`) already exists, restores `adventure.yaml` from that branch so any manual edits already made survive the re-sync.
 3. Fetches `docs/index.yaml` and all level YAMLs from the challenges repo.
 4. Writes `src/data/adventures/<slug>/adventure.yaml` and creates `<level>-posts.json` stubs for each new live level.
-5. Runs `generate-adventures.mjs` to regenerate all TypeScript, sitemap entries, prerender entries, and test arrays.
+5. Runs `generate-adventures.mjs` to regenerate all TypeScript, sitemap entries, prerender entries, test arrays, `public/llms.txt`, and the leaderboard adventure list in `scripts/refresh-leaderboard.mjs`.
 6. Opens (or updates) a PR on `feat/adventure-<slug>` with a checklist of steps to complete before merging.
 
 ---
@@ -137,6 +137,10 @@ If you see this warning, also fix the `devcontainer:` value upstream in the chal
 
 If `gh` is unavailable or unauthenticated, the check is skipped with a warning and generation proceeds.
 
+### Verify llms.txt
+
+`generate-adventures.mjs` automatically patches the adventure entry in `public/llms.txt`. After running `npm run generate`, confirm the adventure appears correctly in the file under the Adventures section with the right title and URL.
+
 ### Run the a11y audit
 
 After the build passes, run the accessibility audit against any new or changed pages:
@@ -150,7 +154,7 @@ Target any new adventure or level detail pages. All severity-weighted findings m
 ### Final checks
 
 ```sh
-npm run lint && npm test && npm run build && npm run test:e2e
+npm run lint && npm run lint:reuse && npm test && npm run build && npm run test:e2e
 ```
 
 All checks must pass before merging.
@@ -221,11 +225,12 @@ Paste or attach the walkthrough content in any format — markdown, YAML, HTML, 
 
 ### What the generator updates
 
-`scripts/generate-solutions.mjs` scans every `.ts` file in `src/data/solutions/<adventure-id>/` (excluding `index.ts` and `types.ts`) and rebuilds four files automatically:
+`scripts/generate-solutions.mjs` scans every `.ts` file in `src/data/solutions/<adventure-id>/` (excluding `index.ts`, `manifest.ts`, and `types.ts`) and rebuilds five files automatically:
 
 | File | What gets patched |
 | --- | --- |
 | `src/data/solutions/index.ts` | Full barrel re-generated: one import per solution file, exported as `SOLUTIONS: Solution[]`. Never edit by hand. |
+| `src/data/solutions/manifest.ts` | Lightweight set of solution IDs regenerated on every run. Used to check solution availability without importing full solution data. Never edit by hand. |
 | `react-router.config.ts` | `GENERATED:solutions` region: one prerender entry per solution route (`/adventures/<id>/levels/<level>/solution`). |
 | `src/test/seo.test.ts` | `GENERATED:solutions` region: one route entry per solution. |
 | `src/test/prerender.test.ts` | `GENERATED:solutions` region: one `{ file, check }` entry per solution asserting the built HTML contains `"Solution"`. |
@@ -259,6 +264,7 @@ src/data/solutions/index.ts                       ← auto-generated barrel (com
 | `deploy.yml` | Push to `main` | Build and deploy to GitHub Pages at [offon.dev](https://offon.dev) |
 | `preview.yml` | Open PR | Deploy a PR preview at `/pr-preview/pr-<n>/` |
 | `refresh-community-data.yml` | Hourly + manual | Refresh discussion posts, leaderboard data, and community leaders from Discourse |
+| `refresh-community-sitemap.yml` | Daily (05:00 UTC) + manual | Regenerate and commit the community Discourse sitemap |
 
 ---
 
@@ -283,4 +289,4 @@ DISCOURSE_API_USERNAME=your_username
 
 The `.env` file is gitignored. For CI, set `DISCOURSE_API_KEY` and `DISCOURSE_API_USERNAME` as repository secrets in **Settings > Secrets and variables > Actions**.
 
-> The `COMMUNITY_BASE` constant in each refresh script is a necessary duplicate of `COMMUNITY_URL` in `src/data/constants.ts`. The scripts run in Node outside the Vite build and cannot import from `src/`. Always update all four places together if the community URL ever changes.
+> The `COMMUNITY_BASE` constant in each refresh script is a necessary duplicate of `COMMUNITY_URL` in `src/data/constants.ts`. The scripts run in Node outside the Vite build and cannot import from `src/`. Always update all five places together if the community URL ever changes: `refresh-discussions.mjs`, `refresh-leaderboard.mjs`, `refresh-community-leaders.mjs`, `generate-community-sitemap.mjs`, and `src/data/constants.ts`.

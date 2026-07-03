@@ -144,6 +144,8 @@ npm run test:visual:update  # Update visual baseline screenshots
 npm run preview      # Copy 404 fallback and serve the production build locally
 npm run generate     # Regenerate TypeScript from adventure YAML files
 npm run generate:validate  # Validate YAML against schema without writing files
+npm run generate:solutions  # Regenerate solution barrel index from src/data/solutions/
+npm run generate:solutions:validate  # Validate solution files without writing the barrel index
 
 npx shadcn@latest add <component>   # Add a shadcn/ui component
 
@@ -513,7 +515,8 @@ Read [`PERFORMANCE.md`](PERFORMANCE.md) before adding any new dependency, font, 
 - The brand is always written **OffOn** (camelCase). Never "offon", "Offon", or "OFFON".
 - The community was previously known as "Open Ecosystem". That name is retired. Never use it anywhere.
 - In code, always use the `BRAND_NAME` constant from `src/data/constants.ts` instead of hardcoding the string.
-- The domain `offon.dev` is always lowercase.
+- As a URL or href: always `offon.dev` (lowercase, e.g. `<a href="https://offon.dev">`).
+- As a display name in prose or UI: `OffOn.dev` is the correct form (brand caps, TLD lowercase). Never capitalise the TLD: `OffOn.Dev` is wrong.
 
 ### Tone
 

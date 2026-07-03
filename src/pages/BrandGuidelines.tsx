@@ -324,7 +324,7 @@ const BrandGuidelines = (): JSX.Element => {
                         <div className={`${bg} h-24 flex items-center justify-center p-5`}>
                           <img
                             src={`${BASE}brand/offon-favicon.svg`}
-                            alt={`OffOn icon mark ${label.toLowerCase()}`}
+                            alt={`${BRAND_NAME} icon mark ${label.toLowerCase()}`}
                             width={56}
                             height={56}
                             className="w-14 h-14 object-contain"
@@ -494,7 +494,7 @@ hsl(var(--foreground))`}</code>
                       <div className="bg-primary h-56 flex items-center justify-center">
                         <img
                           src={`${BASE}nyx.webp`}
-                          alt="Nyx, the OffOn firefly mascot, full view"
+                          alt={`Nyx, the ${BRAND_NAME} firefly mascot, full view`}
                           width={180}
                           height={180}
                           className="object-contain w-44 h-44"
@@ -514,7 +514,7 @@ hsl(var(--foreground))`}</code>
                       <div className="bg-primary h-56 flex items-center justify-center">
                         <img
                           src={`${BASE}nyx_peek.webp`}
-                          alt="Nyx the OffOn firefly mascot, peeking variant"
+                          alt={`Nyx the ${BRAND_NAME} firefly mascot, peeking variant`}
                           width={180}
                           height={180}
                           className="object-contain w-44 h-44"
@@ -539,7 +539,7 @@ hsl(var(--foreground))`}</code>
                   <div className="rounded-lg border border-border overflow-hidden max-w-sm">
                     <img
                       src={`${BASE}og.png`}
-                      alt="OffOn Open Graph preview image, 1200 by 630 pixels"
+                      alt={`${BRAND_NAME} Open Graph preview image, 1200 by 630 pixels`}
                       width={1200}
                       height={630}
                       className="w-full h-auto block"
@@ -602,34 +602,43 @@ hsl(var(--foreground))`}</code>
                 <SectionBlock id="voice" eyebrow="Communication" heading="Voice and Tone">
 
                   <div className="mb-10">
-                    <h3 className="font-sans text-base font-semibold text-foreground mb-3">Brand Name</h3>
-                    <div className="rounded-lg border border-border bg-[hsl(var(--surface))] p-6 max-w-md">
-                      <p className="font-heading text-4xl font-bold text-foreground mb-4" aria-hidden="true">{BRAND_NAME}</p>
-                      <p className="font-sans text-sm text-dim mb-5">
-                        Always camelCase. Domain is always lowercase:{" "}
-                        <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">offon.dev</code>
-                      </p>
-                      <div className="grid grid-cols-2 gap-2">
-                        {[
-                          { text: "OffOn", ok: true },
-                          { text: "offon.dev", ok: true },
-                          { text: "Offon", ok: false },
-                          { text: "OFFON", ok: false },
-                          { text: "offon", ok: false },
-                          { text: "Off-On", ok: false },
-                        ].map(({ text, ok }) => (
-                          <div key={text} className="flex items-center gap-2">
-                            {ok
-                              ? <Check size={11} className="text-[#15803d] shrink-0" aria-hidden="true" />
-                              : <X size={11} className="text-destructive shrink-0" aria-hidden="true" />
-                            }
-                            <span className={`font-mono text-xs ${ok ? "text-foreground" : "text-faint line-through"}`}>
-                              {text}
-                            </span>
-                            <span className="sr-only">{ok ? "(correct)" : "(incorrect)"}</span>
-                          </div>
-                        ))}
+                    <h3 className="font-sans text-base font-semibold text-foreground mb-4">Brand Name</h3>
+                    <div className="space-y-4">
+                    <div className="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
+                      <p className="font-sans text-xs uppercase tracking-widest text-faint mb-3">Usage</p>
+                      <ul className="font-sans text-sm text-dim space-y-1.5">
+                        <li>Always camelCase: <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">OffOn</code></li>
+                        <li>In prose and UI: <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">OffOn.dev</code> (brand caps, TLD lowercase)</li>
+                        <li>In URLs and hrefs: <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">offon.dev</code></li>
+                        <li>Never capitalise the TLD: <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">OffOn.Dev</code> is wrong</li>
+                      </ul>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div className="rounded-lg border border-[hsl(85,48%,56%,0.35)] bg-[hsl(var(--surface))] p-5">
+                        <h4 className="flex items-center gap-2 font-sans text-sm font-semibold text-foreground mb-3">
+                          <Check size={13} className="text-[#15803d] shrink-0" aria-hidden="true" />
+                          Use
+                        </h4>
+                        <ul role="list" className="font-mono text-xs text-foreground space-y-2">
+                          <li>OffOn</li>
+                          <li>OffOn.dev</li>
+                          <li>offon.dev</li>
+                        </ul>
                       </div>
+                      <div className="rounded-lg border border-[hsl(0,84%,60%,0.35)] bg-[hsl(var(--surface))] p-5">
+                        <h4 className="flex items-center gap-2 font-sans text-sm font-semibold text-foreground mb-3">
+                          <X size={13} className="text-destructive shrink-0" aria-hidden="true" />
+                          Never write
+                        </h4>
+                        <ul role="list" className="font-mono text-xs text-faint space-y-2">
+                          <li>OffOn.Dev</li>
+                          <li>Offon</li>
+                          <li>OFFON</li>
+                          <li>offon</li>
+                          <li>Off-On</li>
+                        </ul>
+                      </div>
+                    </div>
                     </div>
                   </div>
 
