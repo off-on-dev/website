@@ -27,6 +27,11 @@
       src: url('../fonts/inter-latin-600-normal.woff2') format('woff2');
       font-weight: 600;
     }
+    @font-face {
+      font-family: 'Inter';
+      src: url('../fonts/inter-latin-700-normal.woff2') format('woff2');
+      font-weight: 700;
+    }
 
     :root {
       --bg:         #0a0a0a;
@@ -44,13 +49,13 @@
 
     .reveal {
       font-family: 'Inter', sans-serif;
-      font-size: 36px;
+      font-size: 50px;
       color: var(--fg);
     }
 
     .reveal .slides section {
       text-align: left;
-      padding: 2.2em 2.8em;
+      padding: 1.8em 2.5em 2.8em;
       box-sizing: border-box;
       height: 100%;
     }
@@ -66,7 +71,7 @@
     }
 
     .reveal h1 { font-size: 2.2em; }
-    .reveal h2 { font-size: 1.4em; }
+    .reveal h2 { font-size: 1.45em; }
 
     .reveal p {
       color: var(--muted);
@@ -85,17 +90,17 @@
     .reveal .slide-number { color: var(--muted); font-size: 0.38em; background: none; }
 
     /* ── Slide header ── */
-    .sh { margin-bottom: 1.2em; }
+    .sh { margin-bottom: 1em; }
     .sh .label {
       display: block;
-      font-size: 0.42em;
-      font-weight: 600;
+      font-size: 0.46em;
+      font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--amber);
-      margin-bottom: 0.6em;
+      margin-bottom: 0.55em;
     }
-    .sh h2 { font-size: 1.4em; margin: 0; }
+    .sh h2 { font-size: 1.45em; margin: 0; }
 
     /* ── Grids ── */
     .g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75em; margin-top: 0.6em; }
@@ -109,17 +114,17 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 0.8em 1em;
+      padding: 0.7em 0.9em;
     }
     .card h4 {
       font-family: 'Syne', sans-serif;
-      font-size: 0.65em;
+      font-size: 0.68em;
       font-weight: 700;
       color: var(--fg);
-      margin: 0 0 0.3em;
+      margin: 0 0 0.25em;
     }
-    .card p { font-size: 0.58em; margin: 0; line-height: 1.5; }
-    .card p + p { margin-top: 0.4em; }
+    .card p { font-size: 0.63em; margin: 0; line-height: 1.5; }
+    .card p + p { margin-top: 0.35em; }
 
     /* ── Agenda ── */
     .agenda {
@@ -160,19 +165,18 @@
       display: flex;
       gap: 0.55em;
       align-items: flex-start;
-      margin-bottom: 0.52em;
+      margin-bottom: 0.5em;
     }
     .brow .dot {
       flex-shrink: 0;
-      color: var(--muted);
-      opacity: 0.5;
-      font-size: 0.58em;
-      margin-top: 0.28em;
+      color: var(--amber);
+      font-size: 0.64em;
+      margin-top: 0.24em;
       line-height: 1;
       width: 0.8em;
     }
-    .brow .bt { font-size: 0.58em; color: var(--muted); line-height: 1.45; }
-    .brow .bt strong { color: var(--fg); font-weight: 600; }
+    .brow .bt { font-size: 0.64em; color: var(--muted); line-height: 1.5; }
+    .brow .bt strong { color: var(--amber); font-weight: 700; }
 
     /* ── Quiz rows ── */
     .qrow {
@@ -370,8 +374,8 @@
     /* ── Column label ── */
     .col-label {
       display: block;
-      font-size: 0.42em;
-      font-weight: 600;
+      font-size: 0.46em;
+      font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--amber);
@@ -393,7 +397,7 @@
       gap: 0.65em;
       margin-bottom: 0.85em;
     }
-    .cobrand img { height: 36px; width: auto; }
+    .cobrand img { height: 54px; width: auto; }
     .cobrand .xsep {
       font-family: 'Syne', sans-serif;
       font-weight: 700;
@@ -410,7 +414,7 @@
     }
 
     /* Title slide gets a much larger cobrand */
-    .title-slide .cobrand img { height: 84px; }
+    .title-slide .cobrand img { height: 126px; }
     .title-slide .cobrand .xsep { font-size: 2em; }
     .title-slide .cobrand .partner { font-size: 1.5em; }
     .title-slide .cobrand { gap: 0.8em; margin-bottom: 1em; }
@@ -425,7 +429,7 @@
       height: 100%;
     }
     .final .cobrand { justify-content: center; margin-bottom: 0.6em; }
-    .final .cobrand img { height: 36px; }
+    .final .cobrand img { height: 54px; }
     .final .cobrand .partner { font-size: 0.72em; }
     .final .cobrand .xsep { font-size: 0.85em; }
     .final h2 { font-size: 1.4em; margin-bottom: 0.3em; color: var(--amber); }
@@ -460,11 +464,12 @@
       radial-gradient(ellipse 48% 52% at 14% 100%, rgba(255,192,52,.042) 0%, transparent 72%),
       radial-gradient(ellipse 42% 42% at 48% 100%, rgba(255,192,52,.029) 0%, transparent 68%),
       radial-gradient(ellipse 46% 50% at 80% 100%, rgba(255,192,52,.037) 0%, transparent 70%); }
-    #deck-logo { position: fixed; top: 20px; right: 28px; height: 44px; pointer-events: none; z-index: 200; }
+    #deck-logo { position: fixed; top: 30px; right: 42px; height: 66px; pointer-events: none; z-index: 200; }
     .fw    { position: absolute; border-radius: 50%; background: #ffc034; }
-    .fw-hi { width:2.5px; height:2.5px; box-shadow: 0 0 1.8px 0px rgba(255,192,52,.95), 0 0 4px 0px rgba(255,192,52,.28); }
-    .fw-md { width:2px;   height:2px;   box-shadow: 0 0 1.2px 0px rgba(255,192,52,.80), 0 0 3.2px 0px rgba(255,192,52,.20); }
-    .fw-lo { width:1.5px; height:1.5px; box-shadow: 0 0 0.8px 0px rgba(255,192,52,.65), 0 0 2.5px 0px rgba(255,192,52,.14); }
+    .fw-hi { width:3.75px; height:3.75px; box-shadow: 0 0 2.7px 0px rgba(255,192,52,.95), 0 0 6px 0px rgba(255,192,52,.28); }
+    .fw-md { width:3px;    height:3px;    box-shadow: 0 0 1.8px 0px rgba(255,192,52,.80), 0 0 4.8px 0px rgba(255,192,52,.20); }
+    .fw-lo { width:2.25px; height:2.25px; box-shadow: 0 0 1.2px 0px rgba(255,192,52,.65), 0 0 3.75px 0px rgba(255,192,52,.14); }
+    body.pdf-mode .speaker-hint { display: none !important; }
   </style>
 </head>
 <body>
@@ -518,7 +523,7 @@
   <span class="fw fw-lo" style="left:76%; top:93%; opacity:.09"></span>
   <span class="fw fw-lo" style="left:81%; top:95%; opacity:.11"></span>
 </div>
-<img id="deck-logo" src="../brand/offon-favicon.svg" alt="" aria-hidden="true" width="34" height="44">
+<img id="deck-logo" src="../brand/offon-favicon.svg" alt="" aria-hidden="true" width="51" height="66">
 <div class="reveal">
   <div class="slides">
 
@@ -533,7 +538,7 @@
         <h1 style="color: #ffc034;">Open Source Talks</h1>
         <p style="font-size: 0.7em; margin-top: 2.8em;">Open Source. Vendor Agnostic. Community Driven.</p>
         <p style="font-size: 0.52em; margin-top: 0.35em; opacity: 0.5;">Vienna, Austria · also in Linz</p>
-        <p style="position: absolute; bottom: 1.8em; right: 2.2em; font-size: 0.38em; opacity: 0.5; letter-spacing: 0.04em;">Press S for speaker notes</p>
+        <p class="speaker-hint" style="position: absolute; bottom: 1.8em; right: 2.2em; font-size: 0.38em; opacity: 0.5; letter-spacing: 0.04em;">Press S for speaker notes</p>
       </div>
       <aside class="notes">
         <ul>
@@ -720,7 +725,7 @@
           <p style="margin-top: 1.4em; font-size: 0.38em; color: #ffc034;">always on. always open. always learning.</p>
         </div>
         <div style="display: flex; align-items: flex-end; justify-content: flex-end;">
-          <img src="../brand/offon-nyx-peek.png" alt="" aria-hidden="true" style="height: 230px; object-fit: contain; opacity: 0.6;">
+          <img src="../brand/offon-nyx-peek.png" alt="" aria-hidden="true" style="height: 345px; object-fit: contain; opacity: 0.6;">
         </div>
       </div>
       <aside class="notes">
@@ -1256,6 +1261,9 @@
 <script src="../reveal/reveal.js"></script>
 <script src="../reveal/plugin/notes.js"></script>
 <script>
+  const isPdf = new URLSearchParams(location.search).has('pdf');
+  if (isPdf) document.body.classList.add('pdf-mode');
+
   Reveal.initialize({
     hash: true,
     slideNumber: 'c/t',
@@ -1264,8 +1272,8 @@
     controls: true,
     progress: true,
     center: false,
-    width: 1280,
-    height: 720,
+    width: 1920,
+    height: 1080,
     margin: 0.04,
     plugins: [ RevealNotes ]
   });

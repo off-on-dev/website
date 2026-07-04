@@ -60,10 +60,10 @@ Brand token reference (for writing slide content):
 
 Four tiers; do not introduce intermediate sizes:
 
-- **Heading** (`2.2em` h1, `1.4em` h2): slide titles only
+- **Heading** (`2.2em` h1, `1.45em` h2): slide titles only
 - **Body** (`0.78em`): `.reveal p` baseline
-- **Component** (`0.65em` h4, `0.58em` body): card titles, bullet text, bios, descriptions. Exception: `.ctext` inside `.contrib .citem` is `0.52em`, one step smaller so contribute-card lists read as secondary detail.
-- **Label** (`0.42em`): overlines, tags, col-labels, metadata
+- **Component** (`0.68em` h4, `0.64em` body): card titles, bullet text, bios, descriptions. Exception: `.ctext` inside `.contrib .citem` is `0.52em`, one step smaller so contribute-card lists read as secondary detail.
+- **Label** (`0.46em`): overlines, tags, col-labels, metadata
 
 Pills are `0.44em`: slightly above label tier because they are interactive.
 
@@ -73,7 +73,7 @@ Amber (`--amber`) is used for: **structure labels** (`.sh` overline, `.col-label
 
 Do not use amber on `.card h4`, `.vrow h4`, or `.person .pn`: those are informational headings and names, not labels or CTAs. Using amber on them dilutes its signal.
 
-Do not use amber for bullet arrows or decorative dots; those use `var(--muted)` at 50% opacity.
+Bullet arrow dots (`.dot`) use `var(--amber)` at full opacity. The `<strong>` inside `.bt` also renders in `var(--amber)`, making it amber rather than near-white. Do not revert these to muted or near-white.
 
 All inline URL references (e.g. `offon.dev/contribute`) must use `style="color: #ffc034;"`. Do not rely on opacity to style links; opacity dims the amber and makes it unreadable.
 
@@ -117,13 +117,13 @@ When a slide has two sub-sections (e.g. "What makes a good talk" left + "Want to
 
 ### Section labels vs. content headings
 
-`col-label` is a section label above a column's content. It is always smaller (`0.42em`) than the content items below it (`0.65em` h4). This is intentional; amber uppercase provides the hierarchy, size does not. Do not try to make `col-label` bigger than the items it labels. Trust the color and spacing.
+`col-label` is a section label above a column's content. It is always smaller (`0.46em`) than the content items below it (`0.68em` h4). This is intentional; amber uppercase provides the hierarchy, size does not. Do not try to make `col-label` bigger than the items it labels. Trust the color and spacing.
 
 The current CSS values (copied from `public/deck/index.html`):
 
-- `.sh .label { font-size: 0.42em; margin-bottom: 0.6em }`: overline size and gap before the h2
-- `.sh { margin-bottom: 1.2em }`: gap after the full header block
-- `.col-label { font-size: 0.42em; margin-bottom: 0.9em }`: gap before column content
+- `.sh .label { font-size: 0.46em; margin-bottom: 0.55em }`: overline size and gap before the h2
+- `.sh { margin-bottom: 1em }`: gap after the full header block
+- `.col-label { font-size: 0.46em; margin-bottom: 0.9em }`: gap before column content
 
 Do not override these inline unless there is a specific layout reason.
 
@@ -182,7 +182,7 @@ The `opacity: 0.55` visually recedes the card so the exclusion reads as secondar
 </div>
 ```
 
-The dot is muted, not amber. The `<strong>` inside `.bt` renders in `--fg` (near-white).
+The dot uses `var(--amber)` at full opacity. The `<strong>` inside `.bt` also renders in `var(--amber)` for emphasis.
 
 ### Value rows (for feature lists in a column)
 
@@ -308,7 +308,7 @@ Use `class="person tba"` for unfilled seats; this applies `opacity: 0.55` and a 
     <h1 style="color: #ffc034;">Presentation Title</h1>
     <p style="font-size: 0.7em; margin-top: 2.8em;">Subtitle or tagline.</p>
     <p style="font-size: 0.52em; margin-top: 0.35em; opacity: 0.7;">Event or context.</p>
-    <p style="position: absolute; bottom: 1.8em; right: 2.2em; font-size: 0.38em; opacity: 0.28; letter-spacing: 0.04em;">Press S for speaker notes</p>
+    <p class="speaker-hint" style="position: absolute; bottom: 1.8em; right: 2.2em; font-size: 0.38em; opacity: 0.28; letter-spacing: 0.04em;">Press S for speaker notes</p>
   </div>
   <aside class="notes">Speaker notes here.</aside>
 </section>
@@ -381,11 +381,11 @@ The deck lives in a subfolder (`public/<event-slug>/index.html`), so all asset p
 | Event speaker photos | `../speakers/<name>.webp` | `.speaker-card .sp-av img` |
 | QR codes | `../qr/<slug>.png` | Final slide QR grid |
 
-The Nyx mascot image is always decorative; use `alt=""` and `aria-hidden="true"`. Apply `opacity: 0.6` and a fixed `height` (e.g. `230px`) so it doesn't compete with the slide content:
+The Nyx mascot image is always decorative; use `alt=""` and `aria-hidden="true"`. Apply `opacity: 0.6` and a fixed `height` (e.g. `345px`) so it doesn't compete with the slide content:
 
 ```html
 <img src="../nyx_peek.webp" alt="" aria-hidden="true"
-     style="height: 230px; object-fit: contain; opacity: 0.6;">
+     style="height: 345px; object-fit: contain; opacity: 0.6;">
 ```
 
 ---
@@ -397,13 +397,13 @@ Two elements sit outside the `.reveal` div and appear on every slide. Copy them 
 ### Favicon logo (`#deck-logo`)
 
 ```html
-<img id="deck-logo" src="../brand/offon-favicon.svg" alt="" aria-hidden="true" width="34" height="44">
+<img id="deck-logo" src="../brand/offon-favicon.svg" alt="" aria-hidden="true" width="51" height="66">
 ```
 
 CSS (already in the template `<style>` block):
 
 ```css
-#deck-logo { position: fixed; top: 20px; right: 28px; height: 44px; pointer-events: none; z-index: 200; }
+#deck-logo { position: fixed; top: 30px; right: 42px; height: 66px; pointer-events: none; z-index: 200; }
 ```
 
 `z-index: 200` is required; Reveal.js internal overlays go up to z-index 100. Use explicit `width`/`height` attributes so the browser sizes the SVG correctly (the source uses mm units which some browsers don't auto-scale from CSS alone).
@@ -425,9 +425,9 @@ html, body { background: var(--bg); }
 /* Wide base layer (200%) ensures full-width coverage; three narrower bumps at 14%, 48%, 80% create a mountain-range height variation. Do not replace with a single centred ellipse; the base+bumps structure is what prevents dark gaps at the edges. */
 
 .fw    { position: absolute; border-radius: 50%; background: #ffc034; }
-.fw-hi { width:2.5px; height:2.5px; box-shadow: 0 0 1.8px 0px rgba(255,192,52,.95), 0 0 4px 0px rgba(255,192,52,.28); }
-.fw-md { width:2px;   height:2px;   box-shadow: 0 0 1.2px 0px rgba(255,192,52,.80), 0 0 3.2px 0px rgba(255,192,52,.20); }
-.fw-lo { width:1.5px; height:1.5px; box-shadow: 0 0 0.8px 0px rgba(255,192,52,.65), 0 0 2.5px 0px rgba(255,192,52,.14); }
+.fw-hi { width:3.75px; height:3.75px; box-shadow: 0 0 2.7px 0px rgba(255,192,52,.95), 0 0 6px 0px rgba(255,192,52,.28); }
+.fw-md { width:3px;    height:3px;    box-shadow: 0 0 1.8px 0px rgba(255,192,52,.80), 0 0 4.8px 0px rgba(255,192,52,.20); }
+.fw-lo { width:2.25px; height:2.25px; box-shadow: 0 0 1.2px 0px rgba(255,192,52,.65), 0 0 3.75px 0px rgba(255,192,52,.14); }
 ```
 
 **Why `body` holds the background:** `.reveal-viewport` is added to `<body>` by Reveal.js at runtime. Setting `background: transparent` on `.reveal-viewport` lets the dark `html, body` background show through, while `#ff-wave` (position fixed, z-index 0) appears behind opaque slide content but shows through dark/empty slide areas.
