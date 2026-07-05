@@ -329,10 +329,9 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Open source is not just code. We treat it that way, but the projects that fall apart usually do not fail because of bad engineering.</li>
-          <li>They fail because of how the people around the code are organized.</li>
-          <li>That is what today is about, designing communities that actually scale.</li>
-          <li>Next, a quick word on who I am.</li>
+          <li>Welcome, everyone. Today we are talking about the heart of open source: community.</li>
+          <li>We treat open source as a code problem, but some projects with genuinely good code still fail. Not because of bad engineering, but because the community was never designed to scale.</li>
+          <li>What I share today comes from years of contributing to and organizing in the Drupal community. It is a perspective, not a rulebook, so please share your feedback at the end.</li>
         </ul>
       </aside>
     </section>
@@ -368,17 +367,58 @@
           </div>
           <div class="brow">
             <span class="dot">✷</span>
-            <span class="bt">Building <a href="https://offon.dev">offon.dev</a>, a vendor-neutral community to sustain open source contributors and grow the maintainers of tomorrow</span>
+            <span class="bt">Building <a href="https://offon.dev">OffOn.dev</a>, a vendor-neutral community to sustain open source contributors and grow the maintainers of tomorrow</span>
           </div>
         </div>
       </div>
       <aside class="notes">
         <ul>
-          <li>I started as a Drupal developer about five and a half years ago, then spent two and a half years as a product manager.</li>
-          <li>Since January 2026 I am on the OSPO team at Dynatrace, building offon.dev.</li>
-          <li>Open source is what I love, and I really believe in open source communities. Most evenings and weekends I am organizing Drupal events, with Drupal Austria, Drupal Switzerland, and others.</li>
-          <li>What I share today comes from what I have seen work, and not work. It is a perspective, not a rulebook, so please push back.</li>
-          <li>Next, the comfortable story we tell ourselves.</li>
+          <li>My name is Sinduri. I started as a Drupal developer about five and a half years ago, then worked two and a half years as a product manager.</li>
+          <li>I was fortunate to find my first job in open source, and that is where I became passionate about communities. Most of my weekends go to organizing Drupal events with Drupal Austria, Drupal Switzerland, and others.</li>
+          <li>Since January 2026 I have been working with the OSPO team at Dynatrace, building OffOn.dev, a vendor-neutral community. I will talk more about it at the end.</li>
+        </ul>
+      </aside>
+    </section>
+
+    <!-- 2b: Why open source matters -->
+    <section>
+      <div class="sh">
+        <span class="label">why this matters</span>
+        <h2>Open Source Runs Everything</h2>
+      </div>
+      <div class="g3" style="margin-top: 0.6em; font-size: 0.9em;">
+        <div class="card">
+          <h4>Linux</h4>
+          <p>Most servers, the cloud, and every Android phone.</p>
+        </div>
+        <div class="card">
+          <h4>Git</h4>
+          <p>Version control behind nearly all software.</p>
+        </div>
+        <div class="card">
+          <h4>curl</h4>
+          <p>Moves data inside cars, TVs, phones, and servers.</p>
+        </div>
+        <div class="card">
+          <h4>OpenSSL</h4>
+          <p>Secures a huge share of web traffic.</p>
+        </div>
+        <div class="card">
+          <h4>Python</h4>
+          <p>Powers data work and most of modern AI.</p>
+        </div>
+        <div class="card">
+          <h4>Kubernetes</h4>
+          <p>Runs cloud infrastructure at scale.</p>
+        </div>
+      </div>
+      <p style="font-size: 0.58em; margin-top: 1em; color: var(--muted); opacity: 0.85;">Most of it is maintained by small teams, often unpaid volunteers.</p>
+      <aside class="notes">
+        <ul>
+          <li>Before we get into problems, let's start with what is at stake. Open source is the foundation almost everything runs on.</li>
+          <li>Linux runs most servers and the cloud, and it is inside every Android phone. Git is how nearly all software is version controlled. curl moves data inside cars, televisions, phones, and servers. OpenSSL secures a huge share of the traffic on the web. Python powers data work and most of modern AI. Kubernetes runs cloud infrastructure at scale.</li>
+          <li>You almost certainly used several of these just to get here this morning.</li>
+          <li>Here is the uncomfortable part. A lot of this critical software is maintained by very small teams, often unpaid volunteers. That is exactly why how we sustain these communities matters so much.</li>
         </ul>
       </aside>
     </section>
@@ -394,7 +434,9 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Act one, the problem. Most projects do not fail on code. They fail under weight nobody names. Let me show you how that happens.</li>
+          <li>Quick show of hands before we start. Who here contributes to or maintains an open source project? Keep that project in mind, we will come back to it.</li>
+          <li>In this first part, let's talk about what makes open source projects fail, and the invisible weight behind them.</li>
+          <li>We will look at the comfortable myth that code quality is enough, what actually ends projects, and why a single maintainer carrying everything is a design flaw, not a personal strength.</li>
         </ul>
       </aside>
     </section>
@@ -419,9 +461,10 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>There is a comfortable story we tell ourselves. Projects succeed because the code is good. Ship better code, and the rest sorts itself out.</li>
-          <li>It is tidy. It is also mostly wrong.</li>
-          <li>Next, what actually ends a project.</li>
+          <li>Let me start with a belief most of us hold quietly.</li>
+          <li>We assume a project succeeds because the code is good. Better architecture, cleaner tests, faster releases, and everything else follows.</li>
+          <li>It is a comfortable story, because it means the thing we control, the code, is the thing that matters most.</li>
+          <li>It is also mostly wrong. The best code in the world does not save a project if nobody can contribute, or if the maintainers burn out.</li>
         </ul>
       </aside>
     </section>
@@ -453,11 +496,11 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Here is what actually ends projects. Nobody knows how to contribute, so they do not.</li>
-          <li>Expectations are never written down, so everyone guesses.</li>
-          <li>A few people end up carrying all the work and all the pressure.</li>
-          <li>It holds for a while, then it gets fragile and stalls.</li>
-          <li>Next, a better way to look at this.</li>
+          <li>So what actually ends projects? It is rarely the code.</li>
+          <li>When contribution paths are unclear, people want to help but do not know how. So they just do not.</li>
+          <li>When expectations are never written down, everyone guesses. That leads to confusion and quiet conflict.</li>
+          <li>Over time, a small group absorbs all the work and all the pressure. They hold everything together.</li>
+          <li>It looks fine for a while. Then one person steps back, and the whole thing becomes fragile and stalls.</li>
         </ul>
       </aside>
     </section>
@@ -482,10 +525,10 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Here is the reframe. Open source is a socio-technical system.</li>
-          <li>The code and the community are not two things you manage separately. They are one system.</li>
-          <li>So community design matters as much as the code.</li>
-          <li>Next, what this looks like when it goes wrong.</li>
+          <li>Here is the shift I want you to take from this talk.</li>
+          <li>Think of open source as a socio-technical system. The code and the community should not be two separate things you manage independently. They should work as one system, shaping each other.</li>
+          <li>When the community is healthy, the code benefits. When the community breaks down, the code suffers, no matter how good it is.</li>
+          <li>Community design should not be treated as a soft or secondary concern. It should matter as much as the technical design.</li>
         </ul>
       </aside>
     </section>
@@ -514,11 +557,11 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>This is the maintainer trap. The work piles onto a few people.</li>
-          <li>We celebrate the hero who carries everything, and it feels great, right until it does not. That is burnout.</li>
-          <li>When one person becomes a single point of failure, that is a design flaw in the community, not a weakness in the person.</li>
-          <li>Rust is a good counter example. Instead of one or two heroes, it runs on topic focused teams. Each team owns its area and sends someone to a leadership council. Ownership is spread on purpose.</li>
-          <li>Next, the good news is this is fixable. Five levers.</li>
+          <li>This is the most common failure pattern, and it has a name: the maintainer trap.</li>
+          <li>Work keeps landing on the same few people. The community comes to depend on them for everything.</li>
+          <li>We celebrate these heroes. But admiring someone who is carrying too much is not the same as fixing the problem.</li>
+          <li>When one person becomes a single point of failure, that is a design flaw in the project, not a personal weakness.</li>
+          <li>Rust is a good counter example. Instead of one or two heroes, it runs on topic-focused teams. Each team owns its area, and a leadership council coordinates across them. Ownership is spread on purpose, so no single person holds the whole thing.</li>
         </ul>
       </aside>
     </section>
@@ -534,17 +577,18 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Act two. The work is too much for one person, so we share it. Five levers.</li>
+          <li>Part two is the response.</li>
+          <li>If the load is too much for one person, we design to share it. Here are six pillars for doing that.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- 7: Five levers -->
+    <!-- 7: Six pillars -->
     <section>
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1em;">
         <div class="sh" style="margin-bottom: 0.5em;">
           <span class="label">framework</span>
-          <h2>Five Levers That Decide Whether a Project Lasts</h2>
+          <h2>Six Pillars That Decide Whether a Project Lasts</h2>
         </div>
         <div class="gif-container" style="flex-shrink: 0; width: 9em; border-radius: 8px; overflow: hidden; border: 1px solid var(--border);" aria-hidden="true">
           <img data-gif-src="https://media.giphy.com/media/RlZO2mKipB3u8/giphy.gif" data-fallback-src="gif-fallback-2.webp" src="" alt="" style="width: 100%; display: block;">
@@ -567,25 +611,33 @@
           <h4>Local Community</h4>
           <p>Where belonging actually forms. Global projects still need local homes.</p>
         </div>
-        <div class="card" style="grid-column: 1 / -1;">
+        <div class="card">
           <h4>Communication</h4>
           <p>Whether people can explain what it solves, and why. This is how a project gets known.</p>
+        </div>
+        <div class="card">
+          <h4>Funding and Sponsorship</h4>
+          <p>Whether the work is paid for. Time is never really free.</p>
         </div>
       </div>
       <aside class="notes">
         <ul>
-          <li>Here are five levers that decide whether a project lasts.</li>
-          <li>Governance, who decides and how. Contributor experience, how easy it is to help. Recognition, whether the work gets seen. Local community, where people feel they belong. Communication, whether people can explain the why.</li>
-          <li>We will walk through each one with an example of a community that does it well.</li>
-          <li>Next, lever one, governance.</li>
+          <li>These are the six pillars I think matter most for building a healthy open source community.</li>
+          <li>Governance: who decides, and how.</li>
+          <li>Contributor experience: how easy it is to show up and help.</li>
+          <li>Recognition: whether the work is seen and valued.</li>
+          <li>Local community: where belonging actually forms.</li>
+          <li>Communication: whether anyone can explain why the project matters.</li>
+          <li>Funding: whether the work is actually paid for.</li>
+          <li>I will go through each of these in the next slides. As I do, hold one project in your head, one you use or help maintain, and notice which of these it is missing.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- 8: Lever 1 - Governance -->
+    <!-- 8: Pillar 1 - Governance -->
     <section>
       <div class="sh" style="margin-bottom: 0.5em;">
-        <span class="label">lever 1</span>
+        <span class="label">pillar 1</span>
         <h2>Governance</h2>
       </div>
       <div class="brow">
@@ -604,17 +656,22 @@
         <span class="dot">✷</span>
         <span class="bt">Give conflict a clear path</span>
       </div>
+      <div class="brow">
+        <span class="dot">✷</span>
+        <span class="bt">Models vary: BDFL, council or committee, foundation</span>
+      </div>
       <div class="card" style="margin-top: 0.5em; border-color: rgba(255,192,52,0.28);">
         <h4>Example: Apache Software Foundation</h4>
         <p>Committees elect committers on merit. Individuals represent themselves, not employers. Decisions happen in the open: if it wasn't recorded, it didn't happen.</p>
       </div>
       <aside class="notes">
         <ul>
-          <li>Governance is about deciding how you will decide, before you are in a crisis.</li>
-          <li>Put shared functions under a neutral body so they do not land on individuals. Spread maintainer roles. Give conflict a clear path.</li>
-          <li>Apache is a good model. Each project is run by a committee that elects committers on merit. People take part as individuals, not as their employer, so no single company can buy control.</li>
-          <li>Governance is boring until the day you badly need it.</li>
-          <li>Next, the code of conduct.</li>
+          <li>Governance sounds heavy, but it just means deciding how you will decide, before a crisis forces you to.</li>
+          <li>Put shared things, funding, events, and infrastructure, under a neutral body instead of one person.</li>
+          <li>Spread maintainer roles across more people. Give conflict a clear route.</li>
+          <li>There is no one right shape. Some projects run on a benevolent dictator, some on a council or a merit based committee, some under a foundation. What matters is that the model is explicit, not accidental.</li>
+          <li>Governance feels boring right up until the day you desperately need it.</li>
+          <li>Apache Software Foundation is a good model. Projects are run by committees that add committers on merit, and people act as individuals, not as their employer, so no single company can take over.</li>
         </ul>
       </aside>
     </section>
@@ -622,7 +679,7 @@
     <!-- 8b: Code of conduct -->
     <section>
       <div class="sh">
-        <span class="label">lever 1 · code of conduct</span>
+        <span class="label">pillar 1 · code of conduct</span>
         <h2>A Code of Conduct</h2>
       </div>
       <div class="brow" style="margin-top: 1.2em;">
@@ -643,19 +700,18 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>A code of conduct is part of governance. It sets explicit rules, not vague good vibes.</li>
-          <li>It should name what is not acceptable, harassment, discrimination, personal attacks, sustained disruption.</li>
-          <li>And it only works if it is enforced. A document nobody acts on is worse than none.</li>
-          <li>The Contributor Covenant is a common starting point, adopted across many projects.</li>
-          <li>Next, lever two, contributor experience.</li>
+          <li>Part of governance is a code of conduct, and it needs to be specific.</li>
+          <li>Not vague good vibes. Spell out what is not acceptable: harassment, discrimination, personal attacks, and sustained disruption.</li>
+          <li>A code of conduct only counts if it is enforced. One that nobody acts on is worse than having none, because it signals safety that does not actually exist.</li>
+          <li>The Contributor Covenant is a widely adopted starting point that many projects use.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- 9: Lever 2 - Contributor experience -->
+    <!-- 9: Pillar 2 - Contributor experience -->
     <section>
       <div class="sh" style="margin-bottom: 0.5em;">
-        <span class="label">lever 2</span>
+        <span class="label">pillar 2</span>
         <h2>Contributor Experience</h2>
       </div>
       <div style="font-size: 0.9em;">
@@ -682,10 +738,11 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>The goal is to lower the cost of a first contribution. Give newcomers a clear place to start. Make the path to trusted contributor visible.</li>
-          <li>Kubernetes does this well. A published ladder from member to reviewer to approver, good first issues, mentoring, and a graceful way to step back.</li>
-          <li>When it is confusing, people do not complain. They quietly leave, and you never find out why.</li>
-          <li>Next, let me show you my own first contribution.</li>
+          <li>Contributor experience is about lowering the cost of that first contribution.</li>
+          <li>Give people a clear place to start. Label good first issues. Make the onboarding path obvious.</li>
+          <li>Make the path from first patch to trusted contributor visible, so people can see a future in the project.</li>
+          <li>Kubernetes does this well. A published ladder from member to reviewer to approver, with mentoring cohorts and a graceful way to step back when life gets busy.</li>
+          <li>When the path is confusing, people do not complain. They quietly leave, and you never learn why.</li>
         </ul>
       </aside>
     </section>
@@ -695,7 +752,7 @@
       <div class="split" style="grid-template-columns: 1.15fr 0.85fr; gap: 1.3em; height: 100%;">
         <div style="align-self: start;">
           <div class="sh">
-            <span class="label">lever 2 · from experience</span>
+            <span class="label">pillar 2 · from experience</span>
             <h2>My First Contribution</h2>
           </div>
           <div class="brow">
@@ -718,19 +775,18 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>This is my own first contribution, back in 2021.</li>
-          <li>I started during Covid and did not know the community yet. It took me forty five minutes just to open the issue, because I was scared of being judged.</li>
-          <li>Nobody judged. The community was welcoming the whole time.</li>
-          <li>That gap, between how scary it felt and how kind it was, is what good contributor experience should close.</li>
-          <li>Next, lever three, recognition.</li>
+          <li>Let me make that personal.</li>
+          <li>My first contribution was in 2021, during Covid, when I did not know anyone in the community. It took me forty five minutes just to open the issue, because I was scared of being judged.</li>
+          <li>Nobody judged me. People were kind and helpful the whole way.</li>
+          <li>That gap, between how frightening it felt and how welcoming it actually was, is exactly what good contributor experience should close.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- 10: Lever 3 - Recognition -->
+    <!-- 10: Pillar 3 - Recognition -->
     <section>
       <div class="sh">
-        <span class="label">lever 3</span>
+        <span class="label">pillar 3</span>
         <h2>Recognition</h2>
       </div>
       <div class="brow" style="margin-top: 1.2em;">
@@ -751,10 +807,11 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Most of the work in a community is invisible. Review, triage, docs, mentoring. It does not show up like a shiny feature, so it gets undervalued.</li>
-          <li>The fix is to make it visible. Record who did the work, and let that credit reach the sponsors too.</li>
-          <li>Drupal does this with a contribution credit system that records it at scale.</li>
-          <li>Next, why that changes behavior.</li>
+          <li>Think about what gets recognized in most communities. Usually it is the big visible things: features, code, commits.</li>
+          <li>But most of the work is invisible. Review, triage, documentation, mentoring. It does not show up in a commit graph.</li>
+          <li>Invisible work gets undervalued. And when it is undervalued, people stop doing it.</li>
+          <li>The fix is to make it visible. Record who actually did the work, and let that credit reach the companies who fund it too.</li>
+          <li>Drupal does this with a public contribution credit system that tracks it at scale.</li>
         </ul>
       </aside>
     </section>
@@ -762,7 +819,7 @@
     <!-- 11: Why recognition changes behavior -->
     <section>
       <div class="sh">
-        <span class="label">lever 3</span>
+        <span class="label">pillar 3</span>
         <h2>Why Recognition Changes Behavior</h2>
       </div>
       <div class="brow" style="margin-top: 1.2em;">
@@ -782,20 +839,19 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Here is why it changes behavior. People get recognition tied to real work, not just self promotion.</li>
-          <li>Companies get visible standing for what they fund, so their interest lines up with the health of the community.</li>
-          <li>Recognition stops being a favor and becomes routine, something the system produces.</li>
-          <li>The pattern I keep seeing, when a company treats contribution as real work with time and budget behind it, the alignment lasts.</li>
-          <li>Good incentive design beats good intentions every time.</li>
-          <li>Next, lever four, local community.</li>
+          <li>Recognition is not just being nice. It quietly changes what people do.</li>
+          <li>First mechanism: individuals get credit tied to real work, not to being loud. So the useful but unglamorous work becomes worth doing.</li>
+          <li>Second mechanism: companies get visible standing for what they fund, so their business interest lines up with the health of the project.</li>
+          <li>Put those together and recognition stops being a favor you ask for. It becomes something the system produces on its own.</li>
+          <li>The pattern I keep seeing, when a company treats contribution as real work with time and budget behind it, the involvement lasts. Good incentives beat good intentions every time.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- 12: Lever 4 - Local community -->
+    <!-- 12: Pillar 4 - Local community -->
     <section>
       <div class="sh" style="margin-bottom: 0.5em;">
-        <span class="label">lever 4</span>
+        <span class="label">pillar 4</span>
         <h2>Local Community</h2>
       </div>
       <div class="brow">
@@ -820,18 +876,24 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Even a global project needs places that feel local. Pair the big global event with small local ones. The local events are where the barrier really drops.</li>
-          <li>This is the one I know best. Drupal has DrupalCon globally, but the real engine is the local camps, run by volunteers, kept small on purpose. That is where new people get pulled in, and where most new organizers, including me, learn how it works.</li>
-          <li>There is a line I love, come for the code, stay for the community. That is a design goal, not a slogan. People commit through other people, not through repositories.</li>
-          <li>Next, lever five, communication.</li>
+          <li>Even a global project needs places that feel local.</li>
+          <li>People do not form belonging at a two thousand person conference. They form it in small rooms, over shared problems, working together.</li>
+          <li>Pair the big global event with small local ones. That is where the barrier drops and people actually connect.</li>
+          <li>Drupal is what I know best. DrupalCon, organized by the Drupal Association, is the global flagship, but the real engine is the local camps, run by volunteers, kept small on purpose.</li>
+          <li>That is where new people get pulled in, and where most organizers, including me, learned how any of this works.</li>
+          <li>Drupal's own slogan captures it well: come for the code, stay for the community.</li>
+          <li>I felt this clearly at DrupalMountain Camp, in a workshop called Why Drupal, where we talked about why we each contribute.</li>
+          <li>Different backgrounds, different journeys, but the same core goal, build something meaningful and grow while doing it.</li>
+          <li>That is what local events really do. They should not be just networking, they should be shared purpose in a small room.</li>
+          <li>People stay for other people, not for a repository.</li>
         </ul>
       </aside>
     </section>
 
-    <!-- 12b: Lever 5 - Communication -->
+    <!-- 12b: Pillar 5 - Communication -->
     <section>
       <div class="sh">
-        <span class="label">lever 5</span>
+        <span class="label">pillar 5</span>
         <h2>Communication</h2>
       </div>
       <div class="brow" style="margin-top: 1.2em;">
@@ -852,11 +914,80 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>A project is not just the code. It also needs people who can communicate around it. What problem does this solve? Why does it matter?</li>
-          <li>Those questions get asked by every potential contributor, every company considering adoption. If nobody answers them well, the project stays invisible.</li>
-          <li>This matters most at the beginning, before there is a community to spread the word.</li>
-          <li>The channels are many: documentation, tutorials, blog posts, videos, conference talks, case studies. Pick the ones that fit you and do them on purpose.</li>
-          <li>Next, what to prioritize.</li>
+          <li>The fifth pillar is communication, and it is the one communities most often skip.</li>
+          <li>A project needs people who can explain what problem it solves and why anyone should care.</li>
+          <li>This matters most early, when nobody knows the project exists. Good communication is what turns a useful tool into a known one.</li>
+          <li>That work lives in docs, tutorials, blog posts, videos, conference talks, and case studies.</li>
+          <li>Great code that nobody understands just sits there. It should not be an afterthought.</li>
+        </ul>
+      </aside>
+    </section>
+
+    <!-- 12c: Pillar 6 - Funding and sponsorship -->
+    <section>
+      <div class="sh">
+        <span class="label">pillar 6</span>
+        <h2>Funding and Sponsorship</h2>
+      </div>
+      <div class="brow" style="margin-top: 1.2em;">
+        <span class="dot">✷</span>
+        <span class="bt">Time is not free. Someone pays, in money or unpaid hours</span>
+      </div>
+      <div class="brow">
+        <span class="dot">✷</span>
+        <span class="bt">Sustainable funding keeps maintainers from <strong>burning out</strong></span>
+      </div>
+      <div class="brow">
+        <span class="dot">✷</span>
+        <span class="bt">Fund the boring, critical work, not just features</span>
+      </div>
+      <div class="card" style="margin-top: 1em; border-color: rgba(255,192,52,0.28);">
+        <h4>Examples</h4>
+        <p>Open Collective, GitHub Sponsors, Patreon, Tidelift, and the Sovereign Tech Fund. Different routes to the same goal, paying for work everyone depends on.</p>
+      </div>
+      <aside class="notes">
+        <ul>
+          <li>The sixth pillar is funding, and it is the one we are shyest about.</li>
+          <li>Time is not free. Someone always pays, either in money or in unpaid evenings and weekends.</li>
+          <li>Sustainable funding is what keeps maintainers from burning out. Without it, we are asking people to quietly subsidize infrastructure that everyone depends on.</li>
+          <li>The key is to fund the boring, critical work: maintenance, security, and documentation. Not just the shiny new features.</li>
+          <li>There are real routes now: Open Collective, GitHub Sponsors, and Patreon for direct support, Tidelift for paying maintainers through subscriptions, and the Sovereign Tech Fund for public investment into critical infrastructure.</li>
+        </ul>
+      </aside>
+    </section>
+
+    <!-- 12d: Signals of a healthy community -->
+    <section>
+      <div class="sh">
+        <span class="label">how to tell</span>
+        <h2>Signals of a Healthy Community</h2>
+      </div>
+      <div class="brow" style="margin-top: 1.2em;">
+        <span class="dot">✷</span>
+        <span class="bt"><strong>Bus factor:</strong> how many can leave before it stalls</span>
+      </div>
+      <div class="brow">
+        <span class="dot">✷</span>
+        <span class="bt"><strong>Time to first response</strong> on issues and pull requests</span>
+      </div>
+      <div class="brow">
+        <span class="dot">✷</span>
+        <span class="bt"><strong>Retention:</strong> do first-time contributors come back</span>
+      </div>
+      <div class="brow">
+        <span class="dot">✷</span>
+        <span class="bt">Is the <strong>maintainer count</strong> growing, flat, or shrinking</span>
+      </div>
+      <p style="font-size: 0.58em; margin-top: 1em; color: var(--muted); opacity: 0.85;">Measurable, and no fancy tooling needed. Watch the trend, not the snapshot.</p>
+      <aside class="notes">
+        <ul>
+          <li>Before we move on, a practical question. How do you actually tell if a community is healthy?</li>
+          <li>Four signals we should watch out for.</li>
+          <li>First, bus factor: how many people could walk away before the project stalls. If the answer is one, that is the maintainer trap in numbers.</li>
+          <li>Second, time to first response on issues and pull requests. Slow first responses are where newcomers quietly give up.</li>
+          <li>Third, retention. Do first-time contributors ever come back, or is it always brand new faces who never return.</li>
+          <li>Fourth, is the number of maintainers growing, holding, or shrinking. A shrinking maintainer count is an early warning, long before anything visibly breaks.</li>
+          <li>None of these need fancy tooling. Watch the trend, not a single snapshot.</li>
         </ul>
       </aside>
     </section>
@@ -872,7 +1003,8 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Act three. What to prioritize, what AI changes, and what you can actually do.</li>
+          <li>Part three is the practical part.</li>
+          <li>What to focus on first, what AI changes, and what you can actually do from wherever you sit.</li>
         </ul>
       </aside>
     </section>
@@ -901,11 +1033,10 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Not everything deserves attention at once.</li>
-          <li>Do these early, clear paths and onboarding, written expectations, and spreading authority before the load gets heavy. Cheap now, expensive later.</li>
-          <li>These can wait, heavy governance, complex tooling, and over structuring a community that is still small.</li>
-          <li>Heavy process on a tiny project can strangle it before it grows.</li>
-          <li>Next, a quick nuance about best practices.</li>
+          <li>Not everything deserves your attention at once.</li>
+          <li>Start with these: clear contribution paths, written expectations, and sharing ownership early, before the load piles onto one person. These are cheap now and expensive to fix later.</li>
+          <li>These can wait: heavy formal governance, complex tooling, and lots of structure on a project that is still small.</li>
+          <li>Over-structuring early is a real risk. Heavy process can strangle a small project before it ever grows.</li>
         </ul>
       </aside>
     </section>
@@ -933,11 +1064,12 @@
       <p style="font-size: 0.58em; margin-top: 1.6em; opacity: 0.75;">Context decides whether a practice helps. The practices aren't the problem; the pairing is.</p>
       <aside class="notes">
         <ul>
+          <li>A quick warning about best practices.</li>
           <li>The same advice can help or hurt depending on what you pair it with.</li>
-          <li>Be welcoming to everyone works with triage. Move fast works with shared decision rights. Document everything works with clear ownership.</li>
-          <li>The practices are not the problem. Pair each one with the thing that makes it work at scale.</li>
-          <li>If I am running long, this is the slide to skip.</li>
-          <li>Next, the AI question.</li>
+          <li>Be welcoming to everyone works, but only if you also have triage, so maintainers can keep up.</li>
+          <li>Move fast works, but only if you also have shared decision rights, so people stay aligned.</li>
+          <li>Document everything works, but only if you also have clear ownership, so the docs stay current.</li>
+          <li>The practice is not the problem. The missing partner is.</li>
         </ul>
       </aside>
     </section>
@@ -967,12 +1099,50 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>I have to talk about AI. On the good side, it lowers the barrier to a first contribution, speeds up docs, translation, and triage, and helps people who do not write English as a first language.</li>
-          <li>There is a deeper promise. Dries Buytaert put it well, AI can shorten the time it takes to understand a codebase enough to act, so it could ease the privilege of free time that open source has always leaned on.</li>
-          <li>But access is not equal. The best tools cost money and skill. So we have to share two things, the cost, with lower cost and open models, and the skill, by building AI know how into the contributor experience.</li>
-          <li>The strain is real. It is cheap to generate a change, but a maintainer still has to understand it. The test is simple, does it help more people go from issue to tested patch, and make it easier to trust and merge.</li>
-          <li>AI does not replace community design. It raises the stakes on the same levers.</li>
-          <li>Next, a mental model to take home.</li>
+          <li>I cannot give this talk without talking about AI.</li>
+          <li>The upside is real. It lowers the barrier to a first contribution, speeds up docs, translation, and issue triage, and helps people who do not work in English as a first language.</li>
+          <li>As Dries, founder of Drupal, puts it, AI can shorten the time needed to understand a codebase, which could ease the reliance on spare free time that open source has always depended on.</li>
+          <li>The strain is just as real. It is cheap to generate a change, but a maintainer still has to understand it. The cost shifts from author to reviewer.</li>
+          <li>And access is unequal. AI can become a new privilege, widening the gap between well-funded contributors and everyone else.</li>
+          <li>The point: AI does not replace community design. It raises the stakes on the same six pillars.</li>
+        </ul>
+      </aside>
+    </section>
+
+    <!-- 15b: AI slop -->
+    <section>
+      <div class="sh">
+        <span class="label">the ai question · in practice</span>
+        <h2>When AI Becomes Slop</h2>
+      </div>
+      <div class="brow" style="margin-top: 1.2em;">
+        <span class="dot">✷</span>
+        <span class="bt">Low-effort AI output lands as <strong>real work</strong> for maintainers</span>
+      </div>
+      <div class="brow">
+        <span class="dot">✷</span>
+        <span class="bt">Bogus AI security reports flood small volunteer teams</span>
+      </div>
+      <div class="brow">
+        <span class="dot">✷</span>
+        <span class="bt"><strong>Seconds to generate, hours to debunk</strong></span>
+      </div>
+      <div class="brow">
+        <span class="dot">✷</span>
+        <span class="bt">The cost lands on the reviewer, not the author</span>
+      </div>
+      <div class="card" style="margin-top: 1em; border-color: rgba(255,192,52,0.28);">
+        <h4>Example: curl</h4>
+        <p>curl was flooded with AI-generated security reports. By 2025 about one in five submissions was slop, and the genuine rate fell below five percent. The team shut down its paid bug bounty to stop the noise. The Python Software Foundation and Open Collective hit the same wall.</p>
+      </div>
+      <aside class="notes">
+        <ul>
+          <li>Let me make the hazard concrete, because it is happening right now. The word people use is AI slop.</li>
+          <li>Someone asks a model to find a bug, pastes the confident output into a report, marks it critical, and never checks whether it is real.</li>
+          <li>curl is the clearest case. Daniel Stenberg, who has maintained it for decades, called it a denial of service on the project. By 2025 about one in five submissions was slop, and fewer than one in twenty was a genuine vulnerability.</li>
+          <li>Each fake report can take an hour to debunk, and these are volunteers with a few hours a week. They eventually shut down their paid bug bounty just to stop the flood.</li>
+          <li>It is not only curl. The Python Software Foundation and Open Collective have said the same thing, and they tie it directly to maintainer burnout.</li>
+          <li>The problem is the asymmetry. Seconds to generate, hours to debunk, aimed at unpaid people who keep critical software running. To be fair, the same tools in skilled hands recently found dozens of real bugs in curl. The tool is not the problem. Unverified slop is.</li>
         </ul>
       </aside>
     </section>
@@ -991,6 +1161,7 @@
           <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Recognize the work</span></div>
           <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Build local belonging</span></div>
           <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Communicate the why</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Fund the work</span></div>
         </div>
         <div class="card" style="display: flex; flex-direction: column; gap: 0.3em; opacity: 0.55;">
           <span class="col-label" style="margin-bottom: 0.1em;">decaying projects</span>
@@ -999,16 +1170,16 @@
           <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Let invisible work go unseen</span></div>
           <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Stay purely global</span></div>
           <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Stay hard to understand</span></div>
+          <div class="brow" style="margin-bottom: 0;"><span class="dot">✷</span><span class="bt">Rely on unpaid time</span></div>
         </div>
       </div>
       <p style="font-size: 0.52em; color: var(--muted); margin-top: 1.2em; opacity: 0.75;">The drift is slow and quiet. That's exactly why it's easy to miss.</p>
       <aside class="notes">
         <ul>
-          <li>If you take one thing home, take this. It maps onto the five levers.</li>
-          <li>Thriving projects share decisions, make it easy to help, recognize the work, and build local belonging.</li>
-          <li>Fading projects do the opposite. Decisions pile onto a few people, contributors are left guessing, invisible work goes unseen, and it never feels local.</li>
-          <li>The hard part is the drift is slow and quiet. There is no alarm, so it is easy to miss until it is far along.</li>
-          <li>Next, what you can actually do.</li>
+          <li>If you remember one thing from this talk, remember this contrast.</li>
+          <li>Thriving projects share decisions, make it easy to help, recognize the work, build local belonging, communicate the why, and fund the work.</li>
+          <li>Decaying projects do the opposite on every one. Decisions concentrate, contributors are left guessing, invisible work goes unseen, everything stays global, nobody explains the point, and the work relies on unpaid time.</li>
+          <li>The dangerous part is that the decay is slow and quiet. There is no alarm. You often notice only when it is far along.</li>
         </ul>
       </aside>
     </section>
@@ -1019,7 +1190,7 @@
         <span class="label">your turn</span>
         <h2>What You Can Realistically Influence</h2>
       </div>
-      <p style="font-size: 0.62em; margin-top: 1.2em; margin-bottom: 0.8em; opacity: 0.8;">You don't need to become a full-time maintainer.</p>
+      <p style="font-size: 0.62em; margin-top: 1.2em; margin-bottom: 0.8em; opacity: 0.8;">You don't need to be a maintainer, or even a regular contributor. If you just use open source, these are for you.</p>
       <div class="brow">
         <span class="dot">✷</span>
         <span class="bt">Document one unclear process</span>
@@ -1036,17 +1207,28 @@
         <span class="dot">✷</span>
         <span class="bt">Help one local event</span>
       </div>
+      <div class="brow">
+        <span class="dot">✷</span>
+        <span class="bt">Fund a project you rely on</span>
+      </div>
+      <div class="brow">
+        <span class="dot">✷</span>
+        <span class="bt">Share a project you use on social media</span>
+      </div>
       <p style="font-size: 0.58em; margin-top: 0.8em; color: var(--muted); opacity: 0.85;">These are small structural acts. <strong>They compound.</strong></p>
       <div class="gif-overlay" aria-hidden="true">
         <img data-gif-src="https://media.giphy.com/media/8Xu2IkvLsjyLe/giphy.gif" data-fallback-src="gif-fallback-3.webp" src="" alt="">
       </div>
       <aside class="notes">
         <ul>
-          <li>You do not need to become a full time maintainer.</li>
-          <li>Document one unclear process. Review someones first contribution. Credit invisible work out loud where people can see it. Help one local event happen.</li>
-          <li>These are small acts, and they add up.</li>
-          <li>That is basically my story. I said yes to one event in 2023, then a few more committees, and it led to the Women in Drupal Award. No master plan, just one small yes at a time.</li>
-          <li>Next, closing thoughts.</li>
+          <li>This one is for everyone in the room, not just maintainers. You do not need to be a regular contributor to do any of these. If you only use open source, you still count.</li>
+          <li>Document one thing that confused you when you joined.</li>
+          <li>Review someone's first contribution.</li>
+          <li>Credit invisible work out loud, where people can see it.</li>
+          <li>Help one local event happen.</li>
+          <li>Fund a project you rely on, even a small amount.</li>
+          <li>Share a project you use, so more people find it.</li>
+          <li>These are small structural acts, and they compound.</li>
         </ul>
       </aside>
     </section>
@@ -1096,10 +1278,8 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>These are the sources behind the talk.</li>
-          <li>David Hirsch and Dries Buytaert shaped the framing and the AI section.</li>
-          <li>The community examples, Rust, Apache, Kubernetes, and Drupal, come from their own governance and contribution docs.</li>
-          <li>Next, the closing thought.</li>
+          <li>These are the sources behind the talk if you want to go deeper.</li>
+          <li>David Hirsch and Dries Buytaert shaped the framing and the AI section. The examples come from the governance and contribution docs of each project.</li>
         </ul>
       </aside>
     </section>
@@ -1135,7 +1315,7 @@
           </div>
           <div class="brow" style="opacity: 0.72;">
             <span class="dot">✷</span>
-            <span class="bt"><strong>Start with one lever</strong></span>
+            <span class="bt"><strong>Start with one pillar</strong></span>
           </div>
         </div>
       </div>
@@ -1144,11 +1324,11 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>To land where we started. Open source is not just code. The system around the code is what actually scales.</li>
-          <li>Design it on purpose. That is the whole talk in four words.</li>
-          <li>The reality check: no quick fix. You control your corner, not the whole. Changing defaults is slow, and that is normal.</li>
-          <li>Pick one lever. The one that fits where you are right now. Start there.</li>
-          <li>Next, questions.</li>
+          <li>To bring it home: open source is not just code. The system around the code is what scales, or what quietly fades.</li>
+          <li>Either way, you are designing it. The only question is whether you do it on purpose.</li>
+          <li>Be honest with yourself too. There is no quick fix. You will not get it all right, and you usually control your corner, not the whole.</li>
+          <li>Changing a community default is slow, and that is normal.</li>
+          <li>Do not try to move all six pillars at once. Pick the one that hurts most right now, and start there.</li>
         </ul>
       </aside>
     </section>
@@ -1177,16 +1357,17 @@
         <div style="display: flex; flex-direction: column; align-items: center; gap: 0.8em; padding-bottom: 2em;">
           <img src="challenges-grid.webp" alt="OffOn challenges grid" style="width: 100%; border-radius: 8px; display: block; border: 1px solid var(--border);">
           <div style="display: flex; flex-direction: column; align-items: center; gap: 0.3em; margin-top: 0.4em;">
-            <img src="../qr/offon-dev.png" alt="QR code for offon.dev" style="width: 6em; border-radius: 6px; display: block;">
-            <p style="font-size: 0.46em; opacity: 0.6; text-align: center; margin: 0;"><a href="https://offon.dev">offon.dev</a></p>
+            <img src="../qr/offon-dev.png" alt="QR code for OffOn.dev" style="width: 6em; border-radius: 6px; display: block;">
+            <p style="font-size: 0.46em; opacity: 0.6; text-align: center; margin: 0;"><a href="https://offon.dev">OffOn.dev</a></p>
           </div>
         </div>
       </div>
       <aside class="notes">
         <ul>
-          <li>If anything from today resonated, offon.dev is a good next step.</li>
-          <li>It is a vendor-neutral community for open source contributors, built around the idea that people who sustain open source deserve a place to grow and find each other.</li>
-          <li>The challenges are hands-on and scenario-driven, built around real open source tools, and everything runs in GitHub Codespaces so there is nothing to install.</li>
+          <li>If anything from today resonated, please check out OffOn.dev.</li>
+          <li>We are building a vendor-neutral community for open source contributors, a place to grow and find each other.</li>
+          <li>One of the core offerings is hands-on challenges built around real tools and real scenarios. Things you can fork, learn through doing, and build on.</li>
+          <li>Everything runs in GitHub Codespaces, so there is nothing to install. You can start today.</li>
         </ul>
       </aside>
     </section>
@@ -1209,7 +1390,9 @@
       </div>
       <aside class="notes">
         <ul>
-          <li>Open the floor. Questions, pushback, your own examples, all welcome.</li>
+          <li>Thank you very much.</li>
+          <li>Please share your feedback using the link on the right, and you can download the slides from the link on the left.</li>
+          <li>Does anyone have any questions, or want to share your own story?</li>
         </ul>
       </aside>
     </section>
