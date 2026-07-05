@@ -75,8 +75,8 @@
       margin: 0;
     }
 
-    .reveal a { color: var(--amber); text-decoration: none; }
-    .reveal a:hover { text-decoration: underline; }
+    .reveal a { color: var(--amber); text-decoration: underline; text-underline-offset: 0.15em; }
+    .reveal a:hover { opacity: 0.8; }
     .reveal a:focus-visible,
     .pill:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; border-radius: 3px; }
 
@@ -241,6 +241,27 @@
     .gif-overlay.top { bottom: auto; top: 3.8em; }
     .gif-overlay img { width: 100%; display: block; }
 
+    /* placeholder shown when Giphy is unreachable */
+    .gif-overlay.gif-error,
+    .gif-container.gif-error {
+      min-height: 6em;
+      background: var(--card);
+      border-style: dashed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gif-overlay.gif-error img { display: none; }
+    .gif-overlay.gif-error::after {
+      content: "gif";
+      font-size: 0.28em;
+      color: var(--muted);
+      opacity: 0.35;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
     /* ── Screenshot frame ── */
     .shot { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
     .shot img { width: 100%; display: block; }
@@ -339,15 +360,15 @@
           </div>
           <div class="brow">
             <span class="dot">✷</span>
-            <span class="bt">Now in the OSPO team at Dynatrace</span>
-          </div>
-          <div class="brow">
-            <span class="dot">✷</span>
             <span class="bt">Volunteer organizer across Drupal Austria, Drupal Switzerland, and beyond</span>
           </div>
           <div class="brow">
             <span class="dot">✷</span>
-            <span class="bt">Building <span style="color: #ffc034;">offon.dev</span>, a vendor-neutral community to sustain open source contributors and grow the maintainers of tomorrow</span>
+            <span class="bt">Open Source Program Office team at Dynatrace</span>
+          </div>
+          <div class="brow">
+            <span class="dot">✷</span>
+            <span class="bt">Building <a href="https://offon.dev">offon.dev</a>, a vendor-neutral community to sustain open source contributors and grow the maintainers of tomorrow</span>
           </div>
         </div>
       </div>
@@ -427,8 +448,8 @@
         <span class="dot">✷</span>
         <span class="bt"><strong>Fragile, then it stalls</strong></span>
       </div>
-      <div class="gif-overlay" aria-hidden="true">
-        <img data-gif-src="https://media.giphy.com/media/smW5FBep69d3q/giphy.gif" src="" alt="">
+      <div class="gif-overlay" style="width: 9em;" aria-hidden="true">
+        <img data-gif-src="https://media.giphy.com/media/smW5FBep69d3q/giphy.gif" data-fallback-src="gif-fallback-1.jpeg" src="" alt="">
       </div>
       <aside class="notes">
         <ul>
@@ -526,7 +547,7 @@
           <h2>Five Levers That Decide Whether a Project Lasts</h2>
         </div>
         <div class="gif-container" style="flex-shrink: 0; width: 9em; border-radius: 8px; overflow: hidden; border: 1px solid var(--border);" aria-hidden="true">
-          <img data-gif-src="https://media.giphy.com/media/RlZO2mKipB3u8/giphy.gif" src="" alt="" style="width: 100%; display: block;">
+          <img data-gif-src="https://media.giphy.com/media/RlZO2mKipB3u8/giphy.gif" data-fallback-src="gif-fallback-2.webp" src="" alt="" style="width: 100%; display: block;">
         </div>
       </div>
       <div class="g2" style="margin-top: 0.4em; font-size: 0.88em;">
@@ -1017,7 +1038,7 @@
       </div>
       <p style="font-size: 0.58em; margin-top: 0.8em; color: var(--muted); opacity: 0.85;">These are small structural acts. <strong>They compound.</strong></p>
       <div class="gif-overlay" aria-hidden="true">
-        <img data-gif-src="https://media.giphy.com/media/8Xu2IkvLsjyLe/giphy.gif" src="" alt="">
+        <img data-gif-src="https://media.giphy.com/media/8Xu2IkvLsjyLe/giphy.gif" data-fallback-src="gif-fallback-3.webp" src="" alt="">
       </div>
       <aside class="notes">
         <ul>
@@ -1047,7 +1068,7 @@
           <span class="bt">Dries Buytaert, <a href="https://dri.es/the-privilege-of-ai-in-open-source">The Privilege of AI in Open Source</a></span>
         </div>
       </div>
-      <div style="margin-top: 1.8em; font-size: 0.88em;">
+      <div style="margin-top: 1.8em; font-size: 0.75em;">
         <span class="col-label">community examples</span>
         <div class="brow">
           <span class="dot">✷</span>
@@ -1064,6 +1085,13 @@
         <div class="brow">
           <span class="dot">✷</span>
           <span class="bt">Drupal, <a href="https://www.drupal.org/docs/develop/issues/fields-and-other-parts-of-an-issue/getting-credit-for-work-on-issues">Contribution credit</a></span>
+        </div>
+      </div>
+      <div style="margin-top: 1.8em; font-size: 0.75em;">
+        <span class="col-label">media credits</span>
+        <div class="brow">
+          <span class="dot">✷</span>
+          <span class="bt"><em>The Lord of the Rings</em> trilogy (2001–2003), New Line Cinema. GIFs via GIPHY: <a href="https://giphy.com/gifs/smW5FBep69d3q">smW5FBep69d3q</a>, <a href="https://giphy.com/gifs/RlZO2mKipB3u8">RlZO2mKipB3u8</a>, <a href="https://giphy.com/gifs/8Xu2IkvLsjyLe">8Xu2IkvLsjyLe</a>, <a href="https://giphy.com/gifs/g67pETponv03e">g67pETponv03e</a>.</span>
         </div>
       </div>
       <aside class="notes">
@@ -1112,7 +1140,7 @@
         </div>
       </div>
       <div class="gif-overlay" aria-hidden="true">
-        <img data-gif-src="https://media.giphy.com/media/g67pETponv03e/giphy.gif" src="" alt="">
+        <img data-gif-src="https://media.giphy.com/media/g67pETponv03e/giphy.gif" data-fallback-src="gif-fallback-4.jpeg" src="" alt="">
       </div>
       <aside class="notes">
         <ul>
@@ -1125,14 +1153,60 @@
       </aside>
     </section>
 
-    <!-- 20: Q&A -->
+    <!-- 20: offon.dev -->
+    <section>
+      <div class="split" style="grid-template-columns: 1.1fr 0.9fr; gap: 1.4em; align-items: start; height: 100%;">
+        <div style="align-self: start;">
+          <div class="sh">
+            <span class="label">community</span>
+            <h2>Join OffOn.dev</h2>
+          </div>
+          <div class="brow">
+            <span class="dot">✷</span>
+            <span class="bt">A welcoming space for everyone who loves open source: learners, contributors, maintainers, writers, designers, translators, and organizers</span>
+          </div>
+          <div class="brow">
+            <span class="dot">✷</span>
+            <span class="bt">Built to sustain the people behind open source and grow the maintainers of tomorrow</span>
+          </div>
+          <div class="brow">
+            <span class="dot">✷</span>
+            <span class="bt"><strong>Play Challenges:</strong> hands-on, scenario-driven challenges built around real open source tools. Runs entirely in GitHub Codespaces.</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.8em; padding-bottom: 2em;">
+          <img src="challenges-grid.webp" alt="OffOn challenges grid" style="width: 100%; border-radius: 8px; display: block; border: 1px solid var(--border);">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0.3em; margin-top: 0.4em;">
+            <img src="../qr/offon-dev.png" alt="QR code for offon.dev" style="width: 6em; border-radius: 6px; display: block;">
+            <p style="font-size: 0.46em; opacity: 0.6; text-align: center; margin: 0;"><a href="https://offon.dev">offon.dev</a></p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">
+        <ul>
+          <li>If anything from today resonated, offon.dev is a good next step.</li>
+          <li>It is a vendor-neutral community for open source contributors, built around the idea that people who sustain open source deserve a place to grow and find each other.</li>
+          <li>The challenges are hands-on and scenario-driven, built around real open source tools, and everything runs in GitHub Codespaces so there is nothing to install.</li>
+        </ul>
+      </aside>
+    </section>
+
+    <!-- 21: Q&A -->
     <section>
       <div class="final">
         <p style="font-size: 1.8em; font-family: 'Lexend', sans-serif; font-weight: 700; color: var(--fg); margin-bottom: 0.5em;">Thank you</p>
         <h2 style="font-size: 2.2em;">Q&amp;A</h2>
-        <div style="margin-top: 1.2em; display: flex; flex-direction: column; align-items: center; gap: 0.4em;">
-          <img src="open-source-is-not-just-code-designing-communitie_guntupalli_1142282_feedback-code.png" alt="Feedback QR code" style="width: 8em; height: 8em; border-radius: 8px;">
-          <span style="font-size: 0.38em; color: var(--amber); letter-spacing: 0.04em;">Leave feedback</span>
+        <div style="margin-top: 1.2em; display: flex; gap: 2.4em; justify-content: center; align-items: flex-start;">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0.4em;">
+            <img src="open-source-is-not-just-code-designing-communitie_guntupalli_1142282_feedback-code.png" alt="Feedback QR code" style="width: 8em; height: 8em; border-radius: 8px;">
+            <span style="font-size: 0.38em; color: var(--amber); letter-spacing: 0.04em;">Leave feedback</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0.4em;">
+            <div style="width: 8em; height: 8em; border-radius: 8px; background: var(--surface); border: 1px dashed var(--border); display: flex; align-items: center; justify-content: center;">
+              <span style="font-size: 0.32em; color: var(--muted); text-align: center;">QR placeholder</span>
+            </div>
+            <span style="font-size: 0.38em; color: var(--amber); letter-spacing: 0.04em;">Find the slides</span>
+          </div>
         </div>
       </div>
       <aside class="notes">
@@ -1169,7 +1243,21 @@
     if (isPdf) return;
     const current = event ? event.currentSlide : Reveal.getCurrentSlide();
     document.querySelectorAll('img[data-gif-src]').forEach(function(img) {
-      img.src = current && current.contains(img) ? img.dataset.gifSrc : '';
+      if (current && current.contains(img)) {
+        img.onerror = function() {
+          if (img.dataset.fallbackSrc) {
+            img.onerror = null;
+            img.src = img.dataset.fallbackSrc;
+          } else {
+            img.parentElement.classList.add('gif-error');
+          }
+        };
+        img.src = img.dataset.gifSrc;
+      } else {
+        img.src = '';
+        img.onerror = null;
+        img.parentElement.classList.remove('gif-error');
+      }
     });
   }
   Reveal.on('slidechanged', syncGifs);
