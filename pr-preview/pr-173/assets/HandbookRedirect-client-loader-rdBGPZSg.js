@@ -1,0 +1,1 @@
+import{g as e}from"./vendor-router-JOD4PaXN.js";function t(){return e(`/handbook`)}export{t as clientLoader};
