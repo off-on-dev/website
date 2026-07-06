@@ -60,6 +60,14 @@ const pages: PageSpec[] = [
   },
   // GENERATED:adventures
   {
+    file: "adventures/dead-reckoning/index.html",
+    check: { type: "contains", value: "Dead Reckoning" },
+  },
+  {
+    file: "adventures/dead-reckoning/levels/beginner/index.html",
+    check: { type: "contains", value: "Laying the Keel" },
+  },
+  {
     file: "adventures/lex-imperfecta/index.html",
     check: { type: "contains", value: "Lex Imperfecta" },
   },

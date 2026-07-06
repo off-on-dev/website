@@ -1,3 +1,4 @@
+import { DEAD_RECKONING } from "./dead-reckoning.generated";
 import { LEX_IMPERFECTA } from "./lex-imperfecta.generated";
 import { BLIND_BY_DESIGN } from "./blind-by-design.generated";
 import { THE_AI_OBSERVATORY } from "./the-ai-observatory.generated";
@@ -8,6 +9,7 @@ import type { Adventure, AdventureContributor, RelatedLevel } from "./types";
 export type { Adventure, AdventureLevel, AdventureContributor, RelatedLevel, ToolboxItem, WalkthroughStep, VerificationInfo, TopPlayer, UpcomingLevel, AdventureLevelSummary, AdventureCardSummary, RelatedLevelSummary } from "./types";
 
 export const ADVENTURES: Adventure[] = [
+  DEAD_RECKONING,
   LEX_IMPERFECTA,
   BLIND_BY_DESIGN,
   THE_AI_OBSERVATORY,
