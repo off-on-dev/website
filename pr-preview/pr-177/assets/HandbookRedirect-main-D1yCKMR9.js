@@ -1,0 +1,1 @@
+import{d as e}from"./vendor-router-CU8wMR5D.js";var t=e(function(){return null});export{t as default};
