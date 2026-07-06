@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-24T16:13:19.532Z",
+  "updatedAt": "2026-07-06T10:05:36.298Z",
   "rows": [
     {
       "rank": 1,
@@ -17,13 +17,13 @@
       "rank": 2,
       "username": "iw4p",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/90/345.png",
-      "points": 120,
-      "challengesSolved": 2,
+      "points": 180,
+      "challengesSolved": 3,
       "beginnerPoints": 60,
       "intermediatePoints": 60,
-      "expertPoints": 0,
+      "expertPoints": 60,
       "singlePoints": 0,
-      "breakdown": "🟡 Fix a broken Kyverno policy estate | June 2026 Adventure: Intermediate [intermediate] late = 60 pts | 🟢 Restore proper admission control using Kyverno | June 2026 Adventure: Beginner [beginner] late = 60 pts"
+      "breakdown": "🟡 Fix a broken Kyverno policy estate | June 2026 Adventure: Intermediate [intermediate] late = 60 pts | 🟢 Restore proper admission control using Kyverno | June 2026 Adventure: Beginner [beginner] late = 60 pts | 🔴 Catch the intruder the Guard couldn't see | June 2026 Adventure: Expert [expert] late = 60 pts"
     },
     {
       "rank": 3,

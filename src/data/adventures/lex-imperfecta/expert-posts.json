@@ -6,6 +6,7 @@
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
       "cooked": "I think I’ll miss the Republic’s chaos. anyway the Republic is safe now.",
       "created_at": "2026-07-03T23:52:25.849Z",
+      "challengeSolved": true,
       "topicUrl": "https://community.offon.dev/t/catch-the-intruder-the-guard-couldnt-see-june-2026-adventure-expert/1591"
     },
     {
@@ -36,6 +37,11 @@
       "username": "KatharinaSick",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
       "solvedAt": "2026-06-17T04:15:58.759Z"
+    },
+    {
+      "username": "iw4p",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
+      "solvedAt": "2026-07-03T23:52:25.849Z"
     }
   ]
 }
