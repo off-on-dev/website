@@ -1,0 +1,1 @@
+import{d as e}from"./vendor-router-X7msAdgI.js";var t=e(function(){return null});export{t as default};
