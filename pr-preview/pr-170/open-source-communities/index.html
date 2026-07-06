@@ -568,7 +568,7 @@
           <li>Work keeps landing on the same few people. The community comes to depend on them for everything.</li>
           <li>We celebrate these heroes. But admiring someone who is carrying too much is not the same as fixing the problem.</li>
           <li>When one person becomes a single point of failure, that is a design flaw in the project, not a personal weakness.</li>
-          <li>Rust is a good counter example. Instead of 1 or 2 heroes, it runs on topic-focused teams. Each team owns its area, and a leadership council coordinates across them. Ownership is spread on purpose, so no single person holds the whole thing.</li>
+          <li>Rust is a good example of how it is done. Instead of 1 or 2 heroes, it runs on topic-focused teams. Each team owns its area, and a leadership council coordinates across them. Ownership is spread on purpose, so no single person holds the whole thing.</li>
         </ul>
       </aside>
     </section>
@@ -679,7 +679,7 @@
           <li>Spread maintainer roles across more people. Give conflict a clear route.</li>
           <li>There is no one right shape. Some projects run on a benevolent dictator, some on a council or a merit based committee, some under a foundation. What matters is that the model is explicit, not accidental.</li>
           <li>Governance feels boring right up until the day you desperately need it.</li>
-          <li>Apache Software Foundation is a good model. Projects are run by committees that add committers on merit, and people act as individuals, not as their employer, so no single company can take over.</li>
+          <li>Apache is a good model. Each project is run by its own committee, and you earn a seat on it through your own contributions, not your job title. People take part as individuals, not on behalf of their employer. That is the key. Influence is tied to the person, not the company, so no single company can quietly take control.</li>
         </ul>
       </aside>
     </section>
@@ -784,7 +784,8 @@
       <aside class="notes">
         <ul style="font-size: 0.92em">
           <li>Let me make that personal.</li>
-          <li>My first contribution was in 2021. I started during Covid, so I had not really interacted with the Drupal community beyond the people I worked with. Just writing the issue took me 45 minutes, not the code, just writing the issue, because I was scared of being judged.</li>
+          <li>My first contribution was in 2021. I started during Covid, so I had not really interacted with the Drupal community beyond the people I worked with.</li>
+          <li>Just writing the issue took me 45 minutes, not the code, just writing the issue, because I was scared of being judged.</li>
           <li>Nobody judged me. People were kind and helpful the whole way.</li>
           <li>That gap, between how frightening it felt and how welcoming it actually was, is exactly what good contributor experience should close.</li>
         </ul>
@@ -1070,7 +1071,7 @@
         </div>
         <div class="card">
           <h4>"Move fast"</h4>
-          <p>Works when paired with <strong>shared decision rights</strong>, so people stay aligned.</p>
+          <p>Works when paired with <strong>transparency</strong>, so contributors can follow the changes and stay aligned.</p>
         </div>
         <div class="card">
           <h4>"Document everything"</h4>
@@ -1080,10 +1081,9 @@
       <p style="font-size: 0.58em; margin-top: 1.6em; opacity: 0.75;">Context decides whether a practice helps. The practices aren't the problem; the pairing is.</p>
       <aside class="notes">
         <ul style="font-size: 0.92em">
-          <li>A quick warning about best practices.</li>
-          <li>The same advice can help or hurt depending on what you pair it with.</li>
+          <li>A lot of common open source advice is not right or wrong on its own. It only works if you pair it with the right thing. On its own, the same advice can quietly backfire.</li>
           <li>Be welcoming to everyone works, but only if you also have triage, so maintainers can keep up.</li>
-          <li>Move fast works, but only if you also have shared decision rights, so people stay aligned.</li>
+          <li>Move fast works, but only if you pair it with transparency, so contributors can follow the changes and stay aligned.</li>
           <li>Document everything works, but only if you also have clear ownership, so the docs stay current.</li>
           <li>The practice is not the problem. The missing partner is.</li>
         </ul>
@@ -1115,7 +1115,7 @@
       </div>
       <aside class="notes">
         <ul style="font-size: 0.92em">
-          <li>I cannot give this talk without talking about AI.</li>
+          <li>I cannot give this talk without talking about the elephant in the room, AI.</li>
           <li>The upside is real. It lowers the barrier to a first contribution, speeds up docs, translation, and issue triage, and helps people who do not work in English as a first language.</li>
           <li>As Dries, founder of Drupal, puts it, AI can shorten the time needed to understand a codebase, which could ease the reliance on spare free time that open source has always depended on.</li>
           <li>The strain is just as real. It is cheap to generate a change, but a maintainer still has to understand it. The cost shifts from author to reviewer.</li>
@@ -1153,7 +1153,7 @@
       </div>
       <aside class="notes">
         <ul style="font-size: 0.92em">
-          <li>Let me make the hazard concrete, because it is happening right now. The word people use is AI slop.</li>
+          <li>Let us make the AI strain concrete, because AI slop is happening right now and burdening maintainers.</li>
           <li>Someone asks a model to find a bug, pastes the confident output into a report, marks it critical, and never checks whether it is real.</li>
           <li>curl is the clearest case. Daniel Stenberg, who has maintained it for decades, called it a denial of service on the project. By 2025 about 1 in 5 submissions was slop, and fewer than 1 in 20 was a genuine vulnerability.</li>
           <li>Each fake report can take an hour to debunk, and these are volunteers with a few hours a week. They eventually shut down their paid bug bounty just to stop the flood.</li>
@@ -1194,7 +1194,7 @@
         <ul style="font-size: 0.92em">
           <li>If you remember one thing from this talk, remember this contrast.</li>
           <li>Thriving projects share decisions, make it easy to help, recognize the work, build local belonging, communicate the why, and fund the work.</li>
-          <li>Decaying projects do the opposite on every one. Decisions concentrate, contributors are left guessing, invisible work goes unseen, everything stays global, nobody explains the point, and the work relies on unpaid time.</li>
+          <li>Now the mirror image. In a decaying project, decisions pile onto a few people, and newcomers are left guessing how to help. The real work stays invisible, nobody explains why the project matters, and it never feels local. And underneath it all, it runs on unpaid time until someone burns out.</li>
           <li>The dangerous part is that the decay is slow and quiet. There is no alarm. You often notice only when it is far along.</li>
         </ul>
       </aside>
@@ -1237,13 +1237,13 @@
       </div>
       <aside class="notes">
         <ul style="font-size: 0.92em">
-          <li>This one is for everyone in the room, not just maintainers. You do not need to be a regular contributor to do any of these. If you only use open source, you still count.</li>
+          <li>You do not have to be a maintainer, or even a contributor, to help. If you use open source at all, every one of these is open to you.</li>
           <li>Document one thing that confused you when you joined.</li>
           <li>Review someone's first contribution.</li>
           <li>Credit invisible work out loud, where people can see it.</li>
           <li>Help one local event happen.</li>
-          <li>Fund a project you rely on, even a small amount.</li>
-          <li>Share a project you use, so more people find it.</li>
+          <li>Fund a project you rely on, even a small amount. I personally fund four maintainers, 70 euros total per month. It is pretty small, but it gives them visibility and encourages others to fund too.</li>
+          <li>Share a project you use with your team or on social media, so more people find it.</li>
           <li>These are small structural acts, and they compound.</li>
         </ul>
       </aside>
@@ -1334,10 +1334,11 @@
       <aside class="notes">
         <ul style="font-size: 0.92em">
           <li>If anything from today resonated, please check out OffOn.dev.</li>
-          <li>The six pillars I walked through are not just things I read about. They are the blueprint we are building OffOn.dev on, shaped by years of organizing Drupal camps and working closely with that community.</li>
+          <li>These six pillars are not just things I read about. They are what we are building OffOn.dev on, shaped by years of organizing Drupal camps and working closely with that community.</li>
           <li>We are building a vendor-neutral community for open source contributors, a place to grow and find each other.</li>
           <li>One of the core offerings is hands-on challenges built around real tools and real scenarios. Things you can fork, learn through doing, and build on.</li>
           <li>Everything runs in GitHub Codespaces, so there is nothing to install. You can start today.</li>
+          <li>Open Source Talks: for the Austrian open source community to present projects and connect with enthusiasts.</li>
         </ul>
       </aside>
     </section>
@@ -1412,7 +1413,7 @@
           <li>David Hirsch's article shaped the framing.</li>
           <li>Dries' article helped the AI section.</li>
           <li>The examples come from the governance and contribution docs of each project.</li>
-          <li>The media is from the movie and the GIFs are sourced from GIPHY.</li>
+          <li>The media is from the movie Lord of the Rings and the GIFs are sourced from GIPHY.</li>
         </ul>
       </aside>
     </section>
@@ -1476,7 +1477,6 @@
       </div>
       <aside class="notes">
         <ul style="font-size: 0.92em">
-          <li>This is a backup slide, in case someone asks whether one project can show all six.</li>
           <li>Drupal is the one I know best, and it takes every pillar seriously. Governance through the Association and core committers, with a real code of conduct. Contributor experience through mentoring, first-time workshops, and issue credit. Recognition through the contribution credit system, for both people and companies.</li>
           <li>Local community through DrupalCon, local camps, and contribution days. Communication through docs, talks, and Drupal in a Day. Funding through the Association, certified partners, and grants.</li>
           <li>No project is perfect at all six, but this shows how they fit together in practice.</li>
