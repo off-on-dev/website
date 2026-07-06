@@ -433,8 +433,8 @@
     <!-- Part I divider -->
     <section class="ch-slide">
       <div class="chapter">
-        <div class="part">Part I</div>
-        <div class="numeral">I</div>
+        <div class="part">Part 1</div>
+        <div class="numeral">1</div>
         <h2>The Burden</h2>
         <div class="sep"><span>&#9670;</span></div>
         <p class="epi">Most projects don't fail on code. They fail under invisible weight.</p>
@@ -559,7 +559,7 @@
         <span class="bt"><strong>A single point of failure is a design flaw</strong></span>
       </div>
       <div class="card" style="margin-top: 1em; border-color: rgba(255,192,52,0.28);">
-        <h4>Example: Rust</h4>
+        <h4>Good Example: <a href="https://www.rust-lang.org/governance">Rust</a></h4>
         <p>Topic-focused teams (compiler, language, libraries, tooling, infrastructure) each own their area independently. A leadership council coordinates across teams. Ownership is spread by design, so no single person carries the whole project.</p>
       </div>
       <aside class="notes">
@@ -576,15 +576,15 @@
     <!-- Part II divider -->
     <section class="ch-slide">
       <div class="chapter">
-        <div class="part">Part II</div>
-        <div class="numeral">II</div>
+        <div class="part">Part 2</div>
+        <div class="numeral">2</div>
         <h2>The Fellowship</h2>
         <div class="sep"><span>&#9670;</span></div>
         <p class="epi">The work is too much for one person. It has to be shared.</p>
       </div>
       <aside class="notes">
         <ul style="font-size: 0.92em">
-          <li>Part two is the response.</li>
+          <li>Part 2 is the response.</li>
           <li>If the load is too much for one person, we design to share it. Here are six pillars for doing that.</li>
         </ul>
       </aside>
@@ -637,6 +637,7 @@
           <li>Communication: whether anyone can explain why the project matters.</li>
           <li>Funding: whether the work is actually paid for.</li>
           <li>I will go through each of these in the next slides. As I do, hold one project in your head, one you use or help maintain, and notice which of these it is missing.</li>
+          <li>One thing to say up front. No single project is perfect at all six. Each example I show is a project that does one especially well.</li>
         </ul>
       </aside>
     </section>
@@ -668,7 +669,7 @@
         <span class="bt">Models vary: BDFL, council or committee, foundation</span>
       </div>
       <div class="card" style="margin-top: 0.5em; border-color: rgba(255,192,52,0.28);">
-        <h4>Example: Apache Software Foundation</h4>
+        <h4>Good Example: <a href="https://www.apache.org/theapacheway/">Apache Software Foundation</a></h4>
         <p>Committees elect committers on merit. Individuals represent themselves, not employers. Decisions happen in the open: if it wasn't recorded, it didn't happen.</p>
       </div>
       <aside class="notes">
@@ -686,7 +687,7 @@
     <!-- 8b: Code of conduct -->
     <section>
       <div class="sh">
-        <span class="label">pillar 1 · code of conduct</span>
+        <span class="label">pillar 1 · <span style="color: var(--amber)">governance</span> · code of conduct</span>
         <h2>A Code of Conduct</h2>
       </div>
       <div class="brow" style="margin-top: 1.2em;">
@@ -702,7 +703,7 @@
         <span class="bt">Rules only matter if they are enforced</span>
       </div>
       <div class="card" style="margin-top: 1em; border-color: rgba(255,192,52,0.28);">
-        <h4>Example: Contributor Covenant</h4>
+        <h4>Good Example: <a href="https://www.contributor-covenant.org/">Contributor Covenant</a></h4>
         <p>A widely adopted code of conduct. Clear expected behavior, clear unacceptable behavior, and a path to report and enforce.</p>
       </div>
       <aside class="notes">
@@ -739,7 +740,7 @@
           <span class="bt">If it is confusing, they quietly leave</span>
         </div>
         <div class="card" style="margin-top: 0.5em; border-color: rgba(255,192,52,0.28);">
-          <h4>Example: Kubernetes</h4>
+          <h4>Good Example: <a href="https://github.com/kubernetes/community/blob/master/community-membership.md">Kubernetes</a></h4>
           <p>Published contributor ladder: from member to approver, with clear expectations at each step. Good first issues, mentoring cohorts, and a graceful way to step back.</p>
         </div>
       </div>
@@ -809,7 +810,7 @@
         <span class="bt">Record who did the work, sponsors included</span>
       </div>
       <div class="card" style="margin-top: 1em; border-color: rgba(255,192,52,0.28);">
-        <h4>Example: Drupal Contribution Credit System</h4>
+        <h4>Good Example: <a href="https://www.drupal.org/docs/develop/issues/fields-and-other-parts-of-an-issue/getting-credit-for-work-on-issues">Drupal Contribution Credit System</a></h4>
         <p>A public record of who did what, across code and the invisible work. Contribution becomes visible instead of assumed.</p>
       </div>
       <aside class="notes">
@@ -876,7 +877,7 @@
         </div>
       </div>
       <div class="card" style="margin-top: 0.6em; border-color: rgba(255,192,52,0.28);">
-        <h4>Example: Drupal</h4>
+        <h4>Good Example: <a href="https://events.drupal.org/">Drupal</a></h4>
         <p>DrupalCon globally, local volunteer-run camps, small and accessible by design. That's where new people get pulled in and where most new organizers learn the ropes.</p>
         <p style="margin-top: 0.5em;">At every event: first-time contributor workshops, contribution days, and Drupal in a Day for students.</p>
       </div>
@@ -950,9 +951,13 @@
         <span class="dot">✷</span>
         <span class="bt">Fund the boring, critical work, not just features</span>
       </div>
+      <div class="brow">
+        <span class="dot">✷</span>
+        <span class="bt">Not a prerequisite. It matters once others <strong>depend on you</strong></span>
+      </div>
       <div class="card" style="margin-top: 1em; border-color: rgba(255,192,52,0.28);">
-        <h4>Examples</h4>
-        <p>Open Collective, GitHub Sponsors, Patreon, Tidelift, and the Sovereign Tech Fund. Different routes to the same goal, paying for work everyone depends on.</p>
+        <h4>Good Example: <a href="https://www.djangoproject.com/fundraising/">Django</a></h4>
+        <p>The Django Software Foundation pays Fellows to do the unglamorous maintenance: triage, reviews, releases, and security. Routes to fund this: Open Collective, GitHub Sponsors, Patreon, Tidelift, and the Sovereign Tech Fund.</p>
       </div>
       <aside class="notes">
         <ul style="font-size: 0.92em">
@@ -960,6 +965,8 @@
           <li>Time is not free. Someone always pays, either in money or in unpaid evenings and weekends.</li>
           <li>Sustainable funding is what keeps maintainers from burning out. Without it, we are asking people to quietly subsidize infrastructure that everyone depends on.</li>
           <li>The key is to fund the boring, critical work: maintenance, security, and documentation. Not just the shiny new features.</li>
+          <li>Django is a clear example. The Django Software Foundation raises money and pays Fellows, who triage tickets, review patches, and ship releases, the work that otherwise would not get done. That is funding aimed straight at maintenance.</li>
+          <li>One important caveat, so nobody leaves worried. Funding is not a prerequisite. Plenty of small projects run happily on volunteer time. It becomes essential only once others start depending on you, once the project is load bearing. Until then, heavy funding structure is something you can delay.</li>
           <li>There are real routes now: Open Collective, GitHub Sponsors, and Patreon for direct support, Tidelift for paying maintainers through subscriptions, and the Sovereign Tech Fund for public investment into critical infrastructure.</li>
         </ul>
       </aside>
@@ -1004,15 +1011,15 @@
     <!-- Part III divider -->
     <section class="ch-slide">
       <div class="chapter">
-        <div class="part">Part III</div>
-        <div class="numeral">III</div>
+        <div class="part">Part 3</div>
+        <div class="numeral">3</div>
         <h2>The Road Ahead</h2>
         <div class="sep"><span>&#9670;</span></div>
         <p class="epi">What to prioritize, what AI changes, and what you can actually do.</p>
       </div>
       <aside class="notes">
         <ul style="font-size: 0.92em">
-          <li>Part three is the practical part.</li>
+          <li>Part 3 is the practical part.</li>
           <li>What to focus on first, what AI changes, and what you can actually do from wherever you sit.</li>
         </ul>
       </aside>
@@ -1141,7 +1148,7 @@
         <span class="bt">The cost lands on the reviewer, not the author</span>
       </div>
       <div class="card" style="margin-top: 1em; border-color: rgba(255,192,52,0.28);">
-        <h4>Example: curl</h4>
+        <h4>Example: <a href="https://daniel.haxx.se/blog/">curl</a></h4>
         <p>curl was flooded with AI-generated security reports. By 2025 about 1 in 5 submissions was slop, and the genuine rate fell below 5%. The team shut down its paid bug bounty to stop the noise. The Python Software Foundation and Open Collective hit the same wall.</p>
       </div>
       <aside class="notes">
@@ -1274,6 +1281,10 @@
             <span class="dot">✷</span>
             <span class="bt">Kubernetes, <a href="https://github.com/kubernetes/community/blob/master/community-membership.md">Contributor ladder</a></span>
           </div>
+          <div class="brow">
+            <span class="dot">✷</span>
+            <span class="bt">Django, <a href="https://www.djangoproject.com/fundraising/">Fellowship program</a></span>
+          </div>
         </div>
         <div>
           <span class="col-label">drupal</span>
@@ -1295,7 +1306,7 @@
           </div>
         </div>
       </div>
-      <div style="margin-top: 1.8em; font-size: 0.75em;">
+      <div style="margin-top: 0.8em; font-size: 0.75em;">
         <span class="col-label">media credits</span>
         <div class="brow">
           <span class="dot">✷</span>
@@ -1398,6 +1409,7 @@
       <aside class="notes">
         <ul style="font-size: 0.92em">
           <li>If anything from today resonated, please check out OffOn.dev.</li>
+          <li>The six pillars I walked through are not just things I read about. They are the blueprint we are building OffOn.dev on, shaped by years of organizing Drupal camps and working closely with that community.</li>
           <li>We are building a vendor-neutral community for open source contributors, a place to grow and find each other.</li>
           <li>One of the core offerings is hands-on challenges built around real tools and real scenarios. Things you can fork, learn through doing, and build on.</li>
           <li>Everything runs in GitHub Codespaces, so there is nothing to install. You can start today.</li>
@@ -1426,6 +1438,48 @@
           <li>Thank you very much.</li>
           <li>Please share your feedback using the link on the right, and you can download the slides from the link on the left.</li>
           <li>Does anyone have any questions, or want to share your own story?</li>
+        </ul>
+      </aside>
+    </section>
+
+    <!-- 22: BACKUP (optional) - Drupal across all six pillars -->
+    <section>
+      <div class="sh">
+        <span class="label">a project that closely follows all 6 pillars</span>
+        <h2>Drupal Across All Six Pillars</h2>
+      </div>
+      <div class="g3" style="margin-top: 0.6em; font-size: 0.9em;">
+        <div class="card">
+          <h4>Governance</h4>
+          <p>Drupal Association and core committers, with a published code of conduct.</p>
+        </div>
+        <div class="card">
+          <h4>Contributor Experience</h4>
+          <p>Mentoring, first-time workshops, and issue credit.</p>
+        </div>
+        <div class="card">
+          <h4>Recognition</h4>
+          <p>Contribution credit for people and companies.</p>
+        </div>
+        <div class="card">
+          <h4>Local Community</h4>
+          <p>DrupalCon, local camps, and contribution days.</p>
+        </div>
+        <div class="card">
+          <h4>Communication</h4>
+          <p>Docs, conference talks, and Drupal in a Day.</p>
+        </div>
+        <div class="card">
+          <h4>Funding</h4>
+          <p>Drupal Association, certified partners, and community grants.</p>
+        </div>
+      </div>
+      <aside class="notes">
+        <ul style="font-size: 0.92em">
+          <li>This is a backup slide, in case someone asks whether one project can show all six.</li>
+          <li>Drupal is the one I know best, and it takes every pillar seriously. Governance through the Association and core committers, with a real code of conduct. Contributor experience through mentoring, first-time workshops, and issue credit. Recognition through the contribution credit system, for both people and companies.</li>
+          <li>Local community through DrupalCon, local camps, and contribution days. Communication through docs, talks, and Drupal in a Day. Funding through the Association, certified partners, and grants.</li>
+          <li>No project is perfect at all six, but this shows how they fit together in practice.</li>
         </ul>
       </aside>
     </section>
