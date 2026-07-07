@@ -20,6 +20,7 @@
 
 Each adventure is a scenario-driven challenge with beginner, intermediate, and expert levels.
 
+- [Dead Reckoning](https://offon.dev/adventures/dead-reckoning/): The Grand Fleet's commission office is buried in complaints. Manifests are filed but nothing comes of them. Vessels that do sail arrive at port with the wrong cargo, and no one along the route can explain why. As the fleet's engineer, your mission is to restore order from keel to quayside and find out what the records are hiding.
 - [Lex Imperfecta](https://offon.dev/adventures/lex-imperfecta/): The Roman Republic has built a sophisticated legal system to protect its citizens — but the laws were written in haste, and the exceptions were written too generously. Policies go unenforced, the wrong citizens are exempt, and something has slipped through the gates unnoticed. As a newly appointed Praetor, your mission is to restore order before chaos takes hold.
 - [Blind by Design](https://offon.dev/adventures/blind-by-design/): Three levels of OpenFeature with flagd as the provider, in a Java + Spring Boot service. Wire the SDK against a flagd sidecar (Beginner), layer evaluation context to target by cohort (Intermediate), then instrument flag evaluations with OpenTelemetry and roll back a misbehaving fractional rollout (Expert). All without redeploying.
 - [The AI Observatory](https://offon.dev/adventures/the-ai-observatory/): Investigate a mysterious bandwidth anomaly at a remote research station by instrumenting its AI system with OpenTelemetry, OpenLLMetry, and Jaeger.
