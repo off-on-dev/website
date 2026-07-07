@@ -5,10 +5,6 @@ month: JUL 2026
 tags:
   - Backstage
   - Gitea
-  - Argo Workflows
-  - Argo CD
-  - OpenTelemetry
-  - Jaeger
 backstory:
   - The Grand Fleet's commission office is buried in complaints. Manifests are filed but nothing comes of them. Vessels
     that do sail arrive at port with the wrong cargo, and no one along the route can explain why. As the fleet's
@@ -31,7 +27,7 @@ levels:
     emoji: 🟢
     title: Laying the Keel
     devcontainer: dead-reckoning_beginner
-    community_url: ""
+    community_url: "https://community.offon.dev/t/repair-a-broken-backstage-software-template-july-2026-adventure-beginner"
     summary: Fix a broken Backstage software template so the commission office can register new vessels for service.
     audience: Platform engineers, developers, and anyone curious about internal developer platforms and self-service
       scaffolding. No prior Backstage experience is needed, but familiarity with YAML and basic Git concepts will help.
@@ -106,7 +102,7 @@ levels:
         content: |
           The only file you need to edit is the vessel commissioning template:
 
-          ```
+          ```bash
           backstage/templates/vessel-commissioning/template.yaml
           ```
 
@@ -114,12 +110,6 @@ levels:
           commissioning procedure), and **output** (what the captain sees at the end), each have a
           📖 documentation link above them. Compare each section against the [Objective](#objective):
           the form, the steps, and the output each have something to put right.
-
-          The fastest way to work is the **Template Editor** tab in **Create**: point it at the template
-          and it reloads your edits **instantly**, with a live preview of the form and a dry-run, so you
-          never have to restart Backstage between attempts. (Running the template from the main **Create**
-          list instead uses the copy in Backstage's catalog, which re-reads the file on its own after a
-          short delay.)
 
           Make your changes, try again, and once a vessel commissions cleanly, check your work.
           Keep Backstage running in its terminal while you do: `make verify` commissions a test
