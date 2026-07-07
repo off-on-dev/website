@@ -20,6 +20,12 @@ rewards:
       description: 50% voucher for a Linux Foundation certification
     - label: Top 3
       description: Credly badge to showcase the achievement
+contributor:
+  name: Katharina Sick
+  url: https://ksick.dev/
+  about: DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native
+    and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities,
+    inline skating rinks, and quiz nights across Europe.
 levels:
   - level: beginner
     emoji: 🟢
@@ -135,10 +141,6 @@ levels:
     topics:
       - Backstage
       - Gitea
-      - Argo Workflows
-      - Argo CD
-      - OpenTelemetry
-      - Jaeger
     verification:
       command: ./verify.sh
       description: Once you think you've solved the challenge, run the verification script. If it fails it will tell you which

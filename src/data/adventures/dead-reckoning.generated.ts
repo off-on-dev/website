@@ -26,7 +26,7 @@ export const DEAD_RECKONING: Adventure = {
       id: "beginner",
       name: "Laying the Keel",
       difficulty: "Beginner",
-      topics: ["Backstage", "Gitea", "Argo Workflows", "Argo CD", "OpenTelemetry", "Jaeger"],
+      topics: ["Backstage", "Gitea"],
       audience: "Platform engineers, developers, and anyone curious about internal developer platforms and self-service scaffolding. No prior Backstage experience is needed, but familiarity with YAML and basic Git concepts will help.",
       learnings: [
         "How Backstage <a href=\"https://backstage.io/docs/features/software-templates/writing-templates\" target=\"_blank\" rel=\"noopener noreferrer\">software templates<span class=\"sr-only\"> (opens in new tab)</span></a> are structured: parameters, steps, and output",
