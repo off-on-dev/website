@@ -3,6 +3,28 @@ import type { AdventureCardSummary, AdventureContributor, RelatedLevelSummary } 
 
 export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
   {
+    id: "dead-reckoning",
+    title: "Dead Reckoning",
+    month: "JUL 2026",
+    story: "The Grand Fleet's commission office is buried in complaints. Manifests are filed but nothing comes of them. Vessels that do sail arrive at port with the wrong cargo, and no one along the route can explain why. As the fleet's engineer, your mission is to restore order from keel to quayside and find out what the records are hiding.",
+    tags: ["Backstage", "Gitea", "Argo Workflows", "Argo CD", "OpenTelemetry", "Jaeger"],
+    isLive: true,
+    levels: [
+      {
+        id: "beginner",
+        name: "Laying the Keel",
+        difficulty: "Beginner",
+        topics: ["Backstage", "Gitea", "Argo Workflows", "Argo CD", "OpenTelemetry", "Jaeger"],
+        learnings: [
+          "How Backstage <a href=\"https://backstage.io/docs/features/software-templates/writing-templates\" target=\"_blank\" rel=\"noopener noreferrer\">software templates<span class=\"sr-only\"> (opens in new tab)</span></a> are structured: parameters, steps, and output",
+          "How scaffolder <a href=\"https://backstage.io/docs/features/software-templates/builtin-actions\" target=\"_blank\" rel=\"noopener noreferrer\">actions<span class=\"sr-only\"> (opens in new tab)</span></a> work, such as <code>fetch:template</code>, <code>publish:gitea</code>, and <code>catalog:register</code>",
+          "How the <a href=\"https://backstage.io/docs/features/software-catalog/life-of-an-entity\" target=\"_blank\" rel=\"noopener noreferrer\">catalog registration<span class=\"sr-only\"> (opens in new tab)</span></a> step connects a scaffolded repository to the Backstage catalog",
+          "How to use Backstage's built-in <a href=\"https://backstage.io/docs/features/software-templates/\" target=\"_blank\" rel=\"noopener noreferrer\">template tooling<span class=\"sr-only\"> (opens in new tab)</span></a>: the installed-actions browser and the Template Editor's live preview and dry-run",
+        ],
+      },
+    ],
+  },
+  {
     id: "lex-imperfecta",
     title: "Lex Imperfecta",
     month: "JUN 2026",
