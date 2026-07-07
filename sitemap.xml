@@ -37,7 +37,6 @@
   <url><loc>https://offon.dev/challenges/</loc><lastmod>2026-06-03</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://offon.dev/challenges/argo-cd/</loc><lastmod>2026-07-06</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://offon.dev/challenges/argo-rollouts/</loc><lastmod>2026-05-31</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://offon.dev/challenges/argo-workflows/</loc><lastmod>2026-07-06</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://offon.dev/challenges/backstage/</loc><lastmod>2026-07-06</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://offon.dev/challenges/flagd/</loc><lastmod>2026-05-31</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://offon.dev/challenges/gitea/</loc><lastmod>2026-07-06</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
