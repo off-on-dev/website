@@ -83,9 +83,11 @@ jobs:
             exit 1
           fi
 
-          if ! echo "$DISCUSSION_URL" | grep -qE '^https://community\.offon\.dev/'; then
-            echo "Error: DISCUSSION_URL must start with https://community.offon.dev/"
+          if ! echo "$DISCUSSION_URL" | grep -qE '^https://community\.offon\.dev/t/[^/]+/[0-9]+$'; then
+            echo "Error: DISCUSSION_URL must include the numeric topic ID."
+            echo "Expected format: https://community.offon.dev/t/<slug>/<numeric-id>"
             echo "Got: ${DISCUSSION_URL}"
+            echo "Open the Discourse thread in your browser — the address bar shows the full URL with the ID."
             exit 1
           fi
 
