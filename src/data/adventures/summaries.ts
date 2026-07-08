@@ -7,14 +7,19 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
     title: "Dead Reckoning",
     month: "JUL 2026",
     story: "The Grand Fleet's commission office is buried in complaints. Manifests are filed but nothing comes of them. Vessels that do sail arrive at port with the wrong cargo, and no one along the route can explain why. As the fleet's engineer, your mission is to restore order from keel to quayside and find out what the records are hiding.",
-    tags: ["Backstage", "Gitea", "Argo Workflows", "Argo CD", "OpenTelemetry", "Jaeger"],
+    tags: ["Backstage", "Gitea"],
+    contributor: {
+      name: "Katharina Sick",
+      url: "https://ksick.dev/",
+      aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
+    },
     isLive: true,
     levels: [
       {
         id: "beginner",
         name: "Laying the Keel",
         difficulty: "Beginner",
-        topics: ["Backstage", "Gitea", "Argo Workflows", "Argo CD", "OpenTelemetry", "Jaeger"],
+        topics: ["Backstage", "Gitea"],
         learnings: [
           "How Backstage <a href=\"https://backstage.io/docs/features/software-templates/writing-templates\" target=\"_blank\" rel=\"noopener noreferrer\">software templates<span class=\"sr-only\"> (opens in new tab)</span></a> are structured: parameters, steps, and output",
           "How scaffolder <a href=\"https://backstage.io/docs/features/software-templates/builtin-actions\" target=\"_blank\" rel=\"noopener noreferrer\">actions<span class=\"sr-only\"> (opens in new tab)</span></a> work, such as <code>fetch:template</code>, <code>publish:gitea</code>, and <code>catalog:register</code>",
