@@ -6,7 +6,7 @@ export const DEAD_RECKONING: Adventure = {
   title: "Dead Reckoning",
   month: "JUL 2026",
   story: "The Grand Fleet's commission office is buried in complaints. Manifests are filed but nothing comes of them. Vessels that do sail arrive at port with the wrong cargo, and no one along the route can explain why. As the fleet's engineer, your mission is to restore order from keel to quayside and find out what the records are hiding.",
-  metaDescription: "Dead Reckoning: a hands-on Backstage and Gitea adventure on OffOn.",
+  metaDescription: "Fix a broken Backstage software template: debug the scaffolder steps that create a Gitea repository and register services in the catalog.",
   tags: ["Backstage", "Gitea"],
   contributor: {
     name: "Katharina Sick",

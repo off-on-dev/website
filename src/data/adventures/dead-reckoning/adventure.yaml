@@ -1,6 +1,6 @@
 slug: dead-reckoning
 community_category_id: 45
-meta_description: "Dead Reckoning: a hands-on Backstage and Gitea adventure on OffOn."
+meta_description: "Fix a broken Backstage software template: debug the scaffolder steps that create a Gitea repository and register services in the catalog."
 name: Dead Reckoning
 emoji: 🧭
 month: JUL 2026
