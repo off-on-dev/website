@@ -88,11 +88,6 @@ and doesn't, make it through when you run the template.</p>` },
 commissioning procedure), and <strong>output</strong> (what the captain sees at the end), each have a
 📖 documentation link above them. Compare each section against the <a href="#objective">Objective</a>:
 the form, the steps, and the output each have something to put right.</p>
-<p>The fastest way to work is the <strong>Template Editor</strong> tab in <strong>Create</strong>: point it at the template
-and it reloads your edits <strong>instantly</strong>, with a live preview of the form and a dry-run, so you
-never have to restart Backstage between attempts. (Running the template from the main <strong>Create</strong>
-list instead uses the copy in Backstage's catalog, which re-reads the file on its own after a
-short delay.)</p>
 <p>Make your changes, try again, and once a vessel commissions cleanly, check your work.
 Keep Backstage running in its terminal while you do: <code>make verify</code> commissions a test
 vessel through it to confirm the repair.</p>

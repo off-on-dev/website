@@ -120,12 +120,6 @@ levels:
           📖 documentation link above them. Compare each section against the [Objective](#objective):
           the form, the steps, and the output each have something to put right.
 
-          The fastest way to work is the **Template Editor** tab in **Create**: point it at the template
-          and it reloads your edits **instantly**, with a live preview of the form and a dry-run, so you
-          never have to restart Backstage between attempts. (Running the template from the main **Create**
-          list instead uses the copy in Backstage's catalog, which re-reads the file on its own after a
-          short delay.)
-
           Make your changes, try again, and once a vessel commissions cleanly, check your work.
           Keep Backstage running in its terminal while you do: `make verify` commissions a test
           vessel through it to confirm the repair.
