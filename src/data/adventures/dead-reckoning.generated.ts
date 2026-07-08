@@ -6,7 +6,7 @@ export const DEAD_RECKONING: Adventure = {
   title: "Dead Reckoning",
   month: "JUL 2026",
   story: "The Grand Fleet's commission office is buried in complaints. Manifests are filed but nothing comes of them. Vessels that do sail arrive at port with the wrong cargo, and no one along the route can explain why. As the fleet's engineer, your mission is to restore order from keel to quayside and find out what the records are hiding.",
-  metaDescription: "Dead Reckoning: a hands-on Backstage, Gitea adventure on OffOn.",
+  metaDescription: "Fix a broken Backstage software template: debug the scaffolder steps that create a Gitea repository and register services in the catalog.",
   tags: ["Backstage", "Gitea"],
   contributor: {
     name: "Katharina Sick",
@@ -26,6 +26,10 @@ export const DEAD_RECKONING: Adventure = {
     rankingNote: "Ranking is determined by total points across all three levels. Points per level are awarded by submission order within the active week (100 for the first valid solution, 95 for the second, and so on; late submissions still earn 60).",
     rankingRulesUrl: `${COMMUNITY_URL}/t/about-the-challenges-category/16`,
   },
+  upcomingLevels: [
+    { name: "Intermediate", difficulty: "Intermediate" },
+    { name: "Expert", difficulty: "Expert" },
+  ],
   levels: [
     {
       id: "beginner",

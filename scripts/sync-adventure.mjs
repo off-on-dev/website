@@ -298,6 +298,8 @@ async function main() {
     slug,
     // Preserve community_category_id right after slug so its position stays stable on re-syncs.
     ...(existing?.community_category_id !== undefined && { community_category_id: existing.community_category_id }),
+    // Preserve a manually-set meta description; the generator auto-builds one from tags if absent.
+    ...(existing?.meta_description && { meta_description: existing.meta_description }),
     // Use whichever title field the challenges repo provides
     ...(indexData.title ? { title: indexData.title } : { name: indexData.name }),
     emoji: indexData.emoji,

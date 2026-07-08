@@ -1,8 +1,9 @@
 slug: dead-reckoning
+community_category_id: 45
+meta_description: "Fix a broken Backstage software template: debug the scaffolder steps that create a Gitea repository and register services in the catalog."
 name: Dead Reckoning
 emoji: 🧭
 month: JUL 2026
-community_category_id: 45
 tags:
   - Backstage
   - Gitea
@@ -23,12 +24,19 @@ contributor:
   about: DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native
     and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities,
     inline skating rinks, and quiz nights across Europe.
+upcoming_levels:
+  - level: intermediate
+    name: Intermediate
+    difficulty: Intermediate
+  - level: expert
+    name: Expert
+    difficulty: Expert
 levels:
   - level: beginner
     emoji: 🟢
     title: Laying the Keel
     devcontainer: dead-reckoning_beginner
-    community_url: "https://community.offon.dev/t/repair-a-broken-backstage-software-template-july-2026-adventure-beginner/1657"
+    community_url: https://community.offon.dev/t/repair-a-broken-backstage-software-template-july-2026-adventure-beginner/1657
     summary: Fix a broken Backstage software template so the commission office can register new vessels for service.
     audience: Platform engineers, developers, and anyone curious about internal developer platforms and self-service
       scaffolding. No prior Backstage experience is needed, but familiarity with YAML and basic Git concepts will help.
