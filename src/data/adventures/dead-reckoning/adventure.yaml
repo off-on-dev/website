@@ -1,15 +1,12 @@
 slug: dead-reckoning
 community_category_id: 45
+meta_description: "Dead Reckoning: a hands-on Backstage and Gitea adventure on OffOn."
 name: Dead Reckoning
 emoji: 🧭
 month: JUL 2026
 tags:
   - Backstage
   - Gitea
-  - Argo Workflows
-  - Argo CD
-  - OpenTelemetry
-  - Jaeger
 backstory:
   - The Grand Fleet's commission office is buried in complaints. Manifests are filed but nothing comes of them. Vessels
     that do sail arrive at port with the wrong cargo, and no one along the route can explain why. As the fleet's
@@ -114,7 +111,7 @@ levels:
         content: |
           The only file you need to edit is the vessel commissioning template:
 
-          ```
+          ```bash
           backstage/templates/vessel-commissioning/template.yaml
           ```
 

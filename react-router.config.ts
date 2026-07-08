@@ -50,7 +50,6 @@ export default {
     // GENERATED:challenge-tags
     "/challenges/argo-cd",
     "/challenges/argo-rollouts",
-    "/challenges/argo-workflows",
     "/challenges/backstage",
     "/challenges/flagd",
     "/challenges/gitea",

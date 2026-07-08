@@ -50,6 +50,11 @@
       "type": "integer",
       "description": "Discourse category ID for the leaderboard query. Look it up at https://community.offon.dev/categories.json. Drives ADVENTURE_CATEGORIES in scripts/refresh-leaderboard.mjs."
     },
+    "meta_description": {
+      "type": "string",
+      "maxLength": 160,
+      "description": "Overrides the auto-generated adventure meta description. Use when the default (built from tags) is misleading — e.g. when early tags belong to future levels."
+    },
     "backstory": {
       "type": "array",
       "items": { "type": "string" },

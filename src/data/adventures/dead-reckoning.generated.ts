@@ -6,8 +6,8 @@ export const DEAD_RECKONING: Adventure = {
   title: "Dead Reckoning",
   month: "JUL 2026",
   story: "The Grand Fleet's commission office is buried in complaints. Manifests are filed but nothing comes of them. Vessels that do sail arrive at port with the wrong cargo, and no one along the route can explain why. As the fleet's engineer, your mission is to restore order from keel to quayside and find out what the records are hiding.",
-  metaDescription: "Dead Reckoning: a hands-on Backstage, Gitea, Argo Workflows adventure on OffOn.",
-  tags: ["Backstage", "Gitea", "Argo Workflows", "Argo CD", "OpenTelemetry", "Jaeger"],
+  metaDescription: "Dead Reckoning: a hands-on Backstage and Gitea adventure on OffOn.",
+  tags: ["Backstage", "Gitea"],
   contributor: {
     name: "Katharina Sick",
     url: "https://ksick.dev/",
@@ -82,7 +82,7 @@ live preview and a safe dry-run. Poke around and see what each one does.</p>
 <p>Open <strong>Gitea</strong> on port 30110 (the archives) and the Backstage <strong>catalog</strong> to see what does,
 and doesn't, make it through when you run the template.</p>` },
         { title: "Repair the Template", content: `<p>The only file you need to edit is the vessel commissioning template:</p>
-<pre tabindex="0" aria-label="Code block"><code>backstage/templates/vessel-commissioning/template.yaml
+<pre tabindex="0" aria-label="Code block"><code class="language-bash">backstage/templates/vessel-commissioning/template.yaml
 </code></pre>
 <p>Read it from top to bottom. Its three sections, <strong>parameters</strong> (the form), <strong>steps</strong> (the
 commissioning procedure), and <strong>output</strong> (what the captain sees at the end), each have a
