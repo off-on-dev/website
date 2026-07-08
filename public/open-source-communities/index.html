@@ -307,8 +307,6 @@
     .reveal .slides section.ch-slide .chapter { height: 100%; }
 
     /* PDF export mode: hide GIFs and interactive hints; strip text-shadow that bleeds */
-    body.pdf-mode .gif-overlay,
-    body.pdf-mode .gif-container,
     body.pdf-mode .speaker-hint { display: none !important; }
     body.pdf-mode .chapter .numeral { text-shadow: none; }
   </style>
@@ -331,7 +329,7 @@
         <ul style="font-size: 0.92em">
           <li>Welcome, everyone. Today we are talking about the heart of open source: community.</li>
           <li>We treat open source as a code problem, but some projects with genuinely good code still fail. Not because of bad engineering, but because the community was never designed to scale.</li>
-          <li>What I share today comes from years of contributing to and organizing in the Drupal community. It is a perspective, not a rulebook, so please share your feedback at the end.</li>
+          <li>What I share today comes from my own perspective watching open source communities. It is not a rulebook. We will have plenty of time at the end, and I would love to hear your feedback.</li>
         </ul>
       </aside>
     </section>
@@ -375,7 +373,7 @@
         <ul style="font-size: 0.92em">
           <li>My name is Sinduri. I started as a Drupal developer about 5.5 years ago, then worked 2.5 years as a product manager.</li>
           <li>I was fortunate to find my first job working with open source software and being mentored by passionate open source maintainers, and that is where I developed my interest in open source communities. Most of my weekends go to organizing local Drupal events with Drupal Austria, Drupal Switzerland, and others.</li>
-          <li>Since January 2026 I have been working with the OSPO team at Dynatrace, building OffOn.dev, a vendor-neutral community. I will talk more about it at the end.</li>
+          <li>Since January 2026 I have been on the OSPO team at Dynatrace, building OffOn.dev, an independent open source community.</li>
         </ul>
       </aside>
     </section>
@@ -416,7 +414,7 @@
       <aside class="notes">
         <ul style="font-size: 0.92em">
           <li>Before we get into problems, let's start with what is at stake. Open source is the foundation almost everything runs on.</li>
-          <li>Here are some famous examples.</li>
+          <li>Here are some famous examples that most of you already know of.</li>
           <li>Linux runs most servers and the cloud, and it is inside every Android phone.</li>
           <li>Git is how nearly all software is version controlled.</li>
           <li>curl moves data inside cars, televisions, phones, and servers.</li>
@@ -441,9 +439,8 @@
       </div>
       <aside class="notes">
         <ul style="font-size: 0.92em">
-          <li>Quick show of hands before we start. Who here contributes to or maintains an open source project? Keep that project in mind, we will come back to it.</li>
-          <li>In this first part, let's talk about what makes open source projects fail, and the invisible weight behind them.</li>
-          <li>We will look at the comfortable myth that code quality is enough, what actually ends projects, and why a single maintainer carrying everything is a design flaw, not a personal strength.</li>
+          <li>Quick show of hands before we dig in. Who here contributes to or maintains an open source project?</li>
+          <li>Most projects do not fail on code. They fail under weight that nobody names until it is too late. Let me show you what that weight looks like.</li>
         </ul>
       </aside>
     </section>
@@ -503,11 +500,10 @@
       </div>
       <aside class="notes">
         <ul style="font-size: 0.92em">
-          <li>So what actually ends projects? It is rarely the code.</li>
           <li>When contribution paths are unclear, people want to help but do not know how. So they just do not.</li>
           <li>When expectations are never written down, everyone guesses. That leads to confusion and quiet conflict.</li>
-          <li>Over time, a small group absorbs all the work and all the pressure. They hold everything together.</li>
-          <li>It looks fine for a while. Then one person steps back, and the whole thing becomes fragile and stalls.</li>
+          <li>A few people slowly absorb all the work and all the pressure.</li>
+          <li>It looks fine for a long time. Then one person steps back, and the whole thing gets fragile and stalls.</li>
         </ul>
       </aside>
     </section>
@@ -564,11 +560,11 @@
       </div>
       <aside class="notes">
         <ul style="font-size: 0.92em">
-          <li>This is the most common failure pattern, and it has a name: the maintainer trap.</li>
-          <li>Work keeps landing on the same few people. The community comes to depend on them for everything.</li>
-          <li>We celebrate these heroes. But admiring someone who is carrying too much is not the same as fixing the problem.</li>
-          <li>When one person becomes a single point of failure, that is a design flaw in the project, not a personal weakness.</li>
-          <li>Rust is a good example of how it is done. Instead of 1 or 2 heroes, it runs on topic-focused teams. Each team owns its area, and a leadership council coordinates across them. Ownership is spread on purpose, so no single person holds the whole thing.</li>
+          <li>This is the most common failure, and it has a name: the maintainer trap.</li>
+          <li>The same few people end up doing everything, and the whole community depends on them.</li>
+          <li>We treat those people as heroes. But cheering for someone who is overloaded does not fix the overload.</li>
+          <li>When one person is the single point of failure, that is a design flaw in the project, not a weakness in the person.</li>
+          <li>Rust avoids this on purpose. Instead of one or two heroes, the work is split across topic teams, each owning its own area, with a council coordinating them. No single person carries the whole thing.</li>
         </ul>
       </aside>
     </section>
@@ -584,8 +580,8 @@
       </div>
       <aside class="notes">
         <ul style="font-size: 0.92em">
-          <li>Part 2 is the response.</li>
-          <li>If the load is too much for one person, we design to share it. Here are six pillars for doing that.</li>
+          <li>Part 2 is the response to that trap.</li>
+          <li>Sharing the load covers everything around the code: how a project is run, how people join, how they are recognized, how they connect, and how it is paid for.</li>
         </ul>
       </aside>
     </section>
@@ -637,7 +633,6 @@
           <li>Communication: whether anyone can explain why the project matters.</li>
           <li>Funding: whether the work is actually paid for.</li>
           <li>I will go through each of these in the next slides. As I do, hold one project in your head, one you use or help maintain, and notice which of these it is missing.</li>
-          <li>One thing to say up front. No single project is perfect at all six. Each example I show is a project that does one especially well.</li>
         </ul>
       </aside>
     </section>
@@ -666,7 +661,11 @@
       </div>
       <div class="brow">
         <span class="dot">✷</span>
-        <span class="bt">Models vary: BDFL, council or committee, foundation</span>
+        <span class="bt">Models vary, and big projects layer several</span>
+      </div>
+      <div class="brow">
+        <span class="dot">✷</span>
+        <span class="bt">One-company control is the opposite risk</span>
       </div>
       <div class="card" style="margin-top: 0.5em; border-color: rgba(255,192,52,0.28);">
         <h4>A Good Model: <a href="https://www.apache.org/theapacheway/">Apache Software Foundation</a></h4>
@@ -677,9 +676,14 @@
           <li>Governance sounds heavy, but it just means deciding how you will decide, before a crisis forces you to.</li>
           <li>Put shared things, funding, events, and infrastructure, under a neutral body instead of one person.</li>
           <li>Spread maintainer roles across more people. Give conflict a clear route.</li>
-          <li>There is no one right shape. Some projects run on a benevolent dictator, some on a council or a merit based committee, some under a foundation. What matters is that the model is explicit, not accidental.</li>
+          <li>There is no one right shape. Some run on a benevolent dictator, some on a council, some under a foundation. What matters is that the model is explicit, not accidental.</li>
+          <li>Big projects usually mix several. Kubernetes layers all three: a foundation holds the assets, a steering committee makes the cross-cutting calls, and individual teams run the day to day.</li>
+          <li>The opposite extreme is one company controlling everything. That is common and not always bad, but the company's interests and the community's can split. The recent license changes at HashiCorp, MongoDB, and Redis are what that looks like when it goes wrong.</li>
+          <li>Apache is a good model that avoids exactly that. Each project is run by its own committee, the PMC, or Project Management Committee. The PMC controls the project and decides who gets added to it.</li>
+          <li>You get onto the PMC through merit, the actual work you do on that project, not your job title or who you work for.</li>
+          <li>And you sit on it as an individual, not on behalf of your employer. Apache is strict about this: companies do not get a seat, only people do.</li>
+          <li>That is what stops any single company from quietly taking over. Apache watches for it too. If one employer starts to dominate a project's PMC, the board steps in and pushes for more diversity.</li>
           <li>Governance feels boring right up until the day you desperately need it.</li>
-          <li>Apache is a good model. Each project is run by its own committee, and you earn a seat on it through your own contributions, not your job title. People take part as individuals, not on behalf of their employer. That is the key. Influence is tied to the person, not the company, so no single company can quietly take control.</li>
         </ul>
       </aside>
     </section>
@@ -711,7 +715,7 @@
           <li>Part of governance is a code of conduct, and it needs to be specific.</li>
           <li>Not vague good vibes. Spell out what is not acceptable: harassment, discrimination, personal attacks, and sustained disruption.</li>
           <li>A code of conduct only counts if it is enforced. One that nobody acts on is worse than having none, because it signals safety that does not actually exist.</li>
-          <li>The Contributor Covenant is a widely adopted starting point that many projects use.</li>
+          <li>The Contributor Covenant is a good model here. It is a ready-made code of conduct that spells out the behavior a project expects, the behavior it will not tolerate, and how to report and act on violations. Many projects adopt it as their starting point.</li>
         </ul>
       </aside>
     </section>
@@ -820,7 +824,8 @@
           <li>But most of the work is invisible. Review, triage, documentation, mentoring. It does not show up in a commit graph.</li>
           <li>Invisible work gets undervalued. And when it is undervalued, people stop doing it.</li>
           <li>The fix is to make it visible. Record who actually did the work, and let that credit reach the companies who fund it too.</li>
-          <li>Drupal does this with a public contribution credit system that tracks it at scale.</li>
+          <li>Drupal is a good example. It runs a public contribution credit system, where every issue records who worked on it, across code and the invisible work like review and docs, and it credits the sponsoring companies too.</li>
+          <li>The work becomes visible instead of assumed, at the scale of a huge project.</li>
         </ul>
       </aside>
     </section>
@@ -849,8 +854,8 @@
       <aside class="notes">
         <ul style="font-size: 0.92em">
           <li>Recognition is not just being nice. It quietly changes what people do.</li>
-          <li>First mechanism: individuals get credit tied to real work, not to being loud. So the useful but unglamorous work becomes worth doing.</li>
-          <li>Second mechanism: companies get visible standing for what they fund, so their business interest lines up with the health of the project.</li>
+          <li>First, individuals get credit tied to real work, not to being loud. So the useful but unglamorous work becomes worth doing.</li>
+          <li>Second, companies get visible standing for what they fund, so their business interest lines up with the health of the project.</li>
           <li>Put those together and recognition stops being a favor you ask for. It becomes something the system produces on its own.</li>
           <li>The pattern I keep seeing, when a company treats contribution as real work with time and budget behind it, the involvement lasts. Good incentives beat good intentions every time.</li>
         </ul>
@@ -885,18 +890,14 @@
       <aside class="notes">
         <ul style="font-size: 0.92em">
           <li>Even a global project needs places that feel local.</li>
-          <li>People do not form belonging at a 2,000-person conference. They form it in small rooms, over shared problems, working together.</li>
-          <li>Pair the big global event with small local ones. That is where the barrier drops and people actually connect.</li>
-          <li>Drupal is what I know best. DrupalCon, organized by the Drupal Association, is the global flagship, but the real engine is the local camps, run by volunteers, kept small on purpose.</li>
+          <li>People do not form belonging at a 2,000-person conference. They form it in small rooms, over shared problems, working together. So pair the big global event with small local ones, where the barrier drops.</li>
+          <li>Drupal is what I know best. DrupalCon, run by the Drupal Association, is the global flagship, but the real engine is the local camps, run by volunteers and kept small on purpose.</li>
           <li>That is where new people get pulled in, and where most organizers, including me, learned how any of this works.</li>
-          <li>Drupal's own slogan captures it well: come for the code, stay for the community.</li>
-          <li>I felt this clearly at DrupalMountain Camp, in a workshop called Why Drupal, where we talked about why we each contribute.</li>
-          <li>Different backgrounds, different journeys, but the same core goal, build something meaningful and grow while doing it.</li>
-          <li>That is what local events really do. They should not be just networking, they should be shared purpose in a small room.</li>
-          <li>And these events build in real on-ramps, not just talks. A volunteer mentoring team runs first-time contributor workshops at almost every event, so newcomers are not left alone.</li>
+          <li>I felt this at DrupalMountain Camp, in a workshop called Why Drupal, where we talked about why we each contribute. Different backgrounds, different journeys, but the same goal: build something meaningful and grow while doing it.</li>
+          <li>These events build in real on-ramps, not just talks. A volunteer team runs first-time contributor workshops at almost every event, so newcomers are not left alone.</li>
           <li>Contribution days give people a dedicated room to sit together and actually contribute, at events big and small.</li>
-          <li>And a newer initiative, Drupal in a Day, brings students in and teaches them Drupal from scratch. Each of these lowers a different barrier: fear, logistics, and awareness.</li>
-          <li>People stay for other people, not for a repository.</li>
+          <li>And a newer one, Drupal in a Day, brings students in and teaches them Drupal from scratch. Each of these lowers a different barrier: fear, logistics, and awareness.</li>
+          <li>That is the whole point: come for the code, stay for the community. People stay for other people, not for a repository.</li>
         </ul>
       </aside>
     </section>
@@ -967,8 +968,8 @@
           <li>Sustainable funding is what keeps maintainers from burning out. Without it, we are asking people to quietly subsidize infrastructure that everyone depends on.</li>
           <li>The key is to fund the boring, critical work: maintenance, security, and documentation. Not just the shiny new features.</li>
           <li>Django is a clear example. The Django Software Foundation raises money and pays Fellows, who triage tickets, review patches, and ship releases, the work that otherwise would not get done. That is funding aimed straight at maintenance.</li>
-          <li>One important caveat, so nobody leaves worried. Funding is not a prerequisite. Plenty of small projects run happily on volunteer time. It becomes essential only once others start depending on you, once the project is load bearing. Until then, heavy funding structure is something you can delay.</li>
-          <li>There are real routes now: Open Collective, GitHub Sponsors, and Patreon for direct support, Tidelift for paying maintainers through subscriptions, and the Sovereign Tech Fund for public investment into critical infrastructure.</li>
+          <li>A project does not need funding on day one. Small projects run fine on volunteer time. But as more people start depending on you, keep sustainability in mind and put funding in place before the load gets too heavy.</li>
+          <li>Places to look: Open Collective, GitHub Sponsors, Patreon, Tidelift, and the Sovereign Tech Fund for public infrastructure funding.</li>
         </ul>
       </aside>
     </section>
@@ -998,13 +999,13 @@
       <p style="font-size: 0.58em; margin-top: 1em; color: var(--muted); opacity: 0.85;">Measurable, and no fancy tooling needed. Watch the trend, not the snapshot.</p>
       <aside class="notes">
         <ul style="font-size: 0.92em">
-          <li>Before we move on, a practical question. How do you actually tell if a community is healthy?</li>
+          <li>How do you actually tell if a community is healthy?</li>
           <li>Four signals worth watching.</li>
           <li>First, bus factor: how many people could walk away before the project stalls. If the answer is one, that is the maintainer trap in numbers.</li>
           <li>Second, time to first response on issues and pull requests. Slow first responses are where newcomers quietly give up.</li>
           <li>Third, retention. Do first-time contributors ever come back, or is it always brand new faces who never return.</li>
           <li>Fourth, is the number of maintainers growing, holding, or shrinking. A shrinking maintainer count is an early warning, long before anything visibly breaks.</li>
-          <li>None of these need fancy tooling. Watch the trend, not a single snapshot.</li>
+          <li>Together these tell you if the pillars are actually working, or just look good on paper.</li>
         </ul>
       </aside>
     </section>
@@ -1051,8 +1052,8 @@
       <aside class="notes">
         <ul style="font-size: 0.92em">
           <li>Not everything deserves your attention at once.</li>
-          <li>Start with these: clear contribution paths, written expectations, and sharing ownership early, before the load piles onto one person. These are cheap now and expensive to fix later.</li>
-          <li>These can wait: heavy formal governance, complex tooling, and lots of structure on a project that is still small.</li>
+          <li>Optimize early: clear contribution paths, expectations written down, and distributing authority early, before it all lands on one person. These are cheap now and expensive to fix later.</li>
+          <li>Safe to delay: heavy formal governance, complex tooling and automation, and over-structuring a community that is still small.</li>
           <li>Over-structuring early is a real risk. Heavy process can strangle a small project before it ever grows.</li>
         </ul>
       </aside>
@@ -1081,9 +1082,9 @@
       <p style="font-size: 0.58em; margin-top: 1.6em; opacity: 0.75;">Context decides whether a practice helps. The practices aren't the problem; the pairing is.</p>
       <aside class="notes">
         <ul style="font-size: 0.92em">
-          <li>A lot of common open source advice is not right or wrong on its own. It only works if you pair it with the right thing. On its own, the same advice can quietly backfire.</li>
-          <li>Be welcoming to everyone works, but only if you also have triage, so maintainers can keep up.</li>
-          <li>Move fast works, but only if you pair it with transparency, so contributors can follow the changes and stay aligned.</li>
+          <li>There is plenty of good advice out there. The catch is that most of it only works when you pair it with the right thing.</li>
+          <li>Be welcoming works, but only if you keep up with the people who show up. An ignored first contribution is the fastest way to lose someone. Triage is what makes the welcome real.</li>
+          <li>Move fast works, but only if you pair it with transparency, so contributors can follow the changes and not get blindsided.</li>
           <li>Document everything works, but only if you also have clear ownership, so the docs stay current.</li>
           <li>The practice is not the problem. The missing partner is.</li>
         </ul>
@@ -1117,9 +1118,9 @@
         <ul style="font-size: 0.92em">
           <li>I cannot give this talk without talking about the elephant in the room, AI.</li>
           <li>The upside is real. It lowers the barrier to a first contribution, speeds up docs, translation, and issue triage, and helps people who do not work in English as a first language.</li>
-          <li>As Dries, founder of Drupal, puts it, AI can shorten the time needed to understand a codebase, which could ease the reliance on spare free time that open source has always depended on.</li>
+          <li>AI can shorten the time it takes to understand a codebase, which could ease the reliance on spare free time that open source has always depended on.</li>
           <li>The strain is just as real. It is cheap to generate a change, but a maintainer still has to understand it. The cost shifts from author to reviewer.</li>
-          <li>And access is unequal. AI can become a new privilege, widening the gap between well-funded contributors and everyone else.</li>
+          <li>And access is unequal. The best AI tools cost money and know-how. So people at well-funded companies get faster, while volunteers and people in lower-income regions get left behind. AI risks becoming a new kind of privilege.</li>
           <li>The point: AI does not replace community design. It raises the stakes on the same six pillars.</li>
         </ul>
       </aside>
@@ -1158,7 +1159,8 @@
           <li>curl is the clearest case. Daniel Stenberg, who has maintained it for decades, called it a denial of service on the project. By 2025 about 1 in 5 submissions was slop, and fewer than 1 in 20 was a genuine vulnerability.</li>
           <li>Each fake report can take an hour to debunk, and these are volunteers with a few hours a week. They eventually shut down their paid bug bounty just to stop the flood.</li>
           <li>It is not only curl. The Python Software Foundation and Open Collective have said the same thing, and they tie it directly to maintainer burnout.</li>
-          <li>The problem is the asymmetry. Seconds to generate, hours to debunk, aimed at unpaid people who keep critical software running. To be fair, the same tools in skilled hands recently found dozens of real bugs in curl. The tool is not the problem. Unverified slop is.</li>
+          <li>The problem is the asymmetry: seconds to generate, hours to debunk, aimed at unpaid people who keep critical software running.</li>
+          <li>To be fair, the same tools in skilled hands recently found dozens of real bugs in curl. So the tool is not the problem. Unverified slop is.</li>
         </ul>
       </aside>
     </section>
@@ -1237,12 +1239,12 @@
       </div>
       <aside class="notes">
         <ul style="font-size: 0.92em">
-          <li>You do not have to be a maintainer, or even a contributor, to help. If you use open source at all, every one of these is open to you.</li>
+          <li>You do not have to be a maintainer, or even a contributor, to help. If you care about open source, you can support it through one or more of these ways.</li>
           <li>Document one thing that confused you when you joined.</li>
           <li>Review someone's first contribution.</li>
           <li>Credit invisible work out loud, where people can see it.</li>
           <li>Help one local event happen.</li>
-          <li>Fund a project you rely on, even a small amount. I personally fund four maintainers, 70 euros total per month. It is pretty small, but it gives them visibility and encourages others to fund too.</li>
+          <li>Fund a project you rely on, even a little. I fund four maintainers, about 70 euros a month total. It is small, but steady support like this is what keeps people going, and it nudges others to chip in too.</li>
           <li>Share a project you use with your team or on social media, so more people find it.</li>
           <li>These are small structural acts, and they compound.</li>
         </ul>
@@ -1334,11 +1336,11 @@
       <aside class="notes">
         <ul style="font-size: 0.92em">
           <li>If anything from today resonated, please check out OffOn.dev.</li>
-          <li>These six pillars are not just things I read about. They are what we are building OffOn.dev on, shaped by years of organizing Drupal camps and working closely with that community.</li>
-          <li>We are building a vendor-neutral community for open source contributors, a place to grow and find each other.</li>
+          <li>We are building OffOn.dev on the six pillars I just walked through.</li>
+          <li>It is a vendor-neutral community with an independent board, a place to grow and find each other.</li>
           <li>One of the core offerings is hands-on challenges built around real tools and real scenarios. Things you can fork, learn through doing, and build on.</li>
           <li>Everything runs in GitHub Codespaces, so there is nothing to install. You can start today.</li>
-          <li>Open Source Talks: for the Austrian open source community to present projects and connect with enthusiasts.</li>
+          <li>We also run Open Source Talks, where the Austrian open source community presents projects and meets other enthusiasts.</li>
         </ul>
       </aside>
     </section>
@@ -1358,6 +1360,10 @@
         <div class="brow">
           <span class="dot">✷</span>
           <span class="bt">Dries Buytaert, <a href="https://dri.es/the-privilege-of-ai-in-open-source">The Privilege of AI in Open Source</a></span>
+        </div>
+        <div class="brow">
+          <span class="dot">✷</span>
+          <span class="bt">Chris Short, <a href="https://chrisshort.net/ospo-notes-open-source-governance-who-decides-and-how/">OSPO Notes: Open Source Governance</a></span>
         </div>
       </div>
       <div class="split-even" style="margin-top: 1.8em; font-size: 0.75em;">
@@ -1412,6 +1418,7 @@
           <li>These are the sources behind the talk if you want to go deeper.</li>
           <li>David Hirsch's article shaped the framing.</li>
           <li>Dries' article helped the AI section.</li>
+          <li>Chris Short's article shaped the governance section.</li>
           <li>The examples come from the governance and contribution docs of each project.</li>
           <li>The media is from the movie Lord of the Rings and the GIFs are sourced from GIPHY.</li>
         </ul>
@@ -1505,7 +1512,12 @@
   });
 
   const isPdf = new URLSearchParams(location.search).has('pdf');
-  if (isPdf) document.body.classList.add('pdf-mode');
+  if (isPdf) {
+    document.body.classList.add('pdf-mode');
+    document.querySelectorAll('img[data-gif-src]').forEach(function(img) {
+      if (img.dataset.fallbackSrc) img.src = img.dataset.fallbackSrc;
+    });
+  }
 
   function syncGifs(event) {
     if (isPdf) return;
