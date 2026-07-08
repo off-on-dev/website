@@ -1,0 +1,1 @@
+var e=`https://community.offon.dev/t/repair-a-broken-backstage-software-template-july-2026-adventure-beginner/1657`,t=[],n=0,r={discussionUrl:e,discussionPosts:t,totalReplies:0};export{r as default,t as discussionPosts,e as discussionUrl,n as totalReplies};
