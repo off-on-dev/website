@@ -50,6 +50,7 @@ const ROUTES: RouteSpec[] = [
   // GENERATED:challenge-tags
   { path: "/challenges/argo-cd", title: /Argo CD Challenges/ },
   { path: "/challenges/argo-rollouts", title: /Argo Rollouts Challenges/ },
+  { path: "/challenges/argo-workflows", title: /Argo Workflows Challenges/ },
   { path: "/challenges/backstage", title: /Backstage Challenges/ },
   { path: "/challenges/flagd", title: /flagd Challenges/ },
   { path: "/challenges/gitea", title: /Gitea Challenges/ },

@@ -6,8 +6,8 @@ export const DEAD_RECKONING: Adventure = {
   title: "Dead Reckoning",
   month: "JUL 2026",
   story: "The Grand Fleet's commission office is buried in complaints. Manifests are filed but nothing comes of them. Vessels that do sail arrive at port with the wrong cargo, and no one along the route can explain why. As the fleet's engineer, your mission is to restore order from keel to quayside and find out what the records are hiding.",
-  metaDescription: "Dead Reckoning: a hands-on Backstage, Gitea adventure on OffOn.",
-  tags: ["Backstage", "Gitea"],
+  metaDescription: "Dead Reckoning: a hands-on Backstage, Gitea, Argo Workflows adventure on OffOn.",
+  tags: ["Backstage", "Gitea", "Argo Workflows", "Argo CD", "OpenTelemetry", "Jaeger"],
   contributor: {
     name: "Katharina Sick",
     url: "https://ksick.dev/",
@@ -26,6 +26,10 @@ export const DEAD_RECKONING: Adventure = {
     rankingNote: "Ranking is determined by total points across all three levels. Points per level are awarded by submission order within the active week (100 for the first valid solution, 95 for the second, and so on; late submissions still earn 60).",
     rankingRulesUrl: `${COMMUNITY_URL}/t/about-the-challenges-category/16`,
   },
+  upcomingLevels: [
+    { name: "Intermediate", difficulty: "Intermediate" },
+    { name: "Expert", difficulty: "Expert" },
+  ],
   levels: [
     {
       id: "beginner",
@@ -78,12 +82,17 @@ live preview and a safe dry-run. Poke around and see what each one does.</p>
 <p>Open <strong>Gitea</strong> on port 30110 (the archives) and the Backstage <strong>catalog</strong> to see what does,
 and doesn't, make it through when you run the template.</p>` },
         { title: "Repair the Template", content: `<p>The only file you need to edit is the vessel commissioning template:</p>
-<pre tabindex="0" aria-label="Code block"><code class="language-bash">backstage/templates/vessel-commissioning/template.yaml
+<pre tabindex="0" aria-label="Code block"><code>backstage/templates/vessel-commissioning/template.yaml
 </code></pre>
 <p>Read it from top to bottom. Its three sections, <strong>parameters</strong> (the form), <strong>steps</strong> (the
 commissioning procedure), and <strong>output</strong> (what the captain sees at the end), each have a
 📖 documentation link above them. Compare each section against the <a href="#objective">Objective</a>:
 the form, the steps, and the output each have something to put right.</p>
+<p>The fastest way to work is the <strong>Template Editor</strong> tab in <strong>Create</strong>: point it at the template
+and it reloads your edits <strong>instantly</strong>, with a live preview of the form and a dry-run, so you
+never have to restart Backstage between attempts. (Running the template from the main <strong>Create</strong>
+list instead uses the copy in Backstage's catalog, which re-reads the file on its own after a
+short delay.)</p>
 <p>Make your changes, try again, and once a vessel commissions cleanly, check your work.
 Keep Backstage running in its terminal while you do: <code>make verify</code> commissions a test
 vessel through it to confirm the repair.</p>
