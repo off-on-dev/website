@@ -309,6 +309,7 @@
     /* PDF export mode: hide GIFs and interactive hints; strip text-shadow that bleeds */
     body.pdf-mode .speaker-hint { display: none !important; }
     body.pdf-mode .chapter .numeral { text-shadow: none; }
+    body.pdf-mode .no-pdf { display: none !important; }
   </style>
 </head>
 <body>
@@ -372,6 +373,7 @@
       <aside class="notes">
         <ul style="font-size: 0.92em">
           <li>My name is Sinduri. I started as a Drupal developer about 5.5 years ago, then worked 2.5 years as a product manager.</li>
+          <li>For anyone who does not know it, Drupal is an open source content management system.</li>
           <li>I was fortunate to find my first job working with open source software and being mentored by passionate open source maintainers, and that is where I developed my interest in open source communities. Most of my weekends go to organizing local Drupal events with Drupal Austria, Drupal Switzerland, and others.</li>
           <li>Since January 2026 I have been on the OSPO team at Dynatrace, building OffOn.dev, an independent open source community.</li>
         </ul>
@@ -674,7 +676,7 @@
         <p>Committees elect committers on merit. Individuals represent themselves, not employers. Decisions happen in the open: if it wasn't recorded, it didn't happen.</p>
       </div>
       <aside class="notes">
-        <ul style="font-size: 0.92em">
+        <ul style="font-size: 0.75em">
           <li>Governance sounds heavy, but it just means deciding how you will decide, before a crisis forces you to.</li>
           <li>Put shared things, funding, events, and infrastructure, under a neutral body instead of one person.</li>
           <li>Spread maintainer roles across more people. Give conflict a clear route.</li>
@@ -682,7 +684,7 @@
           <li>Big projects usually mix several. Kubernetes layers all three: a foundation holds the assets, a steering committee makes the cross-cutting calls, and individual teams run the day to day.</li>
           <li>The opposite extreme is one company controlling everything. That is common and not always bad, but the company's interests and the community's can split.</li>
           <li>Apache is a good model that avoids exactly that. Each project is run by its own committee, the PMC, or Project Management Committee. The PMC controls the project and decides who gets added to it.</li>
-          <li>You get onto the PMC through merit, the actual work you do on that project, not your job title or who you work for.</li>
+          <li>You get onto the PMC through merit. That means the actual work you do on the project, not your job title or who you work for.</li>
           <li>And you sit on it as an individual, not on behalf of your employer. Apache is strict about this: companies do not get a seat, only people do.</li>
           <li>That is what stops any single company from quietly taking over. Apache watches for it too. If one employer starts to dominate a project's PMC, the board steps in and pushes for more diversity.</li>
           <li>Governance feels boring right up until the day you desperately need it.</li>
@@ -856,7 +858,7 @@
       <aside class="notes">
         <ul style="font-size: 0.92em">
           <li>Recognition is not just being nice. It quietly changes what people do.</li>
-          <li>First, individuals get credit tied to real work, not to being loud. So the useful but unglamorous work becomes worth doing.</li>
+          <li>First, individuals get credit tied to real work. The system records it, so you do not have to advocate for yourself. That makes the useful but unglamorous work worth doing.</li>
           <li>Second, companies get visible standing for what they fund, so their business interest lines up with the health of the project.</li>
           <li>Put those together and recognition stops being a favor you ask for. It becomes something the system produces on its own.</li>
           <li>The pattern I keep seeing, when a company treats contribution as real work with time and budget behind it, the involvement lasts. Good incentives beat good intentions every time.</li>
@@ -890,7 +892,7 @@
         <p style="margin-top: 0.5em;">At every event: first-time contributor workshops, contribution days, and Drupal in a Day for students.</p>
       </div>
       <aside class="notes">
-        <ul style="font-size: 0.92em">
+        <ul style="font-size: 0.75em">
           <li>Even a global project needs places that feel local.</li>
           <li>People do not form belonging at a 2,000-person conference. They form it in small rooms, over shared problems, working together. So pair the big global event with small local ones, where the barrier drops.</li>
           <li>Drupal is what I know best. DrupalCon, run by the Drupal Association, is the global flagship, but the real engine is the local camps, run by volunteers and kept small on purpose.</li>
@@ -1000,7 +1002,7 @@
         <span class="dot">✷</span>
         <span class="bt">Is the <strong>maintainer count</strong> growing, flat, or shrinking</span>
       </div>
-      <p style="font-size: 0.58em; margin-top: 1em; color: var(--muted); opacity: 0.85;">Measurable, and no fancy tooling needed. Watch the trend, not the snapshot.</p>
+      <p style="font-size: 0.58em; margin-top: 1em; color: var(--muted); opacity: 0.85;">These tell you if the pillars are working, or just look good on paper.</p>
       <aside class="notes">
         <ul style="font-size: 0.92em">
           <li>How do you actually tell if a community is healthy?</li>
@@ -1076,7 +1078,7 @@
         </div>
         <div class="card">
           <h4>"Move fast"</h4>
-          <p>Works when paired with <strong>transparency</strong>, so contributors can follow the changes and stay aligned.</p>
+          <p>Works when paired with <strong>transparency</strong>, so contributors can follow the changes and not get blindsided.</p>
         </div>
         <div class="card">
           <h4>"Document everything"</h4>
@@ -1212,7 +1214,7 @@
         <span class="label">your turn</span>
         <h2>What You Can Realistically Influence</h2>
       </div>
-      <p style="font-size: 0.62em; margin-top: 1.2em; margin-bottom: 0.8em; opacity: 0.8;">You don't need to be a maintainer, or even a regular contributor. If you just use open source, these are for you.</p>
+      <p style="font-size: 0.62em; margin-top: 1.2em; margin-bottom: 0.8em; opacity: 0.8;">You don't need to be a maintainer, or even a contributor. If you care about open source, any of these help.</p>
       <div class="brow">
         <span class="dot">✷</span>
         <span class="bt">Document one unclear process</span>
@@ -1455,7 +1457,7 @@
     </section>
 
     <!-- 22: BACKUP (optional) - Drupal across all six pillars -->
-    <section>
+    <section class="no-pdf">
       <div class="sh">
         <span class="label">a project that closely follows all 6 pillars</span>
         <h2>Drupal Across All Six Pillars</h2>
@@ -1501,6 +1503,16 @@
 <script src="../reveal/reveal.js"></script>
 <script src="../reveal/plugin/notes.js"></script>
 <script>
+  const params = new URLSearchParams(location.search);
+  const isPdf = params.has('pdf') || params.has('print-pdf');
+  if (isPdf) {
+    document.body.classList.add('pdf-mode');
+    document.querySelectorAll('.no-pdf').forEach(function(el) { el.remove(); });
+    document.querySelectorAll('img[data-gif-src]').forEach(function(img) {
+      if (img.dataset.fallbackSrc) img.src = img.dataset.fallbackSrc;
+    });
+  }
+
   Reveal.initialize({
     hash: true,
     slideNumber: 'c/t',
@@ -1512,16 +1524,10 @@
     width: 1920,
     height: 1080,
     margin: 0.04,
+    pdfMaxPagesPerSlide: 1,
+    pdfSeparateFragments: false,
     plugins: [ RevealNotes ]
   });
-
-  const isPdf = new URLSearchParams(location.search).has('pdf');
-  if (isPdf) {
-    document.body.classList.add('pdf-mode');
-    document.querySelectorAll('img[data-gif-src]').forEach(function(img) {
-      if (img.dataset.fallbackSrc) img.src = img.dataset.fallbackSrc;
-    });
-  }
 
   function syncGifs(event) {
     if (isPdf) return;

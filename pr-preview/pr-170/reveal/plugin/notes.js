@@ -78,7 +78,7 @@
 			#upcoming-slide {
 				position: absolute;
 				width: 40%;
-				height: 40%;
+				height: 30%;
 				right: 0;
 				top: 0;
 			}
@@ -86,10 +86,10 @@
 			/* Speaker controls */
 			#speaker-controls {
 				position: absolute;
-				top: 40%;
+				top: 30%;
 				right: 0;
 				width: 40%;
-				height: 60%;
+				height: 70%;
 				overflow: auto;
 				font-size: 18px;
 			}
