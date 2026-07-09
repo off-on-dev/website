@@ -310,6 +310,31 @@
     body.pdf-mode .speaker-hint { display: none !important; }
     body.pdf-mode .chapter .numeral { text-shadow: none; }
     body.pdf-mode .no-pdf { display: none !important; }
+    body.pdf-mode #slide-six-pillars,
+    body.pdf-mode #slide-sources { padding-bottom: 4em !important; }
+
+    /* PDF export: the glow is 4 full-page radial gradients -> 4 shading
+       patterns rasterized on every page. Slow to render, big file. */
+    body.pdf-mode #ff-wave { display: none !important; }
+    body.pdf-mode #deck-logo { position: absolute !important; }
+    body.pdf-mode .chapter .numeral { text-shadow: none !important; }
+    body.pdf-mode * { box-shadow: none !important; }
+
+    /* reveal's print CSS forces padding:0 on every section -> content hugs
+       the page edges. Restore the deck's own padding for PDF export. */
+    body.pdf-mode .reveal .slides section {
+      padding: 2.2em 3em 0.8em !important;
+    }
+    body.pdf-mode .reveal .slides section.ch-slide {
+      padding: 0 !important;
+    }
+
+    @media print {
+      html, body { background: #0a0a0a !important;
+        -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      #ff-wave { display: none !important; }
+      #deck-logo { position: absolute !important; }
+    }
   </style>
 </head>
 <body>
@@ -590,7 +615,7 @@
     </section>
 
     <!-- 7: Six pillars -->
-    <section>
+    <section id="slide-six-pillars">
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1em;">
         <div class="sh" style="margin-bottom: 0.5em;">
           <span class="label">framework</span>
@@ -1249,7 +1274,7 @@
           <li>Review someone's first contribution.</li>
           <li>Credit invisible work out loud, where people can see it.</li>
           <li>Help one local event happen.</li>
-          <li>Fund a project you rely on, even a little. I fund four maintainers, about 100 euros a month total. It is small, but steady support like this is what keeps people going, and it nudges others to chip in too.</li>
+          <li>Fund a project you rely on, even a little. I fund 5 maintainers, about 100 euros a month total. It is small, but steady support like this is what keeps people going, and it nudges others to chip in too.</li>
           <li>Share a project you use with your team or on social media, so more people find it.</li>
           <li>These are small structural acts, and they compound.</li>
         </ul>
@@ -1331,7 +1356,7 @@
           </div>
         </div>
         <div style="display: flex; flex-direction: column; align-items: center; gap: 0.8em; padding-bottom: 2em;">
-          <img src="challenges-grid.webp" alt="OffOn challenges grid" style="width: 100%; border-radius: 8px; display: block; border: 1px solid var(--border);">
+          <img src="challenges-grid.jpeg" alt="OffOn challenges grid" style="width: 100%; border-radius: 8px; display: block; border: 1px solid var(--border);">
           <div style="display: flex; flex-direction: column; align-items: center; gap: 0.3em; margin-top: 0.4em;">
             <img src="../qr/offon-dev.png" alt="QR code for OffOn.dev" style="width: 6em; border-radius: 6px; display: block;">
             <p style="font-size: 0.46em; opacity: 0.6; text-align: center; margin: 0;"><a href="https://offon.dev">OffOn.dev</a></p>
@@ -1351,7 +1376,7 @@
     </section>
 
     <!-- 21: Sources -->
-    <section>
+    <section id="slide-sources">
       <div class="sh">
         <span class="label">sources</span>
         <h2>Sources &amp; Further Reading</h2>
