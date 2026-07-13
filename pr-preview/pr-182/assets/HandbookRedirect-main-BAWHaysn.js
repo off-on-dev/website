@@ -1,0 +1,1 @@
+import{d as e}from"./vendor-router-BdDqb2SR.js";var t=e(function(){return null});export{t as default};
