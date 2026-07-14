@@ -150,7 +150,7 @@ levels:
     emoji: 🟡
     title: Sea Trial
     devcontainer: dead-reckoning_intermediate
-    community_url: ""
+    community_url: https://community.offon.dev/t/fix-a-broken-delivery-pipeline-july-2026-adventure-intermediate/1668
     summary: Fix the broken integration points in the delivery pipeline so that commissioning a vessel in Backstage results
       in a running deployment.
     topics:
