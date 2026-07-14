@@ -544,7 +544,8 @@ async function generateLevelCode(level, adventureId, indent) {
   // Build codespacesUrl from devcontainer short name
   const fullDevcontainerPath = `.devcontainer/${level.devcontainer}/devcontainer.json`;
   const encodedPath = encodeURIComponent(fullDevcontainerPath).replace(/%2F/g, "%2F");
-  lines.push(`${i2}codespacesUrl: \`\${CODESPACES_BASE}?devcontainer_path=${encodedPath}&quickstart=1\`,`);
+  const machineParam = level.codespaces_machine === "4core" ? "&machine=standardLinux32gb" : "";
+  lines.push(`${i2}codespacesUrl: \`\${CODESPACES_BASE}?devcontainer_path=${encodedPath}&quickstart=1${machineParam}\`,`);
 
   // Build discussionUrl — always output (empty string is valid placeholder for new adventures)
   if (levelDiscussionUrl && levelDiscussionUrl.startsWith("http")) {

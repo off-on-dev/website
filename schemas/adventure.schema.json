@@ -164,6 +164,11 @@
           "type": "string",
           "description": "Short devcontainer name (e.g. 'lex-imperfecta_beginner'). Generator expands to '.devcontainer/{value}/devcontainer.json'."
         },
+        "codespaces_machine": {
+          "type": "string",
+          "enum": ["4core"],
+          "description": "Request a larger Codespaces machine for this level. '4core' maps to standardLinux32gb (4-core, 16 GB). Omit for the default 2-core machine."
+        },
         "discussion_url": {
           "type": "string",
           "description": "Full Discourse topic URL or a path relative to COMMUNITY_URL (e.g. '/t/topic-slug/1419')."
