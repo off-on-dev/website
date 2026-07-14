@@ -214,6 +214,7 @@ levels:
         **harbor master** is Argo CD; Argo Events is the lookout that summons the shipyard when new code is filed. A
         vessel "reaching open water" just means a commissioned service made it all the way to a running, reachable
         deployment.'
+    architecture_diagram: "dead-reckoning-intermediate.svg"
     diagram_alt: "Left-to-right delivery pipeline: Backstage creates the repositories, Argo Events triggers the CI build,
       Argo Workflows builds the image and updates the tag, Argo CD syncs the deployment, and the vessel's app is up and
       running."

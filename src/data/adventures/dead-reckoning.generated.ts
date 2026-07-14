@@ -1,4 +1,5 @@
 import { CODESPACES_BASE, COMMUNITY_URL } from "@/data/constants";
+import deadReckoningIntermediate from "@/assets/diagrams/dead-reckoning-intermediate.svg";
 import type { Adventure } from "./types";
 
 export const DEAD_RECKONING: Adventure = {
@@ -142,6 +143,7 @@ vessel through it to confirm the repair.</p>
 <p>A quick translation from the story to the tools: a <strong>vessel</strong> is a small service you deploy, made up of its code repository, its deployment manifests, and the running Deployment and Service in the cluster. The <strong>commission office</strong> is Backstage, the <strong>archives</strong> are Gitea, the <strong>shipyard</strong> is Argo Workflows, and the <strong>harbor master</strong> is Argo CD; Argo Events is the lookout that summons the shipyard when new code is filed. A vessel "reaching open water" just means a commissioned service made it all the way to a running, reachable deployment.</p>
 </blockquote>`,
       ],
+      architectureDiagram: deadReckoningIntermediate,
       diagramAlt: "Left-to-right delivery pipeline: Backstage creates the repositories, Argo Events triggers the CI build, Argo Workflows builds the image and updates the tag, Argo CD syncs the deployment, and the vessel's app is up and running.",
       toolbox: [
         { name: "Backstage", description: "The commission office and your cockpit (port 3000). Commission a vessel from Create, then watch its page for the vessel's Argo CD status and delivery workflows.", url: "https://backstage.io/docs/features/software-catalog/" },
