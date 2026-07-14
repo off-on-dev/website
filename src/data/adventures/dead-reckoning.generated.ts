@@ -118,7 +118,7 @@ vessel through it to confirm the repair.</p>
         "How to trace a silent failure across tools from each one's logs and UI",
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2Fdead-reckoning_intermediate%2Fdevcontainer.json&quickstart=1`,
-      discussionUrl: "",
+      discussionUrl: "https://community.offon.dev/t/fix-a-broken-delivery-pipeline-july-2026-adventure-intermediate/1668",
       deadline: "2026-07-28T23:59:00+01:00",
       intro: [
         "Fix the broken integration points in the delivery pipeline so that commissioning a vessel in Backstage results in a running deployment.",
