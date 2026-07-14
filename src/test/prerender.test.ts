@@ -68,6 +68,10 @@ const pages: PageSpec[] = [
     check: { type: "contains", value: "Laying the Keel" },
   },
   {
+    file: "adventures/dead-reckoning/levels/intermediate/index.html",
+    check: { type: "contains", value: "Sea Trial" },
+  },
+  {
     file: "adventures/lex-imperfecta/index.html",
     check: { type: "contains", value: "Lex Imperfecta" },
   },

@@ -22,6 +22,7 @@ const ROUTES = [
   // GENERATED:adventures
   "/adventures/dead-reckoning",
   "/adventures/dead-reckoning/levels/beginner",
+  "/adventures/dead-reckoning/levels/intermediate",
   "/adventures/lex-imperfecta",
   "/adventures/lex-imperfecta/levels/beginner",
   "/adventures/lex-imperfecta/levels/intermediate",
@@ -51,7 +52,9 @@ const ROUTES = [
   "/challenges",
   // GENERATED:challenge-tags
   "/challenges/argo-cd",
+  "/challenges/argo-events",
   "/challenges/argo-rollouts",
+  "/challenges/argo-workflows",
   "/challenges/backstage",
   "/challenges/flagd",
   "/challenges/gitea",
