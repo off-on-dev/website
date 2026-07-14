@@ -20,6 +20,7 @@ const ROUTES: RouteSpec[] = [
   // GENERATED:adventures
   { path: "/adventures/dead-reckoning", title: /Dead Reckoning/ },
   { path: "/adventures/dead-reckoning/levels/beginner", title: /Laying the Keel/ },
+  { path: "/adventures/dead-reckoning/levels/intermediate", title: /Sea Trial/ },
   { path: "/adventures/lex-imperfecta", title: /Lex Imperfecta/ },
   { path: "/adventures/lex-imperfecta/levels/beginner", title: /The Twelve Tables/ },
   { path: "/adventures/lex-imperfecta/levels/intermediate", title: /Governing the Provinces/ },
@@ -49,7 +50,9 @@ const ROUTES: RouteSpec[] = [
   { path: "/challenges", title: /Open Source Challenges/ },
   // GENERATED:challenge-tags
   { path: "/challenges/argo-cd", title: /Argo CD Challenges/ },
+  { path: "/challenges/argo-events", title: /Argo Events Challenges/ },
   { path: "/challenges/argo-rollouts", title: /Argo Rollouts Challenges/ },
+  { path: "/challenges/argo-workflows", title: /Argo Workflows Challenges/ },
   { path: "/challenges/backstage", title: /Backstage Challenges/ },
   { path: "/challenges/flagd", title: /flagd Challenges/ },
   { path: "/challenges/gitea", title: /Gitea Challenges/ },

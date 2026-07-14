@@ -7,7 +7,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
     title: "Dead Reckoning",
     month: "JUL 2026",
     story: "The Grand Fleet's commission office is buried in complaints. Manifests are filed but nothing comes of them. Vessels that do sail arrive at port with the wrong cargo, and no one along the route can explain why. As the fleet's engineer, your mission is to restore order from keel to quayside and find out what the records are hiding.",
-    tags: ["Backstage", "Gitea"],
+    tags: ["Backstage", "Gitea", "Argo Events", "Argo Workflows", "Argo CD"],
     contributor: {
       name: "Katharina Sick",
       url: "https://ksick.dev/",
@@ -25,6 +25,19 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
           "How scaffolder <a href=\"https://backstage.io/docs/features/software-templates/builtin-actions\" target=\"_blank\" rel=\"noopener noreferrer\">actions<span class=\"sr-only\"> (opens in new tab)</span></a> work, such as <code>fetch:template</code>, <code>publish:gitea</code>, and <code>catalog:register</code>",
           "How the <a href=\"https://backstage.io/docs/features/software-catalog/life-of-an-entity\" target=\"_blank\" rel=\"noopener noreferrer\">catalog registration<span class=\"sr-only\"> (opens in new tab)</span></a> step connects a scaffolded repository to the Backstage catalog",
           "How to use Backstage's built-in <a href=\"https://backstage.io/docs/features/software-templates/\" target=\"_blank\" rel=\"noopener noreferrer\">template tooling<span class=\"sr-only\"> (opens in new tab)</span></a>: the installed-actions browser and the Template Editor's live preview and dry-run",
+        ],
+      },
+      {
+        id: "intermediate",
+        name: "Sea Trial",
+        difficulty: "Intermediate",
+        topics: ["Backstage", "Gitea", "Argo Events", "Argo Workflows", "Argo CD"],
+        learnings: [
+          "How a Git webhook drives a workflow engine: Argo Events <a href=\"https://argoproj.github.io/argo-events/concepts/sensor/\" target=\"_blank\" rel=\"noopener noreferrer\">Sensors<span class=\"sr-only\"> (opens in new tab)</span></a> turn a push into a <a href=\"https://argoproj.github.io/argo-events/tutorials/02-parameterization/\" target=\"_blank\" rel=\"noopener noreferrer\">parameterized<span class=\"sr-only\"> (opens in new tab)</span></a> workflow run",
+          "How <a href=\"https://argo-workflows.readthedocs.io/en/latest/walk-through/steps/\" target=\"_blank\" rel=\"noopener noreferrer\">Argo Workflows<span class=\"sr-only\"> (opens in new tab)</span></a> runs a multi-step delivery pipeline, and the <a href=\"https://argo-workflows.readthedocs.io/en/latest/workflow-rbac/\" target=\"_blank\" rel=\"noopener noreferrer\">RBAC<span class=\"sr-only\"> (opens in new tab)</span></a> its steps need",
+          "How an Argo CD <a href=\"https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Generators-SCM-Provider/\" target=\"_blank\" rel=\"noopener noreferrer\">ApplicationSet<span class=\"sr-only\"> (opens in new tab)</span></a> auto-discovers repos and <a href=\"https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/\" target=\"_blank\" rel=\"noopener noreferrer\">syncs<span class=\"sr-only\"> (opens in new tab)</span></a> them into the cluster",
+          "How Backstage <a href=\"https://backstage.io/docs/features/software-catalog/well-known-annotations\" target=\"_blank\" rel=\"noopener noreferrer\">annotations<span class=\"sr-only\"> (opens in new tab)</span></a> tie a catalog entity to its live deployment status",
+          "How to trace a silent failure across tools from each one's logs and UI",
         ],
       },
     ],
