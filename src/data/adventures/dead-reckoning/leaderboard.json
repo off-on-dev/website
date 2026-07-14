@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-08T12:58:13.478Z",
+  "updatedAt": "2026-07-14T11:21:32.105Z",
   "rows": [
     {
       "rank": 1,
@@ -24,6 +24,18 @@
       "expertPoints": 0,
       "singlePoints": 0,
       "breakdown": "🟢 Repair a broken Backstage software template | July 2026 Adventure: Beginner [beginner] rank #2 = 95 pts"
+    },
+    {
+      "rank": 3,
+      "username": "alvin",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/alvin/90/1.png",
+      "points": 90,
+      "challengesSolved": 1,
+      "beginnerPoints": 90,
+      "intermediatePoints": 0,
+      "expertPoints": 0,
+      "singlePoints": 0,
+      "breakdown": "🟢 Repair a broken Backstage software template | July 2026 Adventure: Beginner [beginner] rank #3 = 90 pts"
     }
   ]
 }
