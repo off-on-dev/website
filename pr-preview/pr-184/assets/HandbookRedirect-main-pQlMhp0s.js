@@ -1,1 +1,0 @@
-import{d as e}from"./vendor-router-CZ_VYGy-.js";var t=e(function(){return null});export{t as default};
