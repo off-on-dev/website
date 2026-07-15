@@ -3,11 +3,10 @@ import { ExternalLink, Megaphone, CircleHelp, UserPlus, CalendarDays } from "luc
 import { COMMUNITY_URL } from "@/data/constants";
 import { SectionLabel } from "@/components/SectionLabel";
 import { SidebarLayout } from "@/components/SidebarLayout";
-import { Abbr } from "@/components/Abbr";
 
 type Card = {
   icon: ReactNode;
-  title: ReactNode;
+  title: string;
   desc: string;
   cta: string;
   href: string;
@@ -23,7 +22,7 @@ const cards: Card[] = [
   },
   {
     icon: <CircleHelp size={28} aria-hidden="true" />,
-    title: <Abbr title="Questions and Answers">Q&amp;A</Abbr>,
+    title: "Q&A",
     desc: "Stuck on a technical problem or not sure where to start? Post a question and get answers from the community. No question is too basic.",
     cta: "Ask a Question",
     href: `${COMMUNITY_URL}/c/general/q-a/10`,
