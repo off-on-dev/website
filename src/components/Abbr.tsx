@@ -18,7 +18,7 @@ export const Abbr = ({ title, children }: AbbrProps): JSX.Element => {
       </abbr>
       <span
         aria-hidden="true"
-        className="absolute bottom-full left-0 mb-1.5 px-2 py-1 text-xs bg-foreground text-background rounded whitespace-nowrap opacity-0 pointer-events-none transition-opacity group-hover/abbr:opacity-100 group-focus-within/abbr:opacity-100 z-[100]"
+        className="absolute bottom-full left-0 mb-1.5 px-2 py-1 text-xs bg-foreground text-background rounded max-w-64 break-words opacity-0 pointer-events-none transition-opacity group-hover/abbr:opacity-100 group-focus-within/abbr:opacity-100 z-[100]"
       >
         {title}
       </span>
