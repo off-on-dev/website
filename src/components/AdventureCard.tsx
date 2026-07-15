@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { ContributorBadge } from "@/components/ContributorBadge";
 import { LivePill } from "@/components/LivePill";
+import { AdventureIcon } from "@/components/AdventureIcon";
 
 
 type AdventureCardProps = { adventure: AdventureCardSummary };
@@ -39,9 +40,12 @@ export const AdventureCard = ({ adventure }: AdventureCardProps): JSX.Element =>
         </div>
       </div>
 
-      <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
-        {adventure.title}
-      </h3>
+      <div className="flex items-center gap-1">
+        <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+          {adventure.title}
+        </h3>
+        <AdventureIcon icon={adventure.icon} size={16} className="shrink-0 text-muted-foreground" />
+      </div>
       <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{adventure.story}</p>
 
       <div className="mt-4 flex flex-wrap items-center gap-2">

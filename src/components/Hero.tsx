@@ -18,11 +18,11 @@ export const Hero = (): JSX.Element => {
       <div className="relative z-10 mx-auto max-w-3xl text-center">
             <div className="animate-fade-up hero-badge mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-[hsl(var(--surface))] px-4 py-1.5">
               <Zap size={12} aria-hidden="true" className="text-foreground" />
-              <span className="text-xs text-foreground">{BRAND_SLOGAN_PARTS[0]}</span>
-              <Zap size={12} aria-hidden="true" className="text-foreground" />
-              <span className="text-xs text-foreground">{BRAND_SLOGAN_PARTS[1]}</span>
-              <Zap size={12} aria-hidden="true" className="text-foreground" />
-              <span className="text-xs text-foreground">{BRAND_SLOGAN_PARTS[2]}</span>
+              <span className="text-sm text-foreground">{BRAND_SLOGAN_PARTS[0]}</span>
+              <Zap size={14} aria-hidden="true" className="text-foreground" />
+              <span className="text-sm text-foreground">{BRAND_SLOGAN_PARTS[1]}</span>
+              <Zap size={14} aria-hidden="true" className="text-foreground" />
+              <span className="text-sm text-foreground">{BRAND_SLOGAN_PARTS[2]}</span>
             </div>
             <h1 id="hero-heading" className="animate-fade-up-delay-1 font-heading text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
               <span className="block text-primary">

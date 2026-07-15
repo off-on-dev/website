@@ -5,6 +5,7 @@ import type { Adventure } from "./types";
 export const DEAD_RECKONING: Adventure = {
   id: "dead-reckoning",
   title: "Dead Reckoning",
+  icon: "Compass",
   month: "JUL 2026",
   story: "The Grand Fleet's commission office is buried in complaints. Manifests are filed but nothing comes of them. Vessels that do sail arrive at port with the wrong cargo, and no one along the route can explain why. As the fleet's engineer, your mission is to restore order from keel to quayside and find out what the records are hiding.",
   metaDescription: "Fix a broken Backstage software template: debug the scaffolder steps that create a Gitea repository and register services in the catalog.",

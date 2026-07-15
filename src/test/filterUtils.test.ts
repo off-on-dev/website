@@ -99,4 +99,19 @@ describe("getLevelSummariesByFilters", () => {
       expect(item.level.id).toBeTruthy();
     });
   });
+
+  it("adventureIcon in each result exactly matches the source adventure's icon field", () => {
+    const allResults = getLevelSummariesByFilters([], null);
+    ADVENTURE_SUMMARIES.forEach((a) => {
+      const forThisAdventure = allResults.filter((r) => r.adventureId === a.id);
+      expect(forThisAdventure.length).toBeGreaterThan(0);
+      forThisAdventure.forEach((item) => {
+        if (a.icon) {
+          expect(item.adventureIcon).toBe(a.icon);
+        } else {
+          expect(item.adventureIcon).toBeUndefined();
+        }
+      });
+    });
+  });
 });

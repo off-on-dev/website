@@ -1,15 +1,8 @@
 import { type JSX } from "react";
 import { useParams, Link, useLoaderData } from "react-router";
 import type { MetaFunction, LoaderFunctionArgs, LinksFunction } from "react-router";
-import { ArrowRight, Clock, FlaskConical, Satellite, Cloud, Telescope, Scale, type LucideIcon } from "lucide-react";
-
-const ADVENTURE_ICONS: Record<string, LucideIcon> = {
-  FlaskConical,
-  Satellite,
-  Cloud,
-  Telescope,
-  Scale,
-};
+import { ArrowRight, Clock } from "lucide-react";
+import { AdventureIcon } from "@/components/AdventureIcon";
 import { ADVENTURES, type AdventureLevel } from "@/data/adventures";
 import { NotFoundPage } from "@/components/NotFoundPage";
 import { Navbar } from "@/components/Navbar";
@@ -164,10 +157,7 @@ const AdventureDetail = (): JSX.Element => {
           <div className="mb-10">
             <div className="inline-flex items-center gap-3 mb-4">
               <h1 className="text-3xl md:text-4xl font-bold text-foreground">{adventure.title}</h1>
-              {adventure.icon && ADVENTURE_ICONS[adventure.icon] && (() => {
-                const Icon = ADVENTURE_ICONS[adventure.icon!];
-                return <Icon size={28} className="text-primary shrink-0" aria-hidden="true" />;
-              })()}
+              <AdventureIcon icon={adventure.icon} size={28} className="text-primary shrink-0" />
             </div>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-3">
               {adventure.contributor && (

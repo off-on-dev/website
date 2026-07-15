@@ -1406,6 +1406,34 @@ Distinct from `FilteredLevelCard`: `AdventureCard` links to the adventure overvi
 
 ---
 
+### `AdventureIcon`
+
+`src/components/AdventureIcon.tsx`
+
+Renders the Lucide icon associated with an adventure by its string name. Returns `null` if `icon` is undefined or not registered in the component's `ICONS` map.
+
+```tsx
+<AdventureIcon icon={adventure.icon} size={16} className="shrink-0 text-muted-foreground" />
+<AdventureIcon icon={adventure.icon} size={28} className="text-primary shrink-0" />
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `icon` | `string?` | — | Lucide icon name (e.g. `"Compass"`, `"Building2"`). Must match a key in the internal `ICONS` registry. |
+| `size` | `number?` | `16` | Pixel size passed to the Lucide icon component. |
+| `className` | `string?` | — | CSS class applied to the rendered icon element. |
+
+`aria-hidden="true"` is applied automatically — the icon is purely decorative.
+
+**Adding a new icon (two-step process):**
+
+1. Add the emoji-to-name mapping in `scripts/generate-adventures.mjs` `EMOJI_ICON_MAP`.
+2. Add the import and registry entry in `src/components/AdventureIcon.tsx` `ICONS`.
+
+Both steps must be done together. A missing entry in either file causes the icon to silently not render — there is no type error or build warning.
+
+---
+
 ### `DifficultyBadge`
 
 `src/components/DifficultyBadge.tsx`
@@ -1621,6 +1649,19 @@ Filtering logic for the adventure catalog. Built from `ADVENTURE_SUMMARIES` so i
 | `ALL_LEVEL_SUMMARIES` | `RelatedLevelSummary[]` | Pre-computed result of `getLevelSummariesByFilters([], null)`. Use this constant instead of calling the function with empty args. |
 | `DIFFICULTIES` | `readonly ["Beginner", "Intermediate", "Expert"]` | Ordered difficulty array. Use for rendering difficulty filter options. |
 | `Difficulty` | `type` | `"Beginner" \| "Intermediate" \| "Expert"`. Import from here rather than re-deriving the union. |
+
+### `src/lib/difficulty`
+
+Shared difficulty display utilities. Import from here instead of re-deriving the `Difficulty → CSS var suffix` mapping in each component.
+
+| Export | Signature | Description |
+| --- | --- | --- |
+| `DIFFICULTY_VAR` | `Record<Difficulty, string>` | Maps `"Beginner" → "starter"`, `"Intermediate" → "builder"`, `"Expert" → "architect"`. Use to build `--difficulty-{suffix}-bg/border` CSS variable references. |
+| `difficultyStyle` | `(difficulty: Difficulty) => CSSProperties` | Returns the base inline style object (`color`, `borderColor`, `backgroundColor`) for a difficulty. Used by `DifficultyBadge`, `OtherLevelsCard`, and `ChallengeFilters`. |
+
+```ts
+import { DIFFICULTY_VAR, difficultyStyle } from "@/lib/difficulty";
+```
 
 ```ts
 import { getLevelSummariesByFilters, DIFFICULTIES, type Difficulty } from "@/data/adventures/filter-utils";

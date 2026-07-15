@@ -19,6 +19,7 @@ export const getLevelSummariesByFilters = (
           adventureId: a.id,
           adventureTitle: a.title,
           ...(a.isLive ? { isLive: true as const } : {}),
+          ...(a.icon ? { adventureIcon: a.icon } : {}),
         }))
     );
 

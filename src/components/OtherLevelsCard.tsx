@@ -1,27 +1,8 @@
-import type { CSSProperties, JSX } from "react";
+import type { JSX } from "react";
 import { Link } from "react-router";
 import { ArrowRight } from "lucide-react";
-import type { Adventure, AdventureLevel } from "@/data/adventures";
-
-type Difficulty = AdventureLevel["difficulty"];
-
-const pillStyle: Record<Difficulty, CSSProperties> = {
-  Beginner: {
-    borderColor: "hsl(var(--difficulty-starter-border))",
-    backgroundColor: "hsl(var(--difficulty-starter-bg))",
-    color: "hsl(var(--difficulty-text))",
-  },
-  Intermediate: {
-    borderColor: "hsl(var(--difficulty-builder-border))",
-    backgroundColor: "hsl(var(--difficulty-builder-bg))",
-    color: "hsl(var(--difficulty-text))",
-  },
-  Expert: {
-    borderColor: "hsl(var(--difficulty-architect-border))",
-    backgroundColor: "hsl(var(--difficulty-architect-bg))",
-    color: "hsl(var(--difficulty-text))",
-  },
-};
+import type { Adventure } from "@/data/adventures";
+import { difficultyStyle } from "@/lib/difficulty";
 
 type OtherLevelsCardProps = {
   adventure: Adventure;
@@ -49,7 +30,7 @@ export const OtherLevelsCard = ({
             <Link
               to={`/adventures/${adventure.id}/levels/${level.id}/`}
               className="group inline-flex w-full items-center gap-2 rounded-sm border px-2.5 py-1.5 text-xs no-underline hover:brightness-95 transition-[filter] focus-ring-tight"
-              style={pillStyle[level.difficulty]}
+              style={difficultyStyle(level.difficulty)}
             >
               <span className="shrink-0 uppercase font-medium">{level.difficulty}</span>
               <span aria-hidden="true" className="inline-block w-px h-3 bg-current opacity-40" />
@@ -69,7 +50,7 @@ export const OtherLevelsCard = ({
             <li key={`upcoming-${level.difficulty}-${level.name}`}>
               <span
                 className="inline-flex w-full items-center gap-2 rounded-sm border border-dashed px-2.5 py-1.5 text-xs"
-                style={pillStyle[level.difficulty]}
+                style={difficultyStyle(level.difficulty)}
               >
                 <span className="shrink-0 uppercase font-medium">{level.difficulty}</span>
                 {hasDistinctName ? (

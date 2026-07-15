@@ -4,7 +4,7 @@ import type { Adventure } from "./types";
 export const BUILDING_CLOUDHAVEN: Adventure = {
   id: "building-cloudhaven",
   title: "Building CloudHaven",
-  icon: "Cloud",
+  icon: "Building2",
   month: "JAN 2026",
   story: "Join the Infrastructure Guild and modernize CloudHaven's infrastructure from manual provisioning to a self-service platform using Infrastructure as Code. A hands-on journey through infrastructure as code with OpenTofu and GitHub Actions.",
   metaDescription: "Building CloudHaven: a hands-on OpenTofu, Terraform, GitHub Actions adventure on OffOn.",

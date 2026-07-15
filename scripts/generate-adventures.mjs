@@ -77,14 +77,19 @@ const schemaValidate = ajv.compile(adventureSchema);
 // future enum field added to the schema still gets AJV coverage.
 const SCHEMA_SKIP_KEYWORDS = new Set(["required", "type", "minItems", "if", "then", "else"]);
 
-// Maps emoji shorthand to Lucide React icon names used in AdventureDetail.
+// Maps emoji shorthand to Lucide React icon names used in AdventureIcon.tsx.
 const EMOJI_ICON_MAP = {
   "🧪": "FlaskConical",
   "🔭": "Telescope",
   "☁️": "Cloud",
   "🛰️": "Satellite",
   "⚖️": "Scale",
+  "🧭": "Compass",
 };
+
+// Must stay in sync with the ICONS map in src/components/AdventureIcon.tsx.
+// A name absent from this set is written to the generated file but AdventureIcon silently returns null.
+const VALID_ICONS = new Set([...Object.values(EMOJI_ICON_MAP), "Building2"]);
 
 
 // Constant rewards fields shared by all adventures. Omit from YAML to use these defaults.
@@ -672,7 +677,10 @@ async function generateAdventureTs(data) {
   lines.push(``);
   const { title: adventureTitle, story: adventureStory, icon: adventureIcon } = normalizeAdventureFields(data);
   if (data.emoji && !adventureIcon) {
-    warn(`${data.slug}: emoji "${data.emoji}" is not in EMOJI_ICON_MAP — add it to scripts/generate-adventures.mjs and src/pages/AdventureDetail.tsx`);
+    warn(`${data.slug}: emoji "${data.emoji}" is not in EMOJI_ICON_MAP — add it to scripts/generate-adventures.mjs and src/components/AdventureIcon.tsx`);
+  }
+  if (data.icon && !VALID_ICONS.has(data.icon)) {
+    warn(`${data.slug}: icon "${data.icon}" is not in VALID_ICONS — add it to scripts/generate-adventures.mjs VALID_ICONS and src/components/AdventureIcon.tsx ICONS`);
   }
 
   // Pre-render prose fields to HTML at build time.
@@ -802,7 +810,7 @@ async function generateSummariesTs(adventures) {
 
   for (const data of adventures) {
     lines.push(`  {`);
-    const { title: summaryTitle, story: summaryStory } = normalizeAdventureFields(data);
+    const { title: summaryTitle, story: summaryStory, icon: summaryIcon } = normalizeAdventureFields(data);
     lines.push(`    id: "${data.slug}",`);
     lines.push(`    title: "${escapeDoubleQuoted(summaryTitle)}",`);
     lines.push(`    month: "${data.month}",`);
@@ -825,6 +833,7 @@ async function generateSummariesTs(adventures) {
     if (rewardsLive || levelLive) {
       lines.push(`    isLive: true,`);
     }
+    if (summaryIcon) lines.push(`    icon: "${escapeDoubleQuoted(summaryIcon)}",`);
     lines.push(`    levels: [`);
     for (const level of data.levels) {
       lines.push(`      {`);
@@ -864,6 +873,7 @@ async function generateSummariesTs(adventures) {
   lines.push(`        adventureId: a.id,`);
   lines.push(`        adventureTitle: a.title,`);
   lines.push(`        ...(a.isLive ? { isLive: true } : {}),`);
+  lines.push(`        ...(a.icon ? { adventureIcon: a.icon } : {}),`);
   lines.push(`      }))`);
   lines.push(`    );`);
   lines.push(``);
