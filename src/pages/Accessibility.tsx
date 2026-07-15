@@ -45,7 +45,7 @@ const Accessibility = (): JSX.Element => {
                 <a href="https://www.w3.org/TR/WCAG22/" target="_blank" rel="noopener noreferrer" className={link}>
                   <Abbr title="Web Content Accessibility Guidelines">WCAG</Abbr> 2.2 Level <Abbr title="double-A conformance level">AA</Abbr> <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>{" "}
-                across every page on {SITE_NAME}, with selected Level AAA criteria applied wherever practical.
+                across every page on {SITE_NAME}, with selected Level <Abbr title="triple-A conformance level">AAA</Abbr> criteria applied wherever practical.
               </li>
               <li>
                 <strong>Both color modes:</strong> light and dark mode must meet contrast and focus
@@ -120,7 +120,7 @@ const Accessibility = (): JSX.Element => {
               </li>
               <li>
                 <code>prefers-contrast: more</code> is respected: borders and muted elements
-                increase in contrast when the user enables Increase Contrast in their OS settings.
+                increase in contrast when the user enables Increase Contrast in their <Abbr title="operating system">OS</Abbr> settings.
               </li>
               <li>
                 Windows High Contrast Mode is supported via a <code>forced-colors: active</code>{" "}
@@ -175,7 +175,7 @@ const Accessibility = (): JSX.Element => {
               <li>
                 <strong>axe-core via Playwright</strong> on every pull request and on a weekly
                 scheduled scan (Mondays). Runs in dark mode, light mode, and with{" "}
-                <code>prefers-reduced-motion: reduce</code> against the production build. The PR
+                <code>prefers-reduced-motion: reduce</code> against the production build. The <Abbr title="pull request">PR</Abbr>
                 preview workflow blocks on these scans.
               </li>
               <li>
@@ -185,7 +185,7 @@ const Accessibility = (): JSX.Element => {
             </ul>
 
             <h3 className={heading3}>Manual</h3>
-            <p className={paragraph}>For UI changes, contributors verify:</p>
+            <p className={paragraph}>For <Abbr title="user interface">UI</Abbr> changes, contributors verify:</p>
             <ul role="list" className={list}>
               <li>Tab order matches the visual reading order.</li>
               <li>Focus is visible on every interactive element in both modes.</li>
@@ -257,7 +257,7 @@ const Accessibility = (): JSX.Element => {
 
             <h2 className={heading2}>For Contributors</h2>
             <p className={paragraph}>
-              If you are submitting a pull request, every UI change should pass the accessibility
+              If you are submitting a pull request, every <Abbr title="user interface">UI</Abbr> change should pass the accessibility
               checklist in our pull request template. The full ruleset lives in{" "}
               <a
                 href="https://github.com/off-on-dev/website/blob/main/ACCESSIBILITY.md"

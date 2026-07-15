@@ -75,7 +75,7 @@ levels:
       - flagd
       - Spring Boot
     audience: >-
-      Platform engineers, SREs, and developers curious about feature flags, with no prior OpenFeature
+      Platform engineers, <abbr title="Site Reliability Engineers">SREs</abbr>, and developers curious about feature flags, with no prior OpenFeature
       experience needed, but familiarity with Spring Boot and basic Java will help.
     learnings:
       - "How an OpenFeature client and provider work together: the SDK is provider-agnostic and the flagd provider plugs in via dependency only"
@@ -107,7 +107,7 @@ levels:
         and a flagd sidecar.
       - >-
         The Spring Boot service runs on http://localhost:8080/ with one endpoint, GET /. flags.json
-        is mounted read-only into the flagd sidecar; edit it through the IDE and flagd's file
+        is mounted read-only into the flagd sidecar; edit it through the <abbr title="Integrated Development Environment">IDE</abbr> and flagd's file
         watcher picks up the change within about a second. The flagd sidecar serves flag evaluations
         over gRPC on :8013. The OpenFeature SDK reads FLAGD_HOST and FLAGD_PORT from the environment
         (pre-set by the devcontainer), so there is no host or port to hard-code.
@@ -339,7 +339,7 @@ levels:
     difficulty: Expert
     deadline: "2026-05-26T23:59:00+01:00"
     audience: >-
-      Platform engineers, SREs, and observability-focused developers who have completed the
+      Platform engineers, <abbr title="Site Reliability Engineers">SREs</abbr>, and observability-focused developers who have completed the
       Beginner and Intermediate levels or are comfortable with OpenFeature evaluation context,
       and want to learn how flag evaluations join distributed traces and metrics, and how to
       use a flag flip as an operational lever for live rollbacks.

@@ -36,7 +36,8 @@ levels:
     devcontainer: 05-lex-imperfecta_01-beginner
     community_url: https://community.offon.dev/t/restore-proper-admission-control-using-kyverno-june-2026-adventure-beginner/1576
     summary: Fix broken Kyverno policies to restore proper admission control.
-    audience: Platform engineers, SREs, and developers curious about Kubernetes security — no prior Kyverno experience
+    audience: >-
+      Platform engineers, <abbr title="Site Reliability Engineers">SREs</abbr>, and developers curious about Kubernetes security — no prior Kyverno experience
       needed, but familiarity with basic `kubectl` and YAML will help.
     backstory:
       - The Republic's legal scholars have been busy — perhaps too busy. In their haste to codify the Twelve Tables,
@@ -216,7 +217,8 @@ levels:
     devcontainer: 05-lex-imperfecta_02-intermediate
     summary: Fix a misconfigured Kyverno policy estate and use Policy Reporter to restore proper governance across the
       Republic's provinces.
-    audience: Platform engineers and SREs who have some familiarity with Kyverno, ideally after completing the Beginner
+    audience: >-
+      Platform engineers and <abbr title="Site Reliability Engineers">SREs</abbr> who have some familiarity with Kyverno, ideally after completing the Beginner
       level. You should be comfortable reading Kubernetes YAML and basic kubectl commands.
     backstory:
       - The Republic has grown. What once was a single city is now a sprawling empire of provinces, each governed by
@@ -413,12 +415,13 @@ levels:
       - How [Falcosidekick](https://github.com/falcosecurity/falcosidekick) aggregates Falco alerts and how to use its
         UI to watch a runtime incident in real time
     architecture:
-      - "The estate inherits the full intermediate topology: four province namespaces (`gallia`, `hispania`,
+      - >-
+        The estate inherits the full intermediate topology: four province namespaces (`gallia`, `hispania`,
         `britannia`, `aegyptus`) and one infra namespace (`castra`), each labelled as before. Alongside the Kyverno
-        stack and Policy Reporter, the cluster now runs **Falco** (eBPF-based, as a DaemonSet) and **Falcosidekick**
+        stack and Policy Reporter, the cluster now runs **Falco** (<abbr title="extended Berkeley Packet Filter">eBPF</abbr>-based, as a DaemonSet) and **Falcosidekick**
         with its UI at port **30111**. At startup, an intruder pod is already running in one of the provinces, quietly
         reading the census archive: imperial rolls that only workloads bearing the `republic.rome/role: archivist` label
-        are permitted to access."
+        are permitted to access.
       - Your working directory is the challenge root. `manifests/secrets/` and `manifests/workloads/` are already in
         place. They define the estate and the intruder, and need no changes. Everything else is yours to investigate and
         fix.
@@ -477,8 +480,8 @@ levels:
           what's needed, then run `make apply`.
 
           **Going further:** even with the archive sealed at admission, any workload admitted with the
-          Archivist role can read the secret. Kubernetes RBAC can restrict which service accounts may
-          `get` a secret at the API level, a complementary layer that admission control alone cannot
+          Archivist role can read the secret. Kubernetes <abbr title="Role-Based Access Control">RBAC</abbr> can restrict which service accounts may
+          `get` a secret at the <abbr title="Application Programming Interface">API</abbr> level, a complementary layer that admission control alone cannot
           provide.
     helpful_links:
       - title: Falco Rules Reference

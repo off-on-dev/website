@@ -45,6 +45,7 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
+import rehypeRaw from "rehype-raw";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import rehypeStringify from "rehype-stringify";
 import Ajv2020 from "ajv/dist/2020.js";
@@ -114,13 +115,15 @@ const sanitizeSchema = {
     ...(defaultSchema.tagNames ?? []),
     "pre",
     "code",
+    "abbr",
   ],
 };
 
 const mdProcessor = unified()
   .use(remarkParse)
   .use(remarkGfm)
-  .use(remarkRehype)
+  .use(remarkRehype, { allowDangerousHtml: true })
+  .use(rehypeRaw)
   .use(rehypeSanitize, sanitizeSchema)
   .use(rehypeStringify);
 

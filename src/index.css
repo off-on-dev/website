@@ -870,6 +870,44 @@ html {
 }
 .md-inline strong { font-weight: 600; color: hsl(var(--foreground)); }
 .md-inline em { font-style: italic; color: hsl(var(--text-secondary)); }
+/* Chrome removed abbr dotted underline from UA stylesheet; restore it explicitly.
+   display:inline-block gives <abbr> a proper containing block so the ::after
+   tooltip positions reliably; plain inline elements don't always work in all
+   browsers. ::after provides a CSS tooltip matching the <Abbr> component since
+   React components cannot be used inside dangerouslySetInnerHTML content. */
+.md-inline abbr[title],
+.md-content abbr[title] {
+  display: inline-block;
+  cursor: help;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  position: relative;
+}
+.md-inline abbr[title]::after,
+.md-content abbr[title]::after {
+  content: attr(title);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-family: inherit;
+  font-style: normal;
+  background: hsl(var(--foreground));
+  color: hsl(var(--background));
+  border-radius: 0.25rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s;
+  z-index: 100;
+}
+.md-inline abbr[title]:hover::after,
+.md-content abbr[title]:hover::after {
+  opacity: 1;
+}
 .md-inline a {
   display: inline-flex;
   align-items: center;
