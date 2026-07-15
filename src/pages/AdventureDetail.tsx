@@ -105,6 +105,7 @@ const AdventureLevelLink = ({ level, adventureId }: AdventureLevelLinkProps): JS
   return (
     <Link
       to={`/adventures/${adventureId}/levels/${level.id}/`}
+      aria-label={`Start the ${level.difficulty} level: ${level.name}`}
       className="group card-glow relative rounded-xl border border-border bg-[hsl(var(--surface))] p-6 flex flex-col focus-ring"
     >
       <div className="flex flex-wrap items-center gap-2 mb-3">
@@ -116,15 +117,15 @@ const AdventureLevelLink = ({ level, adventureId }: AdventureLevelLinkProps): JS
           </span>
         )}
       </div>
-      <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors mb-3">
+      <p className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors mb-3">
         {level.name}
-      </h3>
+      </p>
       {descHtml && (
         <p className="text-xs text-dim leading-relaxed line-clamp-4 mb-4 flex-1 md-inline"
           dangerouslySetInnerHTML={{ __html: stripLinks(descHtml) }}
         />
       )}
-      <span className="mt-auto inline-flex items-center gap-1 text-xs font-medium text-primary underline decoration-2 underline-offset-2 dark:group-hover:decoration-primary">
+      <span className="mt-auto inline-flex items-center gap-1 text-xs font-medium text-primary underline decoration-2 underline-offset-2 dark:group-hover:decoration-primary" aria-hidden="true">
         Start Challenge <ArrowRight size={12} aria-hidden="true" />
       </span>
     </Link>

@@ -6,10 +6,23 @@ OffOn is a platform for open source enthusiasts. We want everyone to be able to 
 
 ## Our Commitment
 
-- **Target:** [WCAG 2.2 Level AA](https://www.w3.org/TR/WCAG22/) across every page on [offon.dev](https://offon.dev). WCAG 2.2 AA is the floor, not the goal. Every component must be genuinely usable by keyboard-only users, screen reader users, and people with low vision.
+- **Target:** [WCAG 2.2 Level AA](https://www.w3.org/TR/WCAG22/) across every page on [offon.dev](https://offon.dev), with selected WCAG 2.2 Level AAA criteria applied wherever practical. AA is the floor, not the goal.
 - **Both color modes:** light and dark mode must meet contrast and focus requirements. We do not ship a feature that only works in one mode.
 - **Keyboard first:** every interactive element is reachable and operable from the keyboard alone.
 - **No motion traps:** we honor `prefers-reduced-motion` and avoid auto-playing animation that the user did not request.
+
+### AAA criteria in scope
+
+The following WCAG 2.2 Level AAA criteria are actively targeted on this site:
+
+| Criterion | What we do |
+| --- | --- |
+| 1.4.6 Contrast (Enhanced) | Body text targets 7:1; large text targets 4.5:1 in both modes. |
+| 2.4.9 Link Purpose (Link Only) | Every link must make sense without surrounding context. Card links use `aria-label` with the specific item name. Ambiguous text like "via email" is rewritten or wrapped in a descriptive label. |
+| 2.4.10 Section Headings | Headings are used to organize all content sections, including sidebar sub-sections which use `<h3>`. |
+| 3.1.3 Unusual Words | Technical terms (e.g. devcontainer) are defined on first use via `<abbr title="…">` or inline expansion. |
+| 3.1.4 Abbreviations | Abbreviations are expanded on first use per page: `<abbr title="…">` for inline HTML; written out in full for plain-text contexts (e.g. "Site Reliability Engineers (SREs)"). |
+| 3.1.5 Reading Level | General copy targets plain language. Technical content is inherent to the subject; abbreviations and unusual words are expanded on first use. Challenge-specific content is authored by contributors and may be technical by nature. |
 
 ---
 
@@ -371,28 +384,34 @@ This site uses Radix UI's `<Tooltip>` primitive (via `src/components/ui/tooltip.
 
 Use this to identify which criterion applies before writing or reviewing code.
 
-| Principle | Criterion | What to verify |
-| --- | --- | --- |
-| **Perceivable (1.x)** | 1.1.1 Non-text Content (A) | Every image, icon, and non-text element has a text alternative or `aria-hidden`. |
-| | 1.3.1 Info and Relationships (A) | Structure conveyed visually is also in markup (headings, lists, tables). |
-| | 1.4.3 Contrast (AA) | Normal text 4.5:1, large text 3:1 against background. |
-| | 1.4.4 Resize Text (AA) | Text readable at 200% zoom. Never `user-scalable=no`. |
-| | 1.4.10 Reflow (AA) | No horizontal scroll at 400% zoom (320px viewport). |
-| | 1.4.11 Non-text Contrast (AA) | UI components and focus indicators: 3:1 against adjacent colors. |
-| **Operable (2.x)** | 2.1.1 Keyboard (A) | All functionality is keyboard-accessible. |
-| | 2.1.2 No Keyboard Trap (A) | Focus is never permanently trapped; `Escape` exits modals and dropdowns. |
-| | 2.3.1 Three Flashes (A) | No content flashes more than 3 times per second. |
-| | 2.4.1 Bypass Blocks (A) | Skip link is the first focusable element on every page. |
-| | 2.4.3 Focus Order (A) | Tab order follows logical reading order. |
-| | 2.4.7 Focus Visible (AA) | All focusable elements have a visible focus indicator. |
-| | 2.4.11 Focus Appearance (AA, WCAG 2.2) | Focus indicator is at least 2px, with 3:1 contrast against adjacent colors. |
-| | 2.4.12 Focus Not Obscured (AA, WCAG 2.2) | Focused elements are not fully hidden by sticky headers or overlays. |
-| | 2.5.3 Label in Name (A) | Accessible name contains the visible text (required for voice control). |
-| | 2.5.8 Target Size Minimum (AA, WCAG 2.2) | Touch targets are at least 24×24px. |
-| **Understandable (3.x)** | 3.1.1 Language of Page (A) | `<html lang="en">` is set. |
-| | 3.3.1 Error Identification (A) | Error messages identify the field and describe the error. |
-| | 3.3.2 Labels or Instructions (A) | Form fields have labels; placeholders are not substitutes. |
-| **Robust (4.x)** | 4.1.2 Name, Role, Value (A) | ARIA roles and attributes are valid. Dynamic state (`aria-expanded`, `aria-current`) is kept in sync. |
+| Principle | Criterion | Level | What to verify |
+| --- | --- | --- | --- |
+| **Perceivable (1.x)** | 1.1.1 Non-text Content | A | Every image, icon, and non-text element has a text alternative or `aria-hidden`. |
+| | 1.3.1 Info and Relationships | A | Structure conveyed visually is also in markup (headings, lists, tables). |
+| | 1.4.3 Contrast | AA | Normal text 4.5:1, large text 3:1 against background. |
+| | 1.4.4 Resize Text | AA | Text readable at 200% zoom. Never `user-scalable=no`. |
+| | 1.4.6 Contrast (Enhanced) | **AAA** | Body text 7:1, large text 4.5:1 in both modes. |
+| | 1.4.10 Reflow | AA | No horizontal scroll at 400% zoom (320px viewport). |
+| | 1.4.11 Non-text Contrast | AA | UI components and focus indicators: 3:1 against adjacent colors. |
+| **Operable (2.x)** | 2.1.1 Keyboard | A | All functionality is keyboard-accessible. |
+| | 2.1.2 No Keyboard Trap | A | Focus is never permanently trapped; `Escape` exits modals and dropdowns. |
+| | 2.3.1 Three Flashes | A | No content flashes more than 3 times per second. |
+| | 2.4.1 Bypass Blocks | A | Skip link is the first focusable element on every page. |
+| | 2.4.3 Focus Order | A | Tab order follows logical reading order. |
+| | 2.4.7 Focus Visible | AA | All focusable elements have a visible focus indicator. |
+| | 2.4.9 Link Purpose (Link Only) | **AAA** | Every link is unambiguous without surrounding context. Card and CTA links use `aria-label`. |
+| | 2.4.10 Section Headings | **AAA** | Headings organize all content sections, including sidebar sub-sections. |
+| | 2.4.11 Focus Appearance | AA | Focus indicator is at least 2px, with 3:1 contrast against adjacent colors. |
+| | 2.4.12 Focus Not Obscured | AA | Focused elements are not fully hidden by sticky headers or overlays. |
+| | 2.5.3 Label in Name | A | Accessible name contains the visible text (required for voice control). |
+| | 2.5.8 Target Size Minimum | AA | Touch targets are at least 24×24px. |
+| **Understandable (3.x)** | 3.1.1 Language of Page | A | `<html lang="en">` is set. |
+| | 3.1.3 Unusual Words | **AAA** | Technical terms defined on first use via `<abbr title="…">` or inline expansion. |
+| | 3.1.4 Abbreviations | **AAA** | Abbreviations expanded on first use per page. |
+| | 3.1.5 Reading Level | **AAA** | General copy targets plain language; technical terms expanded on first use. |
+| | 3.3.1 Error Identification | A | Error messages identify the field and describe the error. |
+| | 3.3.2 Labels or Instructions | A | Form fields have labels; placeholders are not substitutes. |
+| **Robust (4.x)** | 4.1.2 Name, Role, Value | A | ARIA roles and attributes are valid. Dynamic state (`aria-expanded`, `aria-current`) is kept in sync. |
 
 ---
 

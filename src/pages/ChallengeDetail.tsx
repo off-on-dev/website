@@ -26,6 +26,7 @@ import { SITE_URL, BRAND_NAME, COMMUNITY_DISPLAY_NAME, COMMUNITY_URL } from "@/d
 import { buildPageMeta } from "@/lib/meta";
 import { isDeadlinePast, isSolutionUnlocked, resolveDiscussionUrl } from "@/lib/utils";
 import { InlineProse } from "@/components/InlineProse";
+import { Abbr } from "@/components/Abbr";
 
 export const links: LinksFunction = () => [
   { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
@@ -192,14 +193,14 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
           )}
 
           {/* CTA card */}
-          <section className="mb-6 rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
+          <section aria-labelledby="cta-start-heading" className="mb-6 rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
             <div className="lg:grid lg:grid-cols-2 lg:gap-6 lg:items-center">
               <div>
-                <h3 className="text-sm font-semibold text-foreground mb-1">
+                <h2 id="cta-start-heading" className="text-sm font-semibold text-foreground mb-1">
                   Ready to start?
-                </h3>
+                </h2>
                 <p className="text-xs text-dim">
-                  Launch in a preconfigured devcontainer
+                  Launch in a preconfigured <Abbr title="development container: a portable, reproducible coding environment defined by a configuration file">devcontainer</Abbr>
                 </p>
               </div>
               <div className="mt-4 lg:mt-0 flex flex-col lg:items-end">
@@ -214,8 +215,8 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
                 {
                   title: "Get Started",
                   content: [
-                    `<p><a href="${level.codespacesUrl.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" target="_blank" rel="noopener noreferrer">Open in GitHub Codespaces</a>. The devcontainer is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.</p>`,
-                    `<p>Prefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (VS Code, JetBrains IDEs, and others). The devcontainer config will be detected automatically.</p>`,
+                    `<p><a href="${level.codespacesUrl.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" target="_blank" rel="noopener noreferrer">Open in GitHub Codespaces</a>. The <abbr title="development container: a portable, reproducible coding environment defined by a configuration file">devcontainer</abbr> is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.</p>`,
+                    `<p>Prefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (<abbr title="Visual Studio Code">VS Code</abbr>, JetBrains IDEs, and others). The devcontainer config will be detected automatically.</p>`,
                   ].join("\n"),
                 },
                 ...howToPlay,
@@ -292,6 +293,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
               </p>
               <Link
                 to={`/adventures/${adventure.id}/levels/${level.id}/solution/`}
+                aria-label={`View the solution walkthrough for ${level.name}`}
                 className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline focus-ring-tight rounded-sm"
               >
                 View the solution walkthrough

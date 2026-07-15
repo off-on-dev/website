@@ -42,7 +42,7 @@ export const Footer = (): JSX.Element => {
             <nav aria-label="Community">
               <p className="text-xs uppercase tracking-widest text-faint mb-3">Community</p>
               <div className="flex flex-col">
-                <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className={linkCls}>Hub <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
+                <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className={linkCls}>Community Hub <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
                 <a href={`${COMMUNITY_URL}/t/code-of-conduct/31/1`} target="_blank" rel="noopener noreferrer" className={linkCls}>Code of Conduct <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
                 <NavLink to="/privacy/" className={linkCls}>Privacy Policy</NavLink>
                 <NavLink to="/accessibility/" className={linkCls}>Accessibility</NavLink>

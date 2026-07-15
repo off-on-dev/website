@@ -5,6 +5,7 @@ import { ExternalLink } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SITE_URL, SITE_NAME, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
+import { Abbr } from "@/components/Abbr";
 import { buildPageMeta } from "@/lib/meta";
 
 export const meta: MetaFunction = () =>
@@ -42,9 +43,9 @@ const Accessibility = (): JSX.Element => {
               <li>
                 <strong>Target:</strong>{" "}
                 <a href="https://www.w3.org/TR/WCAG22/" target="_blank" rel="noopener noreferrer" className={link}>
-                  WCAG 2.2 Level AA <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  <Abbr title="Web Content Accessibility Guidelines">WCAG</Abbr> 2.2 Level <Abbr title="double-A conformance level">AA</Abbr> <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>{" "}
-                across every page on {SITE_NAME}.
+                across every page on {SITE_NAME}, with selected Level AAA criteria applied wherever practical.
               </li>
               <li>
                 <strong>Both color modes:</strong> light and dark mode must meet contrast and focus
@@ -69,15 +70,22 @@ const Accessibility = (): JSX.Element => {
                 <code>&lt;nav&gt;</code>, <code>&lt;header&gt;</code>, <code>&lt;footer&gt;</code>,{" "}
                 <code>&lt;section&gt;</code>, and <code>&lt;article&gt;</code> where appropriate.
               </li>
-              <li>One <code>&lt;h1&gt;</code> per page with no skipped heading levels.</li>
+              <li>One <code>&lt;h1&gt;</code> per page with no skipped heading levels. Section headings are used to organise all content areas.</li>
               <li>
                 Meaningful <code>alt</code> text on informational images, empty{" "}
                 <code>alt=""</code> paired with <code>aria-hidden="true"</code> on decorative ones.
               </li>
               <li>Screen reader announcement of links that open in a new tab.</li>
               <li>
-                Color contrast verified at 4.5:1 for body text and 3:1 for large text and UI
-                controls in both modes.
+                Color contrast verified at 7:1 for body text and 4.5:1 for large text (<Abbr title="Web Content Accessibility Guidelines">WCAG</Abbr> <Abbr title="triple-A conformance level">AAA</Abbr> Enhanced Contrast), and 3:1 for <Abbr title="user interface">UI</Abbr> controls, in both modes.
+              </li>
+              <li>
+                Every link is unambiguous without surrounding context. Card links and call-to-action
+                buttons include a specific accessible name when the visible text alone could be ambiguous.
+              </li>
+              <li>
+                Abbreviations and technical terms are expanded on first use per page via{" "}
+                <code>&lt;abbr title="…"&gt;</code> or inline expansion.
               </li>
               <li>
                 Tested with{" "}

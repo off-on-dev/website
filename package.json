@@ -27,6 +27,7 @@
     "postbuild:dev": "node scripts/create-data-aliases.mjs"
   },
   "dependencies": {
+    "@radix-ui/react-tooltip": "^1.2.12",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.21.0",

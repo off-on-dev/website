@@ -29,6 +29,7 @@ export const OtherLevelsCard = ({
           <li key={level.id}>
             <Link
               to={`/adventures/${adventure.id}/levels/${level.id}/`}
+              aria-label={`${level.name} – ${level.difficulty} level of ${adventure.title}`}
               className="group inline-flex w-full items-center gap-2 rounded-sm border px-2.5 py-1.5 text-xs no-underline hover:brightness-95 transition-[filter] focus-ring-tight"
               style={difficultyStyle(level.difficulty)}
             >

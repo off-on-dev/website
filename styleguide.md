@@ -578,6 +578,21 @@ Used in `Navbar` (mobile menu drawer). The ref is attached to the menu `<div>` w
 
 ## Components
 
+### `Abbr`
+
+`src/components/Abbr.tsx`
+
+Wraps an abbreviation with both a semantic `<abbr title>` element (for screen readers and the browser's built-in tooltip) and a shadcn Tooltip that shows instantly on hover (`delayDuration={0}`). Use this for all abbreviations in JSX; native `<abbr title>` must be used in template literal HTML strings (passed to `dangerouslySetInnerHTML`) where React components cannot be rendered.
+
+```tsx
+<Abbr title="pull request">PR</Abbr>
+<Abbr title="Web Content Accessibility Guidelines">WCAG</Abbr>
+```
+
+`TooltipProvider` is mounted inside `Abbr` itself, not in `Layout.tsx`, so each instance is self-contained. The `<abbr>` element is styled with `cursor-help` and a dotted underline to signal the definition is available.
+
+---
+
 ### `InlineProse`
 
 `src/components/InlineProse.tsx`
