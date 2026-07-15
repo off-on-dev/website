@@ -14,20 +14,30 @@ const difficultyPillStyle = (diff: Difficulty, isActive: boolean): CSSProperties
     borderStyle: "solid",
     backgroundColor: `hsl(var(--difficulty-${v}-bg))`,
     borderColor: isActive ? `hsl(var(--difficulty-${v}))` : `hsl(var(--difficulty-${v}-border))`,
-    borderWidth: isActive ? "2px" : "1px",
+    borderWidth: "2px",
     color: `hsl(var(--difficulty-text))`,
   };
 };
 
 // border-style in the `border` class of DIFF_PILL_BASE is what enables inline borderWidth/borderColor.
-const DIFF_PILL_BASE = "inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none transition-all duration-200 focus-ring cursor-pointer";
+const DIFF_PILL_BASE = "filter-pill inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none transition-all duration-200 focus-ring cursor-pointer";
 
 const allLevelsPillStyle = (isActive: boolean): CSSProperties => ({
   borderStyle: "solid",
   backgroundColor: isActive ? "hsl(var(--foreground))" : "transparent",
   borderColor: isActive ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.6)",
-  borderWidth: isActive ? "2px" : "1px",
+  borderWidth: "2px",
   color: isActive ? "hsl(var(--background))" : "hsl(var(--foreground))",
+});
+
+// Visual inverse of allLevelsPillStyle: outlined (transparent bg) instead of filled.
+// Inactive state mirrors pill-inactive: border-border + text-secondary (text-dim).
+const allToolsPillStyle = (isActive: boolean): CSSProperties => ({
+  borderStyle: "solid",
+  backgroundColor: "transparent",
+  borderColor: isActive ? "hsl(var(--foreground))" : "hsl(var(--border))",
+  borderWidth: "2px",
+  color: isActive ? "hsl(var(--foreground))" : "hsl(var(--text-secondary))",
 });
 
 export type { Difficulty };
@@ -195,7 +205,7 @@ export const ChallengeFilters = ({
               activeTopics.length > 0 ? "pill-active" : "pill-inactive",
               "px-6 gap-2"
             )}
-            style={activeTopics.length === 0 ? allLevelsPillStyle(true) : undefined}
+            style={activeTopics.length === 0 ? allToolsPillStyle(true) : undefined}
           >
             {activeTopics.length === 0 ? "All Tools" : `${activeTopics.length} tool${activeTopics.length !== 1 ? "s" : ""} selected`}
             <ChevronDown
@@ -263,7 +273,8 @@ export const ChallengeFilters = ({
 
         <div role="group" aria-label="Filter by technology" className="flex flex-wrap items-center gap-2">
           <button type="button" onClick={() => onTopicsChange([])} aria-pressed={activeTopics.length === 0}
-            className={`${activeTopics.length === 0 ? "pill-active" : "pill-inactive"} px-6`}
+            className={DIFF_PILL_BASE}
+            style={allToolsPillStyle(activeTopics.length === 0)}
           >
             All Tools
           </button>

@@ -1295,6 +1295,17 @@ html {
     color: ButtonText;
     forced-color-adjust: none;
   }
+  .filter-pill[aria-pressed="true"] {
+    border-color: Highlight;
+    background-color: Highlight;
+    color: HighlightText;
+    forced-color-adjust: none;
+  }
+  .filter-pill[aria-pressed="false"] {
+    border-color: ButtonText;
+    color: ButtonText;
+    forced-color-adjust: none;
+  }
   .skip-nav:focus {
     outline: 3px solid Highlight;
     border-color: Highlight;
