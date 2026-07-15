@@ -1,6 +1,7 @@
 import { type JSX } from "react";
 import { Link } from "react-router";
 import { ArrowRight } from "lucide-react";
+import { BRAND_NAME } from "@/data/constants";
 
 export const SponsorStrip = (): JSX.Element => {
   return (
@@ -8,7 +9,7 @@ export const SponsorStrip = (): JSX.Element => {
       <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         <div>
           <h2 id="sponsor-heading" className="text-3xl md:text-4xl font-bold leading-tight tracking-tight text-primary">
-            Support OffOn
+            Support {BRAND_NAME}
           </h2>
         </div>
         <div className="flex flex-col gap-4">

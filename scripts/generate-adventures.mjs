@@ -77,7 +77,7 @@ const schemaValidate = ajv.compile(adventureSchema);
 // future enum field added to the schema still gets AJV coverage.
 const SCHEMA_SKIP_KEYWORDS = new Set(["required", "type", "minItems", "if", "then", "else"]);
 
-// Maps emoji shorthand to Lucide React icon names used in AdventureDetail.
+// Maps emoji shorthand to Lucide React icon names used in AdventureIcon.tsx.
 const EMOJI_ICON_MAP = {
   "🧪": "FlaskConical",
   "🔭": "Telescope",
@@ -673,7 +673,7 @@ async function generateAdventureTs(data) {
   lines.push(``);
   const { title: adventureTitle, story: adventureStory, icon: adventureIcon } = normalizeAdventureFields(data);
   if (data.emoji && !adventureIcon) {
-    warn(`${data.slug}: emoji "${data.emoji}" is not in EMOJI_ICON_MAP — add it to scripts/generate-adventures.mjs and src/pages/AdventureDetail.tsx`);
+    warn(`${data.slug}: emoji "${data.emoji}" is not in EMOJI_ICON_MAP — add it to scripts/generate-adventures.mjs and src/components/AdventureIcon.tsx`);
   }
 
   // Pre-render prose fields to HTML at build time.

@@ -1,26 +1,9 @@
-import type { CSSProperties, JSX } from "react";
+import type { JSX } from "react";
 import { Badge } from "@/components/ui/badge";
 import type { AdventureLevel } from "@/data/adventures";
+import { difficultyStyle } from "@/lib/difficulty";
 
 type Difficulty = AdventureLevel["difficulty"];
-
-const badgeStyle: Record<Difficulty, CSSProperties> = {
-  Beginner: {
-    color: "hsl(var(--difficulty-text))",
-    borderColor: "hsl(var(--difficulty-starter-border))",
-    backgroundColor: "hsl(var(--difficulty-starter-bg))",
-  },
-  Intermediate: {
-    color: "hsl(var(--difficulty-text))",
-    borderColor: "hsl(var(--difficulty-builder-border))",
-    backgroundColor: "hsl(var(--difficulty-builder-bg))",
-  },
-  Expert: {
-    color: "hsl(var(--difficulty-text))",
-    borderColor: "hsl(var(--difficulty-architect-border))",
-    backgroundColor: "hsl(var(--difficulty-architect-bg))",
-  },
-};
 
 type DifficultyBadgeProps = {
   difficulty: Difficulty;
@@ -31,7 +14,7 @@ export const DifficultyBadge = ({ difficulty, showDot = false }: DifficultyBadge
   <Badge
     variant="outline"
     className="gap-1.5 rounded-md py-1 font-mono text-xs uppercase tracking-wider"
-    style={badgeStyle[difficulty]}
+    style={difficultyStyle(difficulty)}
     data-difficulty={difficulty}
   >
     {showDot && (

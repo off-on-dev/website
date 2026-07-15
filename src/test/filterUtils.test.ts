@@ -99,4 +99,28 @@ describe("getLevelSummariesByFilters", () => {
       expect(item.level.id).toBeTruthy();
     });
   });
+
+  it("propagates adventureIcon when the adventure has an icon", () => {
+    const adventuresWithIcon = ADVENTURE_SUMMARIES.filter((a) => a.icon);
+    if (adventuresWithIcon.length === 0) return;
+    adventuresWithIcon.forEach((a) => {
+      const result = getLevelSummariesByFilters([a.tags[0]], null);
+      const forThisAdventure = result.filter((r) => r.adventureId === a.id);
+      forThisAdventure.forEach((item) => {
+        expect(item.adventureIcon).toBe(a.icon);
+      });
+    });
+  });
+
+  it("omits adventureIcon when the adventure has no icon", () => {
+    const adventuresWithoutIcon = ADVENTURE_SUMMARIES.filter((a) => !a.icon);
+    if (adventuresWithoutIcon.length === 0) return;
+    adventuresWithoutIcon.forEach((a) => {
+      const result = getLevelSummariesByFilters([a.tags[0]], null);
+      const forThisAdventure = result.filter((r) => r.adventureId === a.id);
+      forThisAdventure.forEach((item) => {
+        expect(item.adventureIcon).toBeUndefined();
+      });
+    });
+  });
 });

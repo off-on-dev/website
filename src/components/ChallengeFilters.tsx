@@ -4,16 +4,14 @@ import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { ChevronDown, Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DIFFICULTIES, type Difficulty } from "@/data/adventures/filter-utils";
-
-const DIFFICULTY_VAR: Record<Difficulty, string> = {
-  Beginner: "starter",
-  Intermediate: "builder",
-  Expert: "architect",
-};
+import { DIFFICULTY_VAR } from "@/lib/difficulty";
 
 const difficultyPillStyle = (diff: Difficulty, isActive: boolean): CSSProperties => {
   const v = DIFFICULTY_VAR[diff];
   return {
+    // borderStyle must be set inline because DIFF_PILL_BASE's `border` class is the
+    // only source of border-style:solid; inline borderWidth/borderColor alone don't render borders.
+    borderStyle: "solid",
     backgroundColor: `hsl(var(--difficulty-${v}-bg))`,
     borderColor: isActive ? `hsl(var(--difficulty-${v}))` : `hsl(var(--difficulty-${v}-border))`,
     borderWidth: isActive ? "2px" : "1px",
@@ -21,13 +19,15 @@ const difficultyPillStyle = (diff: Difficulty, isActive: boolean): CSSProperties
   };
 };
 
+// border-style in the `border` class of DIFF_PILL_BASE is what enables inline borderWidth/borderColor.
 const DIFF_PILL_BASE = "inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none transition-all duration-200 focus-ring cursor-pointer";
 
 const allLevelsPillStyle = (isActive: boolean): CSSProperties => ({
-  backgroundColor: "hsl(var(--foreground))",
+  borderStyle: "solid",
+  backgroundColor: isActive ? "hsl(var(--foreground))" : "transparent",
   borderColor: isActive ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.6)",
   borderWidth: isActive ? "2px" : "1px",
-  color: "hsl(var(--background))",
+  color: isActive ? "hsl(var(--background))" : "hsl(var(--foreground))",
 });
 
 export type { Difficulty };
@@ -151,7 +151,7 @@ export const ChallengeFilters = ({
                 onKeyDown={navigatePanel}
                 className={dropdownItemClass(activeDifficulty === null)}
               >
-                {activeDifficulty === null && <Check size={13} aria-hidden="true" />}
+                {activeDifficulty === null ? <Check size={13} aria-hidden="true" /> : <span className="w-[13px] shrink-0" />}
                 All Levels
               </button>
               {DIFFICULTIES.map((diff) => {
@@ -163,15 +163,19 @@ export const ChallengeFilters = ({
                     onKeyDown={navigatePanel}
                     className={dropdownItemClass(isActive)}
                   >
-                    {isActive && <Check size={13} aria-hidden="true" />}
-                    <span
-                      className="h-2.5 w-2.5 rounded-sm shrink-0"
-                      aria-hidden="true"
-                      style={{
-                        backgroundColor: `hsl(var(--difficulty-${v}-bg))`,
-                        border: `1px solid hsl(var(--difficulty-${v}-border))`,
-                      }}
-                    />
+                    <span className="w-[13px] inline-flex items-center justify-center shrink-0">
+                      {isActive
+                        ? <Check size={13} aria-hidden="true" />
+                        : <span
+                            className="h-2.5 w-2.5 rounded-sm"
+                            aria-hidden="true"
+                            style={{
+                              backgroundColor: `hsl(var(--difficulty-${v}-bg))`,
+                              border: `1px solid hsl(var(--difficulty-${v}-border))`,
+                            }}
+                          />
+                      }
+                    </span>
                     {diff}
                   </button>
                 );
@@ -191,11 +195,7 @@ export const ChallengeFilters = ({
               activeTopics.length > 0 ? "pill-active" : "pill-inactive",
               "px-6 gap-2"
             )}
-            style={activeTopics.length === 0 ? {
-              backgroundColor: "transparent",
-              borderColor: "hsl(var(--foreground))",
-              color: "hsl(var(--foreground))",
-            } : undefined}
+            style={activeTopics.length === 0 ? allLevelsPillStyle(true) : undefined}
           >
             {activeTopics.length === 0 ? "All Tools" : `${activeTopics.length} tool${activeTopics.length !== 1 ? "s" : ""} selected`}
             <ChevronDown
