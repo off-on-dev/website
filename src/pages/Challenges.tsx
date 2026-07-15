@@ -55,14 +55,22 @@ const Challenges = (): JSX.Element => {
 
   const initialTag = tagSlug ? (slugToTag(tagSlug) ?? null) : null;
 
+  // Defer query-string reads until after mount to avoid hydration mismatch.
+  // Prerendered HTML has no query string; the browser URL does. Path params
+  // (initialTag) are stable between prerender and hydration and are safe to
+  // read immediately.
+  const [mounted, setMounted] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { setMounted(true); }, []);
+
   // ?topics= takes precedence over the path param so multi-tag state is clean.
   // On a single-tag path (/challenges/:tag) with no ?topics=, derive from the path.
-  const topicsParam = searchParams.get("topics");
+  const topicsParam = mounted ? searchParams.get("topics") : null;
   const activeTopics: string[] = topicsParam !== null
     ? topicsParam.split(",").filter(Boolean).map((s) => slugToTag(s)).filter((t): t is string => t !== undefined)
     : initialTag ? [initialTag] : [];
 
-  const difficultyParam = searchParams.get("difficulty");
+  const difficultyParam = mounted ? searchParams.get("difficulty") : null;
   const activeDifficulty: Difficulty | null =
     (DIFFICULTIES as readonly string[]).includes(difficultyParam ?? "")
       ? (difficultyParam as Difficulty)
@@ -71,10 +79,11 @@ const Challenges = (): JSX.Element => {
   const isFiltered = activeTopics.length > 0 || activeDifficulty !== null;
   const filteredLevels = isFiltered ? getLevelSummariesByFilters(activeTopics, activeDifficulty) : ALL_LEVEL_SUMMARIES;
 
-  // Trigger the aria-live announcement after mount. isFiltered is intentionally
-  // read at mount time only so an unresolvable ?topics= slug stays silent.
+  // Trigger the aria-live announcement when filters first become active.
+  // Unresolvable ?topics= slugs are filtered to an empty array, keeping
+  // isFiltered false and the announcement silent for invalid slugs.
   // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { if (isFiltered) setHasFiltered(true); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (isFiltered) setHasFiltered(true); }, [isFiltered]);
 
   // Difficulty always updates via setSearchParams, no path change, no remount, focus held.
   const handleDifficultyChange = (diff: Difficulty | null): void => {

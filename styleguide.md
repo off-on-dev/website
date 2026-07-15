@@ -582,14 +582,14 @@ Used in `Navbar` (mobile menu drawer). The ref is attached to the menu `<div>` w
 
 `src/components/Abbr.tsx`
 
-Wraps an abbreviation with both a semantic `<abbr title>` element (for screen readers and the browser's built-in tooltip) and a shadcn Tooltip that shows instantly on hover (`delayDuration={0}`). Use this for all abbreviations in JSX; native `<abbr title>` must be used in template literal HTML strings (passed to `dangerouslySetInnerHTML`) where React components cannot be rendered.
+Wraps an abbreviation with a semantic `<abbr title="…">` element and a CSS-only Tailwind tooltip that appears on hover. The `title` attribute carries the expansion for screen readers and the browser's native tooltip; the styled `<span>` is a visual enhancement only and is hidden from AT via `aria-hidden="true"`. Use this for all abbreviations in JSX; use native `<abbr title="…">` directly in template literal HTML strings (passed to `dangerouslySetInnerHTML`) where React components cannot be rendered — the `.md-inline`/`.md-content` CSS rules in `src/index.css` render the same tooltip for those.
 
 ```tsx
 <Abbr title="pull request">PR</Abbr>
 <Abbr title="Web Content Accessibility Guidelines">WCAG</Abbr>
 ```
 
-`TooltipProvider` is mounted inside `Abbr` itself, not in `Layout.tsx`, so each instance is self-contained. The `<abbr>` element is styled with `cursor-help` and a dotted underline to signal the definition is available.
+No `TooltipProvider` is needed. The `<abbr>` element is styled with `cursor-help` and a dotted underline to signal the definition is available. The native browser tooltip (from `title`) satisfies WCAG 1.4.13 hoverable; the Tailwind tooltip is supplementary.
 
 ---
 

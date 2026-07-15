@@ -117,9 +117,9 @@ const AdventureLevelLink = ({ level, adventureId }: AdventureLevelLinkProps): JS
           </span>
         )}
       </div>
-      <p className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors mb-3">
+      <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors mb-3">
         {level.name}
-      </p>
+      </h3>
       {descHtml && (
         <p className="text-xs text-dim leading-relaxed line-clamp-4 mb-4 flex-1 md-inline"
           dangerouslySetInnerHTML={{ __html: stripLinks(descHtml) }}

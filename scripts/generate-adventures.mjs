@@ -119,12 +119,28 @@ const sanitizeSchema = {
   ],
 };
 
+/** Post-sanitize: inject tabindex="0" on <abbr title> so keyboard users can
+ *  trigger the CSS tooltip. tabindex is stripped by rehypeSanitize (not in the
+ *  default allowlist), so this runs after sanitization to avoid the strip. */
+function addAbbrTabindex() {
+  return function (tree) {
+    function walk(node) {
+      if (node.type === "element" && node.tagName === "abbr" && node.properties?.title) {
+        node.properties.tabIndex = 0;
+      }
+      for (const child of node.children ?? []) walk(child);
+    }
+    walk(tree);
+  };
+}
+
 const mdProcessor = unified()
   .use(remarkParse)
   .use(remarkGfm)
   .use(remarkRehype, { allowDangerousHtml: true })
   .use(rehypeRaw)
   .use(rehypeSanitize, sanitizeSchema)
+  .use(addAbbrTabindex)
   .use(rehypeStringify);
 
 /** Add target/rel/sr-only to http/https <a> tags. The external link icon is

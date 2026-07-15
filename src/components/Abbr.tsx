@@ -1,4 +1,3 @@
-import { useId } from "react";
 import type { JSX, ReactNode } from "react";
 
 type AbbrProps = {
@@ -7,19 +6,19 @@ type AbbrProps = {
 };
 
 export const Abbr = ({ title, children }: AbbrProps): JSX.Element => {
-  const tooltipId = useId();
   return (
     <span className="relative group/abbr inline">
       <abbr
-        aria-describedby={tooltipId}
-        className="cursor-help underline decoration-dotted decoration-1 underline-offset-2"
+        title={title}
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- makes abbreviation expansion keyboard-accessible per WCAG 1.4.13
+        tabIndex={0}
+        className="cursor-help underline decoration-dotted decoration-1 underline-offset-2 rounded-sm focus-ring-tight"
       >
         {children}
       </abbr>
       <span
-        id={tooltipId}
-        role="tooltip"
-        className="absolute bottom-full left-0 mb-1.5 px-2 py-1 text-xs bg-foreground text-background rounded whitespace-nowrap opacity-0 pointer-events-none transition-opacity group-hover/abbr:opacity-100 z-[100]"
+        aria-hidden="true"
+        className="absolute bottom-full left-0 mb-1.5 px-2 py-1 text-xs bg-foreground text-background rounded whitespace-nowrap opacity-0 pointer-events-none transition-opacity group-hover/abbr:opacity-100 group-focus-within/abbr:opacity-100 z-[100]"
       >
         {title}
       </span>

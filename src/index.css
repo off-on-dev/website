@@ -905,8 +905,16 @@ html {
   z-index: 100;
 }
 .md-inline abbr[title]:hover::after,
-.md-content abbr[title]:hover::after {
+.md-content abbr[title]:hover::after,
+.md-inline abbr[title]:focus-visible::after,
+.md-content abbr[title]:focus-visible::after {
   opacity: 1;
+}
+.md-inline abbr[title]:focus-visible,
+.md-content abbr[title]:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 .md-inline a {
   display: inline-flex;
