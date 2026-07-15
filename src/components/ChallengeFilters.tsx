@@ -4,18 +4,17 @@ import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { ChevronDown, Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DIFFICULTIES, type Difficulty } from "@/data/adventures/filter-utils";
-import { DIFFICULTY_VAR } from "@/lib/difficulty";
+import { DIFFICULTY_VAR, difficultyStyle } from "@/lib/difficulty";
 
 const difficultyPillStyle = (diff: Difficulty, isActive: boolean): CSSProperties => {
   const v = DIFFICULTY_VAR[diff];
   return {
+    ...difficultyStyle(diff),
     // borderStyle must be set inline because DIFF_PILL_BASE's `border` class is the
     // only source of border-style:solid; inline borderWidth/borderColor alone don't render borders.
     borderStyle: "solid",
-    backgroundColor: `hsl(var(--difficulty-${v}-bg))`,
-    borderColor: isActive ? `hsl(var(--difficulty-${v}))` : `hsl(var(--difficulty-${v}-border))`,
     borderWidth: "2px",
-    color: `hsl(var(--difficulty-text))`,
+    borderColor: isActive ? `hsl(var(--difficulty-${v}))` : `hsl(var(--difficulty-${v}-border))`,
   };
 };
 
@@ -205,7 +204,7 @@ export const ChallengeFilters = ({
               activeTopics.length > 0 ? "pill-active" : "pill-inactive",
               "px-6 gap-2"
             )}
-            style={activeTopics.length === 0 ? allToolsPillStyle(true) : undefined}
+            style={allToolsPillStyle(activeTopics.length === 0)}
           >
             {activeTopics.length === 0 ? "All Tools" : `${activeTopics.length} tool${activeTopics.length !== 1 ? "s" : ""} selected`}
             <ChevronDown
@@ -282,7 +281,7 @@ export const ChallengeFilters = ({
             const isActive = activeTopics.includes(tag);
             return (
               <button key={tag} type="button" onClick={() => handleTagClick(tag)} aria-pressed={isActive}
-                className={isActive ? "pill-active" : "pill-inactive"}
+                className={cn("filter-pill", isActive ? "pill-active" : "pill-inactive")}
               >
                 {tag}
                 {isActive && <X size={11} aria-hidden="true" />}

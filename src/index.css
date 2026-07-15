@@ -1285,25 +1285,25 @@ html {
     forced-color-adjust: none;
   }
   .pill-active {
-    border-color: Highlight;
-    background-color: Highlight;
-    color: HighlightText;
+    border-color: Highlight !important;
+    background-color: Highlight !important;
+    color: HighlightText !important;
     forced-color-adjust: none;
   }
   .pill-inactive {
-    border-color: ButtonText;
-    color: ButtonText;
+    border-color: ButtonText !important;
+    color: ButtonText !important;
     forced-color-adjust: none;
   }
   .filter-pill[aria-pressed="true"] {
-    border-color: Highlight;
-    background-color: Highlight;
-    color: HighlightText;
+    border-color: Highlight !important;
+    background-color: Highlight !important;
+    color: HighlightText !important;
     forced-color-adjust: none;
   }
   .filter-pill[aria-pressed="false"] {
-    border-color: ButtonText;
-    color: ButtonText;
+    border-color: ButtonText !important;
+    color: ButtonText !important;
     forced-color-adjust: none;
   }
   .skip-nav:focus {

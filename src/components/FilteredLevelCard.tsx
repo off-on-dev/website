@@ -37,10 +37,12 @@ export const FilteredLevelCard = ({
       <DifficultyBadge difficulty={level.difficulty} showDot />
       {isLive && <LivePill />}
     </div>
-    <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors flex items-center gap-2">
-      {level.name}
+    <div className="flex items-center gap-1">
+      <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+        {level.name}
+      </h3>
       <AdventureIcon icon={adventureIcon} size={16} className="shrink-0 text-muted-foreground" />
-    </h3>
+    </div>
     <ul role="list" className="mt-3 space-y-1.5">
       {level.learnings.slice(0, 3).map((learning) => (
         <li key={learning} className="flex items-start gap-2 text-sm text-muted-foreground">

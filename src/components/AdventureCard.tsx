@@ -40,10 +40,12 @@ export const AdventureCard = ({ adventure }: AdventureCardProps): JSX.Element =>
         </div>
       </div>
 
-      <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors flex items-center gap-2">
-        {adventure.title}
+      <div className="flex items-center gap-1">
+        <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+          {adventure.title}
+        </h3>
         <AdventureIcon icon={adventure.icon} size={16} className="shrink-0 text-muted-foreground" />
-      </h3>
+      </div>
       <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{adventure.story}</p>
 
       <div className="mt-4 flex flex-wrap items-center gap-2">

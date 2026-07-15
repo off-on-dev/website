@@ -100,28 +100,17 @@ describe("getLevelSummariesByFilters", () => {
     });
   });
 
-  it("propagates adventureIcon when the adventure has an icon", () => {
-    const adventuresWithIcon = ADVENTURE_SUMMARIES.filter((a) => a.icon);
-    if (adventuresWithIcon.length === 0) return;
+  it("adventureIcon in each result exactly matches the source adventure's icon field", () => {
     const allResults = getLevelSummariesByFilters([], null);
-    adventuresWithIcon.forEach((a) => {
+    ADVENTURE_SUMMARIES.forEach((a) => {
       const forThisAdventure = allResults.filter((r) => r.adventureId === a.id);
       expect(forThisAdventure.length).toBeGreaterThan(0);
       forThisAdventure.forEach((item) => {
-        expect(item.adventureIcon).toBe(a.icon);
-      });
-    });
-  });
-
-  it("omits adventureIcon when the adventure has no icon", () => {
-    const adventuresWithoutIcon = ADVENTURE_SUMMARIES.filter((a) => !a.icon);
-    if (adventuresWithoutIcon.length === 0) return;
-    const allResults = getLevelSummariesByFilters([], null);
-    adventuresWithoutIcon.forEach((a) => {
-      const forThisAdventure = allResults.filter((r) => r.adventureId === a.id);
-      expect(forThisAdventure.length).toBeGreaterThan(0);
-      forThisAdventure.forEach((item) => {
-        expect(item.adventureIcon).toBeUndefined();
+        if (a.icon) {
+          expect(item.adventureIcon).toBe(a.icon);
+        } else {
+          expect(item.adventureIcon).toBeUndefined();
+        }
       });
     });
   });

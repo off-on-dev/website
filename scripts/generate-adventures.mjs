@@ -87,6 +87,10 @@ const EMOJI_ICON_MAP = {
   "🧭": "Compass",
 };
 
+// Must stay in sync with the ICONS map in src/components/AdventureIcon.tsx.
+// A name absent from this set is written to the generated file but AdventureIcon silently returns null.
+const VALID_ICONS = new Set([...Object.values(EMOJI_ICON_MAP), "Building2"]);
+
 
 // Constant rewards fields shared by all adventures. Omit from YAML to use these defaults.
 const DEFAULT_REWARDS_ELIGIBILITY =
@@ -674,6 +678,9 @@ async function generateAdventureTs(data) {
   const { title: adventureTitle, story: adventureStory, icon: adventureIcon } = normalizeAdventureFields(data);
   if (data.emoji && !adventureIcon) {
     warn(`${data.slug}: emoji "${data.emoji}" is not in EMOJI_ICON_MAP — add it to scripts/generate-adventures.mjs and src/components/AdventureIcon.tsx`);
+  }
+  if (data.icon && !VALID_ICONS.has(data.icon)) {
+    warn(`${data.slug}: icon "${data.icon}" is not in VALID_ICONS — add it to scripts/generate-adventures.mjs VALID_ICONS and src/components/AdventureIcon.tsx ICONS`);
   }
 
   // Pre-render prose fields to HTML at build time.
