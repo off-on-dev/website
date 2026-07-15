@@ -7,6 +7,8 @@ import { AboutSection } from "@/components/AboutSection";
 import { BoardSection } from "@/components/BoardSection";
 import { ChallengeBuildersSection } from "@/components/ChallengeBuildersSection";
 import { BrandStory } from "@/components/BrandStory";
+import { CommunityLeaders } from "@/components/CommunityLeaders";
+import { SidebarLayout } from "@/components/SidebarLayout";
 import { BottomCTA } from "@/components/BottomCTA";
 import { SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
@@ -49,9 +51,17 @@ const About = (): JSX.Element => {
           </div>
         </div>
       </section>
-      <AboutSection />
-      <BrandStory />
-      <BoardSection />
+      <div className="px-6 md:px-16 py-16">
+        <div className="mx-auto max-w-6xl">
+          <SidebarLayout aside={<CommunityLeaders />}>
+            <div>
+              <AboutSection />
+              <BrandStory />
+              <BoardSection />
+            </div>
+          </SidebarLayout>
+        </div>
+      </div>
       <ChallengeBuildersSection />
       <BottomCTA />
       </main>

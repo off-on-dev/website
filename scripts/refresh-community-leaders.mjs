@@ -19,7 +19,7 @@
  *                likes_given, uploaded_avatar_id
  *   8 - Challenge solver/builder stats (solve_count, is_grand_builder, challenges_created)
  *       Columns: user_id, username, solve_count, is_grand_builder, challenges_created,
- *                is_challenge_builder, uploaded_avatar_id
+ *                is_challenge_builder, is_rockstar, uploaded_avatar_id
  *
  * Writes:
  *   src/data/community-leaders.json
@@ -48,9 +48,11 @@ const CHALLENGE_PARAMS = {
   solver_badge_name: "Challenge Solved",
   builder_badge_name: "Challenge Grand Builder",
   cb_badge_name: "Challenge Builder",
+  rockstar_badge_name: "Challenge Rockstar",
 };
 
 const TOP_N = 5;
+const POOL_SIZE = TOP_N + 1; // fetch one extra so promotions/exclusions don't drop displayed lists below TOP_N
 const AVATAR_SIZE = "40";
 
 // Load .env file for local development. Never used in CI (secrets are env vars).
@@ -177,12 +179,14 @@ async function main() {
   const chIsGrandBuilder     = col(chCols, "is_grand_builder");
   const chChallengesCreated  = col(chCols, "challenges_created");
   const chIsChallengeBuilder = col(chCols, "is_challenge_builder");
+  const chIsRockstar         = col(chCols, "is_rockstar");
   const chAvatarId           = col(chCols, "uploaded_avatar_id");
 
   const cRows  = community.rows;
   const chRows = challenge.rows;
 
   const solvers = chRows
+    .filter((r) => !r[chIsRockstar])
     .map((r) => ({
       username: String(r[chUsername]),
       value: Number(r[chSolveCount]),
@@ -190,8 +194,17 @@ async function main() {
     }))
     .filter((u) => u.value > 0)
     .sort((a, b) => b.value - a.value)
-    .slice(0, TOP_N)
+    .slice(0, POOL_SIZE)
     .map((u) => ({ username: u.username, avatarUrl: u.avatarUrl, count: u.value }));
+
+  const rockstars = chRows
+    .filter((r) => r[chIsRockstar])
+    .map((r) => ({
+      username: String(r[chUsername]),
+      avatarUrl: buildAvatarUrl(String(r[chUsername]), r[chAvatarId] ?? null),
+      count: Number(r[chSolveCount]),
+    }))
+    .sort((a, b) => b.count - a.count);
 
   const grandBuilders = chRows
     .filter((r) => r[chIsGrandBuilder])
@@ -204,7 +217,7 @@ async function main() {
   const builders = chRows
     .filter((r) => r[chIsChallengeBuilder] && !r[chIsGrandBuilder])
     .sort((a, b) => Number(b[chChallengesCreated]) - Number(a[chChallengesCreated]))
-    .slice(0, TOP_N)
+    .slice(0, POOL_SIZE)
     .map((r) => ({
       username: String(r[chUsername]),
       avatarUrl: buildAvatarUrl(String(r[chUsername]), r[chAvatarId] ?? null),
@@ -213,8 +226,9 @@ async function main() {
 
   const sections = [
     { id: "top-contributors",         title: "Top Contributors",         users: topByCol(cRows,  cUsername, cTopics,        cAvatarId,  TOP_N) },
-    { id: "top-challenge-solvers",    title: "Top Challenge Solvers",    users: solvers },
+    { id: "challenge-rockstars",      title: "Challenge Rockstars",      users: rockstars },
     { id: "challenge-grand-builders", title: "Challenge Grand Builders", users: grandBuilders },
+    { id: "top-challenge-solvers",    title: "Top Challenge Solvers",    users: solvers },
     { id: "challenge-builders",       title: "Challenge Builders",       users: builders },
     { id: "most-liked",               title: "Most Liked",               users: topByCol(cRows,  cUsername, cLikesReceived, cAvatarId,  TOP_N) },
     { id: "most-replies",             title: "Most Replies",             users: topByCol(cRows,  cUsername, cReplies,       cAvatarId,  TOP_N) },

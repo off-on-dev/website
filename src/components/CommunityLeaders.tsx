@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { Trophy, Target, Building2, Wrench, Heart, MessageCircle, HandHeart } from "lucide-react";
+import { Trophy, Target, Building2, Wrench, Heart, MessageCircle, HandHeart, Star } from "lucide-react";
 import communityLeadersData from "@/data/community-leaders.json";
 import { AvatarLink } from "@/components/AvatarLink";
 
@@ -18,11 +18,14 @@ type LeaderSection = {
 type CommunityLeadersProps = {
   /** Which section IDs to show. Omit to show all. */
   sections?: string[];
+  /** Max users to show per section. Omit to show all. */
+  limit?: number;
 };
 
 const SECTION_ICONS: Record<string, JSX.Element> = {
   "top-contributors": <Trophy size={14} aria-hidden="true" />,
   "top-challenge-solvers": <Target size={14} aria-hidden="true" />,
+  "challenge-rockstars": <Star size={14} aria-hidden="true" />,
   "challenge-grand-builders": <Building2 size={14} aria-hidden="true" />,
   "challenge-builders": <Wrench size={14} aria-hidden="true" />,
   "most-liked": <Heart size={14} aria-hidden="true" />,
@@ -71,10 +74,14 @@ const LeaderCategory = ({ section }: { section: LeaderSection }): JSX.Element =>
 
 export const CommunityLeaders = ({
   sections: sectionFilter,
+  limit,
 }: CommunityLeadersProps): JSX.Element => {
-  const visibleSections = sectionFilter
+  const visibleSections = (sectionFilter
     ? ALL_SECTIONS.filter((s) => sectionFilter.includes(s.id))
-    : ALL_SECTIONS;
+    : ALL_SECTIONS
+  ).map((s) =>
+    limit ? { ...s, users: s.users.slice(0, limit) } : s
+  );
 
   return (
     <div

@@ -7,6 +7,8 @@ import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
 import { SectionLabel } from "@/components/SectionLabel";
+import { SidebarLayout } from "@/components/SidebarLayout";
+import { CommunityLeaders } from "@/components/CommunityLeaders";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL, LINKEDIN_URL, BLUESKY_URL, X_URL } from "@/data/constants";
 import { Abbr } from "@/components/Abbr";
 import { buildPageMeta } from "@/lib/meta";
@@ -39,6 +41,8 @@ const Contribute = (): JSX.Element => {
         {/* Ways to contribute */}
         <div className="px-6 md:px-16 py-16">
           <div className="mx-auto max-w-6xl">
+          <SidebarLayout aside={<CommunityLeaders />}>
+            <div>
             <section aria-labelledby="ways-to-contribute">
               <SectionLabel>get involved</SectionLabel>
               <h2 id="ways-to-contribute" className="text-2xl font-bold text-foreground mb-4">How to Get Involved</h2>
@@ -169,6 +173,8 @@ const Contribute = (): JSX.Element => {
                 </a>
               </div>
             </div>
+            </div>
+          </SidebarLayout>
           </div>
         </div>
 

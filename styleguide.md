@@ -829,21 +829,23 @@ Data source: `src/data/community-leaders.json` (refreshed daily by `.github/work
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `sections` | `string[]` | all | Filter to show only specific section IDs |
+| `sections` | `string[]` | all | Filter to show only specific section IDs, in the order given |
+| `limit` | `number` | all | Cap the number of users shown per section. Used on `Index.tsx` (homepage) with `limit={3}` |
 
-Section IDs: `top-contributors`, `top-challenge-solvers`, `challenge-grand-builders`, `challenge-builders`, `most-liked`, `most-replies`, `most-supportive`.
+Section IDs: `top-contributors`, `challenge-rockstars`, `challenge-grand-builders`, `top-challenge-solvers`, `challenge-builders`, `most-liked`, `most-replies`, `most-supportive`.
 
 | Section | Icon |
 | --- | --- |
 | Top Contributors | `Trophy` |
-| Top Challenge Solvers | `Target` |
+| Challenge Rockstars | `Star` |
 | Challenge Grand Builders | `Building2` |
+| Top Challenge Solvers | `Target` |
 | Challenge Builders | `Wrench` |
 | Most Liked | `Heart` |
 | Most Replies | `MessageCircle` |
 | Most Supportive | `HandHeart` |
 
-Used in: `Index.tsx` (via CommunitySection aside), `Adventures.tsx` (via ChallengeBuildersSection aside), `CommunityGuide.tsx` (standalone sidebar).
+Used in: `Index.tsx` (via CommunitySection aside, limit=3), `Adventures.tsx` (via ChallengeBuildersSection aside, builder-first order), `Challenges.tsx` (via ChallengeBuildersSection aside, solver-first order), `CommunityGuide.tsx` (standalone sidebar, all sections), `About.tsx` (via SidebarLayout aside), `Contribute.tsx` (via SidebarLayout aside).
 
 ---
 

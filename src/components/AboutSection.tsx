@@ -5,8 +5,8 @@ import { SectionLabel } from "@/components/SectionLabel";
 
 export const AboutSection = (): JSX.Element => {
   return (
-    <section id="approach" aria-label="Our foundation" className="py-16 px-6 md:px-16">
-      <div className="mx-auto max-w-6xl">
+    <section id="approach" aria-label="Our foundation" className="pb-16">
+      <div>
         <SectionLabel>our foundation</SectionLabel>
 
         <div className="mb-8">

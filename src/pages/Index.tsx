@@ -59,7 +59,8 @@ const Index = (): JSX.Element => {
         <CommunitySection
           aside={
             <CommunityLeaders
-              sections={["top-contributors", "top-challenge-solvers", "most-liked"]}
+              sections={["top-contributors", "challenge-rockstars", "challenge-grand-builders", "top-challenge-solvers", "challenge-builders", "most-supportive"]}
+              limit={3}
             />
           }
         />
