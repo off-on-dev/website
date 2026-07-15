@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-14T23:47:00.733Z",
+  "lastUpdated": "2026-07-15T01:52:06.161Z",
   "sections": [
     {
       "id": "top-contributors",
@@ -42,23 +42,23 @@
           "count": 9
         },
         {
-          "username": "iw4p",
-          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
-          "count": 8
-        },
-        {
           "username": "gsigmund",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/gsigmund/40/99_2.png",
           "count": 8
         },
         {
-          "username": "enri-kapaj",
-          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/enri-kapaj/40/165_2.png",
-          "count": 6
+          "username": "iw4p",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
+          "count": 8
         },
         {
           "username": "justinrand",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/justinrand/40/140_2.png",
+          "count": 6
+        },
+        {
+          "username": "enri-kapaj",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/enri-kapaj/40/165_2.png",
           "count": 6
         }
       ]
