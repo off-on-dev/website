@@ -1423,7 +1423,7 @@ Renders the Lucide icon associated with an adventure by its string name. Returns
 | `size` | `number?` | `16` | Pixel size passed to the Lucide icon component. |
 | `className` | `string?` | — | CSS class applied to the rendered icon element. |
 
-Always set `aria-hidden="true"` is applied automatically — the icon is purely decorative.
+`aria-hidden="true"` is applied automatically — the icon is purely decorative.
 
 **Adding a new icon (two-step process):**
 

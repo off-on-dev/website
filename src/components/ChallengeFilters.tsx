@@ -140,7 +140,7 @@ export const ChallengeFilters = ({
               activeDifficulty !== null ? "pill-active" : "pill-inactive",
               "px-6 gap-2"
             )}
-            style={activeDifficulty !== null ? difficultyPillStyle(activeDifficulty as Difficulty, true) : allLevelsPillStyle(true)}
+            style={activeDifficulty !== null && activeDifficulty in DIFFICULTY_VAR ? difficultyPillStyle(activeDifficulty as Difficulty, true) : allLevelsPillStyle(true)}
           >
             {activeDifficulty ?? "All Levels"}
             <ChevronDown
