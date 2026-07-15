@@ -41,7 +41,7 @@ const Index = (): JSX.Element => {
             </h2>
             <div className="flex flex-col gap-4">
               <p className="font-sans text-base leading-relaxed text-background/90">
-                Shape what the community learns next. Submit a scenario and help it become the next adventure.
+                An adventure is a set of hands-on challenges built around one open source technology. Submit a scenario and help shape what the community learns next.
               </p>
               <div className="flex gap-3 flex-wrap mt-2">
                 <a

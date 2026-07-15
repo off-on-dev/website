@@ -14,6 +14,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
       aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
     },
     isLive: true,
+    icon: "Compass",
     levels: [
       {
         id: "beginner",
@@ -53,6 +54,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
       url: "https://ksick.dev/",
       aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
     },
+    icon: "Scale",
     levels: [
       {
         id: "beginner",
@@ -104,6 +106,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
       url: "https://schrottner.at/",
       aboutHtml: "CNCF Ambassador and maintainer of OpenFeature and JUnit Pioneer. Helps teams release faster and with more confidence through open standards, feature flagging, and the communities that make both possible. A familiar face at KubeCon EU, Devoxx, ContainerDays, and meetups across Europe.",
     },
+    icon: "FlaskConical",
     levels: [
       {
         id: "beginner",
@@ -153,6 +156,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
       url: "https://ksick.dev/",
       aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
     },
+    icon: "Telescope",
     levels: [
       {
         id: "beginner",
@@ -198,6 +202,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
       url: "https://ksick.dev/",
       aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
     },
+    icon: "Building2",
     levels: [
       {
         id: "beginner",
@@ -247,6 +252,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
       url: "https://ksick.dev/",
       aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
     },
+    icon: "Satellite",
     levels: [
       {
         id: "beginner",
@@ -303,6 +309,7 @@ export const getLevelSummariesByTag = (tag: string): RelatedLevelSummary[] =>
         adventureId: a.id,
         adventureTitle: a.title,
         ...(a.isLive ? { isLive: true } : {}),
+        ...(a.icon ? { adventureIcon: a.icon } : {}),
       }))
     );
 

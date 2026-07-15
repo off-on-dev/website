@@ -6,6 +6,7 @@ import { stripLinks } from "@/lib/markdown";
 import type { AdventureLevelSummary } from "@/data/adventures";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { LivePill } from "@/components/LivePill";
+import { AdventureIcon } from "@/components/AdventureIcon";
 
 type FilteredLevelCardProps = {
   level: AdventureLevelSummary;
@@ -13,6 +14,7 @@ type FilteredLevelCardProps = {
   adventureTitle: string;
   isLive?: boolean;
   className?: string;
+  adventureIcon?: string;
 };
 
 export const FilteredLevelCard = ({
@@ -21,6 +23,7 @@ export const FilteredLevelCard = ({
   adventureTitle,
   isLive,
   className,
+  adventureIcon,
 }: FilteredLevelCardProps): JSX.Element => (
   <Link
     to={`/adventures/${adventureId}/levels/${level.id}/`}
@@ -34,8 +37,9 @@ export const FilteredLevelCard = ({
       <DifficultyBadge difficulty={level.difficulty} showDot />
       {isLive && <LivePill />}
     </div>
-    <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+    <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors flex items-center gap-2">
       {level.name}
+      <AdventureIcon icon={adventureIcon} size={16} className="shrink-0 text-muted-foreground" />
     </h3>
     <ul role="list" className="mt-3 space-y-1.5">
       {level.learnings.slice(0, 3).map((learning) => (

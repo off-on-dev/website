@@ -84,6 +84,7 @@ const EMOJI_ICON_MAP = {
   "☁️": "Cloud",
   "🛰️": "Satellite",
   "⚖️": "Scale",
+  "🧭": "Compass",
 };
 
 
@@ -802,7 +803,7 @@ async function generateSummariesTs(adventures) {
 
   for (const data of adventures) {
     lines.push(`  {`);
-    const { title: summaryTitle, story: summaryStory } = normalizeAdventureFields(data);
+    const { title: summaryTitle, story: summaryStory, icon: summaryIcon } = normalizeAdventureFields(data);
     lines.push(`    id: "${data.slug}",`);
     lines.push(`    title: "${escapeDoubleQuoted(summaryTitle)}",`);
     lines.push(`    month: "${data.month}",`);
@@ -825,6 +826,7 @@ async function generateSummariesTs(adventures) {
     if (rewardsLive || levelLive) {
       lines.push(`    isLive: true,`);
     }
+    if (summaryIcon) lines.push(`    icon: "${escapeDoubleQuoted(summaryIcon)}",`);
     lines.push(`    levels: [`);
     for (const level of data.levels) {
       lines.push(`      {`);
@@ -864,6 +866,7 @@ async function generateSummariesTs(adventures) {
   lines.push(`        adventureId: a.id,`);
   lines.push(`        adventureTitle: a.title,`);
   lines.push(`        ...(a.isLive ? { isLive: true } : {}),`);
+  lines.push(`        ...(a.icon ? { adventureIcon: a.icon } : {}),`);
   lines.push(`      }))`);
   lines.push(`    );`);
   lines.push(``);

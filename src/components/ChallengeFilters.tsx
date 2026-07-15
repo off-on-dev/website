@@ -1,9 +1,34 @@
-import { useState, useEffect, useRef, useId, type JSX } from "react";
+import { useState, useEffect, useRef, useId, type JSX, type CSSProperties } from "react";
 import { useEscapeKey } from "@/hooks/useEscapeKey";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { ChevronDown, Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DIFFICULTIES, type Difficulty } from "@/data/adventures/filter-utils";
+
+const DIFFICULTY_VAR: Record<Difficulty, string> = {
+  Beginner: "starter",
+  Intermediate: "builder",
+  Expert: "architect",
+};
+
+const difficultyPillStyle = (diff: Difficulty, isActive: boolean): CSSProperties => {
+  const v = DIFFICULTY_VAR[diff];
+  return {
+    backgroundColor: `hsl(var(--difficulty-${v}-bg))`,
+    borderColor: isActive ? `hsl(var(--difficulty-${v}))` : `hsl(var(--difficulty-${v}-border))`,
+    borderWidth: isActive ? "2px" : "1px",
+    color: `hsl(var(--difficulty-text))`,
+  };
+};
+
+const DIFF_PILL_BASE = "inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none transition-all duration-200 focus-ring cursor-pointer";
+
+const allLevelsPillStyle = (isActive: boolean): CSSProperties => ({
+  backgroundColor: "hsl(var(--foreground))",
+  borderColor: isActive ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.6)",
+  borderWidth: isActive ? "2px" : "1px",
+  color: "hsl(var(--background))",
+});
 
 export type { Difficulty };
 
@@ -105,6 +130,7 @@ export const ChallengeFilters = ({
               activeDifficulty !== null ? "pill-active" : "pill-inactive",
               "px-6 gap-2"
             )}
+            style={activeDifficulty !== null ? difficultyPillStyle(activeDifficulty as Difficulty, true) : allLevelsPillStyle(true)}
           >
             {activeDifficulty ?? "All Levels"}
             <ChevronDown
@@ -125,18 +151,27 @@ export const ChallengeFilters = ({
                 onKeyDown={navigatePanel}
                 className={dropdownItemClass(activeDifficulty === null)}
               >
-                {activeDifficulty === null ? <Check size={13} aria-hidden="true" /> : <span className="w-[13px] shrink-0" />}
+                {activeDifficulty === null && <Check size={13} aria-hidden="true" />}
                 All Levels
               </button>
               {DIFFICULTIES.map((diff) => {
                 const isActive = activeDifficulty === diff;
+                const v = DIFFICULTY_VAR[diff];
                 return (
                   <button key={diff} type="button" aria-pressed={isActive}
                     onClick={() => { handleDifficultyClick(diff); setDifficultyOpen(false); difficultyTriggerRef.current?.focus(); }}
                     onKeyDown={navigatePanel}
                     className={dropdownItemClass(isActive)}
                   >
-                    {isActive ? <Check size={13} aria-hidden="true" /> : <span className="w-[13px] shrink-0" />}
+                    {isActive && <Check size={13} aria-hidden="true" />}
+                    <span
+                      className="h-2.5 w-2.5 rounded-sm shrink-0"
+                      aria-hidden="true"
+                      style={{
+                        backgroundColor: `hsl(var(--difficulty-${v}-bg))`,
+                        border: `1px solid hsl(var(--difficulty-${v}-border))`,
+                      }}
+                    />
                     {diff}
                   </button>
                 );
@@ -156,6 +191,11 @@ export const ChallengeFilters = ({
               activeTopics.length > 0 ? "pill-active" : "pill-inactive",
               "px-6 gap-2"
             )}
+            style={activeTopics.length === 0 ? {
+              backgroundColor: "transparent",
+              borderColor: "hsl(var(--foreground))",
+              color: "hsl(var(--foreground))",
+            } : undefined}
           >
             {activeTopics.length === 0 ? "All Tools" : `${activeTopics.length} tool${activeTopics.length !== 1 ? "s" : ""} selected`}
             <ChevronDown
@@ -202,17 +242,23 @@ export const ChallengeFilters = ({
 
         <div role="group" aria-label="Filter by difficulty" className="flex flex-wrap items-center gap-2 pb-3 border-b border-border">
           <button type="button" onClick={() => onDifficultyChange(null)} aria-pressed={activeDifficulty === null}
-            className={`${activeDifficulty === null ? "pill-active" : "pill-inactive"} px-6`}
+            className={DIFF_PILL_BASE}
+            style={allLevelsPillStyle(activeDifficulty === null)}
           >
             All Levels
           </button>
-          {DIFFICULTIES.map((diff) => (
-            <button key={diff} type="button" onClick={() => handleDifficultyClick(diff)} aria-pressed={activeDifficulty === diff}
-              className={activeDifficulty === diff ? "pill-active" : "pill-inactive"}
-            >
-              {diff}
-            </button>
-          ))}
+          {DIFFICULTIES.map((diff) => {
+            const isActive = activeDifficulty === diff;
+            return (
+              <button key={diff} type="button" onClick={() => handleDifficultyClick(diff)} aria-pressed={isActive}
+                className={DIFF_PILL_BASE}
+                style={difficultyPillStyle(diff, isActive)}
+              >
+                {diff}
+                {isActive && <X size={11} aria-hidden="true" />}
+              </button>
+            );
+          })}
         </div>
 
         <div role="group" aria-label="Filter by technology" className="flex flex-wrap items-center gap-2">

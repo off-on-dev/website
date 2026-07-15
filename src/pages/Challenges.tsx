@@ -159,13 +159,14 @@ const Challenges = (): JSX.Element => {
                   {activeTopics.length > 0 && ` · ${activeTopics.join(", ")}`}
                 </p>
                 <div key={filterKey} className="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-                  {filteredLevels.map(({ level, adventureId, adventureTitle, isLive }) => (
+                  {filteredLevels.map(({ level, adventureId, adventureTitle, isLive, adventureIcon }) => (
                     <FilteredLevelCard
                       key={`${adventureId}-${level.id}`}
                       level={level}
                       adventureId={adventureId}
                       adventureTitle={adventureTitle}
                       isLive={isLive}
+                      adventureIcon={adventureIcon}
                     />
                   ))}
                 </div>
