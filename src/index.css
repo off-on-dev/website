@@ -391,10 +391,6 @@ html {
   to   { transform: translateY(0); }
 }
 
-@keyframes marquee {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
 
 @keyframes fireflyFloat {
   /* Blink on at origin */
@@ -441,8 +437,7 @@ html {
   .animate-fade-up-delay-1    { animation: fadeUp 0.35s ease-out 0.05s both; }
   .animate-fade-up-delay-2    { animation: fadeUp 0.35s ease-out 0.10s both; }
   .animate-fade-up-delay-3    { animation: fadeUp 0.35s ease-out 0.15s both; }
-  .animate-marquee            { animation: marquee 30s linear infinite; }
-  .firefly                    { animation: fireflyFloat linear infinite; }
+.firefly                    { animation: fireflyFloat linear infinite; }
   /* will-change creates a GPU compositing layer; cap at 3 to stay within PERFORMANCE.md limit */
   .firefly:nth-child(1),
   .firefly:nth-child(2),
@@ -870,13 +865,22 @@ html {
 }
 .md-inline strong { font-weight: 600; color: hsl(var(--foreground)); }
 .md-inline em { font-style: italic; color: hsl(var(--text-secondary)); }
-/* Chrome removed abbr dotted underline from UA stylesheet; restore it explicitly.
+/* Reset UA-stylesheet font-variant and font-style on all <abbr> elements.
+   Some browsers apply font-variant:small-caps by default, making abbreviated
+   text visually distinct from surrounding lowercase prose. */
+abbr {
+  font-variant: normal;
+  font-style: normal;
+}
+/* Custom abbr tooltip via data-title attribute.
+   Using data-title instead of title avoids the browser's native title tooltip
+   (which would show alongside our custom one). The generate pipeline and
+   MarkdownContent.tsx convert title→data-title; aria-label carries the
+   expansion for screen readers.
    display:inline-block gives <abbr> a proper containing block so the ::after
-   tooltip positions reliably; plain inline elements don't always work in all
-   browsers. ::after provides a CSS tooltip matching the <Abbr> component since
-   React components cannot be used inside dangerouslySetInnerHTML content. */
-.md-inline abbr[title],
-.md-content abbr[title] {
+   tooltip positions reliably. Rule is global so it works in generated content,
+   static pages, and inside links without needing a container class. */
+abbr[data-title] {
   display: inline-block;
   cursor: help;
   text-decoration: underline;
@@ -885,35 +889,44 @@ html {
   text-underline-offset: 2px;
   position: relative;
 }
-.md-inline abbr[title]::after,
-.md-content abbr[title]::after {
-  content: attr(title);
+abbr[data-title]::after {
+  content: attr(data-title);
   position: absolute;
-  bottom: calc(100% + 6px);
+  /* top: 100% places the pseudo-element immediately below the abbr (no gap).
+     The transparent border-top bridges the 6px visual gap so the cursor can
+     move from the abbr into the tooltip without the tooltip closing (WCAG 1.4.13
+     hoverable). background-clip: padding-box keeps the background out of the
+     border area so the bridge is truly transparent. */
+  top: 100%;
   left: 0;
   padding: 0.25rem 0.5rem;
+  border-top: 0.375rem solid transparent;
+  background-clip: padding-box;
   font-size: 0.75rem;
   font-family: inherit;
   font-style: normal;
   background: hsl(var(--foreground));
   color: hsl(var(--background));
   border-radius: 0.25rem;
-  max-width: min(16rem, calc(100vw - 2rem));
+  width: max-content;
+  max-width: min(16rem, calc(100vw - 1rem));
   white-space: normal;
   word-break: break-word;
   opacity: 0;
-  pointer-events: none;
   transition: opacity 0.1s;
   z-index: 100;
 }
-.md-inline abbr[title]:hover::after,
-.md-content abbr[title]:hover::after,
-.md-inline abbr[title]:focus-visible::after,
-.md-content abbr[title]:focus-visible::after {
+abbr[data-title]:hover::after,
+abbr[data-title]:focus::after {
   opacity: 1;
 }
-.md-inline abbr[title]:focus-visible,
-.md-content abbr[title]:focus-visible {
+/* MarkdownContent.tsx replaces the ::after tooltip with a JS DOM tooltip for
+   correct sizing on narrow viewports and touch support. The CSS ::after is
+   suppressed for those elements via this class. */
+abbr.abbr-js-tooltip::after {
+  content: none;
+}
+abbr[data-title]:focus-visible {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
   border-radius: 2px;
@@ -960,6 +973,9 @@ html {
 /* Applied to dangerouslySetInnerHTML containers rendering pre-compiled
    markdown HTML (step.content, architecture). Styles injected HTML elements
    that Tailwind utility classes cannot reach from the outside. */
+.md-content {
+  overflow-x: clip;
+}
 .md-content p {
   color: hsl(var(--text-secondary));
   line-height: 1.625;

@@ -108,8 +108,9 @@ const sanitizeSchema = {
   ...defaultSchema,
   attributes: {
     ...defaultSchema.attributes,
+    // Preserve all default <a> attrs (including ARIA) and add target/rel for external links.
+    a: [...(defaultSchema.attributes?.a ?? []), "target", "rel"],
     code: ["className"],
-    a: ["href", "target", "rel"],
   },
   tagNames: [
     ...(defaultSchema.tagNames ?? []),
@@ -117,16 +118,27 @@ const sanitizeSchema = {
     "code",
     "abbr",
   ],
+  // Drop <style> tag content — rehypeSanitize strips the element but passes
+  // its text children through by default (only <script> is in strip[]).
+  strip: [...(defaultSchema.strip ?? []), "style"],
 };
 
-/** Post-sanitize: inject tabindex="0" on <abbr title> so keyboard users can
- *  trigger the CSS tooltip. tabindex is stripped by rehypeSanitize (not in the
- *  default allowlist), so this runs after sanitization to avoid the strip. */
+/** Post-sanitize: convert <abbr title> to <abbr data-title aria-label tabindex>.
+ *  - data-title drives the CSS ::after tooltip (avoids the browser native tooltip
+ *    that appears when title is present alongside a custom one).
+ *  - aria-label carries the expansion for screen readers (title is removed).
+ *  - tabindex="0" lets keyboard users trigger the CSS tooltip.
+ *  All three properties are added after rehypeSanitize runs (sanitize strips
+ *  tabIndex and data-* from its allowlist by default). */
 function addAbbrTabindex() {
   return function (tree) {
     function walk(node) {
       if (node.type === "element" && node.tagName === "abbr" && node.properties?.title) {
+        const text = String(node.properties.title);
+        node.properties.dataTitle = text;
+        node.properties.ariaLabel = text;
         node.properties.tabIndex = 0;
+        delete node.properties.title;
       }
       for (const child of node.children ?? []) walk(child);
     }

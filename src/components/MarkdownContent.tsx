@@ -19,6 +19,104 @@ export const MarkdownContent = ({ source }: MarkdownContentProps): JSX.Element =
     const liveEl = liveRef.current;
     const cleanup: (() => void)[] = [];
 
+    // Convert title→data-title on any abbr elements that still carry title
+    // (e.g. hardcoded HTML strings that weren't processed by the generate
+    // pipeline). data-title drives the CSS ::after tooltip; aria-label carries
+    // the expansion for screen readers. Removing title prevents the browser's
+    // native tooltip from appearing alongside the custom one.
+    el.querySelectorAll("abbr[title]").forEach((abbr) => {
+      const text = abbr.getAttribute("title") ?? "";
+      abbr.setAttribute("data-title", text);
+      abbr.setAttribute("aria-label", text);
+      abbr.removeAttribute("title");
+    });
+
+    // Replace the CSS ::after tooltip on each abbr[data-title] with a fixed-
+    // position portal tooltip appended to document.body. Using position:fixed
+    // escapes the overflow-x:clip on .md-content so the tooltip is never
+    // visually clipped. Position and maxWidth are computed from
+    // getBoundingClientRect() at show time, when fonts are loaded and layout
+    // is stable. Works on mobile touch (focus event fires on tap).
+    el.querySelectorAll<HTMLElement>("abbr[data-title]").forEach((abbrEl) => {
+      const title = abbrEl.getAttribute("data-title") ?? "";
+
+      // Portal element: fixed position, outside .md-content's overflow clip.
+      const tip = document.createElement("span");
+      tip.setAttribute("aria-hidden", "true");
+      tip.style.cssText =
+        "position:fixed;z-index:9999;display:none;" +
+        "padding:0.25rem 0.5rem;font-size:0.75rem;line-height:1rem;" +
+        "background:hsl(var(--foreground));color:hsl(var(--background));" +
+        "border-radius:0.25rem;word-break:break-word;white-space:normal;" +
+        "box-shadow:0 2px 8px rgba(0,0,0,0.3);";
+      tip.textContent = title;
+      document.body.appendChild(tip);
+
+      // Suppress the CSS ::after tooltip now that the portal is live.
+      abbrEl.classList.add("abbr-js-tooltip");
+
+      let hideTimer: ReturnType<typeof setTimeout> | null = null;
+      const clearHide = (): void => {
+        if (hideTimer !== null) { clearTimeout(hideTimer); hideTimer = null; }
+      };
+
+      const positionAndShow = (): void => {
+        clearHide();
+        const rect = abbrEl.getBoundingClientRect();
+        const available = window.innerWidth - rect.left - 16;
+        tip.style.maxWidth = `${Math.min(160, Math.max(80, available))}px`;
+        tip.style.top = `${rect.bottom + 6}px`;
+        tip.style.left = `${rect.left}px`;
+        tip.style.display = "block";
+      };
+
+      const scheduleHide = (): void => {
+        hideTimer = setTimeout(() => { tip.style.display = "none"; hideTimer = null; }, 100);
+      };
+
+      const immediateHide = (): void => { clearHide(); tip.style.display = "none"; };
+
+      // Reposition while visible (page can scroll while tooltip is open).
+      const reposition = (): void => {
+        if (tip.style.display === "block") {
+          const rect = abbrEl.getBoundingClientRect();
+          tip.style.top = `${rect.bottom + 6}px`;
+          tip.style.left = `${rect.left}px`;
+        }
+      };
+
+      abbrEl.addEventListener("mouseenter", positionAndShow);
+      abbrEl.addEventListener("mouseleave", scheduleHide);
+      // Hoverable: moving the mouse from abbr onto the tooltip keeps it visible.
+      tip.addEventListener("mouseenter", clearHide);
+      tip.addEventListener("mouseleave", scheduleHide);
+      // Mobile touch: tap focuses the abbr, blur hides immediately.
+      abbrEl.addEventListener("focus", positionAndShow);
+      abbrEl.addEventListener("blur", immediateHide);
+      // Escape dismisses (WCAG 1.4.13 dismissible).
+      const onKeyDown = (e: Event): void => {
+        if ((e as KeyboardEvent).key === "Escape") { e.preventDefault(); abbrEl.blur(); }
+      };
+      abbrEl.addEventListener("keydown", onKeyDown);
+      window.addEventListener("scroll", reposition, { capture: true });
+      window.addEventListener("resize", reposition);
+
+      cleanup.push(() => {
+        abbrEl.removeEventListener("mouseenter", positionAndShow);
+        abbrEl.removeEventListener("mouseleave", scheduleHide);
+        tip.removeEventListener("mouseenter", clearHide);
+        tip.removeEventListener("mouseleave", scheduleHide);
+        abbrEl.removeEventListener("focus", positionAndShow);
+        abbrEl.removeEventListener("blur", immediateHide);
+        abbrEl.removeEventListener("keydown", onKeyDown);
+        window.removeEventListener("scroll", reposition, { capture: true });
+        window.removeEventListener("resize", reposition);
+        clearHide();
+        abbrEl.classList.remove("abbr-js-tooltip");
+        tip.remove();
+      });
+    });
+
     el.querySelectorAll("pre").forEach((pre) => {
       const code = pre.querySelector("code");
       const langMatch = code?.className.match(/language-(\S+)/);

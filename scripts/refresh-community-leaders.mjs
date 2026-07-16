@@ -204,7 +204,8 @@ async function main() {
       avatarUrl: buildAvatarUrl(String(r[chUsername]), r[chAvatarId] ?? null),
       count: Number(r[chSolveCount]),
     }))
-    .sort((a, b) => b.count - a.count);
+    .sort((a, b) => b.count - a.count)
+    .slice(0, POOL_SIZE);
 
   const grandBuilders = chRows
     .filter((r) => r[chIsGrandBuilder])
@@ -215,7 +216,7 @@ async function main() {
     }));
 
   const builders = chRows
-    .filter((r) => r[chIsChallengeBuilder] && !r[chIsGrandBuilder])
+    .filter((r) => r[chIsChallengeBuilder] && !r[chIsGrandBuilder] && !r[chIsRockstar])
     .sort((a, b) => Number(b[chChallengesCreated]) - Number(a[chChallengesCreated]))
     .slice(0, POOL_SIZE)
     .map((r) => ({

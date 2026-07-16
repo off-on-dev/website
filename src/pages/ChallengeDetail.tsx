@@ -215,8 +215,8 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
                 {
                   title: "Get Started",
                   content: [
-                    `<p><a href="${level.codespacesUrl.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" target="_blank" rel="noopener noreferrer">Open in GitHub Codespaces</a>. The <abbr title="development container: a portable, reproducible coding environment defined by a configuration file">devcontainer</abbr> is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.</p>`,
-                    `<p>Prefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (<abbr title="Visual Studio Code">VS Code</abbr>, JetBrains, and others). The devcontainer config will be detected automatically.</p>`,
+                    `<p><a href="${level.codespacesUrl.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" target="_blank" rel="noopener noreferrer">Open in GitHub Codespaces</a>. The <abbr data-title="development container: a portable, reproducible coding environment defined by a configuration file" aria-label="development container: a portable, reproducible coding environment defined by a configuration file" tabindex="0">devcontainer</abbr> is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.</p>`,
+                    `<p>Prefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (<abbr data-title="Visual Studio Code" aria-label="Visual Studio Code" tabindex="0">VS Code</abbr>, JetBrains, and others). The devcontainer config will be detected automatically.</p>`,
                   ].join("\n"),
                 },
                 ...howToPlay,

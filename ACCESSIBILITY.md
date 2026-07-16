@@ -337,6 +337,24 @@ This site uses Radix UI's `<Tooltip>` primitive (via `src/components/ui/tooltip.
 - Test that the tooltip appears on both `:hover` and `:focus-visible`. Radix handles this by default; do not override the `defaultOpen`/`open` props in a way that breaks focus triggering.
 - Mobile: there is no hover on touch screens. If the tooltip content is not exposed any other way, add visible text or an `aria-label` on the trigger as a fallback.
 
+#### WCAG 1.4.13 requirements for all tooltips (Radix and CSS)
+
+All tooltip implementations on this site must satisfy three conditions:
+
+1. **Dismissible** — pressing `Escape` must close the tooltip without moving keyboard focus. The `<Abbr>` component handles this via `onKeyDown`. CSS-only tooltips (`.md-inline abbr`) cannot dismiss on `Escape`; this is a known limitation of the CSS path.
+2. **Hoverable** — the cursor must be able to move from the trigger onto the tooltip without the tooltip closing. Both `<Abbr>` (via transparent padding bridge) and `.md-inline abbr` (via transparent `border-bottom` bridge) satisfy this. Never add `pointer-events: none` to a tooltip element that users are expected to read.
+3. **Persistent** — the tooltip must remain open as long as pointer or focus is within its bounds.
+
+#### Abbreviation tooltips (`<Abbr>` component)
+
+Use `<Abbr title="Full expansion">ABBR</Abbr>` (from `src/components/Abbr.tsx`) for abbreviations in JSX pages and components.
+
+- The native `title` attribute on `<abbr>` provides the expansion to screen readers without requiring any visual tooltip interaction.
+- `tabIndex={0}` is applied so keyboard users can focus the abbreviation and see the visual tooltip (WCAG 1.4.13 keyboard path). The eslint rule `no-noninteractive-tabindex` is suppressed intentionally.
+- **Never nest `<Abbr>` inside an `<a>` or `<button>`.** The resulting `tabIndex={0}` creates an orphan tab stop inside an interactive element, which is invalid HTML (interactive content inside interactive content is forbidden). Use a plain `<abbr title="...">` (no component, no tabIndex) instead when the abbreviation sits inside a link or button — screen readers read the `title` attribute when traversing the link text.
+- For abbreviations inside `dangerouslySetInnerHTML` prose (`.md-inline` / `.md-content` containers): use `<abbr title="...">` in the YAML/markdown source. The build pipeline injects `tabindex="0"` automatically and the CSS tooltip in `src/index.css` provides the visual expansion.
+- Do not use both `<Abbr>` (JSX) and raw `<abbr>` (CSS-only) for the same abbreviation on the same page — pick one path based on whether the content is React-rendered or pre-rendered HTML.
+
 ### Forms
 
 - Every `<input>`, `<select>`, and `<textarea>` must have an associated `<label>` via `for`/`id` pairing or `aria-label`.
@@ -393,6 +411,7 @@ Use this to identify which criterion applies before writing or reviewing code.
 | | 1.4.6 Contrast (Enhanced) | **AAA** | Body text 7:1, large text 4.5:1 in both modes. |
 | | 1.4.10 Reflow | AA | No horizontal scroll at 400% zoom (320px viewport). |
 | | 1.4.11 Non-text Contrast | AA | UI components and focus indicators: 3:1 against adjacent colors. |
+| | 1.4.13 Content on Hover or Focus | AA | Tooltip content triggered by hover or focus must be dismissible (Escape), hoverable (cursor can move onto the tooltip without it closing), and persistent (stays open while hovered or focused). |
 | **Operable (2.x)** | 2.1.1 Keyboard | A | All functionality is keyboard-accessible. |
 | | 2.1.2 No Keyboard Trap | A | Focus is never permanently trapped; `Escape` exits modals and dropdowns. |
 | | 2.3.1 Three Flashes | A | No content flashes more than 3 times per second. |

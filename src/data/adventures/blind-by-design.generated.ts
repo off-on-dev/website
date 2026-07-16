@@ -41,7 +41,7 @@ export const BLIND_BY_DESIGN: Adventure = {
       name: "Stand up the Lab",
       difficulty: "Beginner",
       topics: ["OpenFeature", "flagd", "Spring Boot"],
-      audience: "Platform engineers, <abbr title=\"Site Reliability Engineers\" tabindex=\"0\">SREs</abbr>, and developers curious about feature flags, with no prior OpenFeature experience needed, but familiarity with Spring Boot and basic Java will help.",
+      audience: "Platform engineers, <abbr data-title=\"Site Reliability Engineers\" aria-label=\"Site Reliability Engineers\" tabindex=\"0\">SREs</abbr>, and developers curious about feature flags, with no prior OpenFeature experience needed, but familiarity with Spring Boot and basic Java will help.",
       learnings: [
         "How an OpenFeature client and provider work together: the SDK is provider-agnostic and the flagd provider plugs in via dependency only",
         "What remote provider means in practice: the SDK calls a separate flag service (flagd) over gRPC, not parsing flags.json itself",
@@ -65,7 +65,7 @@ export const BLIND_BY_DESIGN: Adventure = {
       ],
       architecture: [
         "<p>This level runs as two containers side-by-side in your Codespace: the Spring Boot lab and a flagd sidecar.</p>",
-        "<p>The Spring Boot service runs on <a href=\"http://localhost:8080/\" target=\"_blank\" rel=\"noopener noreferrer\">http://localhost:8080/<span class=\"sr-only\"> (opens in new tab)</span></a> with one endpoint, GET /. flags.json is mounted read-only into the flagd sidecar; edit it through the <abbr title=\"Integrated Development Environment\" tabindex=\"0\">IDE</abbr> and flagd's file watcher picks up the change within about a second. The flagd sidecar serves flag evaluations over gRPC on :8013. The OpenFeature SDK reads FLAGD_HOST and FLAGD_PORT from the environment (pre-set by the devcontainer), so there is no host or port to hard-code.</p>",
+        "<p>The Spring Boot service runs on <a href=\"http://localhost:8080/\" target=\"_blank\" rel=\"noopener noreferrer\">http://localhost:8080/<span class=\"sr-only\"> (opens in new tab)</span></a> with one endpoint, GET /. flags.json is mounted read-only into the flagd sidecar; edit it through the <abbr data-title=\"Integrated Development Environment\" aria-label=\"Integrated Development Environment\" tabindex=\"0\">IDE</abbr> and flagd's file watcher picks up the change within about a second. The flagd sidecar serves flag evaluations over gRPC on :8013. The OpenFeature SDK reads FLAGD_HOST and FLAGD_PORT from the environment (pre-set by the devcontainer), so there is no host or port to hard-code.</p>",
       ],
       toolbox: [
         { name: "./mvnw", description: "Maven wrapper checked in next to pom.xml, builds and runs the Spring Boot lab" },
@@ -203,7 +203,7 @@ curl -s 'http://localhost:8080/?species=zyklop&#x26;dose=underdose' | jq .value
       name: "Read the Chart",
       difficulty: "Expert",
       topics: ["OpenFeature", "OpenTelemetry", "Grafana", "Spring Boot"],
-      audience: "Platform engineers, <abbr title=\"Site Reliability Engineers\" tabindex=\"0\">SREs</abbr>, and observability-focused developers who have completed the Beginner and Intermediate levels or are comfortable with OpenFeature evaluation context, and want to learn how flag evaluations join distributed traces and metrics, and how to use a flag flip as an operational lever for live rollbacks.",
+      audience: "Platform engineers, <abbr data-title=\"Site Reliability Engineers\" aria-label=\"Site Reliability Engineers\" tabindex=\"0\">SREs</abbr>, and observability-focused developers who have completed the Beginner and Intermediate levels or are comfortable with OpenFeature evaluation context, and want to learn how flag evaluations join distributed traces and metrics, and how to use a flag flip as an operational lever for live rollbacks.",
       learnings: [
         "How the OpenFeature OpenTelemetry hooks (TracesHook and MetricsHook) join flag evaluations to the rest of an application's telemetry without a separate ingestion path",
         "How to author your own Hook: a tiny class that copies merged-eval-context attributes onto the active OTel span, closing the loop between why a flag resolved the way it did and what the operator sees in Tempo",

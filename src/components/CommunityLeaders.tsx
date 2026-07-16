@@ -77,7 +77,9 @@ export const CommunityLeaders = ({
   limit,
 }: CommunityLeadersProps): JSX.Element => {
   const visibleSections = (sectionFilter
-    ? ALL_SECTIONS.filter((s) => sectionFilter.includes(s.id))
+    ? sectionFilter
+        .map((id) => ALL_SECTIONS.find((s) => s.id === id))
+        .filter((s): s is LeaderSection => s !== undefined)
     : ALL_SECTIONS
   ).map((s) =>
     limit ? { ...s, users: s.users.slice(0, limit) } : s
@@ -87,9 +89,9 @@ export const CommunityLeaders = ({
     <div
       className="rounded-xl border border-border bg-[hsl(var(--surface))] p-5"
     >
-      <h2 className="font-sans text-base font-semibold text-foreground mb-5">
+      <h3 className="font-sans text-base font-semibold text-foreground mb-5">
         Community Leaders
-      </h2>
+      </h3>
       <div className="space-y-5">
         {visibleSections.map((section) => (
           <div

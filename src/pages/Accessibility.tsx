@@ -43,7 +43,9 @@ const Accessibility = (): JSX.Element => {
               <li>
                 <strong>Target:</strong>{" "}
                 <a href="https://www.w3.org/TR/WCAG22/" target="_blank" rel="noopener noreferrer" className={link}>
-                  <Abbr title="Web Content Accessibility Guidelines">WCAG</Abbr> 2.2 Level <Abbr title="double-A conformance level">AA</Abbr> <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  {/* Plain <abbr> (no tabIndex) inside a link: the link is the
+                      interactive element; AT reads the title attribute natively. */}
+                  <abbr data-title="Web Content Accessibility Guidelines" aria-label="Web Content Accessibility Guidelines">WCAG</abbr> 2.2 Level <abbr data-title="double-A conformance level" aria-label="double-A conformance level">AA</abbr> <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
                 </a>{" "}
                 across every page on {SITE_NAME}, with selected Level <Abbr title="triple-A conformance level">AAA</Abbr> criteria applied wherever practical.
               </li>
@@ -175,7 +177,7 @@ const Accessibility = (): JSX.Element => {
               <li>
                 <strong>axe-core via Playwright</strong> on every pull request and on a weekly
                 scheduled scan (Mondays). Runs in dark mode, light mode, and with{" "}
-                <code>prefers-reduced-motion: reduce</code> against the production build. The <Abbr title="pull request">PR</Abbr>
+                <code>prefers-reduced-motion: reduce</code> against the production build. The <Abbr title="pull request">PR</Abbr>{" "}
                 preview workflow blocks on these scans.
               </li>
               <li>
