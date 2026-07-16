@@ -5,12 +5,14 @@ type AbbrProps = {
   children: ReactNode;
 };
 
+type TooltipPosition = { maxWidth: string; side: "left" | "right" } | null;
+
 export const Abbr = ({ title, children }: AbbrProps): JSX.Element => {
   const descId = useId();
-  // null = pre-mount. Tooltip is hidden (display: none) until useEffect computes
-  // the available space, preventing an invisible tooltip from contributing to
-  // document.scrollWidth on prerendered HTML at narrow viewports.
-  const [maxWidth, setMaxWidth] = useState<string | null>(null);
+  // null = pre-mount. Tooltip is hidden until useEffect computes the available
+  // space, preventing an invisible tooltip from widening document.scrollWidth
+  // on prerendered HTML at narrow viewports.
+  const [pos, setPos] = useState<TooltipPosition>(null);
   const outerRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -18,16 +20,30 @@ export const Abbr = ({ title, children }: AbbrProps): JSX.Element => {
     if (!el) return;
     const compute = (): void => {
       const rect = el.getBoundingClientRect();
-      // At desktop widths the available space exceeds 16rem so the cap resolves
-      // to 16rem (existing behavior). On narrow viewports (e.g. 200% zoom) the
-      // tooltip is constrained to the space between the abbr and the viewport
-      // right edge, wrapping text to more lines rather than overflowing.
-      const available = window.innerWidth - rect.left - 16;
-      setMaxWidth(`min(16rem, ${Math.max(80, available)}px)`);
+      const spaceRight = window.innerWidth - rect.left - 16;
+      // If there is enough space to the right, open the tooltip leftward-
+      // anchored (left-0). Otherwise flip it to right-anchored (right-0) so
+      // it opens toward the left edge and never overflows the viewport.
+      if (spaceRight >= 80) {
+        setPos({ maxWidth: `min(16rem, ${spaceRight}px)`, side: "left" });
+      } else {
+        const spaceLeft = rect.right - 16;
+        setPos({ maxWidth: `min(16rem, ${Math.max(80, spaceLeft)}px)`, side: "right" });
+      }
     };
     compute();
-    window.addEventListener("resize", compute);
-    return () => window.removeEventListener("resize", compute);
+    // Debounce resize so multiple Abbr instances on one page don't each fire a
+    // getBoundingClientRect() on every pixel of a drag-resize.
+    let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+    const onResize = (): void => {
+      if (debounceTimer !== null) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(compute, 100);
+    };
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      if (debounceTimer !== null) clearTimeout(debounceTimer);
+    };
   }, []);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLElement>): void => {
@@ -53,17 +69,16 @@ export const Abbr = ({ title, children }: AbbrProps): JSX.Element => {
       </abbr>
       <span id={descId} className="sr-only">{title}</span>
       {/*
-        Outer span: positioned at top-full with pt-1.5 gap that bridges the space
-        between the abbr bottom edge and the visible tooltip below.
-        Hidden (display:none) until useEffect sets maxWidth so the invisible span
-        does not widen document.scrollWidth before layout is known.
-        pointer-events-none by default; activates on hover/focus so the cursor can
-        move onto the tooltip without it closing (WCAG 1.4.13 hoverable).
+        pt-1.5 gap bridges the space between the abbr and the visible tooltip
+        so the cursor can move onto it without the tooltip closing (WCAG 1.4.13
+        hoverable). Hidden until useEffect computes side and maxWidth.
+        side="left" → left-0 (opens rightward); side="right" → right-0 (opens
+        leftward, used when the abbr is near the viewport right edge).
       */}
       <span
         aria-hidden="true"
-        className={`absolute top-full left-0 pt-1.5 w-max opacity-0 pointer-events-none transition-opacity group-hover/abbr:opacity-100 group-hover/abbr:pointer-events-auto group-focus-within/abbr:opacity-100 group-focus-within/abbr:pointer-events-auto z-[100]${maxWidth === null ? " hidden" : ""}`}
-        style={maxWidth !== null ? { maxWidth } : undefined}
+        className={`absolute top-full pt-1.5 w-max opacity-0 pointer-events-none transition-opacity group-hover/abbr:opacity-100 group-hover/abbr:pointer-events-auto group-focus-within/abbr:opacity-100 group-focus-within/abbr:pointer-events-auto z-[100]${pos === null ? " hidden" : pos.side === "left" ? " left-0" : " right-0"}`}
+        style={pos !== null ? { maxWidth: pos.maxWidth } : undefined}
       >
         <span className="block px-2 py-1 text-xs bg-foreground text-background rounded break-words">
           {title}

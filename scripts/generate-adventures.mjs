@@ -118,7 +118,7 @@ const sanitizeSchema = {
     "code",
     "abbr",
   ],
-  // Drop <style> tag content — rehypeSanitize strips the element but passes
+  // Drop <style> tag content; rehypeSanitize strips the element but passes
   // its text children through by default (only <script> is in strip[]).
   strip: [...(defaultSchema.strip ?? []), "style"],
 };

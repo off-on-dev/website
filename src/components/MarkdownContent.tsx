@@ -63,10 +63,12 @@ export const MarkdownContent = ({ source }: MarkdownContentProps): JSX.Element =
       const positionAndShow = (): void => {
         clearHide();
         const rect = abbrEl.getBoundingClientRect();
-        const available = window.innerWidth - rect.left - 16;
-        tip.style.maxWidth = `${Math.min(160, Math.max(80, available))}px`;
+        const tipMaxWidth = Math.min(160, Math.max(80, window.innerWidth - rect.left - 16));
+        // Clamp left so the tooltip never overflows the viewport right edge.
+        const left = Math.max(8, Math.min(rect.left, window.innerWidth - tipMaxWidth - 8));
+        tip.style.maxWidth = `${tipMaxWidth}px`;
         tip.style.top = `${rect.bottom + 6}px`;
-        tip.style.left = `${rect.left}px`;
+        tip.style.left = `${left}px`;
         tip.style.display = "block";
       };
 

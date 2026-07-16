@@ -582,14 +582,18 @@ Used in `Navbar` (mobile menu drawer). The ref is attached to the menu `<div>` w
 
 `src/components/Abbr.tsx`
 
-Wraps an abbreviation with a semantic `<abbr title="…">` element and a CSS-only Tailwind tooltip that appears on hover. The `title` attribute carries the expansion for screen readers and the browser's native tooltip; the styled `<span>` is a visual enhancement only and is hidden from AT via `aria-hidden="true"`. Use this for all abbreviations in JSX; use native `<abbr title="…">` directly in template literal HTML strings (passed to `dangerouslySetInnerHTML`) where React components cannot be rendered — the `.md-inline`/`.md-content` CSS rules in `src/index.css` render the same tooltip for those.
+Wraps an abbreviation in a stateful component that renders a `<abbr>` with `aria-describedby` pointing to an sr-only `<span>` containing the expansion. A visual tooltip appears on hover and focus via CSS opacity transitions on a positioned child `<span>`. The `title` prop is the expansion text; it is intentionally NOT placed on the `<abbr>` element (doing so would show the browser's native tooltip alongside the custom one). Screen readers read the expansion via `aria-describedby` when the element has focus.
+
+Use `<Abbr>` for abbreviations in JSX pages and components. Use native `<abbr title="…">` in template literal HTML strings passed to `dangerouslySetInnerHTML`; the build pipeline and `MarkdownContent.tsx` handle converting `title` to `data-title` and attaching a JS portal tooltip.
 
 ```tsx
 <Abbr title="pull request">PR</Abbr>
 <Abbr title="Web Content Accessibility Guidelines">WCAG</Abbr>
 ```
 
-No `TooltipProvider` is needed. The `<abbr>` element is styled with `cursor-help` and a dotted underline to signal the definition is available. The native browser tooltip (from `title`) satisfies WCAG 1.4.13 hoverable; the Tailwind tooltip is supplementary.
+No `TooltipProvider` is needed. The `<abbr>` element is styled with `cursor-help` and a dotted underline. `tabIndex={0}` makes it keyboard-focusable so the tooltip is reachable without a mouse (WCAG 1.4.13). The component computes `maxWidth` from `window.innerWidth` after mount to prevent the tooltip from overflowing the viewport on narrow screens.
+
+**Do not nest `<Abbr>` inside an `<a>` or `<button>`.** The `tabIndex={0}` would create an invalid interactive-inside-interactive structure. Use a plain `<abbr title="...">` instead; screen readers read `title` when traversing link text.
 
 ---
 

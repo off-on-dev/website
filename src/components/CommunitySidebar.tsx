@@ -132,7 +132,6 @@ export const CommunitySidebar = ({
           href={hasThread ? discussionUrl : COMMUNITY_URL}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={hasThread ? "Share your solution and discuss this challenge (opens in new tab)" : "Join the community (opens in new tab)"}
           className="btn-soft w-full"
         >
           <MessageCircle size={14} aria-hidden="true" />

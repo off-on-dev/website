@@ -174,3 +174,111 @@ describe("MarkdownContent: copy button", () => {
     expect(document.querySelectorAll(".md-pre-group")).toHaveLength(2);
   });
 });
+
+// ---------------------------------------------------------------------------
+// abbr portal tooltips
+// ---------------------------------------------------------------------------
+
+describe("MarkdownContent: abbr[title] → data-title conversion", () => {
+  it("converts abbr[title] to data-title and removes the title attribute", () => {
+    render(<MarkdownContent source='<p><abbr title="Kubernetes">K8s</abbr></p>' />);
+    const abbr = document.querySelector("abbr")!;
+    expect(abbr).not.toHaveAttribute("title");
+    expect(abbr).toHaveAttribute("data-title", "Kubernetes");
+  });
+
+  it("sets aria-label to the expansion text on converted abbr elements", () => {
+    render(<MarkdownContent source='<p><abbr title="Kubernetes">K8s</abbr></p>' />);
+    const abbr = document.querySelector("abbr")!;
+    expect(abbr).toHaveAttribute("aria-label", "Kubernetes");
+  });
+
+  it("does not mutate abbr elements that already have data-title instead of title", () => {
+    const source = '<p><abbr data-title="Role-Based Access Control" aria-label="Role-Based Access Control" tabindex="0">RBAC</abbr></p>';
+    render(<MarkdownContent source={source} />);
+    const abbr = document.querySelector("abbr")!;
+    expect(abbr).toHaveAttribute("data-title", "Role-Based Access Control");
+    expect(abbr).not.toHaveAttribute("title");
+  });
+});
+
+describe("MarkdownContent: abbr portal tooltip lifecycle", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    Element.prototype.getBoundingClientRect = vi.fn().mockReturnValue({
+      left: 100, right: 140, bottom: 50, top: 30,
+      width: 40, height: 20, x: 100, y: 30,
+      toJSON: () => ({}),
+    });
+    Object.defineProperty(window, "innerWidth", { value: 1024, writable: true });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  function renderWithAbbr(title = "Kubernetes", text = "K8s"): ReturnType<typeof render> {
+    const source = `<p><abbr data-title="${title}" aria-label="${title}" tabindex="0">${text}</abbr></p>`;
+    return render(<MarkdownContent source={source} />);
+  }
+
+  function findPortal(title: string): HTMLElement | undefined {
+    return Array.from(document.body.querySelectorAll<HTMLElement>("span[aria-hidden='true']"))
+      .find((el) => el.textContent === title);
+  }
+
+  it("appends a portal tooltip to document.body for each abbr[data-title]", () => {
+    renderWithAbbr();
+    const portal = findPortal("Kubernetes");
+    expect(portal).toBeDefined();
+    expect(portal?.style.display).toBe("none");
+  });
+
+  it("shows the portal tooltip on focus", () => {
+    renderWithAbbr();
+    const abbr = document.querySelector<HTMLElement>("abbr[data-title]")!;
+    fireEvent.focus(abbr);
+    const portal = findPortal("Kubernetes");
+    expect(portal?.style.display).toBe("block");
+  });
+
+  it("hides the portal tooltip immediately on blur", () => {
+    renderWithAbbr();
+    const abbr = document.querySelector<HTMLElement>("abbr[data-title]")!;
+    fireEvent.focus(abbr);
+    fireEvent.blur(abbr);
+    const portal = findPortal("Kubernetes");
+    expect(portal?.style.display).toBe("none");
+  });
+
+  it("dismisses the tooltip on Escape key and blurs the abbr", () => {
+    renderWithAbbr();
+    const abbr = document.querySelector<HTMLElement>("abbr[data-title]")!;
+    // Spy with implementation so the native blur event still fires and immediateHide runs.
+    const blurSpy = vi.spyOn(abbr, "blur").mockImplementation(() => {
+      fireEvent.blur(abbr);
+    });
+    fireEvent.focus(abbr);
+    fireEvent.keyDown(abbr, { key: "Escape" });
+    expect(blurSpy).toHaveBeenCalledOnce();
+    const portal = findPortal("Kubernetes");
+    expect(portal?.style.display).toBe("none");
+  });
+
+  it("removes the portal from document.body when the component unmounts", () => {
+    const { unmount } = renderWithAbbr();
+    const portal = findPortal("Kubernetes");
+    expect(portal).toBeDefined();
+    act(() => { unmount(); });
+    expect(portal?.parentNode).toBeNull();
+  });
+
+  it("removes the abbr-js-tooltip suppression class on unmount", () => {
+    const { unmount } = renderWithAbbr();
+    const abbr = document.querySelector<HTMLElement>("abbr[data-title]")!;
+    expect(abbr.classList.contains("abbr-js-tooltip")).toBe(true);
+    act(() => { unmount(); });
+    expect(abbr.classList.contains("abbr-js-tooltip")).toBe(false);
+  });
+});
