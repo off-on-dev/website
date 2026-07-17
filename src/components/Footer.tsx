@@ -2,14 +2,14 @@ import type { JSX } from "react";
 import { NavLink } from "@/components/NavLink";
 import { Zap, ExternalLink } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
-import { BRAND_NAME, BRAND_SHORT_DESCRIPTION, BRAND_SLOGAN_PARTS, COMMUNITY_URL, CONTACT_EMAIL, CURRENT_YEAR, LINKEDIN_URL, BLUESKY_URL, X_URL, SITE_NAME } from "@/data/constants";
+import { BRAND_NAME, BRAND_SHORT_DESCRIPTION, BRAND_SLOGAN_PARTS, CODE_OF_CONDUCT_URL, COMMUNITY_URL, CONTACT_EMAIL, CURRENT_YEAR, LINKEDIN_URL, BLUESKY_URL, X_URL, SITE_NAME } from "@/data/constants";
 const logoDark = `${import.meta.env.BASE_URL}brand/offon-logo-dark-color.svg`;
 const logoLight = `${import.meta.env.BASE_URL}brand/offon-logo-light-mono.svg`;
 
+const linkCls = "flex items-center gap-1 min-h-[48px] font-sans text-sm text-dim hover:text-foreground dark:hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent focus-ring-tight rounded-sm";
+
 export const Footer = (): JSX.Element => {
   const { theme } = useTheme();
-
-  const linkCls = "flex items-center gap-1 min-h-[48px] font-sans text-sm text-dim hover:text-foreground dark:hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent focus-ring-tight rounded-sm";
 
   return (
     <footer className="bg-background border-t border-border px-6 sm:px-8 md:px-16 lg:px-20">
@@ -29,7 +29,7 @@ export const Footer = (): JSX.Element => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12">
             {/* Explore */}
             <nav aria-label="Explore">
-              <p className="text-xs uppercase tracking-widest text-faint mb-3">Explore</p>
+              <h2 className="text-xs uppercase tracking-widest text-faint mb-3">Explore</h2>
               <div className="flex flex-col">
                 <NavLink to="/challenges/" className={linkCls}>Challenges</NavLink>
                 <NavLink to="/contribute/" className={linkCls}>Contribute</NavLink>
@@ -40,10 +40,10 @@ export const Footer = (): JSX.Element => {
             </nav>
             {/* Community */}
             <nav aria-label="Community">
-              <p className="text-xs uppercase tracking-widest text-faint mb-3">Community</p>
+              <h2 className="text-xs uppercase tracking-widest text-faint mb-3">Community</h2>
               <div className="flex flex-col">
                 <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className={linkCls}>Community Hub <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
-                <a href={`${COMMUNITY_URL}/t/code-of-conduct/31/1`} target="_blank" rel="noopener noreferrer" className={linkCls}>Code of Conduct <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
+                <a href={CODE_OF_CONDUCT_URL} target="_blank" rel="noopener noreferrer" className={linkCls}>Code of Conduct <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
                 <NavLink to="/privacy/" className={linkCls}>Privacy Policy</NavLink>
                 <NavLink to="/accessibility/" className={linkCls}>Accessibility</NavLink>
                 <a href={`mailto:${CONTACT_EMAIL}`} className={linkCls}>Contact</a>

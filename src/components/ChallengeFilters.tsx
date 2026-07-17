@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useId, type JSX, type CSSProperties } from "react";
+import { useState, useEffect, useRef, useId, type JSX, type CSSProperties, type FocusEvent } from "react";
 import { useEscapeKey } from "@/hooks/useEscapeKey";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { ChevronDown, Check, X } from "lucide-react";
@@ -101,6 +101,15 @@ export const ChallengeFilters = ({
     );
   };
 
+  const handleDropdownBlur = (
+    e: FocusEvent<HTMLDivElement>,
+    closePanel: () => void,
+  ): void => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+      closePanel();
+    }
+  };
+
   // Arrow-key navigation within an open filter panel. Called from onKeyDown on
   // each panel button; walks up to the nearest role="group" to find siblings.
   const navigatePanel = (e: ReactKeyboardEvent<HTMLButtonElement>): void => {
@@ -128,7 +137,7 @@ export const ChallengeFilters = ({
       <div className="flex items-center gap-2 lg:hidden">
 
         {/* Difficulty dropdown */}
-        <div className="relative" ref={difficultyRef}>
+        <div className="relative" ref={difficultyRef} onBlur={(e) => handleDropdownBlur(e, () => setDifficultyOpen(false))}>
           <button
             ref={difficultyTriggerRef}
             type="button"
@@ -193,7 +202,7 @@ export const ChallengeFilters = ({
         </div>
 
         {/* Tags dropdown */}
-        <div className="relative" ref={tagsRef}>
+        <div className="relative" ref={tagsRef} onBlur={(e) => handleDropdownBlur(e, () => setTagsOpen(false))}>
           <button
             ref={tagsTriggerRef}
             type="button"

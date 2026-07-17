@@ -1198,12 +1198,12 @@ function buildSmokeTagsBody(tags) {
 
 function patchRegions(adventures) {
   // Sitemap uses the surrounding static URL lines as anchors so the file stays
-  // free of generator comments. The adventures block sits between the last
-  // static page (/privacy/) and /challenges/. Both anchor lines must stay
-  // exactly as-is; do not reorder the static URLs around them.
+  // free of generator comments. The adventures block sits between /brand/ and
+  // /challenges/. Both anchor lines must stay exactly as-is; do not reorder
+  // the static URLs around them.
   replaceRegion(
     resolve(ROOT, "public/sitemap.xml"),
-    `<url><loc>https://offon.dev/privacy/</loc><lastmod>2026-06-01</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>`,
+    `<url><loc>https://offon.dev/brand/</loc><lastmod>2026-06-05</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>`,
     `<url><loc>https://offon.dev/challenges/</loc>`,
     buildSitemapBody(adventures)
   );

@@ -50,9 +50,10 @@ export const LevelCard = ({ level, headingLevel = "h2" }: LevelCardProps): JSX.E
         href={level.discussionUrl}
         target="_blank"
         rel="noopener noreferrer"
+        aria-label={`Discussion for ${level.name} (opens in new tab)`}
         className="docs-ext-link text-xs font-medium"
       >
-        Discussion <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+        Discussion <ExternalLink size={12} aria-hidden="true" />
       </a>
     </div>
   </div>

@@ -83,8 +83,15 @@ schemas/
   adventure.schema.json  # JSON Schema for adventure YAML validation
 scripts/
   generate-adventures.mjs       # YAML -> TypeScript codegen (runs as prebuild hook)
+  generate-solutions.mjs        # Regenerate solution barrel index from src/data/solutions/
+  generate-community-sitemap.mjs # Regenerate community sitemap (community.offon.dev topics)
+  create-data-aliases.mjs       # Copy *.data files to <name>/_.data for trailing-slash GitHub Pages (runs as postbuild hook)
   sync-adventure.mjs            # Fetch and transform adventure YAML from the challenges repo
   set-discussion-url.mjs        # Set a Discourse thread URL on a level (called by add-discussion-url.yml)
+  refresh-discussions.mjs       # Fetch latest discussion posts per level (called by refresh-community-data.yml)
+  refresh-leaderboard.mjs       # Fetch leaderboard data (called by refresh-community-data.yml)
+  refresh-community-leaders.mjs # Fetch community leader data (called by refresh-community-data.yml)
+  check-docs.sh                 # Validate styleguide.md and README.md were updated alongside code changes
   lib/
     deadline.mjs                # Normalises human-readable deadline strings to ISO 8601
     yaml-text-edit.mjs          # Targeted text-based helpers for editing adventure YAML without reformatting
@@ -224,7 +231,7 @@ See [`ADVENTURES.md`](ADVENTURES.md) for the full guide, including how to comple
 
 ## Accessibility
 
-OffOn targets WCAG 2.2 Level AA across every page, in both light and dark mode. Automated axe-core scans run on every pull request preview via [`e2e/smoke.spec.ts`](e2e/smoke.spec.ts). The full statement, supported environments, known limitations, and how to report a barrier are in [`ACCESSIBILITY.md`](ACCESSIBILITY.md). Contributor rules are in the Accessibility section of [`CLAUDE.md`](CLAUDE.md#accessibility-wcag-22-aa-mandatory).
+OffOn targets WCAG 2.2 Level AA across every page, in both light and dark mode. Automated axe-core scans run on every pull request preview via [`e2e/smoke.spec.ts`](e2e/smoke.spec.ts). The full statement, supported environments, known limitations, and how to report a barrier are in [`ACCESSIBILITY.md`](ACCESSIBILITY.md). Contributor rules are in the Accessibility section of [`CLAUDE.md`](CLAUDE.md#accessibility).
 
 ## Further Reading
 

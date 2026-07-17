@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { Sun, Moon, Menu, X, ExternalLink } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useTheme } from "@/hooks/useTheme";
-import { COMMUNITY_URL } from "@/data/constants";
+import { COMMUNITY_URL, SITE_NAME } from "@/data/constants";
 import { cn } from "@/lib/utils";
 import { useEscapeKey } from "@/hooks/useEscapeKey";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
@@ -116,10 +116,10 @@ export const Navbar = (): JSX.Element => {
       className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background"
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-1.5">
-        <Link to="/" aria-label="offon.dev home" className="logo-link flex items-center focus-ring rounded-sm">
+        <Link to="/" aria-label={`${SITE_NAME} home`} className="logo-link flex items-center focus-ring rounded-sm">
           {/* Dark logo is high-priority: it's visible in the default (dark) theme. Light logo uses auto priority since it's hidden until the user switches theme. */}
           <img src={logoDark} alt="" width={130} height={33} loading="eager" fetchPriority="high" className="h-8 dark:block hidden" />
-          <img src={logoLight} alt="" aria-hidden="true" width={130} height={33} loading="eager" className="h-8 block dark:hidden" />
+          <img src={logoLight} alt="" width={130} height={33} loading="eager" className="h-8 block dark:hidden" />
         </Link>
 
         {/* Desktop nav */}

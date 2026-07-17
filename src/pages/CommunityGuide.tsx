@@ -7,7 +7,7 @@ import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
 import { SectionLabel } from "@/components/SectionLabel";
-import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
+import { CODE_OF_CONDUCT_URL, COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
 import { Abbr } from "@/components/Abbr";
 import { CommunityLeaders } from "@/components/CommunityLeaders";
 import { SidebarLayout } from "@/components/SidebarLayout";
@@ -119,7 +119,7 @@ const CommunityGuide = (): JSX.Element => {
               {[
                 { label: "Trust Levels", href: `${COMMUNITY_URL}/t/trust-level-guide/1475` },
                 { label: "Questions & Feedback", href: `${COMMUNITY_URL}/t/questions-feedback/34` },
-                { label: "Code of Conduct", href: `${COMMUNITY_URL}/t/code-of-conduct/31` },
+                { label: "Code of Conduct", href: CODE_OF_CONDUCT_URL },
                 { label: "Privacy Policy", href: `${COMMUNITY_URL}/t/privacy-policy/22` },
               ].map((item) => (
                 <li key={item.label} className="flex items-center gap-2.5 text-sm">

@@ -45,8 +45,8 @@ Target these thresholds at the 75th percentile of real users:
 
 - All fonts are self-hosted under `public/fonts/`. Never add an external font CDN link.
 - `font-display: optional` is set on all fonts. This means the browser has a very short (~100 ms) window to load a font before permanently falling back to the system font for that page visit. Preloading is therefore required for fonts to render correctly on throttled connections.
-- **Global preloads** go in the `links()` export in `src/root.tsx`. Use this for fonts that appear above the fold on every page. Currently preloaded globally: Inter 400, 500, 600 (body text and semibold/bold labels); Syne 700 (h1–h6 via the `@layer base` rule).
-- **Route-level preloads** go in the `links()` export of a specific route module. Use this for fonts that are only used on certain pages to avoid "preloaded but not used" warnings and wasted bandwidth on other pages. JetBrains Mono (400 and 600) is preloaded at route level on `Index.tsx`, `Challenges.tsx`, `AdventureDetail.tsx`, and `ChallengeDetail.tsx`. These are the routes that render `font-mono` elements. Do not add JetBrains Mono to the global preloads.
+- **Global preloads** go in the `links()` export in `src/root.tsx`. Use this for fonts that appear above the fold on every page. Currently preloaded globally: Inter 400, 500, 600, 700 (body text, semibold/bold labels, and h3–h6); Syne 700 (h1–h2 via the `@layer base` rule).
+- **Route-level preloads** go in the `links()` export of a specific route module. Use this for fonts that are only used on certain pages to avoid "preloaded but not used" warnings and wasted bandwidth on other pages. JetBrains Mono (400 and 600) is preloaded at route level on `Index.tsx`, `Challenges.tsx`, `AdventureDetail.tsx`, `ChallengeDetail.tsx`, `Adventures.tsx`, and `Contribute.tsx`. These are the routes that render `font-mono` elements. Do not add JetBrains Mono to the global preloads.
 
   ```ts
   export const links: LinksFunction = () => [

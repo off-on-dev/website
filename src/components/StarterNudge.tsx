@@ -11,14 +11,22 @@ export const StarterNudge = (): JSX.Element | null => {
   const [showNudge, setShowNudge] = useState(false);
 
   useEffect(() => {
-    if (starterLevel && !localStorage.getItem(STARTER_NUDGE_KEY)) {
-      const id = setTimeout(() => setShowNudge(true));
-      return () => clearTimeout(id);
+    try {
+      if (starterLevel && !localStorage.getItem(STARTER_NUDGE_KEY)) {
+        const id = setTimeout(() => setShowNudge(true));
+        return () => clearTimeout(id);
+      }
+    } catch {
+      // localStorage unavailable; skip nudge
     }
   }, []);
 
   const dismissNudge = (): void => {
-    localStorage.setItem(STARTER_NUDGE_KEY, "1");
+    try {
+      localStorage.setItem(STARTER_NUDGE_KEY, "1");
+    } catch {
+      // localStorage unavailable; nudge will reappear next visit
+    }
     setShowNudge(false);
   };
 

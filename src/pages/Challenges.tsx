@@ -34,7 +34,7 @@ export const meta: MetaFunction = ({ params }) => {
   if (tag) {
     return buildPageMeta({
       title: `${tag} Challenges - ${BRAND_NAME}`,
-      description: `Hands-on open source challenges using ${tag}. Practice in real-world scenarios directly in your browser.`,
+      description: `Hands-on open source challenges using ${tag}. Practice in real-world scenarios in GitHub Codespaces.`,
       url: `${SITE_URL}/challenges/${tagToSlug(tag)}/`,
     });
   }

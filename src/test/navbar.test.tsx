@@ -35,13 +35,13 @@ describe("Navbar - logo", () => {
     const logoLink = screen.getByRole("link", { name: "offon.dev home" });
     const imgs = logoLink.querySelectorAll("img");
     expect(imgs).toHaveLength(2);
-    // Both images are decorative — the link's aria-label="offon.dev home" is the accessible name.
-    // Dark logo: alt="" so screen readers don't double-announce the site name.
+    // Both images are decorative — the link's aria-label provides the accessible name.
+    // alt="" on both suppresses any path-based announcement from AT.
     expect(imgs[0].getAttribute("alt")).toBe("");
     expect(imgs[0].getAttribute("aria-hidden")).toBeNull();
-    // Light logo: alt="" and aria-hidden="true" (fully suppressed).
+    // Light logo: alt="" is sufficient; redundant aria-hidden is omitted.
     expect(imgs[1].getAttribute("alt")).toBe("");
-    expect(imgs[1].getAttribute("aria-hidden")).toBe("true");
+    expect(imgs[1].getAttribute("aria-hidden")).toBeNull();
   });
 
   it("logo link navigates to home (/)", () => {

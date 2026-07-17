@@ -100,7 +100,11 @@ src/
   assets/       # Static assets bundled by Vite
   Layout.tsx    # App shell: providers, skip nav, scroll-to-top, consent banner, and Outlet
 e2e/
-  smoke.spec.ts # Playwright smoke tests (requires npm run build first)
+  smoke.spec.ts    # Playwright smoke tests
+  a11y.spec.ts     # Axe-core accessibility audit (dark and light mode)
+  hydration.spec.ts # React hydration checks
+  visual.spec.ts   # Visual regression tests (local only, not run in CI)
+  wsg.spec.ts      # Well-known/agent-skills verification
 public/
   fonts/        # Self-hosted fonts (Inter, Syne, JetBrains Mono)
   brand/        # OffOn brand assets (SVG + PNG logos, Nyx illustrations). Referenced by deck/index.html and BrandGuidelines.tsx.
@@ -122,6 +126,8 @@ public/
     validate-adventures.yml       # PR check: validates adventure YAML, routes, and sitemap consistency
     validate-docs.yml             # PR check: ensures styleguide.md/README.md updated with code changes
     add-discussion-url.yml        # workflow_dispatch: set discussionUrl for a level and fetch initial posts
+    a11y-scan.yml                 # Scheduled weekly accessibility scan (Monday 08:00 UTC)
+    reuse.yml                     # REUSE licence compliance check on push and PR
 ```
 
 ---
@@ -138,7 +144,7 @@ npm run lint:reuse   # REUSE licence compliance (requires: pip install reuse)
 npm test             # Run tests once (Vitest)
 npm run test:watch   # Tests in watch mode
 npm run test:coverage  # Run tests with v8 coverage (uses @vitest/coverage-v8)
-npm run test:e2e     # Playwright smoke tests (requires npm run build first)
+npm run test:e2e     # Playwright smoke, a11y, hydration, and wsg tests (requires npm run build first)
 npm run test:visual  # Visual regression tests (requires npm run build first)
 npm run test:visual:update  # Update visual baseline screenshots
 npm run preview      # Copy 404 fallback and serve the production build locally
@@ -309,8 +315,15 @@ All analytics-related constants live in `src/data/constants.ts`:
 | `CONSENT_STORAGE_KEY` | `localStorage` key for the consent decision (`analytics_consent`). |
 | `CONSENT_EXPIRY_MS` | Stored consent expiry (180 days). Re-prompt the user on the next visit after this. |
 | `BRAND_NAME` | Always `"OffOn"`. Never hardcode the string. |
+| `BRAND_SHORT_DESCRIPTION` | One-sentence brand description. Used in `Footer.tsx` and meta descriptions. Never hardcode. |
+| `BRAND_SLOGAN_PARTS` | Tuple of the three slogan parts: `["Vendor-Neutral", "Open Source", "Community-Driven"]`. |
+| `BRAND_SLOGAN` | Full slogan parts joined with `". "`. |
+| `BRAND_SECONDARY_LINE_PARTS` | Tuple of the three tagline parts: `["always On.", "always Open.", "always Learning."]`. All three must be rendered in `Hero.tsx`. |
+| `BRAND_SECONDARY_LINE` | Full tagline joined with spaces. |
 | `COMMUNITY_URL` | Real URL of the Discourse instance. Never hardcode. |
 | `COMMUNITY_DISPLAY_NAME` | User-facing display name for the community URL. Use for visible text. |
+| `CODE_OF_CONDUCT_URL` | Canonical URL of the Code of Conduct topic on Discourse. Use instead of hardcoding `${COMMUNITY_URL}/t/code-of-conduct/31`. |
+| `CODESPACES_BASE` | GitHub Codespaces base URL for the challenges repo. Used by `CodespacesButton.tsx`. |
 | `SITE_URL` | `"https://offon.dev"`. Use for canonical URLs and OG tags. |
 | `SITE_NAME` | `"offon.dev"`. |
 | `CONTACT_EMAIL` | Contact email address. Used in `CommunityGuide.tsx`. Never hardcode. |
@@ -318,6 +331,7 @@ All analytics-related constants live in `src/data/constants.ts`:
 | `BLUESKY_URL` | Bluesky profile URL (`https://bsky.app/profile/off-on-dev.bsky.social`). Used in `Footer.tsx`. |
 | `X_URL` | X (Twitter) profile URL (`https://x.com/OffonDev`). Used in `Footer.tsx`. |
 | `THEME_STORAGE_KEY` | `localStorage` key for the stored theme preference (`"theme"`). Used by `useTheme.tsx`. |
+| `CURRENT_YEAR` | Current calendar year (e.g. `2026`). Update manually each January in `src/data/constants.ts`. |
 
 ### How it works
 
@@ -483,10 +497,11 @@ Read [`PERFORMANCE.md`](PERFORMANCE.md) before adding any new dependency, font, 
   - `<meta name="color-scheme" content="dark light">` -- prevents the white flash dark-mode users see before CSS loads, and lets the browser style scrollbars and native form controls to match the active scheme.
 - **Favicons** -- the following files must be present in `public/` and linked from `src/root.tsx`:
   - `favicon.svg` -- primary favicon; linked as `<link rel="icon" href="/favicon.svg" type="image/svg+xml">`.
+  - `favicon.png` -- PNG fallback; linked as `<link rel="icon" href="/favicon.png" type="image/png">`. Also referenced in the Organization JSON-LD block.
   - `favicon.ico` -- ICO fallback for older browsers and the Windows taskbar. Place at `public/favicon.ico` (browsers request it automatically).
   - `apple-touch-icon.png` -- 180x180 px PNG; linked as `<link rel="apple-touch-icon" href="/apple-touch-icon.png">`.
   - A maskable icon entry in `site.webmanifest` with `"purpose": "maskable"` for Android home screens.
-  - Verify all four are present before shipping any favicon change.
+  - Verify all five are present before shipping any favicon change.
 - Add `<link rel="manifest" href="/site.webmanifest" />` to link the web app manifest.
 - Add `<meta name="theme-color">` tags for dark and light mode.
 - Add JSON-LD structured data as two `<script type="application/ld+json">` blocks: one `@type: "WebSite"` and one `@type: "Organization"`. The `"OffOn"` brand name is hardcoded as a string literal in both (they cannot reference TypeScript constants inside `dangerouslySetInnerHTML`). Update them manually if the brand name ever changes.
@@ -591,7 +606,7 @@ All UI labels use **title case (Chicago style)**. Body copy uses **sentence case
 - Every time a new static page is added to `src/pages/` and registered as a route in `src/routes.ts`, its URL must also be added to `public/sitemap.xml` with a `<lastmod>` date.
 - Dynamic routes with statically known IDs must also be added to `public/sitemap.xml` with a `<lastmod>` date. Adventure and challenge-tag URLs are generated automatically by `scripts/generate-adventures.mjs` and include `<lastmod>` set to the build date; do not add them by hand.
 - `robots.txt` at `public/robots.txt` must include: `Sitemap: https://offon.dev/sitemap.xml`
-- **Generator region markers:** `scripts/generate-adventures.mjs` uses two exact sitemap URL strings as anchors when patching adventure and tag entries into `public/sitemap.xml` (see `replaceRegion` calls near line 910 and 952). If you change either anchor URL (including adding, removing, or reordering attributes like `<lastmod>`), you must update the corresponding marker string in the generator. Failing to do so causes `npm run build` to abort with "Region markers not found".
+- **Generator region markers:** `scripts/generate-adventures.mjs` uses two exact sitemap URL strings as anchors when patching adventure and tag entries into `public/sitemap.xml` (see `replaceRegion` calls near line 1204 and 1251). The adventure block open anchor is the `/brand/` entry; the tag block open anchor is the `/challenges/` index entry. If you change either anchor URL (including adding, removing, or reordering attributes like `<lastmod>`), you must update the corresponding marker string in the generator. Failing to do so causes `npm run build` to abort with "Region markers not found".
 
 ### SSG prerendered routes
 

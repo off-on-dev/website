@@ -46,7 +46,6 @@ export function ConsentBanner(): JSX.Element | null {
     <div
       role="region"
       aria-labelledby="consent-banner-title"
-      aria-live="polite"
       style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background shadow-lg"
     >

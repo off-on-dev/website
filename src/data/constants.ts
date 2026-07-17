@@ -6,6 +6,7 @@ export const BRAND_NAME = "OffOn";
 
 export const COMMUNITY_URL = "https://community.offon.dev";
 export const COMMUNITY_DISPLAY_NAME = "community.offon.dev";
+export const CODE_OF_CONDUCT_URL = `${COMMUNITY_URL}/t/code-of-conduct/31`;
 
 export const CODESPACES_BASE = "https://codespaces.new/off-on-dev/open-source-challenges";
 
