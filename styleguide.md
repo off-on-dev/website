@@ -827,7 +827,7 @@ No props. Used only in `Index.tsx`.
 
 `src/components/CommunityLeaders.tsx`
 
-Sidebar card displaying community leaders fetched daily from Discourse Data Explorer queries. Renders a `<div>` card with an `<h2>` "Community Leaders" heading and a ranked list per category. Each category uses a lucide-react icon and an `<ol aria-label="{section.title}">` of user rows (rank, avatar, username, count). Avatars are lazy-loaded from external Discourse CDN URLs.
+Sidebar card displaying community leaders fetched daily from Discourse Data Explorer queries. Renders a `<div>` card with an `<h3>` "Community Leaders" heading (sidebar context is subordinate to main-content `h2` sections) and a ranked list per category. Each category title is rendered as `<h4>` by `LeaderCategory`. Each category uses a lucide-react icon and an `<ol aria-label="{section.title}">` of user rows (rank, avatar, username, count). Avatars are lazy-loaded from external Discourse CDN URLs.
 
 Data source: `src/data/community-leaders.json` (refreshed daily by `.github/workflows/refresh-community-leaders.yml`).
 

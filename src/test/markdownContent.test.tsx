@@ -281,4 +281,18 @@ describe("MarkdownContent: abbr portal tooltip lifecycle", () => {
     act(() => { unmount(); });
     expect(abbr.classList.contains("abbr-js-tooltip")).toBe(false);
   });
+
+  it("keeps the tooltip visible when the mouse leaves the portal while the abbr is keyboard-focused", () => {
+    renderWithAbbr();
+    const abbr = document.querySelector<HTMLElement>("abbr[data-title]")!;
+    const portal = findPortal("Kubernetes")!;
+    // Keyboard user focuses the abbr first (tooltip becomes visible via focus path).
+    fireEvent.focus(abbr);
+    expect(portal.style.display).toBe("block");
+    // Mouse enters then leaves the portal while abbr still has focus.
+    fireEvent.mouseEnter(portal);
+    fireEvent.mouseLeave(portal);
+    // scheduleHide should be suppressed because document.activeElement === abbr.
+    expect(portal.style.display).toBe("block");
+  });
 });

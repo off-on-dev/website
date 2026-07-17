@@ -79,19 +79,29 @@ export const MarkdownContent = ({ source }: MarkdownContentProps): JSX.Element =
       const immediateHide = (): void => { clearHide(); tip.style.display = "none"; };
 
       // Reposition while visible (page can scroll while tooltip is open).
+      // Applies the same clamping as positionAndShow so the tooltip never
+      // overflows the viewport right edge after a scroll or resize.
       const reposition = (): void => {
         if (tip.style.display === "block") {
           const rect = abbrEl.getBoundingClientRect();
+          const tipMaxWidth = Math.min(160, Math.max(80, window.innerWidth - rect.left - 16));
+          const left = Math.max(8, Math.min(rect.left, window.innerWidth - tipMaxWidth - 8));
+          tip.style.maxWidth = `${tipMaxWidth}px`;
           tip.style.top = `${rect.bottom + 6}px`;
-          tip.style.left = `${rect.left}px`;
+          tip.style.left = `${left}px`;
         }
       };
 
       abbrEl.addEventListener("mouseenter", positionAndShow);
       abbrEl.addEventListener("mouseleave", scheduleHide);
       // Hoverable: moving the mouse from abbr onto the tooltip keeps it visible.
+      // Guard: if the abbr is keyboard-focused, mouse leaving the tooltip must
+      // not hide it — the focus path owns visibility until blur fires.
+      const onTipMouseLeave = (): void => {
+        if (document.activeElement !== abbrEl) scheduleHide();
+      };
       tip.addEventListener("mouseenter", clearHide);
-      tip.addEventListener("mouseleave", scheduleHide);
+      tip.addEventListener("mouseleave", onTipMouseLeave);
       // Mobile touch: tap focuses the abbr, blur hides immediately.
       abbrEl.addEventListener("focus", positionAndShow);
       abbrEl.addEventListener("blur", immediateHide);
@@ -107,7 +117,7 @@ export const MarkdownContent = ({ source }: MarkdownContentProps): JSX.Element =
         abbrEl.removeEventListener("mouseenter", positionAndShow);
         abbrEl.removeEventListener("mouseleave", scheduleHide);
         tip.removeEventListener("mouseenter", clearHide);
-        tip.removeEventListener("mouseleave", scheduleHide);
+        tip.removeEventListener("mouseleave", onTipMouseLeave);
         abbrEl.removeEventListener("focus", positionAndShow);
         abbrEl.removeEventListener("blur", immediateHide);
         abbrEl.removeEventListener("keydown", onKeyDown);

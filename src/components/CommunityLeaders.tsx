@@ -60,10 +60,10 @@ const LeaderRow = ({ user, rank }: { user: LeaderUser; rank: number }): JSX.Elem
 
 const LeaderCategory = ({ section }: { section: LeaderSection }): JSX.Element => (
   <div>
-    <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+    <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
       <span className="text-primary">{SECTION_ICONS[section.id]}</span>
       {section.title}
-    </h3>
+    </h4>
     <ol className="space-y-2.5" aria-label={section.title}>
       {section.users.map((user, i) => (
         <LeaderRow key={user.username} user={user} rank={i + 1} />
@@ -82,7 +82,7 @@ export const CommunityLeaders = ({
         .filter((s): s is LeaderSection => s !== undefined)
     : ALL_SECTIONS
   ).map((s) =>
-    limit ? { ...s, users: s.users.slice(0, limit) } : s
+    limit !== undefined ? { ...s, users: s.users.slice(0, limit) } : s
   );
 
   return (

@@ -41,9 +41,9 @@ const Contribute = (): JSX.Element => {
         {/* Ways to contribute */}
         <div className="px-6 md:px-16 py-16">
           <div className="mx-auto max-w-6xl">
-          <SidebarLayout aside={<CommunityLeaders />}>
-            <div>
-            <section aria-labelledby="ways-to-contribute">
+            <SidebarLayout aside={<CommunityLeaders />}>
+              <div>
+              <section aria-labelledby="ways-to-contribute">
               <SectionLabel>get involved</SectionLabel>
               <h2 id="ways-to-contribute" className="text-2xl font-bold text-foreground mb-4">How to Get Involved</h2>
               <p className="text-muted-foreground leading-relaxed mb-8 max-w-2xl">
@@ -157,24 +157,24 @@ const Contribute = (): JSX.Element => {
                 </div>
 
               </div>
-            </section>
+              </section>
 
-            <div className="mt-8">
-              <p className="text-sm text-muted-foreground leading-relaxed mb-2">
-                <span className="font-medium text-foreground">This site is a community project too.</span>{" "}
-                Found a gap or something that could work better? Your feedback shapes what we build next.
-              </p>
-              <div className="flex flex-col gap-1.5">
-                <a href={`${COMMUNITY_URL}/c/general/site-feedback/2`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Post in Site Feedback <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-                </a>
-                <a href="https://github.com/off-on-dev/website/issues" target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Open a GitHub issue <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-                </a>
+              <div className="mt-8">
+                <p className="text-sm text-muted-foreground leading-relaxed mb-2">
+                  <span className="font-medium text-foreground">This site is a community project too.</span>{" "}
+                  Found a gap or something that could work better? Your feedback shapes what we build next.
+                </p>
+                <div className="flex flex-col gap-1.5">
+                  <a href={`${COMMUNITY_URL}/c/general/site-feedback/2`} target="_blank" rel="noopener noreferrer" className={extLink}>
+                    Post in Site Feedback <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  </a>
+                  <a href="https://github.com/off-on-dev/website/issues" target="_blank" rel="noopener noreferrer" className={extLink}>
+                    Open a GitHub issue <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  </a>
+                </div>
               </div>
-            </div>
-            </div>
-          </SidebarLayout>
+              </div>
+            </SidebarLayout>
           </div>
         </div>
 

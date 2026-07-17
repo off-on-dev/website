@@ -437,7 +437,7 @@ html {
   .animate-fade-up-delay-1    { animation: fadeUp 0.35s ease-out 0.05s both; }
   .animate-fade-up-delay-2    { animation: fadeUp 0.35s ease-out 0.10s both; }
   .animate-fade-up-delay-3    { animation: fadeUp 0.35s ease-out 0.15s both; }
-.firefly                    { animation: fireflyFloat linear infinite; }
+  .firefly                    { animation: fireflyFloat linear infinite; }
   /* will-change creates a GPU compositing layer; cap at 3 to stay within PERFORMANCE.md limit */
   .firefly:nth-child(1),
   .firefly:nth-child(2),
