@@ -11,13 +11,16 @@ export const StarterNudge = (): JSX.Element | null => {
   const [showNudge, setShowNudge] = useState(false);
 
   useEffect(() => {
+    let dismissed: boolean;
     try {
-      if (starterLevel && !localStorage.getItem(STARTER_NUDGE_KEY)) {
-        const id = setTimeout(() => setShowNudge(true));
-        return () => clearTimeout(id);
-      }
+      dismissed = !!localStorage.getItem(STARTER_NUDGE_KEY);
     } catch {
       // localStorage unavailable; skip nudge
+      return;
+    }
+    if (starterLevel && !dismissed) {
+      const id = setTimeout(() => setShowNudge(true));
+      return () => clearTimeout(id);
     }
   }, []);
 

@@ -15,7 +15,6 @@ import { buildPageMeta } from "@/lib/meta";
 
 export const links: LinksFunction = () => [
   { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
-  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-600-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
 ];
 
 export const meta: MetaFunction = () =>

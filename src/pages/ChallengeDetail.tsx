@@ -24,6 +24,7 @@ import { RewardsCard } from "@/components/RewardsCard";
 import { ChallengeShareLinks } from "@/components/ChallengeShareLinks";
 import { SITE_URL, BRAND_NAME, COMMUNITY_DISPLAY_NAME, COMMUNITY_URL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
+import { stripHtml } from "@/lib/markdown";
 import { isDeadlinePast, isSolutionUnlocked, resolveDiscussionUrl } from "@/lib/utils";
 import { InlineProse } from "@/components/InlineProse";
 import { Abbr } from "@/components/Abbr";
@@ -54,7 +55,7 @@ export const meta: MetaFunction = ({ params }) => {
     ];
   }
   const rawDescription = level.metaDescription ?? `${level.name}: ${level.intro?.[0] ?? level.topics.join(", ")}`;
-  const description = rawDescription.replace(/<[^>]+>/g, "").slice(0, 160);
+  const description = stripHtml(rawDescription).slice(0, 160);
   return buildPageMeta({
     title: `${level.name} - ${adventure.title} - ${BRAND_NAME}`,
     description,

@@ -80,7 +80,7 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
                       {post.username.slice(0, 2).toUpperCase()}
                     </div>
                   )}
-                  <span className="sr-only">{post.username}{post.age ? `, posted ${post.age}` : ""}: </span>
+                  <span className="sr-only">{post.username || "Community member"}{post.age ? `, posted ${post.age}` : ""}: </span>
                   {post.age && (
                     <span className="text-xs text-faint" aria-hidden="true">{post.age}</span>
                   )}

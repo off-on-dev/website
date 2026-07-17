@@ -26,3 +26,17 @@ export const stripLinks = (html: string): string =>
   html
     .replace(/<a\b[^>]*>([\s\S]*?)<\/a>/gi, "$1")
     .replace(/<span\s+class="sr-only">[\s\S]*?<\/span>/gi, "");
+
+/** Strips all HTML tags and decodes common HTML entities. Use when placing
+ *  author-prose HTML into a plain-text context such as a <meta content=""> attribute.
+ *  Without entity decoding, rehype-generated `&amp;` survives tag stripping and React
+ *  double-encodes it to `&amp;amp;` in the prerendered attribute value. */
+export const stripHtml = (html: string): string =>
+  html
+    .replace(/<[^>]+>/g, "")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, " ");

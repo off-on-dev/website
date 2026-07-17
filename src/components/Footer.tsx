@@ -29,7 +29,7 @@ export const Footer = (): JSX.Element => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12">
             {/* Explore */}
             <nav aria-label="Explore">
-              <h2 className="font-sans font-normal text-xs uppercase tracking-widest text-faint mb-3">Explore</h2>
+              <p className="font-sans font-normal text-xs uppercase tracking-widest text-faint mb-3">explore</p>
               <div className="flex flex-col">
                 <NavLink to="/challenges/" className={linkCls}>Challenges</NavLink>
                 <NavLink to="/contribute/" className={linkCls}>Contribute</NavLink>
@@ -40,7 +40,7 @@ export const Footer = (): JSX.Element => {
             </nav>
             {/* Community */}
             <nav aria-label="Community">
-              <h2 className="font-sans font-normal text-xs uppercase tracking-widest text-faint mb-3">Community</h2>
+              <p className="font-sans font-normal text-xs uppercase tracking-widest text-faint mb-3">community</p>
               <div className="flex flex-col">
                 <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className={linkCls}>Community Hub <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
                 <a href={CODE_OF_CONDUCT_URL} target="_blank" rel="noopener noreferrer" className={linkCls}>Code of Conduct <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
