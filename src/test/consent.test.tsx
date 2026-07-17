@@ -431,6 +431,7 @@ describe('ConsentBanner - mount guard', () => {
         </ConsentProvider>
       </MemoryRouter>
     );
+    expect(html).toContain('aria-live="polite"');
     expect(html).not.toContain('Cookie consent');
     expect(html).not.toContain('Accept analytics');
     expect(html).not.toContain('Decline');
@@ -442,8 +443,7 @@ describe('ConsentBanner - mount guard', () => {
     expect(source).toContain('setMounted(true)');
     // Pre-renders an empty aria-live region instead of null so AT can detect content changes
     // within a pre-existing live region (newly inserted regions are not announced by VoiceOver).
-    expect(source).toContain('if (!mounted) return');
-    expect(source).toContain('aria-live="polite"');
+    expect(source).toContain('if (!mounted) return <div aria-live');
   });
 });
 

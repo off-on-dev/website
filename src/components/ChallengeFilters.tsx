@@ -105,7 +105,7 @@ export const ChallengeFilters = ({
     e: FocusEvent<HTMLDivElement>,
     closePanel: () => void,
   ): void => {
-    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+    if (e.relatedTarget && !e.currentTarget.contains(e.relatedTarget as Node)) {
       closePanel();
     }
   };

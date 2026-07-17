@@ -4,7 +4,7 @@ import { Cookie } from "lucide-react";
 import { useConsent } from "@/hooks/useConsent";
 import { SITE_NAME } from "@/data/constants";
 
-export function ConsentBanner(): JSX.Element | null {
+export function ConsentBanner(): JSX.Element {
   const { consent, grant, deny, reset } = useConsent();
   const [mounted, setMounted] = useState(false);
   const declineRef = useRef<HTMLButtonElement>(null);
