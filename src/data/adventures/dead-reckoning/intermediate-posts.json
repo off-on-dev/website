@@ -6,6 +6,7 @@
       "avatarUrl": "https://community.offon.dev/letter_avatar_proxy/v4/letter/a/b5a626/40.png",
       "cooked": "Thanks for the challenge.",
       "created_at": "2026-07-17T01:08:34.922Z",
+      "challengeSolved": true,
       "topicUrl": "https://community.offon.dev/t/fix-a-broken-delivery-pipeline-july-2026-adventure-intermediate/1668"
     },
     {
@@ -13,9 +14,21 @@
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
       "cooked": "Thanks! How can I make sure about some solutions? for git-sha in workflow-template I’m sure there are better solutions but also at the same time I’m not sure my solution is correct/good or not..",
       "created_at": "2026-07-16T22:31:39.391Z",
+      "challengeSolved": true,
       "topicUrl": "https://community.offon.dev/t/fix-a-broken-delivery-pipeline-july-2026-adventure-intermediate/1668"
     }
   ],
   "totalReplies": 2,
-  "solvers": []
+  "solvers": [
+    {
+      "username": "iw4p",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
+      "solvedAt": "2026-07-16T22:31:39.391Z"
+    },
+    {
+      "username": "alvin",
+      "avatarUrl": "https://community.offon.dev/letter_avatar_proxy/v4/letter/a/b5a626/40.png",
+      "solvedAt": "2026-07-17T01:08:34.922Z"
+    }
+  ]
 }

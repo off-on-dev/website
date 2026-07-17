@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-17T10:02:52.296Z",
+  "lastUpdated": "2026-07-17T14:27:52.902Z",
   "sections": [
     {
       "id": "top-contributors",
@@ -48,14 +48,14 @@
       "title": "Top Challenge Solvers",
       "users": [
         {
-          "username": "theharithsa",
-          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
+          "username": "iw4p",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
           "count": 9
         },
         {
-          "username": "iw4p",
-          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
-          "count": 8
+          "username": "theharithsa",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
+          "count": 9
         },
         {
           "username": "gsigmund",
@@ -75,7 +75,7 @@
         {
           "username": "alvin",
           "avatarUrl": "https://avatars.discourse-cdn.com/v4/letter/a/b5a626/40.png",
-          "count": 5
+          "count": 6
         }
       ]
     },
@@ -162,14 +162,14 @@
           "count": 101
         },
         {
-          "username": "DavidHirsch",
-          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/DavidHirsch/40/8_2.png",
+          "username": "SinduriGuntupalli",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/SinduriGuntupalli/40/194_2.png",
           "count": 44
         },
         {
-          "username": "SinduriGuntupalli",
-          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/SinduriGuntupalli/40/194_2.png",
-          "count": 42
+          "username": "DavidHirsch",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/DavidHirsch/40/8_2.png",
+          "count": 44
         },
         {
           "username": "theharithsa",
