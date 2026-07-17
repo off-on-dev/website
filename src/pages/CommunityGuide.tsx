@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import type { MetaFunction } from "react-router";
+import type { MetaFunction, LinksFunction } from "react-router";
 import { Link } from "react-router";
 import { Navbar } from "@/components/Navbar";
 import { ExternalLink } from "lucide-react";
@@ -14,6 +14,12 @@ import { SidebarLayout } from "@/components/SidebarLayout";
 import { buildPageMeta } from "@/lib/meta";
 
 const extLink = "docs-ext-link";
+
+// CommunityLeaders renders in the SidebarLayout aside above the fold and uses
+// font-mono (400 only, no font-semibold), so preload only the 400 weight.
+export const links: LinksFunction = () => [
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+];
 
 export const meta: MetaFunction = () =>
   buildPageMeta({
