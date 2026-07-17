@@ -15,6 +15,7 @@ import {
   SITE_NAME,
 } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
+import { Abbr } from "@/components/Abbr";
 
 export const meta: MetaFunction = () =>
   buildPageMeta({
@@ -454,7 +455,7 @@ const BrandGuidelines = (): JSX.Element => {
                   <div className="mb-10">
                     <div className="flex flex-wrap items-baseline gap-3 mb-3">
                       <h3 className="font-sans text-sm font-semibold text-foreground">Inter</h3>
-                      <span className="font-mono text-xs text-faint">font-sans / 400-600 / Body and UI</span>
+                      <span className="font-mono text-xs text-faint">font-sans / 400-600 / Body and <Abbr title="user interface">UI</Abbr></span>
                     </div>
                     <div className="rounded-lg border border-border bg-[hsl(var(--surface))] p-8 space-y-5">
                       {FONT_WEIGHTS.map(({ weight, label, sample }) => (
@@ -608,7 +609,7 @@ hsl(var(--foreground))`}</code>
                       <p className="font-sans text-xs uppercase tracking-widest text-faint mb-3">Usage</p>
                       <ul className="font-sans text-sm text-dim space-y-1.5">
                         <li>Always camelCase: <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">OffOn</code></li>
-                        <li>In prose and UI: <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">OffOn.dev</code> (brand caps, TLD lowercase)</li>
+                        <li>In prose and <Abbr title="user interface">UI</Abbr>: <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">OffOn.dev</code> (brand caps, TLD lowercase)</li>
                         <li>In URLs and hrefs: <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">offon.dev</code></li>
                         <li>Never capitalise the TLD: <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">OffOn.Dev</code> is wrong</li>
                       </ul>
@@ -696,7 +697,7 @@ hsl(var(--foreground))`}</code>
                 {/* Accessibility */}
                 <SectionBlock id="accessibility" eyebrow="Standards" heading="Accessibility">
                   <p className="font-sans text-sm text-dim max-w-prose mb-8">
-                    Every page on {BRAND_NAME} targets WCAG 2.2 Level AA for structure and interaction. Body text contrast targets AAA (7:1) in both light and dark mode. The full statement, testing approach, and how to report a barrier are in the{" "}
+                    Every page on {BRAND_NAME} targets <Abbr title="Web Content Accessibility Guidelines">WCAG</Abbr> 2.2 Level <Abbr title="double-A conformance level">AA</Abbr> for structure and interaction. Body text contrast targets <Abbr title="triple-A conformance level">AAA</Abbr> (7:1) in both light and dark mode. The full statement, testing approach, and how to report a barrier are in the{" "}
                     <Link to="/accessibility/" className="docs-ext-link">Accessibility Statement</Link>.
                   </p>
 
@@ -704,9 +705,9 @@ hsl(var(--foreground))`}</code>
                     <div className="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
                       <h3 className="font-sans text-sm font-semibold text-foreground mb-3">Color and contrast</h3>
                       <ul role="list" className="font-sans text-sm text-dim space-y-1.5">
-                        <li>Body text: minimum 7:1 contrast (WCAG AAA) in both modes</li>
-                        <li>Large text (18pt+ or bold 14pt+): minimum 4.5:1 (WCAG AAA)</li>
-                        <li>UI controls and focus indicators: minimum 3:1</li>
+                        <li>Body text: minimum 7:1 contrast (<Abbr title="Web Content Accessibility Guidelines">WCAG</Abbr> <Abbr title="triple-A conformance level">AAA</Abbr>) in both modes</li>
+                        <li>Large text (18pt+ or bold 14pt+): minimum 4.5:1 (<Abbr title="Web Content Accessibility Guidelines">WCAG</Abbr> <Abbr title="triple-A conformance level">AAA</Abbr>)</li>
+                        <li><Abbr title="user interface">UI</Abbr> controls and focus indicators: minimum 3:1</li>
                         <li>Never use amber <code className="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">#ffc034</code> as text in light mode</li>
                         <li>Hover states must meet contrast in both light and dark</li>
                         <li>Never convey meaning through color alone</li>

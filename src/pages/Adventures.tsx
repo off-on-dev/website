@@ -98,7 +98,7 @@ const Adventures = (): JSX.Element => (
       <ChallengeBuildersSection
         aside={
           <CommunityLeaders
-            sections={["top-challenge-solvers", "challenge-grand-builders", "challenge-builders"]}
+            sections={["challenge-grand-builders", "challenge-builders", "challenge-rockstars", "top-challenge-solvers"]}
           />
         }
       />

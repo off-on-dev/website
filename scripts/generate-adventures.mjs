@@ -45,6 +45,7 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
+import rehypeRaw from "rehype-raw";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import rehypeStringify from "rehype-stringify";
 import Ajv2020 from "ajv/dist/2020.js";
@@ -107,21 +108,51 @@ const sanitizeSchema = {
   ...defaultSchema,
   attributes: {
     ...defaultSchema.attributes,
+    // Preserve all default <a> attrs (including ARIA) and add target/rel for external links.
+    a: [...(defaultSchema.attributes?.a ?? []), "target", "rel"],
     code: ["className"],
-    a: ["href", "target", "rel"],
   },
   tagNames: [
     ...(defaultSchema.tagNames ?? []),
     "pre",
     "code",
+    "abbr",
   ],
+  // Drop <style> tag content; rehypeSanitize strips the element but passes
+  // its text children through by default (only <script> is in strip[]).
+  strip: [...(defaultSchema.strip ?? []), "style"],
 };
+
+/** Post-sanitize: convert <abbr title> to <abbr data-title aria-label tabindex>.
+ *  - data-title drives the CSS ::after tooltip (avoids the browser native tooltip
+ *    that appears when title is present alongside a custom one).
+ *  - aria-label carries the expansion for screen readers (title is removed).
+ *  - tabindex="0" lets keyboard users trigger the CSS tooltip.
+ *  All three properties are added after rehypeSanitize runs (sanitize strips
+ *  tabIndex and data-* from its allowlist by default). */
+function addAbbrTabindex() {
+  return function (tree) {
+    function walk(node) {
+      if (node.type === "element" && node.tagName === "abbr" && node.properties?.title) {
+        const text = String(node.properties.title);
+        node.properties.dataTitle = text;
+        node.properties.ariaLabel = text;
+        node.properties.tabIndex = 0;
+        delete node.properties.title;
+      }
+      for (const child of node.children ?? []) walk(child);
+    }
+    walk(tree);
+  };
+}
 
 const mdProcessor = unified()
   .use(remarkParse)
   .use(remarkGfm)
-  .use(remarkRehype)
+  .use(remarkRehype, { allowDangerousHtml: true })
+  .use(rehypeRaw)
   .use(rehypeSanitize, sanitizeSchema)
+  .use(addAbbrTabindex)
   .use(rehypeStringify);
 
 /** Add target/rel/sr-only to http/https <a> tags. The external link icon is

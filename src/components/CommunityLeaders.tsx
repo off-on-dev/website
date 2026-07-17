@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { Trophy, Target, Building2, Wrench, Heart, MessageCircle, HandHeart } from "lucide-react";
+import { Trophy, Target, Building2, Wrench, Heart, MessageCircle, HandHeart, Star } from "lucide-react";
 import communityLeadersData from "@/data/community-leaders.json";
 import { AvatarLink } from "@/components/AvatarLink";
 
@@ -18,11 +18,14 @@ type LeaderSection = {
 type CommunityLeadersProps = {
   /** Which section IDs to show. Omit to show all. */
   sections?: string[];
+  /** Max users to show per section. Omit to show all. */
+  limit?: number;
 };
 
 const SECTION_ICONS: Record<string, JSX.Element> = {
   "top-contributors": <Trophy size={14} aria-hidden="true" />,
   "top-challenge-solvers": <Target size={14} aria-hidden="true" />,
+  "challenge-rockstars": <Star size={14} aria-hidden="true" />,
   "challenge-grand-builders": <Building2 size={14} aria-hidden="true" />,
   "challenge-builders": <Wrench size={14} aria-hidden="true" />,
   "most-liked": <Heart size={14} aria-hidden="true" />,
@@ -57,10 +60,10 @@ const LeaderRow = ({ user, rank }: { user: LeaderUser; rank: number }): JSX.Elem
 
 const LeaderCategory = ({ section }: { section: LeaderSection }): JSX.Element => (
   <div>
-    <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+    <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
       <span className="text-primary">{SECTION_ICONS[section.id]}</span>
       {section.title}
-    </h3>
+    </h4>
     <ol className="space-y-2.5" aria-label={section.title}>
       {section.users.map((user, i) => (
         <LeaderRow key={user.username} user={user} rank={i + 1} />
@@ -71,18 +74,24 @@ const LeaderCategory = ({ section }: { section: LeaderSection }): JSX.Element =>
 
 export const CommunityLeaders = ({
   sections: sectionFilter,
+  limit,
 }: CommunityLeadersProps): JSX.Element => {
-  const visibleSections = sectionFilter
-    ? ALL_SECTIONS.filter((s) => sectionFilter.includes(s.id))
-    : ALL_SECTIONS;
+  const visibleSections = (sectionFilter
+    ? sectionFilter
+        .map((id) => ALL_SECTIONS.find((s) => s.id === id))
+        .filter((s): s is LeaderSection => s !== undefined)
+    : ALL_SECTIONS
+  ).map((s) =>
+    limit !== undefined ? { ...s, users: s.users.slice(0, limit) } : s
+  );
 
   return (
     <div
       className="rounded-xl border border-border bg-[hsl(var(--surface))] p-5"
     >
-      <h2 className="font-sans text-base font-semibold text-foreground mb-5">
+      <h3 className="font-sans text-base font-semibold text-foreground mb-5">
         Community Leaders
-      </h2>
+      </h3>
       <div className="space-y-5">
         {visibleSections.map((section) => (
           <div

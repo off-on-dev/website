@@ -33,6 +33,17 @@
       ]
     },
     {
+      "id": "challenge-grand-builders",
+      "title": "Challenge Grand Builders",
+      "users": [
+        {
+          "username": "KatharinaSick",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/KatharinaSick/40/9_2.png",
+          "count": 14
+        }
+      ]
+    },
+    {
       "id": "top-challenge-solvers",
       "title": "Top Challenge Solvers",
       "users": [
@@ -60,17 +71,6 @@
           "username": "justinrand",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/justinrand/40/140_2.png",
           "count": 6
-        }
-      ]
-    },
-    {
-      "id": "challenge-grand-builders",
-      "title": "Challenge Grand Builders",
-      "users": [
-        {
-          "username": "KatharinaSick",
-          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/KatharinaSick/40/9_2.png",
-          "count": 14
         }
       ]
     },

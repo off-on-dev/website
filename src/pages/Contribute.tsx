@@ -7,7 +7,10 @@ import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
 import { SectionLabel } from "@/components/SectionLabel";
+import { SidebarLayout } from "@/components/SidebarLayout";
+import { CommunityLeaders } from "@/components/CommunityLeaders";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL, LINKEDIN_URL, BLUESKY_URL, X_URL } from "@/data/constants";
+import { Abbr } from "@/components/Abbr";
 import { buildPageMeta } from "@/lib/meta";
 
 export const meta: MetaFunction = () =>
@@ -38,7 +41,9 @@ const Contribute = (): JSX.Element => {
         {/* Ways to contribute */}
         <div className="px-6 md:px-16 py-16">
           <div className="mx-auto max-w-6xl">
-            <section aria-labelledby="ways-to-contribute">
+            <SidebarLayout aside={<CommunityLeaders />}>
+              <div>
+              <section aria-labelledby="ways-to-contribute">
               <SectionLabel>get involved</SectionLabel>
               <h2 id="ways-to-contribute" className="text-2xl font-bold text-foreground mb-4">How to Get Involved</h2>
               <p className="text-muted-foreground leading-relaxed mb-8 max-w-2xl">
@@ -117,7 +122,7 @@ const Contribute = (): JSX.Element => {
                 <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
                   <h3 className="font-semibold text-foreground">Spread the Word</h3>
                   <p className="text-sm text-dim leading-relaxed flex-1">
-                    Follow us, repost what we share, and mention {BRAND_NAME} to your network. Writing about us in a blog post or podcast episode? Share it with us <a href={`mailto:${CONTACT_EMAIL}`} className={extLink}>via email</a> or mention us on social media and we would love to repost.
+                    Follow us, repost what we share, and mention {BRAND_NAME} to your network. Writing about us in a blog post or podcast episode? <a href={`mailto:${CONTACT_EMAIL}`} className={extLink}>Share it with us by email</a> or mention us on social media and we would love to repost.
                   </p>
                   <div className="flex flex-wrap gap-4">
                     <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (opens in new tab)" className="social-icon-link">
@@ -141,7 +146,7 @@ const Contribute = (): JSX.Element => {
                 <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
                   <h3 className="font-semibold text-foreground">Fix Bugs and Improve Docs</h3>
                   <p className="text-sm text-dim leading-relaxed flex-1">
-                    Each adventure has level guides and missing solution walkthroughs. If you have solved a level, write it up. You can also improve this website by reporting an issue or contributing to the site. Typos and broken links across either repo need no issue, just open a PR.
+                    Each adventure has level guides and missing solution walkthroughs. If you have solved a level, write it up. You can also improve this website by reporting an issue or contributing to the site. Typos and broken links across either repo need no issue, just open a <Abbr title="pull request">PR</Abbr>.
                   </p>
                   <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" className={extLink}>
                     See the challenges contributing guide <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
@@ -152,22 +157,24 @@ const Contribute = (): JSX.Element => {
                 </div>
 
               </div>
-            </section>
+              </section>
 
-            <div className="mt-8">
-              <p className="text-sm text-muted-foreground leading-relaxed mb-2">
-                <span className="font-medium text-foreground">This site is a community project too.</span>{" "}
-                Found a gap or something that could work better? Your feedback shapes what we build next.
-              </p>
-              <div className="flex flex-col gap-1.5">
-                <a href={`${COMMUNITY_URL}/c/general/site-feedback/2`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Post in Site Feedback <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-                </a>
-                <a href="https://github.com/off-on-dev/website/issues" target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Open a GitHub issue <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
-                </a>
+              <div className="mt-8">
+                <p className="text-sm text-muted-foreground leading-relaxed mb-2">
+                  <span className="font-medium text-foreground">This site is a community project too.</span>{" "}
+                  Found a gap or something that could work better? Your feedback shapes what we build next.
+                </p>
+                <div className="flex flex-col gap-1.5">
+                  <a href={`${COMMUNITY_URL}/c/general/site-feedback/2`} target="_blank" rel="noopener noreferrer" className={extLink}>
+                    Post in Site Feedback <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  </a>
+                  <a href="https://github.com/off-on-dev/website/issues" target="_blank" rel="noopener noreferrer" className={extLink}>
+                    Open a GitHub issue <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  </a>
+                </div>
               </div>
-            </div>
+              </div>
+            </SidebarLayout>
           </div>
         </div>
 

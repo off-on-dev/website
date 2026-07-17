@@ -5,8 +5,8 @@ import { SectionLabel } from "@/components/SectionLabel";
 
 export const AboutSection = (): JSX.Element => {
   return (
-    <section id="approach" aria-label="Our foundation" className="py-16 px-6 md:px-16">
-      <div className="mx-auto max-w-6xl">
+    <section id="approach" aria-label="Our foundation" className="pb-16">
+      <div>
         <SectionLabel>our foundation</SectionLabel>
 
         <div className="mb-8">
@@ -44,9 +44,9 @@ export const AboutSection = (): JSX.Element => {
           <div className="mt-4 max-w-3xl">
             <BulletList items={[
               "Curious learners and developers looking for a practical, guided path into open source",
-              "Engineers, SREs, and practitioners who want to deepen their skills through real-world challenges",
+              "Engineers, Site Reliability Engineers (SREs), and practitioners who want to deepen their skills through real-world challenges",
               "Contributors and maintainers who want to share knowledge and help grow the next generation",
-              "Advocates, OSPO members, and community builders who want to amplify their work and strengthen the wider ecosystem",
+              "Open Source Program Office (OSPO) members, advocates, and community builders who want to amplify their work and strengthen the wider ecosystem",
               "Non-code contributors (writers, designers, translators, organisers) whose work is essential but often invisible",
               "Organisations and sponsors who want to support open source learning and connect with the community on the community's terms",
             ]} />

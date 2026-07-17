@@ -60,6 +60,7 @@
     "globals": "^17.5.0",
     "jsdom": "^29.0.2",
     "jszip": "^3.10.1",
+    "rehype-raw": "^7.0.0",
     "rehype-sanitize": "^6.0.0",
     "rehype-stringify": "^10.0.1",
     "remark-gfm": "^4.0.1",

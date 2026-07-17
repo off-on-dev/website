@@ -4,8 +4,8 @@ import { BRAND_NAME } from "@/data/constants";
 
 export const BrandStory = (): JSX.Element => {
   return (
-    <section id="story" aria-labelledby="story-heading" className="px-6 md:px-16 pb-16">
-      <div className="mx-auto max-w-6xl">
+    <section id="story" aria-labelledby="story-heading" className="pb-16">
+      <div>
         <SectionLabel>our story</SectionLabel>
         <h2 id="story-heading" className="text-2xl font-bold text-foreground">The Story Behind the Firefly</h2>
         <div className="mt-4 flex flex-col gap-4 max-w-3xl">

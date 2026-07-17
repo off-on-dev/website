@@ -578,6 +578,25 @@ Used in `Navbar` (mobile menu drawer). The ref is attached to the menu `<div>` w
 
 ## Components
 
+### `Abbr`
+
+`src/components/Abbr.tsx`
+
+Wraps an abbreviation in a stateful component that renders a `<abbr>` with `aria-describedby` pointing to an sr-only `<span>` containing the expansion. A visual tooltip appears on hover and focus via CSS opacity transitions on a positioned child `<span>`. The `title` prop is the expansion text; it is intentionally NOT placed on the `<abbr>` element (doing so would show the browser's native tooltip alongside the custom one). Screen readers read the expansion via `aria-describedby` when the element has focus.
+
+Use `<Abbr>` for abbreviations in JSX pages and components. Use native `<abbr title="…">` in template literal HTML strings passed to `dangerouslySetInnerHTML`; the build pipeline and `MarkdownContent.tsx` handle converting `title` to `data-title` and attaching a JS portal tooltip.
+
+```tsx
+<Abbr title="pull request">PR</Abbr>
+<Abbr title="Web Content Accessibility Guidelines">WCAG</Abbr>
+```
+
+No `TooltipProvider` is needed. The `<abbr>` element is styled with `cursor-help` and a dotted underline. `tabIndex={0}` makes it keyboard-focusable so the tooltip is reachable without a mouse (WCAG 1.4.13). The component computes `maxWidth` from `window.innerWidth` after mount to prevent the tooltip from overflowing the viewport on narrow screens.
+
+**Do not nest `<Abbr>` inside an `<a>` or `<button>`.** The `tabIndex={0}` would create an invalid interactive-inside-interactive structure. Use a plain `<abbr title="...">` instead; screen readers read `title` when traversing link text.
+
+---
+
 ### `InlineProse`
 
 `src/components/InlineProse.tsx`
@@ -808,27 +827,29 @@ No props. Used only in `Index.tsx`.
 
 `src/components/CommunityLeaders.tsx`
 
-Sidebar card displaying community leaders fetched daily from Discourse Data Explorer queries. Renders a `<div>` card with an `<h2>` "Community Leaders" heading and a ranked list per category. Each category uses a lucide-react icon and an `<ol aria-label="{section.title}">` of user rows (rank, avatar, username, count). Avatars are lazy-loaded from external Discourse CDN URLs.
+Sidebar card displaying community leaders fetched daily from Discourse Data Explorer queries. Renders a `<div>` card with an `<h3>` "Community Leaders" heading (sidebar context is subordinate to main-content `h2` sections) and a ranked list per category. Each category title is rendered as `<h4>` by `LeaderCategory`. Each category uses a lucide-react icon and an `<ol aria-label="{section.title}">` of user rows (rank, avatar, username, count). Avatars are lazy-loaded from external Discourse CDN URLs.
 
 Data source: `src/data/community-leaders.json` (refreshed daily by `.github/workflows/refresh-community-leaders.yml`).
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `sections` | `string[]` | all | Filter to show only specific section IDs |
+| `sections` | `string[]` | all | Filter to show only specific section IDs, in the order given |
+| `limit` | `number` | all | Cap the number of users shown per section. Used on `Index.tsx` (homepage) with `limit={3}` |
 
-Section IDs: `top-contributors`, `top-challenge-solvers`, `challenge-grand-builders`, `challenge-builders`, `most-liked`, `most-replies`, `most-supportive`.
+Section IDs: `top-contributors`, `challenge-rockstars`, `challenge-grand-builders`, `top-challenge-solvers`, `challenge-builders`, `most-liked`, `most-replies`, `most-supportive`.
 
 | Section | Icon |
 | --- | --- |
 | Top Contributors | `Trophy` |
-| Top Challenge Solvers | `Target` |
+| Challenge Rockstars | `Star` |
 | Challenge Grand Builders | `Building2` |
+| Top Challenge Solvers | `Target` |
 | Challenge Builders | `Wrench` |
 | Most Liked | `Heart` |
 | Most Replies | `MessageCircle` |
 | Most Supportive | `HandHeart` |
 
-Used in: `Index.tsx` (via CommunitySection aside), `Adventures.tsx` (via ChallengeBuildersSection aside), `CommunityGuide.tsx` (standalone sidebar).
+Used in: `Index.tsx` (via CommunitySection aside, limit=3), `Adventures.tsx` (via ChallengeBuildersSection aside, builder-first order), `Challenges.tsx` (via ChallengeBuildersSection aside, solver-first order), `CommunityGuide.tsx` (standalone sidebar, all sections), `About.tsx` (via SidebarLayout aside), `Contribute.tsx` (via SidebarLayout aside).
 
 ---
 

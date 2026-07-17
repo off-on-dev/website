@@ -145,12 +145,12 @@ describe("CommunityGuide - policies section", () => {
 describe("CommunityGuide - community leaders sidebar", () => {
   it("renders the community leaders section heading", () => {
     renderCommunityGuide();
-    expect(screen.getByRole("heading", { name: /community leaders/i, level: 2 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /community leaders/i, level: 3 })).toBeInTheDocument();
   });
 
   it("renders leader section headings inside the sidebar", () => {
     renderCommunityGuide();
-    const heading = screen.getByRole("heading", { name: /community leaders/i, level: 2 });
+    const heading = screen.getByRole("heading", { name: /community leaders/i, level: 3 });
     const sidebar = heading.parentElement!;
     expect(within(sidebar).getByRole("heading", { name: /top contributors/i })).toBeInTheDocument();
     expect(within(sidebar).getByRole("heading", { name: /most liked/i })).toBeInTheDocument();
@@ -158,7 +158,7 @@ describe("CommunityGuide - community leaders sidebar", () => {
 
   it("renders usernames as plain text, not links to community profiles", () => {
     renderCommunityGuide();
-    const heading = screen.getByRole("heading", { name: /community leaders/i, level: 2 });
+    const heading = screen.getByRole("heading", { name: /community leaders/i, level: 3 });
     const sidebar = heading.parentElement!;
     expect(within(sidebar).getAllByText("KatharinaSick").length).toBeGreaterThan(0);
     const profileLinks = within(sidebar).queryAllByRole("link").filter((a) =>

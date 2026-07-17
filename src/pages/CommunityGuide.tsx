@@ -8,6 +8,7 @@ import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
 import { SectionLabel } from "@/components/SectionLabel";
 import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
+import { Abbr } from "@/components/Abbr";
 import { CommunityLeaders } from "@/components/CommunityLeaders";
 import { SidebarLayout } from "@/components/SidebarLayout";
 import { buildPageMeta } from "@/lib/meta";
@@ -64,7 +65,7 @@ const CommunityGuide = (): JSX.Element => {
               </div>
 
               <div className="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
-                <h3 className="font-semibold text-foreground">Q&amp;A</h3>
+                <h3 className="font-semibold text-foreground"><Abbr title="Questions and Answers">Q&amp;A</Abbr></h3>
                 <p className="text-sm text-dim leading-relaxed flex-1">
                   Stuck on a technical problem? Post a clear question and get answers from the community. No question is too basic.
                 </p>

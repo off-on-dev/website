@@ -22,9 +22,9 @@ type CommunitySidebarProps = {
 };
 
 const SidebarLabel = ({ children }: { children: string }): JSX.Element => (
-  <p className="font-mono text-xs uppercase tracking-widest text-faint mb-3">
+  <h3 className="font-mono text-xs uppercase tracking-widest text-faint mb-3">
     {children}
-  </p>
+  </h3>
 );
 
 export const CommunitySidebar = ({

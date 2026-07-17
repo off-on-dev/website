@@ -6,10 +6,23 @@ OffOn is a platform for open source enthusiasts. We want everyone to be able to 
 
 ## Our Commitment
 
-- **Target:** [WCAG 2.2 Level AA](https://www.w3.org/TR/WCAG22/) across every page on [offon.dev](https://offon.dev). WCAG 2.2 AA is the floor, not the goal. Every component must be genuinely usable by keyboard-only users, screen reader users, and people with low vision.
+- **Target:** [WCAG 2.2 Level AA](https://www.w3.org/TR/WCAG22/) across every page on [offon.dev](https://offon.dev), with selected WCAG 2.2 Level AAA criteria applied wherever practical. AA is the floor, not the goal.
 - **Both color modes:** light and dark mode must meet contrast and focus requirements. We do not ship a feature that only works in one mode.
 - **Keyboard first:** every interactive element is reachable and operable from the keyboard alone.
 - **No motion traps:** we honor `prefers-reduced-motion` and avoid auto-playing animation that the user did not request.
+
+### AAA criteria in scope
+
+The following WCAG 2.2 Level AAA criteria are actively targeted on this site:
+
+| Criterion | What we do |
+| --- | --- |
+| 1.4.6 Contrast (Enhanced) | Body text targets 7:1; large text targets 4.5:1 in both modes. |
+| 2.4.9 Link Purpose (Link Only) | Every link must make sense without surrounding context. Card links use `aria-label` with the specific item name. Ambiguous text like "via email" is rewritten or wrapped in a descriptive label. |
+| 2.4.10 Section Headings | Headings are used to organize all content sections, including sidebar sub-sections which use `<h3>`. |
+| 3.1.3 Unusual Words | Technical terms (e.g. devcontainer) are defined on first use via `<abbr title="…">` or inline expansion. |
+| 3.1.4 Abbreviations | Abbreviations are expanded on first use per page: `<abbr title="…">` for inline HTML; written out in full for plain-text contexts (e.g. "Site Reliability Engineers (SREs)"). |
+| 3.1.5 Reading Level | General copy targets plain language. Technical content is inherent to the subject; abbreviations and unusual words are expanded on first use. Challenge-specific content is authored by contributors and may be technical by nature. |
 
 ---
 
@@ -324,6 +337,24 @@ This site uses Radix UI's `<Tooltip>` primitive (via `src/components/ui/tooltip.
 - Test that the tooltip appears on both `:hover` and `:focus-visible`. Radix handles this by default; do not override the `defaultOpen`/`open` props in a way that breaks focus triggering.
 - Mobile: there is no hover on touch screens. If the tooltip content is not exposed any other way, add visible text or an `aria-label` on the trigger as a fallback.
 
+#### WCAG 1.4.13 requirements for all tooltips (Radix and CSS)
+
+All tooltip implementations on this site must satisfy three conditions:
+
+1. **Dismissible:** pressing `Escape` must close the tooltip without moving keyboard focus. The `<Abbr>` component handles this via `onKeyDown`. CSS-only tooltips (`.md-inline abbr`) cannot dismiss on `Escape`; this is a known limitation of the CSS path.
+2. **Hoverable:** the cursor must be able to move from the trigger onto the tooltip without the tooltip closing. Both `<Abbr>` (via transparent padding bridge) and `.md-inline abbr` (via transparent `border-bottom` bridge) satisfy this. Never add `pointer-events: none` to a tooltip element that users are expected to read.
+3. **Persistent:** the tooltip must remain open as long as pointer or focus is within its bounds.
+
+#### Abbreviation tooltips (`<Abbr>` component)
+
+Use `<Abbr title="Full expansion">ABBR</Abbr>` (from `src/components/Abbr.tsx`) for abbreviations in JSX pages and components.
+
+- The `aria-describedby` attribute points to an sr-only `<span>` containing the expansion. Screen readers announce it as a description when the element has focus. In virtual/browse mode (arrow-key navigation), screen readers that support `title` on `<abbr>` will also read the expansion from the `title` attribute on a plain `<abbr>`; the `<Abbr>` component deliberately omits `title` to prevent the browser's native tooltip from overlapping the custom one. This is a known trade-off: browse-mode AT may not hear the expansion unless the user tabs to the element.
+- `tabIndex={0}` is applied so keyboard users can focus the abbreviation and see the visual tooltip (WCAG 1.4.13 keyboard path). The eslint rule `no-noninteractive-tabindex` is suppressed intentionally.
+- **Never nest `<Abbr>` inside an `<a>` or `<button>`.** The resulting `tabIndex={0}` creates an orphan tab stop inside an interactive element, which is invalid HTML (interactive content inside interactive content is forbidden). Use a plain `<abbr title="...">` (no component, no tabIndex) instead when the abbreviation sits inside a link or button; screen readers read the `title` attribute when traversing the link text.
+- For abbreviations inside `dangerouslySetInnerHTML` prose (`.md-inline` / `.md-content` containers): use `<abbr title="...">` in the YAML/markdown source. The build pipeline injects `tabindex="0"` automatically and the CSS tooltip in `src/index.css` provides the visual expansion.
+- Do not use both `<Abbr>` (JSX) and raw `<abbr>` (CSS-only) for the same abbreviation on the same page. Pick one path based on whether the content is React-rendered or pre-rendered HTML.
+
 ### Forms
 
 - Every `<input>`, `<select>`, and `<textarea>` must have an associated `<label>` via `for`/`id` pairing or `aria-label`.
@@ -371,28 +402,35 @@ This site uses Radix UI's `<Tooltip>` primitive (via `src/components/ui/tooltip.
 
 Use this to identify which criterion applies before writing or reviewing code.
 
-| Principle | Criterion | What to verify |
-| --- | --- | --- |
-| **Perceivable (1.x)** | 1.1.1 Non-text Content (A) | Every image, icon, and non-text element has a text alternative or `aria-hidden`. |
-| | 1.3.1 Info and Relationships (A) | Structure conveyed visually is also in markup (headings, lists, tables). |
-| | 1.4.3 Contrast (AA) | Normal text 4.5:1, large text 3:1 against background. |
-| | 1.4.4 Resize Text (AA) | Text readable at 200% zoom. Never `user-scalable=no`. |
-| | 1.4.10 Reflow (AA) | No horizontal scroll at 400% zoom (320px viewport). |
-| | 1.4.11 Non-text Contrast (AA) | UI components and focus indicators: 3:1 against adjacent colors. |
-| **Operable (2.x)** | 2.1.1 Keyboard (A) | All functionality is keyboard-accessible. |
-| | 2.1.2 No Keyboard Trap (A) | Focus is never permanently trapped; `Escape` exits modals and dropdowns. |
-| | 2.3.1 Three Flashes (A) | No content flashes more than 3 times per second. |
-| | 2.4.1 Bypass Blocks (A) | Skip link is the first focusable element on every page. |
-| | 2.4.3 Focus Order (A) | Tab order follows logical reading order. |
-| | 2.4.7 Focus Visible (AA) | All focusable elements have a visible focus indicator. |
-| | 2.4.11 Focus Appearance (AA, WCAG 2.2) | Focus indicator is at least 2px, with 3:1 contrast against adjacent colors. |
-| | 2.4.12 Focus Not Obscured (AA, WCAG 2.2) | Focused elements are not fully hidden by sticky headers or overlays. |
-| | 2.5.3 Label in Name (A) | Accessible name contains the visible text (required for voice control). |
-| | 2.5.8 Target Size Minimum (AA, WCAG 2.2) | Touch targets are at least 24×24px. |
-| **Understandable (3.x)** | 3.1.1 Language of Page (A) | `<html lang="en">` is set. |
-| | 3.3.1 Error Identification (A) | Error messages identify the field and describe the error. |
-| | 3.3.2 Labels or Instructions (A) | Form fields have labels; placeholders are not substitutes. |
-| **Robust (4.x)** | 4.1.2 Name, Role, Value (A) | ARIA roles and attributes are valid. Dynamic state (`aria-expanded`, `aria-current`) is kept in sync. |
+| Principle | Criterion | Level | What to verify |
+| --- | --- | --- | --- |
+| **Perceivable (1.x)** | 1.1.1 Non-text Content | A | Every image, icon, and non-text element has a text alternative or `aria-hidden`. |
+| | 1.3.1 Info and Relationships | A | Structure conveyed visually is also in markup (headings, lists, tables). |
+| | 1.4.3 Contrast | AA | Normal text 4.5:1, large text 3:1 against background. |
+| | 1.4.4 Resize Text | AA | Text readable at 200% zoom. Never `user-scalable=no`. |
+| | 1.4.6 Contrast (Enhanced) | **AAA** | Body text 7:1, large text 4.5:1 in both modes. |
+| | 1.4.10 Reflow | AA | No horizontal scroll at 400% zoom (320px viewport). |
+| | 1.4.11 Non-text Contrast | AA | UI components and focus indicators: 3:1 against adjacent colors. |
+| | 1.4.13 Content on Hover or Focus | AA | Tooltip content triggered by hover or focus must be dismissible (Escape), hoverable (cursor can move onto the tooltip without it closing), and persistent (stays open while hovered or focused). |
+| **Operable (2.x)** | 2.1.1 Keyboard | A | All functionality is keyboard-accessible. |
+| | 2.1.2 No Keyboard Trap | A | Focus is never permanently trapped; `Escape` exits modals and dropdowns. |
+| | 2.3.1 Three Flashes | A | No content flashes more than 3 times per second. |
+| | 2.4.1 Bypass Blocks | A | Skip link is the first focusable element on every page. |
+| | 2.4.3 Focus Order | A | Tab order follows logical reading order. |
+| | 2.4.7 Focus Visible | AA | All focusable elements have a visible focus indicator. |
+| | 2.4.9 Link Purpose (Link Only) | **AAA** | Every link is unambiguous without surrounding context. Card and CTA links use `aria-label`. |
+| | 2.4.10 Section Headings | **AAA** | Headings organize all content sections, including sidebar sub-sections. |
+| | 2.4.11 Focus Appearance | AA | Focus indicator is at least 2px, with 3:1 contrast against adjacent colors. |
+| | 2.4.12 Focus Not Obscured | AA | Focused elements are not fully hidden by sticky headers or overlays. |
+| | 2.5.3 Label in Name | A | Accessible name contains the visible text (required for voice control). |
+| | 2.5.8 Target Size Minimum | AA | Touch targets are at least 24×24px. |
+| **Understandable (3.x)** | 3.1.1 Language of Page | A | `<html lang="en">` is set. |
+| | 3.1.3 Unusual Words | **AAA** | Technical terms defined on first use via `<abbr title="…">` or inline expansion. |
+| | 3.1.4 Abbreviations | **AAA** | Abbreviations expanded on first use per page. |
+| | 3.1.5 Reading Level | **AAA** | General copy targets plain language; technical terms expanded on first use. |
+| | 3.3.1 Error Identification | A | Error messages identify the field and describe the error. |
+| | 3.3.2 Labels or Instructions | A | Form fields have labels; placeholders are not substitutes. |
+| **Robust (4.x)** | 4.1.2 Name, Role, Value | A | ARIA roles and attributes are valid. Dynamic state (`aria-expanded`, `aria-current`) is kept in sync. |
 
 ---
 

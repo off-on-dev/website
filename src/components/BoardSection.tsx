@@ -9,14 +9,14 @@ const AVATAR_SIZE = 80;
 
 export const BoardSection = (): JSX.Element => {
   return (
-    <section id="board" aria-labelledby="board-heading" className="px-6 md:px-16 pb-16">
-      <div className="mx-auto max-w-6xl">
+    <section id="board" aria-labelledby="board-heading" className="pb-16">
+      <div>
         <SectionLabel>the people</SectionLabel>
         <h2 id="board-heading" className="text-2xl font-bold text-foreground">Board</h2>
         <p className="mt-4 max-w-3xl text-muted-foreground leading-relaxed">
           The board guides the long-term direction of {BRAND_NAME}, stewarding its values, governance, and community priorities.
         </p>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {BOARD_MEMBERS.map((member, index) => (
             <div
               key={`${member.name}-${index}`}
