@@ -677,6 +677,7 @@ The `off-on-dev` organisation restricts which third-party actions can run. Only 
 | `JamesIves/github-pages-deploy-action` | any tag |
 | `marocchino/sticky-pull-request-comment` | any tag |
 | `rossjrw/pr-preview-action` | any tag |
+| `fsfe/reuse-action` | any tag |
 | Actions owned by `off-on-dev` | any |
 | Actions created by GitHub | any |
 | Actions verified in the GitHub Marketplace | any |
