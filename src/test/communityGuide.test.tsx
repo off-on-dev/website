@@ -125,6 +125,7 @@ describe("CommunityGuide - policies section", () => {
     renderCommunityGuide();
     const section = screen.getByRole("region", { name: /policies/i });
     const link = within(section).getByRole("link", { name: /code of conduct/i });
+    expect(CODE_OF_CONDUCT_URL).toBe(`${COMMUNITY_URL}/t/code-of-conduct/31`);
     expect(link.getAttribute("href")).toBe(CODE_OF_CONDUCT_URL);
     expect(link.getAttribute("target")).toBe("_blank");
   });
