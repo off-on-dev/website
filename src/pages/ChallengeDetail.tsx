@@ -56,7 +56,7 @@ export const meta: MetaFunction = ({ params }) => {
   }
   const description = (
     level.metaDescription ??
-    stripHtml(`${level.name}: ${level.intro?.[0] ?? level.topics.join(", ")}`)
+    `${level.name}: ${stripHtml(level.intro?.[0] ?? level.topics.join(", "))}`
   ).slice(0, 160);
   return buildPageMeta({
     title: `${level.name} - ${adventure.title} - ${BRAND_NAME}`,

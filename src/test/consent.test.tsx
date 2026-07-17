@@ -441,9 +441,10 @@ describe('ConsentBanner - mount guard', () => {
     const source = readFileSync(resolve(__dirname, '../components/ConsentBanner.tsx'), 'utf-8');
     expect(source).toContain('useState(false)');
     expect(source).toContain('setMounted(true)');
-    // Pre-renders an empty aria-live region instead of null so AT can detect content changes
-    // within a pre-existing live region (newly inserted regions are not announced by VoiceOver).
-    expect(source).toContain('if (!mounted) return <div aria-live');
+    // Persistent outer live region; mount guard renders null inside it so banner is
+    // absent from prerendered HTML. Reversion to a banner-on-first-render would break SSR.
+    expect(source).toContain('!mounted ? null');
+    expect(source).toContain('aria-live="polite"');
   });
 });
 

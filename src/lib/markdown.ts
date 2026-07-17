@@ -36,7 +36,7 @@ const NAMED_ENTITIES: Record<string, string> = {
 };
 
 /** Strips all HTML tags and decodes HTML entities in a single pass.
- *  Contract: `html` must be rehype-sanitize output — `>` inside attribute values
+ *  Contract: `html` must be rehype-sanitize output; `>` inside attribute values
  *  is always escaped to `&gt;`, so `<[^>]+>` safely matches only real tags.
  *  Single-pass decoding prevents double-decode of mixed entities (e.g. `&amp;lt;` → `&lt;`, not `<`).
  *  Use when placing author-prose HTML into a plain-text context such as a `<meta content="">` attribute. */
@@ -44,7 +44,7 @@ export const stripHtml = (html: string): string =>
   html
     .replace(/<[^>]+>/g, "")
     .replace(/&(?:#(\d+)|#[xX]([\da-fA-F]+)|([a-zA-Z]+));/g, (match, dec, hex, name): string => {
-      if (dec) return String.fromCodePoint(Number(dec));
-      if (hex) return String.fromCodePoint(parseInt(hex, 16));
+      if (dec) { const cp = Number(dec); return cp <= 0x10FFFF ? String.fromCodePoint(cp) : match; }
+      if (hex) { const cp = parseInt(hex, 16); return cp <= 0x10FFFF ? String.fromCodePoint(cp) : match; }
       return NAMED_ENTITIES[name] ?? match;
     });

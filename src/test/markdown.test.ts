@@ -96,4 +96,9 @@ describe("stripHtml", () => {
   it("handles empty string", () => {
     expect(stripHtml("")).toBe("");
   });
+
+  it("leaves out-of-range numeric entities unchanged instead of throwing", () => {
+    expect(stripHtml("&#2000000;")).toBe("&#2000000;");
+    expect(stripHtml("&#x1FFFFF;")).toBe("&#x1FFFFF;");
+  });
 });
