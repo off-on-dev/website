@@ -1,0 +1,1 @@
+import{g as e}from"./vendor-router-CCdJfOb1.js";function t(){return e(`/handbook`)}export{t as clientLoader};
