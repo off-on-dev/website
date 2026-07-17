@@ -27,16 +27,24 @@ export const stripLinks = (html: string): string =>
     .replace(/<a\b[^>]*>([\s\S]*?)<\/a>/gi, "$1")
     .replace(/<span\s+class="sr-only">[\s\S]*?<\/span>/gi, "");
 
-/** Strips all HTML tags and decodes common HTML entities. Use when placing
- *  author-prose HTML into a plain-text context such as a <meta content=""> attribute.
- *  Without entity decoding, rehype-generated `&amp;` survives tag stripping and React
- *  double-encodes it to `&amp;amp;` in the prerendered attribute value. */
+// Named entities decoded by stripHtml. Covers the subset rehype-sanitize can emit
+// plus common typographic entities authors may use in YAML prose fields.
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: "&", lt: "<", gt: ">", quot: '"', apos: "'",
+  nbsp: " ", mdash: "—", ndash: "–", hellip: "…",
+  ldquo: "“", rdquo: "”", lsquo: "‘", rsquo: "’",
+};
+
+/** Strips all HTML tags and decodes HTML entities in a single pass.
+ *  Contract: `html` must be rehype-sanitize output — `>` inside attribute values
+ *  is always escaped to `&gt;`, so `<[^>]+>` safely matches only real tags.
+ *  Single-pass decoding prevents double-decode of mixed entities (e.g. `&amp;lt;` → `&lt;`, not `<`).
+ *  Use when placing author-prose HTML into a plain-text context such as a `<meta content="">` attribute. */
 export const stripHtml = (html: string): string =>
   html
     .replace(/<[^>]+>/g, "")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, " ");
+    .replace(/&(?:#(\d+)|#[xX]([\da-fA-F]+)|([a-zA-Z]+));/g, (match, dec, hex, name): string => {
+      if (dec) return String.fromCodePoint(Number(dec));
+      if (hex) return String.fromCodePoint(parseInt(hex, 16));
+      return NAMED_ENTITIES[name] ?? match;
+    });

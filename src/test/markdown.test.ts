@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { Layers, Wrench, ListChecks } from "lucide-react";
-import { slugify, getSectionIcon } from "@/lib/markdown";
+import { slugify, getSectionIcon, stripHtml } from "@/lib/markdown";
 
 describe("slugify", () => {
   it("lowercases text", () => {
@@ -55,5 +55,45 @@ describe("getSectionIcon", () => {
 
   it("returns undefined for empty string", () => {
     expect(getSectionIcon("")).toBeUndefined();
+  });
+});
+
+describe("stripHtml", () => {
+  it("removes HTML tags", () => {
+    expect(stripHtml("<p>hello <strong>world</strong></p>")).toBe("hello world");
+  });
+
+  it("decodes named entities", () => {
+    expect(stripHtml("foo &amp; bar &lt;baz&gt;")).toBe("foo & bar <baz>");
+  });
+
+  it("decodes decimal numeric entities", () => {
+    expect(stripHtml("zero-width&#8203;space")).toBe("zero-width​space");
+  });
+
+  it("decodes hex numeric entities", () => {
+    expect(stripHtml("em&#x2014;dash")).toBe("em—dash");
+  });
+
+  it("does not double-decode mixed entities", () => {
+    // rehype-stringify encodes a literal & as &amp;; if the source text had &lt;
+    // that would arrive as &amp;lt; — single-pass should yield &lt;, not <.
+    expect(stripHtml("&amp;lt;")).toBe("&lt;");
+  });
+
+  it("strips tags and decodes entities together", () => {
+    expect(stripHtml("<p>React &amp; friends</p>")).toBe("React & friends");
+  });
+
+  it("decodes typographic named entities", () => {
+    expect(stripHtml("left&ldquo;quote&rdquo;right")).toBe("left“quote”right");
+  });
+
+  it("returns plain text unchanged", () => {
+    expect(stripHtml("hello world")).toBe("hello world");
+  });
+
+  it("handles empty string", () => {
+    expect(stripHtml("")).toBe("");
   });
 });

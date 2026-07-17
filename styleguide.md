@@ -1737,6 +1737,7 @@ Helper functions for the `MarkdownContent` component.
 | `slugify` | `(text: string) => string` | Converts heading text to a URL-safe slug for `id` attributes. |
 | `getSectionIcon` | `(slug: string) => LucideIcon \| undefined` | Maps known section slugs (`architecture`, `toolbox`, `how-to-play`) to their lucide-react icon. Returns `undefined` for unrecognised slugs. |
 | `stripLinks` | `(html: string) => string` | Strips `<a>` tags from sanitised HTML while preserving link text. Also removes `sr-only` new-tab spans injected by the generator. Call before passing any author-prose HTML to `dangerouslySetInnerHTML` inside an interactive element (`<Link>`, `<button>`) to prevent invalid nested anchors. |
+| `stripHtml` | `(html: string) => string` | Strips all HTML tags and decodes named and numeric HTML entities in a single pass. Contract: input must be rehype-sanitize output so `>` in attribute values is already escaped. Single-pass prevents double-decode of mixed entities (`&amp;lt;` → `&lt;`, not `<`). Use when placing author-prose HTML into plain-text contexts such as `<meta content="">` attributes. |
 
 ---
 

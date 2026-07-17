@@ -54,8 +54,10 @@ export const meta: MetaFunction = ({ params }) => {
       { name: "robots", content: "noindex, nofollow" },
     ];
   }
-  const rawDescription = level.metaDescription ?? `${level.name}: ${level.intro?.[0] ?? level.topics.join(", ")}`;
-  const description = stripHtml(rawDescription).slice(0, 160);
+  const description = (
+    level.metaDescription ??
+    stripHtml(`${level.name}: ${level.intro?.[0] ?? level.topics.join(", ")}`)
+  ).slice(0, 160);
   return buildPageMeta({
     title: `${level.name} - ${adventure.title} - ${BRAND_NAME}`,
     description,

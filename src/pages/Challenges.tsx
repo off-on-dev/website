@@ -40,7 +40,7 @@ export const meta: MetaFunction = ({ params }) => {
   }
   return buildPageMeta({
     title: `Open Source Challenges | ${BRAND_NAME}`,
-    description: `Hands-on challenges built around open source tools. Filter by technology and learn by solving real-world scenarios in your browser.`,
+    description: `Hands-on challenges built around open source tools. Filter by technology and learn by solving real-world scenarios in GitHub Codespaces.`,
     url: `${SITE_URL}/challenges/`,
   });
 };

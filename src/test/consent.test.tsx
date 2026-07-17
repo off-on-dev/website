@@ -440,7 +440,10 @@ describe('ConsentBanner - mount guard', () => {
     const source = readFileSync(resolve(__dirname, '../components/ConsentBanner.tsx'), 'utf-8');
     expect(source).toContain('useState(false)');
     expect(source).toContain('setMounted(true)');
-    expect(source).toContain('if (!mounted) return null');
+    // Pre-renders an empty aria-live region instead of null so AT can detect content changes
+    // within a pre-existing live region (newly inserted regions are not announced by VoiceOver).
+    expect(source).toContain('if (!mounted) return');
+    expect(source).toContain('aria-live="polite"');
   });
 });
 

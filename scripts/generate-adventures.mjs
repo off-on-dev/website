@@ -1197,14 +1197,12 @@ function buildSmokeTagsBody(tags) {
 }
 
 function patchRegions(adventures) {
-  // Sitemap uses the surrounding static URL lines as anchors so the file stays
-  // free of generator comments. The adventures block sits between /brand/ and
-  // /challenges/. Both anchor lines must stay exactly as-is; do not reorder
-  // the static URLs around them.
+  // Sitemap uses XML comment markers so the anchors remain stable when lastmod
+  // dates are updated. The comments must not be removed or renamed.
   replaceRegion(
     resolve(ROOT, "public/sitemap.xml"),
-    `<url><loc>https://offon.dev/brand/</loc><lastmod>2026-06-05</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>`,
-    `<url><loc>https://offon.dev/challenges/</loc>`,
+    `<!-- GENERATED:adventures -->`,
+    `<!-- /GENERATED:adventures -->`,
     buildSitemapBody(adventures)
   );
   replaceRegion(
@@ -1244,14 +1242,12 @@ function patchRegions(adventures) {
     buildLlmsTxtBody(adventures)
   );
 
-  // Challenge tag URLs. Derived from ALL_TAGS across every adventure's `tags:`
-  // array. Sitemap uses the surrounding `/challenges/` index URL and the closing
-  // `</urlset>` as anchors so it stays free of generator comments.
+  // Challenge tag URLs use the same XML comment pattern as adventures above.
   const tags = collectAllTags(adventures);
   replaceRegion(
     resolve(ROOT, "public/sitemap.xml"),
-    `<url><loc>https://offon.dev/challenges/</loc><lastmod>2026-06-03</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>`,
-    `</urlset>`,
+    `<!-- GENERATED:challenge-tags -->`,
+    `<!-- /GENERATED:challenge-tags -->`,
     buildSitemapTagsBody(tags, adventures)
   );
   replaceRegion(

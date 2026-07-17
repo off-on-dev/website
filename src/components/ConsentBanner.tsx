@@ -25,7 +25,10 @@ export function ConsentBanner(): JSX.Element | null {
     }
   }, [mounted, consent]);
 
-  if (!mounted) return null;
+  // Pre-render an empty aria-live region so the region is already in the DOM when
+  // banner content appears after mount. AT only announces content changes within
+  // a pre-existing live region — it does not reliably announce a newly inserted one.
+  if (!mounted) return <div aria-live="polite" aria-atomic="true" />;
 
   if (consent !== null) {
     return (
@@ -43,10 +46,10 @@ export function ConsentBanner(): JSX.Element | null {
   }
 
   return (
+    <div aria-live="polite" aria-atomic="true">
     <div
       role="region"
       aria-labelledby="consent-banner-title"
-      aria-live="polite"
       style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background shadow-lg"
     >
@@ -85,6 +88,7 @@ export function ConsentBanner(): JSX.Element | null {
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 }
