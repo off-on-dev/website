@@ -1,4 +1,4 @@
-import type { CSSProperties, JSX } from "react";
+import { useState, type CSSProperties, type JSX } from "react";
 
 type AvatarLinkProps = {
   username: string;
@@ -24,10 +24,13 @@ export const AvatarLink = ({
   className,
 }: AvatarLinkProps): JSX.Element => {
   const sizeClass = SIZE_CLASSES[size];
+  // Avatars are external (Discourse). If one fails to load, fall back to the
+  // initials chip instead of leaving a broken image.
+  const [imgFailed, setImgFailed] = useState(false);
 
   return (
     <>
-      {avatarUrl ? (
+      {avatarUrl && !imgFailed ? (
         <img
           src={avatarUrl}
           alt=""
@@ -36,6 +39,7 @@ export const AvatarLink = ({
           height={size}
           loading="lazy"
           decoding="async"
+          onError={() => setImgFailed(true)}
           className={`${sizeClass} rounded-full shrink-0 object-cover`}
         />
       ) : (

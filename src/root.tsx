@@ -5,8 +5,9 @@ import "./index.css";
 
 export const links: LinksFunction = () => [
   // Preload fonts used above the fold on every page.
-  // Inter 400–600: body text, semibold labels, and all button variants use at most font-semibold (600).
-  // Syne 700: all h1–h6 via the @layer base rule in index.css.
+  // Inter 400–600: body text (400), semibold labels (500/600). Inter 700 is not preloaded
+  // globally. It is used only for h3–h6, which never appear above the fold on any page.
+  // Syne 700: h1–h2 via the @layer base rule in index.css.
   // Latin-only subsets are always needed for English content and never generate "preloaded but not used" warnings.
   // font-display: optional requires preloads to succeed. Without them, the optional window expires
   // on throttled connections before fonts are discovered, so the browser falls back to system fonts permanently.
@@ -42,7 +43,7 @@ const webSiteJsonLd = `{"@context":"https://schema.org","@type":"WebSite","name"
 // sameAs links populate Google's Knowledge Panel. Mirror LINKEDIN_URL,
 // the Discourse community URL, and the open-source-challenges GitHub org
 // from src/data/constants.ts.
-const orgJsonLd = `{"@context":"https://schema.org","@type":"Organization","name":"OffOn","url":"https://offon.dev","logo":"https://offon.dev/favicon.png","sameAs":["https://www.linkedin.com/company/offondev","https://community.offon.dev","https://github.com/off-on-dev/open-source-challenges"]}`;
+const orgJsonLd = `{"@context":"https://schema.org","@type":"Organization","name":"OffOn","url":"https://offon.dev","logo":"https://offon.dev/brand/offon-logo-dark-color.png","sameAs":["https://www.linkedin.com/company/offondev","https://community.offon.dev","https://github.com/off-on-dev/open-source-challenges"]}`;
 
 export default function Root(): JSX.Element {
   useEffect(() => {

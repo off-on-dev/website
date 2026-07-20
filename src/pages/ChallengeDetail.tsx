@@ -24,6 +24,7 @@ import { RewardsCard } from "@/components/RewardsCard";
 import { ChallengeShareLinks } from "@/components/ChallengeShareLinks";
 import { SITE_URL, BRAND_NAME, COMMUNITY_DISPLAY_NAME, COMMUNITY_URL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
+import { stripHtml } from "@/lib/markdown";
 import { isDeadlinePast, isSolutionUnlocked, resolveDiscussionUrl } from "@/lib/utils";
 import { InlineProse } from "@/components/InlineProse";
 import { Abbr } from "@/components/Abbr";
@@ -53,7 +54,10 @@ export const meta: MetaFunction = ({ params }) => {
       { name: "robots", content: "noindex, nofollow" },
     ];
   }
-  const description = (level.metaDescription ?? `${level.name}: ${level.intro?.[0] ?? level.topics.join(", ")}`).slice(0, 160);
+  const description = (
+    level.metaDescription ??
+    `${level.name}: ${stripHtml(level.intro?.[0] ?? level.topics.join(", "))}`
+  ).slice(0, 160);
   return buildPageMeta({
     title: `${level.name} - ${adventure.title} - ${BRAND_NAME}`,
     description,
@@ -215,8 +219,8 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
                 {
                   title: "Get Started",
                   content: [
-                    `<p><a href="${level.codespacesUrl.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" target="_blank" rel="noopener noreferrer">Open in GitHub Codespaces</a>. The <abbr data-title="development container: a portable, reproducible coding environment defined by a configuration file" aria-label="development container: a portable, reproducible coding environment defined by a configuration file" tabindex="0">devcontainer</abbr> is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.</p>`,
-                    `<p>Prefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (<abbr data-title="Visual Studio Code" aria-label="Visual Studio Code" tabindex="0">VS Code</abbr>, JetBrains, and others). The devcontainer config will be detected automatically.</p>`,
+                    `<p><a href="${level.codespacesUrl.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" target="_blank" rel="noopener noreferrer">Open in GitHub Codespaces</a>. The <abbr data-title="development container: a portable, reproducible coding environment defined by a configuration file" aria-describedby="abbr-devcontainer" tabindex="0">devcontainer</abbr><span id="abbr-devcontainer" class="sr-only">development container: a portable, reproducible coding environment defined by a configuration file</span> is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.</p>`,
+                    `<p>Prefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (<abbr data-title="Visual Studio Code" aria-describedby="abbr-vscode" tabindex="0">VS Code</abbr><span id="abbr-vscode" class="sr-only">Visual Studio Code</span>, JetBrains, and others). The devcontainer config will be detected automatically.</p>`,
                   ].join("\n"),
                 },
                 ...howToPlay,

@@ -19,7 +19,8 @@
  *                likes_given, uploaded_avatar_id
  *   8 - Challenge solver/builder stats (solve_count, is_grand_builder, challenges_created)
  *       Columns: user_id, username, solve_count, is_grand_builder, challenges_created,
- *                is_challenge_builder, is_rockstar, uploaded_avatar_id
+ *                is_challenge_builder, is_rockstar (solve_count > 9, computed inline),
+ *                uploaded_avatar_id
  *
  * Writes:
  *   src/data/community-leaders.json
@@ -44,11 +45,11 @@ const CHALLENGE_QUERY_ID = 8;
 const COMMUNITY_CATEGORY_IDS = "38,18,2,10,11";
 
 // Badge names passed to the challenge stats query.
+// is_rockstar is computed inline (solve_count > 9) and is not a parameter.
 const CHALLENGE_PARAMS = {
   solver_badge_name: "Challenge Solved",
   builder_badge_name: "Challenge Grand Builder",
   cb_badge_name: "Challenge Builder",
-  rockstar_badge_name: "Challenge Rockstar",
 };
 
 const TOP_N = 5;

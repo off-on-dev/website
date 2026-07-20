@@ -187,18 +187,24 @@ describe("MarkdownContent: abbr[title] → data-title conversion", () => {
     expect(abbr).toHaveAttribute("data-title", "Kubernetes");
   });
 
-  it("sets aria-label to the expansion text on converted abbr elements", () => {
+  it("injects an sr-only expansion span (not aria-label) so the visible token stays the name", () => {
     render(<MarkdownContent source='<p><abbr title="Kubernetes">K8s</abbr></p>' />);
     const abbr = document.querySelector("abbr")!;
-    expect(abbr).toHaveAttribute("aria-label", "Kubernetes");
+    expect(abbr).not.toHaveAttribute("aria-label");
+    const next = abbr.nextElementSibling!;
+    expect(next.classList.contains("sr-only")).toBe(true);
+    expect(next.textContent).toBe("Kubernetes");
   });
 
-  it("does not mutate abbr elements that already have data-title instead of title", () => {
-    const source = '<p><abbr data-title="Role-Based Access Control" aria-label="Role-Based Access Control" tabindex="0">RBAC</abbr></p>';
+  it("does not mutate or duplicate the expansion for abbr elements that already have data-title", () => {
+    const source = '<p><abbr data-title="Role-Based Access Control" tabindex="0">RBAC</abbr></p>';
     render(<MarkdownContent source={source} />);
     const abbr = document.querySelector("abbr")!;
     expect(abbr).toHaveAttribute("data-title", "Role-Based Access Control");
     expect(abbr).not.toHaveAttribute("title");
+    // The fallback only targets abbr[title]; a pre-processed abbr gets no
+    // second sr-only span injected here.
+    expect(abbr.nextElementSibling).toBeNull();
   });
 });
 
@@ -243,6 +249,16 @@ describe("MarkdownContent: abbr portal tooltip lifecycle", () => {
     expect(portal?.style.display).toBe("block");
   });
 
+  it("shows the portal tooltip on click by forcing focus (touch path)", () => {
+    // iOS Safari does not reliably focus a tabindex-only element on tap; the
+    // click handler calls focus(), which routes touch through the focus path.
+    renderWithAbbr();
+    const abbr = document.querySelector<HTMLElement>("abbr[data-title]")!;
+    fireEvent.click(abbr);
+    const portal = findPortal("Kubernetes");
+    expect(portal?.style.display).toBe("block");
+  });
+
   it("hides the portal tooltip immediately on blur", () => {
     renderWithAbbr();
     const abbr = document.querySelector<HTMLElement>("abbr[data-title]")!;
@@ -252,16 +268,15 @@ describe("MarkdownContent: abbr portal tooltip lifecycle", () => {
     expect(portal?.style.display).toBe("none");
   });
 
-  it("dismisses the tooltip on Escape key and blurs the abbr", () => {
+  it("hides the tooltip on Escape without moving focus", () => {
+    // WCAG 1.4.13: dismiss without moving keyboard focus. Escape hides the
+    // portal but must not blur the abbr.
     renderWithAbbr();
     const abbr = document.querySelector<HTMLElement>("abbr[data-title]")!;
-    // Spy with implementation so the native blur event still fires and immediateHide runs.
-    const blurSpy = vi.spyOn(abbr, "blur").mockImplementation(() => {
-      fireEvent.blur(abbr);
-    });
+    const blurSpy = vi.spyOn(abbr, "blur");
     fireEvent.focus(abbr);
     fireEvent.keyDown(abbr, { key: "Escape" });
-    expect(blurSpy).toHaveBeenCalledOnce();
+    expect(blurSpy).not.toHaveBeenCalled();
     const portal = findPortal("Kubernetes");
     expect(portal?.style.display).toBe("none");
   });

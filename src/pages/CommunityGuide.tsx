@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import type { MetaFunction } from "react-router";
+import type { MetaFunction, LinksFunction } from "react-router";
 import { Link } from "react-router";
 import { Navbar } from "@/components/Navbar";
 import { ExternalLink } from "lucide-react";
@@ -7,13 +7,19 @@ import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
 import { SectionLabel } from "@/components/SectionLabel";
-import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
+import { CODE_OF_CONDUCT_URL, COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
 import { Abbr } from "@/components/Abbr";
 import { CommunityLeaders } from "@/components/CommunityLeaders";
 import { SidebarLayout } from "@/components/SidebarLayout";
 import { buildPageMeta } from "@/lib/meta";
 
 const extLink = "docs-ext-link";
+
+// CommunityLeaders renders in the SidebarLayout aside above the fold and uses
+// font-mono (400 only, no font-semibold), so preload only the 400 weight.
+export const links: LinksFunction = () => [
+  { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+];
 
 export const meta: MetaFunction = () =>
   buildPageMeta({
@@ -119,7 +125,7 @@ const CommunityGuide = (): JSX.Element => {
               {[
                 { label: "Trust Levels", href: `${COMMUNITY_URL}/t/trust-level-guide/1475` },
                 { label: "Questions & Feedback", href: `${COMMUNITY_URL}/t/questions-feedback/34` },
-                { label: "Code of Conduct", href: `${COMMUNITY_URL}/t/code-of-conduct/31` },
+                { label: "Code of Conduct", href: CODE_OF_CONDUCT_URL },
                 { label: "Privacy Policy", href: `${COMMUNITY_URL}/t/privacy-policy/22` },
               ].map((item) => (
                 <li key={item.label} className="flex items-center gap-2.5 text-sm">

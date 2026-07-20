@@ -153,15 +153,6 @@
   --color-card-foreground: hsl(var(--card-foreground));
   --color-emerald: hsl(var(--emerald));
   --color-teal: hsl(var(--teal));
-  --color-sidebar: hsl(var(--sidebar-background));
-  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
-  --color-sidebar-primary: hsl(var(--sidebar-primary));
-  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
-  --color-sidebar-accent: hsl(var(--sidebar-accent));
-  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
-  --color-sidebar-border: hsl(var(--sidebar-border));
-  --color-sidebar-ring: hsl(var(--sidebar-ring));
-
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
@@ -269,14 +260,6 @@ html {
     --difficulty-architect-border: 245 35% 68% / 0.6;
     --difficulty-text: 0 0% 0%;
 
-    --sidebar-background: 240 9% 9%;
-    --sidebar-foreground: 47 54% 98%;
-    --sidebar-primary: 41 100% 60%;
-    --sidebar-primary-foreground: 0 0% 4%;
-    --sidebar-accent: 0 0% 12%;
-    --sidebar-accent-foreground: 47 54% 98%;
-    --sidebar-border: 219 36% 18%;
-    --sidebar-ring: 41 100% 60%;
   }
 
   .light {
@@ -337,16 +320,6 @@ html {
     --difficulty-builder: 85 48% 75%;
     --difficulty-architect: 245 45% 85%;
 
-    /* Sidebar */
-    --sidebar-background: 220 12% 98%;
-    --sidebar-foreground: 240 25% 8%;
-    --sidebar-primary: 41 100% 60%;
-    --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 220 8% 93%;
-    --sidebar-accent-foreground: 240 25% 8%;
-    --sidebar-border: 220 12% 87%;
-    --sidebar-ring: 41 100% 35%;
-
   }
 }
 
@@ -357,7 +330,6 @@ html {
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Inter', sans-serif;
   }
 
   /* Subtle electric dot grid - only in dark mode */

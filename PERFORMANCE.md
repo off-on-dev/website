@@ -45,10 +45,14 @@ Target these thresholds at the 75th percentile of real users:
 
 - All fonts are self-hosted under `public/fonts/`. Never add an external font CDN link.
 - `font-display: optional` is set on all fonts. This means the browser has a very short (~100 ms) window to load a font before permanently falling back to the system font for that page visit. Preloading is therefore required for fonts to render correctly on throttled connections.
-- **Global preloads** go in the `links()` export in `src/root.tsx`. Use this for fonts that appear above the fold on every page. Currently preloaded globally: Inter 400, 500, 600 (body text and semibold/bold labels); Syne 700 (h1–h6 via the `@layer base` rule).
-- **Route-level preloads** go in the `links()` export of a specific route module. Use this for fonts that are only used on certain pages to avoid "preloaded but not used" warnings and wasted bandwidth on other pages. JetBrains Mono (400 and 600) is preloaded at route level on `Index.tsx`, `Challenges.tsx`, `AdventureDetail.tsx`, and `ChallengeDetail.tsx`. These are the routes that render `font-mono` elements. Do not add JetBrains Mono to the global preloads.
+- **Global preloads** go in the `links()` export in `src/root.tsx`. Use this for fonts that appear above the fold on every page. Currently preloaded globally: Inter 400, 500, 600 (body text and semibold/bold labels); Syne 700 (h1–h2 via the `@layer base` rule). Inter 700 is **not** preloaded globally. It is used only for h3–h6, which never appear above the fold.
+- **Route-level preloads** go in the `links()` export of a specific route module. Use this for fonts that are only used on certain pages to avoid "preloaded but not used" warnings and wasted bandwidth on other pages. Do not add JetBrains Mono to the global preloads.
+  - **JetBrains Mono 400 and 600** are preloaded on `Index.tsx`, `Challenges.tsx`, `AdventureDetail.tsx`, and `ChallengeDetail.tsx`. These routes render both normal and semibold mono elements.
+  - **JetBrains Mono 400 only** is preloaded on `Adventures.tsx`, `Contribute.tsx`, and `CommunityGuide.tsx`. These routes render mono elements but none use `font-semibold`, so the 600-weight file would be preloaded but unused.
+  - **Rule: only preload a font weight if at least one element on that route uses it.** Preloading an unused weight generates a browser warning on every page visit and wastes bandwidth. Before adding a 600-weight preload to a route, confirm a `font-semibold font-mono` element exists in the component tree for that route.
 
   ```ts
+  // Routes with both 400 and semibold (600) mono usage:
   export const links: LinksFunction = () => [
     { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
     { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-600-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
@@ -56,7 +60,7 @@ Target these thresholds at the 75th percentile of real users:
   ```
 
 - The `src/index.css` `@font-face` declarations cover only the `latin` and `latin-ext` subsets. Non-English subset declarations (cyrillic, greek, vietnamese) were removed from CSS. The site is English-only and `unicode-range` already prevented those files from being fetched, but the declarations added unnecessary CSS weight. Note: the corresponding `.woff2` files remain in `public/fonts/` but are never declared in CSS and will never be fetched by the browser.
-- When adding a new route that uses JetBrains Mono (e.g. a page with code blocks or difficulty badges), add the JetBrains Mono preloads to that route's `links()` export.
+- When adding a new route that uses JetBrains Mono (e.g. a page with code blocks or difficulty badges), add only the weight preloads the route actually needs to that route's `links()` export.
 
 ---
 

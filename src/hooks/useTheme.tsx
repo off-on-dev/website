@@ -1,7 +1,6 @@
-import { createContext, useContext, useEffect, useLayoutEffect, useState, startTransition, type JSX } from "react";
+import { createContext, useContext, useEffect, useState, startTransition, type JSX } from "react";
 import { THEME_STORAGE_KEY } from "@/data/constants";
-
-const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+import { useIsomorphicLayoutEffect } from "@/hooks/useIsomorphicLayoutEffect";
 
 type Theme = "dark" | "light";
 

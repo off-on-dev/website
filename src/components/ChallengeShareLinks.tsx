@@ -8,12 +8,13 @@ type Props = {
 
 export const ChallengeShareLinks = ({ url, levelName }: Props): JSX.Element => {
   const encoded = encodeURIComponent(url);
-  const text = encodeURIComponent(`Check out "${levelName}" on ${SITE_NAME}, an open source challenge!`);
+  const shareText = `Check out "${levelName}" on ${SITE_NAME}, an open source challenge!`;
+  const shareTextWithUrl = `${shareText}\n${url}`;
 
   const linkedinHref = `https://www.linkedin.com/sharing/share-offsite/?url=${encoded}`;
-  const xHref = `https://twitter.com/intent/tweet?text=${text}&url=${encoded}`;
-  const blueskyHref = `https://bsky.app/compose?text=${encodeURIComponent(`Check out "${levelName}" on ${SITE_NAME}, an open source challenge!\n${url}`)}`;
-  const mastodonHref = `https://mastodon.social/share?text=${encodeURIComponent(`Check out "${levelName}" on ${SITE_NAME}, an open source challenge!\n${url}`)}`;
+  const xHref = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encoded}`;
+  const blueskyHref = `https://bsky.app/compose?text=${encodeURIComponent(shareTextWithUrl)}`;
+  const mastodonHref = `https://mastodon.social/share?text=${encodeURIComponent(shareTextWithUrl)}`;
 
   return (
     <div className="flex flex-wrap items-center gap-1 pt-4 border-t border-border">

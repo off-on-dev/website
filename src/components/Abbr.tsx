@@ -1,89 +1,32 @@
-import { useId, useEffect, useRef, useState, type JSX, type KeyboardEvent, type ReactNode } from "react";
+import { useId, useRef, type JSX, type ReactNode } from "react";
+import { useAbbrTooltips } from "@/hooks/useAbbrTooltips";
 
 type AbbrProps = {
   title: string;
   children: ReactNode;
 };
 
-type TooltipPosition = { maxWidth: string; side: "left" | "right" } | null;
-
+// Inline abbreviation with an accessible expansion. Renders the same markup the
+// content generator emits for prose <abbr> (data-title + an sr-only span linked
+// by aria-describedby) and shares one tooltip implementation via
+// useAbbrTooltips, so JSX and pre-rendered prose behave identically. The visible
+// token stays the accessible name; the expansion is a description. Styling and
+// the no-JS hover tooltip come from the global `abbr[data-title]` CSS rules.
 export const Abbr = ({ title, children }: AbbrProps): JSX.Element => {
   const descId = useId();
-  // null = pre-mount. Tooltip is hidden until useEffect computes the available
-  // space, preventing an invisible tooltip from widening document.scrollWidth
-  // on prerendered HTML at narrow viewports.
-  const [pos, setPos] = useState<TooltipPosition>(null);
-  const outerRef = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    const el = outerRef.current;
-    if (!el) return;
-    const compute = (): void => {
-      const rect = el.getBoundingClientRect();
-      const spaceRight = window.innerWidth - rect.left - 16;
-      // If there is enough space to the right, open the tooltip leftward-
-      // anchored (left-0). Otherwise flip it to right-anchored (right-0) so
-      // it opens toward the left edge and never overflows the viewport.
-      if (spaceRight >= 80) {
-        setPos({ maxWidth: `min(16rem, ${spaceRight}px)`, side: "left" });
-      } else {
-        const spaceLeft = rect.right - 16;
-        setPos({ maxWidth: `min(16rem, ${Math.max(80, spaceLeft)}px)`, side: "right" });
-      }
-    };
-    compute();
-    // Debounce resize so multiple Abbr instances on one page don't each fire a
-    // getBoundingClientRect() on every pixel of a drag-resize.
-    let debounceTimer: ReturnType<typeof setTimeout> | null = null;
-    const onResize = (): void => {
-      if (debounceTimer !== null) clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(compute, 100);
-    };
-    window.addEventListener("resize", onResize);
-    return () => {
-      window.removeEventListener("resize", onResize);
-      if (debounceTimer !== null) clearTimeout(debounceTimer);
-    };
-  }, []);
-
-  const handleKeyDown = (e: KeyboardEvent<HTMLElement>): void => {
-    if (e.key === "Escape") {
-      e.preventDefault();
-      e.currentTarget.blur();
-    }
-  };
+  const ref = useRef<HTMLSpanElement>(null);
+  useAbbrTooltips(ref, [title]);
 
   return (
-    <span ref={outerRef} className="relative group/abbr inline">
-      {/* No title attribute: aria-describedby provides the expansion to AT
-          without triggering the browser's native title tooltip. */}
-      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- Escape handler satisfies WCAG 1.4.13 dismissible; tabIndex makes it intentionally keyboard-reachable */}
-      <abbr
-        aria-describedby={descId}
-        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- makes abbreviation expansion keyboard-accessible per WCAG 1.4.13
-        tabIndex={0}
-        className="cursor-help underline decoration-dotted decoration-1 underline-offset-2 rounded-sm focus-ring-tight"
-        onKeyDown={handleKeyDown}
-      >
+    <span ref={ref}>
+      {/* No title attribute: it would trigger the browser's native tooltip
+          alongside the custom one. tabIndex makes the tooltip reachable by
+          keyboard and touch; useAbbrTooltips wires hover/focus/click/Escape. */}
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- focusable so keyboard and touch users can reveal the expansion tooltip */}
+      <abbr data-title={title} aria-describedby={descId} tabIndex={0}>
         {children}
       </abbr>
       <span id={descId} className="sr-only">{title}</span>
-      {/*
-        pt-1.5 gap bridges the space between the abbr and the visible tooltip
-        so the cursor can move onto it without the tooltip closing (WCAG 1.4.13
-        hoverable). Hidden until useEffect computes side and maxWidth.
-        side="left" → left-0 (opens rightward); side="right" → right-0 (opens
-        leftward, used when the abbr is near the viewport right edge).
-      */}
-      <span
-        aria-hidden="true"
-        className={`absolute top-full pt-1.5 w-max opacity-0 pointer-events-none transition-opacity group-hover/abbr:opacity-100 group-hover/abbr:pointer-events-auto group-focus-within/abbr:opacity-100 group-focus-within/abbr:pointer-events-auto z-[100]${pos === null ? " hidden" : pos.side === "left" ? " left-0" : " right-0"}`}
-        style={pos !== null ? { maxWidth: pos.maxWidth } : undefined}
-      >
-        <span className="block px-2 py-1 text-xs bg-foreground text-background rounded break-words">
-          {title}
-        </span>
-      </span>
     </span>
   );
 };

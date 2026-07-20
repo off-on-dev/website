@@ -34,13 +34,13 @@ export const meta: MetaFunction = ({ params }) => {
   if (tag) {
     return buildPageMeta({
       title: `${tag} Challenges - ${BRAND_NAME}`,
-      description: `Hands-on open source challenges using ${tag}. Practice in real-world scenarios directly in your browser.`,
+      description: `Hands-on open source challenges using ${tag}. Practice in real-world scenarios in GitHub Codespaces.`,
       url: `${SITE_URL}/challenges/${tagToSlug(tag)}/`,
     });
   }
   return buildPageMeta({
     title: `Open Source Challenges | ${BRAND_NAME}`,
-    description: `Hands-on challenges built around open source tools. Filter by technology and learn by solving real-world scenarios in your browser.`,
+    description: `Hands-on challenges built around open source tools. Filter by technology and learn by solving real-world scenarios in GitHub Codespaces.`,
     url: `${SITE_URL}/challenges/`,
   });
 };

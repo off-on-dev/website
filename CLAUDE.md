@@ -100,7 +100,11 @@ src/
   assets/       # Static assets bundled by Vite
   Layout.tsx    # App shell: providers, skip nav, scroll-to-top, consent banner, and Outlet
 e2e/
-  smoke.spec.ts # Playwright smoke tests (requires npm run build first)
+  smoke.spec.ts    # Playwright smoke tests
+  a11y.spec.ts     # Axe-core accessibility audit (dark and light mode)
+  hydration.spec.ts # React hydration checks
+  visual.spec.ts   # Visual regression tests (local only, not run in CI)
+  wsg.spec.ts      # Well-known/agent-skills verification
 public/
   fonts/        # Self-hosted fonts (Inter, Syne, JetBrains Mono)
   brand/        # OffOn brand assets (SVG + PNG logos, Nyx illustrations). Referenced by deck/index.html and BrandGuidelines.tsx.
@@ -122,6 +126,8 @@ public/
     validate-adventures.yml       # PR check: validates adventure YAML, routes, and sitemap consistency
     validate-docs.yml             # PR check: ensures styleguide.md/README.md updated with code changes
     add-discussion-url.yml        # workflow_dispatch: set discussionUrl for a level and fetch initial posts
+    a11y-scan.yml                 # Scheduled weekly accessibility scan (Monday 08:00 UTC)
+    reuse.yml                     # REUSE licence compliance check on push and PR
 ```
 
 ---
@@ -138,7 +144,7 @@ npm run lint:reuse   # REUSE licence compliance (requires: pip install reuse)
 npm test             # Run tests once (Vitest)
 npm run test:watch   # Tests in watch mode
 npm run test:coverage  # Run tests with v8 coverage (uses @vitest/coverage-v8)
-npm run test:e2e     # Playwright smoke tests (requires npm run build first)
+npm run test:e2e     # Playwright smoke, a11y, hydration, and wsg tests (requires npm run build first)
 npm run test:visual  # Visual regression tests (requires npm run build first)
 npm run test:visual:update  # Update visual baseline screenshots
 npm run preview      # Copy 404 fallback and serve the production build locally
@@ -238,6 +244,7 @@ When diagnosing a bug, especially in the production build, follow these rules wi
 - **TooltipProvider** is intentionally not mounted in `Layout.tsx` until a call site exists. Wrap only the subtree that uses `<Tooltip>` with `<TooltipProvider>` at that point.
 - **Author-controlled prose fields contain pre-rendered HTML.** Every YAML/TS field that holds prose written by a challenge author (`level.audience`, `tool.description`, `step.title`, `step.content`, `contributor.about`, `rewards.eligibility`, `tier.description`, `rewards.rankingNote`, `level.learnings`, `level.objective`, `level.intro`, `level.backstory`, `level.scenario`, `level.architecture`, `adventure.story`, `adventure.backstory`) is converted from Markdown to sanitised HTML at build time by `scripts/generate-adventures.mjs`. Always render them with `dangerouslySetInnerHTML={{ __html: value }}` and the `md-inline` (inline prose) or `md-content` (block content) CSS class. Never render as `{value}` directly. Identifier fields (`id`, URLs, enum values like `difficulty`, emoji) are not author prose and are rendered directly.
   - **When the container is an interactive element** (e.g. a `<Link>` card or a `<button>`), call `stripLinks(html)` from `src/lib/markdown.ts` before passing to `dangerouslySetInnerHTML` to prevent nested `<a>` inside `<a>` or `<button>`, which is invalid HTML.
+  - **When placing a prose HTML field in a plain-text context** (e.g. a `<meta content="">` attribute), call `stripHtml(html)` from `src/lib/markdown.ts`. This strips tags *and* decodes HTML entities. Using a bare tag-strip regex leaves entities intact; React then double-encodes them in the attribute value (e.g. `&amp;` → `&amp;amp;`).
   - **Exception: `adventure.story` in `AdventureCard` and `summaries.ts`:** The summary card and `ADVENTURE_SUMMARIES` store `story` as plain text (no HTML) so the home page renders it as a plain `<span>` with no markdown overhead. The generator emits a build-time warning if any story value contains markdown syntax (`*`, `_`, `` ` ``). Keep story field values as plain prose.
   - **The markdown pipeline (`unified`, `remark-parse`, `remark-gfm`, `remark-rehype`, `rehype-raw`, `rehype-sanitize`, `rehype-stringify`) is dev-only**, used only by `scripts/generate-adventures.mjs`. Do not import any of these packages in component or page files.
 
@@ -245,6 +252,7 @@ When diagnosing a bug, especially in the production build, follow these rules wi
 
 - `hero-badge` class on the hero pill `<div>` in `Hero.tsx`. It is used for CSS scoping of light mode overrides.
 - `logo-link` class on the Navbar logo `<Link>`. It is used to exclude the logo from nav link hover styles.
+- Footer nav group labels ("explore", "community") use `<p>` with `font-sans font-normal text-xs uppercase tracking-widest text-faint`. Do not use heading elements (`<h2>` etc.) here. The nav groups are already identified by `aria-label`, and heading elements create spurious document-outline entries that disrupt screen reader H-key navigation. Source text must be lowercase because these are overline labels styled with `text-transform: uppercase`.
 - `data-difficulty` attribute on `DifficultyBadge`. It is used for CSS targeting of badge text color.
 - `contributor-pill` class on `ContributorBadge`. Scopes light mode overrides: transparent background with slate border instead of the near-invisible `bg-primary/5`.
 - `contributor-pill-glow` class on `ContributorBadge` (applied via `glow` prop). Static amber box-shadow glow, sized for a small pill. Used only on `ChallengeDetail` -- not in `AdventureCard`.
@@ -309,8 +317,15 @@ All analytics-related constants live in `src/data/constants.ts`:
 | `CONSENT_STORAGE_KEY` | `localStorage` key for the consent decision (`analytics_consent`). |
 | `CONSENT_EXPIRY_MS` | Stored consent expiry (180 days). Re-prompt the user on the next visit after this. |
 | `BRAND_NAME` | Always `"OffOn"`. Never hardcode the string. |
+| `BRAND_SHORT_DESCRIPTION` | One-sentence brand description. Used in `Footer.tsx` and meta descriptions. Never hardcode. |
+| `BRAND_SLOGAN_PARTS` | Tuple of the three slogan parts: `["Vendor-Neutral", "Open Source", "Community-Driven"]`. |
+| `BRAND_SLOGAN` | Full slogan parts joined with `". "`. |
+| `BRAND_SECONDARY_LINE_PARTS` | Tuple of the three tagline parts: `["always On.", "always Open.", "always Learning."]`. All three must be rendered in `Hero.tsx`. |
+| `BRAND_SECONDARY_LINE` | Full tagline joined with spaces. |
 | `COMMUNITY_URL` | Real URL of the Discourse instance. Never hardcode. |
 | `COMMUNITY_DISPLAY_NAME` | User-facing display name for the community URL. Use for visible text. |
+| `CODE_OF_CONDUCT_URL` | Canonical URL of the Code of Conduct topic on Discourse. Use instead of hardcoding `${COMMUNITY_URL}/t/code-of-conduct/31`. |
+| `CODESPACES_BASE` | GitHub Codespaces base URL for the challenges repo. Used by `CodespacesButton.tsx`. |
 | `SITE_URL` | `"https://offon.dev"`. Use for canonical URLs and OG tags. |
 | `SITE_NAME` | `"offon.dev"`. |
 | `CONTACT_EMAIL` | Contact email address. Used in `CommunityGuide.tsx`. Never hardcode. |
@@ -318,6 +333,7 @@ All analytics-related constants live in `src/data/constants.ts`:
 | `BLUESKY_URL` | Bluesky profile URL (`https://bsky.app/profile/off-on-dev.bsky.social`). Used in `Footer.tsx`. |
 | `X_URL` | X (Twitter) profile URL (`https://x.com/OffonDev`). Used in `Footer.tsx`. |
 | `THEME_STORAGE_KEY` | `localStorage` key for the stored theme preference (`"theme"`). Used by `useTheme.tsx`. |
+| `CURRENT_YEAR` | Current calendar year (e.g. `2026`). Update manually each January in `src/data/constants.ts`. |
 
 ### How it works
 
@@ -325,7 +341,7 @@ All analytics-related constants live in `src/data/constants.ts`:
 - `src/hooks/useConsent.tsx` owns the React-side state and the `gtag.js` injector. The injector is shared by both the Accept click path and the mount-restore path, gated by a module-scoped `gtagScriptInjected` boolean so the script tag is appended at most once per session. On Accept, the injector pushes `consent update`, `js`, and `config` into `dataLayer` synchronously **before** appending the script tag, so when `gtag.js` loads it drains the queue in the correct order. The `config` call passes only `cookie_flags: 'SameSite=Lax;Secure'`, `cookie_expires: 15552000` (180 days), and `send_page_view: false`. No `cookie_domain` or `linker`.
 - On Decline, the hook pushes `consent update analytics_storage: denied` and clears any `_ga*` cookies. The script tag is **not** removed; `dataLayer` is **not** wiped; `window.gtag` is **not** replaced. `gtag.js` itself stops sending hits when consent is denied.
 - On Reset (floating cookie button): same as Decline plus state goes back to `null` and `localStorage` is cleared so the banner reappears.
-- `src/components/ConsentBanner.tsx` renders a fixed bottom bar until the user makes a choice. Once consent is set, it renders a floating cookie icon button (bottom-right) that calls `reset()` to reopen the banner.
+- `src/components/ConsentBanner.tsx` renders a fixed bottom bar until the user makes a choice. Once consent is set, it renders a floating cookie icon button (bottom-right) that calls `reset()` to reopen the banner. The banner's root `<div>` must keep `aria-live="polite"` so screen readers in virtual cursor mode announce it when it appears after JS hydration. Do not remove it.
 - `src/Layout.tsx` mounts `PageViewTracker` and `ClickTracker`. **Both gate on `consent === "granted"`.** Pushing events to `dataLayer` while `gtag.js` is not loaded would queue them, and a later Accept would drain the queue and retroactively send pageviews and click events for routes/clicks the user made while consent was undecided or denied. Gating prevents that.
 - `src/hooks/useTheme.tsx` manages the light/dark toggle. Theme is stored in `localStorage` under key `theme`. `ThemeProvider` is mounted in `Layout.tsx`.
 
@@ -483,10 +499,12 @@ Read [`PERFORMANCE.md`](PERFORMANCE.md) before adding any new dependency, font, 
   - `<meta name="color-scheme" content="dark light">` -- prevents the white flash dark-mode users see before CSS loads, and lets the browser style scrollbars and native form controls to match the active scheme.
 - **Favicons** -- the following files must be present in `public/` and linked from `src/root.tsx`:
   - `favicon.svg` -- primary favicon; linked as `<link rel="icon" href="/favicon.svg" type="image/svg+xml">`.
+  - `favicon.png` -- PNG fallback; linked as `<link rel="icon" href="/favicon.png" type="image/png">`.
+- The Organization JSON-LD `"logo"` field in `src/root.tsx` uses `https://offon.dev/brand/offon-logo-dark-color.png` (the full brand logo, not the favicon). Do not revert it to `favicon.png`.
   - `favicon.ico` -- ICO fallback for older browsers and the Windows taskbar. Place at `public/favicon.ico` (browsers request it automatically).
   - `apple-touch-icon.png` -- 180x180 px PNG; linked as `<link rel="apple-touch-icon" href="/apple-touch-icon.png">`.
   - A maskable icon entry in `site.webmanifest` with `"purpose": "maskable"` for Android home screens.
-  - Verify all four are present before shipping any favicon change.
+  - Verify all five are present before shipping any favicon change.
 - Add `<link rel="manifest" href="/site.webmanifest" />` to link the web app manifest.
 - Add `<meta name="theme-color">` tags for dark and light mode.
 - Add JSON-LD structured data as two `<script type="application/ld+json">` blocks: one `@type: "WebSite"` and one `@type: "Organization"`. The `"OffOn"` brand name is hardcoded as a string literal in both (they cannot reference TypeScript constants inside `dangerouslySetInnerHTML`). Update them manually if the brand name ever changes.
@@ -588,10 +606,10 @@ All UI labels use **title case (Chicago style)**. Body copy uses **sentence case
 
 ### Sitemap
 
-- Every time a new static page is added to `src/pages/` and registered as a route in `src/routes.ts`, its URL must also be added to `public/sitemap.xml` with a `<lastmod>` date.
+- Every time a new static page is added to `src/pages/` and registered as a route in `src/routes.ts`, its URL must also be added to `public/sitemap.xml` with a `<lastmod>` date. **Exception:** legal/policy pages (`/privacy/`) are intentionally excluded from the sitemap. Do not add them back.
 - Dynamic routes with statically known IDs must also be added to `public/sitemap.xml` with a `<lastmod>` date. Adventure and challenge-tag URLs are generated automatically by `scripts/generate-adventures.mjs` and include `<lastmod>` set to the build date; do not add them by hand.
 - `robots.txt` at `public/robots.txt` must include: `Sitemap: https://offon.dev/sitemap.xml`
-- **Generator region markers:** `scripts/generate-adventures.mjs` uses two exact sitemap URL strings as anchors when patching adventure and tag entries into `public/sitemap.xml` (see `replaceRegion` calls near line 910 and 952). If you change either anchor URL (including adding, removing, or reordering attributes like `<lastmod>`), you must update the corresponding marker string in the generator. Failing to do so causes `npm run build` to abort with "Region markers not found".
+- **Generator region markers:** `scripts/generate-adventures.mjs` uses XML comment markers to patch adventure and tag entries into `public/sitemap.xml` (see `replaceRegion` calls near line 1204 and 1251). The markers are `<!-- GENERATED:adventures -->` / `<!-- /GENERATED:adventures -->` for the adventures block and `<!-- GENERATED:challenge-tags -->` / `<!-- /GENERATED:challenge-tags -->` for the tags block. Do not remove, rename, or reorder these comments. If they are missing, `npm run build` aborts with "Region markers not found".
 
 ### SSG prerendered routes
 
@@ -662,6 +680,7 @@ The `off-on-dev` organisation restricts which third-party actions can run. Only 
 | `JamesIves/github-pages-deploy-action` | any tag |
 | `marocchino/sticky-pull-request-comment` | any tag |
 | `rossjrw/pr-preview-action` | any tag |
+| `fsfe/reuse-action` | any tag |
 | Actions owned by `off-on-dev` | any |
 | Actions created by GitHub | any |
 | Actions verified in the GitHub Marketplace | any |

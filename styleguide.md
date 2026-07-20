@@ -576,24 +576,45 @@ Used in `Navbar` (mobile menu drawer). The ref is attached to the menu `<div>` w
 
 ---
 
+### `useAbbrTooltips`
+
+`src/hooks/useAbbrTooltips.ts`
+
+The single abbreviation-tooltip implementation, shared by the `Abbr` component and `dangerouslySetInnerHTML` prose (`MarkdownContent`) so both behave identically. For every `abbr[data-title]` inside the container it appends a fixed-position portal tooltip to `document.body` (escaping overflow clipping, clamped to the viewport) and wires the interaction: reveal on hover and focus, click forces focus for iOS touch, Escape hides without moving focus (WCAG 1.4.13). It also converts any leftover raw `<abbr title>` to `data-title` plus an adjacent sr-only expansion span. The global `abbr[data-title]::after` CSS rule is the no-JS fallback.
+
+```ts
+useAbbrTooltips(containerRef, [depsThatChangeContent]);
+```
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `containerRef` | `RefObject<T extends HTMLElement>` | Ref to the element whose `abbr[data-title]` descendants get tooltips. |
+| `deps` | `unknown[]` | Effect dependency list. Pass the value that changes the rendered abbreviations (`[source]` in `MarkdownContent`, `[title]` in `Abbr`). Defaults to `[]`. |
+
+All listeners and portal nodes are removed on cleanup, so it is safe across re-renders and unmounts.
+
+---
+
 ## Components
 
 ### `Abbr`
 
 `src/components/Abbr.tsx`
 
-Wraps an abbreviation in a stateful component that renders a `<abbr>` with `aria-describedby` pointing to an sr-only `<span>` containing the expansion. A visual tooltip appears on hover and focus via CSS opacity transitions on a positioned child `<span>`. The `title` prop is the expansion text; it is intentionally NOT placed on the `<abbr>` element (doing so would show the browser's native tooltip alongside the custom one). Screen readers read the expansion via `aria-describedby` when the element has focus.
+Renders the exact markup the content generator emits for prose abbreviations: an `<abbr data-title="…" aria-describedby tabIndex={0}>` followed by an sr-only `<span>` holding the expansion. The visible token stays the accessible name; the expansion is a description. The `title` prop is the expansion text; it is intentionally NOT placed on the `<abbr>` (that would show the browser's native tooltip alongside the custom one) and NOT used as `aria-label` (that would replace the visible token).
 
-Use `<Abbr>` for abbreviations in JSX pages and components. Use native `<abbr title="…">` in template literal HTML strings passed to `dangerouslySetInnerHTML`; the build pipeline and `MarkdownContent.tsx` handle converting `title` to `data-title` and attaching a JS portal tooltip.
+Because it renders the same markup, the component shares a single tooltip implementation with the prose path via the [`useAbbrTooltips`](#useabbrtooltips) hook. There is no bespoke component tooltip: styling and the no-JS hover tooltip come from the global `abbr[data-title]` CSS rules in `src/index.css`, and the interactive portal tooltip (hover, focus, tap, Escape-to-dismiss) is wired by the hook.
+
+Use `<Abbr>` for abbreviations in JSX pages and components. Use native `<abbr title="…">` in template literal HTML strings passed to `dangerouslySetInnerHTML`; the generator adds `data-title`, `tabindex`, and the `aria-describedby` sr-only span at build time, and `MarkdownContent` (via the same hook) wires the tooltip.
 
 ```tsx
 <Abbr title="pull request">PR</Abbr>
 <Abbr title="Web Content Accessibility Guidelines">WCAG</Abbr>
 ```
 
-No `TooltipProvider` is needed. The `<abbr>` element is styled with `cursor-help` and a dotted underline. `tabIndex={0}` makes it keyboard-focusable so the tooltip is reachable without a mouse (WCAG 1.4.13). The component computes `maxWidth` from `window.innerWidth` after mount to prevent the tooltip from overflowing the viewport on narrow screens.
+No `TooltipProvider` is needed. `tabIndex={0}` makes the abbreviation a focusable tooltip trigger reachable by keyboard and touch (WCAG 1.4.13).
 
-**Do not nest `<Abbr>` inside an `<a>` or `<button>`.** The `tabIndex={0}` would create an invalid interactive-inside-interactive structure. Use a plain `<abbr title="...">` instead; screen readers read `title` when traversing link text.
+**Do not nest `<Abbr>` inside an `<a>` or `<button>`.** The `tabIndex={0}` would create an invalid interactive-inside-interactive structure. Use a plain `<abbr title="...">` inside a link or button; for pre-rendered prose that lands in an interactive container, `stripLinks` removes `tabindex`/`aria-describedby` so the embedded `<abbr>` is not focusable there.
 
 ---
 
@@ -1737,6 +1758,7 @@ Helper functions for the `MarkdownContent` component.
 | `slugify` | `(text: string) => string` | Converts heading text to a URL-safe slug for `id` attributes. |
 | `getSectionIcon` | `(slug: string) => LucideIcon \| undefined` | Maps known section slugs (`architecture`, `toolbox`, `how-to-play`) to their lucide-react icon. Returns `undefined` for unrecognised slugs. |
 | `stripLinks` | `(html: string) => string` | Strips `<a>` tags from sanitised HTML while preserving link text. Also removes `sr-only` new-tab spans injected by the generator. Call before passing any author-prose HTML to `dangerouslySetInnerHTML` inside an interactive element (`<Link>`, `<button>`) to prevent invalid nested anchors. |
+| `stripHtml` | `(html: string) => string` | Strips all HTML tags and decodes named and numeric HTML entities in a single pass. Contract: input must be rehype-sanitize output so `>` in attribute values is already escaped. Single-pass prevents double-decode of mixed entities (`&amp;lt;` → `&lt;`, not `<`). Use when placing author-prose HTML into plain-text contexts such as `<meta content="">` attributes. |
 
 ---
 
