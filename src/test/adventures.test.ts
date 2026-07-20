@@ -1,3 +1,5 @@
+import { readdirSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, it, expect } from "vitest";
 import { ADVENTURES } from "@/data/adventures";
 
@@ -50,5 +52,30 @@ describe("ADVENTURES - codespacesUrl", () => {
     const paths = allLevels.map(({ url }) => new URL(url).searchParams.get("devcontainer_path"));
     const unique = new Set(paths);
     expect(unique.size).toBe(paths.length);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Generated prose: non-public URLs must not be links
+// ---------------------------------------------------------------------------
+
+describe("generated adventure prose - non-public URLs", () => {
+  const dir = resolve(__dirname, "../data/adventures");
+  const files = readdirSync(dir).filter(
+    (f) => f.endsWith(".generated.ts") || f === "summaries.ts"
+  );
+  // <a href="<loopback or single-label host>"> must never survive: remark-gfm
+  // autolinks bare URLs, and annotateExternalLinks unwraps non-public ones.
+  const loopbackLink = /href=\\?"https?:\/\/(localhost|127\.\d|0\.0\.0\.0|\[?::1)/i;
+
+  it.each(files)("%s links no loopback/localhost URL", (file) => {
+    const source = readFileSync(resolve(dir, file), "utf-8");
+    expect(loopbackLink.test(source)).toBe(false);
+  });
+
+  it("localhost URLs are still present as plain text somewhere", () => {
+    const source = readFileSync(resolve(dir, "blind-by-design.generated.ts"), "utf-8");
+    expect(source).toContain("http://localhost:8080/");
+    expect(source).not.toMatch(/href=\\?"http:\/\/localhost/i);
   });
 });
