@@ -243,6 +243,16 @@ describe("MarkdownContent: abbr portal tooltip lifecycle", () => {
     expect(portal?.style.display).toBe("block");
   });
 
+  it("shows the portal tooltip on click by forcing focus (touch path)", () => {
+    // iOS Safari does not reliably focus a tabindex-only element on tap; the
+    // click handler calls focus(), which routes touch through the focus path.
+    renderWithAbbr();
+    const abbr = document.querySelector<HTMLElement>("abbr[data-title]")!;
+    fireEvent.click(abbr);
+    const portal = findPortal("Kubernetes");
+    expect(portal?.style.display).toBe("block");
+  });
+
   it("hides the portal tooltip immediately on blur", () => {
     renderWithAbbr();
     const abbr = document.querySelector<HTMLElement>("abbr[data-title]")!;

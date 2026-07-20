@@ -102,7 +102,12 @@ export const MarkdownContent = ({ source }: MarkdownContentProps): JSX.Element =
       };
       tip.addEventListener("mouseenter", clearHide);
       tip.addEventListener("mouseleave", onTipMouseLeave);
-      // Mobile touch: tap focuses the abbr, blur hides immediately.
+      // Touch: iOS Safari does not reliably focus a tabindex-only element on
+      // tap, and attaching a click handler is what makes it dispatch the tap as
+      // a click at all. Forcing focus routes touch through the same focus path;
+      // blur (tapping elsewhere) hides it.
+      const onClick = (): void => { abbrEl.focus(); };
+      abbrEl.addEventListener("click", onClick);
       abbrEl.addEventListener("focus", positionAndShow);
       abbrEl.addEventListener("blur", immediateHide);
       // Escape dismisses (WCAG 1.4.13 dismissible).
@@ -118,6 +123,7 @@ export const MarkdownContent = ({ source }: MarkdownContentProps): JSX.Element =
         abbrEl.removeEventListener("mouseleave", scheduleHide);
         tip.removeEventListener("mouseenter", clearHide);
         tip.removeEventListener("mouseleave", onTipMouseLeave);
+        abbrEl.removeEventListener("click", onClick);
         abbrEl.removeEventListener("focus", positionAndShow);
         abbrEl.removeEventListener("blur", immediateHide);
         abbrEl.removeEventListener("keydown", onKeyDown);

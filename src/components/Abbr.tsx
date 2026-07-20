@@ -56,14 +56,19 @@ export const Abbr = ({ title, children }: AbbrProps): JSX.Element => {
   return (
     <span ref={outerRef} className="relative group/abbr inline">
       {/* No title attribute: aria-describedby provides the expansion to AT
-          without triggering the browser's native title tooltip. */}
-      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- Escape handler satisfies WCAG 1.4.13 dismissible; tabIndex makes it intentionally keyboard-reachable */}
+          without triggering the browser's native title tooltip.
+          The tooltip is revealed on hover (mouse) and focus (keyboard). onClick
+          calls focus() so touch works too: iOS Safari does not reliably focus a
+          tabindex-only element on tap, and attaching a click handler is what makes
+          it dispatch the tap as a click in the first place. Escape dismisses. */}
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- interactive tooltip trigger: focus reveals it (touch/keyboard), Escape dismisses it (WCAG 1.4.13). */}
       <abbr
         aria-describedby={descId}
-        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- makes abbreviation expansion keyboard-accessible per WCAG 1.4.13
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- focusable so keyboard and touch users can reveal the expansion tooltip
         tabIndex={0}
         className="cursor-help underline decoration-dotted decoration-1 underline-offset-2 rounded-sm focus-ring-tight"
         onKeyDown={handleKeyDown}
+        onClick={(e) => e.currentTarget.focus()}
       >
         {children}
       </abbr>

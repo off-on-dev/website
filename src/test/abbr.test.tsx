@@ -81,6 +81,18 @@ describe("Abbr: keyboard behavior", () => {
   });
 });
 
+describe("Abbr: pointer behavior", () => {
+  it("focuses the abbr on click so touch users can reveal the tooltip", () => {
+    // iOS Safari does not reliably focus a tabindex-only element on tap; the
+    // onClick handler forces focus, which is what reveals the tooltip.
+    mockRect();
+    render(<Abbr title="pull request">PR</Abbr>);
+    const abbr = screen.getByText("PR").closest("abbr")!;
+    fireEvent.click(abbr);
+    expect(abbr).toHaveFocus();
+  });
+});
+
 describe("Abbr: tooltip positioning", () => {
   it("opens the tooltip rightward (left-0) when there is enough space to the right", () => {
     // left=100, innerWidth=1024 → spaceRight=908 >= 80 → side=left
