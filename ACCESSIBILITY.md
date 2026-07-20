@@ -370,6 +370,20 @@ Both the `<Abbr>` component and prose `<abbr>` render identical markup and share
 - The skip link uses the `.skip-nav` class in `src/index.css`. Never remove this class or its focus rules.
 - When adding a new page, always add `id="main-content" tabIndex={-1}` to its `<main>` element. Without `tabIndex={-1}`, activating the skip link scrolls the page but does not move keyboard focus -- the link is broken for keyboard users in Chromium and Safari.
 
+### Keyboard-scrollable overflow blocks
+
+Wide `<pre>` blocks (code, ASCII diagrams, command output) that may overflow horizontally must be keyboard-reachable so users who cannot use a mouse can scroll them:
+
+```tsx
+// eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- makes this scrollable block keyboard-reachable per WCAG 2.1 SC 2.1.1
+<pre tabIndex={0} aria-label="Architecture diagram" className="overflow-x-auto ...">
+```
+
+- Add `tabIndex={0}` so the block enters the tab order.
+- Add `aria-label` describing the content type (e.g. `"Architecture diagram"`, `"Terminal output"`).
+- Suppress the `no-noninteractive-tabindex` lint rule with a comment citing WCAG 2.1 SC 2.1.1.
+- Do not add `role` — `<pre>` has no implicit ARIA role, and adding one (e.g. `role="region"`) would create a spurious landmark in the document outline.
+
 ### Hidden until found
 
 - For collapsible sections that should remain discoverable by browser find-in-page and screen readers, use `hidden="until-found"` instead of `display: none` or `visibility: hidden`. The browser auto-expands the section when the user searches for content inside it.

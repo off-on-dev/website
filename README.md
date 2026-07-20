@@ -161,7 +161,7 @@ Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and
 All pages include complete OG tags:
 
 - `og:title`, `og:description`, `og:url`, `og:image`
-- `og:image:width`, `og:image:height`, `og:image:alt` (required for proper image rendering in social previews)
+- `og:image:width`, `og:image:height`, `og:image:alt` (required for proper image rendering in social previews; the alt text is the `OG_IMAGE_ALT` constant from `src/data/constants.ts` — a fixed description of the brand card, not the page title)
 - `og:site_name` (brand), `og:locale` (en_GB)
 - `og:type` (website or article, depending on page)
 
