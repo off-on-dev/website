@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { buildPageMeta } from "@/lib/meta";
-import { BRAND_NAME, SITE_URL } from "@/data/constants";
+import { BRAND_NAME, SITE_URL, OG_IMAGE_ALT } from "@/data/constants";
 
 const BASE = {
   title: "Test Page - OffOn",
@@ -44,14 +44,14 @@ describe("buildPageMeta", () => {
       expect(result).toContainEqual({ name: "twitter:title", content: BASE.title });
     });
 
-    it("uses title for og:image:alt", () => {
+    it("sets og:image:alt to OG_IMAGE_ALT (shared image description, not page title)", () => {
       const result = buildPageMeta(BASE);
-      expect(result).toContainEqual({ property: "og:image:alt", content: BASE.title });
+      expect(result).toContainEqual({ property: "og:image:alt", content: OG_IMAGE_ALT });
     });
 
-    it("uses title for twitter:image:alt", () => {
+    it("sets twitter:image:alt to OG_IMAGE_ALT (shared image description, not page title)", () => {
       const result = buildPageMeta(BASE);
-      expect(result).toContainEqual({ name: "twitter:image:alt", content: BASE.title });
+      expect(result).toContainEqual({ name: "twitter:image:alt", content: OG_IMAGE_ALT });
     });
   });
 

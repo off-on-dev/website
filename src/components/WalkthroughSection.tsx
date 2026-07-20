@@ -53,7 +53,7 @@ export const WalkthroughSection = ({ steps }: WalkthroughSectionProps): JSX.Elem
   }, [steps]);
 
   return (
-    <CollapsibleSection id="walkthrough" title="Walkthrough">
+    <CollapsibleSection id="walkthrough" title="Walkthrough" headingLevel={2}>
       <ol ref={listRef} className="space-y-3">
         {steps.map((step, i) => {
           const isOpen = openSteps[i] ?? true;

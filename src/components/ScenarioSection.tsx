@@ -7,7 +7,7 @@ type ScenarioSectionProps = {
 };
 
 export const ScenarioSection = ({ backstory }: ScenarioSectionProps): JSX.Element => (
-  <CollapsibleSection id="backstory" title="The Story">
+  <CollapsibleSection id="backstory" title="The Story" headingLevel={2}>
     <div className="space-y-3">
       {backstory.map((para, i) => (
         <InlineProse

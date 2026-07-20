@@ -33,7 +33,6 @@ export const RewardsCard = ({ rewards, compact = false, levelDeadline, deadlineP
             >
               Community Voices
               <ExternalLink size={10} aria-hidden="true" />
-              
             </a>
             .
           </p>
@@ -72,7 +71,6 @@ export const RewardsCard = ({ rewards, compact = false, levelDeadline, deadlineP
           >
             See the points & ranking rules for the full breakdown
             <ExternalLink size={10} aria-hidden="true" />
-            
           </a>
         )}
       </p>

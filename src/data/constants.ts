@@ -40,3 +40,5 @@ export const BRAND_SECONDARY_LINE_PARTS = [
 export const BRAND_SECONDARY_LINE = `${BRAND_SECONDARY_LINE_PARTS[0]} ${BRAND_SECONDARY_LINE_PARTS[1]} ${BRAND_SECONDARY_LINE_PARTS[2]}`;
 
 export const BRAND_SHORT_DESCRIPTION = "A welcoming open source community to learn through hands-on challenges, share knowledge, and build together.";
+
+export const OG_IMAGE_ALT = "OffOn logo card on dark background";

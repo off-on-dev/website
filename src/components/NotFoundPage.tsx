@@ -11,7 +11,7 @@ type NotFoundPageProps = {
 export const NotFoundPage = ({ title, message }: NotFoundPageProps): JSX.Element => (
   <div className="min-h-dvh bg-background">
     <Navbar />
-    <main id="main-content" className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
+    <main id="main-content" tabIndex={-1} className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
       <h1 className="text-2xl font-bold text-foreground mb-3">{title}</h1>
       <p className="text-muted-foreground mb-6">{message}</p>
       <Link

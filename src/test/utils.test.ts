@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { isDeadlinePast, formatDeadline, isSolutionUnlocked, resolveDiscussionUrl } from '@/lib/utils';
+import { isDeadlinePast, formatDeadline, isSolutionUnlocked, resolveDiscussionUrl, escapeHtmlAttr } from '@/lib/utils';
 
 describe('isDeadlinePast', () => {
   beforeEach(() => {
@@ -98,6 +98,38 @@ describe('formatDeadline', () => {
 
   it('formats an arbitrary offset as UTC±HH:MM', () => {
     expect(formatDeadline('2026-07-01T23:59:59+05:30')).toBe('1 July 2026 at 23:59 UTC+05:30');
+  });
+});
+
+describe('escapeHtmlAttr', () => {
+  it('passes through a plain string unchanged', () => {
+    expect(escapeHtmlAttr('hello world')).toBe('hello world');
+  });
+
+  it('escapes ampersands', () => {
+    expect(escapeHtmlAttr('a&b')).toBe('a&amp;b');
+  });
+
+  it('escapes double quotes', () => {
+    expect(escapeHtmlAttr('say "hi"')).toBe('say &quot;hi&quot;');
+  });
+
+  it('escapes less-than', () => {
+    expect(escapeHtmlAttr('a<b')).toBe('a&lt;b');
+  });
+
+  it('escapes greater-than', () => {
+    expect(escapeHtmlAttr('a>b')).toBe('a&gt;b');
+  });
+
+  it('escapes a URL with query params containing ampersands', () => {
+    const url = 'https://example.com/?foo=1&bar=2';
+    expect(escapeHtmlAttr(url)).toBe('https://example.com/?foo=1&amp;bar=2');
+  });
+
+  it('escapes all unsafe characters in a single string', () => {
+    expect(escapeHtmlAttr('<script src="x&y">'))
+      .toBe('&lt;script src=&quot;x&amp;y&quot;&gt;');
   });
 });
 

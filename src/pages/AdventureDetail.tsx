@@ -1,4 +1,4 @@
-import { type JSX } from "react";
+import { useState, useEffect, type JSX } from "react";
 import { useParams, Link, useLoaderData } from "react-router";
 import type { MetaFunction, LoaderFunctionArgs, LinksFunction } from "react-router";
 import { ArrowRight, Clock } from "lucide-react";
@@ -134,8 +134,24 @@ const AdventureLevelLink = ({ level, adventureId }: AdventureLevelLinkProps): JS
 
 const AdventureDetail = (): JSX.Element => {
   const { id } = useParams<{ id: string }>();
-  const { rewardsBelowFold, isLive } = useLoaderData<{ rewardsBelowFold: boolean; isLive: boolean }>();
+  const { rewardsBelowFold: initialRewardsBelowFold, isLive: initialIsLive } = useLoaderData<{ rewardsBelowFold: boolean; isLive: boolean }>();
   const adventure = ADVENTURES.find((adventure) => adventure.id === id);
+
+  const [rewardsBelowFold, setRewardsBelowFold] = useState(initialRewardsBelowFold);
+  const [isLive, setIsLive] = useState(initialIsLive);
+
+  // Correct stale prerendered state when a deadline has passed since the last build.
+  // setState-in-effect is intentional here: the loader value comes from a static .data file
+  // and may be outdated; we recompute on mount with the current browser date.
+  useEffect(() => {
+    if (!adventure) return;
+    const deadline = adventure.rewards?.deadline;
+    const nowPast = isDeadlinePast(deadline);
+    const nowLive = !!deadline && !nowPast;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setRewardsBelowFold(nowPast);
+    setIsLive(nowLive);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!adventure) {
     return <NotFoundPage title="Adventure not found" message="The adventure you're looking for doesn't exist." />;
@@ -183,7 +199,7 @@ const AdventureDetail = (): JSX.Element => {
 
               {/* Overview */}
               {adventure.overview && adventure.overview.length > 0 && (
-                <CollapsibleSection id="overview" title="Overview" defaultOpen={true}>
+                <CollapsibleSection id="overview" title="Overview" headingLevel={2} defaultOpen={true}>
                   <ul role="list" className="space-y-2.5">
                     {adventure.overview.map((para, i) => (
                       <li key={i} className="flex items-start gap-2.5">
@@ -225,7 +241,7 @@ const AdventureDetail = (): JSX.Element => {
 
               {/* The Story */}
               {adventure.backstory && adventure.backstory.length > 0 && (
-                <CollapsibleSection id="backstory" title="The Story" defaultOpen={true}>
+                <CollapsibleSection id="backstory" title="The Story" headingLevel={2} defaultOpen={true}>
                   <div className="space-y-3">
                     {adventure.backstory.map((para, i) => (
                       <InlineProse
@@ -247,7 +263,7 @@ const AdventureDetail = (): JSX.Element => {
             </div>
 
             {/* Sidebar: leaderboard + contributor */}
-            <aside className="mt-10 lg:mt-0 space-y-6 lg:sticky lg:top-28 lg:self-start">
+            <aside aria-label="Adventure resources" className="mt-10 lg:mt-0 space-y-6 lg:sticky lg:top-28 lg:self-start">
               <AdventureLeaderboard adventureId={adventure.id} />
               {adventure.contributor && (
                 <div className="rounded-xl border border-border bg-[hsl(var(--surface))] px-5 py-4">
