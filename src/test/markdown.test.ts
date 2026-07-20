@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { Layers, Wrench, ListChecks } from "lucide-react";
-import { slugify, getSectionIcon, stripHtml } from "@/lib/markdown";
+import { slugify, getSectionIcon, stripHtml, stripLinks } from "@/lib/markdown";
 
 describe("slugify", () => {
   it("lowercases text", () => {
@@ -100,5 +100,32 @@ describe("stripHtml", () => {
   it("leaves out-of-range numeric entities unchanged instead of throwing", () => {
     expect(stripHtml("&#2000000;")).toBe("&#2000000;");
     expect(stripHtml("&#x1FFFFF;")).toBe("&#x1FFFFF;");
+  });
+});
+
+describe("stripLinks", () => {
+  it("removes <a> tags but keeps their text", () => {
+    expect(stripLinks('<a href="/x">link text</a>')).toBe("link text");
+  });
+
+  it("removes sr-only new-tab spans", () => {
+    expect(stripLinks('<a href="/x">t<span class="sr-only"> (opens in new tab)</span></a>')).toBe("t");
+  });
+
+  it("strips tabindex and aria-describedby so a generated abbr is not focusable inside an interactive ancestor", () => {
+    const html = '<abbr data-title="Site Reliability Engineers" tabindex="0" aria-describedby="abbr-exp-1">SREs</abbr>';
+    const out = stripLinks(html);
+    expect(out).not.toContain("tabindex");
+    expect(out).not.toContain("aria-describedby");
+    expect(out).toContain('data-title="Site Reliability Engineers"');
+  });
+
+  it("leaves the id-first abbr expansion span intact so the expansion stays readable", () => {
+    const html =
+      '<abbr data-title="X" tabindex="0" aria-describedby="abbr-exp-1">SREs</abbr>' +
+      '<span id="abbr-exp-1" class="sr-only">Site Reliability Engineers</span>';
+    const out = stripLinks(html);
+    expect(out).toContain('<span id="abbr-exp-1" class="sr-only">Site Reliability Engineers</span>');
+    expect(out).not.toContain("aria-describedby");
   });
 });
