@@ -584,7 +584,7 @@ Used in `Navbar` (mobile menu drawer). The ref is attached to the menu `<div>` w
 
 Wraps an abbreviation in a stateful component that renders a `<abbr>` with `aria-describedby` pointing to an sr-only `<span>` containing the expansion. A visual tooltip appears on hover and focus via CSS opacity transitions on a positioned child `<span>`. The `title` prop is the expansion text; it is intentionally NOT placed on the `<abbr>` element (doing so would show the browser's native tooltip alongside the custom one). Screen readers read the expansion via `aria-describedby` when the element has focus.
 
-Use `<Abbr>` for abbreviations in JSX pages and components. Use native `<abbr title="…">` in template literal HTML strings passed to `dangerouslySetInnerHTML`; the build pipeline and `MarkdownContent.tsx` handle converting `title` to `data-title` and attaching a JS portal tooltip.
+Use `<Abbr>` for abbreviations in JSX pages and components. Use native `<abbr title="…">` in template literal HTML strings passed to `dangerouslySetInnerHTML`; the generator (and `MarkdownContent.tsx` as a fallback) converts `title` to `data-title`, adds `tabindex` and an `aria-describedby` sr-only expansion span (not `aria-label`, which would replace the visible token), and attaches a JS portal tooltip. That prose path mirrors this component.
 
 ```tsx
 <Abbr title="pull request">PR</Abbr>

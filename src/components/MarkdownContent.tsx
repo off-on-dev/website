@@ -21,14 +21,21 @@ export const MarkdownContent = ({ source }: MarkdownContentProps): JSX.Element =
 
     // Convert title→data-title on any abbr elements that still carry title
     // (e.g. hardcoded HTML strings that weren't processed by the generate
-    // pipeline). data-title drives the CSS ::after tooltip; aria-label carries
-    // the expansion for screen readers. Removing title prevents the browser's
+    // pipeline). data-title drives the visual tooltip; the expansion is carried
+    // for screen readers by an adjacent sr-only span (not aria-label, which
+    // would replace the visible token). Removing title prevents the browser's
     // native tooltip from appearing alongside the custom one.
     el.querySelectorAll("abbr[title]").forEach((abbr) => {
       const text = abbr.getAttribute("title") ?? "";
       abbr.setAttribute("data-title", text);
-      abbr.setAttribute("aria-label", text);
       abbr.removeAttribute("title");
+      const next = abbr.nextElementSibling;
+      if (!(next && next.classList.contains("sr-only"))) {
+        const span = document.createElement("span");
+        span.className = "sr-only";
+        span.textContent = text;
+        abbr.after(span);
+      }
     });
 
     // Replace the CSS ::after tooltip on each abbr[data-title] with a fixed-

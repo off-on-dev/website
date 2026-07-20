@@ -123,24 +123,45 @@ const sanitizeSchema = {
   strip: [...(defaultSchema.strip ?? []), "style"],
 };
 
-/** Post-sanitize: convert <abbr title> to <abbr data-title aria-label tabindex>.
- *  - data-title drives the CSS ::after tooltip (avoids the browser native tooltip
- *    that appears when title is present alongside a custom one).
- *  - aria-label carries the expansion for screen readers (title is removed).
- *  - tabindex="0" lets keyboard users trigger the CSS tooltip.
- *  All three properties are added after rehypeSanitize runs (sanitize strips
- *  tabIndex and data-* from its allowlist by default). */
-function addAbbrTabindex() {
+// Unique id counter for abbr expansion spans, shared across the whole generate
+// run. Given stable adventure/field iteration order, ids are deterministic, so
+// regeneration produces identical output and no diff churn.
+let abbrExpansionCounter = 0;
+
+/** Post-sanitize: turn <abbr title> into a focusable tooltip trigger whose
+ *  expansion is exposed to assistive tech via an adjacent sr-only span referenced
+ *  by aria-describedby (mirrors the <Abbr> React component).
+ *  - data-title drives the CSS/portal visual tooltip on hover/focus.
+ *  - aria-describedby + the sr-only span keep the visible token as the accessible
+ *    name and add the expansion as a description (WCAG 2.5.3). aria-label is not
+ *    used because it would replace the visible token (e.g. "PR") with the expansion.
+ *  - tabindex makes the tooltip reachable by keyboard and touch.
+ *  Runs after rehypeSanitize (which strips these props from its allowlist), so the
+ *  inserted span is not re-sanitized. */
+function expandAbbr() {
   return function (tree) {
     function walk(node) {
-      if (node.type === "element" && node.tagName === "abbr" && node.properties?.title) {
-        const text = String(node.properties.title);
-        node.properties.dataTitle = text;
-        node.properties.ariaLabel = text;
-        node.properties.tabIndex = 0;
-        delete node.properties.title;
+      const children = node.children;
+      if (!children) return;
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        if (child.type === "element" && child.tagName === "abbr" && child.properties?.title) {
+          const text = String(child.properties.title);
+          const id = `abbr-exp-${++abbrExpansionCounter}`;
+          child.properties.dataTitle = text;
+          child.properties.tabIndex = 0;
+          child.properties.ariaDescribedBy = id;
+          delete child.properties.title;
+          children.splice(i + 1, 0, {
+            type: "element",
+            tagName: "span",
+            properties: { id, className: ["sr-only"] },
+            children: [{ type: "text", value: text }],
+          });
+          i++; // skip the span just inserted
+        }
+        walk(child);
       }
-      for (const child of node.children ?? []) walk(child);
     }
     walk(tree);
   };
@@ -152,7 +173,7 @@ const mdProcessor = unified()
   .use(remarkRehype, { allowDangerousHtml: true })
   .use(rehypeRaw)
   .use(rehypeSanitize, sanitizeSchema)
-  .use(addAbbrTabindex)
+  .use(expandAbbr)
   .use(rehypeStringify);
 
 /** Add target/rel/sr-only to http/https <a> tags. The external link icon is

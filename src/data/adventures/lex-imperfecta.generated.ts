@@ -37,7 +37,7 @@ export const LEX_IMPERFECTA: Adventure = {
       name: "The Twelve Tables",
       difficulty: "Beginner",
       topics: ["Kyverno", "Kubernetes"],
-      audience: "Platform engineers, <abbr data-title=\"Site Reliability Engineers\" aria-label=\"Site Reliability Engineers\" tabindex=\"0\">SREs</abbr>, and developers curious about Kubernetes security — no prior Kyverno experience needed, but familiarity with basic <code>kubectl</code> and YAML will help.",
+      audience: "Platform engineers, <abbr data-title=\"Site Reliability Engineers\" tabindex=\"0\" aria-describedby=\"abbr-exp-1\">SREs</abbr><span id=\"abbr-exp-1\" class=\"sr-only\">Site Reliability Engineers</span>, and developers curious about Kubernetes security — no prior Kyverno experience needed, but familiarity with basic <code>kubectl</code> and YAML will help.",
       learnings: [
         "How Kyverno <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">ValidatingPolicy<span class=\"sr-only\"> (opens in new tab)</span></a> resources and  <a href=\"https://kubernetes.io/docs/reference/using-api/cel/\" target=\"_blank\" rel=\"noopener noreferrer\">CEL validation expressions<span class=\"sr-only\"> (opens in new tab)</span></a> work",
         "The difference between <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">Audit, Deny, and Warn<span class=\"sr-only\"> (opens in new tab)</span></a> validation actions",
@@ -121,7 +121,7 @@ kyverno apply manifests/policies/stamp-travel-permit.yaml --resource manifests/p
       name: "Governing the Provinces",
       difficulty: "Intermediate",
       topics: ["Kyverno", "Policy Reporter", "Kubernetes"],
-      audience: "Platform engineers and <abbr data-title=\"Site Reliability Engineers\" aria-label=\"Site Reliability Engineers\" tabindex=\"0\">SREs</abbr> who have some familiarity with Kyverno, ideally after completing the Beginner level. You should be comfortable reading Kubernetes YAML and basic kubectl commands.",
+      audience: "Platform engineers and <abbr data-title=\"Site Reliability Engineers\" tabindex=\"0\" aria-describedby=\"abbr-exp-2\">SREs</abbr><span id=\"abbr-exp-2\" class=\"sr-only\">Site Reliability Engineers</span> who have some familiarity with Kyverno, ideally after completing the Beginner level. You should be comfortable reading Kubernetes YAML and basic kubectl commands.",
       learnings: [
         "How to scope policies using <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">ValidatingPolicy<span class=\"sr-only\"> (opens in new tab)</span></a> (cluster-wide) and <a href=\"https://kyverno.io/docs/policy-types/validating-policy/#policy-scope\" target=\"_blank\" rel=\"noopener noreferrer\">NamespacedValidatingPolicy<span class=\"sr-only\"> (opens in new tab)</span></a> (per-namespace), and when to use each",
         "How <a href=\"https://kubernetes.io/docs/reference/using-api/cel/\" target=\"_blank\" rel=\"noopener noreferrer\">CEL expressions<span class=\"sr-only\"> (opens in new tab)</span></a> in <code>ValidatingPolicy</code> and <code>PolicyException</code> express fine-grained admission conditions",
@@ -241,7 +241,7 @@ policy reports, the OpenReports data behind Policy Reporter, as the audit of rec
         "<strong>The empire-wide laws holding</strong>: all intermediate-level checks still green across every province",
       ],
       architecture: [
-        "<p>The estate inherits the full intermediate topology: four province namespaces (<code>gallia</code>, <code>hispania</code>, <code>britannia</code>, <code>aegyptus</code>) and one infra namespace (<code>castra</code>), each labelled as before. Alongside the Kyverno stack and Policy Reporter, the cluster now runs <strong>Falco</strong> (<abbr data-title=\"extended Berkeley Packet Filter\" aria-label=\"extended Berkeley Packet Filter\" tabindex=\"0\">eBPF</abbr>-based, as a DaemonSet) and <strong>Falcosidekick</strong> with its UI at port <strong>30111</strong>. At startup, an intruder pod is already running in one of the provinces, quietly reading the census archive: imperial rolls that only workloads bearing the <code>republic.rome/role: archivist</code> label are permitted to access.</p>",
+        "<p>The estate inherits the full intermediate topology: four province namespaces (<code>gallia</code>, <code>hispania</code>, <code>britannia</code>, <code>aegyptus</code>) and one infra namespace (<code>castra</code>), each labelled as before. Alongside the Kyverno stack and Policy Reporter, the cluster now runs <strong>Falco</strong> (<abbr data-title=\"extended Berkeley Packet Filter\" tabindex=\"0\" aria-describedby=\"abbr-exp-3\">eBPF</abbr><span id=\"abbr-exp-3\" class=\"sr-only\">extended Berkeley Packet Filter</span>-based, as a DaemonSet) and <strong>Falcosidekick</strong> with its UI at port <strong>30111</strong>. At startup, an intruder pod is already running in one of the provinces, quietly reading the census archive: imperial rolls that only workloads bearing the <code>republic.rome/role: archivist</code> label are permitted to access.</p>",
         "<p>Your working directory is the challenge root. <code>manifests/secrets/</code> and <code>manifests/workloads/</code> are already in place. They define the estate and the intruder, and need no changes. Everything else is yours to investigate and fix.</p>",
       ],
       toolbox: [
@@ -277,8 +277,8 @@ to share expressions across validations, a pattern worth exploring.</p>` },
         { title: "Act 3: Seal the Archive", content: `<p>Open <code>manifests/policies/</code>: something is missing; the other policies show the structure, write
 what's needed, then run <code>make apply</code>.</p>
 <p><strong>Going further:</strong> even with the archive sealed at admission, any workload admitted with the
-Archivist role can read the secret. Kubernetes <abbr data-title="Role-Based Access Control" aria-label="Role-Based Access Control" tabindex="0">RBAC</abbr> can restrict which service accounts may
-<code>get</code> a secret at the <abbr data-title="Application Programming Interface" aria-label="Application Programming Interface" tabindex="0">API</abbr> level, a complementary layer that admission control alone cannot
+Archivist role can read the secret. Kubernetes <abbr data-title="Role-Based Access Control" tabindex="0" aria-describedby="abbr-exp-4">RBAC</abbr><span id="abbr-exp-4" class="sr-only">Role-Based Access Control</span> can restrict which service accounts may
+<code>get</code> a secret at the <abbr data-title="Application Programming Interface" tabindex="0" aria-describedby="abbr-exp-5">API</abbr><span id="abbr-exp-5" class="sr-only">Application Programming Interface</span> level, a complementary layer that admission control alone cannot
 provide.</p>` },
       ],
       helpfulLinks: [
