@@ -1,4 +1,4 @@
-import { type JSX } from "react";
+import { useState, type JSX } from "react";
 import { ExternalLink, Heart, Trophy } from "lucide-react";
 import { COMMUNITY_URL, COMMUNITY_DISPLAY_NAME } from "@/data/constants";
 import { useDiscussionPosts } from "@/hooks/useDiscussionPosts";
@@ -16,6 +16,9 @@ type DiscussionSectionProps = {
 export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: DiscussionSectionProps): JSX.Element => {
   const { posts: allPosts, loaded } = useDiscussionPosts(adventureId, levelId);
   const posts = allPosts.slice(0, 3);
+  // Avatars are external (Discourse). Track per-post load failures so a broken
+  // image falls back to the initials chip instead of a broken-image icon.
+  const [failedAvatars, setFailedAvatars] = useState<Record<number, true>>({});
 
   const joinLink = (
     <a
@@ -60,7 +63,7 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  {post.avatarUrl ? (
+                  {post.avatarUrl && !failedAvatars[i] ? (
                     <img
                       src={post.avatarUrl}
                       alt=""
@@ -69,6 +72,7 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
                       height={32}
                       loading="lazy"
                       decoding="async"
+                      onError={() => setFailedAvatars((f) => ({ ...f, [i]: true }))}
                       className="h-8 w-8 shrink-0 rounded-full object-cover"
                     />
                   ) : (

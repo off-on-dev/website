@@ -134,6 +134,20 @@ async function getTextContrast(target: Locator): Promise<number | null> {
   });
 }
 
+// Discourse-hosted avatars (community.offon.dev) are the only resource the
+// prerendered pages fetch from a third party at runtime. Stub them with a 1x1
+// PNG so a transient 5xx from that service cannot fail the console-error
+// assertion below; e2e must be hermetic and not depend on external uptime.
+const STUB_PNG = Buffer.from(
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+  "base64",
+);
+test.beforeEach(async ({ page }) => {
+  await page.route(/https:\/\/community\.offon\.dev\//, (route) =>
+    route.fulfill({ status: 200, contentType: "image/png", body: STUB_PNG }),
+  );
+});
+
 test.describe("every prerendered route", () => {
   for (const { path, title } of ROUTES) {
     test(path, async ({ page }) => {

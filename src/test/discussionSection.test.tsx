@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { DiscussionSection } from "@/components/DiscussionSection";
 import { useDiscussionPosts } from "@/hooks/useDiscussionPosts";
 import type { PostWithAge } from "@/hooks/useDiscussionPosts";
@@ -172,6 +172,36 @@ describe("DiscussionSection - live region status", () => {
     );
     expect(screen.queryByText(/No community posts yet/)).toBeNull();
     expect(screen.queryByText(/Great challenge/)).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Avatar fallback: external Discourse avatars must degrade to the initials chip
+// ---------------------------------------------------------------------------
+
+describe("DiscussionSection - avatar fallback", () => {
+  const withAvatar = (avatarUrl: string): void => {
+    vi.mocked(useDiscussionPosts).mockImplementation(() => ({
+      posts: [{ ...MOCK_POSTS[0], username: "alice", avatarUrl }],
+      totalReplies: 1,
+      solvers: [],
+      loaded: true,
+    }));
+  };
+
+  it("renders the avatar image when a post has an avatarUrl", () => {
+    withAvatar("https://community.offon.dev/user_avatar/x/40.png");
+    render(<DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.offon.dev/t/topic/42/1" />);
+    expect(document.querySelector("img")?.getAttribute("src")).toContain("community.offon.dev");
+  });
+
+  it("falls back to the initials chip when the avatar image fails to load", () => {
+    withAvatar("https://community.offon.dev/broken.png");
+    render(<DiscussionSection adventureId="test-adventure" levelId="beginner" discussionUrl="https://community.offon.dev/t/topic/42/1" />);
+    const img = document.querySelector("img")!;
+    fireEvent.error(img);
+    expect(document.querySelector("img")).toBeNull();
+    expect(screen.getByText("AL")).toBeTruthy();
   });
 });
 
