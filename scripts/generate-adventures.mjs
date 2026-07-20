@@ -186,6 +186,9 @@ function isNonPublicUrl(href) {
     const host = new URL(href).hostname.replace(/^\[|\]$/g, ""); // strip IPv6 brackets
     if (host === "localhost" || host === "0.0.0.0" || host === "::1") return true;
     if (/^127\./.test(host)) return true; // IPv4 loopback range
+    if (/^10\./.test(host)) return true; // private class A
+    if (/^192\.168\./.test(host)) return true; // private class C
+    if (/^172\.(1[6-9]|2\d|3[01])\./.test(host)) return true; // private class B (172.16-31)
     if (host.endsWith(".local")) return true; // mDNS
     if (!host.includes(".")) return true; // single-label host, no public TLD
     return false;

@@ -66,7 +66,7 @@ describe("generated adventure prose - non-public URLs", () => {
   );
   // <a href="<loopback or single-label host>"> must never survive: remark-gfm
   // autolinks bare URLs, and annotateExternalLinks unwraps non-public ones.
-  const loopbackLink = /href=\\?"https?:\/\/(localhost|127\.\d|0\.0\.0\.0|\[?::1)/i;
+  const loopbackLink = /href=\\?"https?:\/\/(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|0\.0\.0\.0|\[?::1)/i;
 
   it.each(files)("%s links no loopback/localhost URL", (file) => {
     const source = readFileSync(resolve(dir, file), "utf-8");
