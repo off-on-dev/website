@@ -1,1 +1,0 @@
-import{g as e}from"./vendor-router-C00uM3v2.js";function t(){return e(`/handbook`)}export{t as clientLoader};
