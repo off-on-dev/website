@@ -1,0 +1,1 @@
+import{g as e}from"./vendor-router-DakN4B94.js";function t(){return e(`/handbook`)}export{t as clientLoader};
