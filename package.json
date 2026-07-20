@@ -29,7 +29,7 @@
   "dependencies": {
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.21.0",
+    "lucide-react": "^1.25.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router": "^8.0.1",
@@ -43,7 +43,7 @@
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.61.1",
     "@react-router/dev": "^8.0.1",
-    "@tailwindcss/vite": "^4.2.4",
+    "@tailwindcss/vite": "^4.3.3",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.6.0",
     "@testing-library/react": "^16.0.0",
@@ -67,11 +67,11 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
     "reveal.js": "^6.0.1",
-    "tailwindcss": "^4.2.4",
+    "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.59.2",
+    "typescript-eslint": "^8.64.0",
     "unified": "^11.0.5",
-    "vite": "^8.0.10",
+    "vite": "^8.1.5",
     "vitest": "^4.1.5",
     "yaml": "^2.9.0"
   }
