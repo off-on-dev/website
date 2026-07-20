@@ -145,6 +145,11 @@ export function Layout(): JSX.Element {
         <FocusReset />
         <RouteAnnouncer />
         <ThemeAnnouncer />
+        {/* Shared description for every external link. Referenced via
+            aria-describedby="new-tab-hint" so the "opens in a new tab" hint is
+            an accessible description, not part of each link's accessible name.
+            hidden still resolves for aria-describedby. */}
+        <span id="new-tab-hint" hidden>opens in a new tab</span>
         <PageViewTracker />
         <ClickTracker />
         <ConsentBanner />

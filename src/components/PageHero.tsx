@@ -22,9 +22,9 @@ const renderCta = (cta: Cta, isPrimary: boolean): JSX.Element => {
 
   if (cta.external) {
     return (
-      <a key={cta.href} href={cta.href} target="_blank" rel="noopener noreferrer" className={cls}>
+      <a key={cta.href} href={cta.href} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={cls}>
         {cta.label}
-        <span className="sr-only"> (opens in new tab)</span>
+        
       </a>
     );
   }

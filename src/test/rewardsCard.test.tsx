@@ -111,10 +111,10 @@ describe("RewardsCard - past deadline, non-compact", () => {
     expect(link.getAttribute("rel")).toContain("noopener");
   });
 
-  it("Community Voices link has sr-only new-tab notice", () => {
+  it("Community Voices link has a new-tab hint via aria-describedby", () => {
     render(<RewardsCard rewards={REWARDS} deadlinePast />);
     const link = screen.getByRole("link", { name: /community voices/i });
-    expect(link.textContent).toContain("opens in new tab");
+    expect(link.getAttribute("aria-describedby")).toBe("new-tab-hint");
   });
 });
 

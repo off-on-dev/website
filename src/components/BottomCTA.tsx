@@ -34,18 +34,18 @@ export const BottomCTA = (): JSX.Element => {
               <a
                 href={COMMUNITY_URL}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer" aria-describedby="new-tab-hint"
               className="btn-inverse"
               >
-                Join the Community <ExternalLink size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                Join the Community <ExternalLink size={14} aria-hidden="true" />
               </a>
               <a
                 href="https://github.com/off-on-dev/open-source-challenges"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer" aria-describedby="new-tab-hint"
               className="btn-ghost-inverse"
               >
-                View Challenges on GitHub <ExternalLink size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                View Challenges on GitHub <ExternalLink size={14} aria-hidden="true" />
               </a>
             </div>
           </div>

@@ -37,10 +37,10 @@ export const LevelCard = ({ level, headingLevel = "h2" }: LevelCardProps): JSX.E
     <a
       href={level.codespacesUrl}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noopener noreferrer" aria-describedby="new-tab-hint"
       className="btn-primary"
     >
-      Open in GitHub Codespaces <ExternalLink size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+      Open in GitHub Codespaces <ExternalLink size={14} aria-hidden="true" />
     </a>
     <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
       <p className="text-xs text-faint font-mono">
@@ -49,8 +49,8 @@ export const LevelCard = ({ level, headingLevel = "h2" }: LevelCardProps): JSX.E
       <a
         href={level.discussionUrl}
         target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`Discussion for ${level.name} (opens in new tab)`}
+        rel="noopener noreferrer" aria-describedby="new-tab-hint"
+        aria-label={`Discussion for ${level.name}`}
         className="docs-ext-link text-xs font-medium"
       >
         Discussion <ExternalLink size={12} aria-hidden="true" />

@@ -100,6 +100,60 @@ Switch to code-aware audit mode. Focus on issues that require human judgement:
 
 ---
 
+## Component Rules (WCAG 2.2 / WAI-ARIA APG)
+
+Guardrails to apply when building or fixing any interactive component. Check every
+one during Phase 2; each cites the normative criterion it enforces.
+
+- **Toggle buttons keep a constant accessible name.** A control with `aria-expanded`
+  must not swap its name between states ("Open menu" / "Close menu"). Name it for
+  what it controls ("Menu") and let `aria-expanded` carry open/closed; otherwise the
+  state is announced twice and can contradict itself. (WAI-ARIA APG.)
+- **Do not name a landmark redundantly, or invent a name for a region.** A `<nav>`
+  label must not contain "navigation"; `<header>`/`<main>`/`<footer>` need no label
+  unless one role appears twice. A `<section>`/`<aside>` becomes a landmark only when
+  it has a real visible heading — point `aria-labelledby` at that heading. Never add a
+  synthetic `aria-label` nobody sees; use a plain `<div>` instead. (WCAG 1.3.1.)
+- **`title` attribute only on `<iframe>`.** It is not reliably exposed to touch or
+  keyboard. Use visible text, `aria-label`, or `aria-describedby` instead.
+- **Supplementary hints go in `aria-describedby`, not the accessible name.** e.g.
+  "opens in a new tab" is a description, referenced from one shared hidden node, never
+  folded into link text or `aria-label`. Padding the name breaks voice control.
+  (WCAG 2.5.3 Label in Name; ARIA name-vs-description.)
+- **Do not render non-navigable URLs as links.** Loopback / localhost / single-label
+  hosts in prose (`http://localhost:8080/`) must be plain text, not `target="_blank"`
+  links — on the deployed site they point at the visitor's own machine.
+- **Disabled controls: native `disabled` is the default; `aria-disabled` only when the
+  control must stay discoverable in focus order** (submit button, or inactive-but-
+  important control). Do not blanket-replace `disabled` with `aria-disabled`. When you
+  do, suppress the action in JS and style the state explicitly. (WAI-ARIA APG Button
+  Pattern — this deliberately narrows frontend-a11y's absolute "never disable a button".)
+- **Focus vs announce for dynamic changes:** *move focus* to a destination (route
+  change → new page `<h1>`/`<main>`; submit failure → error summary); *announce* via a
+  polite live region for ambient updates (filter counts, toasts, consent). Do not both
+  move focus and announce the same change.
+
+---
+
+## Contrast and Transparency
+
+- **Text contrast (WCAG 1.4.3) is covered by axe** (`color-contrast`), run on every
+  prerendered route in dark and light mode by `e2e/smoke.spec.ts`. Do not add a
+  parallel contrast checker — it would duplicate axe. When axe reports `incomplete` on
+  a translucent or overlapping pair, composite the alpha over its opaque background by
+  hand and give a definitive ruling (Phase 4).
+- **Non-text / UI contrast (WCAG 1.4.11) is a known axe gap** already guarded by
+  targeted Playwright tests (tag-chip and contributor-pill borders, hover states in
+  `e2e/smoke.spec.ts`). Add a similar targeted test when introducing a new bordered
+  control or hover colour rather than relying on axe for it.
+- **Translucent surfaces** (frosted/glassy backgrounds via `backdrop-filter`, or
+  semi-opaque panels layered over content) must be gated behind
+  `@media (prefers-reduced-transparency: no-preference)`. The site currently has none;
+  decorative glow shadows and the ~3.5%-opacity dot texture do not impair legibility,
+  so there is nothing to gate today. Apply the gate if such a surface is introduced.
+
+---
+
 ## Phase 3 — Deterministic Input: Axe Results
 
 Run the existing test suite to collect axe output:
@@ -158,3 +212,13 @@ End the report with a **Cumulative Friction Summary** noting any user journeys w
 - Do not report mechanical issues (missing alt, basic contrast) during Phases 1 and 2; leave those to Phase 3.
 - Do not give vague remediation ("make the button accessible"). Provide the specific attribute, element, or CSS change.
 - Do not mark an axe Incomplete flag as a finding without a manual ruling.
+
+---
+
+## Credits
+
+The guardrails in this skill were informed by openly published community accessibility guidance. Thank you to these authors and contributors for making it freely available:
+
+- [mgifford/ACCESSIBILITY.md](https://github.com/mgifford/ACCESSIBILITY.md), a community resource for accessibility best practices, testing criteria, and issue-severity frameworks. Thank you to Mike Gifford and all contributors.
+- [mikemai2awesome/agent-skills](https://github.com/mikemai2awesome/agent-skills), the frontend-a11y skill. Thank you to Mike Mai.
+- [Intopia web accessibility skill](https://github.com/Intopia/intopia-web-accessibility-skill), WCAG 2.2 acceptance criteria. Thank you to Intopia.

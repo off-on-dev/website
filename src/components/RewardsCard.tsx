@@ -28,12 +28,12 @@ export const RewardsCard = ({ rewards, compact = false, levelDeadline, deadlineP
             <a
               href={`${COMMUNITY_URL}/c/community-voices/38`}
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener noreferrer" aria-describedby="new-tab-hint"
               className="docs-ext-link"
             >
               Community Voices
               <ExternalLink size={10} aria-hidden="true" />
-              <span className="sr-only"> (opens in new tab)</span>
+              
             </a>
             .
           </p>
@@ -67,12 +67,12 @@ export const RewardsCard = ({ rewards, compact = false, levelDeadline, deadlineP
           <a
             href={rewards.rankingRulesUrl}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener noreferrer" aria-describedby="new-tab-hint"
             className="docs-ext-link"
           >
             See the points & ranking rules for the full breakdown
             <ExternalLink size={10} aria-hidden="true" />
-            <span className="sr-only"> (opens in new tab)</span>
+            
           </a>
         )}
       </p>

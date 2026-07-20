@@ -34,8 +34,7 @@ export function ConsentBanner(): JSX.Element {
         <button
           type="button"
           onClick={reset}
-          aria-label="Reset cookie preferences"
-          title="Reset cookie preferences"
+          aria-label="Cookie Preferences"
           style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 5rem)' }}
           className="fixed right-4 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-muted-foreground shadow-md transition-colors hover:bg-accent hover:text-accent-foreground focus-ring"
         >

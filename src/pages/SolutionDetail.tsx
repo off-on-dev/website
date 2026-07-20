@@ -238,10 +238,10 @@ const FurtherReadingList = ({ links }: { links: Array<{ title: string; url: stri
   <ul className="space-y-1" role="list">
     {links.map((link) => (
       <li key={link.url}>
-        <a href={link.url} target="_blank" rel="noopener noreferrer" className="docs-ext-link text-sm">
+        <a href={link.url} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className="docs-ext-link text-sm">
           {link.title}
           <ExternalLink size={11} aria-hidden="true" />
-          <span className="sr-only"> (opens in new tab)</span>
+          
         </a>
       </li>
     ))}
@@ -409,7 +409,7 @@ const SolutionSidebar = ({
   furtherReading,
 }: SolutionSidebarProps): JSX.Element => (
   <aside
-    aria-label="Solution navigation"
+    aria-label="Solution sidebar"
     className="mt-10 lg:mt-0 space-y-4 lg:sticky lg:top-28 lg:self-start"
   >
     {level.codespacesUrl && (
@@ -448,12 +448,12 @@ const SolutionSidebar = ({
       <a
         href={discussionUrl}
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noopener noreferrer" aria-describedby="new-tab-hint"
         className="docs-ext-link text-sm font-medium"
       >
         Join the discussion
         <ExternalLink size={12} aria-hidden="true" />
-        <span className="sr-only"> (opens in new tab)</span>
+        
       </a>
     </SidebarCard>
   </aside>
@@ -596,12 +596,12 @@ const SolutionArticle = ({ solution, discussionUrl }: SolutionArticleProps): JSX
               <a
                 href={discussionUrl}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer" aria-describedby="new-tab-hint"
                 className="docs-ext-link text-sm font-medium mt-4"
               >
                 Browse the discussion
                 <ExternalLink size={12} aria-hidden="true" />
-                <span className="sr-only"> (opens in new tab)</span>
+                
               </a>
             </div>
           </div>

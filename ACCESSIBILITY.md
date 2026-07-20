@@ -266,7 +266,7 @@ Use the correct keys for each control type:
 - Never use a `<div>` or `<span>` as an interactive element.
 - Never use `role="menu"` or `role="menuitem"` on site navigation. These roles put screen readers into application mode where arrow keys replace Tab, breaking web navigation expectations. Use native `<a>` elements inside `<nav>` instead.
 - One `<h1>` per page. No skipped heading levels.
-- Every `<section>` and `<article>` must have an accessible name via `aria-labelledby` pointing to its heading, or `aria-label` if there is no visible heading. An unnamed `<section>` is not exposed as a landmark to screen readers.
+- A `<section>` becomes a landmark (`role="region"`) only when it has an accessible name, and it then appears in the screen reader's landmarks menu. Name it only when it is a genuinely distinct region worth a navigation shortcut, and name it with `aria-labelledby` pointing to a real visible heading. Never invent a synthetic `aria-label` string that no one sees — a generically named region is noise in the landmarks menu. If a block has no heading and is not a distinct region, use a plain `<div>`, not a `<section>`. Name an `<article>` by its heading via `aria-labelledby` the same way.
 - Never apply overline/label typography (`text-sm uppercase tracking-widest`) to a heading tag. If the text is a genuine section heading, give it heading-appropriate typography. If it is purely decorative, use `<span>` or `<p>`.
 - Never use a non-heading tag for text visually styled as a heading. Promote it to the correct heading level.
 - Every page's primary content must live inside a single `<main id="main-content">`. Do not split content across multiple `<main>` elements.
@@ -283,7 +283,8 @@ Use the correct keys for each control type:
 
 ### External links
 
-- Every `<a target="_blank">` must include `<span className="sr-only"> (opens in new tab)</span>` as its last child.
+- Every `<a target="_blank">` must reference the shared new-tab hint with `aria-describedby="new-tab-hint"`. A single hidden `<span id="new-tab-hint" hidden>opens in a new tab</span>` is rendered once in `Layout.tsx`. Do not fold "opens in a new tab" into the link text or `aria-label`, and do not add a per-link `sr-only` span — the hint is an accessible description, not part of the name (padding the name breaks voice control, WCAG 2.5.3 Label in Name).
+- Never render a non-navigable URL as a link. Loopback / localhost / single-label hosts (e.g. `http://localhost:8080/`) must be plain text — on the deployed site a link there points at the visitor's own machine. The adventure generator (`annotateExternalLinks`) unwraps these automatically; in JSX, write them as text, not `<a>`.
 
 ### Links
 
@@ -322,8 +323,10 @@ Use the correct keys for each control type:
 - Never use ARIA to paper over bad markup. Fix the markup first.
 - Use `role="status"` (implicit `aria-live="polite"`) for non-urgent updates like form success messages.
 - Use `role="alert"` (implicit `aria-live="assertive"`) only for errors requiring immediate attention. Never use `aria-live="assertive"` for informational updates.
-- Use `aria-expanded` on toggles that open/close UI.
+- Use `aria-expanded` on toggles that open/close UI. Keep the toggle's accessible name **constant** across states: name it for what it controls (e.g. `aria-label="Menu"`) and let `aria-expanded` carry open/closed. Never swap the name between "Open menu" / "Close menu" — that announces the state twice and can contradict `aria-expanded`.
 - Always add `aria-label` or `aria-labelledby` to icon-only buttons.
+- Never use the `title` attribute to convey information. It is not exposed on touch, is unreliable for keyboard users, and is announced inconsistently across screen readers. The only acceptable use is `title` on `<iframe>`. Use visible text, `aria-label`, or `aria-describedby` instead.
+- Disabled controls: use native `disabled` on form fields (`<input>`, `<select>`, `<textarea>`) — it correctly governs whether the value submits. For **buttons**, prefer `aria-disabled="true"` over native `disabled` when the control must stay discoverable in the focus order (a submit button, or an inactive-but-important control), so keyboard and screen reader users can still find it and learn why it is unavailable. Do not blanket-replace `disabled` with `aria-disabled`. When you use `aria-disabled`, suppress the action in JavaScript and style the state explicitly (it gets no user-agent dimming). See the `/keyboard` command for detail.
 - Preference toggles (theme, consent): announce state changes to screen readers with a `role="status"` live region. Clear the region then set new text after a 50ms delay so screen readers detect the change as a mutation: `region.textContent = ''` → `setTimeout(() => { region.textContent = 'Theme switched to dark mode'; }, 50)`.
 
 ### Tooltips

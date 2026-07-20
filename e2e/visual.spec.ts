@@ -34,8 +34,8 @@ const VISUAL_ROUTES: VisualRoute[] = [
 // consent is non-null. We keep the button out of screenshots because it is a
 // fixed overlay whose position is unrelated to page content.
 // The selector mirrors the button's aria-label, which is also asserted in
-// smoke.spec.ts; any rename will surface in both places simultaneously.
-const CONSENT_BUTTON_CSS = `[aria-label="Change cookie preferences"] { display: none !important; }`;
+// smoke.spec.ts, so a rename surfaces in both places at once.
+const CONSENT_BUTTON_CSS = `[aria-label="Cookie Preferences"] { display: none !important; }`;
 
 // Registers a script to run before React mounts on each navigation.
 // Pre-denying consent means useConsent restores "denied" from localStorage,

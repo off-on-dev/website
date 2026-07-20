@@ -48,7 +48,7 @@ const Sponsors = (): JSX.Element => {
                     key={sponsor.name}
                     href={sponsor.url}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="noopener noreferrer" aria-describedby="new-tab-hint"
                     className="card-glow inline-flex items-center rounded-xl border border-border bg-[hsl(var(--surface))] px-8 py-6 focus-ring"
                   >
                     {logoSrc ? (
@@ -56,7 +56,7 @@ const Sponsors = (): JSX.Element => {
                     ) : (
                       <span className="text-xl font-semibold text-foreground group-hover:text-foreground/80 transition-colors">{sponsor.name}</span>
                     )}
-                    <span className="sr-only"> (opens in new tab)</span>
+                    
                   </a>
                 );
               })}

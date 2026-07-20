@@ -11,11 +11,11 @@ export const CodespacesButton = ({ href, fullWidth = false }: CodespacesButtonPr
     <a
       href={href}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noopener noreferrer" aria-describedby="new-tab-hint"
       className={fullWidth ? "btn-primary w-full justify-center" : "btn-primary w-fit"}
     >
       Open in Codespaces <ExternalLink size={14} aria-hidden="true" />
-      <span className="sr-only"> (opens in new tab)</span>
+      
     </a>
     <p className={`mt-2.5 text-xs text-faint font-mono${fullWidth ? " text-center" : ""}`}>
       Free GitHub account required

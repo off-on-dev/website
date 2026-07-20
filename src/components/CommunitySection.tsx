@@ -65,10 +65,10 @@ export const CommunitySection = ({ aside }: { aside?: ReactNode }): JSX.Element 
             <a
               href={card.href}
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener noreferrer" aria-describedby="new-tab-hint"
               className="docs-ext-link mt-5 text-sm font-medium"
             >
-              {card.cta} <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+              {card.cta} <ExternalLink size={12} aria-hidden="true" />
             </a>
           </div>
         ))}

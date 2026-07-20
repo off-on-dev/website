@@ -42,8 +42,8 @@ export const Footer = (): JSX.Element => {
             <nav aria-label="Community">
               <p className="font-sans font-normal text-xs uppercase tracking-widest text-faint mb-3">community</p>
               <div className="flex flex-col">
-                <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className={linkCls}>Community Hub <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
-                <a href={CODE_OF_CONDUCT_URL} target="_blank" rel="noopener noreferrer" className={linkCls}>Code of Conduct <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span></a>
+                <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={linkCls}>Community Hub <ExternalLink size={12} aria-hidden="true" /></a>
+                <a href={CODE_OF_CONDUCT_URL} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={linkCls}>Code of Conduct <ExternalLink size={12} aria-hidden="true" /></a>
                 <NavLink to="/privacy/" className={linkCls}>Privacy Policy</NavLink>
                 <NavLink to="/accessibility/" className={linkCls}>Accessibility</NavLink>
                 <a href={`mailto:${CONTACT_EMAIL}`} className={linkCls}>Contact</a>
@@ -68,8 +68,8 @@ export const Footer = (): JSX.Element => {
             <a
               href={LINKEDIN_URL}
               target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn (opens in new tab)"
+              rel="noopener noreferrer" aria-describedby="new-tab-hint"
+              aria-label="LinkedIn"
               className="flex items-center justify-center p-3 text-faint hover:text-foreground dark:hover:text-primary transition-colors focus-ring-tight rounded-sm"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="w-3.5 h-3.5" fill="currentColor">
@@ -79,8 +79,8 @@ export const Footer = (): JSX.Element => {
             <a
               href={BLUESKY_URL}
               target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Bluesky (opens in new tab)"
+              rel="noopener noreferrer" aria-describedby="new-tab-hint"
+              aria-label="Bluesky"
               className="flex items-center justify-center p-3 text-faint hover:text-foreground dark:hover:text-primary transition-colors focus-ring-tight rounded-sm"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="w-3.5 h-3.5" fill="currentColor">
@@ -90,8 +90,8 @@ export const Footer = (): JSX.Element => {
             <a
               href={X_URL}
               target="_blank"
-              rel="noopener noreferrer"
-              aria-label="X / Twitter (opens in new tab)"
+              rel="noopener noreferrer" aria-describedby="new-tab-hint"
+              aria-label="X / Twitter"
               className="flex items-center justify-center p-3 text-faint hover:text-foreground dark:hover:text-primary transition-colors focus-ring-tight rounded-sm"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="w-3.5 h-3.5" fill="currentColor">

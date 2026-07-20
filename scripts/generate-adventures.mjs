@@ -176,16 +176,46 @@ const mdProcessor = unified()
   .use(expandAbbr)
   .use(rehypeStringify);
 
-/** Add target/rel/sr-only to http/https <a> tags. The external link icon is
- *  rendered via CSS ::after on [target="_blank"] — no inline SVG needed. */
+/** A URL is not publicly navigable when its host is loopback, mDNS, or a
+ *  single-label name (no public TLD). remark-gfm autolinks bare URLs written in
+ *  prose (e.g. "runs on http://localhost:8080/"), so without this guard a
+ *  local dev address would become a clickable new-tab link on the deployed
+ *  site, pointing at the visitor's own machine. */
+function isNonPublicUrl(href) {
+  try {
+    const host = new URL(href).hostname.replace(/^\[|\]$/g, ""); // strip IPv6 brackets
+    if (host === "localhost" || host === "0.0.0.0" || host === "::1") return true;
+    if (/^127\./.test(host)) return true; // IPv4 loopback range
+    if (/^10\./.test(host)) return true; // private class A
+    if (/^192\.168\./.test(host)) return true; // private class C
+    if (/^172\.(1[6-9]|2\d|3[01])\./.test(host)) return true; // private class B (172.16-31)
+    if (host.endsWith(".local")) return true; // mDNS
+    if (!host.includes(".")) return true; // single-label host, no public TLD
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+/** Add target/rel and the shared "opens in a new tab" hint to http/https <a>
+ *  tags. The hint is exposed as an accessible description via
+ *  aria-describedby="new-tab-hint" (a single hidden node rendered once in
+ *  Layout.tsx), not folded into each link's accessible name. The external link
+ *  icon is rendered via CSS ::after on [target="_blank"] — no inline SVG.
+ *  Non-public URLs (localhost, loopback) are unwrapped to plain text: they are
+ *  not navigable on the deployed site and must not open a new tab. */
 function annotateExternalLinks(html) {
   return html.replace(
     /<a href="(https?:\/\/[^"]+)"([^>]*)>([\s\S]*?)<\/a>/gi,
     (_, href, restAttrs, content) => {
+      if (isNonPublicUrl(href)) return content;
       const attrs = restAttrs.includes("target=")
         ? restAttrs
         : ` target="_blank" rel="noopener noreferrer"${restAttrs}`;
-      return `<a href="${href}"${attrs}>${content}<span class="sr-only"> (opens in new tab)</span></a>`;
+      const described = restAttrs.includes("aria-describedby=")
+        ? attrs
+        : `${attrs} aria-describedby="new-tab-hint"`;
+      return `<a href="${href}"${described}>${content}</a>`;
     }
   );
 }

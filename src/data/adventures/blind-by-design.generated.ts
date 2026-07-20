@@ -59,17 +59,17 @@ export const BLIND_BY_DESIGN: Adventure = {
         "Your mission: replace that hard-coded label with an OpenFeature client, point that client at the flagd sidecar that already runs next to your Codespace, and let flags.json drive what gets recorded as the subject's vision_state. Prove the lab can change what it records without restarting anything.",
       ],
       objective: [
-        "curl <a href=\"http://localhost:8080/\" target=\"_blank\" rel=\"noopener noreferrer\">http://localhost:8080/<span class=\"sr-only\"> (opens in new tab)</span></a> returns a vision_state reading resolved from flags.json (not the hard-coded 'untreated' fallback)",
+        "curl http://localhost:8080/ returns a vision_state reading resolved from flags.json (not the hard-coded 'untreated' fallback)",
         "The response payload includes OpenFeature evaluation details: flag key, variant, reason, and value",
         "Editing flags.json to change defaultVariant causes the next request to return the new variant without restarting the app or flagd",
       ],
       architecture: [
         "<p>This level runs as two containers side-by-side in your Codespace: the Spring Boot lab and a flagd sidecar.</p>",
-        "<p>The Spring Boot service runs on <a href=\"http://localhost:8080/\" target=\"_blank\" rel=\"noopener noreferrer\">http://localhost:8080/<span class=\"sr-only\"> (opens in new tab)</span></a> with one endpoint, GET /. flags.json is mounted read-only into the flagd sidecar; edit it through the <abbr data-title=\"Integrated Development Environment\" tabindex=\"0\" aria-describedby=\"abbr-exp-7\">IDE</abbr><span id=\"abbr-exp-7\" class=\"sr-only\">Integrated Development Environment</span> and flagd's file watcher picks up the change within about a second. The flagd sidecar serves flag evaluations over gRPC on :8013. The OpenFeature SDK reads FLAGD_HOST and FLAGD_PORT from the environment (pre-set by the devcontainer), so there is no host or port to hard-code.</p>",
+        "<p>The Spring Boot service runs on http://localhost:8080/ with one endpoint, GET /. flags.json is mounted read-only into the flagd sidecar; edit it through the <abbr data-title=\"Integrated Development Environment\" tabindex=\"0\" aria-describedby=\"abbr-exp-7\">IDE</abbr><span id=\"abbr-exp-7\" class=\"sr-only\">Integrated Development Environment</span> and flagd's file watcher picks up the change within about a second. The flagd sidecar serves flag evaluations over gRPC on :8013. The OpenFeature SDK reads FLAGD_HOST and FLAGD_PORT from the environment (pre-set by the devcontainer), so there is no host or port to hard-code.</p>",
       ],
       toolbox: [
         { name: "./mvnw", description: "Maven wrapper checked in next to pom.xml, builds and runs the Spring Boot lab" },
-        { name: "curl", description: "makes requests to <a href=\"http://localhost:8080/\" target=\"_blank\" rel=\"noopener noreferrer\">http://localhost:8080/<span class=\"sr-only\"> (opens in new tab)</span></a> and shows the reading the lab records", url: "https://curl.se/" },
+        { name: "curl", description: "makes requests to http://localhost:8080/ and shows the reading the lab records", url: "https://curl.se/" },
         { name: "jq", description: "pretty-prints and filters the JSON evaluation details returned by the SDK", url: "https://jqlang.org/" },
         { name: "flagd sidecar", description: "already running in the devcontainer compose stack on the docker-internal network, no port forwarding needed" },
       ],
@@ -133,7 +133,7 @@ export const BLIND_BY_DESIGN: Adventure = {
       toolbox: [
         { name: "Java 21 (Temurin)", description: "pre-installed in the devcontainer" },
         { name: "./mvnw", description: "Spring Boot Maven Wrapper, no global Maven install required" },
-        { name: "curl", description: "sends requests to <a href=\"http://localhost:8080/\" target=\"_blank\" rel=\"noopener noreferrer\">http://localhost:8080/<span class=\"sr-only\"> (opens in new tab)</span></a> to test each targeting branch", url: "https://curl.se/" },
+        { name: "curl", description: "sends requests to http://localhost:8080/ to test each targeting branch", url: "https://curl.se/" },
         { name: "jq", description: "pretty-prints the JSON evaluation details", url: "https://jqlang.org/" },
         { name: "tail -f", description: "watches the application log live for [AUDIT] lines" },
       ],
@@ -141,7 +141,7 @@ export const BLIND_BY_DESIGN: Adventure = {
         { title: "Wait for Setup", content: "<p>Wait ~2-3 minutes for the Java toolchain to install. Use <code>Cmd/Ctrl + Shift + P</code> then <code>View Creation Log</code> to watch progress. When the post-create finishes you'll have Java 21, the Maven wrapper, and the broken-state lab ready in <code>adventures/04-blind-by-design/intermediate/</code>.</p>" },
         { title: "Explore the UIs", content: `<p>Open the <strong>Ports</strong> tab and navigate to each service:</p>
 <ul>
-<li><strong>Port 8080:</strong> Spring Boot lab. The application under test. Access via the Ports tab or curl <a href="http://localhost:8080/" target="_blank" rel="noopener noreferrer">http://localhost:8080/<span class="sr-only"> (opens in new tab)</span></a>.</li>
+<li><strong>Port 8080:</strong> Spring Boot lab. The application under test. Access via the Ports tab or curl http://localhost:8080/.</li>
 </ul>` },
         { title: "Confirm the Broken State", content: `<p>Start the lab and confirm the broken state, where no targeting fires yet:</p>
 <pre tabindex="0" aria-label="Code block"><code class="language-sh">./mvnw spring-boot:run
@@ -233,8 +233,8 @@ curl -s 'http://localhost:8080/?species=zyklop&#x26;dose=underdose' | jq .value
       toolbox: [
         { name: "Java 21 (Temurin)", description: "pre-installed in the devcontainer", url: "https://adoptium.net/" },
         { name: "./mvnw", description: "Spring Boot Maven Wrapper, no global Maven install required" },
-        { name: "curl", description: "sends requests to <a href=\"http://localhost:8080/\" target=\"_blank\" rel=\"noopener noreferrer\">http://localhost:8080/<span class=\"sr-only\"> (opens in new tab)</span></a> to test the lab, and to Prometheus on <a href=\"http://localhost:9090/\" target=\"_blank\" rel=\"noopener noreferrer\">http://localhost:9090/<span class=\"sr-only\"> (opens in new tab)</span></a> to query metrics directly", url: "https://curl.se/" },
-        { name: "Grafana", description: "browser UI at <a href=\"http://localhost:3000\" target=\"_blank\" rel=\"noopener noreferrer\">http://localhost:3000<span class=\"sr-only\"> (opens in new tab)</span></a> (admin/admin) for the Feature Flag Metrics dashboard and Tempo trace explorer" },
+        { name: "curl", description: "sends requests to http://localhost:8080/ to test the lab, and to Prometheus on http://localhost:9090/ to query metrics directly", url: "https://curl.se/" },
+        { name: "Grafana", description: "browser UI at http://localhost:3000 (admin/admin) for the Feature Flag Metrics dashboard and Tempo trace explorer" },
         { name: "jq", description: "pretty-prints the JSON evaluation details", url: "https://jqlang.org/" },
       ],
       howToPlay: [
@@ -243,7 +243,7 @@ curl -s 'http://localhost:8080/?species=zyklop&#x26;dose=underdose' | jq .value
 <ul>
 <li><strong>Port 8080:</strong> Spring Boot lab. Add ?userId=subject-42 for a stable fractional-rollout bucketing key.</li>
 <li><strong>Port 3000:</strong> Grafana (admin / admin). Open Dashboards > Feature Flag Metrics (empty until metrics are wired). Try Explore > Tempo to see flag evaluations as span events.</li>
-<li><strong>Port 9090:</strong> Prometheus. Query metrics directly via the Prometheus UI or curl <a href="http://localhost:9090/api/v1/query" target="_blank" rel="noopener noreferrer">http://localhost:9090/api/v1/query<span class="sr-only"> (opens in new tab)</span></a>.</li>
+<li><strong>Port 9090:</strong> Prometheus. Query metrics directly via the Prometheus UI or curl http://localhost:9090/api/v1/query.</li>
 <li><strong>Port 3200:</strong> Tempo. Tempo HTTP API used by the verify script to assert traces are flowing.</li>
 </ul>
 <p>flagd runs on the docker-internal network only. No port forwarding needed.</p>` },

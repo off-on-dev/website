@@ -219,7 +219,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
                 {
                   title: "Get Started",
                   content: [
-                    `<p><a href="${level.codespacesUrl.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" target="_blank" rel="noopener noreferrer">Open in GitHub Codespaces</a>. The <abbr data-title="development container: a portable, reproducible coding environment defined by a configuration file" aria-describedby="abbr-devcontainer" tabindex="0">devcontainer</abbr><span id="abbr-devcontainer" class="sr-only">development container: a portable, reproducible coding environment defined by a configuration file</span> is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.</p>`,
+                    `<p><a href="${level.codespacesUrl.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint">Open in GitHub Codespaces</a>. The <abbr data-title="development container: a portable, reproducible coding environment defined by a configuration file" aria-describedby="abbr-devcontainer" tabindex="0">devcontainer</abbr><span id="abbr-devcontainer" class="sr-only">development container: a portable, reproducible coding environment defined by a configuration file</span> is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.</p>`,
                     `<p>Prefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (<abbr data-title="Visual Studio Code" aria-describedby="abbr-vscode" tabindex="0">VS Code</abbr><span id="abbr-vscode" class="sr-only">Visual Studio Code</span>, JetBrains, and others). The devcontainer config will be detected automatically.</p>`,
                   ].join("\n"),
                 },
@@ -262,10 +262,10 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
                   <a
                     href={resolveDiscussionUrl(level.discussionUrl, COMMUNITY_URL)}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="noopener noreferrer" aria-describedby="new-tab-hint"
                     className="docs-ext-link font-medium"
                   >
-                    challenge thread <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                    challenge thread <ExternalLink size={12} aria-hidden="true" />
                   </a>{" "}
                   on {COMMUNITY_DISPLAY_NAME}.
                 </span>
@@ -276,12 +276,12 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
               <a
                 href={linkedinShareUrl}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer" aria-describedby="new-tab-hint"
                 className="docs-ext-link text-xs"
               >
                 Share your achievement on LinkedIn
                 <ExternalLink size={11} aria-hidden="true" />
-                <span className="sr-only"> (opens in new tab)</span>
+                
               </a>
             </p>
           </section>
@@ -323,12 +323,12 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
                             <a
                               href={tool.url}
                               target="_blank"
-                              rel="noopener noreferrer"
+                              rel="noopener noreferrer" aria-describedby="new-tab-hint"
                               className="docs-ext-link font-medium"
                             >
                               {tool.name}
                               <ExternalLink size={12} aria-hidden="true" />
-                              <span className="sr-only"> (opens in new tab)</span>
+                              
                             </a>
                           ) : (
                             <span className="font-medium text-foreground">{tool.name}</span>
@@ -354,12 +354,12 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
                           <a
                             href={link.url}
                             target="_blank"
-                            rel="noopener noreferrer"
+                            rel="noopener noreferrer" aria-describedby="new-tab-hint"
                             className="docs-ext-link font-medium"
                           >
                             {link.title}
                             <ExternalLink size={11} aria-hidden="true" />
-                            <span className="sr-only"> (opens in new tab)</span>
+                            
                           </a>
                         </span>
                       </li>
