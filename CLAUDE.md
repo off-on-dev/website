@@ -252,7 +252,7 @@ When diagnosing a bug, especially in the production build, follow these rules wi
 
 - `hero-badge` class on the hero pill `<div>` in `Hero.tsx`. It is used for CSS scoping of light mode overrides.
 - `logo-link` class on the Navbar logo `<Link>`. It is used to exclude the logo from nav link hover styles.
-- Footer nav group labels ("explore", "community") use `<p>` with `font-sans font-normal text-xs uppercase tracking-widest text-faint`. Do not use heading elements (`<h2>` etc.) here — the nav groups are already identified by `aria-label`, and heading elements create spurious document-outline entries that disrupt screen reader H-key navigation. Source text must be lowercase because these are overline labels styled with `text-transform: uppercase`.
+- Footer nav group labels ("explore", "community") use `<p>` with `font-sans font-normal text-xs uppercase tracking-widest text-faint`. Do not use heading elements (`<h2>` etc.) here. The nav groups are already identified by `aria-label`, and heading elements create spurious document-outline entries that disrupt screen reader H-key navigation. Source text must be lowercase because these are overline labels styled with `text-transform: uppercase`.
 - `data-difficulty` attribute on `DifficultyBadge`. It is used for CSS targeting of badge text color.
 - `contributor-pill` class on `ContributorBadge`. Scopes light mode overrides: transparent background with slate border instead of the near-invisible `bg-primary/5`.
 - `contributor-pill-glow` class on `ContributorBadge` (applied via `glow` prop). Static amber box-shadow glow, sized for a small pill. Used only on `ChallengeDetail` -- not in `AdventureCard`.
@@ -606,7 +606,7 @@ All UI labels use **title case (Chicago style)**. Body copy uses **sentence case
 
 ### Sitemap
 
-- Every time a new static page is added to `src/pages/` and registered as a route in `src/routes.ts`, its URL must also be added to `public/sitemap.xml` with a `<lastmod>` date. **Exception:** legal/policy pages (`/privacy/`) are intentionally excluded from the sitemap — do not add them back.
+- Every time a new static page is added to `src/pages/` and registered as a route in `src/routes.ts`, its URL must also be added to `public/sitemap.xml` with a `<lastmod>` date. **Exception:** legal/policy pages (`/privacy/`) are intentionally excluded from the sitemap. Do not add them back.
 - Dynamic routes with statically known IDs must also be added to `public/sitemap.xml` with a `<lastmod>` date. Adventure and challenge-tag URLs are generated automatically by `scripts/generate-adventures.mjs` and include `<lastmod>` set to the build date; do not add them by hand.
 - `robots.txt` at `public/robots.txt` must include: `Sitemap: https://offon.dev/sitemap.xml`
 - **Generator region markers:** `scripts/generate-adventures.mjs` uses XML comment markers to patch adventure and tag entries into `public/sitemap.xml` (see `replaceRegion` calls near line 1204 and 1251). The markers are `<!-- GENERATED:adventures -->` / `<!-- /GENERATED:adventures -->` for the adventures block and `<!-- GENERATED:challenge-tags -->` / `<!-- /GENERATED:challenge-tags -->` for the tags block. Do not remove, rename, or reorder these comments. If they are missing, `npm run build` aborts with "Region markers not found".

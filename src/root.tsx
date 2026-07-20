@@ -6,7 +6,7 @@ import "./index.css";
 export const links: LinksFunction = () => [
   // Preload fonts used above the fold on every page.
   // Inter 400–600: body text (400), semibold labels (500/600). Inter 700 is not preloaded
-  // globally — it is used only for h3–h6, which never appear above the fold on any page.
+  // globally. It is used only for h3–h6, which never appear above the fold on any page.
   // Syne 700: h1–h2 via the @layer base rule in index.css.
   // Latin-only subsets are always needed for English content and never generate "preloaded but not used" warnings.
   // font-display: optional requires preloads to succeed. Without them, the optional window expires

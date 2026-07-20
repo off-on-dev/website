@@ -77,7 +77,7 @@ describe("stripHtml", () => {
 
   it("does not double-decode mixed entities", () => {
     // rehype-stringify encodes a literal & as &amp;; if the source text had &lt;
-    // that would arrive as &amp;lt; — single-pass should yield &lt;, not <.
+    // that would arrive as &amp;lt;, so single-pass should yield &lt;, not <.
     expect(stripHtml("&amp;lt;")).toBe("&lt;");
   });
 
