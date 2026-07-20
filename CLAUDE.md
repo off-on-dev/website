@@ -692,10 +692,10 @@ The `off-on-dev` organisation restricts which third-party actions can run. Only 
 
 | Action | Pinned version |
 | --- | --- |
-| `actions/checkout` | `@v7` only |
+| `actions/checkout` | any tag |
 | `actions/cache` | any (GitHub-created, covered by org checkbox) |
-| `actions/setup-node` | `@v6` only |
-| `actions/create-github-app-token` | `@v3` only |
+| `actions/setup-node` | any tag |
+| `actions/create-github-app-token` | any tag |
 | `JamesIves/github-pages-deploy-action` | any tag |
 | `marocchino/sticky-pull-request-comment` | any tag |
 | `rossjrw/pr-preview-action` | any tag |
