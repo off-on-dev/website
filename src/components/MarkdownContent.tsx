@@ -1,4 +1,5 @@
 import { useEffect, useRef, type JSX } from "react";
+import { useAbbrTooltips } from "@/hooks/useAbbrTooltips";
 
 // SVG markup for copy button icons. Defined as module-level constants so the
 // strings are created once rather than on every effect run.
@@ -13,135 +14,14 @@ export const MarkdownContent = ({ source }: MarkdownContentProps): JSX.Element =
   const ref = useRef<HTMLDivElement>(null);
   const liveRef = useRef<HTMLSpanElement>(null);
 
+  // Abbreviation tooltips share one implementation with the <Abbr> component.
+  useAbbrTooltips(ref, [source]);
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const liveEl = liveRef.current;
     const cleanup: (() => void)[] = [];
-
-    // Convert title→data-title on any abbr elements that still carry title
-    // (e.g. hardcoded HTML strings that weren't processed by the generate
-    // pipeline). data-title drives the visual tooltip; the expansion is carried
-    // for screen readers by an adjacent sr-only span (not aria-label, which
-    // would replace the visible token). Removing title prevents the browser's
-    // native tooltip from appearing alongside the custom one.
-    el.querySelectorAll("abbr[title]").forEach((abbr) => {
-      const text = abbr.getAttribute("title") ?? "";
-      abbr.setAttribute("data-title", text);
-      abbr.removeAttribute("title");
-      const next = abbr.nextElementSibling;
-      if (!(next && next.classList.contains("sr-only"))) {
-        const span = document.createElement("span");
-        span.className = "sr-only";
-        span.textContent = text;
-        abbr.after(span);
-      }
-    });
-
-    // Replace the CSS ::after tooltip on each abbr[data-title] with a fixed-
-    // position portal tooltip appended to document.body. Using position:fixed
-    // escapes the overflow-x:clip on .md-content so the tooltip is never
-    // visually clipped. Position and maxWidth are computed from
-    // getBoundingClientRect() at show time, when fonts are loaded and layout
-    // is stable. Works on mobile touch (focus event fires on tap).
-    el.querySelectorAll<HTMLElement>("abbr[data-title]").forEach((abbrEl) => {
-      const title = abbrEl.getAttribute("data-title") ?? "";
-
-      // Portal element: fixed position, outside .md-content's overflow clip.
-      const tip = document.createElement("span");
-      tip.setAttribute("aria-hidden", "true");
-      tip.style.cssText =
-        "position:fixed;z-index:9999;display:none;" +
-        "padding:0.25rem 0.5rem;font-size:0.75rem;line-height:1rem;" +
-        "background:hsl(var(--foreground));color:hsl(var(--background));" +
-        "border-radius:0.25rem;word-break:break-word;white-space:normal;" +
-        "box-shadow:0 2px 8px rgba(0,0,0,0.3);";
-      tip.textContent = title;
-      document.body.appendChild(tip);
-
-      // Suppress the CSS ::after tooltip now that the portal is live.
-      abbrEl.classList.add("abbr-js-tooltip");
-
-      let hideTimer: ReturnType<typeof setTimeout> | null = null;
-      const clearHide = (): void => {
-        if (hideTimer !== null) { clearTimeout(hideTimer); hideTimer = null; }
-      };
-
-      const positionAndShow = (): void => {
-        clearHide();
-        const rect = abbrEl.getBoundingClientRect();
-        const tipMaxWidth = Math.min(160, Math.max(80, window.innerWidth - rect.left - 16));
-        // Clamp left so the tooltip never overflows the viewport right edge.
-        const left = Math.max(8, Math.min(rect.left, window.innerWidth - tipMaxWidth - 8));
-        tip.style.maxWidth = `${tipMaxWidth}px`;
-        tip.style.top = `${rect.bottom + 6}px`;
-        tip.style.left = `${left}px`;
-        tip.style.display = "block";
-      };
-
-      const scheduleHide = (): void => {
-        hideTimer = setTimeout(() => { tip.style.display = "none"; hideTimer = null; }, 100);
-      };
-
-      const immediateHide = (): void => { clearHide(); tip.style.display = "none"; };
-
-      // Reposition while visible (page can scroll while tooltip is open).
-      // Applies the same clamping as positionAndShow so the tooltip never
-      // overflows the viewport right edge after a scroll or resize.
-      const reposition = (): void => {
-        if (tip.style.display === "block") {
-          const rect = abbrEl.getBoundingClientRect();
-          const tipMaxWidth = Math.min(160, Math.max(80, window.innerWidth - rect.left - 16));
-          const left = Math.max(8, Math.min(rect.left, window.innerWidth - tipMaxWidth - 8));
-          tip.style.maxWidth = `${tipMaxWidth}px`;
-          tip.style.top = `${rect.bottom + 6}px`;
-          tip.style.left = `${left}px`;
-        }
-      };
-
-      abbrEl.addEventListener("mouseenter", positionAndShow);
-      abbrEl.addEventListener("mouseleave", scheduleHide);
-      // Hoverable: moving the mouse from abbr onto the tooltip keeps it visible.
-      // Guard: if the abbr is keyboard-focused, mouse leaving the tooltip must
-      // not hide it — the focus path owns visibility until blur fires.
-      const onTipMouseLeave = (): void => {
-        if (document.activeElement !== abbrEl) scheduleHide();
-      };
-      tip.addEventListener("mouseenter", clearHide);
-      tip.addEventListener("mouseleave", onTipMouseLeave);
-      // Touch: iOS Safari does not reliably focus a tabindex-only element on
-      // tap, and attaching a click handler is what makes it dispatch the tap as
-      // a click at all. Forcing focus routes touch through the same focus path;
-      // blur (tapping elsewhere) hides it.
-      const onClick = (): void => { abbrEl.focus(); };
-      abbrEl.addEventListener("click", onClick);
-      abbrEl.addEventListener("focus", positionAndShow);
-      abbrEl.addEventListener("blur", immediateHide);
-      // Escape hides the tooltip without blurring, so keyboard focus stays on
-      // the abbreviation (WCAG 1.4.13: dismiss without moving focus).
-      const onKeyDown = (e: Event): void => {
-        if ((e as KeyboardEvent).key === "Escape") { e.preventDefault(); immediateHide(); }
-      };
-      abbrEl.addEventListener("keydown", onKeyDown);
-      window.addEventListener("scroll", reposition, { capture: true });
-      window.addEventListener("resize", reposition);
-
-      cleanup.push(() => {
-        abbrEl.removeEventListener("mouseenter", positionAndShow);
-        abbrEl.removeEventListener("mouseleave", scheduleHide);
-        tip.removeEventListener("mouseenter", clearHide);
-        tip.removeEventListener("mouseleave", onTipMouseLeave);
-        abbrEl.removeEventListener("click", onClick);
-        abbrEl.removeEventListener("focus", positionAndShow);
-        abbrEl.removeEventListener("blur", immediateHide);
-        abbrEl.removeEventListener("keydown", onKeyDown);
-        window.removeEventListener("scroll", reposition, { capture: true });
-        window.removeEventListener("resize", reposition);
-        clearHide();
-        abbrEl.classList.remove("abbr-js-tooltip");
-        tip.remove();
-      });
-    });
 
     el.querySelectorAll("pre").forEach((pre) => {
       const code = pre.querySelector("code");
