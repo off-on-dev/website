@@ -107,6 +107,35 @@ one item is in the tab stop at a time and arrow keys move within the group.
 
 See [WAI-ARIA APG: Roving tabindex](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_roving_tabindex).
 
+## Serious: Disabled Controls Stay Discoverable Where It Matters
+
+Native `disabled` is the correct default for form controls: it removes the element
+from the tab order and the accessibility tree, which is usually what you want.
+
+But a control the user must still be able to *find* and understand as unavailable
+should use `aria-disabled="true"` instead, because it keeps the element focusable
+and announced. Reach for `aria-disabled` when:
+
+- The control is a **submit button** — keep it active (or `aria-disabled`), never
+  natively `disabled`, so a keyboard/screen-reader user can trigger validation and
+  hear what is missing rather than tabbing past a dead, silent button.
+- The control is **important to keep in the focus order** while temporarily
+  inactive (e.g. a carousel arrow at the end of its range).
+
+Do not blanket-replace `disabled` with `aria-disabled`. When you do use it,
+suppress the action in JavaScript and style the state explicitly (`aria-disabled`
+gets no user-agent dimming), e.g. `[aria-disabled="true"] { cursor: not-allowed; }`.
+
+```html
+<!-- Form field: native disabled is right -->
+<input type="text" disabled />
+
+<!-- Submit / must-stay-discoverable control: aria-disabled -->
+<button type="button" aria-disabled="true" aria-label="Scroll to next">…</button>
+```
+
+See [WAI-ARIA APG: Button Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/).
+
 ## Moderate: Touch Targets (WCAG 2.5.8)
 
 ```css
@@ -128,6 +157,7 @@ Never use `user-scalable=no` in the viewport meta tag.
 - [ ] Dialog: background content `inert` on open; focus returns to trigger on close
 - [ ] Skip link present, first in DOM, visible on focus, target has `tabindex="-1"`
 - [ ] Composite widgets use roving tabindex
+- [ ] Submit buttons are not natively `disabled`; `aria-disabled` used only where the control must stay discoverable
 - [ ] Touch targets meet 24×24px minimum
 
 ## Key WCAG Criteria
