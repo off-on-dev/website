@@ -33,9 +33,11 @@ export default tseslint.config(
         "varsIgnorePattern": "^_"
       }],
       // Safari VoiceOver strips list semantics when list-style is removed (Tailwind list-none).
-      // Explicit role="list" on <ul>/<ol> restores them. This is intentional throughout the codebase
-      // (30+ instances), so a global off is more practical than per-site suppression comments.
-      "jsx-a11y/no-redundant-roles": "off",
+      // Explicit role="list" on <ul>/<ol> restores them and is intentional throughout the codebase
+      // (30+ instances). Allow that one redundant role, but keep the rule on so other redundant
+      // roles (e.g. role="button" on <button>) are caught. Note: the rule does not flag redundant
+      // landmark roles like role="navigation" on <nav>; those stay covered by ACCESSIBILITY.md.
+      "jsx-a11y/no-redundant-roles": ["error", { ul: ["list"], ol: ["list"] }],
     },
   },
 );
