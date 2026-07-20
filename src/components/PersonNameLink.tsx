@@ -15,12 +15,12 @@ export const PersonNameLink = ({ name, url }: PersonNameLinkProps): JSX.Element 
     <a
       href={url}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noopener noreferrer" aria-describedby="new-tab-hint"
       className="docs-ext-link text-base font-semibold"
     >
       {name}
       <ExternalLink size={12} aria-hidden="true" />
-      <span className="sr-only"> (opens in new tab)</span>
+      
     </a>
   );
 };

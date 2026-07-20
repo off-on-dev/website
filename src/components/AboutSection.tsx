@@ -5,7 +5,7 @@ import { SectionLabel } from "@/components/SectionLabel";
 
 export const AboutSection = (): JSX.Element => {
   return (
-    <section id="approach" aria-label="Our foundation" className="pb-16">
+    <div id="approach" className="pb-16">
       <div>
         <SectionLabel>our foundation</SectionLabel>
 
@@ -81,6 +81,6 @@ export const AboutSection = (): JSX.Element => {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };

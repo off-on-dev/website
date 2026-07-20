@@ -44,11 +44,11 @@ const NavLinks = ({ onNavigate }: NavLinksProps): JSX.Element => (
       <a
         href={COMMUNITY_URL}
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noopener noreferrer" aria-describedby="new-tab-hint"
         className={linkCls}
         onClick={onNavigate}
       >
-        Community <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+        Community <ExternalLink size={12} aria-hidden="true" />
       </a>
     </li>
     <li className="contents">
@@ -135,7 +135,7 @@ export const Navbar = (): JSX.Element => {
             ref={triggerRef}
             onClick={() => setMenuOpen((o) => !o)}
             className="flex h-11 w-11 items-center justify-center rounded-md border border-border bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-ring"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-label="Menu"
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
           >

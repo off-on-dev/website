@@ -135,7 +135,7 @@ describe("Navbar - theme toggle", () => {
 describe("Navbar - mobile menu", () => {
   it("hamburger button has aria-expanded='false' when closed", () => {
     renderNavbar();
-    const hamburger = screen.getByRole("button", { name: /Open menu/i });
+    const hamburger = screen.getByRole("button", { name: "Menu" });
     expect(hamburger.getAttribute("aria-expanded")).toBe("false");
   });
 
@@ -146,27 +146,27 @@ describe("Navbar - mobile menu", () => {
 
   it("clicking the hamburger reveals the mobile menu", () => {
     renderNavbar();
-    fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
+    fireEvent.click(screen.getByRole("button", { name: "Menu" }));
     expect(document.getElementById("mobile-menu")?.hasAttribute("hidden")).toBe(false);
   });
 
   it("hamburger button has aria-expanded='true' when menu is open", () => {
     renderNavbar();
-    fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
-    const hamburger = screen.getByRole("button", { name: /Close menu/i });
+    fireEvent.click(screen.getByRole("button", { name: "Menu" }));
+    const hamburger = screen.getByRole("button", { name: "Menu" });
     expect(hamburger.getAttribute("aria-expanded")).toBe("true");
   });
 
   it("clicking the hamburger again closes the mobile menu", () => {
     renderNavbar();
-    fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
-    fireEvent.click(screen.getByRole("button", { name: /Close menu/i }));
+    fireEvent.click(screen.getByRole("button", { name: "Menu" }));
+    fireEvent.click(screen.getByRole("button", { name: "Menu" }));
     expect(document.getElementById("mobile-menu")?.hasAttribute("hidden")).toBe(true);
   });
 
   it("mobile menu contains navigation links when open", () => {
     renderNavbar();
-    fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
+    fireEvent.click(screen.getByRole("button", { name: "Menu" }));
     const mobileMenu = document.getElementById("mobile-menu");
     expect(mobileMenu).toBeTruthy();
     const mobileNav = within(mobileMenu!);
@@ -175,7 +175,7 @@ describe("Navbar - mobile menu", () => {
 
   it("mobile menu has aria-controls pointing to 'mobile-menu'", () => {
     renderNavbar();
-    const hamburger = screen.getByRole("button", { name: /Open menu/i });
+    const hamburger = screen.getByRole("button", { name: "Menu" });
     expect(hamburger.getAttribute("aria-controls")).toBe("mobile-menu");
   });
 
@@ -187,7 +187,7 @@ describe("Navbar - mobile menu", () => {
 
   it("pressing Escape closes the mobile menu", () => {
     renderNavbar();
-    fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
+    fireEvent.click(screen.getByRole("button", { name: "Menu" }));
     expect(document.getElementById("mobile-menu")?.hasAttribute("hidden")).toBe(false);
     fireEvent.keyDown(document, { key: "Escape" });
     expect(document.getElementById("mobile-menu")?.hasAttribute("hidden")).toBe(true);
@@ -195,15 +195,15 @@ describe("Navbar - mobile menu", () => {
 
   it("pressing Escape returns focus to the hamburger button", () => {
     renderNavbar();
-    const hamburger = screen.getByRole("button", { name: /Open menu/i });
+    const hamburger = screen.getByRole("button", { name: "Menu" });
     fireEvent.click(hamburger);
     fireEvent.keyDown(document, { key: "Escape" });
-    expect(document.activeElement).toBe(screen.getByRole("button", { name: /Open menu/i }));
+    expect(document.activeElement).toBe(screen.getByRole("button", { name: "Menu" }));
   });
 
   it("Tab on the last menu item wraps focus back to the first menu item", () => {
     renderNavbar();
-    fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
+    fireEvent.click(screen.getByRole("button", { name: "Menu" }));
     const menu = document.getElementById("mobile-menu")!;
     const focusable = Array.from(
       menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
@@ -217,7 +217,7 @@ describe("Navbar - mobile menu", () => {
 
   it("Shift+Tab on the first menu item wraps focus to the last menu item", () => {
     renderNavbar();
-    fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
+    fireEvent.click(screen.getByRole("button", { name: "Menu" }));
     const menu = document.getElementById("mobile-menu")!;
     const focusable = Array.from(
       menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
@@ -241,7 +241,7 @@ describe("Navbar - mobile menu", () => {
 
     try {
       renderNavbar();
-      fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
+      fireEvent.click(screen.getByRole("button", { name: "Menu" }));
       expect(main.hasAttribute("inert")).toBe(true);
       expect(main.getAttribute("aria-hidden")).toBe("true");
       expect(footer.hasAttribute("inert")).toBe(true);
@@ -249,7 +249,7 @@ describe("Navbar - mobile menu", () => {
       expect(aside.hasAttribute("inert")).toBe(true);
       expect(aside.getAttribute("aria-hidden")).toBe("true");
 
-      fireEvent.click(screen.getByRole("button", { name: /Close menu/i }));
+      fireEvent.click(screen.getByRole("button", { name: "Menu" }));
       expect(main.hasAttribute("inert")).toBe(false);
       expect(main.getAttribute("aria-hidden")).toBeNull();
       expect(footer.hasAttribute("inert")).toBe(false);
@@ -271,11 +271,11 @@ describe("Navbar - mobile menu", () => {
 
     try {
       renderNavbar();
-      fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
+      fireEvent.click(screen.getByRole("button", { name: "Menu" }));
       expect(footer.hasAttribute("inert")).toBe(true);
       expect(footer.getAttribute("aria-hidden")).toBe("true");
 
-      fireEvent.click(screen.getByRole("button", { name: /Close menu/i }));
+      fireEvent.click(screen.getByRole("button", { name: "Menu" }));
       expect(footer.hasAttribute("inert")).toBe(false);
       expect(footer.getAttribute("aria-hidden")).toBeNull();
     } finally {
@@ -285,12 +285,12 @@ describe("Navbar - mobile menu", () => {
 
   it("clicking a nav link closes the menu without moving focus to the hamburger", () => {
     renderNavbar();
-    fireEvent.click(screen.getByRole("button", { name: /Open menu/i }));
+    fireEvent.click(screen.getByRole("button", { name: "Menu" }));
     const links = screen.getAllByRole("link", { name: /About/i });
     const mobileLink = links.find((l) => l.closest("#mobile-menu"));
     expect(mobileLink).toBeTruthy();
     fireEvent.click(mobileLink!);
     expect(document.getElementById("mobile-menu")?.hasAttribute("hidden")).toBe(true);
-    expect(document.activeElement).not.toBe(screen.queryByRole("button", { name: /Open menu/i }));
+    expect(document.activeElement).not.toBe(screen.queryByRole("button", { name: "Menu" }));
   });
 });

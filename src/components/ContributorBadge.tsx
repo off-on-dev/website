@@ -28,12 +28,12 @@ export const ContributorBadge = ({ name, url, glow = false, label = "Challenge B
       <a
         href={url}
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noopener noreferrer" aria-describedby="new-tab-hint"
         className={`${pillClass} hover:border-primary/40 hover:bg-primary/10 transition-colors focus-ring-tight`}
       >
         {content}
         <ExternalLink size={11} aria-hidden="true" />
-        <span className="sr-only"> (opens in new tab)</span>
+        
       </a>
     );
   }

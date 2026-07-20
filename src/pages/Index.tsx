@@ -47,10 +47,10 @@ const Index = (): JSX.Element => {
                 <a
                   href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer" aria-describedby="new-tab-hint"
                   className="btn-inverse"
                 >
-                  Propose an Adventure Idea <ExternalLink size={14} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  Propose an Adventure Idea <ExternalLink size={14} aria-hidden="true" />
                 </a>
               </div>
             </div>

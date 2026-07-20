@@ -131,13 +131,13 @@ export const CommunitySidebar = ({
         <a
           href={hasThread ? discussionUrl : COMMUNITY_URL}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener noreferrer" aria-describedby="new-tab-hint"
           className="btn-soft w-full"
         >
           <MessageCircle size={14} aria-hidden="true" />
           {hasThread ? "Share & Discuss" : "Join the Community"}
           <ExternalLink size={14} aria-hidden="true" />
-          <span className="sr-only"> (opens in new tab)</span>
+          
         </a>
         <p className="mt-2.5 text-xs text-faint font-mono text-center">
           Get help or share your solution

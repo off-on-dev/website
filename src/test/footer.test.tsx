@@ -93,34 +93,37 @@ describe("Footer - Community nav", () => {
 // ---------------------------------------------------------------------------
 
 describe("Footer - bottom strip", () => {
-  it("renders the LinkedIn link with an aria-label that mentions 'opens in new tab'", () => {
+  it("renders the LinkedIn link with a new-tab hint via aria-describedby, not in its name", () => {
     renderFooter();
-    const linkedInLink = screen.getByRole("link", { name: /LinkedIn.*opens in new tab/i });
+    const linkedInLink = screen.getByRole("link", { name: "LinkedIn" });
     expect(linkedInLink).toBeTruthy();
     expect(linkedInLink.getAttribute("target")).toBe("_blank");
+    expect(linkedInLink.getAttribute("aria-describedby")).toBe("new-tab-hint");
   });
 
-  it("renders the Bluesky link with an aria-label that mentions 'opens in new tab'", () => {
+  it("renders the Bluesky link with a new-tab hint via aria-describedby", () => {
     renderFooter();
-    const link = screen.getByRole("link", { name: /Bluesky.*opens in new tab/i });
+    const link = screen.getByRole("link", { name: "Bluesky" });
     expect(link).toBeTruthy();
     expect(link.getAttribute("target")).toBe("_blank");
     expect(link.getAttribute("rel")).toBe("noopener noreferrer");
+    expect(link.getAttribute("aria-describedby")).toBe("new-tab-hint");
   });
 
   it("Bluesky link href matches BLUESKY_URL constant", () => {
     renderFooter();
-    const link = screen.getByRole("link", { name: /Bluesky.*opens in new tab/i });
+    const link = screen.getByRole("link", { name: "Bluesky" });
     expect(link.getAttribute("href")).toBe("https://bsky.app/profile/off-on-dev.bsky.social");
   });
 
   it("renders the X / Twitter link as an external link that opens in a new tab", () => {
     renderFooter();
-    const link = screen.getByRole("link", { name: /X \/ Twitter.*opens in new tab/i });
+    const link = screen.getByRole("link", { name: "X / Twitter" });
     expect(link).toBeTruthy();
     expect(link.getAttribute("href")).toBe("https://x.com/OffonDev");
     expect(link.getAttribute("target")).toBe("_blank");
     expect(link.getAttribute("rel")).toBe("noopener noreferrer");
+    expect(link.getAttribute("aria-describedby")).toBe("new-tab-hint");
   });
 
   it("renders all three slogan parts in the bottom strip", () => {

@@ -101,14 +101,14 @@ describe("PageHero", () => {
       expect(link.getAttribute("rel")).toBe("noopener noreferrer");
     });
 
-    it("includes a sr-only '(opens in new tab)' span on external links", () => {
+    it("points external links at the shared new-tab hint via aria-describedby", () => {
       renderHero({
         title: "T",
         description: "D",
         primaryCta: { label: "Community", href: "https://example.com", external: true },
       });
-      const srSpan = screen.getByText("(opens in new tab)");
-      expect(srSpan.className).toContain("sr-only");
+      const link = screen.getByRole("link", { name: /Community/ });
+      expect(link.getAttribute("aria-describedby")).toBe("new-tab-hint");
     });
   });
 

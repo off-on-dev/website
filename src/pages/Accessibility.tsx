@@ -42,10 +42,10 @@ const Accessibility = (): JSX.Element => {
             <ul role="list" className={list}>
               <li>
                 <strong>Target:</strong>{" "}
-                <a href="https://www.w3.org/TR/WCAG22/" target="_blank" rel="noopener noreferrer" className={link}>
+                <a href="https://www.w3.org/TR/WCAG22/" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={link}>
                   {/* Plain <abbr> (no tabIndex) inside a link: the link is the
                       interactive element; AT reads the title attribute natively. */}
-                  <abbr data-title="Web Content Accessibility Guidelines" aria-label="Web Content Accessibility Guidelines">WCAG</abbr> 2.2 Level <abbr data-title="double-A conformance level" aria-label="double-A conformance level">AA</abbr> <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  <abbr data-title="Web Content Accessibility Guidelines" aria-label="Web Content Accessibility Guidelines">WCAG</abbr> 2.2 Level <abbr data-title="double-A conformance level" aria-label="double-A conformance level">AA</abbr> <ExternalLink size={12} aria-hidden="true" />
                 </a>{" "}
                 across every page on {SITE_NAME}, with selected Level <Abbr title="triple-A conformance level">AAA</Abbr> criteria applied wherever practical.
               </li>
@@ -91,8 +91,8 @@ const Accessibility = (): JSX.Element => {
               </li>
               <li>
                 Tested with{" "}
-                <a href="https://github.com/dequelabs/axe-core" target="_blank" rel="noopener noreferrer" className={link}>
-                  axe-core <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                <a href="https://github.com/dequelabs/axe-core" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={link}>
+                  axe-core <ExternalLink size={12} aria-hidden="true" />
                 </a>{" "}
                 on every pull request preview, in both light and dark mode.
               </li>
@@ -203,10 +203,10 @@ const Accessibility = (): JSX.Element => {
               <a
                 href="https://github.com/off-on-dev/website/issues/new?template=accessibility.yml"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer" aria-describedby="new-tab-hint"
                 className={link}
               >
-                open an accessibility issue <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                open an accessibility issue <ExternalLink size={12} aria-hidden="true" />
               </a>
               . The form prompts for the page, your assistive technology, and severity, which helps
               us reproduce and prioritize.
@@ -264,10 +264,10 @@ const Accessibility = (): JSX.Element => {
               <a
                 href="https://github.com/off-on-dev/website/blob/main/ACCESSIBILITY.md"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer" aria-describedby="new-tab-hint"
                 className={link}
               >
-                ACCESSIBILITY.md <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                ACCESSIBILITY.md <ExternalLink size={12} aria-hidden="true" />
               </a>{" "}
               and applies to every change.
             </p>
@@ -286,10 +286,10 @@ const Accessibility = (): JSX.Element => {
               <a
                 href="https://github.com/mgifford/ACCESSIBILITY.md"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer" aria-describedby="new-tab-hint"
                 className={link}
               >
-                mgifford/ACCESSIBILITY.md <ExternalLink size={10} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                mgifford/ACCESSIBILITY.md <ExternalLink size={10} aria-hidden="true" />
               </a>
               , a community resource for accessibility best practices, testing criteria, and
               issue severity frameworks. Thank you to Mike Gifford and all contributors for

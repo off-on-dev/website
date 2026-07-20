@@ -55,8 +55,8 @@ const CommunityGuide = (): JSX.Element => {
                 <p className="text-sm text-dim leading-relaxed flex-1">
                   Create your account to access challenges, Q&amp;A, community discussions, and everything else.
                 </p>
-                <a href={`${COMMUNITY_URL}/signup`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Create an account <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                <a href={`${COMMUNITY_URL}/signup`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={extLink}>
+                  Create an account <ExternalLink size={12} aria-hidden="true" />
                 </a>
               </div>
 
@@ -65,8 +65,8 @@ const CommunityGuide = (): JSX.Element => {
                 <p className="text-sm text-dim leading-relaxed flex-1">
                   Say hello and tell the community who you are and what you're working on. It's the first step.
                 </p>
-                <a href={`${COMMUNITY_URL}/c/general/introductions/18`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Say hello <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                <a href={`${COMMUNITY_URL}/c/general/introductions/18`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={extLink}>
+                  Say hello <ExternalLink size={12} aria-hidden="true" />
                 </a>
               </div>
 
@@ -75,8 +75,8 @@ const CommunityGuide = (): JSX.Element => {
                 <p className="text-sm text-dim leading-relaxed flex-1">
                   Stuck on a technical problem? Post a clear question and get answers from the community. No question is too basic.
                 </p>
-                <a href={`${COMMUNITY_URL}/c/public-categories/q-a/10`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Ask a question <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                <a href={`${COMMUNITY_URL}/c/public-categories/q-a/10`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={extLink}>
+                  Ask a question <ExternalLink size={12} aria-hidden="true" />
                 </a>
               </div>
 
@@ -85,8 +85,8 @@ const CommunityGuide = (): JSX.Element => {
                 <p className="text-sm text-dim leading-relaxed flex-1">
                   Share a tutorial, showcase a project, or write about what you've learned. Every contribution makes the community stronger.
                 </p>
-                <a href={`${COMMUNITY_URL}/c/community-voices/38`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Share something <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                <a href={`${COMMUNITY_URL}/c/community-voices/38`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={extLink}>
+                  Share something <ExternalLink size={12} aria-hidden="true" />
                 </a>
               </div>
             </div>
@@ -101,8 +101,8 @@ const CommunityGuide = (): JSX.Element => {
                 <p className="text-sm text-dim leading-relaxed flex-1">
                   Hands-on scenarios with broken environments, misconfigured pipelines, and real-world failures to debug and fix. Post your solution and see how others approached it.
                 </p>
-                <a href={`${COMMUNITY_URL}/c/challenges/11`} target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Start a challenge <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                <a href={`${COMMUNITY_URL}/c/challenges/11`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={extLink}>
+                  Start a challenge <ExternalLink size={12} aria-hidden="true" />
                 </a>
               </div>
 
@@ -111,8 +111,8 @@ const CommunityGuide = (): JSX.Element => {
                 <p className="text-sm text-dim leading-relaxed flex-1">
                   Bring your expertise and experience. Help build adventures for others to learn from open source tech with a broken scenario, a real-world failure, or a skill gap. Shape the next adventure.
                 </p>
-                <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea" target="_blank" rel="noopener noreferrer" className={extLink}>
-                  Submit an idea <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={extLink}>
+                  Submit an idea <ExternalLink size={12} aria-hidden="true" />
                 </a>
               </div>
             </div>
@@ -130,8 +130,8 @@ const CommunityGuide = (): JSX.Element => {
               ].map((item) => (
                 <li key={item.label} className="flex items-center gap-2.5 text-sm">
                   <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                  <a href={item.href} target="_blank" rel="noopener noreferrer" className={extLink}>
-                    {item.label} <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+                  <a href={item.href} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={extLink}>
+                    {item.label} <ExternalLink size={12} aria-hidden="true" />
                   </a>
                 </li>
               ))}

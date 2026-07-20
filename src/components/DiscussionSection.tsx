@@ -24,10 +24,10 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
     <a
       href={discussionUrl || COMMUNITY_URL}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noopener noreferrer" aria-describedby="new-tab-hint"
       className="docs-ext-link mt-4 text-sm font-medium"
     >
-      Join the Discussion on {COMMUNITY_DISPLAY_NAME} <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+      Join the Discussion on {COMMUNITY_DISPLAY_NAME} <ExternalLink size={12} aria-hidden="true" />
     </a>
   );
 
@@ -58,7 +58,7 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
               key={`${post.username}-${post.created_at}`}
               href={post.topicUrl}
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener noreferrer" aria-describedby="new-tab-hint"
               className="block card-glow rounded-xl border border-border bg-[hsl(var(--surface))] p-5 transition-all focus-ring"
             >
               <div className="flex items-center justify-between mb-3">
@@ -101,7 +101,7 @@ export const DiscussionSection = ({ adventureId, levelId, discussionUrl }: Discu
                 {isCertificatePost(post) && <Trophy size={14} className="inline mr-1 text-primary" aria-hidden="true" />}
                 {displaySnippet(post)}
               </p>
-              <span className="sr-only"> (opens in new tab)</span>
+              
             </a>
           ))}
           {joinLink}

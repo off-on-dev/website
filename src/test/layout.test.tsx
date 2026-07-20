@@ -259,3 +259,18 @@ describe("Layout file-content regression", () => {
     expect(trackerBody).toMatch(/consent\s*!==\s*["']granted["']/);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Shared external-link hint
+// ---------------------------------------------------------------------------
+
+describe("Shared new-tab hint", () => {
+  it("renders a single hidden #new-tab-hint node used by aria-describedby on external links", () => {
+    renderLayout("/");
+    const hint = document.getElementById("new-tab-hint");
+    expect(hint).toBeTruthy();
+    expect(hint?.hasAttribute("hidden")).toBe(true);
+    expect(hint?.textContent).toBe("opens in a new tab");
+    expect(document.querySelectorAll("#new-tab-hint").length).toBe(1);
+  });
+});

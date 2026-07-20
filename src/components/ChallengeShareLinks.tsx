@@ -22,8 +22,8 @@ export const ChallengeShareLinks = ({ url, levelName }: Props): JSX.Element => {
       <a
         href={linkedinHref}
         target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Share on LinkedIn (opens in new tab)"
+        rel="noopener noreferrer" aria-describedby="new-tab-hint"
+        aria-label="Share on LinkedIn"
         className="social-icon-link"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="w-3.5 h-3.5" fill="currentColor">
@@ -33,8 +33,8 @@ export const ChallengeShareLinks = ({ url, levelName }: Props): JSX.Element => {
       <a
         href={xHref}
         target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Share on X / Twitter (opens in new tab)"
+        rel="noopener noreferrer" aria-describedby="new-tab-hint"
+        aria-label="Share on X / Twitter"
         className="social-icon-link"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="w-3.5 h-3.5" fill="currentColor">
@@ -44,8 +44,8 @@ export const ChallengeShareLinks = ({ url, levelName }: Props): JSX.Element => {
       <a
         href={blueskyHref}
         target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Share on Bluesky (opens in new tab)"
+        rel="noopener noreferrer" aria-describedby="new-tab-hint"
+        aria-label="Share on Bluesky"
         className="social-icon-link"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="w-3.5 h-3.5" fill="currentColor">
@@ -55,8 +55,8 @@ export const ChallengeShareLinks = ({ url, levelName }: Props): JSX.Element => {
       <a
         href={mastodonHref}
         target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Share on Mastodon (opens in new tab)"
+        rel="noopener noreferrer" aria-describedby="new-tab-hint"
+        aria-label="Share on Mastodon"
         className="social-icon-link"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="w-3.5 h-3.5" fill="currentColor">

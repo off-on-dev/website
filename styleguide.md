@@ -729,7 +729,7 @@ Full-width amber (`bg-primary`) hero banner used at the top of inner pages. Rend
 | `primaryCta` | `Cta?` | Primary button (`.btn-inverse`) |
 | `secondaryCta` | `Cta?` | Secondary button (`.btn-ghost-inverse`) |
 
-`Cta` shape: `{ label: ReactNode; href: string; external?: boolean }`. External CTAs get `target="_blank"` with the sr-only new-tab span. Anchors (`#`) and `mailto:` links render as `<a>`; all others render as React Router `<Link>`.
+`Cta` shape: `{ label: ReactNode; href: string; external?: boolean }`. External CTAs get `target="_blank"` and `aria-describedby="new-tab-hint"` (the shared hint, see External links). Anchors (`#`) and `mailto:` links render as `<a>`; all others render as React Router `<Link>`.
 
 **Important:** Buttons inside `PageHero` must use `.btn-inverse` / `.btn-ghost-inverse`. Never use `.btn-primary` or `.btn-ghost` inside `bg-primary` sections. They produce yellow-on-yellow in light mode.
 
@@ -990,7 +990,7 @@ Used in `Adventures.tsx` and `About.tsx`.
 
 `src/components/PersonNameLink.tsx`
 
-Renders a person's name with consistent styling, used for board members and adventure contributors. When `url` is provided, renders an external `<a>` with the lucide `ExternalLink` icon and a `sr-only` "(opens in new tab)" announcement; when omitted, renders a plain `<span>` with the same font weight. Shared by `BoardSection` and `ChallengeBuildersSection` so the className string and external-link affordances stay in sync.
+Renders a person's name with consistent styling, used for board members and adventure contributors. When `url` is provided, renders an external `<a>` with the lucide `ExternalLink` icon and `aria-describedby="new-tab-hint"` (the shared new-tab hint, see External links); when omitted, renders a plain `<span>` with the same font weight. Shared by `BoardSection` and `ChallengeBuildersSection` so the className string and external-link affordances stay in sync.
 
 ```tsx
 <PersonNameLink name="Jane Doe" url="https://example.com" />
@@ -1327,7 +1327,7 @@ Renders pre-compiled block HTML (generated at build time by `scripts/generate-ad
 
 - Fenced code blocks get an always-visible "Copy" button in a header bar (clipboard API, flips to "Copied" for 1.5 s, with proper `aria-label` updates). Same `.code-block-header`, `.code-lang-label`, and `.code-header-btn` CSS classes as `CodeBlock`.
 - All element styles (headings, lists, code, blockquote, tables, links) are driven by `.md-content` rules in `src/index.css`.
-- External links get `target="_blank"`, `rel="noopener noreferrer"`, and a `<span class="sr-only"> (opens in new tab)</span>` injected by the generator. The external link icon is rendered purely via a CSS `::after` rule on `[target="_blank"]` in `src/index.css` — no inline SVG in the HTML.
+- External links get `target="_blank"`, `rel="noopener noreferrer"`, and `aria-describedby="new-tab-hint"` (pointing at the shared hidden hint, see External links) injected by the generator. The external link icon is rendered purely via a CSS `::after` rule on `[target="_blank"]` in `src/index.css` — no inline SVG in the HTML.
 
 ```tsx
 <MarkdownContent source={htmlString} />
@@ -1388,7 +1388,7 @@ Renders a row of icon-only share links (LinkedIn, X, Bluesky, Mastodon) for a ch
 | `url` | `string` | Canonical URL of the level page. |
 | `levelName` | `string` | Display name used in the pre-composed share text. |
 
-Each platform link opens in a new tab with `rel="noopener noreferrer"`. All `<svg>` icons carry `aria-hidden="true"`; each `<a>` carries an explicit `aria-label` for screen readers.
+Each platform link opens in a new tab with `rel="noopener noreferrer"` and `aria-describedby="new-tab-hint"` (the shared hint, see External links). All `<svg>` icons carry `aria-hidden="true"`; each `<a>` carries an explicit `aria-label` for screen readers (the label is the platform name only, without the new-tab hint).
 
 ---
 
@@ -1757,10 +1757,26 @@ Helper functions for the `MarkdownContent` component.
 | --- | --- | --- |
 | `slugify` | `(text: string) => string` | Converts heading text to a URL-safe slug for `id` attributes. |
 | `getSectionIcon` | `(slug: string) => LucideIcon \| undefined` | Maps known section slugs (`architecture`, `toolbox`, `how-to-play`) to their lucide-react icon. Returns `undefined` for unrecognised slugs. |
-| `stripLinks` | `(html: string) => string` | Strips `<a>` tags from sanitised HTML while preserving link text. Also removes `sr-only` new-tab spans injected by the generator. Call before passing any author-prose HTML to `dangerouslySetInnerHTML` inside an interactive element (`<Link>`, `<button>`) to prevent invalid nested anchors. |
+| `stripLinks` | `(html: string) => string` | Strips `<a>` tags from sanitised HTML while preserving link text. Also strips the `aria-describedby` and `tabindex` attributes the generator adds to external links so no dangling reference survives once the anchor is unwrapped. Call before passing any author-prose HTML to `dangerouslySetInnerHTML` inside an interactive element (`<Link>`, `<button>`) to prevent invalid nested anchors. |
 | `stripHtml` | `(html: string) => string` | Strips all HTML tags and decodes named and numeric HTML entities in a single pass. Contract: input must be rehype-sanitize output so `>` in attribute values is already escaped. Single-pass prevents double-decode of mixed entities (`&amp;lt;` → `&lt;`, not `<`). Use when placing author-prose HTML into plain-text contexts such as `<meta content="">` attributes. |
 
 ---
+
+## External links
+
+Every link that opens in a new tab (`target="_blank"`) carries `rel="noopener noreferrer"` and `aria-describedby="new-tab-hint"`.
+
+`Layout.tsx` renders a single hidden node once for the whole app:
+
+```tsx
+<span id="new-tab-hint" hidden>opens in a new tab</span>
+```
+
+The "opens in a new tab" text is an accessible **description**, not part of each link's accessible **name**. Do not append a `<span className="sr-only"> (opens in new tab)</span>` inside the link, and do not fold the phrase into an `aria-label`. Both make the phrase part of the name, which bloats every announcement and can break voice control (the spoken name no longer matches the visible label). A single shared description keeps names clean and is announced after a pause. `hidden` still resolves for `aria-describedby`.
+
+- **Text links:** visible text is the name; add `aria-describedby="new-tab-hint"` to the `<a>`.
+- **Icon-only links** (e.g. Footer social icons): keep `aria-label` as the platform name only (`"LinkedIn"`), and add `aria-describedby="new-tab-hint"`.
+- **Generated adventure prose:** `scripts/generate-adventures.mjs` (`annotateExternalLinks`) adds `aria-describedby="new-tab-hint"` to external links at build time; `stripLinks` removes it when unwrapping a link inside an interactive container.
 
 ## Icons
 
@@ -1787,8 +1803,8 @@ Never put a raw SVG icon next to text inside a plain `inline` or `block` element
 </Link>
 
 // Correct: external link (opens in new tab)
-<a target="_blank" ... className="docs-ext-link">
-  View docs <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+<a target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className="docs-ext-link">
+  View docs <ExternalLink size={12} aria-hidden="true" />
 </a>
 
 // Incorrect: icon drops below text baseline
@@ -1826,9 +1842,9 @@ Some official brand marks have no equivalent in lucide-react and must use the br
 
 | Brand | Where used | Notes |
 | --- | --- | --- |
-| LinkedIn "in" rounded-rectangle mark | `Footer.tsx` bottom strip | Inline SVG, `aria-hidden="true"` on `<svg>`, `aria-label="LinkedIn (opens in new tab)"` on parent `<a>`, `fill="currentColor"`, `className="w-3.5 h-3.5"` (14 px, matching surrounding icon size) |
-| Bluesky butterfly mark | `Footer.tsx` bottom strip | Inline SVG, `aria-hidden="true"` on `<svg>`, `aria-label="Bluesky (opens in new tab)"` on parent `<a>`, `fill="currentColor"`, `className="w-3.5 h-3.5"`. URL from `BLUESKY_URL` constant. |
-| X (Twitter) mark | `Footer.tsx` bottom strip | Inline SVG, `aria-hidden="true"` on `<svg>`, `aria-label="X / Twitter (opens in new tab)"` on parent `<a>`, `target="_blank"`, `rel="noopener noreferrer"`, `fill="currentColor"`, `className="w-3.5 h-3.5"`. URL from `X_URL` constant. |
+| LinkedIn "in" rounded-rectangle mark | `Footer.tsx` bottom strip | Inline SVG, `aria-hidden="true"` on `<svg>`, `aria-label="LinkedIn"` on parent `<a>` plus `aria-describedby="new-tab-hint"` for the new-tab hint, `fill="currentColor"`, `className="w-3.5 h-3.5"` (14 px, matching surrounding icon size) |
+| Bluesky butterfly mark | `Footer.tsx` bottom strip | Inline SVG, `aria-hidden="true"` on `<svg>`, `aria-label="Bluesky"` on parent `<a>` plus `aria-describedby="new-tab-hint"`, `fill="currentColor"`, `className="w-3.5 h-3.5"`. URL from `BLUESKY_URL` constant. |
+| X (Twitter) mark | `Footer.tsx` bottom strip | Inline SVG, `aria-hidden="true"` on `<svg>`, `aria-label="X / Twitter"` on parent `<a>` plus `aria-describedby="new-tab-hint"`, `target="_blank"`, `rel="noopener noreferrer"`, `fill="currentColor"`, `className="w-3.5 h-3.5"`. URL from `X_URL` constant. |
 
 When adding a new brand SVG: place it inline, set `aria-hidden="true"` on the `<svg>`, put the accessible label on the parent interactive element, use `fill="currentColor"`, and add a row to this table.
 
@@ -1883,7 +1899,7 @@ Includes `padding: 0.25rem` (equivalent to `p-1`) to improve tap target size and
 Usage pattern:
 
 ```tsx
-<a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (opens in new tab)" className="social-icon-link">
+<a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" aria-describedby="new-tab-hint" className="social-icon-link">
   <svg aria-hidden="true" ...>...</svg>
 </a>
 ```

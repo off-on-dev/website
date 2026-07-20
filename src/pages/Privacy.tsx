@@ -110,12 +110,12 @@ const Privacy = (): JSX.Element => {
           may transfer data to and process it in the United States. Such transfers occur under the
           EU-U.S. Data Privacy Framework and Standard Contractual Clauses as appropriate
           safeguards. For more information, see{" "}
-          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="docs-ext-link">
-            Google's Privacy Policy <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className="docs-ext-link">
+            Google's Privacy Policy <ExternalLink size={12} aria-hidden="true" />
           </a>{" "}
           and{" "}
-          <a href="https://support.google.com/analytics/answer/6004245" target="_blank" rel="noopener noreferrer" className="docs-ext-link">
-            Google Analytics data safeguards <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+          <a href="https://support.google.com/analytics/answer/6004245" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className="docs-ext-link">
+            Google Analytics data safeguards <ExternalLink size={12} aria-hidden="true" />
           </a>
           .
         </p>
@@ -179,8 +179,8 @@ const Privacy = (): JSX.Element => {
           lodge a complaint with a supervisory authority. In the EU, this is typically the data
           protection authority in your country of residence or the country where the alleged
           violation occurred. A list of EU supervisory authorities is available from the{" "}
-          <a href="https://edpb.europa.eu/about-edpb/about-edpb/members_en" target="_blank" rel="noopener noreferrer" className="docs-ext-link">
-            European Data Protection Board <ExternalLink size={12} aria-hidden="true" /><span className="sr-only"> (opens in new tab)</span>
+          <a href="https://edpb.europa.eu/about-edpb/about-edpb/members_en" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className="docs-ext-link">
+            European Data Protection Board <ExternalLink size={12} aria-hidden="true" />
           </a>
           . We do ask that you contact us first so we have an opportunity to address the issue
           directly.
