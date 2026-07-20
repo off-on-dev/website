@@ -308,7 +308,7 @@ test.describe("hydration and interactivity", () => {
     await page.getByRole("button", { name: "Accept analytics cookies" }).click();
 
     await expect(banner).not.toBeVisible();
-    await expect(page.getByRole("button", { name: "Change cookie preferences" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Reset cookie preferences" })).toBeVisible();
     const stored = await page.evaluate(() => localStorage.getItem("analytics_consent"));
     expect(JSON.parse(stored!).value).toBe("granted");
   });
@@ -318,7 +318,7 @@ test.describe("hydration and interactivity", () => {
     await page.getByRole("button", { name: "Decline analytics cookies" }).click();
 
     await expect(page.getByRole("region", { name: "This site uses analytics cookies" })).not.toBeVisible();
-    await expect(page.getByRole("button", { name: "Change cookie preferences" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Reset cookie preferences" })).toBeVisible();
     const stored = await page.evaluate(() => localStorage.getItem("analytics_consent"));
     expect(JSON.parse(stored!).value).toBe("denied");
   });

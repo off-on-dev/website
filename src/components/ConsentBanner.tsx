@@ -34,8 +34,8 @@ export function ConsentBanner(): JSX.Element {
         <button
           type="button"
           onClick={reset}
-          aria-label="Change cookie preferences"
-          title="Change cookie preferences"
+          aria-label="Reset cookie preferences"
+          title="Reset cookie preferences"
           style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 5rem)' }}
           className="fixed right-4 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-muted-foreground shadow-md transition-colors hover:bg-accent hover:text-accent-foreground focus-ring"
         >
@@ -48,7 +48,7 @@ export function ConsentBanner(): JSX.Element {
           style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
           className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background shadow-lg"
         >
-          <div className="mx-auto flex max-w-screen-xl flex-col gap-4 px-4 py-5 sm:flex-row sm:items-start sm:gap-8 sm:px-6">
+          <div className="mx-auto flex max-h-[80vh] max-w-screen-xl flex-col gap-4 overflow-y-auto px-4 py-5 sm:flex-row sm:items-start sm:gap-8 sm:px-6">
             <div className="flex-1 space-y-1">
               <p id="consent-banner-title" className="text-sm text-foreground">This site uses analytics cookies</p>
               <p className="text-sm text-muted-foreground">

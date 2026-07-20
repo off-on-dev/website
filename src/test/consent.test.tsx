@@ -475,14 +475,14 @@ describe('ConsentBanner - undecided state', () => {
     renderWithProviders(<ConsentBanner />);
     fireEvent.click(screen.getByRole('button', { name: /accept analytics/i }));
     expect(screen.queryByRole('region', { name: 'This site uses analytics cookies' })).toBeNull();
-    expect(screen.getByRole('button', { name: /change cookie preferences/i })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /reset cookie preferences/i })).toBeTruthy();
   });
 
   it('hides the banner and shows the floating cookie button after declining', () => {
     renderWithProviders(<ConsentBanner />);
     fireEvent.click(screen.getByRole('button', { name: /decline/i }));
     expect(screen.queryByRole('region', { name: 'This site uses analytics cookies' })).toBeNull();
-    expect(screen.getByRole('button', { name: /change cookie preferences/i })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /reset cookie preferences/i })).toBeTruthy();
   });
 });
 
@@ -494,21 +494,21 @@ describe('ConsentBanner - floating button', () => {
   it('shows floating button (not banner) when consent was previously stored', () => {
     ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
     renderWithProviders(<ConsentBanner />);
-    expect(screen.getByRole('button', { name: /change cookie preferences/i })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /reset cookie preferences/i })).toBeTruthy();
     expect(screen.queryByRole('region', { name: 'This site uses analytics cookies' })).toBeNull();
   });
 
   it('clicking the floating button re-shows the banner', () => {
     ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
     renderWithProviders(<ConsentBanner />);
-    fireEvent.click(screen.getByRole('button', { name: /change cookie preferences/i }));
+    fireEvent.click(screen.getByRole('button', { name: /reset cookie preferences/i }));
     expect(screen.getByRole('region', { name: 'This site uses analytics cookies' })).toBeTruthy();
   });
 
   it('moves focus to Decline when the banner reappears after reset', () => {
     ls.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ value: 'granted', timestamp: Date.now() }));
     renderWithProviders(<ConsentBanner />);
-    fireEvent.click(screen.getByRole('button', { name: /change cookie preferences/i }));
+    fireEvent.click(screen.getByRole('button', { name: /reset cookie preferences/i }));
     expect(document.activeElement).toBe(screen.getByRole('button', { name: /decline/i }));
   });
 });
