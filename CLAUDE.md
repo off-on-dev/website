@@ -320,8 +320,8 @@ All analytics-related constants live in `src/data/constants.ts`:
 | `BRAND_SHORT_DESCRIPTION` | One-sentence brand description. Used in `Footer.tsx` and meta descriptions. Never hardcode. |
 | `BRAND_SLOGAN_PARTS` | Tuple of the three slogan parts: `["Vendor-Neutral", "Open Source", "Community-Driven"]`. |
 | `BRAND_SLOGAN` | Full slogan parts joined with `". "`. |
-| `BRAND_SECONDARY_LINE_PARTS` | Tuple of the three tagline parts: `["always On.", "always Open.", "always Learning."]`. All three must be rendered in `Hero.tsx`. |
-| `BRAND_SECONDARY_LINE` | Full tagline joined with spaces. |
+| `BRAND_SECONDARY_LINE_PARTS` | Tuple of the three tagline parts: `["always On.", "always Open.", "always Learning."]`. The `Hero.tsx` heading renders only the first two (`[0]` and `[1]`); `[2]` ("always Learning.") is not part of the hero. |
+| `BRAND_SECONDARY_LINE` | Full tagline (all three parts) joined with spaces. Used for the complete brand line in `BottomCTA.tsx` and `BrandGuidelines.tsx`, not the hero. |
 | `COMMUNITY_URL` | Real URL of the Discourse instance. Never hardcode. |
 | `COMMUNITY_DISPLAY_NAME` | User-facing display name for the community URL. Use for visible text. |
 | `CODE_OF_CONDUCT_URL` | Canonical URL of the Code of Conduct topic on Discourse. Use instead of hardcoding `${COMMUNITY_URL}/t/code-of-conduct/31`. |

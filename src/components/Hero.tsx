@@ -31,9 +31,6 @@ export const Hero = (): JSX.Element => {
               <span className="block text-foreground">
                 {BRAND_SECONDARY_LINE_PARTS[1]}
               </span>
-              <span className="block text-foreground">
-                {BRAND_SECONDARY_LINE_PARTS[2]}
-              </span>
             </h1>
             <p className="animate-fade-up-delay-2 font-sans mx-auto mt-6 max-w-xl text-lg leading-relaxed text-dim">
               A welcoming community for open source enthusiasts. Learn through hands-on challenges, share your knowledge, and grow alongside people who love open source as much as you do.
