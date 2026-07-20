@@ -1,0 +1,1 @@
+import{d as e}from"./vendor-router-Cey2jHZ1.js";var t=e(function(){return null});export{t as default};
