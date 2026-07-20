@@ -39,10 +39,10 @@ export const LEX_IMPERFECTA: Adventure = {
       topics: ["Kyverno", "Kubernetes"],
       audience: "Platform engineers, <abbr data-title=\"Site Reliability Engineers\" tabindex=\"0\" aria-describedby=\"abbr-exp-1\">SREs</abbr><span id=\"abbr-exp-1\" class=\"sr-only\">Site Reliability Engineers</span>, and developers curious about Kubernetes security — no prior Kyverno experience needed, but familiarity with basic <code>kubectl</code> and YAML will help.",
       learnings: [
-        "How Kyverno <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">ValidatingPolicy<span class=\"sr-only\"> (opens in new tab)</span></a> resources and  <a href=\"https://kubernetes.io/docs/reference/using-api/cel/\" target=\"_blank\" rel=\"noopener noreferrer\">CEL validation expressions<span class=\"sr-only\"> (opens in new tab)</span></a> work",
-        "The difference between <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">Audit, Deny, and Warn<span class=\"sr-only\"> (opens in new tab)</span></a> validation actions",
-        "How to use <a href=\"https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/\" target=\"_blank\" rel=\"noopener noreferrer\">custom label keys<span class=\"sr-only\"> (opens in new tab)</span></a> to  enforce workload identity standards",
-        "How Kyverno <a href=\"https://kyverno.io/docs/policy-types/mutating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">MutatingPolicy<span class=\"sr-only\"> (opens in new tab)</span></a> resources automatically  patch incoming workloads at admission",
+        "How Kyverno <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">ValidatingPolicy</a> resources and  <a href=\"https://kubernetes.io/docs/reference/using-api/cel/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">CEL validation expressions</a> work",
+        "The difference between <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">Audit, Deny, and Warn</a> validation actions",
+        "How to use <a href=\"https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">custom label keys</a> to  enforce workload identity standards",
+        "How Kyverno <a href=\"https://kyverno.io/docs/policy-types/mutating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">MutatingPolicy</a> resources automatically  patch incoming workloads at admission",
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F05-lex-imperfecta_01-beginner%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: "https://community.offon.dev/t/restore-proper-admission-control-using-kyverno-june-2026-adventure-beginner/1576",
@@ -123,10 +123,10 @@ kyverno apply manifests/policies/stamp-travel-permit.yaml --resource manifests/p
       topics: ["Kyverno", "Policy Reporter", "Kubernetes"],
       audience: "Platform engineers and <abbr data-title=\"Site Reliability Engineers\" tabindex=\"0\" aria-describedby=\"abbr-exp-2\">SREs</abbr><span id=\"abbr-exp-2\" class=\"sr-only\">Site Reliability Engineers</span> who have some familiarity with Kyverno, ideally after completing the Beginner level. You should be comfortable reading Kubernetes YAML and basic kubectl commands.",
       learnings: [
-        "How to scope policies using <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">ValidatingPolicy<span class=\"sr-only\"> (opens in new tab)</span></a> (cluster-wide) and <a href=\"https://kyverno.io/docs/policy-types/validating-policy/#policy-scope\" target=\"_blank\" rel=\"noopener noreferrer\">NamespacedValidatingPolicy<span class=\"sr-only\"> (opens in new tab)</span></a> (per-namespace), and when to use each",
-        "How <a href=\"https://kubernetes.io/docs/reference/using-api/cel/\" target=\"_blank\" rel=\"noopener noreferrer\">CEL expressions<span class=\"sr-only\"> (opens in new tab)</span></a> in <code>ValidatingPolicy</code> and <code>PolicyException</code> express fine-grained admission conditions",
-        "How to write and scope a <a href=\"https://kyverno.io/docs/guides/exceptions/\" target=\"_blank\" rel=\"noopener noreferrer\">PolicyException<span class=\"sr-only\"> (opens in new tab)</span></a> correctly so only the intended workloads are exempt",
-        "How to use <a href=\"https://kyverno.github.io/policy-reporter/\" target=\"_blank\" rel=\"noopener noreferrer\">Policy Reporter<span class=\"sr-only\"> (opens in new tab)</span></a> and the <a href=\"https://openreports.io/\" target=\"_blank\" rel=\"noopener noreferrer\">OpenReports<span class=\"sr-only\"> (opens in new tab)</span></a> format to audit and debug a policy estate across multiple namespaces",
+        "How to scope policies using <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">ValidatingPolicy</a> (cluster-wide) and <a href=\"https://kyverno.io/docs/policy-types/validating-policy/#policy-scope\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">NamespacedValidatingPolicy</a> (per-namespace), and when to use each",
+        "How <a href=\"https://kubernetes.io/docs/reference/using-api/cel/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">CEL expressions</a> in <code>ValidatingPolicy</code> and <code>PolicyException</code> express fine-grained admission conditions",
+        "How to write and scope a <a href=\"https://kyverno.io/docs/guides/exceptions/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">PolicyException</a> correctly so only the intended workloads are exempt",
+        "How to use <a href=\"https://kyverno.github.io/policy-reporter/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">Policy Reporter</a> and the <a href=\"https://openreports.io/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">OpenReports</a> format to audit and debug a policy estate across multiple namespaces",
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F05-lex-imperfecta_02-intermediate%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: "https://community.offon.dev/t/fix-a-broken-kyverno-policy-estate-june-2026-adventure-intermediate/1581",
@@ -218,11 +218,11 @@ policy reports, the OpenReports data behind Policy Reporter, as the audit of rec
       topics: ["Kyverno", "Policy Reporter", "Kubernetes"],
       audience: "Security engineers and platform engineers who want to explore the boundary between admission control and runtime security. Completing the Intermediate level first is helpful but not required. You should be comfortable reading Kyverno ValidatingPolicies and CEL expressions. No prior Falco experience required.",
       learnings: [
-        "How <a href=\"https://falco.org/docs/reference/rules/\" target=\"_blank\" rel=\"noopener noreferrer\">Falco rules<span class=\"sr-only\"> (opens in new tab)</span></a> are structured: conditions, output, and kernel-level fields, and how to write a rule targeting a specific runtime behaviour",
-        "Why <code>privileged: false</code> is not enough: how <a href=\"https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-capabilities-for-a-container\" target=\"_blank\" rel=\"noopener noreferrer\">Linux capabilities<span class=\"sr-only\"> (opens in new tab)</span></a> grant host-level access without the privileged flag",
-        "How to use <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">spec.variables<span class=\"sr-only\"> (opens in new tab)</span></a> in a <code>ValidatingPolicy</code> to share reusable CEL expressions across validations",
+        "How <a href=\"https://falco.org/docs/reference/rules/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">Falco rules</a> are structured: conditions, output, and kernel-level fields, and how to write a rule targeting a specific runtime behaviour",
+        "Why <code>privileged: false</code> is not enough: how <a href=\"https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-capabilities-for-a-container\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">Linux capabilities</a> grant host-level access without the privileged flag",
+        "How to use <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">spec.variables</a> in a <code>ValidatingPolicy</code> to share reusable CEL expressions across validations",
         "How pod volumes reference secrets, and why a volume's name and the secret it mounts are two separate fields in the pod spec",
-        "How <a href=\"https://github.com/falcosecurity/falcosidekick\" target=\"_blank\" rel=\"noopener noreferrer\">Falcosidekick<span class=\"sr-only\"> (opens in new tab)</span></a> aggregates Falco alerts and how to use its UI to watch a runtime incident in real time",
+        "How <a href=\"https://github.com/falcosecurity/falcosidekick\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">Falcosidekick</a> aggregates Falco alerts and how to use its UI to watch a runtime incident in real time",
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F05-lex-imperfecta_03-expert%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: "https://community.offon.dev/t/catch-the-intruder-the-guard-couldnt-see-june-2026-adventure-expert/1591",
@@ -268,11 +268,11 @@ kubectl get namespacedvalidatingpolicies -A
 the intruder left no trace at admission. That is part of the problem.</p>` },
         { title: "Act 1: Wake the Praetorian Guard", content: `<p>The Falco rule in <code>falco-rules.yaml</code> has a defect: find the break, fix it, and run <code>make apply</code>;
 alerts streaming into the <strong>Falcosidekick UI at port 30111</strong> are your signal. The
-<a href="https://falco.org/docs/reference/rules/supported-fields/" target="_blank" rel="noopener noreferrer">Falco condition fields reference<span class="sr-only"> (opens in new tab)</span></a>
+<a href="https://falco.org/docs/reference/rules/supported-fields/" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint">Falco condition fields reference</a>
 documents every available field.</p>` },
         { title: "Act 2: Close the Gate", content: `<p>The intruder passed admission: find the policy gap that let it through, close it, and run
 <code>make apply</code>; re-admission denied and the <strong>Falcosidekick UI</strong> going quiet confirm Act 2 is done.
-The existing policy already uses <a href="https://kyverno.io/docs/policy-types/validating-policy/" target="_blank" rel="noopener noreferrer">spec.variables<span class="sr-only"> (opens in new tab)</span></a>
+The existing policy already uses <a href="https://kyverno.io/docs/policy-types/validating-policy/" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint">spec.variables</a>
 to share expressions across validations, a pattern worth exploring.</p>` },
         { title: "Act 3: Seal the Archive", content: `<p>Open <code>manifests/policies/</code>: something is missing; the other policies show the structure, write
 what's needed, then run <code>make apply</code>.</p>
