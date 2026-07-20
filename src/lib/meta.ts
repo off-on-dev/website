@@ -1,5 +1,5 @@
 import type { MetaDescriptor } from "react-router";
-import { BRAND_NAME, SITE_URL } from "@/data/constants";
+import { BRAND_NAME, SITE_URL, OG_IMAGE_ALT } from "@/data/constants";
 
 type PageMetaOptions = {
   title: string;
@@ -36,14 +36,14 @@ export const buildPageMeta = ({
   { property: "og:image", content: `${SITE_URL}/og.png` },
   { property: "og:image:width", content: "1200" },
   { property: "og:image:height", content: "630" },
-  { property: "og:image:alt", content: title },
+  { property: "og:image:alt", content: OG_IMAGE_ALT },
   { property: "og:site_name", content: BRAND_NAME },
   { property: "og:locale", content: "en_GB" },
   { name: "twitter:card", content: "summary_large_image" },
   { name: "twitter:title", content: title },
   { name: "twitter:description", content: description },
   { name: "twitter:image", content: `${SITE_URL}/og.png` },
-  { name: "twitter:image:alt", content: title },
+  { name: "twitter:image:alt", content: OG_IMAGE_ALT },
   ...extra,
   ];
 };

@@ -241,7 +241,7 @@ export const ChallengeFilters = ({
                 const isActive = activeTopics.includes(tag);
                 return (
                   <button key={tag} type="button" aria-pressed={isActive}
-                    onClick={() => { handleTagClick(tag); setTagsOpen(false); tagsTriggerRef.current?.focus(); }}
+                    onClick={() => handleTagClick(tag)}
                     onKeyDown={navigatePanel}
                     className={dropdownItemClass(isActive)}
                   >
@@ -250,6 +250,16 @@ export const ChallengeFilters = ({
                   </button>
                 );
               })}
+              <div className="mt-1 border-t border-border pt-1">
+                <button
+                  type="button"
+                  onClick={() => { setTagsOpen(false); tagsTriggerRef.current?.focus(); }}
+                  onKeyDown={navigatePanel}
+                  className={dropdownItemClass(false)}
+                >
+                  Done
+                </button>
+              </div>
             </div>
         </div>
 

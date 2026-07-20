@@ -334,6 +334,7 @@ All analytics-related constants live in `src/data/constants.ts`:
 | `X_URL` | X (Twitter) profile URL (`https://x.com/OffonDev`). Used in `Footer.tsx`. |
 | `THEME_STORAGE_KEY` | `localStorage` key for the stored theme preference (`"theme"`). Used by `useTheme.tsx`. |
 | `CURRENT_YEAR` | Current calendar year (e.g. `2026`). Update manually each January in `src/data/constants.ts`. |
+| `OG_IMAGE_ALT` | Fixed alt text for the `og:image` and `twitter:image` tags. A description of the brand card image (`public/og.png`). Used internally by `buildPageMeta`; callers do not pass it. Never derive this from the page title — the OG image is a fixed brand card, not page-specific art. |
 
 ### How it works
 
@@ -451,6 +452,24 @@ const [hasFiltered, setHasFiltered] = useState(() => searchParams.has("topics"))
 const [hasFiltered, setHasFiltered] = useState(false);
 useEffect(() => { if (searchParams.has("topics")) setHasFiltered(true); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 ```
+
+### Stale prerendered data
+
+Loader functions run at build time. The static `.data` file they produce is frozen until the next build. Any data that depends on the current time (e.g. a deadline that has since passed) will be stale when the page loads in the browser.
+
+**Pattern:** initialize `useState` from the loader value (correct for hydration — prerendered HTML and first client render agree), then correct in a `useEffect` on mount:
+
+```tsx
+const { myField: initialMyField } = useLoaderData();
+const [myField, setMyField] = useState(initialMyField);
+
+useEffect(() => {
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  setMyField(recomputeFromCurrentTime());
+}, []); // eslint-disable-line react-hooks/exhaustive-deps
+```
+
+The `set-state-in-effect` disable is intentional: the mount effect corrects a known staleness in the prerendered value, not a derivation that should live in the render body. Do not suppress the rule for other patterns.
 
 ### JavaScript degradation testing
 
@@ -673,10 +692,10 @@ The `off-on-dev` organisation restricts which third-party actions can run. Only 
 
 | Action | Pinned version |
 | --- | --- |
-| `actions/checkout` | `@v7` only |
+| `actions/checkout` | any tag |
 | `actions/cache` | any (GitHub-created, covered by org checkbox) |
-| `actions/setup-node` | `@v6` only |
-| `actions/create-github-app-token` | `@v3` only |
+| `actions/setup-node` | any tag |
+| `actions/create-github-app-token` | any tag |
 | `JamesIves/github-pages-deploy-action` | any tag |
 | `marocchino/sticky-pull-request-comment` | any tag |
 | `rossjrw/pr-preview-action` | any tag |

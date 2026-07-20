@@ -43,6 +43,15 @@ export function formatDeadline(iso: string): string {
   return `${parseInt(day)} ${monthNames[parseInt(month) - 1]} ${year} at ${hours}:${minutes} ${tzLabel}`;
 }
 
+/** Escapes characters that are unsafe inside an HTML attribute value. */
+export function escapeHtmlAttr(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
 /**
  * Resolves a raw discussionUrl field to an absolute URL.
  * Full URLs (starting with "http") pass through unchanged.

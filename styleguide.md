@@ -822,6 +822,8 @@ Two-row filter UI for the adventure catalog. Row 1 is a difficulty single-select
 
 **ARIA pattern:** all filter groups (mobile dropdowns and desktop pill rows) use `role="group"` with `aria-pressed` on each button. Mobile dropdowns are always in the DOM — the panel uses the HTML `hidden` attribute when closed so `aria-controls` on the trigger always resolves to a valid IDREF. Trigger buttons use `aria-expanded` and `aria-controls` to signal disclosure state; `aria-haspopup` is intentionally omitted because none of the valid ARIA values (`menu`, `listbox`, `tree`, `grid`, `dialog`) accurately describe a `role="group"` panel, and using an incorrect value misleads screen readers about expected interaction semantics. Arrow-key navigation (Up/Down) is supported within each open panel via `onKeyDown` handlers on the panel buttons.
 
+**Tags dropdown close behaviour:** the mobile tags dropdown does not auto-close on individual tag selection (tags are multi-select — closing after each pick is disruptive). A "Done" button at the bottom of the panel closes it explicitly and returns focus to the trigger. Pressing Escape also closes it via `useEscapeKey`. The difficulty dropdown is single-select and does auto-close because selecting a difficulty is a definitive, final action.
+
 **Exported type:** `Difficulty = "Beginner" | "Intermediate" | "Expert"`. Import from `@/components/ChallengeFilters` where `activeDifficulty` state needs typing.
 
 ---
@@ -1237,7 +1239,7 @@ A native `<details>/<summary>` wrapper with consistent card styling, chevron ani
 | `title` | `string` | required | Text shown in the `<summary>` as a heading. |
 | `children` | `ReactNode` | required | Content revealed when open. |
 | `defaultOpen` | `boolean?` | `true` | Whether the section starts expanded. |
-| `headingLevel` | `2 \| 3 \| 4` | `2` | The `aria-level` for the heading inside `<summary>`. Match the surrounding heading hierarchy. |
+| `headingLevel` | `2 \| 3 \| 4` | `2` | Renders the title inside a real `<h2>`, `<h3>`, or `<h4>` element inside `<summary>`. Match the surrounding document heading hierarchy to avoid skipped levels. |
 
 ---
 
@@ -1536,7 +1538,7 @@ Used in `ChallengeDetail` and `AdventureDetail` to render the level's technology
 
 `src/components/NotFoundPage.tsx`
 
-Reusable 404 page shell used by both `NotFound.tsx` (prerendered `/404` route) and `CatchAll.tsx` (client-side fallback). Renders `Navbar`, a centered `<main id="main-content">` with an `<h1>`, body message, and "Go to Homepage" link, and `Footer`.
+Reusable 404 page shell used by both `NotFound.tsx` (prerendered `/404` route) and `CatchAll.tsx` (client-side fallback). Renders `Navbar`, a centered `<main id="main-content" tabIndex={-1}>` with an `<h1>`, body message, and "Go to Homepage" link, and `Footer`. The `tabIndex={-1}` is required so `FocusReset` can shift keyboard focus to `#main-content` after a SPA navigation lands on a 404.
 
 ```tsx
 <NotFoundPage title="Page Not Found" message="The page you're looking for doesn't exist." />
@@ -1624,9 +1626,10 @@ General-purpose utility functions.
 | `isSolutionUnlocked` | `(deadline: string \| undefined) => boolean` | Returns `true` when a solution is unlocked: no deadline set, or deadline has passed. Used in the `SolutionDetail` loader to gate access. |
 | `formatDeadline` | `(iso: string) => string` | Formats an ISO 8601 deadline string for human display, preserving the stored UTC offset rather than converting to the viewer's local timezone. `+01:00` renders as CET, `+02:00` as CEST. Returns the original string unchanged if it does not match the expected format. |
 | `resolveDiscussionUrl` | `(rawUrl: string \| null \| undefined, communityUrl: string) => string` | Resolves a raw `discussionUrl` field to an absolute URL. Full URLs pass through unchanged; relative paths are prepended with `communityUrl`; missing or empty values fall back to `communityUrl`. |
+| `escapeHtmlAttr` | `(s: string) => string` | Escapes `&`, `"`, `<`, `>` for safe use inside an HTML attribute value. Use this — not a manual regex — whenever a dynamic value is placed in a plain-text attribute in a template literal (e.g. `href="${escapeHtmlAttr(url)}"` inside `dangerouslySetInnerHTML`). JSX attribute interpolation does not need this; only raw HTML strings do. |
 
 ```ts
-import { cn, isDeadlinePast, isSolutionUnlocked, formatDeadline, resolveDiscussionUrl } from "@/lib/utils";
+import { cn, isDeadlinePast, isSolutionUnlocked, formatDeadline, resolveDiscussionUrl, escapeHtmlAttr } from "@/lib/utils";
 ```
 
 ---
@@ -1655,6 +1658,8 @@ export const meta: MetaFunction = () =>
 | `url` | `string` | required | Canonical URL and `og:url`. Normalized to end with `/` to match GitHub Pages' 301 redirects for directory routes. |
 | `ogType` | `string?` | `"website"` | `og:type` value. Use `"article"` for adventure and challenge pages. |
 | `extra` | `MetaDescriptor[]?` | `[]` | Additional tags appended after the standard set (e.g. `{ name: "robots", content: "noindex" }` for `Privacy`). |
+
+**Image alt text:** `og:image:alt` and `twitter:image:alt` are always set to the `OG_IMAGE_ALT` constant from `src/data/constants.ts`. Callers do not pass this value — it is fixed inside `buildPageMeta`. Never use the page title for the OG image alt; the image is a fixed brand card (`public/og.png`), not page-specific art.
 
 Every page's `meta()` must use this function. Do not inline the og/twitter tag block manually.
 

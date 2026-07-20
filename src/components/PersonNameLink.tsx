@@ -20,7 +20,6 @@ export const PersonNameLink = ({ name, url }: PersonNameLinkProps): JSX.Element 
     >
       {name}
       <ExternalLink size={12} aria-hidden="true" />
-      
     </a>
   );
 };

@@ -1,4 +1,4 @@
-import { type JSX } from "react";
+import { useState, useEffect, type JSX } from "react";
 import { useParams, useLoaderData, Link } from "react-router";
 import type { MetaFunction, LoaderFunctionArgs, LinksFunction } from "react-router";
 import { Check, Clock, ExternalLink, ArrowRight } from "lucide-react";
@@ -25,7 +25,7 @@ import { ChallengeShareLinks } from "@/components/ChallengeShareLinks";
 import { SITE_URL, BRAND_NAME, COMMUNITY_DISPLAY_NAME, COMMUNITY_URL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 import { stripHtml } from "@/lib/markdown";
-import { isDeadlinePast, isSolutionUnlocked, resolveDiscussionUrl } from "@/lib/utils";
+import { isDeadlinePast, isSolutionUnlocked, resolveDiscussionUrl, escapeHtmlAttr } from "@/lib/utils";
 import { InlineProse } from "@/components/InlineProse";
 import { Abbr } from "@/components/Abbr";
 
@@ -178,7 +178,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
 
           {/* Audience */}
           {level.audience && (
-            <CollapsibleSection id="audience" title="Best Suited For">
+            <CollapsibleSection id="audience" title="Best Suited For" headingLevel={2}>
               <InlineProse html={level.audience} className="text-sm text-dim leading-relaxed" />
             </CollapsibleSection>
           )}
@@ -219,7 +219,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
                 {
                   title: "Get Started",
                   content: [
-                    `<p><a href="${level.codespacesUrl.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint">Open in GitHub Codespaces</a>. The <abbr data-title="development container: a portable, reproducible coding environment defined by a configuration file" aria-describedby="abbr-devcontainer" tabindex="0">devcontainer</abbr><span id="abbr-devcontainer" class="sr-only">development container: a portable, reproducible coding environment defined by a configuration file</span> is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.</p>`,
+                    `<p><a href="${escapeHtmlAttr(level.codespacesUrl)}" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint">Open in GitHub Codespaces</a>. The <abbr data-title="development container: a portable, reproducible coding environment defined by a configuration file" aria-describedby="abbr-devcontainer" tabindex="0">devcontainer</abbr><span id="abbr-devcontainer" class="sr-only">development container: a portable, reproducible coding environment defined by a configuration file</span> is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.</p>`,
                     `<p>Prefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (<abbr data-title="Visual Studio Code" aria-describedby="abbr-vscode" tabindex="0">VS Code</abbr><span id="abbr-vscode" class="sr-only">Visual Studio Code</span>, JetBrains, and others). The devcontainer config will be detected automatically.</p>`,
                   ].join("\n"),
                 },
@@ -279,9 +279,8 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
                 rel="noopener noreferrer" aria-describedby="new-tab-hint"
                 className="docs-ext-link text-xs"
               >
-                Share your achievement on LinkedIn
+                  Share your achievement on LinkedIn
                 <ExternalLink size={11} aria-hidden="true" />
-                
               </a>
             </p>
           </section>
@@ -328,7 +327,6 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
                             >
                               {tool.name}
                               <ExternalLink size={12} aria-hidden="true" />
-                              
                             </a>
                           ) : (
                             <span className="font-medium text-foreground">{tool.name}</span>
@@ -359,7 +357,6 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
                           >
                             {link.title}
                             <ExternalLink size={11} aria-hidden="true" />
-                            
                           </a>
                         </span>
                       </li>
@@ -405,9 +402,25 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
 
 const ChallengeDetail = (): JSX.Element => {
   const { id, levelId } = useParams<{ id: string; levelId: string }>();
-  const { rewardsBelowFold, hasSolution } = useLoaderData<ReturnType<typeof loader>>();
+  const { rewardsBelowFold: initialRewardsBelowFold, hasSolution: initialHasSolution } = useLoaderData<ReturnType<typeof loader>>();
   const adventure = ADVENTURES.find((adventure) => adventure.id === id);
   const level = adventure?.levels.find((level) => level.id === levelId);
+
+  const [rewardsBelowFold, setRewardsBelowFold] = useState(initialRewardsBelowFold);
+  const [hasSolution, setHasSolution] = useState(initialHasSolution);
+
+  // Correct stale prerendered state when a deadline has passed since the last build.
+  // setState-in-effect is intentional here: the loader value comes from a static .data file
+  // and may be outdated; we recompute on mount with the current browser date.
+  useEffect(() => {
+    if (!adventure || !level) return;
+    const deadline = level.deadline ?? adventure.rewards?.deadline;
+    const nowPast = isDeadlinePast(deadline);
+    const nowHasSolution = isSolutionUnlocked(deadline) && SOLUTION_IDS.has(`${id}/${levelId}`);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setRewardsBelowFold(nowPast);
+    setHasSolution(nowHasSolution);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!adventure || !level) {
     return <NotFoundPage title="Challenge not found" message="The challenge you're looking for doesn't exist." />;
