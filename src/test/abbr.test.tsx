@@ -59,25 +59,42 @@ describe("Abbr: semantics", () => {
 });
 
 describe("Abbr: keyboard behavior", () => {
-  it("blurs the element when Escape is pressed (WCAG 1.4.13 dismissible)", () => {
-    mockRect();
-    render(<Abbr title="pull request">PR</Abbr>);
-    const abbr = screen.getByText("PR").closest("abbr")!;
-    // Spy with implementation so the native blur event still fires.
-    const blurSpy = vi.spyOn(abbr, "blur").mockImplementation(() => {
-      fireEvent.blur(abbr);
-    });
-    fireEvent.keyDown(abbr, { key: "Escape" });
-    expect(blurSpy).toHaveBeenCalledOnce();
-  });
+  const FOCUS_TOOLTIP_CLASS = "group-focus-within/abbr:opacity-100";
+  const tooltip = (): HTMLElement =>
+    document.querySelector<HTMLElement>("[aria-hidden='true']")!;
 
-  it("does not blur for non-Escape keys", () => {
+  it("dismisses the tooltip on Escape without moving focus", () => {
+    // WCAG 1.4.13: the tooltip must be dismissible without moving keyboard
+    // focus. Escape drops the focus-shown visibility class but keeps focus.
     mockRect();
     render(<Abbr title="pull request">PR</Abbr>);
     const abbr = screen.getByText("PR").closest("abbr")!;
     const blurSpy = vi.spyOn(abbr, "blur");
-    fireEvent.keyDown(abbr, { key: "Enter" });
+    abbr.focus();
+    expect(tooltip().className).toContain(FOCUS_TOOLTIP_CLASS);
+    fireEvent.keyDown(abbr, { key: "Escape" });
+    expect(abbr).toHaveFocus();
     expect(blurSpy).not.toHaveBeenCalled();
+    expect(tooltip().className).not.toContain(FOCUS_TOOLTIP_CLASS);
+  });
+
+  it("re-enables the focus tooltip after the element loses focus", () => {
+    mockRect();
+    render(<Abbr title="pull request">PR</Abbr>);
+    const abbr = screen.getByText("PR").closest("abbr")!;
+    abbr.focus();
+    fireEvent.keyDown(abbr, { key: "Escape" });
+    fireEvent.blur(abbr);
+    expect(tooltip().className).toContain(FOCUS_TOOLTIP_CLASS);
+  });
+
+  it("does not dismiss for non-Escape keys", () => {
+    mockRect();
+    render(<Abbr title="pull request">PR</Abbr>);
+    const abbr = screen.getByText("PR").closest("abbr")!;
+    abbr.focus();
+    fireEvent.keyDown(abbr, { key: "Enter" });
+    expect(tooltip().className).toContain(FOCUS_TOOLTIP_CLASS);
   });
 });
 

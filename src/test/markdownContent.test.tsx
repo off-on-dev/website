@@ -262,16 +262,15 @@ describe("MarkdownContent: abbr portal tooltip lifecycle", () => {
     expect(portal?.style.display).toBe("none");
   });
 
-  it("dismisses the tooltip on Escape key and blurs the abbr", () => {
+  it("hides the tooltip on Escape without moving focus", () => {
+    // WCAG 1.4.13: dismiss without moving keyboard focus. Escape hides the
+    // portal but must not blur the abbr.
     renderWithAbbr();
     const abbr = document.querySelector<HTMLElement>("abbr[data-title]")!;
-    // Spy with implementation so the native blur event still fires and immediateHide runs.
-    const blurSpy = vi.spyOn(abbr, "blur").mockImplementation(() => {
-      fireEvent.blur(abbr);
-    });
+    const blurSpy = vi.spyOn(abbr, "blur");
     fireEvent.focus(abbr);
     fireEvent.keyDown(abbr, { key: "Escape" });
-    expect(blurSpy).toHaveBeenCalledOnce();
+    expect(blurSpy).not.toHaveBeenCalled();
     const portal = findPortal("Kubernetes");
     expect(portal?.style.display).toBe("none");
   });

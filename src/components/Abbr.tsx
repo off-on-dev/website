@@ -13,6 +13,10 @@ export const Abbr = ({ title, children }: AbbrProps): JSX.Element => {
   // space, preventing an invisible tooltip from widening document.scrollWidth
   // on prerendered HTML at narrow viewports.
   const [pos, setPos] = useState<TooltipPosition>(null);
+  // Escape hides the focus-shown tooltip without blurring, so keyboard focus
+  // stays on the abbreviation (WCAG 1.4.13: dismiss without moving focus).
+  // Reset on blur so the tooltip works again next time the element is focused.
+  const [dismissed, setDismissed] = useState(false);
   const outerRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -47,9 +51,11 @@ export const Abbr = ({ title, children }: AbbrProps): JSX.Element => {
   }, []);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLElement>): void => {
-    if (e.key === "Escape") {
+    // Only handle Escape while the tooltip is showing; otherwise let it bubble
+    // (e.g. to close a surrounding dialog). Dismiss without moving focus.
+    if (e.key === "Escape" && !dismissed) {
       e.preventDefault();
-      e.currentTarget.blur();
+      setDismissed(true);
     }
   };
 
@@ -69,6 +75,7 @@ export const Abbr = ({ title, children }: AbbrProps): JSX.Element => {
         className="cursor-help underline decoration-dotted decoration-1 underline-offset-2 rounded-sm focus-ring-tight"
         onKeyDown={handleKeyDown}
         onClick={(e) => e.currentTarget.focus()}
+        onBlur={() => setDismissed(false)}
       >
         {children}
       </abbr>
@@ -82,7 +89,7 @@ export const Abbr = ({ title, children }: AbbrProps): JSX.Element => {
       */}
       <span
         aria-hidden="true"
-        className={`absolute top-full pt-1.5 w-max opacity-0 pointer-events-none transition-opacity group-hover/abbr:opacity-100 group-hover/abbr:pointer-events-auto group-focus-within/abbr:opacity-100 group-focus-within/abbr:pointer-events-auto z-[100]${pos === null ? " hidden" : pos.side === "left" ? " left-0" : " right-0"}`}
+        className={`absolute top-full pt-1.5 w-max opacity-0 pointer-events-none transition-opacity group-hover/abbr:opacity-100 group-hover/abbr:pointer-events-auto${dismissed ? "" : " group-focus-within/abbr:opacity-100 group-focus-within/abbr:pointer-events-auto"} z-[100]${pos === null ? " hidden" : pos.side === "left" ? " left-0" : " right-0"}`}
         style={pos !== null ? { maxWidth: pos.maxWidth } : undefined}
       >
         <span className="block px-2 py-1 text-xs bg-foreground text-background rounded break-words">

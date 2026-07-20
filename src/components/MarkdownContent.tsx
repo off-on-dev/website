@@ -110,9 +110,10 @@ export const MarkdownContent = ({ source }: MarkdownContentProps): JSX.Element =
       abbrEl.addEventListener("click", onClick);
       abbrEl.addEventListener("focus", positionAndShow);
       abbrEl.addEventListener("blur", immediateHide);
-      // Escape dismisses (WCAG 1.4.13 dismissible).
+      // Escape hides the tooltip without blurring, so keyboard focus stays on
+      // the abbreviation (WCAG 1.4.13: dismiss without moving focus).
       const onKeyDown = (e: Event): void => {
-        if ((e as KeyboardEvent).key === "Escape") { e.preventDefault(); abbrEl.blur(); }
+        if ((e as KeyboardEvent).key === "Escape") { e.preventDefault(); immediateHide(); }
       };
       abbrEl.addEventListener("keydown", onKeyDown);
       window.addEventListener("scroll", reposition, { capture: true });
