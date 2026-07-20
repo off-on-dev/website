@@ -48,7 +48,7 @@ export const THE_AI_OBSERVATORY: Adventure = {
       ],
       objective: [
         "Enable OpenTelemetry instrumentation for HubSystem using OpenLLMetry",
-        "Send traces to the OpenTelemetry Collector at <a href=\"http://localhost:30107\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">http://localhost:30107</a>",
+        "Send traces to the OpenTelemetry Collector at http://localhost:30107",
         "Analyze traces in Jaeger to find what causes the high bandwidth usage",
         "Provide the correct answer in quiz.txt",
       ],
