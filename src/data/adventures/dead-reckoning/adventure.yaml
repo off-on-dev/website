@@ -326,7 +326,7 @@ levels:
     emoji: 🔴
     title: The Chronometer
     devcontainer: dead-reckoning_expert
-    community_url: ""
+    community_url: https://community.offon.dev/t/trace-a-silent-failure-across-your-delivery-pipeline-july-2026-adventure-expert/1671
     summary: Repair the fleet's broken navigation log, then use the complete trace it produces to find why vessels arrive
       carrying the wrong cargo.
     topics:
