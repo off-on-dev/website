@@ -21,6 +21,7 @@ const ROUTES: RouteSpec[] = [
   { path: "/adventures/dead-reckoning", title: /Dead Reckoning/ },
   { path: "/adventures/dead-reckoning/levels/beginner", title: /Laying the Keel/ },
   { path: "/adventures/dead-reckoning/levels/intermediate", title: /Sea Trial/ },
+  { path: "/adventures/dead-reckoning/levels/expert", title: /The Chronometer/ },
   { path: "/adventures/lex-imperfecta", title: /Lex Imperfecta/ },
   { path: "/adventures/lex-imperfecta/levels/beginner", title: /The Twelve Tables/ },
   { path: "/adventures/lex-imperfecta/levels/intermediate", title: /Governing the Provinces/ },
