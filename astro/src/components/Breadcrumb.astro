@@ -1,0 +1,33 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  items: { label: string; href?: string }[];
+  class?: string;
+}
+const { items, class: className = "mb-5" } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const resolve = (href: string): string => (href.startsWith("http") ? href : base + href.replace(/^\//, ""));
+---
+
+<nav aria-label="Breadcrumb" class={className}>
+  <ol class="flex flex-wrap items-center gap-1 text-xs text-faint">
+    {
+      items.map((item, i) => (
+        <li class="flex items-center gap-1">
+          {i > 0 && <Icon name="lucide:chevron-right" width={12} height={12} aria-hidden="true" class="shrink-0" />}
+          {item.href ? (
+            <a
+              href={resolve(item.href)}
+              class="focus-ring-subtle inline-flex min-h-6 items-center rounded-sm transition-colors hover:text-foreground"
+            >
+              {item.label}
+            </a>
+          ) : (
+            <span aria-current="page">{item.label}</span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>

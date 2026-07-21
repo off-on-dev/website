@@ -1,0 +1,15 @@
+---
+// Renders pre-rendered prose HTML with the right wrapper: block HTML → <div
+// md-content>, inline HTML → <p md-inline>. Ported from src/components/InlineProse.tsx.
+const BLOCK_ELEMENT_RE = /<(p|ul|ol|blockquote|h[1-6]|pre|table|hr|figure|div)\b/;
+
+interface Props {
+  html: string;
+  class?: string;
+}
+const { html, class: className } = Astro.props;
+const isBlock = BLOCK_ELEMENT_RE.test(html);
+const cls = [className?.trim(), isBlock ? "md-content" : "md-inline"].filter(Boolean).join(" ");
+---
+
+{isBlock ? <div class={cls} set:html={html} /> : <p class={cls} set:html={html} />}

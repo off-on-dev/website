@@ -1,0 +1,58 @@
+---
+import { Icon } from "astro-icon/components";
+import InlineProse from "@/components/InlineProse.astro";
+import { formatDeadline } from "@/lib/utils";
+
+interface Props {
+  rewards: {
+    deadline: string;
+    eligibility: string;
+    tiers: { label: string; description: string }[];
+    rankingNote?: string;
+    rankingRulesUrl?: string;
+  };
+  deadlinePast?: boolean;
+}
+const { rewards, deadlinePast = false } = Astro.props;
+---
+
+<div class="rounded-xl border border-primary/30 bg-[hsl(var(--surface))] p-5">
+  <div class="mb-4 flex items-center gap-2">
+    <Icon name="lucide:trophy" width={15} height={15} class="shrink-0 text-primary" aria-hidden="true" />
+    <h2 class="font-sans text-base font-semibold text-foreground">Rewards</h2>
+  </div>
+
+  {
+    deadlinePast ? (
+      <p class="mb-4 text-xs leading-relaxed text-dim">
+        The deadline has passed, but the adventure is still open. Play it and post your solution in the community.
+      </p>
+    ) : (
+      <p class="mb-4 text-xs leading-relaxed text-dim"><span class="md-inline" set:html={rewards.eligibility} /></p>
+    )
+  }
+
+  <div class="space-y-3">
+    {
+      rewards.tiers.map((tier) => (
+        <div>
+          <p class="text-xs font-semibold text-foreground">{tier.label}</p>
+          <InlineProse html={tier.description} class="text-xs text-dim" />
+        </div>
+      ))
+    }
+  </div>
+
+  {rewards.rankingNote && (
+    <p class="mt-4 text-xs leading-relaxed text-faint"><span class="md-inline" set:html={rewards.rankingNote} /></p>
+  )}
+
+  {rewards.deadline && (
+    <>
+      <div class="my-3 border-t border-border"></div>
+      <p class="text-xs text-faint">
+        Deadline: <span class="font-medium text-foreground">{formatDeadline(rewards.deadline)}</span>
+      </p>
+    </>
+  )}
+</div>
