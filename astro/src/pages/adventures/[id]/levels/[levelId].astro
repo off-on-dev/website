@@ -1,0 +1,173 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import { BRAND_NAME } from "@/lib/site";
+import { stripHtml } from "@/lib/markdown";
+import { getDiscussion, getLeaderboard } from "@/lib/community-data";
+
+export async function getStaticPaths() {
+  const adventures = await getCollection("adventures");
+  return adventures.flatMap((a) =>
+    a.data.levels.map((level) => ({
+      params: { id: a.id, levelId: level.id },
+      props: { adventure: a.data, level },
+    })),
+  );
+}
+
+const { adventure, level } = Astro.props;
+const discussion = getDiscussion(adventure.slug, level.id);
+const leaderboard = getLeaderboard(adventure.slug);
+const posts = discussion?.discussionPosts?.slice(0, 5) ?? [];
+const topRows = leaderboard?.rows?.slice(0, 5) ?? [];
+---
+
+<Layout
+  title={`${level.name} - ${adventure.title} - ${BRAND_NAME}`}
+  description={level.metaDescription}
+  path={`/adventures/${adventure.slug}/levels/${level.id}/`}
+  ogType="article"
+>
+  <main id="main-content" tabindex="-1" class="mx-auto max-w-3xl px-4 py-12">
+    <nav aria-label="Breadcrumb" class="text-xs text-faint">
+      <a class="docs-ext-link" href={`${import.meta.env.BASE_URL}adventures/${adventure.slug}/`}>{adventure.title}</a>
+      <span> / {level.name}</span>
+    </nav>
+
+    <div class="mt-3 flex flex-wrap items-center gap-3">
+      <h1 class="text-3xl md:text-4xl font-bold text-foreground">{level.name}</h1>
+      <span class="rounded-full border border-border px-3 py-1 text-xs text-dim">{level.difficulty}</span>
+      {level.estimatedTime ? <span class="text-xs text-faint">{level.estimatedTime}</span> : null}
+    </div>
+
+    {level.hook ? <div class="mt-4 text-lg text-dim md-content" set:html={level.hook} /> : null}
+
+    {level.intro?.length ? (
+      <div class="mt-4">
+        {level.intro.map((p) => <p class="mt-2 text-dim md-inline" set:html={p} />)}
+      </div>
+    ) : null}
+
+    <div class="mt-6 flex flex-wrap gap-3">
+      <a class="btn-primary" href={level.codespacesUrl} target="_blank" rel="noopener noreferrer">
+        Start in Codespaces
+      </a>
+      {level.discussionUrl ? (
+        <a class="btn-ghost" href={level.discussionUrl} target="_blank" rel="noopener noreferrer">
+          Discussion
+        </a>
+      ) : null}
+    </div>
+
+    {level.audience ? (
+      <p class="mt-4 text-sm text-faint md-inline" set:html={level.audience} />
+    ) : null}
+
+    {level.scenario ? (
+      <section aria-labelledby="scenario-heading" class="mt-10">
+        <h2 id="scenario-heading" class="text-lg font-semibold text-foreground">Scenario</h2>
+        <div class="mt-3 text-dim md-content" set:html={level.scenario} />
+      </section>
+    ) : null}
+
+    {level.objective?.length ? (
+      <section aria-labelledby="objective-heading" class="mt-10">
+        <h2 id="objective-heading" class="text-lg font-semibold text-foreground">Objective</h2>
+        <ul class="mt-3 list-disc pl-6 text-dim">
+          {level.objective.map((o) => <li class="mt-1 md-inline" set:html={o} />)}
+        </ul>
+      </section>
+    ) : null}
+
+    {level.toolbox?.length ? (
+      <section aria-labelledby="toolbox-heading" class="mt-10">
+        <h2 id="toolbox-heading" class="text-lg font-semibold text-foreground">Toolbox</h2>
+        <ul class="mt-3 grid gap-3 sm:grid-cols-2">
+          {level.toolbox.map((tool) => (
+            <li class="rounded-lg border border-border p-3">
+              <p class="font-medium text-foreground">
+                {tool.url ? (
+                  <a class="docs-ext-link" href={tool.url} target="_blank" rel="noopener noreferrer">{tool.name}</a>
+                ) : (
+                  tool.name
+                )}
+              </p>
+              <p class="mt-1 text-sm text-dim md-inline" set:html={tool.description} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    ) : null}
+
+    {level.howToPlay?.length ? (
+      <section aria-labelledby="walkthrough-heading" class="mt-10">
+        <h2 id="walkthrough-heading" class="text-lg font-semibold text-foreground">Walkthrough</h2>
+        <ol class="mt-4 space-y-6">
+          {level.howToPlay.map((step, i) => (
+            <li>
+              <h3 class="font-semibold text-foreground">
+                <span class="text-faint">{i + 1}. </span><span class="md-inline" set:html={step.title} />
+              </h3>
+              <div class="mt-2 text-dim md-content" set:html={step.content} />
+            </li>
+          ))}
+        </ol>
+      </section>
+    ) : null}
+
+    {level.verification ? (
+      <section aria-labelledby="verify-heading" class="mt-10">
+        <h2 id="verify-heading" class="text-lg font-semibold text-foreground">Verify</h2>
+        <p class="mt-2 text-dim">{level.verification.description}</p>
+        <pre tabindex="0" aria-label="Verification command" class="mt-2 overflow-x-auto rounded bg-black/30 p-3 text-sm"><code>{level.verification.command}</code></pre>
+      </section>
+    ) : null}
+
+    {level.helpfulLinks?.length ? (
+      <section aria-labelledby="links-heading" class="mt-10">
+        <h2 id="links-heading" class="text-lg font-semibold text-foreground">Further Reading</h2>
+        <ul class="mt-3 list-disc pl-6">
+          {level.helpfulLinks.map((link) => (
+            <li class="mt-1">
+              <a class="docs-ext-link" href={link.url} target="_blank" rel="noopener noreferrer">{link.title}</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ) : null}
+
+    {posts.length ? (
+      <section aria-labelledby="discussion-heading" class="mt-10">
+        <h2 id="discussion-heading" class="text-lg font-semibold text-foreground">
+          Community Discussion
+          {discussion?.totalReplies ? <span class="text-sm font-normal text-faint"> ({discussion.totalReplies} replies)</span> : null}
+        </h2>
+        <ul class="mt-4 space-y-3">
+          {posts.map((post) => (
+            <li class="rounded-lg border border-border p-3">
+              <p class="text-sm font-medium text-foreground">
+                {post.username}
+                {post.challengeSolved ? <span class="ml-2 text-xs text-faint">solved</span> : null}
+              </p>
+              <p class="mt-1 text-sm text-dim line-clamp-3">{stripHtml(post.cooked)}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ) : null}
+
+    {topRows.length ? (
+      <section aria-labelledby="leaderboard-heading" class="mt-10">
+        <h2 id="leaderboard-heading" class="text-lg font-semibold text-foreground">Leaderboard</h2>
+        <ol class="mt-3 space-y-1">
+          {topRows.map((row) => (
+            <li class="flex items-center justify-between text-sm text-dim">
+              <span><span class="text-faint">#{row.rank}</span> {row.username}</span>
+              <span class="text-faint">{row.points} pts</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+    ) : null}
+  </main>
+</Layout>
