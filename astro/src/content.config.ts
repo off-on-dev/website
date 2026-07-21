@@ -13,6 +13,11 @@ import {
 } from "./lib/markdown-pipeline.mjs";
 import { LEVEL_DIFFICULTY_BY_EMOJI } from "./lib/level-constants.mjs";
 import { parseDeadline } from "./lib/deadline.mjs";
+import {
+  buildLevelMetaDescription,
+  buildAdventureMetaDescription,
+  buildServicesStepBody,
+} from "./lib/adventure-derive.mjs";
 
 // Read the real app's adventure YAML. Resolved from this file's location:
 // astro/src/content.config.ts -> ../../src/data/adventures.
@@ -167,6 +172,11 @@ async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Record<s
   const learnings = level.learnings ?? level.what_you_learn ?? [];
   const intro = level.intro ?? (level.summary ? [level.summary] : undefined);
 
+  // Inject an "Explore the UIs" step from services (ported from the generator).
+  const steps: { title: string; content: string }[] = [...level.how_to_play];
+  const servicesBody = buildServicesStepBody(level.services);
+  if (servicesBody) steps.splice(1, 0, { title: "Explore the UIs", content: servicesBody });
+
   const [
     learningsHtml,
     audienceHtml,
@@ -191,7 +201,7 @@ async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Record<s
       level.toolbox.map(async (t) => ({ ...t, description: await mdToInline(t.description) })),
     ),
     Promise.all(
-      level.how_to_play.map(async (s) => ({
+      steps.map(async (s) => ({
         title: await mdToInline(s.title),
         content: await mdToBlock(s.content),
       })),
@@ -223,9 +233,7 @@ async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Record<s
     howToPlay,
     ...(level.helpful_links ? { helpfulLinks: level.helpful_links } : {}),
     verification: level.verification,
-    // TODO(phase-2b): meta_description synthesis (buildLevelMetaDescription). Explicit only for now.
-    ...(level.meta_description ? { metaDescription: level.meta_description } : {}),
-    // TODO(phase-2b): services -> "Explore the UIs" how_to_play step injection.
+    metaDescription: level.meta_description || buildLevelMetaDescription(level),
   };
 }
 
@@ -317,9 +325,9 @@ const adventures = defineCollection({
         title,
         month: data.month,
         story: storyHtml,
+        metaDescription: data.meta_description || buildAdventureMetaDescription(data),
         tags: data.tags,
         ...(icon ? { icon } : {}),
-        ...(data.meta_description ? { metaDescription: data.meta_description } : {}),
         ...(data.contributor
           ? {
               contributor: {

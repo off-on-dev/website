@@ -8,6 +8,11 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
 import { mdToInline, mdToBlock } from "../src/lib/markdown-pipeline.mjs";
+import {
+  buildLevelMetaDescription,
+  buildAdventureMetaDescription,
+  buildServicesStepBody,
+} from "../src/lib/adventure-derive.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const ADV = resolve(ROOT, "src/data/adventures");
@@ -53,17 +58,24 @@ for (const dir of readdirSync(ADV, { withFileTypes: true })) {
   }
   // adventure story -> inline (when explicit)
   if (data.story) check("story", await mdToInline(data.story), gen);
+  // adventure metaDescription (synthesized when absent) — plain text
+  check("adventure.metaDescription", data.meta_description || buildAdventureMetaDescription(data), gen);
 
   for (const level of data.levels ?? []) {
     // learnings (inline array)
     const learnings = level.learnings ?? level.what_you_learn ?? [];
     for (const l of learnings) check(`${level.level}.learning`, await mdToInline(l), gen);
-    // how_to_play content (block) — exercises code blocks, links, external-link annotation
-    for (const step of level.how_to_play ?? []) {
+    // how_to_play content (block), incl. the injected "Explore the UIs" services step
+    const steps = [...(level.how_to_play ?? [])];
+    const servicesBody = buildServicesStepBody(level.services);
+    if (servicesBody) steps.splice(1, 0, { title: "Explore the UIs", content: servicesBody });
+    for (const step of steps) {
       check(`${level.level}.how_to_play.content`, await mdToBlock(step.content), gen);
     }
     // audience (inline) — often contains abbr in blind-by-design/lex-imperfecta
     if (level.audience) check(`${level.level}.audience`, await mdToInline(level.audience), gen);
+    // level metaDescription (synthesized when absent) — plain text
+    check(`${level.level}.metaDescription`, level.meta_description || buildLevelMetaDescription(level), gen);
   }
 }
 

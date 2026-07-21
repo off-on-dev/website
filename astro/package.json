@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "sync": "astro sync",
+    "verify:content": "node scripts/verify-gate.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.2.1",
