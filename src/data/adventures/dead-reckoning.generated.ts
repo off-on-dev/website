@@ -215,7 +215,7 @@ commissioned vessel stage by stage and reports the first place the pipeline runs
         "How to read that trace in <a href=\"https://www.jaegertracing.io/docs/latest/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">Jaeger</a> to localise a fault to a single service by following one attribute across the whole voyage",
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2Fdead-reckoning_expert%2Fdevcontainer.json&quickstart=1&machine=standardLinux32gb`,
-      discussionUrl: "",
+      discussionUrl: "https://community.offon.dev/t/trace-a-silent-failure-across-your-delivery-pipeline-july-2026-adventure-expert/1671",
       deadline: "2026-07-28T23:59:00+01:00",
       intro: [
         "Repair the fleet's broken navigation log, then use the complete trace it produces to find why vessels arrive carrying the wrong cargo.",
