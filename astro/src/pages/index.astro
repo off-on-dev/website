@@ -1,0 +1,24 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import IslandCheck from "@/components/IslandCheck.vue";
+import { getCollection } from "astro:content";
+
+// Scaffold placeholder. Real pages land in Phase 3.
+const adventures = await getCollection("adventures");
+---
+
+<Layout title="OffOn — Astro scaffold" description="Phase 1 scaffold placeholder.">
+  <main id="main-content" tabindex="-1" class="mx-auto max-w-2xl p-8">
+    <h1 class="text-3xl font-bold">Astro scaffold (Phase 1)</h1>
+    <p class="mt-2 text-sm">
+      Shell, content collection, Tailwind, and Vue island all wired.
+      {adventures.length} adventures loaded.
+    </p>
+    <ul class="mt-4 list-disc pl-6">
+      {adventures.map((a) => <li>{a.data.title}</li>)}
+    </ul>
+    <div class="mt-6">
+      <IslandCheck client:idle />
+    </div>
+  </main>
+</Layout>

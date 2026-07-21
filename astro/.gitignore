@@ -1,0 +1,4 @@
+# Astro migration app (nested during migration)
+node_modules/
+dist/
+.astro/
