@@ -1,0 +1,59 @@
+---
+import { Icon } from "astro-icon/components";
+import { BRAND_SLOGAN_PARTS, BRAND_SECONDARY_LINE_PARTS, COMMUNITY_URL } from "@/lib/site";
+
+const base = import.meta.env.BASE_URL;
+const fireflies = Array.from({ length: 8 });
+---
+
+<section
+  aria-labelledby="hero-heading"
+  class="relative flex min-h-dvh items-center justify-center px-6 pt-20"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    {fireflies.map(() => <span class="firefly"></span>)}
+  </div>
+
+  <div class="relative z-10 mx-auto max-w-3xl text-center">
+    <div
+      class="animate-fade-up hero-badge mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-[hsl(var(--surface))] px-4 py-1.5"
+    >
+      <Icon name="lucide:zap" width={12} height={12} aria-hidden="true" class="text-foreground" />
+      <span class="text-sm text-foreground">{BRAND_SLOGAN_PARTS[0]}</span>
+      <Icon name="lucide:zap" width={14} height={14} aria-hidden="true" class="text-foreground" />
+      <span class="text-sm text-foreground">{BRAND_SLOGAN_PARTS[1]}</span>
+      <Icon name="lucide:zap" width={14} height={14} aria-hidden="true" class="text-foreground" />
+      <span class="text-sm text-foreground">{BRAND_SLOGAN_PARTS[2]}</span>
+    </div>
+
+    <h1
+      id="hero-heading"
+      class="animate-fade-up-delay-1 font-heading text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
+    >
+      <span class="block text-primary">{BRAND_SECONDARY_LINE_PARTS[0]}</span>
+      <span class="block text-foreground">{BRAND_SECONDARY_LINE_PARTS[1]}</span>
+    </h1>
+
+    <p class="animate-fade-up-delay-2 mx-auto mt-6 max-w-xl font-sans text-lg leading-relaxed text-dim">
+      A welcoming community for open source enthusiasts. Learn through hands-on challenges, share your
+      knowledge, and grow alongside people who love open source as much as you do.
+    </p>
+
+    <div class="animate-fade-up-delay-3 mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+      <a href={`${base}challenges/`} class="btn-primary inline-flex items-center gap-1">
+        Start a Challenge
+        <Icon name="lucide:arrow-down" width={16} height={16} aria-hidden="true" />
+      </a>
+      <a
+        href={COMMUNITY_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-describedby="new-tab-hint"
+        class="btn-ghost inline-flex items-center gap-1"
+      >
+        Join the Community
+        <Icon name="lucide:external-link" width={16} height={16} aria-hidden="true" />
+      </a>
+    </div>
+  </div>
+</section>

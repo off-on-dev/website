@@ -1,0 +1,24 @@
+---
+import { Icon } from "astro-icon/components";
+
+// Maps the stored icon name (Lucide PascalCase) to the astro-icon lucide slug.
+const MAP: Record<string, string> = {
+  Building2: "building-2",
+  Compass: "compass",
+  Cloud: "cloud",
+  FlaskConical: "flask-conical",
+  Satellite: "satellite",
+  Scale: "scale",
+  Telescope: "telescope",
+};
+
+interface Props {
+  icon?: string;
+  size?: number;
+  class?: string;
+}
+const { icon, size = 16, class: className } = Astro.props;
+const name = icon ? MAP[icon] : undefined;
+---
+
+{name && <Icon name={`lucide:${name}`} width={size} height={size} aria-hidden="true" class={className} />}

@@ -19,6 +19,8 @@ export const CONSENT_STORAGE_KEY = "analytics_consent";
 export const CONSENT_EXPIRY_MS = 1000 * 60 * 60 * 24 * 180;
 export const BRAND_SHORT_DESCRIPTION =
   "A welcoming open source community to learn through hands-on challenges, share knowledge, and build together.";
+export const BRAND_SLOGAN_PARTS = ["Vendor-Neutral", "Open Source", "Community-Driven"] as const;
+export const BRAND_SECONDARY_LINE_PARTS = ["always On.", "always Open.", "always Learning."] as const;
 
 /** Canonical URL for a path: SITE_URL + path, normalized to a trailing slash
  *  (GitHub Pages 301-redirects directory routes to the trailing-slash form). */

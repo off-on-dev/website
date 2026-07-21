@@ -1,8 +1,9 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
-import { BRAND_NAME, BRAND_SHORT_DESCRIPTION, COMMUNITY_URL } from "@/lib/site";
-import { stripHtml } from "@/lib/markdown";
+import Hero from "@/components/Hero.astro";
+import AdventureCard from "@/components/AdventureCard.astro";
+import { BRAND_NAME, BRAND_SHORT_DESCRIPTION } from "@/lib/site";
 
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 const monthKey = (m: string): number => {
@@ -10,45 +11,32 @@ const monthKey = (m: string): number => {
   return Number(year) * 12 + Math.max(0, MONTHS.indexOf(mon));
 };
 
-const featured = (await getCollection("adventures"))
-  .map((a) => a.data)
-  .sort((x, y) => monthKey(y.month) - monthKey(x.month))
-  .slice(0, 3);
+// Build-time isLive: active rewards window or any future level deadline. Frozen
+// at build (same caveat as the React summaries); a client re-check can refine it later.
+const now = new Date();
+const isLive = (a: { rewards?: { deadline?: string }; levels: { deadline?: string }[] }): boolean =>
+  !!(a.rewards?.deadline && new Date(a.rewards.deadline) > now) ||
+  a.levels.some((l) => l.deadline && new Date(l.deadline) > now);
 
-const base = import.meta.env.BASE_URL;
+const adventures = (await getCollection("adventures"))
+  .map((a) => a.data)
+  .sort((x, y) => monthKey(y.month) - monthKey(x.month));
 ---
 
 <Layout title={`${BRAND_NAME} - Learn Open Source by Doing`} description={BRAND_SHORT_DESCRIPTION} path="/">
   <main id="main-content" tabindex="-1">
-    <section class="mx-auto max-w-4xl px-4 py-20 text-center">
-      <p class="text-sm uppercase tracking-widest text-faint">Vendor-Neutral · Open Source · Community-Driven</p>
-      <h1 class="mt-4 text-4xl font-bold text-foreground md:text-5xl">
-        <span class="block">always On.</span>
-        <span class="block">always Open.</span>
-      </h1>
-      <p class="mx-auto mt-6 max-w-xl text-lg text-dim">{BRAND_SHORT_DESCRIPTION}</p>
-      <div class="mt-8 flex flex-wrap justify-center gap-3">
-        <a class="btn-primary" href={`${base}challenges/`}>Explore Challenges</a>
-        <a class="btn-ghost" href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint">
-          Join the Community
-        </a>
-      </div>
-    </section>
+    <Hero />
 
-    <section aria-labelledby="featured-heading" class="mx-auto max-w-5xl px-4 pb-20">
-      <div class="flex items-baseline justify-between">
-        <h2 id="featured-heading" class="text-2xl font-bold text-foreground">Latest Adventures</h2>
-        <a class="docs-ext-link text-sm" href={`${base}adventures/`}>All adventures</a>
+    <section id="challenges" aria-labelledby="challenges-heading" class="mx-auto max-w-6xl px-6 py-20">
+      <div class="mb-8 flex items-baseline justify-between">
+        <h2 id="challenges-heading" class="font-heading text-2xl font-bold text-foreground sm:text-3xl">
+          Open Source Adventures
+        </h2>
+        <a class="docs-ext-link text-sm" href={`${import.meta.env.BASE_URL}adventures/`}>View all</a>
       </div>
-      <ul class="mt-6 grid gap-4 sm:grid-cols-3">
-        {featured.map((a) => (
-          <li class="rounded-lg border border-border p-5">
-            <a class="docs-ext-link text-lg font-semibold text-foreground" href={`${base}adventures/${a.slug}/`}>{a.title}</a>
-            <p class="mt-1 text-xs uppercase tracking-widest text-faint">{a.month}</p>
-            <p class="mt-2 text-sm text-dim line-clamp-3">{stripHtml(a.story)}</p>
-          </li>
-        ))}
-      </ul>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {adventures.map((a) => <AdventureCard adventure={{ ...a, isLive: isLive(a) }} />)}
+      </div>
     </section>
   </main>
 </Layout>
