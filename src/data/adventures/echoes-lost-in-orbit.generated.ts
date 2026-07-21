@@ -12,10 +12,10 @@ export const ECHOES_LOST_IN_ORBIT: Adventure = {
   contributor: {
     name: "Katharina Sick",
     url: "https://ksick.dev/",
-    aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
+    aboutHtml: "<abbr data-title=\"Developer Relations\" tabindex=\"0\" aria-describedby=\"abbr-exp-51\">DevRel</abbr><span id=\"abbr-exp-51\" class=\"sr-only\">Developer Relations</span> at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
   },
   backstory: [
-    "Welcome aboard the GitOps Starliner, a multi-species engineering vessel orbiting the vibrant planet of Polaris-9. Life in this quadrant is wonderfully diverse, from the whispering cloud-dwellers of Nebulon to the rhythmic click-speakers of Crustacea Prime.",
+    "Welcome aboard the <abbr data-title=\"Git Operations\" tabindex=\"0\" aria-describedby=\"abbr-exp-52\">GitOps</abbr><span id=\"abbr-exp-52\" class=\"sr-only\">Git Operations</span> Starliner, a multi-species engineering vessel orbiting the vibrant planet of Polaris-9. Life in this quadrant is wonderfully diverse, from the whispering cloud-dwellers of Nebulon to the rhythmic click-speakers of Crustacea Prime.",
     "Communication between species used to be seamless, thanks to the Echo Server, a universal translator that instantly echoed your words in the listener's native format.",
     "But lately, something's off. Messages are getting scrambled. Some transmissions never arrive. The Echo Server, deployed across the Staging Moonbase and the Production Outpost, is no longer syncing properly. The Argo CD dashboard shows no active deployments, and telemetry is suspiciously quiet.",
     "You've been assigned to restore interstellar communication before the next critical mission.",
@@ -27,7 +27,7 @@ export const ECHOES_LOST_IN_ORBIT: Adventure = {
       difficulty: "Beginner",
       topics: ["Argo CD"],
       learnings: [
-        "Debug GitOps flows with Argo CD",
+        "Debug <abbr data-title=\"Git Operations\" tabindex=\"0\" aria-describedby=\"abbr-exp-53\">GitOps</abbr><span id=\"abbr-exp-53\" class=\"sr-only\">Git Operations</span> flows with Argo CD",
         "ApplicationSet templating &#x26; pitfalls",
         "Environment isolation &#x26; namespaces",
         "Sync policies: automated, prune &#x26; self-heal",
@@ -49,9 +49,9 @@ export const ECHOES_LOST_IN_ORBIT: Adventure = {
         "Confirm that updates roll out automatically without leaving stale resources behind",
       ],
       toolbox: [
-        { name: "kubectl", description: "Kubernetes CLI for interacting with the cluster", url: "https://kubernetes.io/docs/reference/kubectl/" },
+        { name: "kubectl", description: "Kubernetes <abbr data-title=\"Command Line Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-54\">CLI</abbr><span id=\"abbr-exp-54\" class=\"sr-only\">Command Line Interface</span> for interacting with the cluster", url: "https://kubernetes.io/docs/reference/kubectl/" },
         { name: "kubens", description: "fast way to switch between Kubernetes namespaces", url: "https://github.com/ahmetb/kubectx" },
-        { name: "k9s", description: "terminal UI for managing and inspecting your cluster", url: "https://k9scli.io/" },
+        { name: "k9s", description: "terminal <abbr data-title=\"User Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-55\">UI</abbr><span id=\"abbr-exp-55\" class=\"sr-only\">User Interface</span> for managing and inspecting your cluster", url: "https://k9scli.io/" },
       ],
       howToPlay: [
         { title: "Wait for Infrastructure", content: "<p>Wait around 5 minutes for the Codespace to provision a Kubernetes cluster, Argo CD, and the sample app. Press Cmd+Shift+P (or Ctrl+Shift+P on Windows/Linux) and search for 'View Creation Log' to track progress.</p>" },
@@ -106,9 +106,9 @@ export const ECHOES_LOST_IN_ORBIT: Adventure = {
         "All rollouts complete successfully",
       ],
       toolbox: [
-        { name: "kubectl", description: "Kubernetes CLI for interacting with the cluster", url: "https://kubernetes.io/docs/reference/kubectl/" },
+        { name: "kubectl", description: "Kubernetes <abbr data-title=\"Command Line Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-56\">CLI</abbr><span id=\"abbr-exp-56\" class=\"sr-only\">Command Line Interface</span> for interacting with the cluster", url: "https://kubernetes.io/docs/reference/kubectl/" },
         { name: "kubens", description: "fast way to switch between Kubernetes namespaces", url: "https://github.com/ahmetb/kubectx" },
-        { name: "k9s", description: "terminal UI for managing and inspecting your cluster", url: "https://k9scli.io/" },
+        { name: "k9s", description: "terminal <abbr data-title=\"User Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-57\">UI</abbr><span id=\"abbr-exp-57\" class=\"sr-only\">User Interface</span> for managing and inspecting your cluster", url: "https://k9scli.io/" },
         { name: "Argo CD CLI", description: "manage Argo CD applications from the command line", url: "https://argo-cd.readthedocs.io/en/latest/user-guide/commands/argocd/" },
         { name: "Argo Rollouts kubectl plugin", description: "extended kubectl commands for managing rollouts", url: "https://argo-rollouts.readthedocs.io/en/stable/features/kubectl-plugin/" },
       ],
@@ -182,13 +182,13 @@ kubectl argo rollouts get rollout echo-server -n echo-prod --watch
       ],
       objective: [
         "Automated rollout progression to HotROD version 1.76.0 driven by observability signals",
-        "OpenTelemetry Collector configured with an OTLP receiver for HotROD traces, a Spanmetrics connector converting traces to metrics, trace export to Jaeger, and metrics export to Prometheus",
+        "OpenTelemetry Collector configured with an <abbr data-title=\"OpenTelemetry Protocol\" tabindex=\"0\" aria-describedby=\"abbr-exp-58\">OTLP</abbr><span id=\"abbr-exp-58\" class=\"sr-only\">OpenTelemetry Protocol</span> receiver for HotROD traces, a Spanmetrics connector converting traces to metrics, trace export to Jaeger, and metrics export to Prometheus",
         "Canary analysis with three PromQL queries: traffic detection (at least 0.05 req/s to prevent idle canaries), error rate below 5%, and 95th-percentile latency below 1000ms",
       ],
       toolbox: [
-        { name: "kubectl", description: "Kubernetes CLI for interacting with the cluster", url: "https://kubernetes.io/docs/reference/kubectl/" },
+        { name: "kubectl", description: "Kubernetes <abbr data-title=\"Command Line Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-59\">CLI</abbr><span id=\"abbr-exp-59\" class=\"sr-only\">Command Line Interface</span> for interacting with the cluster", url: "https://kubernetes.io/docs/reference/kubectl/" },
         { name: "kubens", description: "fast way to switch between Kubernetes namespaces", url: "https://github.com/ahmetb/kubectx" },
-        { name: "k9s", description: "terminal UI for managing and inspecting your cluster", url: "https://k9scli.io/" },
+        { name: "k9s", description: "terminal <abbr data-title=\"User Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-60\">UI</abbr><span id=\"abbr-exp-60\" class=\"sr-only\">User Interface</span> for managing and inspecting your cluster", url: "https://k9scli.io/" },
         { name: "Argo CD CLI", description: "manage Argo CD applications from the command line", url: "https://argo-cd.readthedocs.io/en/latest/user-guide/commands/argocd/" },
         { name: "Argo Rollouts kubectl plugin", description: "extended kubectl commands for managing rollouts", url: "https://argo-rollouts.readthedocs.io/en/stable/features/kubectl-plugin/" },
       ],
@@ -215,7 +215,7 @@ argocd app get otel --refresh
 <p>If you changed HotROD, retry the rollout:</p>
 <pre tabindex="0" aria-label="Code block"><code class="language-sh">kubectl argo rollouts retry rollout hotrod -n hotrod
 </code></pre>
-<p>If you changed the OTel Collector config, restart it:</p>
+<p>If you changed the <abbr data-title="OpenTelemetry" tabindex="0" aria-describedby="abbr-exp-61">OTel</abbr><span id="abbr-exp-61" class="sr-only">OpenTelemetry</span> Collector config, restart it:</p>
 <pre tabindex="0" aria-label="Code block"><code class="language-sh">kubectl rollout restart daemonset/collector -n otel
 </code></pre>` },
         { title: "Watch the Rollout", content: `<p>Watch rollout progress. The rollout should progress automatically based on analysis metrics:</p>

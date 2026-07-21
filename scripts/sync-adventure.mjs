@@ -231,6 +231,9 @@ async function main() {
       writeFileSync(resolve(diagramsDir, raw.architecture_diagram), svgContent);
       fetchedDiagrams.add(raw.architecture_diagram);
       console.log(`  Fetched diagram: ${raw.architecture_diagram}`);
+    } else if (existsSync(resolve(diagramsDir, raw.architecture_diagram))) {
+      fetchedDiagrams.add(raw.architecture_diagram);
+      console.log(`  Diagram not in challenges repo — using existing local file: ${raw.architecture_diagram}`);
     } else {
       console.warn(`  Diagram not found at docs/diagrams/${raw.architecture_diagram} — add SVG manually to src/assets/diagrams/`);
     }

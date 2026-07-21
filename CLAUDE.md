@@ -242,7 +242,7 @@ When diagnosing a bug, especially in the production build, follow these rules wi
 - **Buttons:** use raw `<button>` elements with the CSS utility classes defined in `src/index.css` (`.btn-primary`, `.btn-ghost`, `.btn-soft`, `.btn-inverse`, `.btn-ghost-inverse`). There is no `Button` component wrapper and no `@radix-ui/react-slot` dependency. See `styleguide.md` for which class to use on which background color.
 - **Toasts:** if toast notifications are ever needed, install `sonner` and add `src/components/ui/sonner.tsx` (shadcn pattern). Mount `<Toaster>` in the nearest layout that actually triggers a toast. Do not install speculatively.
 - **TooltipProvider** is intentionally not mounted in `Layout.tsx` until a call site exists. Wrap only the subtree that uses `<Tooltip>` with `<TooltipProvider>` at that point.
-- **Author-controlled prose fields contain pre-rendered HTML.** Every YAML/TS field that holds prose written by a challenge author (`level.audience`, `tool.description`, `step.title`, `step.content`, `contributor.about`, `rewards.eligibility`, `tier.description`, `rewards.rankingNote`, `level.learnings`, `level.objective`, `level.intro`, `level.backstory`, `level.scenario`, `level.architecture`, `adventure.story`, `adventure.backstory`) is converted from Markdown to sanitised HTML at build time by `scripts/generate-adventures.mjs`. Always render them with `dangerouslySetInnerHTML={{ __html: value }}` and the `md-inline` (inline prose) or `md-content` (block content) CSS class. Never render as `{value}` directly. Identifier fields (`id`, URLs, enum values like `difficulty`, emoji) are not author prose and are rendered directly.
+- **Author-controlled prose fields contain pre-rendered HTML.** Every YAML/TS field that holds prose written by a challenge author (`level.audience`, `tool.description`, `step.title`, `step.content`, `contributor.about`, `rewards.eligibility`, `tier.description`, `rewards.ranking_note`, `level.learnings`, `level.objective`, `level.intro`, `level.backstory`, `level.hook`, `level.scenario`, `level.architecture`, `adventure.story`, `adventure.backstory`) is converted from Markdown to sanitised HTML at build time by `scripts/generate-adventures.mjs`. Always render them with `dangerouslySetInnerHTML={{ __html: value }}` and the `md-inline` (inline prose) or `md-content` (block content) CSS class. Never render as `{value}` directly. Identifier fields (`id`, URLs, enum values like `difficulty`, emoji) are not author prose and are rendered directly.
   - **When the container is an interactive element** (e.g. a `<Link>` card or a `<button>`), call `stripLinks(html)` from `src/lib/markdown.ts` before passing to `dangerouslySetInnerHTML` to prevent nested `<a>` inside `<a>` or `<button>`, which is invalid HTML.
   - **When placing a prose HTML field in a plain-text context** (e.g. a `<meta content="">` attribute), call `stripHtml(html)` from `src/lib/markdown.ts`. This strips tags *and* decodes HTML entities. Using a bare tag-strip regex leaves entities intact; React then double-encodes them in the attribute value (e.g. `&amp;` → `&amp;amp;`).
   - **Exception: `adventure.story` in `AdventureCard` and `summaries.ts`:** The summary card and `ADVENTURE_SUMMARIES` store `story` as plain text (no HTML) so the home page renders it as a plain `<span>` with no markdown overhead. The generator emits a build-time warning if any story value contains markdown syntax (`*`, `_`, `` ` ``). Keep story field values as plain prose.
@@ -644,13 +644,10 @@ When adding a new route to `src/routes.ts`, follow these rules by route type:
 
 ### When adding a new adventure or a new level to an existing adventure
 
-See [`ADVENTURES.md`](ADVENTURES.md) for the full sync process and PR checklist. The code changes required before merging are:
+See [`ADVENTURES.md`](ADVENTURES.md) for the full sync process and PR checklist. The **Sync Adventure** workflow handles routes, sitemap, prerender entries, test arrays, and `public/llms.txt` automatically. The two manual steps before merging are:
 
-1. Add the adventure detail route and all level routes to `src/routes.ts`.
-2. Add all URLs to `public/sitemap.xml` and the `prerender` array in `react-router.config.ts`.
-3. Add each level URL to the `ROUTES` array in `e2e/smoke.spec.ts` and `src/test/seo.test.ts`, and to the `pages` array in `src/test/prerender.test.ts` with the expected `<title>` value.
-4. Update the routes table in `README.md`.
-5. Add the adventure to `public/llms.txt` under the Adventures section so AI agents can discover it.
+1. Update the routes table in `README.md`.
+2. Run `npm run generate`, then commit `public/llms.txt` to the PR branch (the sync workflow modifies it but does not stage it).
 
 ---
 

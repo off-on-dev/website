@@ -12,7 +12,7 @@ export const THE_AI_OBSERVATORY: Adventure = {
   contributor: {
     name: "Katharina Sick",
     url: "https://ksick.dev/",
-    aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
+    aboutHtml: "<abbr data-title=\"Developer Relations\" tabindex=\"0\" aria-describedby=\"abbr-exp-32\">DevRel</abbr><span id=\"abbr-exp-32\" class=\"sr-only\">Developer Relations</span> at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
   },
   backstory: [
     "You are stationed at Perimeter Alpha, a research outpost on the newly discovered planet HB-7742. The station is run by HubSystem, a central AI that manages everything from life support to data analysis.",
@@ -58,9 +58,9 @@ export const THE_AI_OBSERVATORY: Adventure = {
       ],
       toolbox: [
         { name: "python", description: "programming language used for the HubSystem application" },
-        { name: "kubectl", description: "Kubernetes CLI for interacting with the cluster", url: "https://kubernetes.io/docs/reference/kubectl/" },
+        { name: "kubectl", description: "Kubernetes <abbr data-title=\"Command Line Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-33\">CLI</abbr><span id=\"abbr-exp-33\" class=\"sr-only\">Command Line Interface</span> for interacting with the cluster", url: "https://kubernetes.io/docs/reference/kubectl/" },
         { name: "kubens", description: "fast way to switch between Kubernetes namespaces", url: "https://github.com/ahmetb/kubectx" },
-        { name: "k9s", description: "terminal UI for managing and inspecting your cluster", url: "https://k9scli.io/" },
+        { name: "k9s", description: "terminal <abbr data-title=\"User Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-34\">UI</abbr><span id=\"abbr-exp-34\" class=\"sr-only\">User Interface</span> for managing and inspecting your cluster", url: "https://k9scli.io/" },
       ],
       howToPlay: [
         { title: "Wait for Infrastructure", content: "<p>Wait ~10 minutes for all infrastructure to initialize.</p>" },
@@ -68,7 +68,7 @@ export const THE_AI_OBSERVATORY: Adventure = {
 <ul>
 <li><strong>Port 30103:</strong> Jaeger. Analyze the traces sent by HubSystem.</li>
 </ul>` },
-        { title: "Instrument the App", content: `<p>The application code is in <code>./hubsystem.py</code>. Add OpenTelemetry instrumentation using OpenLLMetry. The OTel
+        { title: "Instrument the App", content: `<p>The application code is in <code>./hubsystem.py</code>. Add OpenTelemetry instrumentation using OpenLLMetry. The <abbr data-title="OpenTelemetry" tabindex="0" aria-describedby="abbr-exp-35">OTel</abbr><span id="abbr-exp-35" class="sr-only">OpenTelemetry</span>
 Collector and Jaeger are already configured correctly; you only need to instrument the app. You do not need to
 interact with Kubernetes directly. The cluster is already running, so focus on the Python code.</p>` },
         { title: "Run and Investigate", content: `<p>Run the application, interact with the AI to generate traces, then check Jaeger:</p>
@@ -92,7 +92,7 @@ interact with Kubernetes directly. The cluster is already running, so focus on t
       difficulty: "Intermediate",
       topics: ["OpenTelemetry", "OpenLLMetry", "Jaeger", "Prometheus"],
       learnings: [
-        "Instrument RAG pipelines with OpenLLMetry",
+        "Instrument <abbr data-title=\"Retrieval-Augmented Generation\" tabindex=\"0\" aria-describedby=\"abbr-exp-36\">RAG</abbr><span id=\"abbr-exp-36\" class=\"sr-only\">Retrieval-Augmented Generation</span> pipelines with OpenLLMetry",
         "Create custom OpenTelemetry metrics in Python",
         "Write PromQL queries &#x26; recording rules in Prometheus",
       ],
@@ -100,7 +100,7 @@ interact with Kubernetes directly. The cluster is already running, so focus on t
       discussionUrl: `${COMMUNITY_URL}/t/instrument-debug-a-rag-pipeline-adventure-03-intermediate-is-live/936/2`,
       deadline: "2026-03-08T23:59:00+01:00",
       intro: [
-        "ART's RAG pipeline is retrieving entertainment data instead of navigation coordinates and won't calculate your jump. Instrument the full retrieval pipeline with OpenLLMetry, build a custom OTel metric to quantify the distraction, and write a Prometheus recording rule to prove it.",
+        "ART's RAG pipeline is retrieving entertainment data instead of navigation coordinates and won't calculate your jump. Instrument the full retrieval pipeline with OpenLLMetry, build a custom <abbr data-title=\"OpenTelemetry\" tabindex=\"0\" aria-describedby=\"abbr-exp-37\">OTel</abbr><span id=\"abbr-exp-37\" class=\"sr-only\">OpenTelemetry</span> metric to quantify the distraction, and write a Prometheus recording rule to prove it.",
       ],
       backstory: [
         "You're a rogue SecUnit who just escaped from Preservation Station after being identified. A researcher helped you flee aboard the Perihelion, a university research vessel with a very opinionated AI.",
@@ -121,14 +121,14 @@ interact with Kubernetes directly. The cluster is already running, so focus on t
         "Restore the navigation system so ART successfully calculates jump coordinates to RaviHyral",
       ],
       architecture: [
-        "<p>The ART Pilot System runs as a local Python application outside Kubernetes, using a RAG (Retrieval-Augmented Generation) architecture. AI infrastructure (Ollama for LLM, Qdrant for vector storage) and observability tools (OpenTelemetry Collector, Jaeger, Prometheus) run inside Kubernetes.</p>",
+        "<p>The ART Pilot System runs as a local Python application outside Kubernetes, using a RAG (Retrieval-Augmented Generation) architecture. AI infrastructure (Ollama for <abbr data-title=\"Large Language Model\" tabindex=\"0\" aria-describedby=\"abbr-exp-38\">LLM</abbr><span id=\"abbr-exp-38\" class=\"sr-only\">Large Language Model</span>, Qdrant for vector storage) and observability tools (OpenTelemetry Collector, Jaeger, Prometheus) run inside Kubernetes.</p>",
         "<p>This setup lets you focus on observability patterns: edit Python code, run it, and see traces and metrics immediately without a build or deploy cycle.</p>",
       ],
       toolbox: [
         { name: "python", description: "programming language used for the ART application" },
-        { name: "kubectl", description: "Kubernetes CLI for interacting with the cluster", url: "https://kubernetes.io/docs/reference/kubectl/" },
+        { name: "kubectl", description: "Kubernetes <abbr data-title=\"Command Line Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-39\">CLI</abbr><span id=\"abbr-exp-39\" class=\"sr-only\">Command Line Interface</span> for interacting with the cluster", url: "https://kubernetes.io/docs/reference/kubectl/" },
         { name: "kubens", description: "fast way to switch between Kubernetes namespaces", url: "https://github.com/ahmetb/kubectx" },
-        { name: "k9s", description: "terminal UI for managing and inspecting your cluster", url: "https://k9scli.io/" },
+        { name: "k9s", description: "terminal <abbr data-title=\"User Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-40\">UI</abbr><span id=\"abbr-exp-40\" class=\"sr-only\">User Interface</span> for managing and inspecting your cluster", url: "https://k9scli.io/" },
       ],
       howToPlay: [
         { title: "Wait for Infrastructure", content: "<p>Wait ~15 minutes for all infrastructure to initialize.</p>" },
@@ -166,7 +166,7 @@ make traffic
       topics: ["OpenTelemetry", "OpenLLMetry", "Jaeger"],
       learnings: [
         "OpenTelemetry GenAI semantic conventions",
-        "Tail sampling in the OTel Collector",
+        "Tail sampling in the <abbr data-title=\"OpenTelemetry\" tabindex=\"0\" aria-describedby=\"abbr-exp-41\">OTel</abbr><span id=\"abbr-exp-41\" class=\"sr-only\">OpenTelemetry</span> Collector",
       ],
       codespacesUrl: `${CODESPACES_BASE}?devcontainer_path=.devcontainer%2F03-the-ai-observatory_03-expert%2Fdevcontainer.json&quickstart=1`,
       discussionUrl: `${COMMUNITY_URL}/t/reduce-telemetry-noise-adventure-03-expert-is-live/999/1`,
@@ -193,13 +193,13 @@ make traffic
         "Configure tail sampling in the OpenTelemetry Collector to keep only traces that contain errors or take longer than 5 seconds",
       ],
       architecture: [
-        "<p>Same setup as the intermediate level: the ART Pilot System runs as a local Python application outside Kubernetes with a RAG architecture. AI infrastructure (Ollama, Qdrant) and observability tools (OpenTelemetry Collector, Jaeger) run inside Kubernetes.</p>",
+        "<p>Same setup as the intermediate level: the ART Pilot System runs as a local Python application outside Kubernetes with a <abbr data-title=\"Retrieval-Augmented Generation\" tabindex=\"0\" aria-describedby=\"abbr-exp-42\">RAG</abbr><span id=\"abbr-exp-42\" class=\"sr-only\">Retrieval-Augmented Generation</span> architecture. AI infrastructure (Ollama, Qdrant) and observability tools (OpenTelemetry Collector, Jaeger) run inside Kubernetes.</p>",
       ],
       toolbox: [
         { name: "python", description: "programming language used for the ART application" },
-        { name: "kubectl", description: "Kubernetes CLI for interacting with the cluster", url: "https://kubernetes.io/docs/reference/kubectl/" },
+        { name: "kubectl", description: "Kubernetes <abbr data-title=\"Command Line Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-43\">CLI</abbr><span id=\"abbr-exp-43\" class=\"sr-only\">Command Line Interface</span> for interacting with the cluster", url: "https://kubernetes.io/docs/reference/kubectl/" },
         { name: "kubens", description: "fast way to switch between Kubernetes namespaces", url: "https://github.com/ahmetb/kubectx" },
-        { name: "k9s", description: "terminal UI for managing and inspecting your cluster", url: "https://k9scli.io/" },
+        { name: "k9s", description: "terminal <abbr data-title=\"User Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-44\">UI</abbr><span id=\"abbr-exp-44\" class=\"sr-only\">User Interface</span> for managing and inspecting your cluster", url: "https://k9scli.io/" },
       ],
       howToPlay: [
         { title: "Wait for Infrastructure", content: "<p>Wait ~15 minutes for all infrastructure to initialize.</p>" },

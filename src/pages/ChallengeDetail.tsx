@@ -1,4 +1,4 @@
-import { useState, useEffect, type JSX } from "react";
+import { useState, useEffect, useRef, type JSX } from "react";
 import { useParams, useLoaderData, Link } from "react-router";
 import type { MetaFunction, LoaderFunctionArgs, LinksFunction } from "react-router";
 import { Check, Clock, ExternalLink, ArrowRight } from "lucide-react";
@@ -28,6 +28,7 @@ import { stripHtml } from "@/lib/markdown";
 import { isDeadlinePast, isSolutionUnlocked, resolveDiscussionUrl, escapeHtmlAttr } from "@/lib/utils";
 import { InlineProse } from "@/components/InlineProse";
 import { Abbr } from "@/components/Abbr";
+import { useAbbrTooltips } from "@/hooks/useAbbrTooltips";
 
 export const links: LinksFunction = () => [
   { rel: "preload", href: `${import.meta.env.BASE_URL}fonts/jetbrains-mono-latin-400-normal.woff2`, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
@@ -113,6 +114,8 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
   const { intro, objective, toolbox, backstory, architecture, architectureDiagram, diagramAlt, architectureAscii, howToPlay, helpfulLinks, verification } = level;
   const levelUrl = `${SITE_URL}/adventures/${adventure.id}/levels/${level.id}/`;
   const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(levelUrl)}`;
+  const objectiveLearningsRef = useRef<HTMLDivElement>(null);
+  useAbbrTooltips(objectiveLearningsRef, [level.learnings, level.objective]);
   return (
     <>
       {/* Header */}
@@ -144,7 +147,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
       <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-10">
         <div className="min-w-0">
           {/* Objective + Key Learnings side-by-side */}
-          <div className="grid gap-5 sm:grid-cols-2 mb-6">
+          <div ref={objectiveLearningsRef} className="grid gap-5 sm:grid-cols-2 mb-6">
             {objective && objective.length > 0 && (
               <section id="objective" className="scroll-mt-28 rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
                 <h2 className="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
@@ -219,7 +222,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
                 {
                   title: "Get Started",
                   content: [
-                    `<p><a href="${escapeHtmlAttr(level.codespacesUrl)}" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint">Open in GitHub Codespaces</a>. The <abbr data-title="development container: a portable, reproducible coding environment defined by a configuration file" aria-describedby="abbr-devcontainer" tabindex="0">devcontainer</abbr><span id="abbr-devcontainer" class="sr-only">development container: a portable, reproducible coding environment defined by a configuration file</span> is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.</p>`,
+                    `<p><a href="${escapeHtmlAttr(level.codespacesUrl)}" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint">Open in GitHub Codespaces</a>. The devcontainer is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.</p>`,
                     `<p>Prefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (<abbr data-title="Visual Studio Code" aria-describedby="abbr-vscode" tabindex="0">VS Code</abbr><span id="abbr-vscode" class="sr-only">Visual Studio Code</span>, JetBrains, and others). The devcontainer config will be detected automatically.</p>`,
                   ].join("\n"),
                 },

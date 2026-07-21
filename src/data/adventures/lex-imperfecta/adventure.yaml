@@ -26,7 +26,7 @@ rewards:
 contributor:
   name: Katharina Sick
   url: https://ksick.dev/
-  about: DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native
+  about: <abbr title="Developer Relations">DevRel</abbr> at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native
     and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities,
     inline skating rinks, and quiz nights across Europe.
 levels:
@@ -57,7 +57,7 @@ levels:
         **`republic.rome/travel-permit: granted`** label"
       - "**All other workloads** deploy and run successfully in the cluster"
     what_you_learn:
-      - How Kyverno [ValidatingPolicy](https://kyverno.io/docs/policy-types/validating-policy/) resources and  [CEL
+      - How Kyverno [ValidatingPolicy](https://kyverno.io/docs/policy-types/validating-policy/) resources and  [<abbr title="Common Expression Language">CEL</abbr>
         validation expressions](https://kubernetes.io/docs/reference/using-api/cel/) work
       - The difference between [Audit, Deny, and Warn](https://kyverno.io/docs/policy-types/validating-policy/)
         validation actions
@@ -72,7 +72,7 @@ levels:
         through while you assume everything is fine."
       - Your Codespace comes with a Kubernetes cluster and Kyverno pre-installed. Three broken policies are already
         deployed in `manifests/policies/` — two `ValidatingPolicy` resources and one `MutatingPolicy`. Edit them
-        directly and re-apply with `kubectl`. The pods in `manifests/pods/` are for reference only — no GitOps, no
+        directly and re-apply with `kubectl`. The pods in `manifests/pods/` are for reference only — no <abbr title="Git Operations">GitOps</abbr>, no
         dashboards.
     toolbox:
       - name: kubectl
@@ -83,7 +83,7 @@ levels:
         description: Test and lint policies locally before applying
       - name: k9s
         url: https://k9scli.io/
-        description: Explore cluster resources in a terminal UI
+        description: Explore cluster resources in a terminal <abbr title="User Interface">UI</abbr>
     services: []
     how_to_play:
       - id: explore
@@ -151,7 +151,7 @@ levels:
           misconfiguration.
 
 
-          **Test Locally with the Kyverno CLI**
+          **Test Locally with the Kyverno <abbr title="Command Line Interface">CLI</abbr>**
 
 
           Before applying to the cluster, you can use the `kyverno` CLI to test your policy changes locally against the
@@ -269,7 +269,7 @@ levels:
         description: Test and lint policies locally before applying to the cluster
       - name: k9s
         url: https://k9scli.io/
-        description: Explore cluster resources and policy reports in a terminal UI
+        description: Explore cluster resources and policy reports in a terminal <abbr title="User Interface">UI</abbr>
     how_to_play:
       - id: explore
         title: Explore the Estate
@@ -316,7 +316,7 @@ levels:
           matching. The namespace labels you saw with `kubectl get ns --show-labels` are a key part of the picture.
 
 
-          **Test locally with the Kyverno CLI before applying:**
+          **Test locally with the Kyverno <abbr title="Command Line Interface">CLI</abbr> before applying:**
 
 
           ```bash
@@ -360,7 +360,7 @@ levels:
         description: How to write and scope a PolicyException to exempt specific workloads
       - title: CEL Validation Expressions
         url: https://kubernetes.io/docs/reference/using-api/cel/
-        description: How CEL expressions work in Kubernetes admission, including accessing namespace context
+        description: How <abbr title="Common Expression Language">CEL</abbr> expressions work in Kubernetes admission, including accessing namespace context
       - title: Policy Reporter
         url: https://kyverno.github.io/policy-reporter/
         description: How to use Policy Reporter to audit and visualise policy results across the cluster
@@ -384,7 +384,7 @@ levels:
       unauthorized access.
     audience: Security engineers and platform engineers who want to explore the boundary between admission control and
       runtime security. Completing the Intermediate level first is helpful but not required. You should be comfortable
-      reading Kyverno ValidatingPolicies and CEL expressions. No prior Falco experience required.
+      reading Kyverno ValidatingPolicies and <abbr title="Common Expression Language">CEL</abbr> expressions. No prior Falco experience required.
     backstory:
       - "The Republic's defences have always rested on the law: block the wrong workloads at the gate, and nothing bad
         gets in. But the Senate's Praetorian Guard was built for a different threat: the workload that slips through and
@@ -396,7 +396,7 @@ levels:
         It reads them on a loop and tries to send them out of the Republic."
     objective:
       - "**The Praetorian Guard awake**: Falco fires an alert every time an unauthorized process reads the census
-        archive, with live alerts streaming into the Falcosidekick UI"
+        archive, with live alerts streaming into the Falcosidekick <abbr title='User Interface'>UI</abbr>"
       - "**The gate closed**: the intruder is denied re-admission. The policy that kept privileged containers out now
         covers every path to unchecked host power"
       - "**The archive sealed**: the census-archive secret is inaccessible to any workload that does not bear the

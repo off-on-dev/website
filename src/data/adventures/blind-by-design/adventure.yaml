@@ -20,7 +20,7 @@ contributor:
   name: "Simon Schrottner"
   url: "https://schrottner.at/"
   about: >-
-    CNCF Ambassador and maintainer of OpenFeature and JUnit Pioneer. Helps teams release faster
+    <abbr title="Cloud Native Computing Foundation">CNCF</abbr> Ambassador and maintainer of OpenFeature and JUnit Pioneer. Helps teams release faster
     and with more confidence through open standards, feature flagging, and the communities that
     make both possible. A familiar face at KubeCon EU, Devoxx, ContainerDays, and meetups across Europe.
 
@@ -31,7 +31,7 @@ backstory:
     through the protocol (blurry, sharp, enhanced, or clouded), because subjects don't all arrive
     with the same biology, the same dose adherence, or the same trial-jurisdiction baseline. The
     flag definitions that drive those readings live in flags.json, watched by a flagd sidecar;
-    the OpenFeature SDK is supposed to call that sidecar on every evaluation.
+    the OpenFeature <abbr title="Software Development Kit">SDK</abbr> is supposed to call that sidecar on every evaluation.
   - >-
     It hasn't been. For the past eight months, every subject through the door has been recorded
     as "untreated": the integration was never finished, and the lab director assumed the system
@@ -78,8 +78,8 @@ levels:
       Platform engineers, <abbr title="Site Reliability Engineers">SREs</abbr>, and developers curious about feature flags, with no prior OpenFeature
       experience needed, but familiarity with Spring Boot and basic Java will help.
     learnings:
-      - "How an OpenFeature client and provider work together: the SDK is provider-agnostic and the flagd provider plugs in via dependency only"
-      - "What remote provider means in practice: the SDK calls a separate flag service (flagd) over gRPC, not parsing flags.json itself"
+      - "How an OpenFeature client and provider work together: the <abbr title='Software Development Kit'>SDK</abbr> is provider-agnostic and the flagd provider plugs in via dependency only"
+      - "What remote provider means in practice: the SDK calls a separate flag service (flagd) over <abbr title='Google Remote Procedure Call'>gRPC</abbr>, not parsing flags.json itself"
       - "What flags.json looks like for flagd (state, variants, defaultVariant)"
       - "Why hot-reload of the flag file matters operationally: configuration without redeploy"
     devcontainer: 04-blind-by-design_01-beginner
@@ -199,7 +199,7 @@ levels:
         baselines.
       - >-
         Your shift: teach the lab to read each subject's species off the request, attach the trial's country of
-        registration (set on the JVM via the COUNTRY environment variable) to the global context, pass the dose as
+        registration (set on the <abbr title="Java Virtual Machine">JVM</abbr> via the COUNTRY environment variable) to the global context, pass the dose as
         invocation context at the moment of the flag evaluation, and register an audit hook that records every dose
         with its variant and reason.
     architecture_diagram: "blind-by-design-intermediate.svg"
@@ -209,7 +209,7 @@ levels:
       - "With COUNTRY=de, curl /?dose=standard returns 'sharp'; with COUNTRY=at, the same call falls through to the default"
       - "curl /?dose=underdose returns 'clouded'; curl /?species=zyklop&dose=underdose returns 'enhanced' (species takes precedence)"
       - "Every evaluation produces an [AUDIT] log line naming the flag, the resolved variant, the reason, and the attributes that drove the outcome"
-      - "The response is never 'untreated' (that fallback only fires when the SDK cannot reach flagd)"
+      - "The response is never 'untreated' (that fallback only fires when the <abbr title='Software Development Kit'>SDK</abbr> cannot reach flagd)"
     toolbox:
       - name: "Java 21 (Temurin)"
         description: "pre-installed in the devcontainer"
@@ -350,7 +350,7 @@ levels:
       - Spring Boot
     learnings:
       - "How the OpenFeature OpenTelemetry hooks (TracesHook and MetricsHook) join flag evaluations to the rest of an application's telemetry without a separate ingestion path"
-      - "How to author your own Hook: a tiny class that copies merged-eval-context attributes onto the active OTel span, closing the loop between why a flag resolved the way it did and what the operator sees in Tempo"
+      - "How to author your own Hook: a tiny class that copies merged-eval-context attributes onto the active <abbr title='OpenTelemetry'>OTel</abbr> span, closing the loop between why a flag resolved the way it did and what the operator sees in Tempo"
       - "How fractional rollout in flagd buckets users by targetingKey (same key, same bucket, every request) and how to read that bucketing off a dashboard"
       - "How a flag flip is a faster operational lever than a redeploy when a rollout is misbehaving: the difference between a one-line config change and a twenty-minute deployment"
     devcontainer: 04-blind-by-design_03-expert
@@ -396,7 +396,7 @@ levels:
         description: "sends requests to http://localhost:8080/ to test the lab, and to Prometheus on http://localhost:9090/ to query metrics directly"
         url: "https://curl.se/"
       - name: "Grafana"
-        description: "browser UI at http://localhost:3000 (admin/admin) for the Feature Flag Metrics dashboard and Tempo trace explorer"
+        description: "browser <abbr title='User Interface'>UI</abbr> at http://localhost:3000 (admin/admin) for the Feature Flag Metrics dashboard and Tempo trace explorer"
       - name: "jq"
         description: "pretty-prints the JSON evaluation details"
         url: "https://jqlang.org/"
@@ -420,7 +420,7 @@ levels:
     how_to_play:
       - title: "Start Your Challenge"
         content: |
-          The sibling containers (flagd, Grafana LGTM, k6 loadgen) start automatically as part of the devcontainer compose. Wait ~2-3 minutes for them to be ready before moving on.
+          The sibling containers (flagd, Grafana <abbr title="Loki, Grafana, Tempo, Mimir">LGTM</abbr>, k6 loadgen) start automatically as part of the devcontainer compose. Wait ~2-3 minutes for them to be ready before moving on.
       - title: "Start the Lab"
         content: |
           The sibling containers are already up. Boot the Spring Boot lab by clicking **Run** on `Laboratory` in the Spring Boot Dashboard panel (or press **F5** with `Laboratory.java` open), or from the terminal:
@@ -432,7 +432,7 @@ levels:
           Spans start flowing into Tempo on the first request. The trace pipeline is already wired. The metrics pipeline is dead (task 4a), so the Grafana dashboard panels stay empty until you fix it.
       - title: "Turn On the Metrics Exporter"
         content: |
-          OTel ships two parallel pipelines: traces (already flowing into Tempo) and metrics (dead). The OTel Java Agent attached to the lab JVM has both pipelines plumbed and pointed at the LGTM stack, but `otel.properties` (next to `pom.xml`) sets `otel.metrics.exporter=none`, so anything the meter records goes nowhere.
+          OTel ships two parallel pipelines: traces (already flowing into Tempo) and metrics (dead). The OTel Java Agent attached to the lab <abbr title="Java Virtual Machine">JVM</abbr> has both pipelines plumbed and pointed at the LGTM stack, but `otel.properties` (next to `pom.xml`) sets `otel.metrics.exporter=none`, so anything the meter records goes nowhere.
 
           Open `otel.properties` and flip the exporter on. While you're there, look at the export interval. The default makes the next steps harder than they need to be.
 
@@ -454,7 +454,7 @@ levels:
           }
           ```
 
-          `HookContext.getCtx()` returns the merged evaluation context (global + transaction + invocation). Use a fixed allowlist of `List.of("species", "country", "dose")`. Never iterate the whole context: `targetingKey` joins to PII in real apps, and span attributes are retained for days in Tempo at scale.
+          `HookContext.getCtx()` returns the merged evaluation context (global + transaction + invocation). Use a fixed allowlist of `List.of("species", "country", "dose")`. Never iterate the whole context: `targetingKey` joins to <abbr title="Personally Identifiable Information">PII</abbr> in real apps, and span attributes are retained for days in Tempo at scale.
 
           Register `ContextSpanHook` alongside `TracesHook` and `MetricsHook` in `OpenFeatureConfig`. The verifier searches Tempo for `feature_flag.context.dose=underdose` once you are done.
       - title: "Turn On the Loadgen"

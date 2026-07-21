@@ -14,10 +14,10 @@ export const BLIND_BY_DESIGN: Adventure = {
   contributor: {
     name: "Simon Schrottner",
     url: "https://schrottner.at/",
-    aboutHtml: "CNCF Ambassador and maintainer of OpenFeature and JUnit Pioneer. Helps teams release faster and with more confidence through open standards, feature flagging, and the communities that make both possible. A familiar face at KubeCon EU, Devoxx, ContainerDays, and meetups across Europe.",
+    aboutHtml: "<abbr data-title=\"Cloud Native Computing Foundation\" tabindex=\"0\" aria-describedby=\"abbr-exp-18\">CNCF</abbr><span id=\"abbr-exp-18\" class=\"sr-only\">Cloud Native Computing Foundation</span> Ambassador and maintainer of OpenFeature and JUnit Pioneer. Helps teams release faster and with more confidence through open standards, feature flagging, and the communities that make both possible. A familiar face at KubeCon EU, Devoxx, ContainerDays, and meetups across Europe.",
   },
   backstory: [
-    "The Aletheia Institute is running a multi-phase vision-enhancement trial. The lab is a Spring Boot service whose one job is to record the vision_state of every subject who walks through the protocol (blurry, sharp, enhanced, or clouded), because subjects don't all arrive with the same biology, the same dose adherence, or the same trial-jurisdiction baseline. The flag definitions that drive those readings live in flags.json, watched by a flagd sidecar; the OpenFeature SDK is supposed to call that sidecar on every evaluation.",
+    "The Aletheia Institute is running a multi-phase vision-enhancement trial. The lab is a Spring Boot service whose one job is to record the vision_state of every subject who walks through the protocol (blurry, sharp, enhanced, or clouded), because subjects don't all arrive with the same biology, the same dose adherence, or the same trial-jurisdiction baseline. The flag definitions that drive those readings live in flags.json, watched by a flagd sidecar; the OpenFeature <abbr data-title=\"Software Development Kit\" tabindex=\"0\" aria-describedby=\"abbr-exp-19\">SDK</abbr><span id=\"abbr-exp-19\" class=\"sr-only\">Software Development Kit</span> is supposed to call that sidecar on every evaluation.",
     "It hasn't been. For the past eight months, every subject through the door has been recorded as \"untreated\": the integration was never finished, and the lab director assumed the system was reading the chart. Worse, eight weeks ago the Institute opened its flagship Phase 3 trial: a new amplifier variant rolled out fractionally to a cohort by a targeting rule in flags.json. Four adverse-event reports have since been filed, each one a subject whose vision_state at discharge was worse than at enrollment.",
     "The monitoring is dark, not by accident, but because no one ever turned the lights on. Your mission across three levels: stand up the lab so it reads the chart, read the chart by cohort so outcomes can be tracked, then turn on the lights and roll back the Phase 3 variant before the director signs off on the next enrollment batch.",
   ],
@@ -41,10 +41,10 @@ export const BLIND_BY_DESIGN: Adventure = {
       name: "Stand up the Lab",
       difficulty: "Beginner",
       topics: ["OpenFeature", "flagd", "Spring Boot"],
-      audience: "Platform engineers, <abbr data-title=\"Site Reliability Engineers\" tabindex=\"0\" aria-describedby=\"abbr-exp-6\">SREs</abbr><span id=\"abbr-exp-6\" class=\"sr-only\">Site Reliability Engineers</span>, and developers curious about feature flags, with no prior OpenFeature experience needed, but familiarity with Spring Boot and basic Java will help.",
+      audience: "Platform engineers, <abbr data-title=\"Site Reliability Engineers\" tabindex=\"0\" aria-describedby=\"abbr-exp-22\">SREs</abbr><span id=\"abbr-exp-22\" class=\"sr-only\">Site Reliability Engineers</span>, and developers curious about feature flags, with no prior OpenFeature experience needed, but familiarity with Spring Boot and basic Java will help.",
       learnings: [
-        "How an OpenFeature client and provider work together: the SDK is provider-agnostic and the flagd provider plugs in via dependency only",
-        "What remote provider means in practice: the SDK calls a separate flag service (flagd) over gRPC, not parsing flags.json itself",
+        "How an OpenFeature client and provider work together: the <abbr data-title=\"Software Development Kit\" tabindex=\"0\" aria-describedby=\"abbr-exp-20\">SDK</abbr><span id=\"abbr-exp-20\" class=\"sr-only\">Software Development Kit</span> is provider-agnostic and the flagd provider plugs in via dependency only",
+        "What remote provider means in practice: the SDK calls a separate flag service (flagd) over <abbr data-title=\"Google Remote Procedure Call\" tabindex=\"0\" aria-describedby=\"abbr-exp-21\">gRPC</abbr><span id=\"abbr-exp-21\" class=\"sr-only\">Google Remote Procedure Call</span>, not parsing flags.json itself",
         "What flags.json looks like for flagd (state, variants, defaultVariant)",
         "Why hot-reload of the flag file matters operationally: configuration without redeploy",
       ],
@@ -65,7 +65,7 @@ export const BLIND_BY_DESIGN: Adventure = {
       ],
       architecture: [
         "<p>This level runs as two containers side-by-side in your Codespace: the Spring Boot lab and a flagd sidecar.</p>",
-        "<p>The Spring Boot service runs on http://localhost:8080/ with one endpoint, GET /. flags.json is mounted read-only into the flagd sidecar; edit it through the <abbr data-title=\"Integrated Development Environment\" tabindex=\"0\" aria-describedby=\"abbr-exp-7\">IDE</abbr><span id=\"abbr-exp-7\" class=\"sr-only\">Integrated Development Environment</span> and flagd's file watcher picks up the change within about a second. The flagd sidecar serves flag evaluations over gRPC on :8013. The OpenFeature SDK reads FLAGD_HOST and FLAGD_PORT from the environment (pre-set by the devcontainer), so there is no host or port to hard-code.</p>",
+        "<p>The Spring Boot service runs on http://localhost:8080/ with one endpoint, GET /. flags.json is mounted read-only into the flagd sidecar; edit it through the <abbr data-title=\"Integrated Development Environment\" tabindex=\"0\" aria-describedby=\"abbr-exp-23\">IDE</abbr><span id=\"abbr-exp-23\" class=\"sr-only\">Integrated Development Environment</span> and flagd's file watcher picks up the change within about a second. The flagd sidecar serves flag evaluations over gRPC on :8013. The OpenFeature SDK reads FLAGD_HOST and FLAGD_PORT from the environment (pre-set by the devcontainer), so there is no host or port to hard-code.</p>",
       ],
       toolbox: [
         { name: "./mvnw", description: "Maven wrapper checked in next to pom.xml, builds and runs the Spring Boot lab" },
@@ -119,14 +119,14 @@ export const BLIND_BY_DESIGN: Adventure = {
       backstory: [
         "The trial is widening. Subjects from outside the lab's local population are getting the wrong reading on their chart, and the lab director has just walked in holding a stack of complaint forms. She wants the audit log to tell her, after the fact, exactly which vision_state the lab recorded for which subject, and she wants the lab to read the chart properly before it records any more bad readings.",
         "The protocol is the same for every subject; the lab is not varying the trial. What differs is the observed outcome: some subjects have a biology that responds enhancedly to the same serum, some absorb less or more than the protocol's standard dose, and the trial is registered in different jurisdictions with different baselines.",
-        "Your shift: teach the lab to read each subject's species off the request, attach the trial's country of registration (set on the JVM via the COUNTRY environment variable) to the global context, pass the dose as invocation context at the moment of the flag evaluation, and register an audit hook that records every dose with its variant and reason.",
+        "Your shift: teach the lab to read each subject's species off the request, attach the trial's country of registration (set on the <abbr data-title=\"Java Virtual Machine\" tabindex=\"0\" aria-describedby=\"abbr-exp-25\">JVM</abbr><span id=\"abbr-exp-25\" class=\"sr-only\">Java Virtual Machine</span> via the COUNTRY environment variable) to the global context, pass the dose as invocation context at the moment of the flag evaluation, and register an audit hook that records every dose with its variant and reason.",
       ],
       objective: [
         "curl /?species=zyklop returns 'enhanced' regardless of dose or country",
         "With COUNTRY=de, curl /?dose=standard returns 'sharp'; with COUNTRY=at, the same call falls through to the default",
         "curl /?dose=underdose returns 'clouded'; curl /?species=zyklop&#x26;dose=underdose returns 'enhanced' (species takes precedence)",
         "Every evaluation produces an [AUDIT] log line naming the flag, the resolved variant, the reason, and the attributes that drove the outcome",
-        "The response is never 'untreated' (that fallback only fires when the SDK cannot reach flagd)",
+        "The response is never 'untreated' (that fallback only fires when the <abbr data-title=\"Software Development Kit\" tabindex=\"0\" aria-describedby=\"abbr-exp-24\">SDK</abbr><span id=\"abbr-exp-24\" class=\"sr-only\">Software Development Kit</span> cannot reach flagd)",
       ],
       architectureDiagram: blindByDesignIntermediate,
       diagramAlt: "HTTP flows through SpeciesInterceptor, Trial, and OpenFeature client left to right, then down through AuditHook and FlagdProvider, connecting via gRPC to a flagd sidecar.",
@@ -203,10 +203,10 @@ curl -s 'http://localhost:8080/?species=zyklop&#x26;dose=underdose' | jq .value
       name: "Read the Chart",
       difficulty: "Expert",
       topics: ["OpenFeature", "OpenTelemetry", "Grafana", "Spring Boot"],
-      audience: "Platform engineers, <abbr data-title=\"Site Reliability Engineers\" tabindex=\"0\" aria-describedby=\"abbr-exp-8\">SREs</abbr><span id=\"abbr-exp-8\" class=\"sr-only\">Site Reliability Engineers</span>, and observability-focused developers who have completed the Beginner and Intermediate levels or are comfortable with OpenFeature evaluation context, and want to learn how flag evaluations join distributed traces and metrics, and how to use a flag flip as an operational lever for live rollbacks.",
+      audience: "Platform engineers, <abbr data-title=\"Site Reliability Engineers\" tabindex=\"0\" aria-describedby=\"abbr-exp-27\">SREs</abbr><span id=\"abbr-exp-27\" class=\"sr-only\">Site Reliability Engineers</span>, and observability-focused developers who have completed the Beginner and Intermediate levels or are comfortable with OpenFeature evaluation context, and want to learn how flag evaluations join distributed traces and metrics, and how to use a flag flip as an operational lever for live rollbacks.",
       learnings: [
         "How the OpenFeature OpenTelemetry hooks (TracesHook and MetricsHook) join flag evaluations to the rest of an application's telemetry without a separate ingestion path",
-        "How to author your own Hook: a tiny class that copies merged-eval-context attributes onto the active OTel span, closing the loop between why a flag resolved the way it did and what the operator sees in Tempo",
+        "How to author your own Hook: a tiny class that copies merged-eval-context attributes onto the active <abbr data-title=\"OpenTelemetry\" tabindex=\"0\" aria-describedby=\"abbr-exp-26\">OTel</abbr><span id=\"abbr-exp-26\" class=\"sr-only\">OpenTelemetry</span> span, closing the loop between why a flag resolved the way it did and what the operator sees in Tempo",
         "How fractional rollout in flagd buckets users by targetingKey (same key, same bucket, every request) and how to read that bucketing off a dashboard",
         "How a flag flip is a faster operational lever than a redeploy when a rollout is misbehaving: the difference between a one-line config change and a twenty-minute deployment",
       ],
@@ -234,11 +234,11 @@ curl -s 'http://localhost:8080/?species=zyklop&#x26;dose=underdose' | jq .value
         { name: "Java 21 (Temurin)", description: "pre-installed in the devcontainer", url: "https://adoptium.net/" },
         { name: "./mvnw", description: "Spring Boot Maven Wrapper, no global Maven install required" },
         { name: "curl", description: "sends requests to http://localhost:8080/ to test the lab, and to Prometheus on http://localhost:9090/ to query metrics directly", url: "https://curl.se/" },
-        { name: "Grafana", description: "browser UI at http://localhost:3000 (admin/admin) for the Feature Flag Metrics dashboard and Tempo trace explorer" },
+        { name: "Grafana", description: "browser <abbr data-title=\"User Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-28\">UI</abbr><span id=\"abbr-exp-28\" class=\"sr-only\">User Interface</span> at http://localhost:3000 (admin/admin) for the Feature Flag Metrics dashboard and Tempo trace explorer" },
         { name: "jq", description: "pretty-prints the JSON evaluation details", url: "https://jqlang.org/" },
       ],
       howToPlay: [
-        { title: "Start Your Challenge", content: "<p>The sibling containers (flagd, Grafana LGTM, k6 loadgen) start automatically as part of the devcontainer compose. Wait ~2-3 minutes for them to be ready before moving on.</p>" },
+        { title: "Start Your Challenge", content: "<p>The sibling containers (flagd, Grafana <abbr data-title=\"Loki, Grafana, Tempo, Mimir\" tabindex=\"0\" aria-describedby=\"abbr-exp-29\">LGTM</abbr><span id=\"abbr-exp-29\" class=\"sr-only\">Loki, Grafana, Tempo, Mimir</span>, k6 loadgen) start automatically as part of the devcontainer compose. Wait ~2-3 minutes for them to be ready before moving on.</p>" },
         { title: "Explore the UIs", content: `<p>Open the <strong>Ports</strong> tab and navigate to each service:</p>
 <ul>
 <li><strong>Port 8080:</strong> Spring Boot lab. Add ?userId=subject-42 for a stable fractional-rollout bucketing key.</li>
@@ -251,7 +251,7 @@ curl -s 'http://localhost:8080/?species=zyklop&#x26;dose=underdose' | jq .value
 <pre tabindex="0" aria-label="Code block"><code class="language-sh">./mvnw spring-boot:run
 </code></pre>
 <p>Spans start flowing into Tempo on the first request. The trace pipeline is already wired. The metrics pipeline is dead (task 4a), so the Grafana dashboard panels stay empty until you fix it.</p>` },
-        { title: "Turn On the Metrics Exporter", content: `<p>OTel ships two parallel pipelines: traces (already flowing into Tempo) and metrics (dead). The OTel Java Agent attached to the lab JVM has both pipelines plumbed and pointed at the LGTM stack, but <code>otel.properties</code> (next to <code>pom.xml</code>) sets <code>otel.metrics.exporter=none</code>, so anything the meter records goes nowhere.</p>
+        { title: "Turn On the Metrics Exporter", content: `<p>OTel ships two parallel pipelines: traces (already flowing into Tempo) and metrics (dead). The OTel Java Agent attached to the lab <abbr data-title="Java Virtual Machine" tabindex="0" aria-describedby="abbr-exp-30">JVM</abbr><span id="abbr-exp-30" class="sr-only">Java Virtual Machine</span> has both pipelines plumbed and pointed at the LGTM stack, but <code>otel.properties</code> (next to <code>pom.xml</code>) sets <code>otel.metrics.exporter=none</code>, so anything the meter records goes nowhere.</p>
 <p>Open <code>otel.properties</code> and flip the exporter on. While you're there, look at the export interval. The default makes the next steps harder than they need to be.</p>
 <p>Once the exporter is on, <code>MetricsHook</code> (next step) finds the working meter provider through <code>GlobalOpenTelemetry</code> without any further plumbing. You will need to restart the lab to pick up the change.</p>` },
         { title: "Register MetricsHook", content: `<p><code>OpenFeatureConfig.java</code> registers <code>TracesHook</code> but stops there. <code>MetricsHook</code> needs an <code>OpenTelemetry</code> handle to find the meter provider. The agent installs one globally at JVM start, so <code>GlobalOpenTelemetry.get()</code> is the way to reach it.</p>
@@ -263,7 +263,7 @@ curl -s 'http://localhost:8080/?species=zyklop&#x26;dose=underdose' | jq .value
         span.setAttribute("feature_flag.context." + key, value)
 }
 </code></pre>
-<p><code>HookContext.getCtx()</code> returns the merged evaluation context (global + transaction + invocation). Use a fixed allowlist of <code>List.of("species", "country", "dose")</code>. Never iterate the whole context: <code>targetingKey</code> joins to PII in real apps, and span attributes are retained for days in Tempo at scale.</p>
+<p><code>HookContext.getCtx()</code> returns the merged evaluation context (global + transaction + invocation). Use a fixed allowlist of <code>List.of("species", "country", "dose")</code>. Never iterate the whole context: <code>targetingKey</code> joins to <abbr data-title="Personally Identifiable Information" tabindex="0" aria-describedby="abbr-exp-31">PII</abbr><span id="abbr-exp-31" class="sr-only">Personally Identifiable Information</span> in real apps, and span attributes are retained for days in Tempo at scale.</p>
 <p>Register <code>ContextSpanHook</code> alongside <code>TracesHook</code> and <code>MetricsHook</code> in <code>OpenFeatureConfig</code>. The verifier searches Tempo for <code>feature_flag.context.dose=underdose</code> once you are done.</p>` },
         { title: "Turn On the Loadgen", content: `<p><code>flags.json</code> has two flags: <code>loadgen_active</code> (off by default) and the misbehaving <code>vision_amplifier_v2</code>. flagd watches the file and picks up changes within about a second.</p>
 <p>Flip <code>loadgen_active</code> to on. The k6 loadgen polls it every two seconds and starts five virtual users hammering the lab. Within a minute, latency p99 should climb ~200ms and the 5xx rate ~10% on the dashboard, confirming that the bad arm of <code>vision_amplifier_v2</code> is active.</p>` },
