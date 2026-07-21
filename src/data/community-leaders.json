@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-19T18:57:38.407Z",
+  "lastUpdated": "2026-07-21T08:12:51.287Z",
   "sections": [
     {
       "id": "top-contributors",
@@ -33,6 +33,17 @@
       ]
     },
     {
+      "id": "challenge-rockstars",
+      "title": "Challenge Rockstars",
+      "users": [
+        {
+          "username": "theharithsa",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
+          "count": 10
+        }
+      ]
+    },
+    {
       "id": "challenge-grand-builders",
       "title": "Challenge Grand Builders",
       "users": [
@@ -50,11 +61,6 @@
         {
           "username": "iw4p",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
-          "count": 9
-        },
-        {
-          "username": "theharithsa",
-          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
           "count": 9
         },
         {
@@ -76,6 +82,11 @@
           "username": "alvin",
           "avatarUrl": "https://avatars.discourse-cdn.com/v4/letter/a/b5a626/40.png",
           "count": 6
+        },
+        {
+          "username": "rohit_bc",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/rohit_bc/40/164_2.png",
+          "count": 3
         }
       ]
     },
@@ -102,12 +113,12 @@
         {
           "username": "SinduriGuntupalli",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/SinduriGuntupalli/40/194_2.png",
-          "count": 31
+          "count": 32
         },
         {
           "username": "theharithsa",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
-          "count": 28
+          "count": 29
         },
         {
           "username": "adrianamvillela",
@@ -117,7 +128,7 @@
         {
           "username": "iw4p",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
-          "count": 17
+          "count": 18
         }
       ]
     },
@@ -133,7 +144,7 @@
         {
           "username": "theharithsa",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
-          "count": 16
+          "count": 17
         },
         {
           "username": "iw4p",
@@ -164,7 +175,7 @@
         {
           "username": "SinduriGuntupalli",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/SinduriGuntupalli/40/194_2.png",
-          "count": 44
+          "count": 45
         },
         {
           "username": "DavidHirsch",
@@ -174,7 +185,7 @@
         {
           "username": "theharithsa",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
-          "count": 38
+          "count": 41
         },
         {
           "username": "AgataWlodarczyk",

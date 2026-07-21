@@ -41,6 +41,17 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
           "How to trace a silent failure across tools from each one's logs and UI",
         ],
       },
+      {
+        id: "expert",
+        name: "The Chronometer",
+        difficulty: "Expert",
+        topics: ["Backstage", "Argo Workflows", "Argo CD", "OpenTelemetry", "Jaeger"],
+        learnings: [
+          "How trace context crosses an asynchronous boundary with no call chain: a commission carries its <a href=\"https://www.w3.org/TR/trace-context/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">W3C traceparent</a> to a push-triggered pipeline, so its spans <a href=\"https://opentelemetry.io/docs/concepts/context-propagation/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">continue the same trace</a> instead of starting a new one",
+          "Why a <a href=\"https://opentelemetry.io/docs/concepts/signals/traces/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">distributed trace</a> reveals what per-tool logs cannot: the value that flowed through each step, so a fault surfaces where the data diverges",
+          "How to read that trace in <a href=\"https://www.jaegertracing.io/docs/latest/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">Jaeger</a> to localise a fault to a single service by following one attribute across the whole voyage",
+        ],
+      },
     ],
   },
   {
