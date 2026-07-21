@@ -70,7 +70,7 @@ is already running in the cluster.</p>`},{title:`Explore the UIs`,content:`<p>Op
 <strong>Citrus</strong>), and let the vessel sail. Delivery still works, but the records don't add up. You have two
 instruments to check what really happened:</p>
 <ul>
-<li><strong>Hail the vessel.</strong> Once it's running, <code>make ahoi VESSEL=&#x3C;name></code> reports the cargo it's actually carrying.
+<li><strong>Greet the vessel.</strong> Once it's running, <code>make ahoi</code> reports the cargo it's actually carrying.
 Is it what you ordered?</li>
 <li><strong>Open the log.</strong> In <strong>Jaeger</strong> (port 30103), search service <code>backstage</code>, operation <code>commission &#x3C;vessel></code>,
 and open the trace. Read it from the commission office outward: how much of the voyage actually reached the
