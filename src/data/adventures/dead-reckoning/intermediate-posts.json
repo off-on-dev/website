@@ -6,6 +6,7 @@
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
       "cooked": "Done with the challenge. It took little bit of time for me to solve this but it is done.",
       "created_at": "2026-07-21T02:10:18.921Z",
+      "challengeSolved": true,
       "topicUrl": "https://community.offon.dev/t/fix-a-broken-delivery-pipeline-july-2026-adventure-intermediate/1668"
     },
     {
@@ -50,6 +51,11 @@
       "username": "alvin",
       "avatarUrl": "https://community.offon.dev/letter_avatar_proxy/v4/letter/a/b5a626/40.png",
       "solvedAt": "2026-07-17T01:08:34.922Z"
+    },
+    {
+      "username": "theharithsa",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
+      "solvedAt": "2026-07-21T02:10:18.921Z"
     }
   ]
 }
