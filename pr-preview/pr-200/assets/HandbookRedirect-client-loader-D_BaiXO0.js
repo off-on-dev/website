@@ -1,0 +1,1 @@
+import{g as e}from"./vendor-router-BYjzUS7J.js";function t(){return e(`/handbook`)}export{t as clientLoader};
