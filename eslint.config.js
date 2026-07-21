@@ -6,7 +6,7 @@ import jsxA11y from "eslint-plugin-jsx-a11y";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist", "coverage", "src/components/ui/**", ".react-router/types/**", "public/reveal/**"] },
+  { ignores: ["dist", "coverage", "src/components/ui/**", ".react-router/types/**", "public/reveal/**", "astro/**"] },
   {
     extends: [
       js.configs.recommended,
