@@ -889,6 +889,9 @@ async function generateSummariesTs(adventures) {
   lines.push(`export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [`);
 
   const now = new Date();
+  // Cache processed contributor bios by contributor name so that adventures sharing
+  // the same contributor always produce identical aboutHtml (same abbr-exp-* IDs).
+  const contributorAboutHtmlCache = new Map();
 
   for (const data of adventures) {
     lines.push(`  {`);
@@ -903,7 +906,10 @@ async function generateSummariesTs(adventures) {
     lines.push(`    story: ${formatString(summaryStory)},`);
     lines.push(`    tags: [${data.tags.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
     if (data.contributor) {
-      const contributorAboutHtml = data.contributor.about ? await mdToInline(data.contributor.about) : null;
+      if (data.contributor.about && !contributorAboutHtmlCache.has(data.contributor.name)) {
+        contributorAboutHtmlCache.set(data.contributor.name, await mdToInline(data.contributor.about));
+      }
+      const contributorAboutHtml = contributorAboutHtmlCache.get(data.contributor.name) ?? null;
       lines.push(`    contributor: {`);
       lines.push(`      name: "${escapeDoubleQuoted(data.contributor.name)}",`);
       if (data.contributor.url) lines.push(`      url: "${escapeDoubleQuoted(data.contributor.url)}",`);

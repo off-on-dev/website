@@ -12,7 +12,7 @@ export const BUILDING_CLOUDHAVEN: Adventure = {
   contributor: {
     name: "Katharina Sick",
     url: "https://ksick.dev/",
-    aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
+    aboutHtml: "<abbr data-title=\"Developer Relations\" tabindex=\"0\" aria-describedby=\"abbr-exp-45\">DevRel</abbr><span id=\"abbr-exp-45\" class=\"sr-only\">Developer Relations</span> at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
   },
   backstory: [
     "Welcome to CloudHaven, a bustling digital metropolis where every district depends on essential services to thrive. You've just joined the Infrastructure Guild, a team of platform engineers responsible for providing the tools and services that keep the city running.",
@@ -29,7 +29,7 @@ export const BUILDING_CLOUDHAVEN: Adventure = {
       topics: ["OpenTofu"],
       learnings: [
         "Infrastructure as Code with OpenTofu",
-        "Remote state management with GCS backend",
+        "Remote state management with <abbr data-title=\"Google Cloud Storage\" tabindex=\"0\" aria-describedby=\"abbr-exp-46\">GCS</abbr><span id=\"abbr-exp-46\" class=\"sr-only\">Google Cloud Storage</span> backend",
         "Dynamic resource provisioning with for_each",
         "Conditional resources with the enabled meta-argument, new in OpenTofu",
       ],
@@ -50,7 +50,7 @@ export const BUILDING_CLOUDHAVEN: Adventure = {
         "Resolve all TODOs in the code and successfully run tofu apply",
       ],
       toolbox: [
-        { name: "tofu", description: "OpenTofu CLI for infrastructure provisioning", url: "https://opentofu.org/" },
+        { name: "tofu", description: "OpenTofu <abbr data-title=\"Command Line Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-47\">CLI</abbr><span id=\"abbr-exp-47\" class=\"sr-only\">Command Line Interface</span> for infrastructure provisioning", url: "https://opentofu.org/" },
         { name: "gcp-api-mock", description: "mock GCP API running locally to simulate cloud resources without real cloud costs (Cloud Storage and Cloud SQL only)", url: "https://github.com/KatharinaSick/gcp-api-mock" },
       ],
       howToPlay: [
@@ -90,7 +90,7 @@ export const BUILDING_CLOUDHAVEN: Adventure = {
       topics: ["OpenTofu", "TDD"],
       learnings: [
         "OpenTofu module testing with tofu test",
-        "Test-Driven Development (TDD) workflow",
+        "Test-Driven Development (<abbr data-title=\"Test-Driven Development\" tabindex=\"0\" aria-describedby=\"abbr-exp-48\">TDD</abbr><span id=\"abbr-exp-48\" class=\"sr-only\">Test-Driven Development</span>) workflow",
         "Input validation with custom rules",
         "Refactoring infrastructure safely with moved blocks",
       ],
@@ -111,7 +111,7 @@ export const BUILDING_CLOUDHAVEN: Adventure = {
         "Three districts deployed with correctly configured infrastructure (vaults and ledgers)",
       ],
       toolbox: [
-        { name: "tofu", description: "OpenTofu CLI for infrastructure provisioning", url: "https://opentofu.org/" },
+        { name: "tofu", description: "OpenTofu <abbr data-title=\"Command Line Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-49\">CLI</abbr><span id=\"abbr-exp-49\" class=\"sr-only\">Command Line Interface</span> for infrastructure provisioning", url: "https://opentofu.org/" },
         { name: "gcp-api-mock", description: "mock GCP API running locally to simulate cloud resources without real cloud costs (Cloud Storage and Cloud SQL only)", url: "https://github.com/KatharinaSick/gcp-api-mock" },
       ],
       howToPlay: [
@@ -174,7 +174,7 @@ make apply
       discussionUrl: `${COMMUNITY_URL}/t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8`,
       deadline: "2026-02-04T23:59:00+01:00",
       intro: [
-        "Three broken GitHub Actions workflows stand between CloudHaven and automated infrastructure governance. Fix drift detection that creates PRs, PR validation with Trivy security scanning and service-container integration tests, and automatic apply on merge.",
+        "Three broken GitHub Actions workflows stand between CloudHaven and automated infrastructure governance. Fix drift detection that creates PRs, <abbr data-title=\"Pull Request\" tabindex=\"0\" aria-describedby=\"abbr-exp-50\">PR</abbr><span id=\"abbr-exp-50\" class=\"sr-only\">Pull Request</span> validation with Trivy security scanning and service-container integration tests, and automatic apply on merge.",
       ],
       backstory: [
         "After the Modular Metropolis refactoring, CloudHaven flourished. But with growth came risk. One night, a rogue change slipped through unnoticed and nearly brought down the North Market's trading vaults. The Council was furious: how could this happen without anyone noticing?",
@@ -189,7 +189,7 @@ make apply
         "All three workflows must have succeeded at least once",
       ],
       toolbox: [
-        { name: "tofu", description: "OpenTofu CLI for infrastructure provisioning", url: "https://opentofu.org/" },
+        { name: "tofu", description: "OpenTofu <abbr data-title=\"Command Line Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-51\">CLI</abbr><span id=\"abbr-exp-51\" class=\"sr-only\">Command Line Interface</span> for infrastructure provisioning", url: "https://opentofu.org/" },
         { name: "gcp-api-mock", description: "mock GCP API running locally (port set to public so GitHub Actions runners can access it)", url: "https://github.com/KatharinaSick/gcp-api-mock" },
         { name: "GitHub Actions", description: "the workflows you will fix are in .github/workflows/", url: "https://docs.github.com/en/actions" },
       ],

@@ -13,7 +13,7 @@ export const DEAD_RECKONING: Adventure = {
   contributor: {
     name: "Katharina Sick",
     url: "https://ksick.dev/",
-    aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
+    aboutHtml: "<abbr data-title=\"Developer Relations\" tabindex=\"0\" aria-describedby=\"abbr-exp-1\">DevRel</abbr><span id=\"abbr-exp-1\" class=\"sr-only\">Developer Relations</span> at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
   },
   backstory: [
     "The Grand Fleet's commission office is buried in complaints. Manifests are filed but nothing comes of them. Vessels that do sail arrive at port with the wrong cargo, and no one along the route can explain why. As the fleet's engineer, your mission is to restore order from keel to quayside and find out what the records are hiding.",
@@ -111,7 +111,7 @@ vessel through it to confirm the repair.</p>
       name: "Sea Trial",
       difficulty: "Intermediate",
       topics: ["Backstage", "Gitea", "Argo Events", "Argo Workflows", "Argo CD"],
-      audience: "Platform and DevOps engineers who have met these tools before and want to see how they fit together. You should be comfortable with Kubernetes, YAML, and reading a tool's logs and UI. Prior exposure to Backstage, Gitea, and the Argo projects helps, but the focus here is the integration between them, not any one tool.",
+      audience: "Platform and <abbr data-title=\"Development and Operations\" tabindex=\"0\" aria-describedby=\"abbr-exp-2\">DevOps</abbr><span id=\"abbr-exp-2\" class=\"sr-only\">Development and Operations</span> engineers who have met these tools before and want to see how they fit together. You should be comfortable with Kubernetes, YAML, and reading a tool's logs and <abbr data-title=\"User Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-3\">UI</abbr><span id=\"abbr-exp-3\" class=\"sr-only\">User Interface</span>. Prior exposure to Backstage, Gitea, and the Argo projects helps, but the focus here is the integration between them, not any one tool.",
       learnings: [
         "How a Git webhook drives a workflow engine: Argo Events <a href=\"https://argoproj.github.io/argo-events/concepts/sensor/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">Sensors</a> turn a push into a <a href=\"https://argoproj.github.io/argo-events/tutorials/02-parameterization/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">parameterized</a> workflow run",
         "How <a href=\"https://argo-workflows.readthedocs.io/en/latest/walk-through/steps/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">Argo Workflows</a> runs a multi-step delivery pipeline, and the <a href=\"https://argo-workflows.readthedocs.io/en/latest/workflow-rbac/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">RBAC</a> its steps need",

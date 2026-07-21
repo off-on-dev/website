@@ -219,7 +219,7 @@ const StructuredLayout = ({ adventure, level, rewardsBelowFold, hasSolution }: S
                 {
                   title: "Get Started",
                   content: [
-                    `<p><a href="${escapeHtmlAttr(level.codespacesUrl)}" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint">Open in GitHub Codespaces</a>. The <abbr data-title="development container: a portable, reproducible coding environment defined by a configuration file" aria-describedby="abbr-devcontainer" tabindex="0">devcontainer</abbr><span id="abbr-devcontainer" class="sr-only">development container: a portable, reproducible coding environment defined by a configuration file</span> is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.</p>`,
+                    `<p><a href="${escapeHtmlAttr(level.codespacesUrl)}" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint">Open in GitHub Codespaces</a>. The devcontainer is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.</p>`,
                     `<p>Prefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (<abbr data-title="Visual Studio Code" aria-describedby="abbr-vscode" tabindex="0">VS Code</abbr><span id="abbr-vscode" class="sr-only">Visual Studio Code</span>, JetBrains, and others). The devcontainer config will be detected automatically.</p>`,
                   ].join("\n"),
                 },

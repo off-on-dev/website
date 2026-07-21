@@ -13,7 +13,7 @@ export const LEX_IMPERFECTA: Adventure = {
   contributor: {
     name: "Katharina Sick",
     url: "https://ksick.dev/",
-    aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
+    aboutHtml: "<abbr data-title=\"Developer Relations\" tabindex=\"0\" aria-describedby=\"abbr-exp-4\">DevRel</abbr><span id=\"abbr-exp-4\" class=\"sr-only\">Developer Relations</span> at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
   },
   backstory: [
     "The Roman Republic has built a sophisticated legal system to protect its citizens — but the laws were written in haste, and the exceptions were written too generously. Policies go unenforced, the wrong citizens are exempt, and something has slipped through the gates unnoticed. As a newly appointed Praetor, your mission is to restore order before chaos takes hold.",
@@ -37,9 +37,9 @@ export const LEX_IMPERFECTA: Adventure = {
       name: "The Twelve Tables",
       difficulty: "Beginner",
       topics: ["Kyverno", "Kubernetes"],
-      audience: "Platform engineers, <abbr data-title=\"Site Reliability Engineers\" tabindex=\"0\" aria-describedby=\"abbr-exp-1\">SREs</abbr><span id=\"abbr-exp-1\" class=\"sr-only\">Site Reliability Engineers</span>, and developers curious about Kubernetes security — no prior Kyverno experience needed, but familiarity with basic <code>kubectl</code> and YAML will help.",
+      audience: "Platform engineers, <abbr data-title=\"Site Reliability Engineers\" tabindex=\"0\" aria-describedby=\"abbr-exp-6\">SREs</abbr><span id=\"abbr-exp-6\" class=\"sr-only\">Site Reliability Engineers</span>, and developers curious about Kubernetes security — no prior Kyverno experience needed, but familiarity with basic <code>kubectl</code> and YAML will help.",
       learnings: [
-        "How Kyverno <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">ValidatingPolicy</a> resources and  <a href=\"https://kubernetes.io/docs/reference/using-api/cel/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">CEL validation expressions</a> work",
+        "How Kyverno <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">ValidatingPolicy</a> resources and  <a href=\"https://kubernetes.io/docs/reference/using-api/cel/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\"><abbr data-title=\"Common Expression Language\" tabindex=\"0\" aria-describedby=\"abbr-exp-5\">CEL</abbr><span id=\"abbr-exp-5\" class=\"sr-only\">Common Expression Language</span> validation expressions</a> work",
         "The difference between <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">Audit, Deny, and Warn</a> validation actions",
         "How to use <a href=\"https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">custom label keys</a> to  enforce workload identity standards",
         "How Kyverno <a href=\"https://kyverno.io/docs/policy-types/mutating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">MutatingPolicy</a> resources automatically  patch incoming workloads at admission",
@@ -61,14 +61,14 @@ export const LEX_IMPERFECTA: Adventure = {
       ],
       architecture: [
         "<p>The Twelve Tables enforced Roman law <strong>at the gates</strong> — before a citizen could act, not after the damage was done. Kyverno works the same way: it intercepts every workload request <em>before</em> it reaches the cluster. A misconfigured policy doesn't just fail to enforce — it fails silently, letting non-compliant workloads slip through while you assume everything is fine.</p>",
-        "<p>Your Codespace comes with a Kubernetes cluster and Kyverno pre-installed. Three broken policies are already deployed in <code>manifests/policies/</code> — two <code>ValidatingPolicy</code> resources and one <code>MutatingPolicy</code>. Edit them directly and re-apply with <code>kubectl</code>. The pods in <code>manifests/pods/</code> are for reference only — no GitOps, no dashboards.</p>",
+        "<p>Your Codespace comes with a Kubernetes cluster and Kyverno pre-installed. Three broken policies are already deployed in <code>manifests/policies/</code> — two <code>ValidatingPolicy</code> resources and one <code>MutatingPolicy</code>. Edit them directly and re-apply with <code>kubectl</code>. The pods in <code>manifests/pods/</code> are for reference only — no <abbr data-title=\"Git Operations\" tabindex=\"0\" aria-describedby=\"abbr-exp-7\">GitOps</abbr><span id=\"abbr-exp-7\" class=\"sr-only\">Git Operations</span>, no dashboards.</p>",
       ],
       architectureDiagram: lexImperfectaBeginner,
       diagramAlt: "Workload request flows through Kyverno's admission webhook before reaching the Kubernetes cluster. Two ValidatingPolicy resources block non-compliant workloads, and one MutatingPolicy automatically patches admitted workloads with required labels.",
       toolbox: [
         { name: "kubectl", description: "Apply and inspect cluster resources", url: "https://kubernetes.io/docs/reference/kubectl/" },
         { name: "kyverno CLI", description: "Test and lint policies locally before applying", url: "https://kyverno.io/docs/kyverno-cli/" },
-        { name: "k9s", description: "Explore cluster resources in a terminal UI", url: "https://k9scli.io/" },
+        { name: "k9s", description: "Explore cluster resources in a terminal <abbr data-title=\"User Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-8\">UI</abbr><span id=\"abbr-exp-8\" class=\"sr-only\">User Interface</span>", url: "https://k9scli.io/" },
       ],
       howToPlay: [
         { title: "Explore the Cluster", content: `<p>When your Codespace is ready, four pods are already running — or trying to. Open a terminal and check what's going on:</p>
@@ -91,7 +91,7 @@ kubectl get mutatingpolicy stamp-travel-permit -o yaml
 <p>Navigate to <code>ValidatingPolicy</code> resources with <code>:validatingpolicies</code> and <code>MutatingPolicy</code> resources with <code>:mutatingpolicies</code> to inspect all three policies.</p>` },
         { title: "Fix the Policies", content: `<p>Review the <a href="#objective">Objective</a> and investigate what's wrong in <code>manifests/policies/</code>.</p>
 <p>All three broken policies are in <code>manifests/policies/</code>. Read them carefully — each has a different kind of misconfiguration.</p>
-<p><strong>Test Locally with the Kyverno CLI</strong></p>
+<p><strong>Test Locally with the Kyverno <abbr data-title="Command Line Interface" tabindex="0" aria-describedby="abbr-exp-9">CLI</abbr><span id="abbr-exp-9" class="sr-only">Command Line Interface</span></strong></p>
 <p>Before applying to the cluster, you can use the <code>kyverno</code> CLI to test your policy changes locally against the workload manifests:</p>
 <pre tabindex="0" aria-label="Code block"><code class="language-bash">kyverno apply manifests/policies/require-labels.yaml --resource manifests/pods/missing-labels.yaml
 kyverno apply manifests/policies/no-privileged-containers.yaml --resource manifests/pods/privileged.yaml
@@ -121,7 +121,7 @@ kyverno apply manifests/policies/stamp-travel-permit.yaml --resource manifests/p
       name: "Governing the Provinces",
       difficulty: "Intermediate",
       topics: ["Kyverno", "Policy Reporter", "Kubernetes"],
-      audience: "Platform engineers and <abbr data-title=\"Site Reliability Engineers\" tabindex=\"0\" aria-describedby=\"abbr-exp-2\">SREs</abbr><span id=\"abbr-exp-2\" class=\"sr-only\">Site Reliability Engineers</span> who have some familiarity with Kyverno, ideally after completing the Beginner level. You should be comfortable reading Kubernetes YAML and basic kubectl commands.",
+      audience: "Platform engineers and <abbr data-title=\"Site Reliability Engineers\" tabindex=\"0\" aria-describedby=\"abbr-exp-10\">SREs</abbr><span id=\"abbr-exp-10\" class=\"sr-only\">Site Reliability Engineers</span> who have some familiarity with Kyverno, ideally after completing the Beginner level. You should be comfortable reading Kubernetes YAML and basic kubectl commands.",
       learnings: [
         "How to scope policies using <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">ValidatingPolicy</a> (cluster-wide) and <a href=\"https://kyverno.io/docs/policy-types/validating-policy/#policy-scope\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">NamespacedValidatingPolicy</a> (per-namespace), and when to use each",
         "How <a href=\"https://kubernetes.io/docs/reference/using-api/cel/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">CEL expressions</a> in <code>ValidatingPolicy</code> and <code>PolicyException</code> express fine-grained admission conditions",
@@ -153,7 +153,7 @@ kyverno apply manifests/policies/stamp-travel-permit.yaml --resource manifests/p
       toolbox: [
         { name: "kubectl", description: "Apply and inspect cluster resources, check namespace labels and policy status", url: "https://kubernetes.io/docs/reference/kubectl/" },
         { name: "kyverno CLI", description: "Test and lint policies locally before applying to the cluster", url: "https://kyverno.io/docs/kyverno-cli/" },
-        { name: "k9s", description: "Explore cluster resources and policy reports in a terminal UI", url: "https://k9scli.io/" },
+        { name: "k9s", description: "Explore cluster resources and policy reports in a terminal <abbr data-title=\"User Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-11\">UI</abbr><span id=\"abbr-exp-11\" class=\"sr-only\">User Interface</span>", url: "https://k9scli.io/" },
       ],
       howToPlay: [
         { title: "Explore the Estate", content: `<p>When your Codespace is ready, the policy estate is already deployed, but something is wrong.
@@ -184,7 +184,7 @@ kubectl get policyreports -A
 <code>manifests/exceptions/</code>.</p>
 <p>Think about what each policy is <em>supposed</em> to cover, and compare that against what it is <em>actually</em>
 matching. The namespace labels you saw with <code>kubectl get ns --show-labels</code> are a key part of the picture.</p>
-<p><strong>Test locally with the Kyverno CLI before applying:</strong></p>
+<p><strong>Test locally with the Kyverno <abbr data-title="Command Line Interface" tabindex="0" aria-describedby="abbr-exp-12">CLI</abbr><span id="abbr-exp-12" class="sr-only">Command Line Interface</span> before applying:</strong></p>
 <pre tabindex="0" aria-label="Code block"><code class="language-bash">kyverno apply manifests/policies/require-census.yaml --resource manifests/workloads/citizens.yaml
 kyverno apply manifests/policies/aegyptus-require-scribe-role.yaml --resource manifests/workloads/aegyptus-legacy-scribe.yaml
 </code></pre>
@@ -201,7 +201,7 @@ policy reports, the OpenReports data behind Policy Reporter, as the audit of rec
       helpfulLinks: [
         { title: "Kyverno ValidatingPolicy", url: "https://kyverno.io/docs/policy-types/validating-policy/", description: "Reference docs for ValidatingPolicy and NamespacedValidatingPolicy: the policy types you'll fix" },
         { title: "Kyverno PolicyException", url: "https://kyverno.io/docs/guides/exceptions/", description: "How to write and scope a PolicyException to exempt specific workloads" },
-        { title: "CEL Validation Expressions", url: "https://kubernetes.io/docs/reference/using-api/cel/", description: "How CEL expressions work in Kubernetes admission, including accessing namespace context" },
+        { title: "CEL Validation Expressions", url: "https://kubernetes.io/docs/reference/using-api/cel/", description: "How <abbr title=\"Common Expression Language\">CEL</abbr> expressions work in Kubernetes admission, including accessing namespace context" },
         { title: "Policy Reporter", url: "https://kyverno.github.io/policy-reporter/", description: "How to use Policy Reporter to audit and visualise policy results across the cluster" },
         { title: "OpenReports Format", url: "https://openreports.io/", description: "The OpenReports standard that Kyverno uses to emit PolicyReport resources" },
       ],
@@ -216,7 +216,7 @@ policy reports, the OpenReports data behind Policy Reporter, as the audit of rec
       name: "Quis Custodiet",
       difficulty: "Expert",
       topics: ["Kyverno", "Policy Reporter", "Kubernetes"],
-      audience: "Security engineers and platform engineers who want to explore the boundary between admission control and runtime security. Completing the Intermediate level first is helpful but not required. You should be comfortable reading Kyverno ValidatingPolicies and CEL expressions. No prior Falco experience required.",
+      audience: "Security engineers and platform engineers who want to explore the boundary between admission control and runtime security. Completing the Intermediate level first is helpful but not required. You should be comfortable reading Kyverno ValidatingPolicies and <abbr data-title=\"Common Expression Language\" tabindex=\"0\" aria-describedby=\"abbr-exp-13\">CEL</abbr><span id=\"abbr-exp-13\" class=\"sr-only\">Common Expression Language</span> expressions. No prior Falco experience required.",
       learnings: [
         "How <a href=\"https://falco.org/docs/reference/rules/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">Falco rules</a> are structured: conditions, output, and kernel-level fields, and how to write a rule targeting a specific runtime behaviour",
         "Why <code>privileged: false</code> is not enough: how <a href=\"https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-capabilities-for-a-container\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">Linux capabilities</a> grant host-level access without the privileged flag",
@@ -235,13 +235,13 @@ policy reports, the OpenReports data behind Policy Reporter, as the audit of rec
         "And while the Guard slept, an intruder crept in. It declared valid labels, passed the census, and presented itself as a loyal citizen of the Republic. Its papers were in order. Its power was not. Once inside, it reached straight for the census archive: the imperial rolls of every citizen, sealed records it had no right to touch. It reads them on a loop and tries to send them out of the Republic.",
       ],
       objective: [
-        "<strong>The Praetorian Guard awake</strong>: Falco fires an alert every time an unauthorized process reads the census archive, with live alerts streaming into the Falcosidekick UI",
+        "<strong>The Praetorian Guard awake</strong>: Falco fires an alert every time an unauthorized process reads the census archive, with live alerts streaming into the Falcosidekick <abbr data-title=\"User Interface\" tabindex=\"0\" aria-describedby=\"abbr-exp-14\">UI</abbr><span id=\"abbr-exp-14\" class=\"sr-only\">User Interface</span>",
         "<strong>The gate closed</strong>: the intruder is denied re-admission. The policy that kept privileged containers out now covers every path to unchecked host power",
         "<strong>The archive sealed</strong>: the census-archive secret is inaccessible to any workload that does not bear the Archivist role",
         "<strong>The empire-wide laws holding</strong>: all intermediate-level checks still green across every province",
       ],
       architecture: [
-        "<p>The estate inherits the full intermediate topology: four province namespaces (<code>gallia</code>, <code>hispania</code>, <code>britannia</code>, <code>aegyptus</code>) and one infra namespace (<code>castra</code>), each labelled as before. Alongside the Kyverno stack and Policy Reporter, the cluster now runs <strong>Falco</strong> (<abbr data-title=\"extended Berkeley Packet Filter\" tabindex=\"0\" aria-describedby=\"abbr-exp-3\">eBPF</abbr><span id=\"abbr-exp-3\" class=\"sr-only\">extended Berkeley Packet Filter</span>-based, as a DaemonSet) and <strong>Falcosidekick</strong> with its UI at port <strong>30111</strong>. At startup, an intruder pod is already running in one of the provinces, quietly reading the census archive: imperial rolls that only workloads bearing the <code>republic.rome/role: archivist</code> label are permitted to access.</p>",
+        "<p>The estate inherits the full intermediate topology: four province namespaces (<code>gallia</code>, <code>hispania</code>, <code>britannia</code>, <code>aegyptus</code>) and one infra namespace (<code>castra</code>), each labelled as before. Alongside the Kyverno stack and Policy Reporter, the cluster now runs <strong>Falco</strong> (<abbr data-title=\"extended Berkeley Packet Filter\" tabindex=\"0\" aria-describedby=\"abbr-exp-15\">eBPF</abbr><span id=\"abbr-exp-15\" class=\"sr-only\">extended Berkeley Packet Filter</span>-based, as a DaemonSet) and <strong>Falcosidekick</strong> with its UI at port <strong>30111</strong>. At startup, an intruder pod is already running in one of the provinces, quietly reading the census archive: imperial rolls that only workloads bearing the <code>republic.rome/role: archivist</code> label are permitted to access.</p>",
         "<p>Your working directory is the challenge root. <code>manifests/secrets/</code> and <code>manifests/workloads/</code> are already in place. They define the estate and the intruder, and need no changes. Everything else is yours to investigate and fix.</p>",
       ],
       toolbox: [
@@ -277,8 +277,8 @@ to share expressions across validations, a pattern worth exploring.</p>` },
         { title: "Act 3: Seal the Archive", content: `<p>Open <code>manifests/policies/</code>: something is missing; the other policies show the structure, write
 what's needed, then run <code>make apply</code>.</p>
 <p><strong>Going further:</strong> even with the archive sealed at admission, any workload admitted with the
-Archivist role can read the secret. Kubernetes <abbr data-title="Role-Based Access Control" tabindex="0" aria-describedby="abbr-exp-4">RBAC</abbr><span id="abbr-exp-4" class="sr-only">Role-Based Access Control</span> can restrict which service accounts may
-<code>get</code> a secret at the <abbr data-title="Application Programming Interface" tabindex="0" aria-describedby="abbr-exp-5">API</abbr><span id="abbr-exp-5" class="sr-only">Application Programming Interface</span> level, a complementary layer that admission control alone cannot
+Archivist role can read the secret. Kubernetes <abbr data-title="Role-Based Access Control" tabindex="0" aria-describedby="abbr-exp-16">RBAC</abbr><span id="abbr-exp-16" class="sr-only">Role-Based Access Control</span> can restrict which service accounts may
+<code>get</code> a secret at the <abbr data-title="Application Programming Interface" tabindex="0" aria-describedby="abbr-exp-17">API</abbr><span id="abbr-exp-17" class="sr-only">Application Programming Interface</span> level, a complementary layer that admission control alone cannot
 provide.</p>` },
       ],
       helpfulLinks: [

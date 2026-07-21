@@ -11,7 +11,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
     contributor: {
       name: "Katharina Sick",
       url: "https://ksick.dev/",
-      aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
+      aboutHtml: "<abbr data-title=\"Developer Relations\" tabindex=\"0\" aria-describedby=\"abbr-exp-63\">DevRel</abbr><span id=\"abbr-exp-63\" class=\"sr-only\">Developer Relations</span> at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
     },
     isLive: true,
     icon: "Compass",
@@ -52,7 +52,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
     contributor: {
       name: "Katharina Sick",
       url: "https://ksick.dev/",
-      aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
+      aboutHtml: "<abbr data-title=\"Developer Relations\" tabindex=\"0\" aria-describedby=\"abbr-exp-63\">DevRel</abbr><span id=\"abbr-exp-63\" class=\"sr-only\">Developer Relations</span> at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
     },
     icon: "Scale",
     levels: [
@@ -62,7 +62,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
         difficulty: "Beginner",
         topics: ["Kyverno", "Kubernetes"],
         learnings: [
-          "How Kyverno <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">ValidatingPolicy</a> resources and  <a href=\"https://kubernetes.io/docs/reference/using-api/cel/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">CEL validation expressions</a> work",
+          "How Kyverno <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">ValidatingPolicy</a> resources and  <a href=\"https://kubernetes.io/docs/reference/using-api/cel/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\"><abbr data-title=\"Common Expression Language\" tabindex=\"0\" aria-describedby=\"abbr-exp-64\">CEL</abbr><span id=\"abbr-exp-64\" class=\"sr-only\">Common Expression Language</span> validation expressions</a> work",
           "The difference between <a href=\"https://kyverno.io/docs/policy-types/validating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">Audit, Deny, and Warn</a> validation actions",
           "How to use <a href=\"https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">custom label keys</a> to  enforce workload identity standards",
           "How Kyverno <a href=\"https://kyverno.io/docs/policy-types/mutating-policy/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-describedby=\"new-tab-hint\">MutatingPolicy</a> resources automatically  patch incoming workloads at admission",
@@ -104,7 +104,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
     contributor: {
       name: "Simon Schrottner",
       url: "https://schrottner.at/",
-      aboutHtml: "CNCF Ambassador and maintainer of OpenFeature and JUnit Pioneer. Helps teams release faster and with more confidence through open standards, feature flagging, and the communities that make both possible. A familiar face at KubeCon EU, Devoxx, ContainerDays, and meetups across Europe.",
+      aboutHtml: "<abbr data-title=\"Cloud Native Computing Foundation\" tabindex=\"0\" aria-describedby=\"abbr-exp-65\">CNCF</abbr><span id=\"abbr-exp-65\" class=\"sr-only\">Cloud Native Computing Foundation</span> Ambassador and maintainer of OpenFeature and JUnit Pioneer. Helps teams release faster and with more confidence through open standards, feature flagging, and the communities that make both possible. A familiar face at KubeCon EU, Devoxx, ContainerDays, and meetups across Europe.",
     },
     icon: "FlaskConical",
     levels: [
@@ -114,8 +114,8 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
         difficulty: "Beginner",
         topics: ["OpenFeature", "flagd", "Spring Boot"],
         learnings: [
-          "How an OpenFeature client and provider work together: the SDK is provider-agnostic and the flagd provider plugs in via dependency only",
-          "What remote provider means in practice: the SDK calls a separate flag service (flagd) over gRPC, not parsing flags.json itself",
+          "How an OpenFeature client and provider work together: the <abbr data-title=\"Software Development Kit\" tabindex=\"0\" aria-describedby=\"abbr-exp-66\">SDK</abbr><span id=\"abbr-exp-66\" class=\"sr-only\">Software Development Kit</span> is provider-agnostic and the flagd provider plugs in via dependency only",
+          "What remote provider means in practice: the SDK calls a separate flag service (flagd) over <abbr data-title=\"Google Remote Procedure Call\" tabindex=\"0\" aria-describedby=\"abbr-exp-67\">gRPC</abbr><span id=\"abbr-exp-67\" class=\"sr-only\">Google Remote Procedure Call</span>, not parsing flags.json itself",
           "What flags.json looks like for flagd (state, variants, defaultVariant)",
           "Why hot-reload of the flag file matters operationally: configuration without redeploy",
         ],
@@ -138,7 +138,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
         topics: ["OpenFeature", "OpenTelemetry", "Grafana", "Spring Boot"],
         learnings: [
           "How the OpenFeature OpenTelemetry hooks (TracesHook and MetricsHook) join flag evaluations to the rest of an application's telemetry without a separate ingestion path",
-          "How to author your own Hook: a tiny class that copies merged-eval-context attributes onto the active OTel span, closing the loop between why a flag resolved the way it did and what the operator sees in Tempo",
+          "How to author your own Hook: a tiny class that copies merged-eval-context attributes onto the active <abbr data-title=\"OpenTelemetry\" tabindex=\"0\" aria-describedby=\"abbr-exp-68\">OTel</abbr><span id=\"abbr-exp-68\" class=\"sr-only\">OpenTelemetry</span> span, closing the loop between why a flag resolved the way it did and what the operator sees in Tempo",
           "How fractional rollout in flagd buckets users by targetingKey (same key, same bucket, every request) and how to read that bucketing off a dashboard",
           "How a flag flip is a faster operational lever than a redeploy when a rollout is misbehaving: the difference between a one-line config change and a twenty-minute deployment",
         ],
@@ -154,7 +154,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
     contributor: {
       name: "Katharina Sick",
       url: "https://ksick.dev/",
-      aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
+      aboutHtml: "<abbr data-title=\"Developer Relations\" tabindex=\"0\" aria-describedby=\"abbr-exp-63\">DevRel</abbr><span id=\"abbr-exp-63\" class=\"sr-only\">Developer Relations</span> at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
     },
     icon: "Telescope",
     levels: [
@@ -174,7 +174,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
         difficulty: "Intermediate",
         topics: ["OpenTelemetry", "OpenLLMetry", "Jaeger", "Prometheus"],
         learnings: [
-          "Instrument RAG pipelines with OpenLLMetry",
+          "Instrument <abbr data-title=\"Retrieval-Augmented Generation\" tabindex=\"0\" aria-describedby=\"abbr-exp-69\">RAG</abbr><span id=\"abbr-exp-69\" class=\"sr-only\">Retrieval-Augmented Generation</span> pipelines with OpenLLMetry",
           "Create custom OpenTelemetry metrics in Python",
           "Write PromQL queries &#x26; recording rules in Prometheus",
         ],
@@ -186,7 +186,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
         topics: ["OpenTelemetry", "OpenLLMetry", "Jaeger"],
         learnings: [
           "OpenTelemetry GenAI semantic conventions",
-          "Tail sampling in the OTel Collector",
+          "Tail sampling in the <abbr data-title=\"OpenTelemetry\" tabindex=\"0\" aria-describedby=\"abbr-exp-70\">OTel</abbr><span id=\"abbr-exp-70\" class=\"sr-only\">OpenTelemetry</span> Collector",
         ],
       },
     ],
@@ -200,7 +200,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
     contributor: {
       name: "Katharina Sick",
       url: "https://ksick.dev/",
-      aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
+      aboutHtml: "<abbr data-title=\"Developer Relations\" tabindex=\"0\" aria-describedby=\"abbr-exp-63\">DevRel</abbr><span id=\"abbr-exp-63\" class=\"sr-only\">Developer Relations</span> at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
     },
     icon: "Building2",
     levels: [
@@ -211,7 +211,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
         topics: ["OpenTofu"],
         learnings: [
           "Infrastructure as Code with OpenTofu",
-          "Remote state management with GCS backend",
+          "Remote state management with <abbr data-title=\"Google Cloud Storage\" tabindex=\"0\" aria-describedby=\"abbr-exp-71\">GCS</abbr><span id=\"abbr-exp-71\" class=\"sr-only\">Google Cloud Storage</span> backend",
           "Dynamic resource provisioning with for_each",
           "Conditional resources with the enabled meta-argument, new in OpenTofu",
         ],
@@ -223,7 +223,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
         topics: ["OpenTofu", "TDD"],
         learnings: [
           "OpenTofu module testing with tofu test",
-          "Test-Driven Development (TDD) workflow",
+          "Test-Driven Development (<abbr data-title=\"Test-Driven Development\" tabindex=\"0\" aria-describedby=\"abbr-exp-72\">TDD</abbr><span id=\"abbr-exp-72\" class=\"sr-only\">Test-Driven Development</span>) workflow",
           "Input validation with custom rules",
           "Refactoring infrastructure safely with moved blocks",
         ],
@@ -250,7 +250,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
     contributor: {
       name: "Katharina Sick",
       url: "https://ksick.dev/",
-      aboutHtml: "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
+      aboutHtml: "<abbr data-title=\"Developer Relations\" tabindex=\"0\" aria-describedby=\"abbr-exp-63\">DevRel</abbr><span id=\"abbr-exp-63\" class=\"sr-only\">Developer Relations</span> at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
     },
     icon: "Satellite",
     levels: [
@@ -260,7 +260,7 @@ export const ADVENTURE_SUMMARIES: AdventureCardSummary[] = [
         difficulty: "Beginner",
         topics: ["Argo CD"],
         learnings: [
-          "Debug GitOps flows with Argo CD",
+          "Debug <abbr data-title=\"Git Operations\" tabindex=\"0\" aria-describedby=\"abbr-exp-73\">GitOps</abbr><span id=\"abbr-exp-73\" class=\"sr-only\">Git Operations</span> flows with Argo CD",
           "ApplicationSet templating &#x26; pitfalls",
           "Environment isolation &#x26; namespaces",
           "Sync policies: automated, prune &#x26; self-heal",

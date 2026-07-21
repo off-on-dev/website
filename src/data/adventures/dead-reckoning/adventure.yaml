@@ -25,7 +25,7 @@ rewards:
 contributor:
   name: Katharina Sick
   url: https://ksick.dev/
-  about: DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native
+  about: <abbr title="Developer Relations">DevRel</abbr> at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native
     and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities,
     inline skating rinks, and quiz nights across Europe.
 upcoming_levels:
@@ -160,8 +160,8 @@ levels:
       - Argo Events
       - Argo Workflows
       - Argo CD
-    audience: Platform and DevOps engineers who have met these tools before and want to see how they fit together. You
-      should be comfortable with Kubernetes, YAML, and reading a tool's logs and UI. Prior exposure to Backstage, Gitea,
+    audience: Platform and <abbr title="Development and Operations">DevOps</abbr> engineers who have met these tools before and want to see how they fit together. You
+      should be comfortable with Kubernetes, YAML, and reading a tool's logs and <abbr title="User Interface">UI</abbr>. Prior exposure to Backstage, Gitea,
       and the Argo projects helps, but the focus here is the integration between them, not any one tool.
     backstory:
       - "The commission office is back in business: manifests are filed, repositories are created, and every new vessel
