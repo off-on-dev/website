@@ -1,0 +1,22 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { BRAND_NAME } from "@/lib/site";
+
+// GitHub Pages serves this as 404.html for unmatched paths, returning a real
+// HTTP 404 (no soft-404 / catch-all route needed).
+const base = import.meta.env.BASE_URL;
+---
+
+<Layout title={`Page Not Found - ${BRAND_NAME}`} description="The page you're looking for doesn't exist." path="/404/">
+  <main id="main-content" tabindex="-1" class="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
+    <p class="font-mono text-sm uppercase tracking-widest text-faint">404</p>
+    <h1 class="mb-3 mt-2 text-2xl font-bold text-foreground">Page not found</h1>
+    <p class="mb-6 text-muted-foreground">The page you're looking for doesn't exist or has moved.</p>
+    <a
+      href={base}
+      class="focus-ring-tight rounded-sm text-sm font-medium text-primary underline decoration-2 underline-offset-2 transition-colors hover:text-foreground"
+    >
+      Go to Homepage
+    </a>
+  </main>
+</Layout>
