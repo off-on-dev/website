@@ -906,10 +906,11 @@ async function generateSummariesTs(adventures) {
     lines.push(`    story: ${formatString(summaryStory)},`);
     lines.push(`    tags: [${data.tags.map((t) => `"${escapeDoubleQuoted(t)}"`).join(", ")}],`);
     if (data.contributor) {
-      if (data.contributor.about && !contributorAboutHtmlCache.has(data.contributor.name)) {
-        contributorAboutHtmlCache.set(data.contributor.name, await mdToInline(data.contributor.about));
+      const cacheKey = data.contributor.url ?? data.contributor.name;
+      if (data.contributor.about && !contributorAboutHtmlCache.has(cacheKey)) {
+        contributorAboutHtmlCache.set(cacheKey, await mdToInline(data.contributor.about));
       }
-      const contributorAboutHtml = contributorAboutHtmlCache.get(data.contributor.name) ?? null;
+      const contributorAboutHtml = contributorAboutHtmlCache.get(cacheKey) ?? null;
       lines.push(`    contributor: {`);
       lines.push(`      name: "${escapeDoubleQuoted(data.contributor.name)}",`);
       if (data.contributor.url) lines.push(`      url: "${escapeDoubleQuoted(data.contributor.url)}",`);

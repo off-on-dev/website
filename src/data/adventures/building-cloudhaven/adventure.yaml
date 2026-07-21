@@ -118,7 +118,7 @@ levels:
       - TDD
     learnings:
       - OpenTofu module testing with tofu test
-      - Test-Driven Development (<abbr title="Test-Driven Development">TDD</abbr>) workflow
+      - Test-Driven Development (TDD) workflow
       - Input validation with custom rules
       - Refactoring infrastructure safely with moved blocks
     devcontainer: 02-building-cloudhaven_02-intermediate
