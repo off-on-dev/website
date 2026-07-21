@@ -23,6 +23,7 @@ const ROUTES = [
   "/adventures/dead-reckoning",
   "/adventures/dead-reckoning/levels/beginner",
   "/adventures/dead-reckoning/levels/intermediate",
+  "/adventures/dead-reckoning/levels/expert",
   "/adventures/lex-imperfecta",
   "/adventures/lex-imperfecta/levels/beginner",
   "/adventures/lex-imperfecta/levels/intermediate",
