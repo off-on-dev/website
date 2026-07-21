@@ -1,6 +1,8 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import SEO from "@/components/SEO.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
 import "@/styles/index.css";
 
 // App shell. Replaces src/root.tsx. Per-page SEO is delegated to <SEO>.
@@ -26,7 +28,10 @@ const gtagBootstrap = `window.dataLayer=window.dataLayer||[];function gtag(){dat
 
 // With <ClientRouter />, re-assert the theme class after each swap, before paint,
 // so the theme does not flash on client navigation (research-confirmed gotcha).
-const themeAfterSwap = `document.addEventListener("astro:after-swap",function(){try{var t=localStorage.getItem("theme");var c=document.documentElement.classList;if(t==="light"){c.remove("dark");c.add("light");}else{c.remove("light");c.add("dark");}}catch(e){}});`;
+// Also move focus to #main-content after each swap: Astro's router restores prior
+// focus but does not move focus into the landmark; do that for keyboard/AT users.
+// (Fires only on client navigation, not the initial load.)
+const themeAfterSwap = `document.addEventListener("astro:after-swap",function(){try{var t=localStorage.getItem("theme");var c=document.documentElement.classList;if(t==="light"){c.remove("dark");c.add("light");}else{c.remove("light");c.add("dark");}}catch(e){}var m=document.getElementById("main-content");if(m){m.focus({preventScroll:true});}});`;
 
 const webSiteJsonLd = `{"@context":"https://schema.org","@type":"WebSite","name":"OffOn","url":"https://offon.dev","description":"A vendor-neutral community for open source enthusiasts. Learn through hands-on challenges, share what you know, and connect with people who love open source."}`;
 
@@ -85,6 +90,11 @@ const fontPreloads = [
     <ClientRouter />
   </head>
   <body>
+    <a href="#main-content" class="skip-nav">Skip to main content</a>
+    {/* Shared "opens in a new tab" description referenced via aria-describedby on external links. */}
+    <span id="new-tab-hint" hidden>opens in a new tab</span>
+    <Navbar />
     <slot />
+    <Footer />
   </body>
 </html>
