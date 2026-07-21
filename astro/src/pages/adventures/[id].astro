@@ -1,0 +1,101 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import { BRAND_NAME } from "@/lib/site";
+import { stripLinks } from "@/lib/markdown";
+
+export async function getStaticPaths() {
+  const adventures = await getCollection("adventures");
+  return adventures.map((a) => ({ params: { id: a.id }, props: { adventure: a.data } }));
+}
+
+const { adventure } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+<Layout
+  title={`${adventure.title} - ${BRAND_NAME} Adventures`}
+  description={adventure.metaDescription}
+  path={`/adventures/${adventure.slug}/`}
+  ogType="article"
+>
+  <main id="main-content" tabindex="-1" class="mx-auto max-w-3xl px-4 py-12">
+    <p class="text-xs uppercase tracking-widest text-faint">{adventure.month}</p>
+    <h1 class="mt-2 text-3xl md:text-4xl font-bold text-foreground">{adventure.title}</h1>
+
+    <p class="mt-3 text-base text-dim md-inline" set:html={adventure.story} />
+
+    {adventure.tags?.length ? (
+      <ul class="mt-4 flex flex-wrap gap-2" aria-label="Technologies">
+        {adventure.tags.map((t) => (
+          <li class="rounded-full border border-border px-3 py-1 text-xs text-dim">{t}</li>
+        ))}
+      </ul>
+    ) : null}
+
+    {adventure.backstory?.length ? (
+      <section aria-labelledby="story-heading" class="mt-10">
+        <h2 id="story-heading" class="text-lg font-semibold text-foreground">The Story</h2>
+        {adventure.backstory.map((p) => (
+          <p class="mt-3 text-dim md-inline" set:html={p} />
+        ))}
+      </section>
+    ) : null}
+
+    {adventure.overview?.length ? (
+      <section aria-labelledby="mission-heading" class="mt-10">
+        <h2 id="mission-heading" class="text-lg font-semibold text-foreground">Your Mission</h2>
+        <ul class="mt-3 list-disc pl-6 text-dim">
+          {adventure.overview.map((o) => <li class="mt-1">{o}</li>)}
+        </ul>
+      </section>
+    ) : null}
+
+    <section aria-labelledby="levels-heading" class="mt-10">
+      <h2 id="levels-heading" class="text-lg font-semibold text-foreground">Challenges</h2>
+      <ul class="mt-4 space-y-4">
+        {adventure.levels.map((level) => (
+          <li class="rounded-lg border border-border p-4">
+            <div class="flex items-center justify-between gap-3">
+              <a
+                class="docs-ext-link text-base font-semibold text-foreground"
+                href={`${base}adventures/${adventure.slug}/levels/${level.id}/`}
+              >
+                {level.name}
+              </a>
+              <span class="text-xs text-faint">{level.difficulty}</span>
+            </div>
+            {level.topics?.length ? (
+              <p class="mt-1 text-xs text-faint">{level.topics.join(" · ")}</p>
+            ) : null}
+            {level.learnings?.length ? (
+              <ul class="mt-2 list-disc pl-5 text-sm text-dim">
+                {level.learnings.map((l) => (
+                  <li class="md-inline" set:html={stripLinks(l)} />
+                ))}
+              </ul>
+            ) : null}
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    {adventure.contributor ? (
+      <section aria-labelledby="contributor-heading" class="mt-10">
+        <h2 id="contributor-heading" class="text-lg font-semibold text-foreground">Contributor</h2>
+        <p class="mt-2 text-dim">
+          {adventure.contributor.url ? (
+            <a class="docs-ext-link" href={adventure.contributor.url} target="_blank" rel="noopener noreferrer">
+              {adventure.contributor.name}
+            </a>
+          ) : (
+            adventure.contributor.name
+          )}
+        </p>
+        {adventure.contributor.aboutHtml ? (
+          <p class="mt-2 text-sm text-dim md-inline" set:html={adventure.contributor.aboutHtml} />
+        ) : null}
+      </section>
+    ) : null}
+  </main>
+</Layout>

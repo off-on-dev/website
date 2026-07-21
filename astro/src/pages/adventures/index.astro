@@ -1,0 +1,43 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import { BRAND_NAME } from "@/lib/site";
+import { stripHtml } from "@/lib/markdown";
+
+// Sort newest-first by month (MMM YYYY).
+const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+function monthKey(m: string): number {
+  const [mon, year] = m.split(" ");
+  return Number(year) * 12 + Math.max(0, MONTHS.indexOf(mon));
+}
+
+const adventures = (await getCollection("adventures"))
+  .map((a) => a.data)
+  .sort((x, y) => monthKey(y.month) - monthKey(x.month));
+
+const base = import.meta.env.BASE_URL;
+---
+
+<Layout
+  title={`Adventures - ${BRAND_NAME}`}
+  description="Hands-on open source adventures. Learn by fixing real systems across GitOps, observability, progressive delivery, and more."
+  path="/adventures/"
+>
+  <main id="main-content" tabindex="-1" class="mx-auto max-w-4xl px-4 py-12">
+    <h1 class="text-3xl md:text-4xl font-bold text-foreground">Adventures</h1>
+    <p class="mt-3 text-dim">Pick an adventure and start learning by doing.</p>
+
+    <ul class="mt-8 grid gap-4 sm:grid-cols-2">
+      {adventures.map((a) => (
+        <li class="rounded-lg border border-border p-5">
+          <a class="docs-ext-link text-lg font-semibold text-foreground" href={`${base}adventures/${a.slug}/`}>
+            {a.title}
+          </a>
+          <p class="mt-1 text-xs uppercase tracking-widest text-faint">{a.month}</p>
+          <p class="mt-2 text-sm text-dim line-clamp-3">{stripHtml(a.story)}</p>
+          <p class="mt-3 text-xs text-faint">{a.levels.length} {a.levels.length === 1 ? "level" : "levels"}</p>
+        </li>
+      ))}
+    </ul>
+  </main>
+</Layout>
