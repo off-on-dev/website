@@ -1,0 +1,416 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+import {
+  BRAND_NAME,
+  COMMUNITY_URL,
+  CONTACT_EMAIL,
+  LINKEDIN_URL,
+  BLUESKY_URL,
+  X_URL,
+  BRAND_SECONDARY_LINE_PARTS,
+} from "@/lib/site";
+
+const base = import.meta.env.BASE_URL;
+
+const BRAND_SECONDARY_LINE = BRAND_SECONDARY_LINE_PARTS.join(" ");
+
+// Community Leaders sidebar data (mirrors src/data/community-leaders.json).
+// Refreshed hourly in the React app; embedded here as a build-time snapshot.
+const LEADER_SECTIONS = [
+  {
+    id: "top-contributors",
+    title: "Top Contributors",
+    users: [
+      { username: "KatharinaSick", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/KatharinaSick/40/9_2.png", count: 24 },
+      { username: "SinduriGuntupalli", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/SinduriGuntupalli/40/194_2.png", count: 16 },
+      { username: "adrianamvillela", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/adrianamvillela/40/46_2.png", count: 14 },
+      { username: "DavidHirsch", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/DavidHirsch/40/8_2.png", count: 14 },
+      { username: "theharithsa", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png", count: 4 },
+    ],
+  },
+  {
+    id: "challenge-grand-builders",
+    title: "Challenge Grand Builders",
+    users: [
+      { username: "KatharinaSick", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/KatharinaSick/40/9_2.png", count: 14 },
+    ],
+  },
+  {
+    id: "top-challenge-solvers",
+    title: "Top Challenge Solvers",
+    users: [
+      { username: "iw4p", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png", count: 9 },
+      { username: "theharithsa", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png", count: 9 },
+      { username: "gsigmund", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/gsigmund/40/99_2.png", count: 8 },
+      { username: "enri-kapaj", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/enri-kapaj/40/165_2.png", count: 6 },
+      { username: "justinrand", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/justinrand/40/140_2.png", count: 6 },
+      { username: "alvin", avatarUrl: "https://avatars.discourse-cdn.com/v4/letter/a/b5a626/40.png", count: 6 },
+    ],
+  },
+  {
+    id: "challenge-builders",
+    title: "Challenge Builders",
+    users: [
+      { username: "simon.schrottner", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/simon.schrottner/40/311_2.png", count: 3 },
+    ],
+  },
+  {
+    id: "most-liked",
+    title: "Most Liked",
+    users: [
+      { username: "KatharinaSick", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/KatharinaSick/40/9_2.png", count: 67 },
+      { username: "SinduriGuntupalli", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/SinduriGuntupalli/40/194_2.png", count: 31 },
+      { username: "theharithsa", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png", count: 28 },
+      { username: "adrianamvillela", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/adrianamvillela/40/46_2.png", count: 26 },
+      { username: "iw4p", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png", count: 17 },
+    ],
+  },
+  {
+    id: "most-replies",
+    title: "Most Replies",
+    users: [
+      { username: "KatharinaSick", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/KatharinaSick/40/9_2.png", count: 39 },
+      { username: "theharithsa", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png", count: 16 },
+      { username: "iw4p", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png", count: 11 },
+      { username: "enri-kapaj", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/enri-kapaj/40/165_2.png", count: 10 },
+      { username: "RoelofW", avatarUrl: "https://avatars.discourse-cdn.com/v4/letter/r/b5a626/40.png", count: 10 },
+    ],
+  },
+  {
+    id: "most-supportive",
+    title: "Most Supportive",
+    users: [
+      { username: "KatharinaSick", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/KatharinaSick/40/9_2.png", count: 104 },
+      { username: "SinduriGuntupalli", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/SinduriGuntupalli/40/194_2.png", count: 44 },
+      { username: "DavidHirsch", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/DavidHirsch/40/8_2.png", count: 44 },
+      { username: "theharithsa", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png", count: 38 },
+      { username: "AgataWlodarczyk", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/AgataWlodarczyk/40/51_2.png", count: 20 },
+    ],
+  },
+];
+
+const SECTION_ICONS: Record<string, string> = {
+  "top-contributors": "lucide:trophy",
+  "top-challenge-solvers": "lucide:target",
+  "challenge-rockstars": "lucide:star",
+  "challenge-grand-builders": "lucide:building-2",
+  "challenge-builders": "lucide:wrench",
+  "most-liked": "lucide:heart",
+  "most-replies": "lucide:message-circle",
+  "most-supportive": "lucide:hand-heart",
+};
+---
+
+<Layout
+  title={`How to Contribute - ${BRAND_NAME}`}
+  description={`From code and content to community discussion and advocacy, there are many ways to contribute to ${BRAND_NAME}. Find the path that fits you.`}
+  path="/contribute/"
+>
+  <main id="main-content" tabindex="-1">
+    {/* Page hero */}
+    <section
+      aria-labelledby="page-hero-heading"
+      class="bg-primary pt-32 pb-20 px-6 md:px-16 overflow-hidden min-h-[560px] flex flex-col justify-center"
+    >
+      <div class="mx-auto max-w-6xl relative w-full">
+        <div class="max-w-2xl">
+          <span class="font-sans text-sm font-medium uppercase tracking-widest text-background/90 block mb-4">
+            Contribute
+          </span>
+          <h1
+            id="page-hero-heading"
+            class="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground mb-5"
+          >
+            Every Contribution Counts
+          </h1>
+          <p class="font-sans text-base leading-relaxed text-background/90 max-w-2xl mb-8">
+            {BRAND_NAME} is built by the community, for the community. Whether you code, write, teach, or advocate, your work moves the community forward.
+          </p>
+          <div class="flex gap-3 flex-wrap">
+            <a
+              href={COMMUNITY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-describedby="new-tab-hint"
+              class="btn-inverse"
+            >
+              <span class="inline-flex items-center gap-2">
+                Join the Community <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Ways to contribute */}
+    <div class="px-6 md:px-16 py-16">
+      <div class="mx-auto max-w-6xl">
+        <div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12">
+          <div>
+            <section aria-labelledby="ways-to-contribute">
+              <div class="mb-3">
+                <span class="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">get involved</span>
+              </div>
+              <h2 id="ways-to-contribute" class="text-2xl font-bold text-foreground mb-4">How to Get Involved</h2>
+              <p class="text-muted-foreground leading-relaxed mb-8 max-w-2xl">
+                Explore the platform, play an adventure, join discussions, follow the weekly digest, shape or build a challenge, improve the docs, or spread the word. Every action here is a genuine contribution.
+              </p>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                {/* Row 1: discover, learn */}
+                <div class="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                  <h3 class="font-semibold text-foreground">Explore {BRAND_NAME}</h3>
+                  <p class="text-sm text-dim leading-relaxed flex-1">
+                    Browse the forum, see what the community is building, and sign up to get started. Introduce yourself and get a feel for how {BRAND_NAME} works.
+                  </p>
+                  <a href={`${COMMUNITY_URL}/signup`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
+                    Create an account <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                  </a>
+                </div>
+
+                <div class="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                  <h3 class="font-semibold text-foreground">Play an Adventure</h3>
+                  <p class="text-sm text-dim leading-relaxed flex-1">
+                    Take on a hands-on challenge, debug a broken environment, and learn by doing. Tell us what worked, what confused you, and where you got stuck. Your experience helps us improve the challenges.
+                  </p>
+                  <a href={`${base}challenges/`} class="docs-ext-link">
+                    Browse challenges
+                  </a>
+                </div>
+
+                {/* Row 2: shape, engage */}
+                <div class="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                  <h3 class="font-semibold text-foreground">Shape the Challenges</h3>
+                  <p class="text-sm text-dim leading-relaxed flex-1">
+                    Have a scenario that would make a great challenge? Submit your idea on GitHub. Ready to go further? Pick up an approved idea and implement the full adventure.
+                  </p>
+                  <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
+                    Read the adventure ideas guide <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                  </a>
+                  <a href="https://github.com/off-on-dev/open-source-challenges/issues?q=is%3Aissue+is%3Aopen+label%3A%22adventure+idea%22" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
+                    Browse open adventure ideas <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                  </a>
+                </div>
+
+                <div class="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                  <h3 class="font-semibold text-foreground">Join the Conversation</h3>
+                  <p class="text-sm text-dim leading-relaxed flex-1">
+                    <a href={`${COMMUNITY_URL}/c/public-categories/q-a/10`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">Ask a question <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" /></a>{" "}or answer one, take part in discussions, and support newcomers getting started. Share tutorials, post tips, and write about what you have learned. Introduce the community to open source tools you use or maintain.
+                  </p>
+                  <a href={`${COMMUNITY_URL}/c/community-voices/38`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
+                    Post in Community Voices <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                  </a>
+                </div>
+
+                {/* Row 3: stay informed, local community */}
+                <div class="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                  <h3 class="font-semibold text-foreground">Follow the Weekly Digest</h3>
+                  <p class="text-sm text-dim leading-relaxed flex-1">
+                    Stay up to date with what is happening across the open source community. Answer the question of the week and tell us what topics you would like to see covered next.
+                  </p>
+                  <a href={`${COMMUNITY_URL}/tag/weekly-digest/95`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
+                    Read the weekly digest <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                  </a>
+                </div>
+
+                <div class="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                  <h3 class="font-semibold text-foreground">Meetups and Groups</h3>
+                  <p class="text-sm text-dim leading-relaxed flex-1">
+                    Running a local meetup, user group, or open source community? Use {BRAND_NAME} as a vendor-agnostic home for your discussions and announcements. Find existing groups, join as a speaker, or bring open source to your local community.
+                  </p>
+                  <a href={`${COMMUNITY_URL}/c/local-meetups-and-groups/19`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
+                    Explore meetups and groups <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                  </a>
+                </div>
+
+                {/* Row 4: advocate, improve */}
+                <div class="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                  <h3 class="font-semibold text-foreground">Spread the Word</h3>
+                  <p class="text-sm text-dim leading-relaxed flex-1">
+                    Follow us, repost what we share, and mention {BRAND_NAME} to your network. Writing about us in a blog post or podcast episode? <a href={`mailto:${CONTACT_EMAIL}`} class="docs-ext-link">Share it with us by email</a> or mention us on social media and we would love to repost.
+                  </p>
+                  <div class="flex flex-wrap gap-4">
+                    <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" aria-label="LinkedIn" class="social-icon-link">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" class="w-4 h-4" fill="currentColor">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                      </svg>
+                    </a>
+                    <a href={BLUESKY_URL} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" aria-label="Bluesky" class="social-icon-link">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" class="w-4 h-4" fill="currentColor">
+                        <path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.479 0-.689-.139-1.861-.902-2.203-.659-.299-1.664-.621-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z" />
+                      </svg>
+                    </a>
+                    <a href={X_URL} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" aria-label="X / Twitter" class="social-icon-link">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" class="w-4 h-4" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+
+                <div class="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                  <h3 class="font-semibold text-foreground">Fix Bugs and Improve Docs</h3>
+                  <p class="text-sm text-dim leading-relaxed flex-1">
+                    Each adventure has level guides and missing solution walkthroughs. If you have solved a level, write it up. You can also improve this website by reporting an issue or contributing to the site. Typos and broken links across either repo need no issue, just open a <span><abbr data-title="pull request" aria-describedby="abbr-pr" tabindex="0">PR</abbr><span id="abbr-pr" class="sr-only">pull request</span></span>.
+                  </p>
+                  <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
+                    See the challenges contributing guide <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                  </a>
+                  <a href="https://github.com/off-on-dev/website/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
+                    Contribute to the website <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                  </a>
+                </div>
+
+              </div>
+            </section>
+
+            <div class="mt-8">
+              <p class="text-sm text-muted-foreground leading-relaxed mb-2">
+                <span class="font-medium text-foreground">This site is a community project too.</span>{" "}
+                Found a gap or something that could work better? Your feedback shapes what we build next.
+              </p>
+              <div class="flex flex-col gap-1.5">
+                <a href={`${COMMUNITY_URL}/c/general/site-feedback/2`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
+                  Post in Site Feedback <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                </a>
+                <a href="https://github.com/off-on-dev/website/issues" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
+                  Open a GitHub issue <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Sidebar: Community Leaders */}
+          <div class="hidden lg:block">
+            <div class="sticky top-24">
+              <div class="rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
+                <h3 class="font-sans text-base font-semibold text-foreground mb-5">Community Leaders</h3>
+                <div class="space-y-5">
+                  {LEADER_SECTIONS.map((section) => (
+                    <div class="pb-5 border-b border-border last:border-b-0 last:pb-0">
+                      <div>
+                        <h4 class="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                          <span class="text-primary">
+                            <Icon name={SECTION_ICONS[section.id]} width={14} height={14} aria-hidden="true" />
+                          </span>
+                          {section.title}
+                        </h4>
+                        <ol class="space-y-2.5" aria-label={section.title}>
+                          {section.users.map((user, i) => (
+                            <li class="flex items-center gap-3">
+                              <span class="font-mono text-xs text-faint w-4 shrink-0 text-right" aria-hidden="true">{i + 1}</span>
+                              <img
+                                src={user.avatarUrl}
+                                alt=""
+                                aria-hidden="true"
+                                width={28}
+                                height={28}
+                                loading="lazy"
+                                decoding="async"
+                                class="h-7 w-7 rounded-full shrink-0 object-cover"
+                              />
+                              <span class="text-sm font-medium text-foreground min-w-0 flex-1">
+                                <span class="truncate">{user.username}</span>
+                              </span>
+                              <span class="text-xs font-mono text-dim tabular-nums shrink-0" aria-label={`${user.count} contributions`}>{user.count}</span>
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Sponsor callout */}
+    <div class="bg-card border-y border-border px-6 md:px-16 py-16">
+      <div class="mx-auto max-w-6xl">
+        <section aria-labelledby="sponsor-callout">
+          <div class="max-w-2xl">
+            <div class="mb-3">
+              <span class="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">organisations</span>
+            </div>
+            <h2 id="sponsor-callout" class="text-2xl font-bold text-foreground mb-4">Support the Community as a Sponsor</h2>
+            <p class="text-muted-foreground leading-relaxed mb-6">
+              If your organisation wants to invest in the open source ecosystem without commercial strings attached, sponsorship is how you do it. Sponsors provide financial and operational support while the community retains full editorial independence.
+            </p>
+            <a href={`${base}sponsors/#becoming-a-sponsor`} class="btn-primary">
+              Learn about sponsorship
+            </a>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    {/* Bottom CTA */}
+    <section aria-labelledby="bottom-cta-heading" class="bg-primary py-16 px-6 md:px-16 relative overflow-hidden">
+      <div class="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1fr_1fr_auto] gap-12 lg:gap-16 items-center">
+        {/* Left - headline */}
+        <div>
+          <h2 id="bottom-cta-heading" class="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground">
+            <span class="block">Start Curious.</span>
+            <span class="block">Break Things.</span>
+            <span class="block">Learn Together.</span>
+            <span class="block">Glow Brighter.</span>
+          </h2>
+        </div>
+
+        {/* Right - copy + buttons */}
+        <div class="flex flex-col gap-4">
+          <p class="font-sans text-base leading-relaxed text-background/90">
+            <strong class="font-medium text-primary-foreground">
+              You bring your questions, your fixes, your ideas.
+            </strong>{" "}
+            We bring the challenges, the tooling, and the practitioners who care about the same problems you do.
+          </p>
+          <p class="font-sans text-base leading-relaxed text-background/90">
+            Every spark starts with one person. Like Nyx, our firefly, together we brighten the whole open source ecosystem.
+          </p>
+          <p class="font-sans text-base font-medium text-background/90">
+            That's {BRAND_NAME}. {BRAND_SECONDARY_LINE}
+          </p>
+          <div class="flex gap-3 flex-wrap mt-2">
+            <a
+              href={COMMUNITY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-describedby="new-tab-hint"
+              class="btn-inverse"
+            >
+              Join the Community <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+            </a>
+            <a
+              href="https://github.com/off-on-dev/open-source-challenges"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-describedby="new-tab-hint"
+              class="btn-ghost-inverse"
+            >
+              View Challenges on GitHub <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+            </a>
+          </div>
+        </div>
+
+        {/* Nyx mascot - third column, visible on lg+ only */}
+        <img
+          src={`${base}nyx.webp`}
+          alt=""
+          aria-hidden="true"
+          width={240}
+          height={240}
+          loading="lazy"
+          decoding="async"
+          class="hidden lg:block w-[240px] h-[240px] self-start"
+        />
+      </div>
+    </section>
+  </main>
+</Layout>

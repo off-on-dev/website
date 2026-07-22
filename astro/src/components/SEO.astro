@@ -9,14 +9,17 @@ interface Props {
   /** Canonical path, e.g. "/adventures/echoes-lost-in-orbit/". */
   path: string;
   ogType?: string;
+  /** Emit <meta name="robots" content="noindex"> (e.g. legal pages kept out of the index). */
+  noindex?: boolean;
 }
-const { title, description, path, ogType = "website" } = Astro.props;
+const { title, description, path, ogType = "website", noindex = false } = Astro.props;
 const canonical = canonicalUrl(path);
 const ogImage = `${SITE_URL}/og.png`;
 ---
 
 <title>{title}</title>
 <meta name="description" content={description} />
+{noindex && <meta name="robots" content="noindex" />}
 <link rel="canonical" href={canonical} />
 
 <meta property="og:title" content={title} />

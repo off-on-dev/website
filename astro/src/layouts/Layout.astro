@@ -13,8 +13,10 @@ interface Props {
   /** Canonical path for this page, e.g. "/adventures/". Defaults to the current URL. */
   path?: string;
   ogType?: string;
+  /** Keep this page out of the search index (e.g. legal pages). */
+  noindex?: boolean;
 }
-const { title, description, path, ogType } = Astro.props;
+const { title, description, path, ogType, noindex } = Astro.props;
 const canonicalPath = path ?? Astro.url.pathname;
 
 const base = import.meta.env.BASE_URL;
@@ -86,7 +88,7 @@ const fontPreloads = [
     <script type="application/ld+json" is:inline set:html={webSiteJsonLd} />
     <script type="application/ld+json" is:inline set:html={orgJsonLd} />
 
-    <SEO title={title} description={description} path={canonicalPath} ogType={ogType} />
+    <SEO title={title} description={description} path={canonicalPath} ogType={ogType} noindex={noindex} />
 
     <ClientRouter />
   </head>
