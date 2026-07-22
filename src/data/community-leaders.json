@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-22T19:04:11.082Z",
+  "lastUpdated": "2026-07-22T21:04:04.348Z",
   "sections": [
     {
       "id": "top-contributors",
@@ -39,6 +39,11 @@
         {
           "username": "theharithsa",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
+          "count": 11
+        },
+        {
+          "username": "iw4p",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
           "count": 10
         }
       ]
@@ -58,11 +63,6 @@
       "id": "top-challenge-solvers",
       "title": "Top Challenge Solvers",
       "users": [
-        {
-          "username": "iw4p",
-          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
-          "count": 9
-        },
         {
           "username": "gsigmund",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/gsigmund/40/99_2.png",
@@ -86,6 +86,11 @@
         {
           "username": "georgblumenschein",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/georgblumenschein/40/116_2.png",
+          "count": 3
+        },
+        {
+          "username": "rohit_bc",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/rohit_bc/40/164_2.png",
           "count": 3
         }
       ]
@@ -113,7 +118,7 @@
         {
           "username": "theharithsa",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
-          "count": 32
+          "count": 34
         },
         {
           "username": "SinduriGuntupalli",
@@ -128,7 +133,7 @@
         {
           "username": "iw4p",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
-          "count": 19
+          "count": 20
         }
       ]
     },
@@ -139,7 +144,7 @@
         {
           "username": "KatharinaSick",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/KatharinaSick/40/9_2.png",
-          "count": 40
+          "count": 41
         },
         {
           "username": "theharithsa",
@@ -170,7 +175,7 @@
         {
           "username": "KatharinaSick",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/KatharinaSick/40/9_2.png",
-          "count": 106
+          "count": 109
         },
         {
           "username": "SinduriGuntupalli",
