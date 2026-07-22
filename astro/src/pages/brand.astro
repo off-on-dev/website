@@ -1,0 +1,734 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+import {
+  BRAND_NAME,
+  BRAND_SLOGAN_PARTS,
+  BRAND_SECONDARY_LINE_PARTS,
+  BRAND_SHORT_DESCRIPTION,
+  SITE_URL,
+  SITE_NAME,
+} from "@/lib/site";
+
+const base = import.meta.env.BASE_URL;
+
+// site.ts exposes the parts tuples but not the joined line; derive it here.
+const BRAND_SECONDARY_LINE = BRAND_SECONDARY_LINE_PARTS.join(" ");
+
+type TocItem = { readonly id: string; readonly label: string };
+type ColorSwatch = { name: string; token: string; hex: string; hsl: string; textClass: string; usage: string };
+type DownloadSpec = { href: string; filename: string; label: string };
+
+const TOC_ITEMS: TocItem[] = [
+  { id: "mission", label: "Mission and Values" },
+  { id: "logos", label: "Logo" },
+  { id: "colors", label: "Colors" },
+  { id: "typography", label: "Typography" },
+  { id: "design-elements", label: "Design Elements" },
+  { id: "photography", label: "Photography" },
+  { id: "voice", label: "Voice and Tone" },
+  { id: "accessibility", label: "Accessibility" },
+];
+
+// Static default: the React page starts with "mission" active, then a scroll-spy
+// IntersectionObserver updates it. The scroll-spy is not ported (no JS here).
+const activeSection = "mission";
+
+const DARK_COLORS: ColorSwatch[] = [
+  { name: "Amber Primary", token: "--primary", hex: "#ffc034", hsl: "41 100% 60%", textClass: "text-[#0a0a0a]", usage: "Fills, borders, focus rings, accent highlights. ~12:1 on dark bg." },
+  { name: "Background", token: "--background", hex: "#0a0a0a", hsl: "0 0% 4%", textClass: "text-[#faf8f3]", usage: "Page background." },
+  { name: "Card", token: "--card", hex: "#141416", hsl: "240 9% 9%", textClass: "text-[#faf8f3]", usage: "Card and section surfaces." },
+  { name: "Foreground", token: "--foreground", hex: "#faf8f3", hsl: "47 54% 98%", textClass: "text-[#0a0a0a]", usage: "Primary text. ~19:1 on dark bg." },
+  { name: "Border", token: "--border", hex: "#1b283e", hsl: "219 36% 18%", textClass: "text-[#faf8f3]", usage: "Borders and dividers." },
+  { name: "Link hover", token: "--primary", hex: "#ffc034", hsl: "41 100% 60%", textClass: "text-[#0a0a0a]", usage: "Link hover and active state on dark backgrounds. ~12:1 on dark bg." },
+];
+
+const LIGHT_COLORS: ColorSwatch[] = [
+  { name: "Amber Primary", token: "--primary", hex: "#ffc034", hsl: "41 100% 60%", textClass: "text-[#0a0a0a]", usage: "Fills and borders only. Never as text color." },
+  { name: "Background", token: "--background", hex: "#f8f9fb", hsl: "220 12% 98%", textClass: "text-[#0d0d17]", usage: "Page background." },
+  { name: "Card", token: "--card", hex: "#f4f5f7", hsl: "220 10% 96%", textClass: "text-[#0d0d17]", usage: "Card and section surfaces." },
+  { name: "Foreground", token: "--foreground", hex: "#0d0d17", hsl: "240 25% 8%", textClass: "text-[#f8f9fb]", usage: "Primary text. ~18:1 on light bg." },
+  { name: "Border", token: "--border", hex: "#d8dbe2", hsl: "220 12% 87%", textClass: "text-[#0d0d17]", usage: "Borders and dividers." },
+  { name: "Link hover", token: "--link-hover-light", hex: "#704d00", hsl: "41 100% 22%", textClass: "text-[#f8f9fb]", usage: "Amber inline link hover. ~7.4:1 on light bg." },
+];
+
+const FONT_WEIGHTS = [
+  { weight: "400", label: "Regular", sample: "Open source community for everyone." },
+  { weight: "500", label: "Medium", sample: "Learn through hands-on challenges." },
+  { weight: "600", label: "Semibold", sample: "Build together. Grow together." },
+];
+
+const VALUES = [
+  { name: "Vendor-Neutral", description: "We only discuss and recommend open source tools. Proprietary or vendor-specific technology is out of scope." },
+  { name: "Open Source", description: "The challenges, tools, and content are open source. Anyone can participate, contribute, and build on what's here." },
+  { name: "Community-Driven", description: "Direction and content come from contributors. There is no central authority deciding what matters." },
+];
+
+const LOGO_CARDS = [
+  {
+    label: "Dark backgrounds",
+    note: "Color variant",
+    bg: "bg-[#0a0a0a]",
+    src: `${base}brand/offon-logo-dark-color.svg`,
+    alt: `${SITE_NAME} color logo on dark background`,
+    downloads: [
+      { href: `${base}brand/offon-logo-dark-color.svg`, filename: "offon-logo-dark-color.svg", label: "SVG" },
+      { href: `${base}brand/offon-logo-dark-color.png`, filename: "offon-logo-dark-color.png", label: "PNG" },
+    ] as DownloadSpec[],
+  },
+  {
+    label: "Light and amber backgrounds",
+    note: "Mono variant",
+    bg: "bg-[#f8f9fb]",
+    src: `${base}brand/offon-logo-light-mono.svg`,
+    alt: `${SITE_NAME} mono logo on light background`,
+    downloads: [
+      { href: `${base}brand/offon-logo-light-mono.svg`, filename: "offon-logo-light-mono.svg", label: "SVG" },
+      { href: `${base}brand/offon-logo-light-mono.png`, filename: "offon-logo-light-mono.png", label: "PNG" },
+    ] as DownloadSpec[],
+  },
+  {
+    label: "Single-color / print on dark",
+    note: "Dark mono variant",
+    bg: "bg-[#0a0a0a]",
+    src: `${base}brand/offon-logo-dark-mono.svg`,
+    alt: `${SITE_NAME} mono logo on dark background`,
+    downloads: [
+      { href: `${base}brand/offon-logo-dark-mono.svg`, filename: "offon-logo-dark-mono.svg", label: "SVG" },
+      { href: `${base}brand/offon-logo-dark-mono.png`, filename: "offon-logo-dark-mono.png", label: "PNG" },
+    ] as DownloadSpec[],
+  },
+];
+
+const ICON_MARK_BACKGROUNDS = [
+  { bg: "bg-[#0a0a0a]", label: "On dark" },
+  { bg: "bg-[#f8f9fb]", label: "On light" },
+  { bg: "bg-primary", label: "On amber" },
+];
+
+const ICON_DOWNLOADS: DownloadSpec[] = [
+  { href: `${base}brand/offon-favicon.svg`, filename: "offon-favicon.svg", label: "SVG" },
+  { href: `${base}brand/offon-favicon.png`, filename: "offon-favicon.png", label: "PNG" },
+];
+
+const NYX_FULL_DOWNLOADS: DownloadSpec[] = [
+  { href: `${base}nyx.webp`, filename: "offon-nyx.webp", label: "WebP" },
+  { href: `${base}brand/offon-nyx.png`, filename: "offon-nyx.png", label: "PNG" },
+];
+
+const NYX_PEEK_DOWNLOADS: DownloadSpec[] = [
+  { href: `${base}nyx_peek.webp`, filename: "offon-nyx-peek.webp", label: "WebP" },
+  { href: `${base}brand/offon-nyx-peek.png`, filename: "offon-nyx-peek.png", label: "PNG" },
+];
+
+const OG_DOWNLOADS: DownloadSpec[] = [
+  { href: `${base}og.png`, filename: "offon-og.png", label: "PNG" },
+];
+
+const codeSample = `--primary: 41 100% 60%;
+--font-heading: Syne, 'Syne Fallback', sans-serif;
+--background: 0 0% 4%;
+hsl(var(--foreground))`;
+---
+
+<Layout
+  title={`Brand Guidelines - ${BRAND_NAME}`}
+  description={`Logos, colors, typography, mascot, and brand voice for ${BRAND_NAME}, the vendor-neutral open source community.`}
+  path="/brand/"
+>
+  <main id="main-content" tabindex="-1">
+
+    {/* Hero */}
+    <section aria-labelledby="brand-hero-heading" class="bg-primary pt-32 pb-20 px-6 md:px-16">
+      <div class="mx-auto max-w-6xl">
+        <div class="max-w-2xl">
+          <span class="font-sans text-sm font-medium uppercase tracking-widest text-primary-foreground/80 block mb-4">
+            Brand
+          </span>
+          <h1 id="brand-hero-heading" class="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground mb-5">
+            Brand Guidelines
+          </h1>
+          <p class="font-sans text-base leading-relaxed text-primary-foreground/80 max-w-xl">
+            Logos, colors, typography, mascot, and voice for {BRAND_NAME}.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* Content with sticky right TOC */}
+    <div class="px-6 sm:px-8 md:px-16 lg:px-20 pb-24">
+      <div class="mx-auto max-w-7xl">
+        <div class="lg:grid lg:grid-cols-[1fr_200px] lg:gap-16">
+
+          {/* Main content */}
+          <div>
+
+            {/* Mission and Values */}
+            <section id="mission" aria-labelledby="mission-heading">
+              <div class="mb-10 pt-16">
+                <span class="text-xs uppercase tracking-widest text-faint block mb-2">Foundation</span>
+                <h2 id="mission-heading" class="font-heading text-3xl md:text-4xl font-bold text-foreground">Mission and Values</h2>
+              </div>
+              <p class="font-sans text-base text-dim leading-relaxed max-w-prose mb-8">
+                {BRAND_SHORT_DESCRIPTION}
+              </p>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {VALUES.map((v) => (
+                  <div class="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
+                    <div class="flex items-center gap-2 mb-3">
+                      <Icon name="lucide:zap" width={14} height={14} class="text-primary shrink-0" aria-hidden="true" />
+                      <h3 class="font-sans font-semibold text-sm text-foreground">{v.name}</h3>
+                    </div>
+                    <p class="font-sans text-xs text-dim leading-relaxed">{v.description}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Logo */}
+            <section id="logos" aria-labelledby="logos-heading">
+              <div class="mb-10 pt-16">
+                <span class="text-xs uppercase tracking-widest text-faint block mb-2">Identity</span>
+                <h2 id="logos-heading" class="font-heading text-3xl md:text-4xl font-bold text-foreground">Logo</h2>
+              </div>
+
+              {/* Project Mark */}
+              <h3 class="font-sans text-base font-semibold text-foreground mb-3">Project Mark</h3>
+              <p class="font-sans text-sm text-dim max-w-prose mb-6">
+                The horizontal wordmark is the preferred form. Use the icon mark alone only when the wordmark won't fit (minimum 24 px icon height).
+              </p>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+                {LOGO_CARDS.map((card) => (
+                  <div class="rounded-lg border border-border overflow-hidden">
+                    <div class:list={[card.bg, "h-32 flex items-center justify-center px-8"]}>
+                      <img src={card.src} alt={card.alt} width={200} height={48} class="h-12 w-auto max-w-[200px]" loading="lazy" decoding="async" />
+                    </div>
+                    <div class="bg-[hsl(var(--surface))] border-t border-border px-4 py-3">
+                      <p class="font-sans text-sm font-semibold text-foreground leading-tight mb-2.5">{card.label}</p>
+                      <div class="flex items-center justify-between gap-2">
+                        <p class="font-sans text-xs text-faint">{card.note}</p>
+                        <div class="flex flex-wrap gap-1.5">
+                          {card.downloads.map((d) => (
+                            <a href={d.href} download={d.filename} aria-label={`Download ${d.filename}`} class="inline-flex items-center gap-1 font-sans text-[11px] font-semibold tracking-wide text-dim hover:text-foreground border border-foreground/25 hover:border-foreground/50 rounded-full px-2.5 py-0.5 transition-colors focus-ring-tight">
+                              <Icon name="lucide:download" width={10} height={10} aria-hidden="true" />
+                              {d.label}
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Icon Mark */}
+              <h3 class="font-sans text-base font-semibold text-foreground mb-3">Icon Mark</h3>
+              <p class="font-sans text-sm text-dim max-w-prose mb-5">
+                A geometric amber firefly bolt. Use it at 24 px minimum. Never rotate, recolor, or distort it.
+              </p>
+              <div class="flex flex-wrap gap-4">
+                {ICON_MARK_BACKGROUNDS.map(({ bg, label }) => (
+                  <div class="rounded-lg border border-border overflow-hidden w-36">
+                    <div class:list={[bg, "h-24 flex items-center justify-center p-5"]}>
+                      <img
+                        src={`${base}brand/offon-favicon.svg`}
+                        alt={`${BRAND_NAME} icon mark ${label.toLowerCase()}`}
+                        width={56}
+                        height={56}
+                        class="w-14 h-14 object-contain"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <div class="bg-[hsl(var(--surface))] border-t border-border px-3 pt-2 pb-2.5">
+                      <p class="font-sans text-sm font-semibold text-foreground leading-tight">{label}</p>
+                    </div>
+                  </div>
+                ))}
+                {/* Single download card for all icon mark variants */}
+                <div class="rounded-lg border border-border overflow-hidden w-36 bg-[hsl(var(--surface))] flex flex-col items-center justify-center px-3 py-2.5 text-center">
+                  <p class="font-sans text-sm font-semibold text-foreground leading-tight mb-2.5">Download</p>
+                  <div class="flex flex-wrap gap-1.5 justify-center">
+                    {ICON_DOWNLOADS.map((d) => (
+                      <a href={d.href} download={d.filename} aria-label={`Download ${d.filename}`} class="inline-flex items-center gap-1 font-sans text-[11px] font-semibold tracking-wide text-dim hover:text-foreground border border-foreground/25 hover:border-foreground/50 rounded-full px-2.5 py-0.5 transition-colors focus-ring-tight">
+                        <Icon name="lucide:download" width={10} height={10} aria-hidden="true" />
+                        {d.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Do / Don't */}
+              <h3 class="font-sans text-base font-semibold text-foreground mt-10 mb-4">Do and Don't</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="rounded-lg border border-[hsl(85,48%,56%,0.35)] bg-[hsl(var(--surface))] p-5">
+                  <h4 class="flex items-center gap-2 font-sans text-sm font-semibold text-foreground mb-3">
+                    <Icon name="lucide:check" width={13} height={13} class="text-[#15803d] shrink-0" aria-hidden="true" />
+                    Do
+                  </h4>
+                  <ul role="list" class="font-sans text-sm text-dim space-y-1.5">
+                    <li>Use the correct variant for the background color</li>
+                    <li>Maintain clear space equal to the "O" height on all sides</li>
+                    <li>Scale proportionally</li>
+                    <li>Use the icon mark when the wordmark won't fit</li>
+                    <li>Use mono variants for print or embroidery</li>
+                  </ul>
+                </div>
+                <div class="rounded-lg border border-[hsl(0,84%,60%,0.35)] bg-[hsl(var(--surface))] p-5">
+                  <h4 class="flex items-center gap-2 font-sans text-sm font-semibold text-foreground mb-3">
+                    <Icon name="lucide:x" width={13} height={13} class="text-destructive shrink-0" aria-hidden="true" />
+                    Don't
+                  </h4>
+                  <ul role="list" class="font-sans text-sm text-dim space-y-1.5">
+                    <li>Don't recolor, outline, or add drop shadows</li>
+                    <li>Don't use the dark logo on light backgrounds</li>
+                    <li>Don't stretch, skew, or rotate</li>
+                    <li>Don't place the logo over busy images or patterns</li>
+                    <li>Don't use the color logo where mono is required</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            {/* Colors */}
+            <section id="colors" aria-labelledby="colors-heading">
+              <div class="mb-10 pt-16">
+                <span class="text-xs uppercase tracking-widest text-faint block mb-2">Identity</span>
+                <h2 id="colors-heading" class="font-heading text-3xl md:text-4xl font-bold text-foreground">Colors</h2>
+              </div>
+              <p class="font-sans text-sm text-dim max-w-prose mb-6">
+                All colors are CSS custom properties in{" "}
+                <code class="font-mono text-xs bg-[hsl(var(--surface))] px-1.5 py-0.5 rounded border border-border">src/index.css</code>. Reference tokens, not hardcoded hex values.
+              </p>
+
+              {/* Side-by-side dark / light panels — each panel has its own correct background */}
+              <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
+
+                {/* Dark mode panel — hardcoded dark surface tokens, always renders dark */}
+                <div class="rounded-xl overflow-hidden border" style="border-color:#2e4268">
+                  <div class="px-5 py-3 border-b" style="background-color:#151519;border-color:#2e4268">
+                    <span class="font-sans text-xs font-semibold uppercase tracking-widest" style="color:#8a8680">Dark Mode</span>
+                  </div>
+                  <div class="p-5 grid grid-cols-2 gap-3" style="background-color:#151519">
+                    {DARK_COLORS.map((swatch) => (
+                      <div class="rounded-lg overflow-hidden border" style="border-color:#2e4268">
+                        <div class="h-20 flex items-end p-3" style={`background-color:${swatch.hex};box-shadow:inset 0 0 0 1px rgba(127,127,127,0.14)`}>
+                          <span class:list={["font-mono text-xs font-semibold", swatch.textClass]}>{swatch.hex}</span>
+                        </div>
+                        <div class="p-4">
+                          <p class="font-sans font-semibold text-sm mb-0.5" style="color:#faf8f3">{swatch.name}</p>
+                          <p class="font-mono text-xs mb-1" style="color:#c8c4bc">{swatch.hsl}</p>
+                          <p class="font-sans text-xs leading-snug" style="color:#c8c4bc">{swatch.usage}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Light mode panel — hardcoded light surface tokens, always renders light */}
+                <div class="rounded-xl overflow-hidden border" style="border-color:#d8dbe2">
+                  <div class="px-5 py-3 border-b" style="background-color:#f4f5f7;border-color:#d8dbe2">
+                    <span class="font-sans text-xs font-semibold uppercase tracking-widest" style="color:#6b6760">Light Mode</span>
+                  </div>
+                  <div class="p-5 grid grid-cols-2 gap-3" style="background-color:#f4f5f7">
+                    {LIGHT_COLORS.map((swatch) => (
+                      <div class="rounded-lg overflow-hidden border" style="border-color:#d8dbe2">
+                        <div class="h-20 flex items-end p-3" style={`background-color:${swatch.hex};box-shadow:inset 0 0 0 1px rgba(127,127,127,0.14)`}>
+                          <span class:list={["font-mono text-xs font-semibold", swatch.textClass]}>{swatch.hex}</span>
+                        </div>
+                        <div class="p-4">
+                          <p class="font-sans font-semibold text-sm mb-0.5" style="color:#0d0d17">{swatch.name}</p>
+                          <p class="font-mono text-xs mb-1" style="color:#2a2a3e">{swatch.hsl}</p>
+                          <p class="font-sans text-xs leading-snug" style="color:#2a2a3e">{swatch.usage}</p>
+                        </div>
+                      </div>
+                    ))}
+                    <div class="col-span-2 rounded-lg border p-4 mt-1" style="border-color:#d8dbe2;background-color:#eaebee">
+                      <p class="font-sans text-xs" style="color:#2a2a3e">
+                        <span class="font-semibold" style="color:#0d0d17">Amber in light mode:</span>{" "}
+                        fill and border only. For hover text use{" "}
+                        <code class="font-mono px-1 py-0.5 rounded" style="background-color:#dddee4;color:#0d0d17">--link-hover-light</code>.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </section>
+
+            {/* Typography */}
+            <section id="typography" aria-labelledby="typography-heading">
+              <div class="mb-10 pt-16">
+                <span class="text-xs uppercase tracking-widest text-faint block mb-2">Identity</span>
+                <h2 id="typography-heading" class="font-heading text-3xl md:text-4xl font-bold text-foreground">Typography</h2>
+              </div>
+              <p class="font-sans text-sm text-dim max-w-prose mb-8">
+                All fonts are self-hosted as WOFF2. No external requests. Use the{" "}
+                <code class="font-mono text-xs bg-[hsl(var(--surface))] px-1.5 py-0.5 rounded border border-border">font-heading</code>,{" "}
+                <code class="font-mono text-xs bg-[hsl(var(--surface))] px-1.5 py-0.5 rounded border border-border">font-sans</code>, and{" "}
+                <code class="font-mono text-xs bg-[hsl(var(--surface))] px-1.5 py-0.5 rounded border border-border">font-mono</code>{" "}
+                Tailwind utilities.
+              </p>
+
+              <div class="mb-10">
+                <div class="flex flex-wrap items-baseline gap-3 mb-3">
+                  <h3 class="font-sans text-sm font-semibold text-foreground">Syne</h3>
+                  <span class="font-mono text-xs text-faint">font-heading / 700 / Headings and display</span>
+                </div>
+                <div
+                  class="rounded-lg border border-border bg-[hsl(var(--surface))] p-8 space-y-3"
+                  role="img"
+                  aria-label="Syne typeface specimen at sizes 48, 36, 30, 24, and 20px"
+                >
+                  <p class="font-heading text-5xl font-bold text-foreground leading-tight" aria-hidden="true">Open Source</p>
+                  <p class="font-heading text-4xl font-bold text-foreground leading-tight" aria-hidden="true">Community First</p>
+                  <p class="font-heading text-3xl font-bold text-foreground leading-tight" aria-hidden="true">Build Together</p>
+                  <p class="font-heading text-2xl font-bold text-foreground leading-tight" aria-hidden="true">Vendor-Neutral</p>
+                  <p class="font-heading text-xl font-bold text-foreground leading-tight" aria-hidden="true">Always Learning</p>
+                </div>
+              </div>
+
+              <div class="mb-10">
+                <div class="flex flex-wrap items-baseline gap-3 mb-3">
+                  <h3 class="font-sans text-sm font-semibold text-foreground">Inter</h3>
+                  <span class="font-mono text-xs text-faint">font-sans / 400-600 / Body and <span><abbr data-title="user interface" aria-describedby="abbr-ui-1" tabindex="0">UI</abbr><span id="abbr-ui-1" class="sr-only">user interface</span></span></span>
+                </div>
+                <div class="rounded-lg border border-border bg-[hsl(var(--surface))] p-8 space-y-5">
+                  {FONT_WEIGHTS.map(({ weight, label, sample }) => (
+                    <div class="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6">
+                      <span class="font-mono text-xs text-faint shrink-0 sm:w-32">{weight} {label}</span>
+                      <p class="font-sans text-base text-foreground" style={`font-weight:${weight}`}>{sample}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div class="flex flex-wrap items-baseline gap-3 mb-3">
+                  <h3 class="font-sans text-sm font-semibold text-foreground">JetBrains Mono</h3>
+                  <span class="font-mono text-xs text-faint">font-mono / 400-600 / Code and tokens</span>
+                </div>
+                <div class="rounded-lg border border-border bg-[hsl(var(--surface))] p-8">
+                  <pre class="font-mono text-sm text-dim leading-relaxed overflow-x-auto"><code>{codeSample}</code></pre>
+                </div>
+              </div>
+            </section>
+
+            {/* Design Elements */}
+            <section id="design-elements" aria-labelledby="design-elements-heading">
+              <div class="mb-10 pt-16">
+                <span class="text-xs uppercase tracking-widest text-faint block mb-2">Visual Identity</span>
+                <h2 id="design-elements-heading" class="font-heading text-3xl md:text-4xl font-bold text-foreground">Design Elements</h2>
+              </div>
+
+              <h3 class="font-sans text-base font-semibold text-foreground mb-3">Mascot: Nyx</h3>
+              <p class="font-sans text-sm text-dim max-w-prose mb-6">
+                Nyx is the {BRAND_NAME} firefly mascot. Nyx is gender neutral, so avoid gendered pronouns. Use Nyx in event materials, swag, and community campaigns. Don't alter the colors, proportions, or shape.
+              </p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
+                <div class="rounded-lg border border-border overflow-hidden">
+                  <div class="bg-primary h-56 flex items-center justify-center">
+                    <img
+                      src={`${base}nyx.webp`}
+                      alt={`Nyx, the ${BRAND_NAME} firefly mascot, full view`}
+                      width={180}
+                      height={180}
+                      class="object-contain w-44 h-44"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <div class="bg-[hsl(var(--surface))] border-t border-border px-4 py-3">
+                    <p class="font-sans text-sm font-semibold text-foreground leading-tight mb-2.5">Nyx: Full</p>
+                    <div class="flex items-center justify-between gap-2">
+                      <p class="font-sans text-xs text-faint">Hero sections, event banners, swag.</p>
+                      <div class="flex flex-wrap gap-1.5">
+                        {NYX_FULL_DOWNLOADS.map((d) => (
+                          <a href={d.href} download={d.filename} aria-label={`Download ${d.filename}`} class="inline-flex items-center gap-1 font-sans text-[11px] font-semibold tracking-wide text-dim hover:text-foreground border border-foreground/25 hover:border-foreground/50 rounded-full px-2.5 py-0.5 transition-colors focus-ring-tight">
+                            <Icon name="lucide:download" width={10} height={10} aria-hidden="true" />
+                            {d.label}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="rounded-lg border border-border overflow-hidden">
+                  <div class="bg-primary h-56 flex items-center justify-center">
+                    <img
+                      src={`${base}nyx_peek.webp`}
+                      alt={`Nyx the ${BRAND_NAME} firefly mascot, peeking variant`}
+                      width={180}
+                      height={180}
+                      class="object-contain w-44 h-44"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <div class="bg-[hsl(var(--surface))] border-t border-border px-4 py-3">
+                    <p class="font-sans text-sm font-semibold text-foreground leading-tight mb-2.5">Nyx: Peek</p>
+                    <div class="flex items-center justify-between gap-2">
+                      <p class="font-sans text-xs text-faint">Page hero backgrounds, corner decorations.</p>
+                      <div class="flex flex-wrap gap-1.5">
+                        {NYX_PEEK_DOWNLOADS.map((d) => (
+                          <a href={d.href} download={d.filename} aria-label={`Download ${d.filename}`} class="inline-flex items-center gap-1 font-sans text-[11px] font-semibold tracking-wide text-dim hover:text-foreground border border-foreground/25 hover:border-foreground/50 rounded-full px-2.5 py-0.5 transition-colors focus-ring-tight">
+                            <Icon name="lucide:download" width={10} height={10} aria-hidden="true" />
+                            {d.label}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <h3 class="font-sans text-base font-semibold text-foreground mb-3">Open Graph Image</h3>
+              <p class="font-sans text-sm text-dim max-w-prose mb-4">
+                Used as the social media preview when {BRAND_NAME} links are shared. Dimensions: 1200 x 630 px.
+              </p>
+              <div class="rounded-lg border border-border overflow-hidden max-w-sm">
+                <img
+                  src={`${base}og.png`}
+                  alt={`${BRAND_NAME} Open Graph preview image, 1200 by 630 pixels`}
+                  width={1200}
+                  height={630}
+                  class="w-full h-auto block"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div class="bg-[hsl(var(--surface))] border-t border-border px-4 py-3 flex items-center justify-between gap-2">
+                  <p class="font-sans text-sm font-semibold text-foreground">og.png <span class="font-normal text-faint">· 1200 × 630</span></p>
+                  <div class="flex flex-wrap gap-1.5">
+                    {OG_DOWNLOADS.map((d) => (
+                      <a href={d.href} download={d.filename} aria-label={`Download ${d.filename}`} class="inline-flex items-center gap-1 font-sans text-[11px] font-semibold tracking-wide text-dim hover:text-foreground border border-foreground/25 hover:border-foreground/50 rounded-full px-2.5 py-0.5 transition-colors focus-ring-tight">
+                        <Icon name="lucide:download" width={10} height={10} aria-hidden="true" />
+                        {d.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Photography */}
+            <section id="photography" aria-labelledby="photography-heading">
+              <div class="mb-10 pt-16">
+                <span class="text-xs uppercase tracking-widest text-faint block mb-2">Visual Identity</span>
+                <h2 id="photography-heading" class="font-heading text-3xl md:text-4xl font-bold text-foreground">Photography</h2>
+              </div>
+              <p class="font-sans text-sm text-dim max-w-prose mb-8">
+                When photography appears in {BRAND_NAME} materials, it should feel raw and technical, not polished stock imagery.
+              </p>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                <div class="rounded-lg border border-[hsl(85,48%,56%,0.35)] bg-[hsl(var(--surface))] p-5">
+                  <h3 class="flex items-center gap-2 font-sans text-sm font-semibold text-foreground mb-3">
+                    <Icon name="lucide:check" width={13} height={13} class="text-[#15803d] shrink-0" aria-hidden="true" />
+                    Use
+                  </h3>
+                  <ul role="list" class="font-sans text-sm text-dim space-y-1.5">
+                    <li>Real developers at real terminals</li>
+                    <li>Dark environments that echo the dark mode palette</li>
+                    <li>Collaborative scenes with multiple contributors</li>
+                    <li>Warm amber or neutral accent lighting</li>
+                    <li>Diverse representation of the open source community</li>
+                    <li>Legible code on screens where visible</li>
+                  </ul>
+                </div>
+                <div class="rounded-lg border border-[hsl(0,84%,60%,0.35)] bg-[hsl(var(--surface))] p-5">
+                  <h3 class="flex items-center gap-2 font-sans text-sm font-semibold text-foreground mb-3">
+                    <Icon name="lucide:x" width={13} height={13} class="text-destructive shrink-0" aria-hidden="true" />
+                    Avoid
+                  </h3>
+                  <ul role="list" class="font-sans text-sm text-dim space-y-1.5">
+                    <li>Stock photos of people smiling at laptops</li>
+                    <li>Bright, corporate-feeling environments</li>
+                    <li>Heavily retouched or filtered images</li>
+                    <li>Low-quality clipart or filler illustrations</li>
+                    <li>Photos with visible vendor brand logos</li>
+                    <li>Images that imply exclusion</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
+                <h3 class="font-sans text-sm font-semibold text-foreground mb-1">When photos aren't available</h3>
+                <p class="font-sans text-sm text-dim">
+                  Use the Nyx mascot or abstract dark/amber compositions. A clean empty section is better than a distracting stock photo.
+                </p>
+              </div>
+            </section>
+
+            {/* Voice and Tone */}
+            <section id="voice" aria-labelledby="voice-heading">
+              <div class="mb-10 pt-16">
+                <span class="text-xs uppercase tracking-widest text-faint block mb-2">Communication</span>
+                <h2 id="voice-heading" class="font-heading text-3xl md:text-4xl font-bold text-foreground">Voice and Tone</h2>
+              </div>
+
+              <div class="mb-10">
+                <h3 class="font-sans text-base font-semibold text-foreground mb-4">Brand Name</h3>
+                <div class="space-y-4">
+                  <div class="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
+                    <p class="font-sans text-xs uppercase tracking-widest text-faint mb-3">Usage</p>
+                    <ul class="font-sans text-sm text-dim space-y-1.5">
+                      <li>Always camelCase: <code class="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">OffOn</code></li>
+                      <li>In prose and <span><abbr data-title="user interface" aria-describedby="abbr-ui-2" tabindex="0">UI</abbr><span id="abbr-ui-2" class="sr-only">user interface</span></span>: <code class="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">OffOn.dev</code> (brand caps, TLD lowercase)</li>
+                      <li>In URLs and hrefs: <code class="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">offon.dev</code></li>
+                      <li>Never capitalise the TLD: <code class="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">OffOn.Dev</code> is wrong</li>
+                    </ul>
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="rounded-lg border border-[hsl(85,48%,56%,0.35)] bg-[hsl(var(--surface))] p-5">
+                      <h4 class="flex items-center gap-2 font-sans text-sm font-semibold text-foreground mb-3">
+                        <Icon name="lucide:check" width={13} height={13} class="text-[#15803d] shrink-0" aria-hidden="true" />
+                        Use
+                      </h4>
+                      <ul role="list" class="font-mono text-xs text-foreground space-y-2">
+                        <li>OffOn</li>
+                        <li>OffOn.dev</li>
+                        <li>offon.dev</li>
+                      </ul>
+                    </div>
+                    <div class="rounded-lg border border-[hsl(0,84%,60%,0.35)] bg-[hsl(var(--surface))] p-5">
+                      <h4 class="flex items-center gap-2 font-sans text-sm font-semibold text-foreground mb-3">
+                        <Icon name="lucide:x" width={13} height={13} class="text-destructive shrink-0" aria-hidden="true" />
+                        Never write
+                      </h4>
+                      <ul role="list" class="font-mono text-xs text-faint space-y-2">
+                        <li>OffOn.Dev</li>
+                        <li>Offon</li>
+                        <li>OFFON</li>
+                        <li>offon</li>
+                        <li>Off-On</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-10">
+                <h3 class="font-sans text-base font-semibold text-foreground mb-4">Slogans</h3>
+                <div class="space-y-3">
+                  <div class="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
+                    <p class="font-sans text-xs uppercase tracking-widest text-faint mb-2">Primary</p>
+                    <p class="font-heading text-xl font-bold text-foreground">
+                      {BRAND_SLOGAN_PARTS.join(". ")}.
+                    </p>
+                  </div>
+                  <div class="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
+                    <p class="font-sans text-xs uppercase tracking-widest text-faint mb-2">Secondary</p>
+                    <p class="font-heading text-xl font-bold text-foreground">{BRAND_SECONDARY_LINE}</p>
+                    <p class="font-sans text-xs text-faint mt-2">
+                      The lowercase "always" is intentional.
+                    </p>
+                    <div class="flex flex-wrap gap-x-2 gap-y-0.5 mt-3">
+                      {BRAND_SECONDARY_LINE_PARTS.map((part) => (
+                        <span class="font-mono text-xs text-faint">{part}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="font-sans text-base font-semibold text-foreground mb-4">Tone</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div class="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
+                    <h4 class="font-sans text-sm font-semibold text-foreground mb-3">We are</h4>
+                    <ul role="list" class="font-sans text-sm text-dim space-y-1.5">
+                      <li>Direct and to the point</li>
+                      <li>Focused on the community, not the brand</li>
+                      <li>Inclusive and welcoming</li>
+                      <li>Plain-spoken, no unnecessary jargon</li>
+                      <li>Active voice wherever possible</li>
+                    </ul>
+                  </div>
+                  <div class="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
+                    <h4 class="font-sans text-sm font-semibold text-foreground mb-3">We are not</h4>
+                    <ul role="list" class="font-sans text-sm text-dim space-y-1.5">
+                      <li>Corporate or formal</li>
+                      <li>Hype-driven or hollow</li>
+                      <li>Exclusive or gatekeeping</li>
+                      <li>Vendor-aligned in language</li>
+                      <li>Passive or hedging</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Accessibility */}
+            <section id="accessibility" aria-labelledby="accessibility-heading">
+              <div class="mb-10 pt-16">
+                <span class="text-xs uppercase tracking-widest text-faint block mb-2">Standards</span>
+                <h2 id="accessibility-heading" class="font-heading text-3xl md:text-4xl font-bold text-foreground">Accessibility</h2>
+              </div>
+              <p class="font-sans text-sm text-dim max-w-prose mb-8">
+                Every page on {BRAND_NAME} targets <span><abbr data-title="Web Content Accessibility Guidelines" aria-describedby="abbr-wcag-1" tabindex="0">WCAG</abbr><span id="abbr-wcag-1" class="sr-only">Web Content Accessibility Guidelines</span></span> 2.2 Level <span><abbr data-title="double-A conformance level" aria-describedby="abbr-aa-1" tabindex="0">AA</abbr><span id="abbr-aa-1" class="sr-only">double-A conformance level</span></span> for structure and interaction. Body text contrast targets <span><abbr data-title="triple-A conformance level" aria-describedby="abbr-aaa-1" tabindex="0">AAA</abbr><span id="abbr-aaa-1" class="sr-only">triple-A conformance level</span></span> (7:1) in both light and dark mode. The full statement, testing approach, and how to report a barrier are in the{" "}
+                <a href={`${base}accessibility/`} class="docs-ext-link">Accessibility Statement</a>.
+              </p>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
+                  <h3 class="font-sans text-sm font-semibold text-foreground mb-3">Color and contrast</h3>
+                  <ul role="list" class="font-sans text-sm text-dim space-y-1.5">
+                    <li>Body text: minimum 7:1 contrast (<span><abbr data-title="Web Content Accessibility Guidelines" aria-describedby="abbr-wcag-2" tabindex="0">WCAG</abbr><span id="abbr-wcag-2" class="sr-only">Web Content Accessibility Guidelines</span></span> <span><abbr data-title="triple-A conformance level" aria-describedby="abbr-aaa-2" tabindex="0">AAA</abbr><span id="abbr-aaa-2" class="sr-only">triple-A conformance level</span></span>) in both modes</li>
+                    <li>Large text (18pt+ or bold 14pt+): minimum 4.5:1 (<span><abbr data-title="Web Content Accessibility Guidelines" aria-describedby="abbr-wcag-3" tabindex="0">WCAG</abbr><span id="abbr-wcag-3" class="sr-only">Web Content Accessibility Guidelines</span></span> <span><abbr data-title="triple-A conformance level" aria-describedby="abbr-aaa-3" tabindex="0">AAA</abbr><span id="abbr-aaa-3" class="sr-only">triple-A conformance level</span></span>)</li>
+                    <li><span><abbr data-title="user interface" aria-describedby="abbr-ui-3" tabindex="0">UI</abbr><span id="abbr-ui-3" class="sr-only">user interface</span></span> controls and focus indicators: minimum 3:1</li>
+                    <li>Never use amber <code class="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">#ffc034</code> as text in light mode</li>
+                    <li>Hover states must meet contrast in both light and dark</li>
+                    <li>Never convey meaning through color alone</li>
+                  </ul>
+                </div>
+                <div class="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
+                  <h3 class="font-sans text-sm font-semibold text-foreground mb-3">Interaction and motion</h3>
+                  <ul role="list" class="font-sans text-sm text-dim space-y-1.5">
+                    <li>Every interactive element is keyboard reachable</li>
+                    <li>Focus rings visible in both modes on all elements</li>
+                    <li>Touch targets minimum 24 x 24 px (prefer 44 x 44 px)</li>
+                    <li>Animations respect <code class="font-mono text-xs bg-background px-1 py-0.5 rounded border border-border">prefers-reduced-motion</code></li>
+                    <li>All images have descriptive alt text</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+          </div>
+
+          {/* Sticky right TOC — visible to screen readers, not aria-hidden */}
+          <aside aria-label="Page sections" class="hidden lg:block">
+            <div class="sticky top-24 pt-16">
+              <nav aria-label="On this page">
+                <p class="font-sans text-xs font-semibold uppercase tracking-widest text-faint mb-4">
+                  On this page
+                </p>
+                <ul class="space-y-0.5" role="list">
+                  {TOC_ITEMS.map(({ id, label }) => (
+                    <li>
+                      <a
+                        href={`#${id}`}
+                        aria-current={activeSection === id ? "location" : undefined}
+                        class:list={[
+                          "block font-sans text-sm py-1.5 pl-3 border-l-2 transition-colors rounded-r-sm cursor-pointer focus-ring-tight",
+                          activeSection === id
+                            ? "border-primary text-foreground dark:text-primary font-medium"
+                            : "border-transparent text-dim hover:text-foreground hover:border-border",
+                        ]}
+                      >
+                        {label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </div>
+
+  </main>
+</Layout>

@@ -1,0 +1,159 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+import { BRAND_NAME } from "@/lib/site";
+
+const base = import.meta.env.BASE_URL;
+
+const REVEAL_SLIDES: readonly string[] = [
+  "Title slide with co-brand area",
+  "Agenda table",
+  "Bullet rows",
+  "Two-column split",
+  "Cards grid",
+  "Speaker cards",
+  "Bullet rows with tech tags",
+  "Asymmetric split with image",
+  "Two-column cards",
+  "Contribute cards",
+  "Board members",
+  "Final / join slide",
+];
+
+const REVEAL_STEPS: readonly { readonly step: number; readonly text: string }[] = [
+  { step: 1, text: "Download and unzip the template. Rename the deck-template folder to your talk name (e.g. my-talk), then edit index.html inside it." },
+  { step: 2, text: 'Replace TITLE_PLACEHOLDER in the <title> tag with your event or talk name.' },
+  { step: 3, text: "Edit the slide sections directly in index.html. Each <section> is one slide. Delete layouts you don't need." },
+  { step: 4, text: "Open index.html in any browser for local use. All assets are bundled in the ZIP, so no server is needed." },
+  { step: 5, text: "To publish: upload your renamed folder along with the sibling asset folders to any web host. For offon.dev, drop the folder into public/ and push to main, since the asset folders already live there." },
+];
+
+const PPTX_INCLUDES: readonly string[] = [
+  `Title slide with ${BRAND_NAME} branding`,
+  "Section and content slide layouts",
+  `${BRAND_NAME} color palette and typography`,
+  "Speaker notes placeholder",
+];
+---
+
+<Layout
+  title={`Presentation Templates - ${BRAND_NAME}`}
+  description={`Download slide templates for ${BRAND_NAME} events. Available as Reveal.js HTML or an editable PowerPoint file.`}
+  path="/presentation-templates/"
+  noindex
+>
+  <main id="main-content" tabindex="-1" class="px-6 md:px-16 pt-28 pb-20">
+    <div class="mx-auto max-w-4xl">
+      <h1 class="font-heading text-3xl font-bold text-foreground mb-3">
+        Presentation Templates
+      </h1>
+      <p class="text-muted-foreground mb-12 max-w-2xl">
+        Slide templates for {BRAND_NAME} events and talks. Choose the format that fits your workflow.
+      </p>
+
+      <section aria-labelledby="reveal-heading">
+        <div class="rounded-xl border border-surface-border bg-card p-6 flex flex-col gap-5">
+          <div class="flex items-start gap-3">
+            <span class="text-primary mt-0.5"><Icon name="lucide:globe" width={24} height={24} aria-hidden="true" /></span>
+            <div>
+              <h2 id="reveal-heading" class="font-heading text-lg font-bold text-foreground">
+                Reveal.js HTML Template
+              </h2>
+              <span class="text-xs text-muted-foreground">ZIP archive</span>
+            </div>
+          </div>
+
+          <p class="text-sm text-muted-foreground leading-relaxed">
+            One HTML file plus bundled assets, no build step. The ZIP works locally, on offon.dev,
+            or on any other web host. Preview the live version on offon.dev before downloading.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h3 class="text-sm font-semibold text-foreground mb-3">Included Slide Layouts</h3>
+              <ul class="space-y-1.5" role="list">
+                {REVEAL_SLIDES.map((slide) => (
+                  <li class="text-xs text-muted-foreground flex gap-2">
+                    <span class="text-primary shrink-0 mt-px" aria-hidden="true">–</span>
+                    <span>{slide}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="text-sm font-semibold text-foreground mb-3">How to Create a New Deck</h3>
+              <ul class="space-y-3" role="list">
+                {REVEAL_STEPS.map(({ step, text }) => (
+                  <li class="flex gap-3 text-xs text-muted-foreground">
+                    <span class="text-primary font-semibold shrink-0 w-4" aria-hidden="true">{step}.</span>
+                    <span>{text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-3 mt-auto justify-end">
+            <a
+              href={`${base}deck-template/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-describedby="new-tab-hint"
+              class="btn-ghost inline-flex items-center gap-2"
+            >
+              Preview the Template
+              <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+            </a>
+            <a
+              href={`${base}downloads/offon-reveal-template.zip`}
+              download="offon-reveal-template.zip"
+              class="btn-primary inline-flex items-center gap-2"
+            >
+              <Icon name="lucide:download" width={16} height={16} aria-hidden="true" />
+              Download Reveal.js ZIP
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="pptx-heading" class="mt-6">
+        <div class="rounded-xl border border-surface-border bg-card p-6 flex flex-col gap-5">
+          <div class="flex items-start gap-3">
+            <span class="text-primary mt-0.5"><Icon name="lucide:presentation" width={24} height={24} aria-hidden="true" /></span>
+            <div>
+              <h2 id="pptx-heading" class="font-heading text-lg font-bold text-foreground">
+                PowerPoint Template
+              </h2>
+              <span class="text-xs text-muted-foreground">PPTX file</span>
+            </div>
+          </div>
+
+          <p class="text-sm text-muted-foreground leading-relaxed">
+            An editable PowerPoint file with {BRAND_NAME} branding applied. Open in PowerPoint or Keynote and edit slides directly.
+          </p>
+
+          <ul class="space-y-1" role="list">
+            {PPTX_INCLUDES.map((item) => (
+              <li class="text-xs text-muted-foreground flex gap-2">
+                <span class="text-primary shrink-0 mt-px" aria-hidden="true">–</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div class="flex mt-auto justify-end">
+            <a
+              href={`${base}downloads/offon-deck-template.pptx`}
+              download="offon-deck-template.pptx"
+              class="btn-primary inline-flex items-center gap-2"
+            >
+              <Icon name="lucide:download" width={16} height={16} aria-hidden="true" />
+              Download PPTX
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</Layout>

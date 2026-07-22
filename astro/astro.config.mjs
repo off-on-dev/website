@@ -23,6 +23,13 @@ export default defineConfig({
     prefetchAll: true,
     defaultStrategy: "hover",
   },
+  // Retired URLs → their successor. Astro emits static meta-refresh redirect
+  // pages (GitHub Pages-compatible). Mirrors src/pages/redirects/*.
+  redirects: {
+    "/docs": "/handbook/",
+    "/docs/community-guide": "/handbook/",
+    "/community-guide": "/handbook/",
+  },
   integrations: [vue({ appEntrypoint: "/src/pages/_app" }), icon()],
   markdown: {
     // Build-time dual-theme highlighting (retires the custom CodeBlock highlighter).

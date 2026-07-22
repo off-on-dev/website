@@ -1,0 +1,321 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+import { COMMUNITY_URL, BRAND_NAME, CONTACT_EMAIL } from "@/lib/site";
+import { SPONSORS, SUPPORT_WAYS } from "@/data/sponsors";
+
+const base = import.meta.env.BASE_URL;
+
+// Bullet lists (ported from <BulletList marker=... spacing="loose">).
+const dynatraceProvides = [
+  "Funding to keep the platform running and accessible",
+  "Engineering and developer advocacy time from individuals who take part as community members",
+  "Infrastructure, tooling, and operational support where useful",
+  "Visibility through Dynatrace's own channels, when it helps the community rather than the company",
+];
+
+const dynatraceDoesNot = [
+  `Use ${BRAND_NAME} as a sales, marketing, or lead generation channel`,
+  `Promote Dynatrace products, launches, or campaigns through ${BRAND_NAME}`,
+  "Gate content, learning paths, or contributor opportunities behind any commercial relationship",
+];
+
+const sponsorsReceive = [
+  "Your logo and link featured on this page",
+  "Quarterly social posts thanking you for your support",
+  "Recognition of your contributions in our weekly community digest",
+  "The opportunity to support specific initiatives, such as challenges, events, or learning paths",
+  `A direct line to the ${BRAND_NAME} team for coordination and collaboration`,
+];
+
+const weAskInReturn = [
+  "Respect for our community guidelines and code of conduct",
+  "Restraint on promotional content. Technical mentions are welcome only when vendor-neutral and reproducible",
+  "Engagement as a community member, not as a marketing presence",
+];
+
+const sponsorshipDoesNotInclude = [
+  "Editorial control over challenges, content, or community direction",
+  "Voting power in governance decisions",
+  "Influence over moderation or community policies",
+  "Access to community member data for marketing or sales purposes",
+  "Exclusivity over topics, technologies, or audience segments",
+];
+
+// Shared bullet-list styles (mirror BulletList marker/spacing="loose").
+const liClass = "flex items-start gap-3 text-sm text-muted-foreground leading-relaxed";
+const markerClass = "mt-0.5 shrink-0 text-foreground";
+---
+
+<Layout
+  title={`Sponsorship and Independence - ${BRAND_NAME}`}
+  description={`Find out who supports ${BRAND_NAME}, what sponsorship involves, and how we keep the community vendor-neutral and editorially independent.`}
+  path="/sponsors/"
+>
+  <main id="main-content" tabindex="-1">
+    {/* Page hero */}
+    <section
+      aria-labelledby="page-hero-heading"
+      class="bg-primary pt-32 pb-20 px-6 md:px-16 overflow-hidden min-h-[560px] flex flex-col justify-center"
+    >
+      <div class="mx-auto max-w-6xl relative w-full">
+        <div class="max-w-2xl">
+          <span class="font-sans text-sm font-medium uppercase tracking-widest text-background/90 block mb-4">
+            Sponsors
+          </span>
+          <h1
+            id="page-hero-heading"
+            class="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground mb-5"
+          >
+            Sponsorship and Independence
+          </h1>
+          <p class="font-sans text-base leading-relaxed text-background/90 max-w-2xl mb-8">
+            Sponsors provide financial support and participate as community members, but do not control editorial direction, content priorities, or governance. This community belongs to its members.
+          </p>
+          <div class="flex gap-3 flex-wrap">
+            <a href={`mailto:${CONTACT_EMAIL}`} class="btn-inverse">
+              <span class="inline-flex items-center gap-2">
+                <Icon name="lucide:mail" width={14} height={14} aria-hidden="true" /> Become a Sponsor
+              </span>
+            </a>
+            <a
+              href={COMMUNITY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-describedby="new-tab-hint"
+              class="btn-ghost-inverse"
+            >
+              <span class="inline-flex items-center gap-2">
+                Join the Community <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="px-6 md:px-16 py-16">
+      <div class="mx-auto max-w-6xl">
+        {/* Founding Sponsor */}
+        <section aria-labelledby="founding-sponsor">
+          <h2 id="founding-sponsor" class="text-2xl font-bold text-foreground mb-6">Founding Sponsor</h2>
+          <div class="mb-8">
+            {SPONSORS.map((sponsor) => (
+              <a
+                href={sponsor.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-describedby="new-tab-hint"
+                class="card-glow inline-flex items-center rounded-xl border border-border bg-[hsl(var(--surface))] px-8 py-6 focus-ring"
+              >
+                {sponsor.logoDark && sponsor.logoLight ? (
+                  <>
+                    <img
+                      src={`${base}${sponsor.logoDark}`}
+                      alt={sponsor.name}
+                      width={240}
+                      height={44}
+                      class="h-12 w-auto max-w-full hidden dark:block"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <img
+                      src={`${base}${sponsor.logoLight}`}
+                      alt={sponsor.name}
+                      width={240}
+                      height={44}
+                      class="h-12 w-auto max-w-full block dark:hidden"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </>
+                ) : (
+                  <span class="text-xl font-semibold text-foreground group-hover:text-foreground/80 transition-colors">{sponsor.name}</span>
+                )}
+              </a>
+            ))}
+          </div>
+
+          <div class="space-y-4 max-w-2xl mb-8">
+            <p class="text-muted-foreground leading-relaxed">
+              Dynatrace's roots, like much of modern software, are deeply tied to open source. The company builds on it, contributes to it, and depends on the long-term health of the open source ecosystem. Sponsoring {BRAND_NAME} is a way of giving back to that ecosystem in a form that is genuinely useful to the people who sustain it: individual contributors and maintainers.
+            </p>
+            <p class="text-muted-foreground leading-relaxed">
+              Most corporate open source investment today flows toward foundations, enterprise programs, and large strategic projects. Far less of it reaches the individuals who write the code, maintain the projects, mentor new contributors, and keep open source alive day to day.
+            </p>
+            <p class="text-muted-foreground leading-relaxed">
+              Dynatrace sponsors {BRAND_NAME} because supporting the people behind open source is not a marketing exercise. It is part of being a responsible participant in the ecosystem we all rely on.
+            </p>
+          </div>
+
+          <h3 class="text-lg font-semibold text-foreground mb-3">What Dynatrace Provides</h3>
+          <div class="max-w-2xl mb-8">
+            <ul role="list" class="space-y-3">
+              {dynatraceProvides.map((item) => (
+                <li class={liClass}>
+                  <Icon name="lucide:check" width={14} height={14} aria-hidden="true" class={markerClass} />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <h3 class="text-lg font-semibold text-foreground mb-3">What Dynatrace Does Not Do</h3>
+          <div class="max-w-2xl mb-8">
+            <ul role="list" class="space-y-3">
+              {dynatraceDoesNot.map((item) => (
+                <li class={liClass}>
+                  <Icon name="lucide:x" width={14} height={14} aria-hidden="true" class={markerClass} />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <p class="text-muted-foreground leading-relaxed max-w-2xl">
+            {BRAND_NAME} is not a Dynatrace property dressed up as a community. It is a vendor-neutral space that Dynatrace helps fund because the work matters.
+          </p>
+        </section>
+      </div>
+    </div>
+
+    {/* How Sponsorship Works */}
+    <div class="bg-card border-y border-border px-6 md:px-16 py-16">
+      <div class="mx-auto max-w-6xl">
+        <section aria-labelledby="how-sponsorship-works">
+          <h2 id="how-sponsorship-works" class="text-2xl font-bold text-foreground mb-4">How Sponsorship Works</h2>
+          <p class="text-muted-foreground leading-relaxed mb-8 max-w-2xl">
+            Sponsorship at {BRAND_NAME} is a partnership. The boundaries are clear, our policies are public, and community input shapes how we evolve.
+          </p>
+
+          <h3 class="text-lg font-semibold text-foreground mb-3">What Sponsors Receive</h3>
+          <div class="max-w-2xl mb-8">
+            <ul role="list" class="space-y-3">
+              {sponsorsReceive.map((item) => (
+                <li class={liClass}>
+                  <Icon name="lucide:check" width={14} height={14} aria-hidden="true" class={markerClass} />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <h3 class="text-lg font-semibold text-foreground mb-3">What We Ask in Return</h3>
+          <div class="max-w-2xl mb-8">
+            <ul role="list" class="space-y-3">
+              {weAskInReturn.map((item) => (
+                <li class={liClass}>
+                  <Icon name="lucide:check" width={14} height={14} aria-hidden="true" class={markerClass} />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <h3 class="text-lg font-semibold text-foreground mb-3">What Sponsorship Does Not Include</h3>
+          <div class="max-w-2xl mb-8">
+            <ul role="list" class="space-y-3">
+              {sponsorshipDoesNotInclude.map((item) => (
+                <li class={liClass}>
+                  <Icon name="lucide:x" width={14} height={14} aria-hidden="true" class={markerClass} />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <p class="text-muted-foreground leading-relaxed max-w-2xl">
+            Sponsors enable the work; they do not direct it.
+          </p>
+        </section>
+      </div>
+    </div>
+
+    {/* Becoming a Sponsor */}
+    <div class="px-6 md:px-16 py-16">
+      <div class="mx-auto max-w-6xl">
+        <section aria-labelledby="becoming-a-sponsor">
+          <h2 id="becoming-a-sponsor" class="text-2xl font-bold text-foreground mb-4">Becoming a Sponsor</h2>
+          <p class="text-muted-foreground leading-relaxed mb-8 max-w-2xl">
+            {BRAND_NAME} welcomes additional sponsors who share this model. If your organisation wants to support open source contributors and maintainers without attaching commercial expectations, we would like to hear from you.
+          </p>
+          <div class="grid gap-4 sm:grid-cols-2 mb-8">
+            {SUPPORT_WAYS.map((way) => (
+              <div class="card-glow rounded-xl border border-border bg-[hsl(var(--surface))] p-6">
+                <h3 class="text-lg font-semibold text-foreground mb-2">{way.title}</h3>
+                <p class="text-sm text-muted-foreground leading-relaxed">{way.description}</p>
+              </div>
+            ))}
+          </div>
+          <a href={`mailto:${CONTACT_EMAIL}`} class="btn-primary">
+            <Icon name="lucide:mail" width={14} height={14} aria-hidden="true" />
+            Get in Touch
+          </a>
+        </section>
+      </div>
+    </div>
+
+    {/* Bottom CTA */}
+    <section aria-labelledby="bottom-cta-heading" class="bg-primary py-16 px-6 md:px-16 relative overflow-hidden">
+      <div class="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1fr_1fr_auto] gap-12 lg:gap-16 items-center">
+        {/* Left - headline */}
+        <div>
+          <h2 id="bottom-cta-heading" class="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground">
+            <span class="block">Start Curious.</span>
+            <span class="block">Break Things.</span>
+            <span class="block">Learn Together.</span>
+            <span class="block">Glow Brighter.</span>
+          </h2>
+        </div>
+
+        {/* Right - copy + buttons */}
+        <div class="flex flex-col gap-4">
+          <p class="font-sans text-base leading-relaxed text-background/90">
+            <strong class="font-medium text-primary-foreground">
+              You bring your questions, your fixes, your ideas.
+            </strong>{" "}
+            We bring the challenges, the tooling, and the practitioners who care about the same problems you do.
+          </p>
+          <p class="font-sans text-base leading-relaxed text-background/90">
+            Every spark starts with one person. Like Nyx, our firefly, together we brighten the whole open source ecosystem.
+          </p>
+          <p class="font-sans text-base font-medium text-background/90">
+            That's {BRAND_NAME}. always On. always Open. always Learning.
+          </p>
+          <div class="flex gap-3 flex-wrap mt-2">
+            <a
+              href={COMMUNITY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-describedby="new-tab-hint"
+              class="btn-inverse"
+            >
+              Join the Community <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+            </a>
+            <a
+              href="https://github.com/off-on-dev/open-source-challenges"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-describedby="new-tab-hint"
+              class="btn-ghost-inverse"
+            >
+              View Challenges on GitHub <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+            </a>
+          </div>
+        </div>
+
+        {/* Nyx mascot - third column, visible on lg+ only */}
+        <img
+          src={`${base}nyx.webp`}
+          alt=""
+          aria-hidden="true"
+          width={240}
+          height={240}
+          loading="lazy"
+          decoding="async"
+          class="hidden lg:block w-[240px] h-[240px] self-start"
+        />
+      </div>
+    </section>
+  </main>
+</Layout>
