@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>What I've Been Building — Sinduri Guntupalli</title>
+  <title>What I've Been Building: Sinduri Guntupalli</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../reveal/reset.css">
   <link rel="stylesheet" href="../reveal/reveal.css">
@@ -27,7 +27,7 @@
 
     .reveal {
       font-family: 'Lexend', sans-serif;
-      font-size: 54px;
+      font-size: 38px;
       color: var(--fg);
     }
 
@@ -111,6 +111,16 @@
       color: var(--amber); margin-bottom: 0.9em;
     }
 
+    /* ── Title slide ── */
+    .title-slide {
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      padding: 2em 2.5em !important;
+    }
+
     /* ── Chapter divider ── */
     .chapter {
       display: flex; flex-direction: column;
@@ -136,6 +146,7 @@
     .chapter .sep span { font-size: 0.5em; opacity: 0.8; }
     .chapter .epi { font-style: italic; font-size: 0.66em; color: var(--muted); opacity: 0.82; margin-top: 1em; max-width: 22em; line-height: 1.5; }
     .reveal .slides section.ch-slide { padding: 0; }
+    .reveal .slides section.ch-slide .chapter { height: 100%; }
 
     /* ── Final slide ── */
     .final {
@@ -150,7 +161,7 @@
 
     /* ── Screenshot frame ── */
     .shot { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-    .shot img { width: 100%; display: block; }
+    .shot img { width: 100%; height: 9em; object-fit: cover; object-position: top; display: block; }
 
     /* ── Ambient glow ── */
     #ff-wave { position: fixed; inset: 0; pointer-events: none; z-index: 0; background:
@@ -167,17 +178,17 @@
       background: var(--card);
       border: 1px solid rgba(255, 192, 52, 0.35);
       border-radius: 8px;
-      padding: 0.6em 0.9em;
-      margin-top: 0.9em;
+      padding: 0.35em 0.8em;
+      margin-top: 0.6em;
     }
-    .outcome .olabel { font-size: 0.42em; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber); display: block; margin-bottom: 0.35em; }
-    .outcome p { font-size: 0.62em; line-height: 1.55; }
+    .outcome .olabel { font-size: 0.40em; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber); display: block; margin-bottom: 0.25em; }
+    .outcome p { font-size: 0.58em; line-height: 1.5; }
     .outcome p strong { color: var(--amber); }
 
     /* ── Stat grid ── */
     .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75em; margin-top: 0.6em; }
-    .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 0.7em 0.9em; text-align: center; }
-    .stat-box .num { font-size: 1.6em; font-weight: 900; color: var(--amber); line-height: 1; display: block; }
+    .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 0.5em 0.7em; text-align: center; }
+    .stat-box .num { font-size: 1.4em; font-weight: 900; color: var(--amber); line-height: 1; display: block; }
     .stat-box .desc { font-size: 0.52em; color: var(--muted); margin-top: 0.3em; display: block; line-height: 1.4; }
 
     /* PDF mode */
@@ -204,19 +215,11 @@
 
     <!-- 1: Title -->
     <section>
-      <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; height:100%; padding: 3em 3.2em;">
-        <h1 style="color: #ffc034; font-size: 1.9em; margin-top: 0;">What I've Been Building</h1>
-        <p style="font-size: 0.78em; margin-top: 0.8em; opacity: 0.6;">January – July 2026</p>
-        <div style="display:flex; align-items:center; gap:0.9em; margin-top:1.6em; justify-content:center;">
-          <div style="width:4.5em; height:4.5em; border-radius:50%; overflow:hidden; border:2px solid rgba(255,192,52,0.3); flex-shrink:0;">
-            <img src="data:image/webp;base64,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" alt="Sinduri Guntupalli" style="width:100%; height:100%; object-fit:cover;">
-          </div>
-          <div style="text-align:left;">
-            <p style="font-size:0.72em; font-weight:700; color:var(--fg); margin:0;">Sinduri Guntupalli</p>
-            <p style="font-size:0.58em; color:var(--amber); margin-top:0.2em;">Sr Developer Programs Engineer · OSPO · Dynatrace</p>
-          </div>
-        </div>
-        <p style="font-size:0.46em; margin-top:2.5em; opacity:0.3; letter-spacing:0.04em;">← → to navigate &nbsp;·&nbsp; S for speaker notes</p>
+      <div class="title-slide" style="text-align: center;">
+        <h1 style="color: #ffc034; margin-top: 0.4em;">What I've Been Building</h1>
+        <p style="font-size: 0.9em; margin-top: 1em;">January – July 2026</p>
+        <p style="font-size: 0.72em; margin-top: 1em; opacity: 0.7;">Sinduri Guntupalli · Sr Developer Programs Engineer · OSPO · Dynatrace</p>
+        <p style="position: absolute; bottom: 1.8em; right: 2.2em; font-size: 0.38em; opacity: 0.28; letter-spacing: 0.04em;">← → to navigate</p>
       </div>
     </section>
 
@@ -226,30 +229,30 @@
         <span class="label">overview</span>
         <h2>Seven Workstreams</h2>
       </div>
-      <div class="g2" style="margin-top:0.5em; font-size:0.9em;">
+      <div class="g3" style="margin-top:0.5em; font-size:0.82em;">
         <div class="card">
           <h4>1 · Discourse Rebrand</h4>
-          <p>community.offon.dev — theme, leaderboard, onboarding automation</p>
+          <p>Theme, leaderboard, onboarding</p>
         </div>
         <div class="card">
           <h4>2 · offon.dev Website</h4>
-          <p>React rebuild, design system, SEO, GitHub Actions pipeline</p>
+          <p>React + TS, design system, SEO</p>
         </div>
         <div class="card">
           <h4>3 · Community Reporting</h4>
-          <p>GA4 + Discourse queries + AI-merged monthly reports</p>
+          <p>GA4 + Discourse + AI reports</p>
         </div>
         <div class="card">
           <h4>4 · Open Source Talks</h4>
-          <p>Event series — concept, logistics, first event 25 June</p>
+          <p>End-to-end, first event: June 25</p>
         </div>
         <div class="card">
           <h4>5 · Weekly Digest</h4>
-          <p>Automated news roundup, every Wednesday since 6 May</p>
+          <p>Every Wednesday, AI-assisted</p>
         </div>
         <div class="card">
           <h4>6 &amp; 7 · OSR FAQ + AI Skills</h4>
-          <p>Request automation, shared config across all three skills</p>
+          <p>FAQ doc + AI skills</p>
         </div>
       </div>
     </section>
@@ -261,7 +264,7 @@
         <div class="numeral">1</div>
         <h2>Discourse Rebrand</h2>
         <div class="sep"><span>&#9670;</span></div>
-        <p class="epi">From Open Ecosystem to community.offon.dev — a full identity and infrastructure rebuild.</p>
+        <p class="epi">From Open Ecosystem to community.offon.dev, a full identity and infrastructure rebuild.</p>
       </div>
     </section>
 
@@ -271,24 +274,21 @@
         <span class="label">workstream 1 · discourse</span>
         <h2>community.offon.dev</h2>
       </div>
-      <div class="split-even" style="margin-top:0.3em; font-size:0.9em;">
+      <div class="split-even" style="margin-top:0.3em; font-size:0.82em;">
         <div>
           <span class="col-label">theme &amp; identity</span>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Reconfigured site identity, categories, and navigation after the domain move</span></div>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt"><strong>Matched Discourse to the offon.dev styleguide</strong> — mapped CSS variables to design tokens, built WCAG AA palettes for both light and dark modes</span></div>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Built custom theme components: cookie consent banner, styling overrides</span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Identity, categories + nav rebuilt</span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt"><strong>Design tokens synced:</strong> WCAG AA, both modes</span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Consent banner + custom overrides</span></div>
         </div>
         <div>
           <span class="col-label">features built</span>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt"><strong>Leaderboard</strong> — pulls from Data Explorer queries via the API, renders in the sidebar and as a full page, ranks by badges, caches results so queries don't run on every load</span></div>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Restructured categories based on where traffic and replies were actually happening</span></div>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt"><strong>Automated onboarding</strong> — Day 0, Day 3, and Day 7 private message sequence for new members</span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt"><strong>Leaderboard:</strong> API-driven, badge-ranked</span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Categories restructured by usage</span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt"><strong>Automated onboarding:</strong> Days 0, 3, 7</span></div>
         </div>
       </div>
-      <div class="outcome">
-        <span class="olabel">outcome</span>
-        <p>The old community domain had <strong>zero pages indexed</strong> — including the homepage. community.offon.dev now has <strong>27 indexed pages</strong>.</p>
-      </div>
+      <p style="font-size:0.55em; margin-top:0.9em; color:var(--muted); opacity:0.8;">Community domain went from <strong style="color:var(--amber);">0 indexed pages</strong> (including homepage) to <strong style="color:var(--amber);">27</strong> after the rebrand.</p>
     </section>
 
     <!-- Ch 2 -->
@@ -308,19 +308,19 @@
         <span class="label">workstream 2 · offon.dev</span>
         <h2>The Website</h2>
       </div>
-      <div class="split-even" style="margin-top:0.3em; font-size:0.9em;">
+      <div class="split-even" style="margin-top:0.3em; font-size:0.82em;">
         <div>
           <span class="col-label">what I built</span>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Rebuilt from Lovable in <strong>React + TypeScript</strong> with a full custom design system and accessible components</span></div>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Wrote the site content and framing together with David</span></div>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Moved docs and handbook off Discourse and onto <a href="https://offon.dev">offon.dev</a></span></div>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt"><strong>SEO</strong> — sitemap, structured metadata, clear page hierarchy for challenges and adventures</span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt"><strong>React + TypeScript</strong> rebuild, custom design system</span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Site content + framing with David</span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Docs + handbook moved to <a href="https://offon.dev">offon.dev</a></span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt"><strong>SEO:</strong> sitemap, metadata, challenge pages</span></div>
         </div>
         <div>
           <span class="col-label">content pipeline</span>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt"><strong>GitHub Actions</strong> sync challenge content from the challenges repo automatically</span></div>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Discourse data (discussions, replies, leaderboard) pulled in on a schedule — both stay current without manual work</span></div>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">YAML-sourced adventure content compiled to TypeScript at build time via a generator script</span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt"><strong>GitHub Actions</strong> auto-syncs challenge content</span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Discourse data refreshed on schedule</span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">YAML compiled to TypeScript at build</span></div>
         </div>
       </div>
     </section>
@@ -333,13 +333,13 @@
       </div>
       <div class="split-even" style="align-items:start; gap:1em;">
         <div>
-          <span style="display:block; font-size:0.42em; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); opacity:0.55; margin-bottom:0.5em;">Original — Open Ecosystem (Lovable, Jan 2026)</span>
+          <span style="display:block; font-size:0.42em; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); opacity:0.55; margin-bottom:0.5em;">Original: Open Ecosystem (Lovable, Jan 2026)</span>
           <div class="shot">
             <img src="original-lovable.png" alt="Screenshot of the original Open Ecosystem site built on Lovable">
           </div>
         </div>
         <div>
-          <span style="display:block; font-size:0.42em; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--amber); margin-bottom:0.5em;">Now — <a href="https://offon.dev">offon.dev</a> (July 2026)</span>
+          <span style="display:block; font-size:0.42em; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--amber); margin-bottom:0.5em;">Now: <a href="https://offon.dev">offon.dev</a> (July 2026)</span>
           <div class="shot">
             <img src="offon-dev.png" alt="Screenshot of the current offon.dev website">
           </div>
@@ -353,7 +353,7 @@
         <span class="label">workstreams 1 + 2 · combined impact</span>
         <h2>From 1 Indexed Page to 63</h2>
       </div>
-      <div class="stat-row" style="grid-template-columns: repeat(4,1fr); margin-top:0.9em;">
+      <div class="stat-row" style="grid-template-columns: repeat(4,1fr); margin-top:0.5em; font-size:0.85em;">
         <div class="stat-box" style="border-color:rgba(255,192,52,0.45);">
           <span class="num">1</span>
           <span class="desc">Pages indexed in April</span>
@@ -371,9 +371,9 @@
           <span class="desc">on community.offon.dev</span>
         </div>
       </div>
-      <div class="brow" style="margin-top:1.1em;">
+      <div class="brow" style="margin-top:0.4em;">
         <span class="dot" aria-hidden="true"></span>
-        <span class="bt">The old community domain had <strong>zero pages indexed</strong> — including the homepage</span>
+        <span class="bt">The old community domain had <strong>zero pages indexed,</strong> including the homepage</span>
       </div>
       <div class="brow">
         <span class="dot" aria-hidden="true"></span>
@@ -398,23 +398,61 @@
         <span class="label">workstream 3 · reporting</span>
         <h2>Knowing What's Actually Happening</h2>
       </div>
-      <div class="split-even" style="margin-top:0.3em; font-size:0.9em;">
+      <div class="split-even" style="margin-top:0.3em; font-size:0.82em;">
         <div>
           <span class="col-label">GA4 setup</span>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Set up GA4 across both domains with <strong>cross-domain tracking</strong></span></div>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Custom dimension to separate admin traffic from real visitor data</span></div>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Reports for traffic sources, new vs returning, landing pages, and a <strong>challenge-to-signup funnel</strong></span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">GA4 + <strong>cross-domain tracking</strong>, both domains</span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Custom dim: admin vs real traffic</span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Traffic, landing pages, <strong>funnel reports</strong></span></div>
         </div>
         <div>
           <span class="col-label">discourse + ai merge</span>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Discourse queries for membership, trust levels, posting activity, reply depth, and inactive contributors</span></div>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt"><strong>AI skill merges GA4 + Discourse exports</strong> into one monthly report with history so months are comparable</span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Discourse: membership, activity, churn</span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt"><strong>AI skill:</strong> monthly GA4 + Discourse report</span></div>
         </div>
       </div>
-      <div class="outcome">
-        <span class="olabel">what we can now see</span>
-        <p>meetup.com and GitHub bring the best traffic · <strong>10%</strong> of what we counted was our own admin sessions · <strong>85.9%</strong> of members have never posted · exactly where people drop out of the challenge funnel</p>
+      <p style="font-size:0.55em; margin-top:0.9em; color:var(--muted); opacity:0.8;">meetup.com + GitHub = top sources · <strong style="color:var(--amber);">10%</strong> of traffic was admin sessions · <strong style="color:var(--amber);">85.9%</strong> of members have never posted</p>
+    </section>
+
+    <!-- 7b: State of Community -->
+    <section>
+      <div class="sh">
+        <span class="label">workstream 3 · monthly report coverage</span>
+        <h2>State of Community</h2>
       </div>
+      <div class="g3" style="margin-top:0.5em; font-size:0.75em;">
+        <div class="card">
+          <h4>Traffic (GA4)</h4>
+          <p>Sessions, sources</p>
+          <p style="margin-top:0.4em;">Funnel + attribution</p>
+        </div>
+        <div class="card">
+          <h4>Discourse Traffic</h4>
+          <p>Sign-ups, DAU/MAU</p>
+          <p style="margin-top:0.4em;">Pageviews, referrers</p>
+        </div>
+        <div class="card">
+          <h4>Challenge Funnel</h4>
+          <p>Page hits to signups</p>
+          <p style="margin-top:0.4em;">Visitor engagement rate</p>
+        </div>
+        <div class="card">
+          <h4>Membership</h4>
+          <p>Trust levels, domains</p>
+          <p style="margin-top:0.4em;">Posting tiers, activation</p>
+        </div>
+        <div class="card">
+          <h4>Community Activity</h4>
+          <p>Topics, posts, depth</p>
+          <p style="margin-top:0.4em;">Contributors + churn</p>
+        </div>
+        <div class="card">
+          <h4>SEO</h4>
+          <p>Indexed pages by domain</p>
+          <p style="margin-top:0.4em;">Organic search count</p>
+        </div>
+      </div>
+      <p style="font-size:0.55em; margin-top:0.9em; color:var(--muted); opacity:0.8;">GA4 export + Discourse API data merged monthly · AI synthesizes the narrative</p>
     </section>
 
     <!-- Ch 4 -->
@@ -424,7 +462,7 @@
         <div class="numeral">4</div>
         <h2>Open Source Talks</h2>
         <div class="sep"><span>&#9670;</span></div>
-        <p class="epi">The event drove 30 sign-ups — the highest month since launch.</p>
+        <p class="epi">The event drove 30 sign-ups, the highest month since launch.</p>
       </div>
     </section>
 
@@ -434,18 +472,18 @@
         <span class="label">workstream 4 · events</span>
         <h2>Open Source Talks</h2>
       </div>
-      <div class="split-even" style="margin-top:0.3em; font-size:0.92em;">
+      <div class="split-even" style="margin-top:0.3em; font-size:0.82em;">
         <div>
           <span class="col-label">what I organised</span>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Planned and organised the series end to end: <strong>concept, format, speakers, venue, catering, security, swag, approvals</strong></span></div>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Listed on meetup.com with RSVPs routed through the community site — attendance is trackable, not just a headcount</span></div>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">First event held <strong>25 June 2026</strong> · next planned late August · <a href="https://github.com/Dynatrace/Open-Source-Docs/blob/main/docs/offon/events/open-source-talks-log.md">event log</a></span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">End-to-end: <strong>speakers, venue, swag</strong></span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">meetup.com listing with RSVP tracking</span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">First event <strong>25 June</strong> · next: late August · <a href="https://github.com/Dynatrace/Open-Source-Docs/blob/main/docs/offon/events/open-source-talks-log.md">event log</a></span></div>
         </div>
         <div>
           <span class="col-label">outcomes</span>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt"><strong>30 sign-ups</strong> — highest month since launch</span></div>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">meetup.com entered the <strong>top five referral sources</strong> from zero</span></div>
-          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Directly attributable to <strong>six sign-ups</strong></span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt"><strong>30 sign-ups,</strong> highest month ever</span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">meetup.com: <strong>top 5 referral source</strong></span></div>
+          <div class="brow"><span class="dot" aria-hidden="true"></span><span class="bt">Directly attributable to <strong>6 sign-ups</strong></span></div>
         </div>
       </div>
     </section>
@@ -467,24 +505,21 @@
         <span class="label">workstreams 5 · 6 · 7</span>
         <h2>Digest, FAQ, and AI Skills</h2>
       </div>
-      <div class="g3" style="margin-top:0.6em; font-size:0.86em;">
+      <div class="g3" style="margin-top:0.4em; font-size:0.82em;">
         <div class="card" style="border-color:rgba(255,192,52,0.25);">
           <h4>5 · Weekly Digest</h4>
-          <p>Open source news roundup, researched, written, and published every Wednesday.</p>
-          <p style="margin-top:0.4em;">Automated with an AI skill covering research, drafting, and the image prompt. A history file ensures nothing repeats.</p>
-          <p style="margin-top:0.5em; color:var(--amber); font-weight:600;">Running unbroken since 6 May. The main reason Community Voices is now the largest category at 48 topics.</p>
+          <p>OS news roundup, AI-assisted.</p>
+          <p style="margin-top:0.5em; color:var(--amber); font-weight:600;">Unbroken since May 6 · 48 topics.</p>
         </div>
         <div class="card" style="border-color:rgba(255,192,52,0.25);">
           <h4>6 · OSR FAQ</h4>
-          <p>Exported historic requests from Asana and Slack and turned them into an AI skill and <a href="https://github.com/Dynatrace/Open-Source-Docs/blob/main/docs/osr/osr-faq.md">FAQ document</a>.</p>
-          <p style="margin-top:0.4em;">Any incoming request can be answered from it directly, without digging through old tasks. Updated regularly as new types arrive.</p>
-          <p style="margin-top:0.5em; color:var(--amber); font-weight:600;">Answering a repeat request no longer depends on someone remembering where it was handled last time.</p>
+          <p>Asana + Slack → <a href="https://github.com/Dynatrace/Open-Source-Docs/blob/main/docs/osr/osr-faq.md">FAQ doc</a> + AI skill.</p>
+          <p style="margin-top:0.5em; color:var(--amber); font-weight:600;">No more digging through old tasks.</p>
         </div>
         <div class="card" style="border-color:rgba(255,192,52,0.25);">
           <h4>7 · AI Skills Repo</h4>
-          <p>Three skills in the repo: <strong>digest</strong>, <strong>leaderboard</strong>, <a href="https://github.com/Dynatrace/Open-Source-Docs/blob/main/docs/offon/community/state-of-community.md"><strong>state of community</strong></a>.</p>
-          <p style="margin-top:0.4em;">Each reads community details from one shared config file — a rename updates all of them at once. Anyone on the team can run them.</p>
-          <p style="margin-top:0.5em; color:var(--amber); font-weight:600;">Monthly report and weekly digest were both manual before. They now take a fraction of the time.</p>
+          <p>Skills: <strong>digest</strong>, <strong>leaderboard</strong>, <a href="https://github.com/Dynatrace/Open-Source-Docs/blob/main/docs/offon/community/state-of-community.md"><strong>state</strong></a>.</p>
+          <p style="margin-top:0.5em; color:var(--amber); font-weight:600;">Monthly report + digest automated.</p>
         </div>
       </div>
     </section>
@@ -495,30 +530,30 @@
         <span class="label">impact</span>
         <h2>Seven Months, in Numbers</h2>
       </div>
-      <div class="stat-row" style="grid-template-columns:repeat(3,1fr); margin-top:0.7em;">
+      <div class="stat-row" style="grid-template-columns:repeat(3,1fr); margin-top:0.5em; font-size:0.7em;">
         <div class="stat-box" style="border-color:rgba(255,192,52,0.45);">
           <span class="num">63×</span>
           <span class="desc">Pages indexed (was 1 in April)</span>
         </div>
         <div class="stat-box">
           <span class="num">30</span>
-          <span class="desc">Sign-ups from one event — highest month ever</span>
+          <span class="desc">Highest sign-up month to date</span>
         </div>
         <div class="stat-box">
           <span class="num">11+</span>
-          <span class="desc">Weekly digests published without a break</span>
+          <span class="desc">Weekly digests, no breaks</span>
         </div>
         <div class="stat-box">
           <span class="num">48</span>
-          <span class="desc">Topics in Community Voices — now the largest category</span>
+          <span class="desc">Community Voices topics</span>
         </div>
         <div class="stat-box">
           <span class="num">10%</span>
-          <span class="desc">Of counted traffic was admin sessions — now filtered out</span>
+          <span class="desc">Admin traffic now filtered out</span>
         </div>
         <div class="stat-box">
           <span class="num">7</span>
-          <span class="desc">AI skills and automations running across the team</span>
+          <span class="desc">AI skills across the team</span>
         </div>
       </div>
     </section>
