@@ -884,13 +884,17 @@ abbr[data-title]::after {
   max-width: min(16rem, calc(100vw - 1rem));
   white-space: normal;
   word-break: break-word;
-  opacity: 0;
-  transition: opacity 0.1s;
+  /* Astro migration: display:none (not opacity:0) so the absolutely-positioned
+     tooltip contributes NO layout when hidden. The React app suppresses this CSS
+     tooltip entirely via the JS-added `abbr-js-tooltip` class (useAbbrTooltips);
+     that JS is not ported yet, so without display:none the hidden ::after would
+     extend the page width at narrow viewports (WCAG 1.4.10 Reflow). */
+  display: none;
   z-index: 100;
 }
 abbr[data-title]:hover::after,
 abbr[data-title]:focus::after {
-  opacity: 1;
+  display: block;
 }
 /* MarkdownContent.tsx replaces the ::after tooltip with a JS DOM tooltip for
    correct sizing on narrow viewports and touch support. The CSS ::after is

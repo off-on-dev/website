@@ -116,11 +116,12 @@ const hasFilters = computed(() => activeTags.value.length > 0 || activeDifficult
       <p class="text-sm text-faint" role="status" aria-live="polite">
         {{ filtered.length }} {{ filtered.length === 1 ? "challenge" : "challenges" }}
       </p>
-      <button v-if="hasFilters" type="button" class="text-sm text-dim underline" @click="clearAll">
+      <button v-if="hasFilters" type="button" class="inline-flex min-h-6 items-center text-sm text-dim underline" @click="clearAll">
         Clear filters
       </button>
     </div>
 
+    <h2 class="sr-only">Challenges</h2>
     <ul class="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       <li v-for="e in filtered" :key="`${e.adventureId}-${e.levelId}`" class="contents">
         <a

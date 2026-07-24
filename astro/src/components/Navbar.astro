@@ -12,6 +12,9 @@ const links = [
   { href: "sponsors/", label: "Sponsors" },
 ];
 const isActive = (href: string): boolean => path.startsWith(base + href);
+// min-h-[44px] keeps links at the WCAG 2.5.8 touch-target size (matches the React Navbar).
+const linkCls =
+  "inline-flex items-center min-h-[44px] rounded px-1.5 -mx-1.5 text-sm text-dim hover:text-foreground focus-ring";
 ---
 
 <nav aria-label="Main" class="border-b border-border">
@@ -25,11 +28,7 @@ const isActive = (href: string): boolean => path.startsWith(base + href);
     </a>
     <div class="flex flex-wrap items-center gap-4">
       {links.map((l) => (
-        <a
-          href={base + l.href}
-          class="text-sm text-dim hover:text-foreground focus-ring rounded-sm"
-          aria-current={isActive(l.href) ? "page" : undefined}
-        >
+        <a href={base + l.href} class={linkCls} aria-current={isActive(l.href) ? "page" : undefined}>
           {l.label}
         </a>
       ))}
@@ -38,7 +37,7 @@ const isActive = (href: string): boolean => path.startsWith(base + href);
         target="_blank"
         rel="noopener noreferrer"
         aria-describedby="new-tab-hint"
-        class="text-sm text-dim hover:text-foreground focus-ring rounded-sm"
+        class={linkCls}
       >
         Community
       </a>

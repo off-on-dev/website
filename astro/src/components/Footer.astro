@@ -38,7 +38,7 @@ const social = [
         <p class="mb-3 font-sans text-xs font-normal uppercase tracking-widest text-faint">explore</p>
         <ul class="space-y-2">
           {explore.map((l) => (
-            <li><a class="text-sm text-dim hover:text-foreground focus-ring rounded-sm" href={base + l.href}>{l.label}</a></li>
+            <li><a class="inline-flex items-center min-h-[48px] text-sm text-dim hover:text-foreground focus-ring rounded-sm" href={base + l.href}>{l.label}</a></li>
           ))}
         </ul>
       </nav>
@@ -48,9 +48,9 @@ const social = [
         <ul class="space-y-2">
           <li><a class="docs-ext-link text-sm" href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint">Community Hub</a></li>
           <li><a class="docs-ext-link text-sm" href={CODE_OF_CONDUCT_URL} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint">Code of Conduct</a></li>
-          <li><a class="text-sm text-dim hover:text-foreground focus-ring rounded-sm" href={`${base}privacy/`}>Privacy Policy</a></li>
-          <li><a class="text-sm text-dim hover:text-foreground focus-ring rounded-sm" href={`${base}accessibility/`}>Accessibility</a></li>
-          <li><a class="text-sm text-dim hover:text-foreground focus-ring rounded-sm" href={`mailto:${CONTACT_EMAIL}`}>Contact</a></li>
+          <li><a class="inline-flex items-center min-h-[48px] text-sm text-dim hover:text-foreground focus-ring rounded-sm" href={`${base}privacy/`}>Privacy Policy</a></li>
+          <li><a class="inline-flex items-center min-h-[48px] text-sm text-dim hover:text-foreground focus-ring rounded-sm" href={`${base}accessibility/`}>Accessibility</a></li>
+          <li><a class="inline-flex items-center min-h-[48px] text-sm text-dim hover:text-foreground focus-ring rounded-sm" href={`mailto:${CONTACT_EMAIL}`}>Contact</a></li>
         </ul>
       </nav>
     </div>
@@ -60,7 +60,7 @@ const social = [
       <ul class="flex gap-4">
         {social.map((s) => (
           <li>
-            <a class="text-sm text-dim hover:text-foreground focus-ring rounded-sm" href={s.href} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint">{s.label}</a>
+            <a class="inline-flex items-center min-h-[48px] text-sm text-dim hover:text-foreground focus-ring rounded-sm" href={s.href} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint">{s.label}</a>
           </li>
         ))}
       </ul>
