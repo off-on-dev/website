@@ -2,6 +2,31 @@
 
 > **Post-migration note:** the site migrated from React to Astro + Vue islands. The **design system** in this guide — colour tokens, typography, the `@theme` block, button/pill/badge classes, light/dark rules, animations — remains authoritative and lives in `src/styles/index.css`. However, component-level entries below still describe the former React (`.tsx`) implementations and their props; the current components are `.astro` (static) and `.vue` (islands) in `src/components/`, which are the source of truth for markup and props. A component-by-component rewrite of this guide is a tracked follow-up. Where this doc and the actual components disagree, the components win.
 
+## Component inventory (current Astro/Vue)
+
+The site was brought to full visual parity with the former React app. Current components:
+
+### App shell / chrome
+
+- `Navbar.astro`: fixed top bar, theme-swapped image logo, animated-underline nav links with active state; hosts `ThemeToggle.vue` (desktop + mobile variants) and `MobileMenu.vue`.
+- `MobileMenu.vue` (island): hamburger + drawer with focus trap, Escape, and `inert`/`aria-hidden` on body siblings. Drawer is `absolute top-full` under the fixed nav.
+- `Footer.astro`: image logo, Zap-separated slogan strip, LinkedIn/Bluesky/X social icon buttons.
+- `Layout.astro`: also hosts the code-block enhancer script (adds a `code-block-header` + Copy button to `#main-content pre[aria-label^="Code block"]` on `astro:page-load`).
+
+### Home + landing sections (static `.astro`)
+
+- `Hero.astro`, `SectionLabel.astro`, `ChallengeHighlights.astro`, `CommunitySection.astro` + `CommunityLeaders.astro`, `SponsorStrip.astro`, `BottomCTA.astro` (Nyx mascot), `PageHero.astro` (Adventures/Challenges primary hero, `pt-32` clears the fixed nav), `ChallengeBuildersSection.astro`, `AvatarLink.astro`, `LeaderboardList.astro`.
+
+### Interactive islands (`.vue`)
+
+- `ChallengesFilter.vue`: difficulty-colored pill rows (desktop) + dropdowns (`<lg`) with click-outside / Escape / arrow-key nav; unfiltered view shows `AdventureCard`s passed via an Astro slot (`.astro` cannot render inside a Vue island), switching to level cards when filtered; `embedded` + `seeAllHref` props tailor it to the home. Used on `/` and `/challenges/`.
+- `StarterNudge.vue`: dismissable "new here?" nudge (localStorage), starter adventure/level resolved at build and passed as props.
+- `ThemeToggle.vue`, `ConsentBanner.vue`.
+
+### Cards / atoms / prose
+
+- `AdventureCard.astro`, `DifficultyBadge.astro` (font-semibold), `ContributorBadge.astro`, `LivePill.astro`, `TagChips.astro`, `RewardsCard.astro`, `OtherLevelsCard.astro`, `CollapsibleSection.astro` (native `<details>`; used for adventure Overview/Story and level sections), `InlineProse.astro`, `PersonNameLink.astro`, `SEO.astro`.
+
 ## Brand Name
 
 The brand is always written **OffOn** (camelCase). Never "offon", "Offon", or "OFFON".
