@@ -88,8 +88,8 @@ jobs:
           LEVELS_TO_SYNC: ${{ inputs.levels }}
         run: node scripts/sync-adventure.mjs
 
-      - name: Validate and regenerate TypeScript
-        run: node scripts/generate-adventures.mjs
+      - name: Validate adventure YAML (Zod content schema)
+        run: npm run sync
 
       - name: Create pull request
         env:
@@ -111,19 +111,13 @@ jobs:
           git fetch origin "$BRANCH" 2>/dev/null || true
 
           git checkout -b "$BRANCH" 2>/dev/null || git checkout "$BRANCH"
+          # Astro reads the YAML directly (Zod content collection) — no generated
+          # TS, prerender array, or sitemap region to commit. Routes come from
+          # getStaticPaths at build time.
           git add \
             src/data/adventures/${SLUG}/ \
-            src/data/adventures/${SLUG}.generated.ts \
-            src/data/adventures/index.ts \
-            src/data/adventures/summaries.ts \
-            src/data/adventures/types.ts \
             src/assets/diagrams/ \
-            public/sitemap.xml \
-            react-router.config.ts \
-            scripts/refresh-leaderboard.mjs \
-            e2e/smoke.spec.ts \
-            src/test/seo.test.ts \
-            src/test/prerender.test.ts
+            scripts/refresh-leaderboard.mjs
           git commit -m "feat: sync adventure ${SLUG} from challenges repo (${MODE})"
 
           # The branch is owned by this workflow, so a plain --force is safe here and
@@ -156,23 +150,18 @@ jobs:
 
           ### Manual steps (only if needed)
 
-          - [ ] If a level's \`architecture_diagram\` SVG was not auto-fetched (check the sync logs for a warning), add the SVG manually to \`src/assets/diagrams/\` and add \`architecture_diagram: <file>.svg\` to that level in \`adventure.yaml\`, then run \`npm run generate\`
-          - [ ] If a level has an \`architecture_diagram\` but no \`diagram_alt\`, add \`diagram_alt:\` to that level in \`adventure.yaml\` with a one-sentence description of the diagram, then run \`npm run generate\`
-          - [ ] Run \`node scripts/refresh-discussions.mjs\` after \`discussionUrl\` values are set
+          - [ ] If a level's \`architecture_diagram\` SVG was not auto-fetched (check the sync logs for a warning), add the SVG manually to \`src/assets/diagrams/\` and add \`architecture_diagram: <file>.svg\` to that level in \`adventure.yaml\`          - [ ] If a level has an \`architecture_diagram\` but no \`diagram_alt\`, add \`diagram_alt:\` to that level in \`adventure.yaml\` with a one-sentence description of the diagram          - [ ] Run \`node scripts/refresh-discussions.mjs\` after \`discussionUrl\` values are set
 
-          ### Auto-generated (do not edit by hand)
+          ### Routes & sitemap
 
-          The following are kept in sync with \`adventure.yaml\` by \`npm run generate\` (prebuild hook):
-          - \`public/sitemap.xml\` (GENERATED:adventures region)
-          - \`react-router.config.ts\` prerender (GENERATED:adventures region)
-          - \`e2e/smoke.spec.ts\` and \`src/test/seo.test.ts\` route arrays
-          - \`src/test/prerender.test.ts\` pages array
-          - \`scripts/refresh-leaderboard.mjs\` ADVENTURE_CATEGORIES
+          Routes are generated from \`adventure.yaml\` by the Astro content collection
+          at build time (\`getStaticPaths\`) — there is nothing to regenerate or commit.
+          Only \`scripts/refresh-leaderboard.mjs\` ADVENTURE_CATEGORIES is hand-maintained.
 
           ### Checks
 
           \`\`\`sh
-          npm run lint && npm test && npm run build && npm run test:e2e
+          npm run sync && npm run build && npm run test:e2e
           \`\`\`
           EOF
           else
@@ -197,32 +186,26 @@ jobs:
               about: "One sentence bio."
             \`\`\`
           - [ ] Confirm \`month:\` is correct for the planned release
-          - [ ] Set \`community_category_id:\` in \`src/data/adventures/${SLUG}/adventure.yaml\` (look up at https://community.offon.dev/categories.json), then run \`npm run generate\`
-          - [ ] Update \`rewards.deadline:\` from \`TODO\` to ISO 8601 (e.g. \`2026-07-01T23:59:00+01:00\`)
+          - [ ] Set \`community_category_id:\` in \`src/data/adventures/${SLUG}/adventure.yaml\` (look up at https://community.offon.dev/categories.json)          - [ ] Update \`rewards.deadline:\` from \`TODO\` to ISO 8601 (e.g. \`2026-07-01T23:59:00+01:00\`)
           - [ ] Review \`topics:\` on each level, auto-set to all adventure tags, refine to level-specific subset if needed
           - [ ] Update \`discussion_url:\` in each level once the Discourse threads are created
           - [ ] Update \`discussionUrl\` in each \`*-posts.json\` stub
 
           ### Manual steps (only if needed)
 
-          - [ ] If a level's \`architecture_diagram\` SVG was not auto-fetched (check the sync logs for a warning), add the SVG manually to \`src/assets/diagrams/\` and add \`architecture_diagram: <file>.svg\` to that level in \`adventure.yaml\`, then run \`npm run generate\`
-          - [ ] If a level has an \`architecture_diagram\` but no \`diagram_alt\`, add \`diagram_alt:\` to that level in \`adventure.yaml\` with a one-sentence description of the diagram, then run \`npm run generate\`
-          - [ ] Run \`node scripts/refresh-leaderboard.mjs\` after \`community_category_id\` is set
+          - [ ] If a level's \`architecture_diagram\` SVG was not auto-fetched (check the sync logs for a warning), add the SVG manually to \`src/assets/diagrams/\` and add \`architecture_diagram: <file>.svg\` to that level in \`adventure.yaml\`          - [ ] If a level has an \`architecture_diagram\` but no \`diagram_alt\`, add \`diagram_alt:\` to that level in \`adventure.yaml\` with a one-sentence description of the diagram          - [ ] Run \`node scripts/refresh-leaderboard.mjs\` after \`community_category_id\` is set
           - [ ] Run \`node scripts/refresh-discussions.mjs\` after \`discussionUrl\` values are set
 
-          ### Auto-generated (do not edit by hand)
+          ### Routes & sitemap
 
-          The following are kept in sync with \`adventure.yaml\` by \`npm run generate\` (prebuild hook):
-          - \`public/sitemap.xml\` (GENERATED:adventures region)
-          - \`react-router.config.ts\` prerender (GENERATED:adventures region)
-          - \`e2e/smoke.spec.ts\` and \`src/test/seo.test.ts\` route arrays
-          - \`src/test/prerender.test.ts\` pages array
-          - \`scripts/refresh-leaderboard.mjs\` ADVENTURE_CATEGORIES
+          Routes are generated from \`adventure.yaml\` by the Astro content collection
+          at build time (\`getStaticPaths\`) — there is nothing to regenerate or commit.
+          Only \`scripts/refresh-leaderboard.mjs\` ADVENTURE_CATEGORIES is hand-maintained.
 
           ### Checks
 
           \`\`\`sh
-          npm run lint && npm test && npm run build && npm run test:e2e
+          npm run sync && npm run build && npm run test:e2e
           \`\`\`
           EOF
           fi
