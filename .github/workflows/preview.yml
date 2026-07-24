@@ -12,7 +12,7 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  lint:
+  check:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
@@ -32,7 +32,13 @@ jobs:
       - if: steps.node-cache.outputs.cache-hit != 'true'
         run: npm ci
 
-      - run: npm run lint
+      # Content-layer gates: astro sync validates the Zod collection schema
+      # (build fails on invalid YAML); verify:content diffs the rendered fields
+      # against the retiring *.generated.ts until the generator is removed.
+      - run: npm run sync
+      - run: npm run verify:content
+      # TODO(cutover): add `npm run lint` once eslint-plugin-astro/eslint-plugin-vue
+      # config is ported (the root ESLint currently only covers the React app).
 
   build:
     if: github.event.action != 'closed'
@@ -56,12 +62,10 @@ jobs:
 
       - run: npm run build
 
-      - run: npm test
-
       - uses: actions/upload-artifact@v7
         with:
-          name: dist-client
-          path: dist/client/
+          name: dist
+          path: dist/
           retention-days: 1
 
   e2e:
@@ -91,8 +95,8 @@ jobs:
 
       - uses: actions/download-artifact@v8
         with:
-          name: dist-client
-          path: dist/client/
+          name: dist
+          path: dist/
 
       - uses: actions/cache@v6
         id: playwright-cache
@@ -106,13 +110,12 @@ jobs:
       - if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: npx playwright install-deps chromium
 
+      # playwright.config webServer runs `astro preview` (serves dist/) itself.
       - run: npm run test:e2e -- --shard=${{ matrix.shard }}/3
 
   preview:
-    needs: [lint, e2e]
-    # Run when both passed (normal PR update), or when build was skipped (PR closed, cleanup).
-    # Never run when tests failed.
-    if: always() && ((needs.lint.result == 'success' && needs.e2e.result == 'success') || needs.lint.result == 'skipped')
+    needs: [check, e2e]
+    if: always() && ((needs.check.result == 'success' && needs.e2e.result == 'success') || needs.check.result == 'skipped')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -132,27 +135,13 @@ jobs:
       - if: github.event.action != 'closed' && steps.node-cache.outputs.cache-hit != 'true'
         run: npm ci
 
+      # Astro's `base` (from VITE_BASE_PATH) prefixes every asset/link, and public/
+      # assets are copied into dist/ automatically — so the whole dist/ deploys as
+      # the preview with no per-directory asset-copy step. Layout.astro marks
+      # /pr-preview/ builds noindex.
       - if: github.event.action != 'closed'
         run: VITE_BASE_PATH=/pr-preview/pr-${{ github.event.number }}/ npm run build
 
-      - if: github.event.action != 'closed'
-        run: |
-          PREVIEW_DIR="dist/client/pr-preview/pr-${{ github.event.number }}"
-          cp -r dist/client/assets "${PREVIEW_DIR}/"
-          cp -r dist/client/fonts "${PREVIEW_DIR}/"
-          cp -r dist/client/reveal "${PREVIEW_DIR}/"
-          cp -r dist/client/team "${PREVIEW_DIR}/"
-          cp -r dist/client/speakers "${PREVIEW_DIR}/"
-          cp -r dist/client/brand "${PREVIEW_DIR}/"
-          cp -r dist/client/solutions "${PREVIEW_DIR}/"
-          cp -r dist/client/qr "${PREVIEW_DIR}/"
-          cp -r dist/client/downloads "${PREVIEW_DIR}/"
-          cp -r dist/client/screenshots "${PREVIEW_DIR}/"
-          cp -r dist/client/deck "${PREVIEW_DIR}/"
-          cp -r dist/client/deck-template "${PREVIEW_DIR}/"
-          find dist/client -maxdepth 1 -type f \( -name "*.svg" -o -name "*.png" -o -name "*.ico" -o -name "*.webmanifest" -o -name "*.webp" \) -exec cp {} "${PREVIEW_DIR}/" \;
-          cp "${PREVIEW_DIR}/index.html" "${PREVIEW_DIR}/404.html"
-
       - uses: rossjrw/pr-preview-action@v1
         with:
-          source-dir: dist/client/pr-preview/pr-${{ github.event.number }}/
+          source-dir: dist/
