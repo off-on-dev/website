@@ -5,9 +5,7 @@ on:
     paths:
       - 'src/data/adventures/**'
       - 'src/data/solutions/**'
-      - 'react-router.config.ts'
-      - 'public/sitemap.xml'
-      - 'schemas/adventure.schema.json'
+      - 'src/content.config.ts'
 
 permissions:
   contents: read
@@ -37,110 +35,39 @@ jobs:
       - if: steps.node-cache.outputs.cache-hit != 'true'
         run: npm ci
 
-      - name: Validate YAML schema
-        run: node scripts/generate-adventures.mjs --validate-only
-
-      - name: Validate solution index is up-to-date
-        run: node scripts/generate-solutions.mjs --validate-only
-
-      - name: Verify generated files are up-to-date
-        run: |
-          node scripts/generate-adventures.mjs
-          node scripts/generate-solutions.mjs
-          GENERATED_PATHS=(
-            src/data/adventures/
-            src/data/solutions/index.ts
-            src/data/solutions/manifest.ts
-            public/llms.txt
-            public/sitemap.xml
-            react-router.config.ts
-            scripts/refresh-leaderboard.mjs
-            e2e/smoke.spec.ts
-            src/test/seo.test.ts
-            src/test/prerender.test.ts
-          )
-          if ! git diff --quiet "${GENERATED_PATHS[@]}"; then
-            echo "❌ Generated files are out of date. Run 'npm run generate' and 'npm run generate:solutions' and commit the result."
-            git diff --stat "${GENERATED_PATHS[@]}"
-            exit 1
-          fi
+      # astro sync loads the content collection and runs the Zod schema over every
+      # adventure.yaml. Invalid YAML (unknown field, bad enum, missing required)
+      # fails here — this replaces the old ajv `generate-adventures.mjs --validate-only`.
+      - name: Validate adventure YAML (Zod content schema)
+        run: npm run sync
 
       - name: Validate adventure consistency
         run: |
           set -euo pipefail
-
           ERRORS=0
-
-          # Extract adventure IDs from YAML files
           for adventure_dir in src/data/adventures/*/; do
             adventure_id=$(basename "$adventure_dir")
-
-            # Skip if no adventure.yaml
-            if [[ ! -f "$adventure_dir/adventure.yaml" ]]; then
-              continue
-            fi
-
+            [[ -f "$adventure_dir/adventure.yaml" ]] || continue
             echo "Checking adventure: $adventure_id"
 
-            # Check generated TS file exists
-            if [[ ! -f "src/data/adventures/$adventure_id.generated.ts" ]]; then
-              echo "  ❌ Missing generated file: src/data/adventures/$adventure_id.generated.ts"
-              ERRORS=$((ERRORS + 1))
-            fi
-
-            # Check adventure is imported in index.ts
-            if ! grep -q "from \"./$adventure_id.generated\"" src/data/adventures/index.ts; then
-              echo "  ❌ Not imported in index.ts"
-              ERRORS=$((ERRORS + 1))
-            fi
-
-            # Extract live level IDs only (under `levels:`, not `upcoming_levels:`)
+            # Live level IDs (under `levels:`, not `upcoming_levels:`)
             level_ids=$(awk '/^levels:/{s=1;next} /^[a-z]/{s=0} s && /- level:/{gsub(/.*- level: /,""); gsub(/"/,""); print}' "$adventure_dir/adventure.yaml" || true)
 
-            # Check adventure landing page in prerender
-            if ! grep -q "\"/adventures/$adventure_id\"" react-router.config.ts; then
-              echo "  ❌ /adventures/$adventure_id missing from prerender in react-router.config.ts"
-              ERRORS=$((ERRORS + 1))
-            fi
-
-            # Check adventure landing page in sitemap
-            if ! grep -q "offon.dev/adventures/$adventure_id/" public/sitemap.xml; then
-              echo "  ❌ /adventures/$adventure_id/ missing from sitemap.xml"
-              ERRORS=$((ERRORS + 1))
-            fi
-
-            # Check each level
             for level_id in $level_ids; do
-              # Discussion JSON exists
-              if [[ ! -f "src/data/adventures/$adventure_id/$level_id-posts.json" ]]; then
-                echo "  ❌ Missing discussion JSON: src/data/adventures/$adventure_id/$level_id-posts.json"
-                ERRORS=$((ERRORS + 1))
-              fi
-
-              # Prerender entry exists
-              if ! grep -q "\"/adventures/$adventure_id/levels/$level_id\"" react-router.config.ts; then
-                echo "  ❌ /adventures/$adventure_id/levels/$level_id missing from prerender"
-                ERRORS=$((ERRORS + 1))
-              fi
-
-              # Sitemap entry exists
-              if ! grep -q "offon.dev/adventures/$adventure_id/levels/$level_id/" public/sitemap.xml; then
-                echo "  ❌ /adventures/$adventure_id/levels/$level_id/ missing from sitemap.xml"
+              # A discussion JSON file must exist for each live level.
+              if [[ ! -f "$adventure_dir/$level_id-posts.json" ]]; then
+                echo "  ❌ Missing discussion JSON: $adventure_dir$level_id-posts.json"
                 ERRORS=$((ERRORS + 1))
               fi
             done
-
             echo "  ✓ Done"
           done
-
           if [[ $ERRORS -gt 0 ]]; then
             echo ""
-            echo "❌ Found $ERRORS consistency error(s). Run 'npm run generate' to regenerate route/sitemap/prerender regions, or re-run the Sync Adventure workflow."
+            echo "❌ Found $ERRORS consistency error(s)."
             exit 1
-          else
-            echo ""
-            echo "✓ All adventures are consistent."
           fi
+          echo "✓ All adventures are consistent."
 
       - name: Verify all adventures are registered in ADVENTURE_CATEGORIES
         run: |
@@ -148,9 +75,7 @@ jobs:
           ERRORS=0
           for adventure_dir in src/data/adventures/*/; do
             adventure_id=$(basename "$adventure_dir")
-            if [[ ! -f "$adventure_dir/adventure.yaml" ]]; then
-              continue
-            fi
+            [[ -f "$adventure_dir/adventure.yaml" ]] || continue
             if ! grep -q "\"$adventure_id\"" scripts/refresh-leaderboard.mjs; then
               echo "❌ '$adventure_id' is missing from ADVENTURE_CATEGORIES in scripts/refresh-leaderboard.mjs"
               ERRORS=$((ERRORS + 1))
@@ -160,6 +85,5 @@ jobs:
             echo ""
             echo "❌ Add missing adventure IDs to ADVENTURE_CATEGORIES in scripts/refresh-leaderboard.mjs before merging."
             exit 1
-          else
-            echo "✓ All adventure IDs are registered in ADVENTURE_CATEGORIES."
           fi
+          echo "✓ All adventure IDs are registered in ADVENTURE_CATEGORIES."
