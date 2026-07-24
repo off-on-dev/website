@@ -6,6 +6,7 @@
       "avatarUrl": "https://community.offon.dev/letter_avatar_proxy/v4/letter/a/b5a626/40.png",
       "cooked": "Thanks for the challenge.",
       "created_at": "2026-07-23T03:21:26.038Z",
+      "challengeSolved": true,
       "topicUrl": "https://community.offon.dev/t/trace-a-silent-failure-across-your-delivery-pipeline-july-2026-adventure-expert/1671"
     },
     {
@@ -43,6 +44,11 @@
       "username": "iw4p",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
       "solvedAt": "2026-07-22T18:12:32.820Z"
+    },
+    {
+      "username": "alvin",
+      "avatarUrl": "https://community.offon.dev/letter_avatar_proxy/v4/letter/a/b5a626/40.png",
+      "solvedAt": "2026-07-23T03:21:26.038Z"
     }
   ]
 }
