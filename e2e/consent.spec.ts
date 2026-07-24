@@ -85,6 +85,22 @@ test.describe("consent: gated load", () => {
     await expect(cookieButton(page)).toBeVisible();
   });
 
+  test("clicks are tracked only after consent is granted", async ({ page }) => {
+    await page.goto("/");
+    await page.waitForLoadState("load");
+    const themeToggle = page.getByRole("button", { name: /switch to (light|dark) mode/i });
+    const clickEvents = () =>
+      page.evaluate(() => (window.dataLayer ?? []).filter((a: unknown[]) => a[1] === "click_event").length);
+
+    // Before consent: clicking a (non-navigating) button records nothing.
+    await themeToggle.click();
+    expect(await clickEvents()).toBe(0);
+
+    await page.getByRole("button", { name: "Accept" }).click();
+    await themeToggle.click();
+    expect(await clickEvents()).toBeGreaterThan(0);
+  });
+
   test("stored denied stays silent (no gtag.js, no banner)", async ({ page }) => {
     await page.addInitScript((key) => {
       localStorage.setItem(key, JSON.stringify({ value: "denied", timestamp: Date.now() }));

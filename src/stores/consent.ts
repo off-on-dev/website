@@ -140,3 +140,26 @@ export function firePageView(): void {
     page_title: document.title,
   });
 }
+
+// Delegated click tracking, gated on consent at click time. Registered once
+// (the consent island is transition:persist), so it survives View Transitions.
+let clickTrackerBound = false;
+export function trackClicks(): void {
+  if (clickTrackerBound) return;
+  clickTrackerBound = true;
+  document.addEventListener(
+    "click",
+    (e) => {
+      if ($consent.get() !== "granted" || typeof window.gtag !== "function") return;
+      const target = e.target as HTMLElement | null;
+      const el = target?.closest?.("a[href], button");
+      if (!el) return;
+      window.gtag("event", "click_event", {
+        element: el.tagName.toLowerCase(),
+        link_text: (el.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 100),
+        ...(el.tagName === "A" ? { link_url: (el as HTMLAnchorElement).href } : {}),
+      });
+    },
+    { capture: true },
+  );
+}

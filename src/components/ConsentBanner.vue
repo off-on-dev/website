@@ -2,17 +2,18 @@
 import { onMounted } from "vue";
 import { useStore } from "@nanostores/vue";
 import { Cookie } from "lucide-vue-next";
-import { $consent, grant, deny, reset, initConsent, firePageView } from "@/stores/consent";
+import { $consent, grant, deny, reset, initConsent, firePageView, trackClicks } from "@/stores/consent";
 
 const consent = useStore($consent);
 
 // Hydration-safe: SSR + first client render show the banner (consent === null,
 // matching the store default). initConsent() restores the stored decision / GPC
 // state after mount. The island is transition:persist, so this runs once and the
-// astro:page-load listener persists across client navigations.
+// astro:page-load / click listeners persist across client navigations.
 onMounted(() => {
   initConsent();
   document.addEventListener("astro:page-load", firePageView);
+  trackClicks();
 });
 </script>
 
