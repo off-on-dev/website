@@ -15,45 +15,35 @@ Project-level Claude Code commands live in `.claude/commands/`. Invoke them with
 | &nbsp;&nbsp;`/navigation` | Sub-command: working on nav components — primary nav, skip links, breadcrumbs, pagination, mobile menus. |
 | &nbsp;&nbsp;`/progressive-enhancement` | Sub-command: building any new feature or reviewing architecture. Ensures core content works without JS. |
 | &nbsp;&nbsp;`/user-personalization` | Sub-command: working on theme toggle, consent state, or any user preference persistence. |
-| `/add-solution` | Generate a structured TypeScript solution file from any input format (md, YAML, HTML, plain text). Downloads and converts images to WebP. |
-| `/create-presentation` | Create a presentation deck for an OffOn event or challenge. Supports two formats: Reveal.js HTML (`public/deck-template/index.html`) and editable PowerPoint PPTX (edit and run `.claude/templates/generate-pptx.mjs`). Reveal.js output goes to `public/<event-slug>/index.html`; PPTX outputs to `public/downloads/offon-deck-template.pptx`. |
+| `/add-solution` | Generate a structured TypeScript solution file (`src/data/solutions/<id>/<level>.ts`) from any input format. Downloads and converts images to WebP. Solutions are pre-built TS objects loaded by the app; there is no generator step. |
+| `/create-presentation` | Create a presentation deck for an OffOn event or challenge. Reveal.js HTML or editable PPTX. Output goes to `public/<event-slug>/index.html` or `public/downloads/`. |
 
-The `spec-first-coding` command is installed globally (`~/.claude/skills/`) and is not in this repo. It enforces W3C spec citations before generating any accessibility-related code.
-
-Use `/a11y-audit` for all accessibility audits in this repo. The four sub-commands can also be invoked directly when working in their specific domain.
-
----
-
-## Icons
-
-- Always use **lucide-react** for all icons. Do not add any other icon library.
-- Decorative icons next to visible text: `aria-hidden="true"`, no `aria-label`.
-- Icon-only interactive elements: add `aria-label` to the parent element, do not use `aria-hidden`.
-- When placing an icon next to text in a link or button, always add `inline-flex items-center gap-1` to the container. A lone icon inside a plain `inline` element drops below the text baseline.
-- See the Icons section of `styleguide.md` for the full icon map, size conventions, and current usage.
-- **Brand/social icon exception:** Official brand SVGs (e.g. the LinkedIn "in" mark) are exempt from the lucide-react-only rule when no equivalent exists in lucide-react. Place the SVG inline, set `aria-hidden="true"` on the `<svg>` element, and put `aria-label` on the parent interactive element. Use `fill="currentColor"` so hover and theme color changes apply. Document every brand SVG addition in the Icon map table in `styleguide.md`. Current exceptions: LinkedIn icon in `Footer.tsx`.
+The `spec-first-coding` command is installed globally (`~/.claude/skills/`). Use `/a11y-audit` for all accessibility audits.
 
 ---
 
 ## Project Overview
 
-**offon.dev** is the main website for OffOn, a platform for open source enthusiasts.
-It is fully static with no backend and no database. Pages are prerendered at build time using React Router v8 framework mode (`ssr: false`).
+**offon.dev** is the main website for OffOn, a platform for open source enthusiasts. It is fully static with no backend and no database. Pages are prerendered at build time by **Astro** (`output: 'static'`); interactivity is layered on as **Vue islands**.
 
-Community activity happens on a separate Discourse instance. Its display name is **community.offon.dev**, but the real URL is managed via the `COMMUNITY_URL` constant in `src/data/constants.ts`. Do not hardcode it. Do not attempt to replicate or integrate Discourse functionality here.
+> This project was migrated from React Router v8 to Astro + Vue. If you find a reference to `root.tsx`, `entry.server`, `routes.ts`, `*.generated.ts`, `useConsent`, `useTheme`, or `scripts/generate-adventures.mjs`, it is stale — those no longer exist.
+
+Community activity happens on a separate Discourse instance (display name **community.offon.dev**). Use the `COMMUNITY_URL` constant from `src/lib/site.ts`; never hardcode it. Do not replicate or integrate Discourse functionality here.
 
 ---
 
 ## Stack
 
-- **Framework:** React 19 with TypeScript, bundled via Vite. Check `package.json` for current versions.
-- **Styling:** Tailwind CSS 4, configured CSS-first via `src/index.css` (`@theme` block). There is no `tailwind.config.ts`; it was deleted as part of the Tailwind 4 migration.
-- **Components:** Minimal shadcn/ui surface. `src/components/ui/` contains only `badge.tsx` and `tooltip.tsx`. Most Radix UI packages were intentionally removed.
-- **Routing:** React Router v8 framework mode (static prerendering with `ssr: false`)
-- **Testing:** Vitest + @testing-library/react (unit/component); Playwright (smoke tests in `e2e/`)
-- **Hosting:** GitHub Pages
-- **PR previews:** pr-preview-action
-- **Node.js:** 26 is required. Version is pinned in `.nvmrc`. Run `nvm use` to switch automatically.
+- **Framework:** Astro 7 (static output), TypeScript. Check `package.json` for versions.
+- **Interactivity:** Vue 3 islands via `@astrojs/vue`, hydrated with `client:*` directives. Shared cross-island state uses **nanostores** (`src/stores/`).
+- **Styling:** Tailwind CSS 4, CSS-first via `src/styles/index.css` (`@theme` block) and the `@tailwindcss/vite` plugin. No `tailwind.config.ts`.
+- **Icons:** `astro-icon` (lucide set) in `.astro`; `lucide-vue-next` in `.vue` islands.
+- **UI primitives:** Reka UI (`reka-ui`) for the tooltip. There is no shadcn surface.
+- **Content:** Astro Content Collections (Zod-validated) over authored YAML. See "Content collection".
+- **Routing:** Astro file-based routing + `getStaticPaths()`. Trailing slashes always.
+- **Testing:** Playwright + `@axe-core/playwright` in `e2e/` (a11y + SEO/smoke/hydration).
+- **Hosting:** GitHub Pages. **PR previews:** `rossjrw/pr-preview-action`.
+- **Node.js:** 26 (pinned in `.nvmrc`; `nvm use`).
 
 ---
 
@@ -63,28 +53,27 @@ Community activity happens on a separate Discourse instance. Its display name is
 
 | Thing | Convention | Example |
 | --- | --- | --- |
-| Component files and exports | PascalCase | `FilteredLevelCard.tsx`, `export const FilteredLevelCard` |
-| Hook files and exports | camelCase, `use` prefix | `useTheme.tsx`, `export function useTheme` |
-| Module-level constants from static data | SCREAMING_SNAKE_CASE | `ADVENTURES`, `ALL_TAGS` |
-| Route segments | kebab-case | `community-guide`, `adventure-detail` |
+| Astro components / pages | PascalCase files (components), kebab or `[param]` (pages) | `AdventureCard.astro`, `adventures/[id].astro` |
+| Vue island components | PascalCase | `ThemeToggle.vue`, `ChallengesFilter.vue` |
+| nanostores | camelCase file, `$`-prefixed export | `stores/theme.ts` → `$theme` |
+| Module-level constants | SCREAMING_SNAKE_CASE | `BRAND_NAME`, `DIFFICULTIES` |
+| Route segments | kebab-case | `presentation-templates`, `handbook` |
 
 ### What lives where
 
-- Logic derived from `ADVENTURES` belongs in `src/data/adventures/index.ts`, exported, and imported everywhere. Do not re-derive it in component files.
-- Reusable card or list markup belongs in `src/components/`, not duplicated inline. Extract before the second copy appears.
-- Redirect routes that share a destination share a single file in `src/pages/redirects/`. The filename describes the destination, not the source (e.g. `HandbookRedirect.tsx`).
+- Adventure data is derived from the `adventures` content collection (`getCollection('adventures')`). Do not re-derive collection logic ad hoc in pages; put shared derivations in `src/lib/` (e.g. `challenges.ts`, `adventure-derive.mjs`).
+- Reusable markup belongs in `src/components/` (`.astro` for static, `.vue` for islands). Extract before the second copy appears.
+- Retired URLs are handled by the `redirects` map in `astro.config.mjs`, not by page files.
 
 ---
 
 ## URLs and External Organisations
 
-- The canonical domain for this site is <https://offon.dev>.
-- og:url, og:image, and all absolute URLs must use <https://offon.dev>.
-- The og:image file is public/og.png and its full URL is <https://offon.dev/og.png>. Its dimensions are 1200 x 630 px.
-- PR preview deployments are served from the gh-pages branch under /pr-preview/pr-{number}/.
-- The open source challenges content lives in a separate organisation at <https://github.com/off-on-dev/open-source-challenges>. This is an intentional external link and must never be changed or flagged as a violation.
-- The community Discourse instance is at <https://community.offon.dev>. Use the `COMMUNITY_URL` constant from `src/data/constants.ts`, never hardcode this URL.
-- `COMMUNITY_DISPLAY_NAME` is defined in `src/data/constants.ts` as the user-facing display name for the community URL. Use it for visible text, use `COMMUNITY_URL` for href attributes.
+- The canonical domain is <https://offon.dev>. og:url, og:image, and all absolute URLs must use it.
+- The og:image is `public/og.png` (<https://offon.dev/og.png>), 1200 x 630 px.
+- PR previews are served from the gh-pages branch under `/pr-preview/pr-{number}/`.
+- The open source challenges content lives at <https://github.com/off-on-dev/open-source-challenges> (intentional external link; never flag it).
+- The community Discourse instance is <https://community.offon.dev>. Use `COMMUNITY_URL` from `src/lib/site.ts`; never hardcode. Use `COMMUNITY_DISPLAY_NAME` for visible text, `COMMUNITY_URL` for hrefs.
 
 ---
 
@@ -92,42 +81,33 @@ Community activity happens on a separate Discourse instance. Its display name is
 
 ```text
 src/
-  components/   # Reusable UI components (named exports, PascalCase files)
-  pages/        # Route-level page components
-  data/         # Static data files (TypeScript objects/arrays)
-  hooks/        # Custom React hooks
-  lib/          # Shared utilities
-  assets/       # Static assets bundled by Vite
-  Layout.tsx    # App shell: providers, skip nav, scroll-to-top, consent banner, and Outlet
+  pages/          # File-based routes (.astro). Dynamic routes use getStaticPaths().
+    index.astro   # Home
+    adventures/[id].astro, adventures/[id]/levels/[levelId].astro (+/solution.astro)
+    challenges/[...tag].astro, 404.astro, and the static pages
+    _app.ts       # Vue appEntrypoint (island-wide setup)
+  layouts/
+    Layout.astro  # App shell: <head> (SEO, CSP, favicons, theme + GA4 bootstrap, JSON-LD),
+                  # ClientRouter, skip-nav, Navbar, <slot/>, Footer, ConsentBanner
+  components/      # *.astro (static, zero-JS) and *.vue (islands)
+  content.config.ts  # Content collection: Zod schema + custom loader + markdown rendering
+  data/
+    adventures/<id>/adventure.yaml + <level>-posts.json + leaderboard.json
+    adventures/contributors.ts, types.ts
+    solutions/<id>/<level>.ts (pre-built Solution objects), sponsors.ts, team.ts
+  lib/            # markdown-pipeline.mjs, adventure-derive.mjs, community-data.ts,
+                  # solutions.ts, challenges.ts, difficulty.ts, markdown.ts, utils.ts,
+                  # site.ts (constants), level-constants.mjs, deadline.mjs
+  stores/         # nanostores: theme.ts ($theme), consent.ts ($consent + gtag injector)
+  styles/index.css  # Tailwind @theme, component classes, light-mode overrides
+  assets/diagrams/  # Architecture SVGs (imported per-level via import.meta.glob)
 e2e/
-  smoke.spec.ts    # Playwright smoke tests
-  a11y.spec.ts     # Axe-core accessibility audit (dark and light mode)
-  hydration.spec.ts # React hydration checks
-  visual.spec.ts   # Visual regression tests (local only, not run in CI)
-  wsg.spec.ts      # Well-known/agent-skills verification
-public/
-  fonts/        # Self-hosted fonts (Inter, Syne, JetBrains Mono)
-  brand/        # OffOn brand assets (SVG + PNG logos, Nyx illustrations). Referenced by deck/index.html and BrandGuidelines.tsx.
-  team/         # Board member photos (*.webp). Used by BoardSection and deck/index.html host slides. Do not duplicate into src/assets/.
-  speakers/     # Event speaker photos (*.webp). Used by presentation decks only. Speakers are per-event and distinct from board members.
-  solutions/    # Solution walkthrough screenshots, one subdirectory per adventure ID (e.g. solutions/echoes-lost-in-orbit/). Referenced by src/data/solutions/ with absolute paths.
-  reveal/       # Self-hosted Reveal.js 6.0.1 library. Used by deck/index.html, deck-template/index.html, and all generated Reveal.js decks.
-  deck/         # Reveal.js presentation for Open Source Talks events (public/deck/index.html). Served at /deck/. All asset paths use ../ to resolve sibling directories correctly regardless of trailing-slash normalization.
-  deck-template/ # Boilerplate template for /create-presentation (Reveal.js format). Edit deck-template/index.html to update the design system for all future decks. Asset paths use ../ so the file works both from the dev server (/deck-template/) and inside the standalone ZIP.
-  nyx.webp      # Nyx mascot illustration. Referenced in BottomCTA and About via import.meta.env.BASE_URL.
-  nyx_peek.webp # Nyx peek variant. Referenced in About via import.meta.env.BASE_URL.
-.github/
-  workflows/
-    deploy.yml                    # Production deploy to GitHub Pages (push to main)
-    preview.yml                   # PR preview deploy (runs smoke tests before deploying)
-    refresh-community-data.yml    # Hourly discussion and leaderboard data refresh
-    refresh-community-sitemap.yml # Daily community sitemap regeneration
-    sync-adventure.yml            # workflow_dispatch: sync an adventure from the challenges repo
-    validate-adventures.yml       # PR check: validates adventure YAML, routes, and sitemap consistency
-    validate-docs.yml             # PR check: ensures styleguide.md/README.md updated with code changes
-    add-discussion-url.yml        # workflow_dispatch: set discussionUrl for a level and fetch initial posts
-    a11y-scan.yml                 # Scheduled weekly accessibility scan (Monday 08:00 UTC)
-    reuse.yml                     # REUSE licence compliance check on push and PR
+  a11y.spec.ts    # axe (dark/light/forced-colors) + touch targets + focus rings + zoom
+  smoke.spec.ts   # per-route title/canonical/OG/h1 + island hydration
+public/           # copied verbatim to dist/ (fonts, favicons, brand, well-known, decks, etc.)
+astro.config.mjs, tsconfig.json, playwright.config.ts, package.json
+.github/workflows/  # deploy, preview, validate-adventures, sync-adventure,
+                    # add-discussion-url, refresh-community-*, a11y-scan, reuse
 ```
 
 ---
@@ -135,413 +115,190 @@ public/
 ## Commands
 
 ```sh
-nvm use              # Switch to Node 26 (required)
-npm run dev          # Start local dev server (http://localhost:8080)
-npm run build        # Production SSG build (React Router v8) -> dist/client/
-npm run build:dev    # Dev-mode build
-npm run lint         # ESLint
-npm run lint:reuse   # REUSE licence compliance (requires: pip install reuse)
-npm test             # Run tests once (Vitest)
-npm run test:watch   # Tests in watch mode
-npm run test:coverage  # Run tests with v8 coverage (uses @vitest/coverage-v8)
-npm run test:e2e     # Playwright smoke, a11y, hydration, and wsg tests (requires npm run build first)
-npm run test:visual  # Visual regression tests (requires npm run build first)
-npm run test:visual:update  # Update visual baseline screenshots
-npm run preview      # Copy 404 fallback and serve the production build locally
-npm run generate     # Regenerate TypeScript from adventure YAML files
-npm run generate:validate  # Validate YAML against schema without writing files
-npm run generate:solutions  # Regenerate solution barrel index from src/data/solutions/
-npm run generate:solutions:validate  # Validate solution files without writing the barrel index
+nvm use              # Node 26
+npm run dev          # Astro dev server (http://localhost:4321)
+npm run build        # Static build -> dist/
+npm run preview      # Serve the built dist/ (astro preview)
+npm run sync         # astro sync — runs the Zod content schema; fails on invalid adventure YAML
+npm run test:e2e     # Playwright (a11y + smoke). Runs `astro preview` itself; no separate build needed
+npm run lint:reuse   # REUSE licence compliance (requires: pip install reuse)  [if present]
 
-npx shadcn@latest add <component>   # Add a shadcn/ui component
-
-# Regenerate downloadable presentation ZIPs and PPTX (run from repo root)
+# Presentation templates (unchanged; run from repo root)
 node .claude/templates/generate-reveal-zip.mjs   # → public/downloads/offon-reveal-template.zip
 node .claude/templates/generate-pptx.mjs         # → public/downloads/offon-deck-template.pptx
 ```
+
+There is **no** content generator, `npm run generate`, or `*.generated.ts` — routes and rendered prose come from the content collection at build time.
 
 ---
 
 ## Code Quality
 
-- Use explicit return types on all functions and components.
-- Prefer named exports for components.
-- Keep components small and single-responsibility.
-- Functions must have a single responsibility. If a function requires more than one level of conditional nesting to describe in plain language, split it.
-- Use functional components with hooks only. No class components.
-- Prefer `const` over `let`, never `var`.
-- Use async/await over promise chains. Always handle errors explicitly.
-- Never leave unused imports, variables, or dead code.
-- Write self-documenting code. Add comments only for non-obvious logic.
+- Explicit return types on functions and helpers.
+- Keep components small and single-responsibility. Split a function that needs more than one level of conditional nesting to describe.
+- Prefer `const`; never `var`. Use async/await; handle errors explicitly.
+- Never leave unused imports, variables, or dead code. Self-documenting code; comment only non-obvious logic.
 
 ---
 
 ## Stability Rules
 
 - Never remove or rename existing exports without checking all usages first.
-- Never change a component's props interface without updating all call sites.
+- Never change a component's props without updating all call sites.
 - Never delete files without confirming they are unused.
 - When refactoring, change one thing at a time. Do not mix refactors with feature changes.
-- Always verify no TypeScript errors after making changes.
-- Prefer extending existing components over rewriting them.
-- If a change could break something, flag it explicitly before proceeding.
+- Always verify the build (`npm run build`) has no TypeScript errors after changes.
+- Prefer extending existing components over rewriting them. Flag risky changes before proceeding.
 
 ---
 
 ## Debugging Rules
 
-When diagnosing a bug, especially in the production build, follow these rules without exception. They exist to prevent debugging by accumulation.
-
 ### Evidence rules
 
-- Never claim a fix worked based on source inspection alone. The only signal that counts is the expected behavior observed in a real browser against the current bundle hash.
-- Before acting on any error message, verify the error came from the current build. Compare the bundle hash in the error stack trace (e.g. `index-XXXX.js`) against the latest build output. If they differ, the browser is serving cached code and the error is stale.
-- Before acting on any diagnostic output, state what evidence supports the conclusion. "Only X was left in the DOM" is not evidence of what the DOM looked like at error time. React's error recovery can tear down the tree before the diagnostic runs.
-- When a grep claims to confirm something, verify the grep pattern is specific enough to exclude false positives. Strings like "hydrateRoot" exist in production React too, so their presence proves nothing about whether the build is minified.
+- Never claim a fix worked from source inspection alone. The only signal that counts is the expected behaviour observed in a real browser against the current build (`npm run build && npm run preview`).
+- Before acting on any error, verify it came from the current build. Astro emits hashed asset names (`_astro/*.js`); a stale hash means the browser is serving cached code.
+- Before acting on diagnostic output, state what evidence supports the conclusion.
+- When a grep claims to confirm something, verify the pattern excludes false positives. `::after` and other pseudo-elements are invisible to `querySelectorAll('*')` — layout/overflow bugs can hide there.
 
 ### One-fix-at-a-time rule
 
-- Never stack fixes. One change, rebuild, verify in a real browser, then the next. If you apply two fixes before verifying, you cannot tell which one worked or if either did.
-- Commit after every verified fix. Each commit should have a clear before/after.
-- If the same bug has been "fixed" more than once in a session and still reproduces, stop. The diagnosis is wrong. Go back to first principles.
+- Never stack fixes. One change, rebuild, verify, then the next. Commit after every verified fix.
+- If the same bug has been "fixed" more than once in a session and still reproduces, stop and go back to first principles.
 
-### Build cache rules
+### Server / cache rules
 
-- Always run `rm -rf dist node_modules/.vite` before any rebuild you intend to verify against. Vite's cache can silently produce stale output.
-- After rebuilding, always compare the new bundle hash to the previous one. If the hash is identical, the cache was reused. Clear it and rebuild.
-
-### Getting unminified React errors
-
-- The `--mode development` flag alone does not produce a dev React build with Vite's React plugin. Proof: a dev React bundle is roughly 1.4 MB; a production bundle is roughly 330 KB.
-- To force a dev React build, add to vite.config.ts inside defineConfig:
-    define: { 'process.env.NODE_ENV': JSON.stringify('development') },
-    build: { minify: false, sourcemap: true }
-- Verify the dev build actually happened: `ls -lh dist/assets/index-*.js`. Size should be ~1.4 MB, not ~330 KB.
-- Revert this change before merging to main.
+- Playwright's webServer uses `reuseExistingServer: false`; kill any stray `astro dev`/`astro preview` on port 4321 before running tests (a lingering **dev** server has the dev toolbar, which fails focus-ring tests).
+- If a build looks stale, `rm -rf dist .astro` and rebuild.
 
 ---
 
 ## TypeScript
 
-- `noImplicitAny: false` and `strictNullChecks: false` are intentional. Do not change them.
-- Avoid `any` in new code. Use proper types or `unknown` with narrowing.
-- Never use `@ts-ignore`.
-- Use `@/*` path alias for all imports from `src/`: e.g. `import { cn } from "@/lib/utils"`.
-- Prefer `type` over `interface` for object shapes.
+- Use the `@/*` path alias for imports from `src/`: `import { BRAND_NAME } from "@/lib/site"`.
+- Astro components declare props with `interface Props { ... }` and `Astro.props`. In plain `.ts` prefer `type` for object shapes.
+- Avoid `any`; use `unknown` with narrowing. Never `@ts-ignore`. `tsconfig.json` extends `astro/tsconfigs/strict`.
 
 ---
 
 ## Components
 
-- Always check `src/components/ui/` before building a new primitive.
-- `src/components/ui/` contains two files: `badge.tsx` and `tooltip.tsx`. Adding a new shadcn component requires an immediate use case in the same PR. Unused components are removed. To add one: `npx shadcn@latest add <component>`.
-- Never modify files inside `src/components/ui/` directly. Extend or wrap them in `src/components/`.
-- Page-level components go in `src/pages/`. Reusable components go in `src/components/`.
-- Extract sub-components into `src/components/` rather than nesting them inline.
-- Do not duplicate card or list markup across components. If the same JSX structure appears in two places, extract a shared component. `FilteredLevelCard` is the established pattern.
-- **Buttons:** use raw `<button>` elements with the CSS utility classes defined in `src/index.css` (`.btn-primary`, `.btn-ghost`, `.btn-soft`, `.btn-inverse`, `.btn-ghost-inverse`). There is no `Button` component wrapper and no `@radix-ui/react-slot` dependency. See `styleguide.md` for which class to use on which background color.
-- **Toasts:** if toast notifications are ever needed, install `sonner` and add `src/components/ui/sonner.tsx` (shadcn pattern). Mount `<Toaster>` in the nearest layout that actually triggers a toast. Do not install speculatively.
-- **TooltipProvider** is intentionally not mounted in `Layout.tsx` until a call site exists. Wrap only the subtree that uses `<Tooltip>` with `<TooltipProvider>` at that point.
-- **Author-controlled prose fields contain pre-rendered HTML.** Every YAML/TS field that holds prose written by a challenge author (`level.audience`, `tool.description`, `step.title`, `step.content`, `contributor.about`, `rewards.eligibility`, `tier.description`, `rewards.rankingNote`, `level.learnings`, `level.objective`, `level.intro`, `level.backstory`, `level.scenario`, `level.architecture`, `adventure.story`, `adventure.backstory`) is converted from Markdown to sanitised HTML at build time by `scripts/generate-adventures.mjs`. Always render them with `dangerouslySetInnerHTML={{ __html: value }}` and the `md-inline` (inline prose) or `md-content` (block content) CSS class. Never render as `{value}` directly. Identifier fields (`id`, URLs, enum values like `difficulty`, emoji) are not author prose and are rendered directly.
-  - **When the container is an interactive element** (e.g. a `<Link>` card or a `<button>`), call `stripLinks(html)` from `src/lib/markdown.ts` before passing to `dangerouslySetInnerHTML` to prevent nested `<a>` inside `<a>` or `<button>`, which is invalid HTML.
-  - **When placing a prose HTML field in a plain-text context** (e.g. a `<meta content="">` attribute), call `stripHtml(html)` from `src/lib/markdown.ts`. This strips tags *and* decodes HTML entities. Using a bare tag-strip regex leaves entities intact; React then double-encodes them in the attribute value (e.g. `&amp;` → `&amp;amp;`).
-  - **Exception: `adventure.story` in `AdventureCard` and `summaries.ts`:** The summary card and `ADVENTURE_SUMMARIES` store `story` as plain text (no HTML) so the home page renders it as a plain `<span>` with no markdown overhead. The generator emits a build-time warning if any story value contains markdown syntax (`*`, `_`, `` ` ``). Keep story field values as plain prose.
-  - **The markdown pipeline (`unified`, `remark-parse`, `remark-gfm`, `remark-rehype`, `rehype-raw`, `rehype-sanitize`, `rehype-stringify`) is dev-only**, used only by `scripts/generate-adventures.mjs`. Do not import any of these packages in component or page files.
+- Static UI is a `.astro` component (zero JS shipped). Only make something a **Vue island** when it needs client state/interactivity, and hydrate it with the lightest directive that works: `client:visible` / `client:idle` by default, `client:load` only for above-the-fold interactivity (protects the Lighthouse baseline).
+- `.astro` components cannot be rendered inside a `.vue` island. If an island needs a badge/pill/icon, inline the markup and use `lucide-vue-next`.
+- **Buttons:** raw `<button>` with the CSS utility classes in `src/styles/index.css` (`.btn-primary`, `.btn-ghost`, `.btn-soft`, `.btn-inverse`, `.btn-ghost-inverse`). No Button wrapper. See `styleguide.md`.
+- **Touch targets (WCAG 2.5.8):** nav/footer links and any blockified interactive element must be ≥24×24px. Nav links use `min-h-[44px]`, footer links `min-h-[48px]`.
+- **Author-controlled prose is pre-rendered, sanitised HTML.** The content collection converts author markdown fields (`level.audience`, `tool.description`, `step.title`, `step.content`, `contributor.about`, `rewards.eligibility`, `tier.description`, `rewards.rankingNote`, `level.learnings`, `level.objective`, `level.intro`, `level.backstory`, `level.scenario`, `level.architecture`, `adventure.story`, `adventure.backstory`) to sanitised HTML at build time via `src/lib/markdown-pipeline.mjs`. Render with `set:html={value}` and the `md-inline` (inline) or `md-content` (block) class — via `<InlineProse html={...} />`, which picks the wrapper automatically. Never render `{value}` raw.
+  - **Inside an interactive element** (a link card or button): call `stripLinks(html)` from `@/lib/markdown` first, to avoid nested `<a>`/`<button>`.
+  - **Into a plain-text context** (e.g. a meta attribute): call `stripHtml(html)` from `@/lib/markdown` (strips tags and decodes entities).
+  - `adventure.story` is rendered plain in card views (`stripHtml`) to keep card markup light.
+  - The markdown packages (`unified`, `remark-*`, `rehype-*`) are used only by `src/lib/markdown-pipeline.mjs` at build time. Do not import them in pages/components.
 
 ### Component CSS patterns
 
-- `hero-badge` class on the hero pill `<div>` in `Hero.tsx`. It is used for CSS scoping of light mode overrides.
-- `logo-link` class on the Navbar logo `<Link>`. It is used to exclude the logo from nav link hover styles.
-- Footer nav group labels ("explore", "community") use `<p>` with `font-sans font-normal text-xs uppercase tracking-widest text-faint`. Do not use heading elements (`<h2>` etc.) here. The nav groups are already identified by `aria-label`, and heading elements create spurious document-outline entries that disrupt screen reader H-key navigation. Source text must be lowercase because these are overline labels styled with `text-transform: uppercase`.
-- `data-difficulty` attribute on `DifficultyBadge`. It is used for CSS targeting of badge text color.
-- `contributor-pill` class on `ContributorBadge`. Scopes light mode overrides: transparent background with slate border instead of the near-invisible `bg-primary/5`.
-- `contributor-pill-glow` class on `ContributorBadge` (applied via `glow` prop). Static amber box-shadow glow, sized for a small pill. Used only on `ChallengeDetail` -- not in `AdventureCard`.
-- `docs-ext-link` class on all inline prose links site-wide. Bundles `inline-flex`, `align-items: center`, `gap`, `underline`, `decoration-thickness`, `underline-offset`, `border-radius`, focus-visible ring, and color/hover transitions. Handles both modes: dark mode foreground text with amber underline, hover to full `#ffc034`; light mode near-black text with `currentColor` underline, hover to `--link-hover-light` (`hsl(41 100% 22%)` dark amber, ~7.4:1 contrast). Used in `CommunityGuide`, `DiscussionSection`, `CommunitySection`, `LevelCard`, `PersonNameLink`, `ChallengeBuildersSection`, `ChallengeDetail`, `CommunitySidebar`, `RewardsCard`, `Accessibility`, and `Privacy`. Links inside pre-rendered adventure HTML use the `.md-inline a` and `.md-content a` rules in `src/index.css` instead. Do not use `hover:text-primary` or `hover:underline` on inline links, and do not add redundant `inline-flex items-center gap-*` utilities. Use `docs-ext-link` alone, adding only contextual utilities (font-size, weight, margin).
+- `hero-badge` on the Hero pill; `logo-link` on the Navbar logo (excludes it from nav-link hover); `data-difficulty` on `DifficultyBadge`; `contributor-pill` / `contributor-pill-glow` on `ContributorBadge`.
+- Footer nav group labels ("explore", "community") use `<p class="font-sans ... text-faint">`, not headings (they'd create spurious document-outline entries). Source text is lowercase (CSS uppercases).
+- `docs-ext-link` on all inline prose links site-wide (bundles inline-flex, underline, focus ring, and light/dark colour handling). Links inside pre-rendered adventure HTML use the `.md-inline a` / `.md-content a` rules in `index.css`. Do not add redundant `hover:*`/`inline-flex` utilities.
 
 ---
 
-## Data
+## Content collection
 
-- Static content lives in `src/data/` as typed TypeScript objects/arrays.
-- No runtime `fetch` calls in components. All network data must be fetched at build time.
-- **Adventure content pipeline:** Adventure data is authored as YAML files at `src/data/adventures/<id>/adventure.yaml` and compiled to TypeScript via `scripts/generate-adventures.mjs`. The generated files (`*.generated.ts`, `index.ts`, and `summaries.ts`) are committed to the repo. The `prebuild` hook runs the generator automatically before every build. Never edit `*.generated.ts`, `src/data/adventures/index.ts`, or `src/data/adventures/summaries.ts` by hand.
-  - **`summaries.ts` vs `index.ts`:** `summaries.ts` is a lightweight snapshot (id, title, month, story, tags, contributor name, and per-level id/name/difficulty/topics/learnings) with no imports from the full `*.generated.ts` files. Components that only render cards or tag filters (e.g. `ChallengesGrid`, `AdventureCard`, `FilteredLevelCard`) must import from `@/data/adventures/summaries` to avoid pulling the full detail-page data into the home page bundle. Detail pages and components that need full adventure content import from `@/data/adventures`.
-  - **Why YAML + generated TS instead of writing TS directly?** YAML is easier to author and review for non-engineers, and validated by JSON Schema. Vite cannot import YAML natively, so a generator converts it to fully-typed TS that the app can statically import. Committing the generated files means the build works without running the generator first, and CI can detect when generated output is out of sync with the source YAML.
-- **Schema validation:** Adventure YAML files are validated against `schemas/adventure.schema.json` (JSON Schema Draft 2020-12). Run `npm run generate:validate` to check without writing files.
-- **Build-time fetching:** Discussion data lives in per-level JSON files under `src/data/adventures/<adventure-id>/<level-id>-posts.json`. Each file contains only `discussionUrl`, `discussionPosts`, and `totalReplies`. These are refreshed hourly by the GitHub Action in `.github/workflows/refresh-community-data.yml` (runs `scripts/refresh-discussions.mjs`). Components import the JSON dynamically via `import.meta.glob`.
+Authored as YAML at `src/data/adventures/<id>/adventure.yaml`, loaded and validated by `src/content.config.ts`:
+
+- **Custom loader** (not `glob()`): reads the YAML with the `yaml` package. Astro's built-in glob YAML parser auto-casts unquoted ISO timestamps to `Date` objects, corrupting `deadline` fields — the `yaml` package (YAML 1.2 core) keeps them as strings. Digest-gated.
+- **Zod schema** mirrors the old JSON Schema (`.strict()` = fail on unknown fields). `npm run sync` runs it; invalid YAML fails the build.
+- **Markdown fields** are rendered to sanitised HTML in the loader via `mdToInline`/`mdToBlock` (`src/lib/markdown-pipeline.mjs`, which preserves the original abbr-tooltip expansion, external-link annotation, and `rehype-sanitize` posture). `astro:content` returns `entry.data` with HTML fields already rendered.
+- **Field normalization** (title/name, story/backstory[0], icon/emoji, difficulty/emoji, learnings aliases, codespacesUrl, discussionUrl, deadline, rewards defaults, meta descriptions, services→step injection) lives in `src/content.config.ts` + `src/lib/adventure-derive.mjs`.
+- **Discussion + leaderboard** JSON (`<level>-posts.json`, `leaderboard.json`) is read at build time by `src/lib/community-data.ts` (node `fs`, resolved from `process.cwd()`). These render statically — no client fetch. Refreshed hourly by `refresh-community-data.yml`.
+- **Solutions** are pre-built TS objects in `src/data/solutions/<id>/<level>.ts`, loaded via `import.meta.glob` in `src/lib/solutions.ts`. No generation.
+- **No runtime `fetch` in components.** All data is resolved at build time.
+
+Adding an adventure requires only the YAML + per-level `*-posts.json` and registering the id in `ADVENTURE_CATEGORIES` (`scripts/refresh-leaderboard.mjs`). Routes appear automatically via `getStaticPaths()`.
 
 ---
 
 ## Styling
 
-- Use Tailwind utility classes directly on JSX elements.
-- Always check the `@theme` block in `src/index.css` before introducing any new color, font, spacing, or border radius value. Never hardcode these. There is no `tailwind.config.ts`; all theme values live in the `@theme` block in `src/index.css`.
-- Both light and dark mode must work. Use the CSS variable pairs (`bg-background`, `text-foreground`) that shadcn sets up. Never hardcode a color that only works in one mode.
-- Never add a `dark:` override without a corresponding base (light) style.
-- Mobile first. Write base styles for mobile, then add `sm:`, `md:`, `lg:` breakpoints as needed.
-- For font utilities, type scale, component class patterns (buttons, pills, badges, overline labels), and animations, see `styleguide.md`. It is the source of truth. Do not duplicate those details here.
-- Never write custom CSS unless Tailwind genuinely cannot do the job. If you must, add it to `src/index.css` with a comment explaining why.
-- Light mode overrides: do NOT put them inside `@layer base`; rules there are always overridden by `@layer utilities`. Add unlayered rules to the "Light mode overrides" section at the bottom of `src/index.css`, scoped to `.light`.
+- Tailwind utilities directly on elements. Check the `@theme` block in `src/styles/index.css` before adding any colour/font/spacing/radius; never hardcode these.
+- Both light and dark mode must work. Use the CSS variable pairs (`bg-background`, `text-foreground`). Never add a `dark:` override without a base (light) style.
+- Mobile first (`sm:`/`md:`/`lg:`). See `styleguide.md` for the type scale, component classes, and animations (source of truth).
+- **Light mode overrides:** add unlayered rules to the "Light mode overrides" section at the bottom of `index.css`, scoped to `.light` (rules in `@layer base` are overridden by `@layer utilities`).
 
 ### Design system rules
 
-- Light mode uses `.light` class on `<html>`, set by the `useTheme` hook.
-- Yellow `#ffc034` is accent-only in light mode. Never use it as a text color.
-- Dark mode uses `:root` and `.dark`. Never modify these when fixing light mode issues.
-- Tailwind `group-hover:*` and `group-focus:*` utilities are not matched by `.light .classname` selectors. Always add explicit `.light .group:hover` rules in the unlayered light mode overrides section of `src/index.css`.
-- Avatar palette colors must not be used directly as text colors in light mode. They fail contrast on near-white surfaces. Use `hsl(var(--foreground))` as the text color for avatar initials in all modes.
+- Light mode uses `.light` on `<html>`, set by the theme pre-hydration script in `Layout.astro` and the `ThemeToggle` island (backed by the `$theme` nanostore, localStorage key `theme`).
+- Yellow `#ffc034` is accent-only in light mode; never a text colour.
+- Dark mode uses `:root`/`.dark`. Never modify these when fixing light mode.
+- `group-hover:*`/`group-focus:*` are not matched by `.light .classname`; add explicit `.light .group:hover` rules.
 
 ---
 
 ## Accessibility
 
-Read [`ACCESSIBILITY.md`](ACCESSIBILITY.md) before writing or modifying any component. It contains the full contributor checklist, WCAG principle reference, and manual testing requirements.
+Read [`ACCESSIBILITY.md`](ACCESSIBILITY.md) before writing or modifying any component. WCAG 2.2 AA is the floor, not the goal.
 
-The target is not minimum compliance. Every component must be genuinely usable by keyboard-only users, screen reader users, and people with low vision. WCAG 2.2 AA is the floor, not the goal.
+The `e2e/a11y.spec.ts` suite gates every representative route on axe (dark, light, and forced-colors with the full WCAG tag set), touch-target size, focus-ring visibility (dark + light), focus traps, and 200% zoom reflow. Never reduce the axe tag set `["wcag2a","wcag2aa","wcag21a","wcag21aa","wcag22aa","best-practice"]`. Add new routes to `PAGES` in `a11y.spec.ts` and `smoke.spec.ts`.
 
 ---
 
 ## Analytics and Consent
 
-The site uses Google Analytics 4 with **Consent Mode v2 in gated-load mode**. No data of any kind is sent to Google until the user clicks Accept on the cookie banner; the `gtag.js` script itself is not loaded until that point. Cross-domain measurement between `offon.dev` and `community.offon.dev` is configured in the GA4 admin UI, not in this codebase.
+Google Analytics 4 with **Consent Mode v2 in gated-load mode**: no data of any kind is sent to Google until Accept; `gtag.js` is not loaded until then. After Accept, only `analytics_storage` flips to `granted`; the three ad signals stay denied for the site's lifetime.
 
-After Accept, only `analytics_storage` flips to `granted`. The three ad signals (`ad_storage`, `ad_user_data`, `ad_personalization`) stay denied for the lifetime of the site since OffOn does not run Google Ads.
+### Where it lives
 
-### Constants
+- **`Layout.astro`** contains the minimal inline `<head>` bootstrap (`is:inline`): bootstrap `window.dataLayer`, define `window.gtag` as the `dataLayer.push` shim, and `gtag('consent','default',{...})` with all four signals denied. **No** `wait_for_update`, localStorage read, `js`, `config`, or `<script src=...googletagmanager...>`.
+- **`src/stores/consent.ts`** owns the state (a plain nanostore `$consent`, default `null`, so island SSR matches hydration) and the `gtag.js` injector. The injector is shared by Accept and the mount-restore path, gated by a module-scoped `gtagScriptInjected` boolean. On Accept it pushes `consent update` + `js` + `config` synchronously **before** appending the script tag. `config` passes only `cookie_flags: 'SameSite=Lax;Secure'`, `cookie_expires: 15552000`, `send_page_view: false`. The stored format (`{value, timestamp}` + 180-day expiry, key `analytics_consent`) is preserved from the React app.
+- **`src/components/ConsentBanner.vue`** (island, `client:load` + `transition:persist`) renders the banner until a choice is made, then a floating cookie button that calls `reset()`. Keeps `aria-live="polite"`. On mount it calls `initConsent()` (GPC + restore) and registers `firePageView` on `astro:page-load`.
+- **`firePageView`** only fires when `$consent === "granted"` and `gtag` is loaded — never queue events while undecided/denied.
 
-All analytics-related constants live in `src/data/constants.ts`:
+### Consent state machine (enumerate all transitions before touching this code)
 
-| Constant | Purpose |
-| --- | --- |
-| `GA_MEASUREMENT_ID` | GA4 Measurement ID. Used by `useConsent.tsx` only, when it injects `gtag.js` on Accept. The inline bootstrap in `src/root.tsx` does not reference it. |
-| `CONSENT_STORAGE_KEY` | `localStorage` key for the consent decision (`analytics_consent`). |
-| `CONSENT_EXPIRY_MS` | Stored consent expiry (180 days). Re-prompt the user on the next visit after this. |
-| `BRAND_NAME` | Always `"OffOn"`. Never hardcode the string. |
-| `BRAND_SHORT_DESCRIPTION` | One-sentence brand description. Used in `Footer.tsx` and meta descriptions. Never hardcode. |
-| `BRAND_SLOGAN_PARTS` | Tuple of the three slogan parts: `["Vendor-Neutral", "Open Source", "Community-Driven"]`. |
-| `BRAND_SLOGAN` | Full slogan parts joined with `". "`. |
-| `BRAND_SECONDARY_LINE_PARTS` | Tuple of the three tagline parts: `["always On.", "always Open.", "always Learning."]`. The `Hero.tsx` heading renders only the first two (`[0]` and `[1]`); `[2]` ("always Learning.") is not part of the hero. |
-| `BRAND_SECONDARY_LINE` | Full tagline (all three parts) joined with spaces. Used for the complete brand line in `BottomCTA.tsx` and `BrandGuidelines.tsx`, not the hero. |
-| `COMMUNITY_URL` | Real URL of the Discourse instance. Never hardcode. |
-| `COMMUNITY_DISPLAY_NAME` | User-facing display name for the community URL. Use for visible text. |
-| `CODE_OF_CONDUCT_URL` | Canonical URL of the Code of Conduct topic on Discourse. Use instead of hardcoding `${COMMUNITY_URL}/t/code-of-conduct/31`. |
-| `CODESPACES_BASE` | GitHub Codespaces base URL for the challenges repo. Used by `CodespacesButton.tsx`. |
-| `SITE_URL` | `"https://offon.dev"`. Use for canonical URLs and OG tags. |
-| `SITE_NAME` | `"offon.dev"`. |
-| `CONTACT_EMAIL` | Contact email address. Used in `CommunityGuide.tsx`. Never hardcode. |
-| `LINKEDIN_URL` | LinkedIn company page URL. |
-| `BLUESKY_URL` | Bluesky profile URL (`https://bsky.app/profile/off-on-dev.bsky.social`). Used in `Footer.tsx`. |
-| `X_URL` | X (Twitter) profile URL (`https://x.com/OffonDev`). Used in `Footer.tsx`. |
-| `THEME_STORAGE_KEY` | `localStorage` key for the stored theme preference (`"theme"`). Used by `useTheme.tsx`. |
-| `CURRENT_YEAR` | Current calendar year (e.g. `2026`). Update manually each January in `src/data/constants.ts`. |
-| `OG_IMAGE_ALT` | Fixed alt text for the `og:image` and `twitter:image` tags. A description of the brand card image (`public/og.png`). Used internally by `buildPageMeta`; callers do not pass it. Never derive this from the page title — the OG image is a fixed brand card, not page-specific art. |
-
-### How it works
-
-- `src/root.tsx` contains a minimal inline `<head>` bootstrap that does only three things: bootstrap `window.dataLayer`, define `window.gtag` as the `dataLayer.push` shim, and call `gtag('consent', 'default', {...})` with all four signals denied. **No `wait_for_update`. No localStorage read. No `gtag('js', ...)`. No `gtag('config', ...)`. No `<script src="...googletagmanager...">` tag.**
-- `src/hooks/useConsent.tsx` owns the React-side state and the `gtag.js` injector. The injector is shared by both the Accept click path and the mount-restore path, gated by a module-scoped `gtagScriptInjected` boolean so the script tag is appended at most once per session. On Accept, the injector pushes `consent update`, `js`, and `config` into `dataLayer` synchronously **before** appending the script tag, so when `gtag.js` loads it drains the queue in the correct order. The `config` call passes only `cookie_flags: 'SameSite=Lax;Secure'`, `cookie_expires: 15552000` (180 days), and `send_page_view: false`. No `cookie_domain` or `linker`.
-- On Decline, the hook pushes `consent update analytics_storage: denied` and clears any `_ga*` cookies. The script tag is **not** removed; `dataLayer` is **not** wiped; `window.gtag` is **not** replaced. `gtag.js` itself stops sending hits when consent is denied.
-- On Reset (floating cookie button): same as Decline plus state goes back to `null` and `localStorage` is cleared so the banner reappears.
-- `src/components/ConsentBanner.tsx` renders a fixed bottom bar until the user makes a choice. Once consent is set, it renders a floating cookie icon button (bottom-right) that calls `reset()` to reopen the banner. The banner's root `<div>` must keep `aria-live="polite"` so screen readers in virtual cursor mode announce it when it appears after JS hydration. Do not remove it.
-- `src/Layout.tsx` mounts `PageViewTracker` and `ClickTracker`. **Both gate on `consent === "granted"`.** Pushing events to `dataLayer` while `gtag.js` is not loaded would queue them, and a later Accept would drain the queue and retroactively send pageviews and click events for routes/clicks the user made while consent was undecided or denied. Gating prevents that.
-- `src/hooks/useTheme.tsx` manages the light/dark toggle. Theme is stored in `localStorage` under key `theme`. `ThemeProvider` is mounted in `Layout.tsx`.
-
-### Consent state machine: enumerate all transitions before touching this code
-
-| From | To | Trigger | localStorage | React state | gtag.js | dataLayer / cookies |
+| From | To | Trigger | localStorage | $consent | gtag.js | dataLayer / cookies |
 | --- | --- | --- | --- | --- | --- | --- |
-| `null` | `"granted"` | User clicks Accept | write `granted` | `setConsent("granted")` | injected if not already | push `consent update granted` + `js` + `config` |
-| `null` | `"denied"` | User clicks Decline | write `denied` | `setConsent("denied")` | not injected | push `consent update denied`, clear `_ga*` cookies (no-op if none) |
-| `"granted"` | `"denied"` | Decline after grant | write `denied` | `setConsent("denied")` | unchanged (still loaded) | push `consent update denied`, clear `_ga*` cookies |
-| `"denied"` | `"granted"` | Accept after decline | write `granted` | `setConsent("granted")` | injected if not already | push `consent update granted` (+ `js` + `config` only if first injection) |
-| `"granted"` | `null` | User clicks Cookie Preferences | clear | `setConsent(null)` | unchanged | push `consent update denied`, clear `_ga*` cookies |
-| `"denied"` | `null` | User clicks Cookie Preferences | clear | `setConsent(null)` | unchanged | push `consent update denied` |
-| `null` | `"granted"` | Page load with stored `granted` | (read) | `setConsent("granted")` | injected by mount effect | push `consent update granted` + `js` + `config` |
-| `null` | `"denied"` | Page load with stored `denied` | (read) | `setConsent("denied")` | not injected | nothing |
-| `null` | `"denied"` | Page load, GPC active, no stored preference | write `denied` | `setConsent("denied")` | not injected | clear `_ga*` cookies |
-| `"denied"` | `"denied"` | Page load, GPC active, stored `denied` | overwrite `denied` | `setConsent("denied")` | not injected | clear `_ga*` cookies |
-| GPC active | `"granted"` | Page load, GPC active, stored `granted` | (read) | `setConsent("granted")` | injected by mount effect | push `consent update granted` + `js` + `config` |
+| `null` | `granted` | Accept | write `granted` | `granted` | inject if not already | `consent update granted` + `js` + `config` |
+| `null` | `denied` | Decline | write `denied` | `denied` | not injected | `consent update denied`, clear `_ga*` |
+| `granted` | `denied` | Decline after grant | write `denied` | `denied` | unchanged | `consent update denied`, clear `_ga*` |
+| `denied` | `granted` | Accept after decline | write `granted` | `granted` | inject if not already | `consent update granted` (+ js/config only on first injection) |
+| `granted`/`denied` | `null` | Cookie Preferences (reset) | clear | `null` | unchanged | `consent update denied`, clear `_ga*` |
+| `null` | stored value | Page load with stored choice | (read) | stored | inject if stored `granted` | on granted: `consent update granted` + js + config |
+| `null`/`denied` | `denied` | Page load, GPC active, not explicitly granted | write `denied` | `denied` | not injected | clear `_ga*` |
+| GPC active | `granted` | Page load, GPC active, stored `granted` | (read) | `granted` | injected | `consent update granted` + js + config |
 
 ### Do not
 
-- Do not load `gtag.js` outside the consent injector.
-- Do not put `gtag('js')` or `gtag('config')` in `root.tsx`. Both belong in the injector, queued after the consent update.
-- Do not reintroduce `wait_for_update`.
-- Do not remove GPC detection: `navigator.globalPrivacyControl === true` is checked on mount in `useConsent.tsx`. If active and no explicit prior Accept is stored, consent is auto-denied without prompting the user.
-- Do not reintroduce `ANALYTICS_LINKER_DOMAINS` or `cookie_domain`.
-- Do not put the consent update inside `script.onload`. It must be queued before `appendChild` so the dataLayer drains in the correct order.
-- Do not remove the script tag, wipe `dataLayer`, or replace `window.gtag` on deny.
-- Do not push `page_view` or `click_event` when consent is not granted.
-- Do not skip clearing `_ga*` cookies on deny or reset.
+- Do not load `gtag.js` outside the injector. Do not put `js`/`config` in `Layout.astro` (they belong queued after the consent update in the injector).
+- Do not reintroduce `wait_for_update`, `ANALYTICS_LINKER_DOMAINS`, or `cookie_domain`.
+- Do not put the consent update inside `script.onload` (queue it before `appendChild`).
+- Do not remove GPC detection (`navigator.globalPrivacyControl === true`).
+- Do not remove the script, wipe `dataLayer`, or replace `window.gtag` on deny.
+- Do not push `page_view`/`click_event` when consent is not granted. Do not skip clearing `_ga*` on deny/reset.
 
 ---
 
-## Testing
+## Islands & Hydration Safety
 
-- Use Vitest for all unit and integration tests.
-- Use `@testing-library/react` for component tests. Test from the user's perspective, not implementation details.
-- Test files live in `src/test/` or co-located alongside the module as `*.test.ts(x)`.
-- Write tests for all logic in `src/lib/` and `src/hooks/`. Target 80% coverage for new utility and hook files.
-- Pure visual components (no state, no side effects) do not require tests. A visual component that holds state or has side effects is not a pure visual component and must have tests.
-- Prefer `getByRole` and `getByLabelText` queries over `getByTestId`. They also validate accessibility.
-- Never ship code that causes test or lint failures.
-- Every new hook, utility function, or stateful component must have tests covering the happy path, edge cases, and all state transitions.
-- Tests must be written as part of the implementation, not as an afterthought.
-- If a component or hook has side effects (DOM mutations, localStorage, external scripts), mock those side effects in tests and assert they are called correctly.
-- When fixing a bug, add a regression test that would have caught it before writing the fix.
-- When fixing a bug caused by an incorrect import, file path, or configuration value, add a regression test that asserts on the file's contents.
-- Prerender tests live in `src/test/prerender.test.ts` and require a production build. Always run `npm run build` before `npm test` if prerender tests are included.
-- Playwright smoke tests live in `e2e/smoke.spec.ts` and require a production build. The axe audit runs with tags `["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"]` in both dark and light mode. Never remove `wcag22aa` from this list. When adding a new prerendered route, add it to the `ROUTES` array in `e2e/smoke.spec.ts` and `src/test/seo.test.ts`, and to the `pages` array in `src/test/prerender.test.ts` with the expected `<title>` value.
-- SEO tests live in `src/test/seo.test.ts` and require a production build. When adding a new prerendered route, add it to the `ROUTES` array in `src/test/seo.test.ts`.
-- **Visual regression tests** live in `e2e/visual.spec.ts` and require a production build. Run `npm run build && npm run test:visual`. First run generates baseline screenshots in `e2e/__screenshots__/`; subsequent runs compare against baselines and fail if pixel differences exceed threshold. Baselines are committed. To update baselines after intentional visual changes: `npm run test:visual:update`. When adding a new page or making major layout changes, add it to `VISUAL_ROUTES` in `visual.spec.ts` and regenerate baselines. Use `maskSelectors` to hide dynamic content (timestamps, discussion posts) that changes between builds. **These tests are local-only and are not run in CI** (font rendering differs between macOS and Linux). Run them manually before and after any major design change. Never name a smoke test describe block with "visual" in the title, as `--grep visual` routes tests between the two suites.
-- When a page renders multiple navigation landmarks, use `within` from `@testing-library/react` to scope queries to the correct landmark before asserting link destinations.
-- **Testing hooks with dynamic imports:** Never use `vi.mock` for a dynamic import called inside a hook. Export a loader type and default loader; tests inject `vi.fn().mockResolvedValue(data)` via an optional argument. See `src/hooks/useDiscussionPosts.ts` for the reference implementation.
-- **Coverage:** run `npm run test:coverage` for v8 coverage reports. `@vitest/coverage-v8` is installed as a dev dependency.
-- **Axe incomplete flags:** When axe reports an "Incomplete" or "Needs Review" result, provide a definitive manual ruling (confirmed violation, confirmed pass, or cannot determine without AT testing) before merging. Do not leave incomplete flags unresolved. Use `/a11y-audit` to evaluate in context.
+These patterns produce hydration mismatches and console errors. Never introduce them.
 
----
-
-## Hydration and Prerender Safety
-
-Whether or not the site is prerendered today, these patterns cause bugs. They produce visible flashes in client-only apps and break hydration entirely if the site is ever prerendered. Never introduce them.
-
-### Do not read browser-only globals during render
-
-- Never read `window`, `document`, `navigator`, `localStorage`, or `sessionStorage` in a component function body.
-- Never read them in a `useState` lazy initializer.
-- Correct pattern: initialize state with a safe default, then update it in `useEffect` or `useLayoutEffect`.
-
-### Do not use non-deterministic values during render
-
-- Never call `Math.random()`, `Date.now()`, `new Date()`, `crypto.randomUUID()`, or `performance.now()` in a render body.
-- `new Date().getFullYear()` in JSX is a common mistake. Use a module-level constant instead.
-
-### Client-only behavior must be gated
-
-- Anything that depends on `localStorage`, `matchMedia`, or similar must produce the same initial render as a fresh visitor with no stored state.
-- For theme and consent state: always render the default (dark, no-consent) on first render, then update in an effect.
-- Always wrap `localStorage` reads and writes in `try/catch`. Storage throws in private browsing and when quota is exceeded.
-
-### No IntersectionObserver or ResizeObserver at render time
-
-- Always create observers inside `useEffect`, never at the top level of a component or module.
-- Guard any observer that affects rendered content with a `typeof window !== 'undefined'` check.
-- Use `useIsomorphicLayoutEffect` instead of `useLayoutEffect` in any component that renders during SSG.
-
-### entry.server.tsx must use renderToPipeableStream, not renderToString
-
-- `renderToString` emits `<!--$!-->` markers for any Suspense boundary that suspends during prerender.
-- `entry.server.tsx` must always use `renderToPipeableStream` with `onAllReady` callback.
-- Never revert to `renderToString` in `entry.server.tsx`.
-
-### Do not add Suspense wrappers around Outlet in Layout.tsx
-
-- Adding `<Suspense>` around `<Outlet />` in Layout.tsx creates an extra boundary React Router does not resolve during prerender, producing broken hydration.
-- If you need loading states for routes, configure them in the route module itself.
-
-### useSearchParams() and prerender hydration
-
-`useSearchParams()` is safe to call during render, but its value differs between prerender (empty, no URL) and client hydration (real URL params from the browser). Deriving initial `useState` from it causes a mismatch: the prerendered HTML has one value, the hydrating client has another, React throws. Always default to the server-safe value (`false`, `null`, or `[]`) and sync to the real param value in `useEffect`.
-
-```tsx
-// WRONG: lazy initializer reads params at prerender time (always empty) and at
-// hydration time (real URL), causing a mismatch.
-const [hasFiltered, setHasFiltered] = useState(() => searchParams.has("topics"));
-
-// CORRECT: start with the server-safe default; sync after mount.
-const [hasFiltered, setHasFiltered] = useState(false);
-useEffect(() => { if (searchParams.has("topics")) setHasFiltered(true); }, []); // eslint-disable-line react-hooks/exhaustive-deps
-```
-
-### Stale prerendered data
-
-Loader functions run at build time. The static `.data` file they produce is frozen until the next build. Any data that depends on the current time (e.g. a deadline that has since passed) will be stale when the page loads in the browser.
-
-**Pattern:** initialize `useState` from the loader value (correct for hydration — prerendered HTML and first client render agree), then correct in a `useEffect` on mount:
-
-```tsx
-const { myField: initialMyField } = useLoaderData();
-const [myField, setMyField] = useState(initialMyField);
-
-useEffect(() => {
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  setMyField(recomputeFromCurrentTime());
-}, []); // eslint-disable-line react-hooks/exhaustive-deps
-```
-
-The `set-state-in-effect` disable is intentional: the mount effect corrects a known staleness in the prerendered value, not a derivation that should live in the render body. Do not suppress the rule for other patterns.
-
-### JavaScript degradation testing
-
-Core content must be readable with JavaScript disabled. To verify: DevTools → Cmd+Shift+P → "Disable JavaScript" → reload the page.
-
-- Page headings, body text, images, and navigation links must be visible and functional.
-- Filters, theme toggle, and consent banner may degrade gracefully — they are JS-enhanced features.
-- Challenge and adventure text, navigation, and all other primary page content must not be exclusively client-side rendered.
-- Run `npm run build` and confirm all content appears in the prerendered HTML files in `dist/client/`.
+- **An island's first client render must match its SSR output.** SSR runs with default state (dark theme, `null` consent). Read `localStorage`/`navigator`/the DOM in `onMounted`, then update reactive state — never in `<script setup>` top level or as a `ref` initializer. This is why `$theme`/`$consent` are plain atoms read on mount, not `persistentAtom` (which reads localStorage at import time and would mismatch SSR).
+- **No non-deterministic values in a render body.** Build-time `.astro` frontmatter may use `new Date()` (it runs on the server); Vue island templates must not.
+- **`client:only` + ClientRouter** has a first-navigation hydration bug — prefer SSR islands (`client:visible`/`idle`/`load`). Islands in `Layout.astro` (theme toggle, consent) use `transition:persist` so they survive View Transitions.
+- **After each client navigation** (`astro:after-swap`), `Layout.astro` re-asserts the `<html>` theme class (prevents flash) and moves focus to `#main-content`. Astro's `<ClientRouter />` provides the route announcer and respects `prefers-reduced-motion`.
+- **Wide content** (code blocks) must scroll inside its own `overflow-x:auto` container; grid tracks holding it need `minmax(0,1fr)`, not `1fr`.
+- **Progressive enhancement:** core content (headings, prose, nav, cards) must render server-side and work with JS disabled. Filters/theme/consent may degrade. Verify: DevTools → Disable JavaScript → reload; and inspect `dist/`.
 
 ---
 
 ## SEO
 
-This is a fully static React site. Apply these practices on every page.
+Static site. Apply on every page.
 
-### Document structure
-
-- Every page must have a unique, descriptive `<title>` tag.
-- Every page must have a `<meta name="description">` under 160 characters.
-- Add Open Graph tags to every page: `og:title`, `og:description`, `og:url`, `og:type`, and `og:image` where an image is available.
-- Add Twitter meta tags: always include `twitter:card` (use `summary_large_image` for pages with images), `twitter:title`, `twitter:description`, and `twitter:image`.
-- Use React Router v8's `meta()` export on each route module to manage head tags per page. Use the `buildPageMeta` helper from `src/lib/meta.ts`.
-
-### Heading hierarchy
-
-- One `<h1>` per page that clearly describes the page topic.
-- Headings follow a logical order with no skipped levels.
-- For multi-line hero or section headings, do not use `<br />` inside `h1`/`h2`. Use block-level `<span>` elements for visual line breaks.
-
-### Links and navigation
-
-- Internal links use React Router `<Link>`. Never trigger full page reloads.
-- Use descriptive link text. Never use "click here" or "read more" alone.
-- Set the canonical URL for each page as `${SITE_URL}${pathname}` using the `SITE_URL` constant from `src/data/constants.ts`.
-
-### Performance
-
-Read [`PERFORMANCE.md`](PERFORMANCE.md) before adding any new dependency, font, image, or route.
-
-### Global head setup (root.tsx)
-
-- **Required `<head>` elements** -- verify these are present whenever editing `src/root.tsx`:
-  - `<meta charset="utf-8">` -- must appear in the first 1024 bytes of the HTML, before any non-ASCII content.
-  - `<meta name="viewport" content="width=device-width, initial-scale=1">` -- tells mobile browsers to render at device width. Never set `user-scalable=no` or `maximum-scale=1`; disabling user zoom breaks WCAG 1.4.4 (Resize Text).
-  - `<meta name="color-scheme" content="dark light">` -- prevents the white flash dark-mode users see before CSS loads, and lets the browser style scrollbars and native form controls to match the active scheme.
-- **Favicons** -- the following files must be present in `public/` and linked from `src/root.tsx`:
-  - `favicon.svg` -- primary favicon; linked as `<link rel="icon" href="/favicon.svg" type="image/svg+xml">`.
-  - `favicon.png` -- PNG fallback; linked as `<link rel="icon" href="/favicon.png" type="image/png">`.
-- The Organization JSON-LD `"logo"` field in `src/root.tsx` uses `https://offon.dev/brand/offon-logo-dark-color.png` (the full brand logo, not the favicon). Do not revert it to `favicon.png`.
-  - `favicon.ico` -- ICO fallback for older browsers and the Windows taskbar. Place at `public/favicon.ico` (browsers request it automatically).
-  - `apple-touch-icon.png` -- 180x180 px PNG; linked as `<link rel="apple-touch-icon" href="/apple-touch-icon.png">`.
-  - A maskable icon entry in `site.webmanifest` with `"purpose": "maskable"` for Android home screens.
-  - Verify all five are present before shipping any favicon change.
-- Add `<link rel="manifest" href="/site.webmanifest" />` to link the web app manifest.
-- Add `<meta name="theme-color">` tags for dark and light mode.
-- Add JSON-LD structured data as two `<script type="application/ld+json">` blocks: one `@type: "WebSite"` and one `@type: "Organization"`. The `"OffOn"` brand name is hardcoded as a string literal in both (they cannot reference TypeScript constants inside `dangerouslySetInnerHTML`). Update them manually if the brand name ever changes.
-- Always include `og:image:width`, `og:image:height`, and `og:image:alt` for all OG image tags.
-- Add `og:site_name` and `og:locale` (en_GB) to all global OG tags in `src/root.tsx`.
-- Do not add page-specific meta tags to `src/root.tsx`. These must live in each route module's `meta()` export only.
-
-### URL structure
-
-- Keep URLs lowercase, hyphen-separated, and descriptive. Never use underscores or camelCase in URL segments.
-- Treat published URLs as a public contract. Once a URL is live, it must keep working. If a URL must change, add a redirect route in `src/routes.ts` pointing the old path to the new one.
-- Redirect routes in `src/pages/redirects/` use React Router's `redirect()`. Prefer client-side redirects over broken links. Never chain more than one redirect for the same URL.
-
-### Soft 404s
-
-- Every path that does not correspond to a real page must return HTTP 404, not 200. GitHub Pages serves `404.html` automatically for unmatched paths -- no configuration is needed.
-- Never create a catch-all route that renders a "page not found" UI with a 200 status. Search engines and AI crawlers treat a 200 response as indexable content.
-- When retiring a URL, add a redirect route to its successor. If there is no successor, redirect to the nearest parent or category page. Reserve 404 for paths that were never valid.
+- Every page: unique descriptive `<title>`, `<meta name="description">` under 160 chars, and canonical `${SITE_URL}${path}` (trailing slash). One `<h1>`; logical heading order (no skips; use block `<span>` for multi-line headings, not `<br>`).
+- **Per-page meta comes from the `<SEO>` component** (`src/components/SEO.astro`), fed by `Layout.astro` props (`title`, `description`, `path`, `ogType`, `noindex`). It emits canonical, OG (`og:title/description/type/url/image` + width/height/alt, `og:site_name`, `og:locale` en_GB) and Twitter tags. Do not hand-write these in pages. Legal pages pass `noindex`.
+- Internal links use plain `<a href>` with **trailing slashes** and `import.meta.env.BASE_URL` (so PR previews under `/pr-preview/pr-N/` resolve). External links: `target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint"`.
+- **`Layout.astro` global head** (verify when editing): `<meta charset>` in the first 1024 bytes, viewport (never `user-scalable=no`), `color-scheme`, favicons (svg/png/ico/apple-touch), manifest, both `theme-color` tags, CSP meta, the two JSON-LD blocks (`WebSite` + `Organization`, brand name hardcoded), font preloads, and the PR-preview `noindex` guard. `lang="en"` on `<html>`.
+- **Soft 404s:** unmatched paths must return 404, not 200. `src/pages/404.astro` → `dist/404.html` (GitHub Pages serves it). No catch-all route rendering a 200 "not found" page. Retire URLs via the `redirects` map in `astro.config.mjs`.
+- Read [`PERFORMANCE.md`](PERFORMANCE.md) before adding a dependency, font, image, or route.
 
 ---
 
@@ -549,66 +306,39 @@ Read [`PERFORMANCE.md`](PERFORMANCE.md) before adding any new dependency, font, 
 
 ### Brand Name
 
-- The brand is always written **OffOn** (camelCase). Never "offon", "Offon", or "OFFON".
-- The community was previously known as "Open Ecosystem". That name is retired. Never use it anywhere.
-- In code, always use the `BRAND_NAME` constant from `src/data/constants.ts` instead of hardcoding the string.
-- As a URL or href: always `offon.dev` (lowercase, e.g. `<a href="https://offon.dev">`).
-- As a display name in prose or UI: `OffOn.dev` is the correct form (brand caps, TLD lowercase). Never capitalise the TLD: `OffOn.Dev` is wrong.
+- Always **OffOn** (camelCase). Never "offon", "Offon", or "OFFON".
+- "Open Ecosystem" is retired. Never use it.
+- In code, use the `BRAND_NAME` constant from `src/lib/site.ts`.
+- As a URL/href: `offon.dev` (lowercase). As a display name: `OffOn.dev` (never `OffOn.Dev`).
 
 ### Tone
 
-- Direct, positive, and community-focused.
-- Write for open source enthusiasts, not a corporate audience.
-- Use plain language. Avoid jargon unless it is standard in open source contexts.
-- Avoid passive voice where an active one works.
-- Keep sentences short and scannable.
-- Never enumerate specific difficulty levels (e.g. "Beginner, Intermediate, or Expert") in UI copy. Adventures can have one, two, or three levels at any combination of difficulties. Use broad language instead: "the difficulty that fits where you are", "any difficulty level", or similar.
+- Direct, positive, community-focused. Write for open source enthusiasts, not a corporate audience. Plain language. Active voice. Short, scannable sentences.
+- Never enumerate specific difficulty levels in UI copy. Use broad language ("any difficulty level", "the difficulty that fits where you are").
 
 ### Capitalisation
 
-All UI labels use **title case (Chicago style)**. Body copy uses **sentence case**.
-
-**Title case applies to:** button and CTA labels, section headings (h2/h3), card and value titles, navigation labels and footer links, pill and badge text.
-
-**Title case rule:** capitalise every word except articles (a, an, the), prepositions shorter than five letters, and coordinating conjunctions (and, but, or, nor), unless they open or close the label.
-
-**Sentence case applies to:** body paragraphs, meta descriptions, `<p>` elements, hero sub-headings, and card descriptions.
-
-**Exception:** decorative overline labels use CSS `text-transform: uppercase`, so write their source text in plain lowercase.
+UI labels use **title case (Chicago)**; body copy uses **sentence case**.
+- **Title case:** button/CTA labels, section headings (h2/h3), card/value titles, nav and footer links, pill/badge text. Capitalise every word except articles, prepositions under five letters, and coordinating conjunctions — unless they open or close the label.
+- **Sentence case:** body paragraphs, meta descriptions, `<p>` text, hero sub-headings, card descriptions.
+- **Exception:** overline labels use CSS `text-transform: uppercase`, so write source text lowercase.
 
 ### Formatting
 
-- Never use em dashes anywhere, including comments and documentation. Use commas, periods, or restructure the sentence instead.
-- Maintain a cohesive tone across all pages and components.
-- Do not mix formal and casual registers within the same page.
-
-### External URLs
-
-- `LINKEDIN_URL` in `src/data/constants.ts` contains the current LinkedIn company page URL. Update it when the LinkedIn company page URL changes.
+- Never use em dashes anywhere (comments and docs included). Use commas, periods, or restructure.
+- Keep tone cohesive; don't mix formal and casual registers within a page.
 
 ---
 
 ## Git
 
-- Branch naming: `type/short-description` (e.g. `feat/hero-section`, `fix/nav-scroll`).
-- All commits must be signed off: `git commit -s`.
-- Never force-push to `main`.
-- PR titles follow conventional commits: `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`.
+- Branch naming: `type/short-description` (e.g. `feat/hero-section`).
+- All commits signed off: `git commit -s`.
+- Never force-push to `main`. PR titles follow conventional commits.
 
-### Commit types
-
-| Type | When to use |
+| Type | When |
 | --- | --- |
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation only |
-| `style` | CSS or formatting changes |
-| `refactor` | Code restructure, no feature or fix |
-| `chore` | Maintenance, dependencies |
-| `perf` | Performance improvements |
-| `security` | Security fixes |
-| `config` | Configuration changes |
-| `revert` | Reverting a previous commit |
+| `feat` / `fix` / `docs` / `style` / `refactor` / `chore` / `perf` / `security` / `config` / `revert` | as named |
 
 ---
 
@@ -616,157 +346,74 @@ All UI labels use **title case (Chicago style)**. Body copy uses **sentence case
 
 ### Well-known files
 
-- `public/.well-known/security.txt` contains an `Expires` field. Update the date annually (current expiry: `2027-06-01`). An expired security.txt is treated as absent by scanners.
-- `public/llms.txt` lists key pages and all live adventures. Update it whenever a new adventure is added (step 7 in the adventure checklist above) or a page is significantly renamed.
-- `public/llms-full.txt` is the extended companion to `llms.txt`. It contains full level-by-level detail for every adventure. Update it whenever a new adventure or level is added, or a level's technologies/description changes.
-- `public/robots.txt` lists named AI crawler agents. No routine updates needed; add a new agent entry only when a major crawler publishes a new user-agent string. Note: robots.txt does not support inheritance — named `User-agent` groups do not inherit `Disallow` rules from `User-agent: *`. When adding a new path to exclude, repeat the `Disallow` line in every group.
-- `public/.well-known/agent-skills/offon/SKILL.md` describes the site to AI agents. Update it if the site's key URLs, adventure list, or technology list changes significantly. After editing it, recompute the SHA256 digest (`shasum -a 256 public/.well-known/agent-skills/offon/SKILL.md`) and update the `digest` field in `public/.well-known/agent-skills/index.json`. A stale digest makes the file unverifiable to compliant agents.
-- `public/.well-known/api-catalog` lists machine-readable resources. Update it if a new resource endpoint is added (e.g. a new feed or data file).
+- `public/.well-known/security.txt` `Expires` — update annually (current: `2027-06-01`).
+- `public/llms.txt` / `llms-full.txt` — update when an adventure/level is added or a page renamed.
+- `public/robots.txt` — named `User-agent` groups do not inherit `Disallow` from `*`; repeat `Disallow` in each group. Must include `Sitemap: https://offon.dev/sitemap.xml`.
+- `public/.well-known/agent-skills/offon/SKILL.md` — after editing, update the SHA256 `digest` in `index.json`.
 
 ### Sitemap
 
-- Every time a new static page is added to `src/pages/` and registered as a route in `src/routes.ts`, its URL must also be added to `public/sitemap.xml` with a `<lastmod>` date. **Exception:** legal/policy pages (`/privacy/`) are intentionally excluded from the sitemap. Do not add them back.
-- Dynamic routes with statically known IDs must also be added to `public/sitemap.xml` with a `<lastmod>` date. Adventure and challenge-tag URLs are generated automatically by `scripts/generate-adventures.mjs` and include `<lastmod>` set to the build date; do not add them by hand.
-- `robots.txt` at `public/robots.txt` must include: `Sitemap: https://offon.dev/sitemap.xml`
-- **Generator region markers:** `scripts/generate-adventures.mjs` uses XML comment markers to patch adventure and tag entries into `public/sitemap.xml` (see `replaceRegion` calls near line 1204 and 1251). The markers are `<!-- GENERATED:adventures -->` / `<!-- /GENERATED:adventures -->` for the adventures block and `<!-- GENERATED:challenge-tags -->` / `<!-- /GENERATED:challenge-tags -->` for the tags block. Do not remove, rename, or reorder these comments. If they are missing, `npm run build` aborts with "Region markers not found".
+- `public/sitemap.xml` is currently a static file served as-is. **Follow-up:** a custom `src/pages/sitemap.xml.ts` endpoint should generate it from `getCollection()` + the static routes (excluding `/privacy/`), replacing the static file. Until then, add new static-page and adventure/level URLs to `public/sitemap.xml` by hand.
 
-### SSG prerendered routes
+### Routes
 
-- The list of routes React Router v8 prerenders is in the `prerender` array inside `react-router.config.ts`.
-- When adding a new static route, add it to **all three** of: `src/routes.ts`, `public/sitemap.xml`, and the `prerender` array in `react-router.config.ts`.
+- Routes come from file-based pages and `getStaticPaths()`. There is no prerender array to maintain. When adding a page, add it to `PAGES` in `e2e/a11y.spec.ts` and `ROUTES` in `e2e/smoke.spec.ts` (with the expected title), to `public/sitemap.xml` (except `/privacy/`), and to the routes table in `README.md`.
 
-When adding a new route to `src/routes.ts`, follow these rules by route type:
+### Adding an adventure or level
 
-- Static routes: add to `public/sitemap.xml`, the routes table in `README.md`, and the `prerender` array in `react-router.config.ts`.
-- Dynamic routes with statically known IDs: add individual URLs to `public/sitemap.xml`, the `prerender` array, and `README.md`. Also create a per-level discussion JSON file if the level has a discussion thread.
-- Redirect routes: do not add to `sitemap.xml` or `README.md`.
-- Catch-all routes: do not add anywhere.
-
-### When adding a new adventure or a new level to an existing adventure
-
-See [`ADVENTURES.md`](ADVENTURES.md) for the full sync process and PR checklist. The code changes required before merging are:
-
-1. Add the adventure detail route and all level routes to `src/routes.ts`.
-2. Add all URLs to `public/sitemap.xml` and the `prerender` array in `react-router.config.ts`.
-3. Add each level URL to the `ROUTES` array in `e2e/smoke.spec.ts` and `src/test/seo.test.ts`, and to the `pages` array in `src/test/prerender.test.ts` with the expected `<title>` value.
-4. Update the routes table in `README.md`.
-5. Add the adventure to `public/llms.txt` under the Adventures section so AI agents can discover it.
+See [`ADVENTURES.md`](ADVENTURES.md). In brief: add/extend the YAML at `src/data/adventures/<id>/adventure.yaml`, add each level's `*-posts.json`, register the id in `ADVENTURE_CATEGORIES` (`scripts/refresh-leaderboard.mjs`), and add the new URLs to `public/sitemap.xml`, the test route lists, `README.md`, and `public/llms.txt`. Routes generate automatically.
 
 ---
 
 ## Deployment
 
-- Push to `main` triggers `deploy.yml` and deploys to GitHub Pages.
-- Open PRs trigger `preview.yml` and create a PR preview deployment.
-- Only static files in `dist/client/` are deployed. No server config is needed.
-- The base path is set via the `VITE_BASE_PATH` environment variable (defaults to `/`). Never change this without verifying GitHub Pages routing.
-
-### Trailing slashes and `_.data` aliases
-
-GitHub Pages normalises every URL to a trailing slash (e.g. `/adventures/lex-imperfecta` becomes `/adventures/lex-imperfecta/`). All internal `Link to` props use trailing slashes to stay consistent with the URL the browser shows.
-
-React Router v8 defaults to `trailingSlashAwareDataRequests`. When the current URL has a trailing slash, single-fetch data requests use `<path>/_.data` instead of `<path>.data`. The prerender only generates `<path>.data` files, so a `_.data` request would 404.
-
-The `postbuild` script (`scripts/create-data-aliases.mjs`) runs automatically after every `npm run build`. It copies each `*.data` file to `<name>/_.data` so both URL formats resolve. Example:
-
-```text
-dist/client/adventures/lex-imperfecta.data          # non-trailing-slash request
-dist/client/adventures/lex-imperfecta/_.data         # trailing-slash request (GitHub Pages)
-```
-
-`serve.json` at the repo root sets `trailingSlash: true` so `npm run preview` mirrors GitHub Pages behaviour locally. It is not in `public/` and is not served in production.
-
-**Never remove trailing slashes from `Link to` props.** That would make client-side navigation inconsistent with the URL GitHub Pages shows in the browser.
-
-### PR preview static assets
-
-The `preview.yml` copy step explicitly lists every static asset directory and root-level file type that needs to appear in the PR preview. Vite copies `public/` to `dist/client/` during the build, but `preview.yml` then copies those files into the `dist/client/pr-preview/pr-N/` subdirectory that `rossjrw/pr-preview-action` deploys.
-
-**When adding a new directory or root-level file type to `public/`, you must also add a corresponding copy line in the copy step of `.github/workflows/preview.yml`.** If you forget, the file will exist in production but return 404 in all PR previews.
-
-Current copy step covers: `assets/`, `fonts/`, `reveal/`, `team/`, `speakers/`, `brand/`, `solutions/`, `downloads/`, `qr/`, `screenshots/`, `deck/`, `deck-template/`, and root-level `*.svg`, `*.png`, `*.ico`, `*.webmanifest`, `*.webp` files. `serve.json` lives at the repo root, not in `public/`, and is not copied here.
+- Push to `main` triggers `deploy.yml` → GitHub Pages. Open PRs trigger `preview.yml`.
+- The build outputs `dist/`; `JamesIves/github-pages-deploy-action` publishes it to `gh-pages`. Astro emits `dist/404.html` natively.
+- `trailingSlash: 'always'` matches GitHub Pages URL normalization (no `_.data` alias handling needed).
+- **PR previews** build with `VITE_BASE_PATH=/pr-preview/pr-N/` (→ Astro `base`); the whole `dist/` is the preview source (public assets are copied into `dist/` automatically, so there is no per-directory copy step). `Layout.astro` marks `/pr-preview/` builds `noindex`.
 
 ### GitHub Actions allowlist
 
-The `off-on-dev` organisation restricts which third-party actions can run. Only the following are permitted:
-
-| Action | Pinned version |
-| --- | --- |
-| `actions/checkout` | any tag |
-| `actions/cache` | any (GitHub-created, covered by org checkbox) |
-| `actions/setup-node` | any tag |
-| `actions/create-github-app-token` | any tag |
-| `JamesIves/github-pages-deploy-action` | any tag |
-| `marocchino/sticky-pull-request-comment` | any tag |
-| `rossjrw/pr-preview-action` | any tag |
-| `fsfe/reuse-action` | any tag |
-| Actions owned by `off-on-dev` | any |
-| Actions created by GitHub | any |
-| Actions verified in the GitHub Marketplace | any |
-
-Before adding any new `uses:` line to a workflow file, verify the action is on this list. If it is not, replace it with an equivalent using `gh` (GitHub CLI) or native shell commands.
+The `off-on-dev` org restricts third-party actions. Permitted: `actions/checkout`, `actions/cache`, `actions/setup-node`, `actions/create-github-app-token`, `JamesIves/github-pages-deploy-action`, `marocchino/sticky-pull-request-comment`, `rossjrw/pr-preview-action`, `fsfe/reuse-action`, actions owned by `off-on-dev`, actions created by GitHub, and Marketplace-verified actions. **The official `withastro/action` and `actions/deploy-pages` are NOT allowlisted** — keep the JamesIves deploy flow. Before adding a `uses:`, verify it is permitted or use `gh`/shell.
 
 ---
 
 ## Before Submitting Code
 
-Every code change must pass all of these checks before being considered done. State the result of each check explicitly before finishing a task.
+State the result of each check explicitly before finishing.
 
-### Mandatory checks
+1. **Content gate:** `npm run sync` passes (Zod schema over adventure YAML).
+2. **REUSE lint:** `npm run lint:reuse` (or `reuse lint`) passes. `.astro`/`.vue` are covered by globs in `REUSE.toml`.
+3. **Build:** `npm run build` completes with no errors.
+4. **e2e + a11y:** `npm run test:e2e` passes. The axe audit runs the full WCAG tag set in dark and light. Kill any stray server on port 4321 first. Manual persona testing (ACCESSIBILITY.md) is still required.
+5. **Re-read every file you changed;** verify the final state.
+6. **Check call sites** for any changed prop/type/export. **Check imports** resolve; no unused imports.
+7. **Verify at 375 / 768 / 1280px** against the production build (`npm run preview`), not the dev server.
+8. If the change adds/modifies adventure levels, verify a per-level `*-posts.json` exists.
 
-1. **Run lint:** `npm run lint` must exit with zero errors.
-2. **Run REUSE lint:** `npm run lint:reuse` must pass. Requires `pip install reuse` once. Run whenever a new file type or extension is added to the repo.
-3. **Run tests:** `npm test` must pass with zero failures.
-4. **Run e2e and a11y tests:** `npm run build && npm run test:e2e` must pass with zero failures. The axe audit runs tags `["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"]` in both light and dark mode. Never reduce this tag set. Axe catches roughly 30–40% of real issues — treat it as ground truth for mechanical violations, but manual persona testing (see ACCESSIBILITY.md) is always required.
-5. **Run build:** `npm run build` must complete with no TypeScript errors or bundling failures.
-6. **Re-read every file you changed:** verify the final state is correct. Never assume an edit landed correctly without checking.
-7. **Check all call sites:** if you changed a function signature, component props, or exported type, search for all usages and confirm they are updated.
-8. **Check imports:** every import must resolve. No unused imports. No circular dependencies introduced.
-9. **Verify at three viewports:** 375px, 768px, and 1280px. Always test against the production build, never the dev server.
-10. **Check discussion data on every PR:** if the PR adds or modifies adventure levels, verify that a per-level discussion JSON file exists with the correct `discussionUrl`.
+### Red flags — stop and flag to the user
 
-### Before writing any code
-
-1. Read the relevant files first. Never edit a file you have not read in this session.
-2. If the change touches more than one file, list all affected files before starting.
-3. If the change involves a state machine, enumerate all transitions first.
-4. If the change involves shared state, confirm a context provider is used.
-5. If the change involves a side effect (DOM, localStorage, external scripts), write the test before or alongside the implementation.
-
-### Red flags that require stopping and flagging to the user
-
-- A fix requires changing more than 3 files you did not plan to change.
-- A type error requires adding a cast or suppression to resolve.
-- A test requires mocking something that was not mocked before.
-- The same bug has been fixed more than once in this session.
-- A replacement did not change the file (silent no-op).
-- The error in the browser console shows a different bundle hash than the latest build output.
-- A "fix" has been applied but the same error reproduces unchanged.
+- A fix touches >3 files you did not plan to change; a type error needs a cast/suppression; the same bug is "fixed" more than once; a replacement is a silent no-op; a browser error shows a stale asset hash.
 
 ---
 
 ## Do Not
 
-- Do not add a backend, API routes, or server-side rendering.
-- Do not add external font or icon CDN links. All assets must be self-hosted.
-- Do not change `vite.config.ts` base path without verifying GitHub Pages routing.
-- Do not install new dependencies without checking if shadcn/ui or an existing utility covers the need.
+- Do not add a backend, API routes, or SSR (`output` stays `static`).
+- Do not add external font or icon CDN links; all assets self-hosted.
+- Do not change `base` handling without verifying GitHub Pages + PR-preview routing.
+- Do not install a new dependency without checking an existing lib/primitive covers it.
 - Do not commit secrets, tokens, or credentials.
-- Do not change the `@theme` block in `src/index.css` without verifying the change does not break existing components.
-- Do not reinstall `@radix-ui/*` packages that were removed.
-- Do not re-derive data from `ADVENTURES` inside component files.
-- Do not edit `*.generated.ts`, `src/data/adventures/index.ts`, or `src/data/adventures/summaries.ts` by hand.
+- Do not change the `@theme` block in `src/styles/index.css` without verifying it doesn't break components.
+- Do not edit the copied data types by hand expecting a generator to reconcile — there is no generator; the YAML and the Zod schema are the source of truth.
 
 ---
 
 ## When Suggesting Code
 
-- Always read `styleguide.md` before making any UI, copy, or component changes.
-- Follow all rules in the Styling and Components sections.
-- Flag any accessibility concerns before writing the code, not after. Read `ACCESSIBILITY.md` first.
-- Flag any breaking changes explicitly.
-- Prefer simple, readable solutions over clever ones.
-- If something could be done multiple ways, briefly explain the tradeoff and recommend one approach.
+- Read `styleguide.md` before UI/copy/component changes. Follow the Styling and Components sections.
+- Flag accessibility concerns before writing code (read `ACCESSIBILITY.md`). Flag breaking changes explicitly.
+- Prefer simple, readable solutions. If multiple approaches exist, state the tradeoff and recommend one.
 
 ---
 
@@ -774,26 +421,12 @@ Every code change must pass all of these checks before being considered done. St
 
 A task is not done until the relevant docs are updated.
 
-### Always check these four things after any non-trivial change
+1. New/changed component, island, or utility? Update `styleguide.md`.
+2. New/changed page or route? Update the routes table in `README.md` (and the test route lists + sitemap).
+3. New/changed constant or config value? Document it in `README.md`.
+4. Changed a build/deploy/dev workflow? Update the Commands section in `CLAUDE.md` and `README.md`.
 
-1. **Did you add or change a component, hook, or utility?** Update `styleguide.md`.
-2. **Did you add or change a page or route?** Update the routes table in `README.md`.
-3. **Did you add or change an environment variable, constant, or config value?** Document it in `README.md`.
-4. **Did you change a build, deploy, or dev workflow?** Update the Commands section in both `CLAUDE.md` and `README.md`.
-
-After completing any task, explicitly state which checks applied, what was updated, or why it was skipped.
-
-| Change | Update |
-| --- | --- |
-| New component | styleguide.md: component entry with props and usage |
-| New hook | styleguide.md: hook entry with return type and behavior |
-| New utility function | styleguide.md: brief entry if it affects patterns |
-| New page or route | README.md routes table; sitemap.xml and prerender array for static routes |
-| New constant | README.md constants section, styleguide.md if visual |
-| New workflow step | README.md commands section, CLAUDE.md if it changes a rule |
-| New brand or copy rule | styleguide.md first, then apply across codebase |
-| Bug fix that reveals a missing rule | CLAUDE.md: add the rule to prevent recurrence |
-| New test pattern | CLAUDE.md: add to Testing section if it sets a precedent |
+State which checks applied and what was updated (or why skipped).
 
 ---
 
@@ -801,44 +434,18 @@ After completing any task, explicitly state which checks applied, what was updat
 
 ### Shared state
 
-If a hook or piece of state is consumed by more than one sibling component, it must be a React context provider, not a plain hook.
+State consumed by more than one island lives in a **nanostore** (`src/stores/`), read via `@nanostores/vue`'s `useStore`. Do not duplicate cross-island state in component refs.
 
 ### File extensions
 
-Any file that renders or returns JSX must use the `.tsx` extension. Files that are pure TypeScript logic with no JSX use `.ts`.
-
-### React hooks
-
-Each `useEffect` must have a single responsibility. Never combine side effects with different trigger conditions into one effect. Split them.
-
-Every `useEffect` that creates a `setTimeout`, `setInterval`, or event listener must return a cleanup function that cancels it. Clear and reassign timer refs before setting a new one so rapid re-fires don't stack. Example:
-
-```tsx
-const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-useEffect(() => (): void => {
-  if (timerRef.current !== null) clearTimeout(timerRef.current);
-}, []);
-// in handler:
-if (timerRef.current !== null) clearTimeout(timerRef.current);
-timerRef.current = setTimeout(() => setState(false), 1500);
-```
+Static, zero-JS UI is `.astro`. Interactive islands are `.vue`. Pure logic is `.ts`/`.mjs`. Build-time-only pipeline modules are `.mjs`.
 
 ### State machines
 
-When implementing any feature with multiple states, enumerate every transition before writing code. For each transition, list every system that must be updated (storage, UI state, external APIs, DOM).
+Enumerate every transition before writing code. For each, list every system that must update (localStorage, store state, DOM, `gtag`/dataLayer). The consent machine table above is the reference.
 
 ---
 
-## SEO Checklist: Required for Every New Page
+## Known follow-ups (post-migration)
 
-Add via the route module's `meta()` export, never in `src/root.tsx`:
-
-- `<title>` (unique) and `<meta name="description">` (under 160 chars)
-- `og:title`, `og:description`, `og:url`, `og:type`, `og:image`, `og:image:width` (1200), `og:image:height` (630), `og:image:alt`, `og:site_name`, `og:locale` (en_GB)
-- `twitter:card` (`summary_large_image`), `twitter:title`, `twitter:description`, `twitter:image`, `twitter:image:alt`
-- `<link rel="canonical">` set to `${SITE_URL}${pathname}`
-- Correct heading hierarchy: one `h1`, `h2` for sections, `h3` for subsections
-
-Static routes only: add to `public/sitemap.xml` and the `prerender` array in `react-router.config.ts`.
-
-One-time `src/root.tsx` check (not per page): manifest link, both theme-color tags, JSON-LD block, `lang="en"` on `<html>`.
+Tracked cleanups not yet done: add `eslint-plugin-astro`/`eslint-plugin-vue` + a `lint` script; the custom `sitemap.xml.ts` endpoint; the abbr JS tooltip (touch + viewport reposition; the CSS `::after` tooltip is `display:none` when hidden to avoid layout overflow); Shiki syntax highlighting for code blocks; click-event tracking; consent runtime regression tests; and pruning stale `REUSE.toml` entries (e.g. `*.generated.ts`, shadcn `ui/`).
