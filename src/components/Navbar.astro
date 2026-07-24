@@ -1,47 +1,75 @@
 ---
+import { Icon } from "astro-icon/components";
 import { SITE_NAME, COMMUNITY_URL } from "@/lib/site";
 import ThemeToggle from "@/components/ThemeToggle.vue";
+import MobileMenu from "@/components/MobileMenu.vue";
 
 const base = import.meta.env.BASE_URL;
 const path = Astro.url.pathname;
-const links = [
-  { href: "challenges/", label: "Challenges" },
-  { href: "about/", label: "About" },
-  { href: "contribute/", label: "Contribute" },
-  { href: "handbook/", label: "Handbook" },
-  { href: "sponsors/", label: "Sponsors" },
+const logoDark = `${base}brand/offon-logo-dark-color.svg`;
+const logoLight = `${base}brand/offon-logo-light-mono.svg`;
+
+// Community sits between About and Contribute and is an external link (matches
+// the React Navbar order). The same list feeds the desktop cluster and the
+// mobile drawer island, so it is defined once.
+const navItems = [
+  { href: `${base}challenges/`, label: "Challenges" },
+  { href: `${base}about/`, label: "About" },
+  { href: COMMUNITY_URL, label: "Community", external: true },
+  { href: `${base}contribute/`, label: "Contribute" },
+  { href: `${base}handbook/`, label: "Handbook" },
+  { href: `${base}sponsors/`, label: "Sponsors" },
 ];
-const isActive = (href: string): boolean => path.startsWith(base + href);
-// min-h-[44px] keeps links at the WCAG 2.5.8 touch-target size (matches the React Navbar).
+
+const isActive = (item: (typeof navItems)[number]): boolean =>
+  !item.external && path.startsWith(item.href);
+
+// min-h-[44px] keeps links at the WCAG 2.5.8 touch-target size. The underline is
+// transparent until hover/active, giving the animated underline affordance.
 const linkCls =
-  "inline-flex items-center min-h-[44px] rounded px-1.5 -mx-1.5 text-sm text-dim hover:text-foreground focus-ring";
+  "inline-flex items-center gap-1 min-h-[44px] text-sm font-medium text-dim hover:text-foreground dark:hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent rounded px-1.5 -mx-1.5 focus-ring";
+const activeCls =
+  "text-foreground dark:text-primary underline decoration-foreground dark:decoration-primary underline-offset-4";
 ---
 
-<nav aria-label="Main" class="border-b border-border">
-  <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-    <a
-      href={base}
-      class="logo-link font-heading text-lg font-bold text-foreground focus-ring rounded-sm"
-      aria-label={`${SITE_NAME} home`}
-    >
-      OffOn
+<nav aria-label="Main" class="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-1.5">
+    <a href={base} aria-label={`${SITE_NAME} home`} class="logo-link flex items-center focus-ring rounded-sm">
+      {/* Dark logo is high-priority: visible in the default (dark) theme. Light logo is hidden until the user switches. */}
+      <img src={logoDark} alt="" width={130} height={33} loading="eager" fetchpriority="high" class="h-8 hidden dark:block" />
+      <img src={logoLight} alt="" width={130} height={33} loading="eager" class="h-8 block dark:hidden" />
     </a>
-    <div class="flex flex-wrap items-center gap-4">
-      {links.map((l) => (
-        <a href={base + l.href} class={linkCls} aria-current={isActive(l.href) ? "page" : undefined}>
-          {l.label}
-        </a>
-      ))}
-      <a
-        href={COMMUNITY_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-describedby="new-tab-hint"
-        class={linkCls}
-      >
-        Community
-      </a>
-      <ThemeToggle client:load transition:persist />
+
+    {/* Desktop nav */}
+    <div class="hidden md:flex items-center gap-8">
+      <ul role="list" class="contents">
+        {navItems.map((item) =>
+          item.external ? (
+            <li class="contents">
+              <a href={item.href} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class={linkCls}>
+                {item.label} <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+              </a>
+            </li>
+          ) : (
+            <li class="contents">
+              <a
+                href={item.href}
+                class={`${linkCls} ${isActive(item) ? activeCls : ""}`}
+                aria-current={isActive(item) ? "page" : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ),
+        )}
+      </ul>
+      <ThemeToggle variant="desktop" client:load transition:persist="theme-desktop" />
+    </div>
+
+    {/* Mobile: theme toggle + hamburger drawer */}
+    <div class="flex md:hidden items-center gap-3">
+      <ThemeToggle variant="mobile" client:load transition:persist="theme-mobile" />
+      <MobileMenu links={navItems} client:load transition:persist="mobile-menu" />
     </div>
   </div>
 </nav>

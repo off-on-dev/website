@@ -1,0 +1,147 @@
+<script setup lang="ts">
+import { ref, nextTick, onBeforeUnmount } from "vue";
+import { Menu, X, ExternalLink } from "lucide-vue-next";
+
+// Mobile nav drawer, ported from the React Navbar's hamburger + useFocusTrap +
+// useEscapeKey + inert-siblings behaviour. Rendered as an island because it
+// needs client state; the drawer markup is always in the DOM so aria-controls
+// has a valid target. The link list is passed in from Navbar.astro so it stays
+// defined once (SSR) alongside the desktop links.
+type NavLink = { href: string; label: string; external?: boolean };
+
+const props = defineProps<{ links: NavLink[] }>();
+
+const open = ref(false);
+const triggerRef = ref<HTMLButtonElement | null>(null);
+const menuRef = ref<HTMLElement | null>(null);
+let inertSiblings: HTMLElement[] = [];
+
+// Hide every body sibling (skip-nav, main, footer, consent banner) from AT and
+// pointer/focus while the drawer is open. Walk from the drawer up to its
+// nearest body-child ancestor (the <nav>) so the nav itself stays operable.
+function setSiblingsInert(): void {
+  let host: Element | null = menuRef.value;
+  while (host && host.parentElement !== document.body) host = host.parentElement;
+  if (!host) return;
+  inertSiblings = (Array.from(document.body.children) as HTMLElement[]).filter((el) => el !== host);
+  inertSiblings.forEach((el) => {
+    el.setAttribute("inert", "");
+    el.setAttribute("aria-hidden", "true");
+  });
+}
+
+function clearSiblingsInert(): void {
+  inertSiblings.forEach((el) => {
+    el.removeAttribute("inert");
+    el.removeAttribute("aria-hidden");
+  });
+  inertSiblings = [];
+}
+
+function focusableIn(container: HTMLElement): HTMLElement[] {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    ),
+  );
+}
+
+function onKeydown(e: KeyboardEvent): void {
+  if (e.key === "Escape") {
+    closeMenu(true);
+    return;
+  }
+  if (e.key !== "Tab" || !menuRef.value) return;
+  const items = focusableIn(menuRef.value);
+  if (items.length === 0) return;
+  const first = items[0];
+  const last = items[items.length - 1];
+  const active = document.activeElement;
+  if (e.shiftKey && active === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && active === last) {
+    e.preventDefault();
+    first.focus();
+  }
+}
+
+async function openMenu(): Promise<void> {
+  open.value = true;
+  await nextTick();
+  setSiblingsInert();
+  document.addEventListener("keydown", onKeydown);
+  focusableIn(menuRef.value as HTMLElement)[0]?.focus();
+}
+
+function closeMenu(restoreFocus = true): void {
+  open.value = false;
+  document.removeEventListener("keydown", onKeydown);
+  clearSiblingsInert();
+  if (restoreFocus) triggerRef.value?.focus();
+}
+
+function toggle(): void {
+  if (open.value) closeMenu(true);
+  else void openMenu();
+}
+
+onBeforeUnmount(() => {
+  document.removeEventListener("keydown", onKeydown);
+  clearSiblingsInert();
+});
+
+// Shared link classes (match the React NavLinks link styling).
+const linkCls =
+  "inline-flex items-center gap-1 min-h-[44px] text-sm font-medium text-dim hover:text-foreground dark:hover:text-primary transition-colors rounded px-1.5 -mx-1.5 focus-ring";
+</script>
+
+<template>
+  <button
+    ref="triggerRef"
+    type="button"
+    class="flex h-11 w-11 items-center justify-center rounded-md border border-border bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-ring"
+    aria-label="Menu"
+    :aria-expanded="open"
+    aria-controls="mobile-menu"
+    @click="toggle"
+  >
+    <X v-if="open" :size="18" aria-hidden="true" />
+    <Menu v-else :size="18" aria-hidden="true" />
+  </button>
+
+  <!-- Drawer: always in the DOM so aria-controls resolves. Positioned
+       absolute top-full so it sits directly below the fixed <nav> (a fixed
+       element is the containing block for its absolute descendants) at full
+       width, no magic offset. Plain <div>, not <nav>: it lives inside the outer
+       <nav aria-label="Main"> and a nested nav landmark would create two
+       overlapping navigation regions. -->
+  <div
+    id="mobile-menu"
+    ref="menuRef"
+    :hidden="!open"
+    :class="[
+      'absolute inset-x-0 top-full z-40 border-b border-border bg-background px-6 py-2 md:hidden',
+      open ? 'flex flex-col gap-1' : '',
+    ]"
+  >
+    <ul role="list" class="contents">
+      <li v-for="l in props.links" :key="l.href" class="contents">
+        <a
+          v-if="l.external"
+          :href="l.href"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-describedby="new-tab-hint"
+          :class="linkCls"
+          @click="closeMenu(false)"
+        >
+          {{ l.label }} <ExternalLink :size="12" aria-hidden="true" />
+        </a>
+        <a v-else :href="l.href" :class="linkCls" @click="closeMenu(false)">
+          {{ l.label }}
+        </a>
+      </li>
+    </ul>
+  </div>
+</template>
