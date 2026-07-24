@@ -2,6 +2,8 @@
 
 This file applies to all work on offon.dev. Read it before adding fonts, images, dependencies, or new routes.
 
+> **Post-migration note:** the site is now Astro + Vue islands, not React Router. The performance *principles* below (image rules, font subsetting/preloading, self-hosting, "ship less JS") still hold, but some mechanics are superseded: global font preloads live in `src/layouts/Layout.astro` (not `root.tsx`); code-splitting and "zero JS by default" come from Astro islands (not React Router / `React.lazy`); markdown is pre-rendered by the content collection (`src/content.config.ts` + `src/lib/markdown-pipeline.mjs`), not a generator; prefetching uses Astro's native `prefetch` config (not a `SPECULATION_RULES` script); the build outputs `dist/` (not `dist/client/`); routes come from `getStaticPaths()` (no `react-router.config.ts` prerender array). Where this doc and `CLAUDE.md` disagree, `CLAUDE.md` wins.
+
 ---
 
 ## Targets

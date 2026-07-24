@@ -1,5 +1,7 @@
 # OffOn Style Guide
 
+> **Post-migration note:** the site migrated from React to Astro + Vue islands. The **design system** in this guide — colour tokens, typography, the `@theme` block, button/pill/badge classes, light/dark rules, animations — remains authoritative and lives in `src/styles/index.css`. However, component-level entries below still describe the former React (`.tsx`) implementations and their props; the current components are `.astro` (static) and `.vue` (islands) in `src/components/`, which are the source of truth for markup and props. A component-by-component rewrite of this guide is a tracked follow-up. Where this doc and the actual components disagree, the components win.
+
 ## Brand Name
 
 The brand is always written **OffOn** (camelCase). Never "offon", "Offon", or "OFFON".

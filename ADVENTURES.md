@@ -2,7 +2,9 @@
 
 This file is for anyone creating, syncing, or updating an adventure on offon.dev.
 
-Adventures live in a separate repo ([open-source-challenges](https://github.com/off-on-dev/open-source-challenges)) and are pulled into this site via the **Sync Adventure** GitHub Actions workflow. You never write the generated TypeScript files by hand — the workflow and build scripts do that automatically.
+Adventures live in a separate repo ([open-source-challenges](https://github.com/off-on-dev/open-source-challenges)) and are pulled into this site via the **Sync Adventure** GitHub Actions workflow.
+
+Since the Astro migration there is **no code generation step**. Astro reads `adventure.yaml` directly through a Zod-validated content collection (`src/content.config.ts`) and renders the markdown prose to HTML at build time. Routes appear automatically via `getStaticPaths()`. The source of truth is the YAML; there are no `*.generated.ts` files.
 
 ---
 
@@ -13,12 +15,12 @@ off-on-dev/open-source-challenges          offon.dev website repo
   adventures/<id>/docs/
     index.yaml          ──── Sync Adventure workflow ────►  src/data/adventures/<slug>/adventure.yaml
     beginner.yaml                                            src/data/adventures/<slug>/<level>-posts.json
-    intermediate.yaml   ──── npm run generate (prebuild) ──►  src/data/adventures/<slug>.generated.ts
-    ...                                                       src/data/adventures/index.ts
-                                                              src/data/adventures/summaries.ts
+    intermediate.yaml
+    ...
+                        (build time) content collection ──►  routes + rendered HTML (getStaticPaths)
 ```
 
-The generated TypeScript files are committed so the dev server works without running the generator manually. Never edit `*.generated.ts`, `index.ts`, or `summaries.ts` by hand.
+Validate the YAML any time with `npm run sync` (runs the Zod schema; the build also fails on invalid content).
 
 ---
 
@@ -39,7 +41,7 @@ Go to **Actions → Sync Adventure from Challenges Repo → Run workflow**.
 2. If a PR branch (`feat/adventure-<slug>`) already exists, restores `adventure.yaml` from that branch so any manual edits already made survive the re-sync.
 3. Fetches `docs/index.yaml` and all level YAMLs from the challenges repo.
 4. Writes `src/data/adventures/<slug>/adventure.yaml` and creates `<level>-posts.json` stubs for each new live level.
-5. Runs `generate-adventures.mjs` to regenerate all TypeScript, sitemap entries, prerender entries, test arrays, `public/llms.txt`, and the leaderboard adventure list in `scripts/refresh-leaderboard.mjs`.
+5. Validates the YAML with `astro sync` (Zod content schema) and registers the adventure in `ADVENTURE_CATEGORIES` (`scripts/refresh-leaderboard.mjs`). Routes, `public/sitemap.xml`, and `public/llms.txt` are updated by hand as part of the PR checklist (routes themselves are automatic via `getStaticPaths()`).
 6. Opens (or updates) a PR on `feat/adventure-<slug>` with a checklist of steps to complete before merging.
 
 ---
@@ -68,7 +70,7 @@ The `month:` field defaults to the current month when first synced. Correct it i
 1. Look up the Discourse category at `https://community.offon.dev/categories.json`.
 2. Find the category for this adventure and copy its `id` integer.
 3. Add `community_category_id: <id>` to `adventure.yaml`.
-4. Run `npm run generate` to regenerate TypeScript.
+4. Run `npm run sync` to validate the YAML against the content schema.
 
 This field also survives future re-syncs once set.
 
@@ -154,7 +156,7 @@ Target any new adventure or level detail pages. All severity-weighted findings m
 ### Final checks
 
 ```sh
-npm run lint && npm run lint:reuse && npm test && npm run build && npm run test:e2e
+npm run sync && npm run lint:reuse && npm run build && npm run test:e2e
 ```
 
 All checks must pass before merging.
@@ -219,24 +221,12 @@ Paste or attach the walkthrough content in any format — markdown, YAML, HTML, 
 1. Parses the input into structured steps (`SolutionBlock[]` arrays with text, code, image, and callout blocks).
 2. Downloads any referenced images and converts them to WebP at quality 85 using `cwebp`. Images are saved to `public/solutions/<adventure-id>/`.
 3. Writes `src/data/solutions/<adventure-id>/<level-id>.ts` with the full typed `Solution` object.
-4. Runs `node scripts/generate-solutions.mjs` to rebuild the barrel index and patch region markers.
-5. Runs `npm run build` and `npm run lint` to verify the output compiles cleanly.
-6. Run `/a11y-audit` against the new solution page to catch any accessibility issues before merging.
+4. Runs `npm run build` to verify the output compiles cleanly.
+5. Run `/a11y-audit` against the new solution page to catch any accessibility issues before merging.
 
-### What the generator updates
+### How solutions are loaded
 
-`scripts/generate-solutions.mjs` scans every `.ts` file in `src/data/solutions/<adventure-id>/` (excluding `index.ts`, `manifest.ts`, and `types.ts`) and rebuilds five files automatically:
-
-| File | What gets patched |
-| --- | --- |
-| `src/data/solutions/index.ts` | Full barrel re-generated: one import per solution file, exported as `SOLUTIONS: Solution[]`. Never edit by hand. |
-| `src/data/solutions/manifest.ts` | Lightweight set of solution IDs regenerated on every run. Used to check solution availability without importing full solution data. Never edit by hand. |
-| `react-router.config.ts` | `GENERATED:solutions` region: one prerender entry per solution route (`/adventures/<id>/levels/<level>/solution`). |
-| `src/test/seo.test.ts` | `GENERATED:solutions` region: one route entry per solution. |
-| `src/test/prerender.test.ts` | `GENERATED:solutions` region: one `{ file, check }` entry per solution asserting the built HTML contains `"Solution"`. |
-| `e2e/smoke.spec.ts` | `GENERATED:solutions` region: one `{ path, title }` smoke-test entry per solution. |
-
-You do not need to touch any of these files manually when adding a solution.
+There is no solutions generator. `src/lib/solutions.ts` loads every `src/data/solutions/<adventure-id>/<level-id>.ts` via `import.meta.glob` at build time, and the solution route (`/adventures/<id>/levels/<level>/solution/`) is generated by `getStaticPaths()`. Just add the `.ts` file — no barrel or region markers to update. Add the route to the test lists in `e2e/smoke.spec.ts` and `e2e/a11y.spec.ts`.
 
 ### Deadline gating
 
@@ -260,7 +250,7 @@ src/data/solutions/index.ts                       ← auto-generated barrel (com
 | --- | --- | --- |
 | `sync-adventure.yml` | Manual (`workflow_dispatch`) | Sync adventure content from the challenges repo and open or update a PR |
 | `add-discussion-url.yml` | Manual (`workflow_dispatch`) | Set a Discourse thread URL for a level after it has been merged, and open a PR with updated YAML and initial posts |
-| `validate-adventures.yml` | PR (when adventure files change) | Validate YAML schema, check generated files are up-to-date, verify route/sitemap/prerender consistency |
+| `validate-adventures.yml` | PR (when adventure files change) | Validate adventure YAML against the Zod content schema (`astro sync`), check per-level discussion JSON exists, verify `ADVENTURE_CATEGORIES` registration |
 | `deploy.yml` | Push to `main` | Build and deploy to GitHub Pages at [offon.dev](https://offon.dev) |
 | `preview.yml` | Open PR | Deploy a PR preview at `/pr-preview/pr-<n>/` |
 | `refresh-community-data.yml` | Hourly + manual | Refresh discussion posts, leaderboard data, and community leaders from Discourse |
@@ -289,4 +279,4 @@ DISCOURSE_API_USERNAME=your_username
 
 The `.env` file is gitignored. For CI, set `DISCOURSE_API_KEY` and `DISCOURSE_API_USERNAME` as repository secrets in **Settings > Secrets and variables > Actions**.
 
-> The `COMMUNITY_BASE` constant in each refresh script is a necessary duplicate of `COMMUNITY_URL` in `src/data/constants.ts`. The scripts run in Node outside the Vite build and cannot import from `src/`. Always update all five places together if the community URL ever changes: `refresh-discussions.mjs`, `refresh-leaderboard.mjs`, `refresh-community-leaders.mjs`, `generate-community-sitemap.mjs`, and `src/data/constants.ts`.
+> The `COMMUNITY_BASE` constant in each refresh script is a necessary duplicate of `COMMUNITY_URL` in `src/lib/site.ts`. The scripts run in Node outside the Vite build and cannot import from `src/`. Always update all five places together if the community URL ever changes: `refresh-discussions.mjs`, `refresh-leaderboard.mjs`, `refresh-community-leaders.mjs`, `generate-community-sitemap.mjs`, and `src/lib/site.ts`.
