@@ -15,7 +15,7 @@ tags:
 contributor:
   name: Katharina Sick
   url: https://ksick.dev/
-  about: DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native
+  about: <abbr title="Developer Relations">DevRel</abbr> at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native
     and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities,
     inline skating rinks, and quiz nights across Europe.
 backstory:
@@ -38,7 +38,7 @@ levels:
       - OpenTofu
     learnings:
       - Infrastructure as Code with OpenTofu
-      - Remote state management with GCS backend
+      - Remote state management with <abbr title="Google Cloud Storage">GCS</abbr> backend
       - Dynamic resource provisioning with for_each
       - Conditional resources with the enabled meta-argument, new in OpenTofu
     devcontainer: 02-building-cloudhaven_01-beginner
@@ -60,7 +60,7 @@ levels:
       - Resolve all TODOs in the code and successfully run tofu apply
     toolbox:
       - name: tofu
-        description: OpenTofu CLI for infrastructure provisioning
+        description: OpenTofu <abbr title="Command Line Interface">CLI</abbr> for infrastructure provisioning
         url: https://opentofu.org/
       - name: gcp-api-mock
         description: mock GCP API running locally to simulate cloud resources without real cloud costs (Cloud Storage and Cloud
@@ -141,7 +141,7 @@ levels:
       - Three districts deployed with correctly configured infrastructure (vaults and ledgers)
     toolbox:
       - name: tofu
-        description: OpenTofu CLI for infrastructure provisioning
+        description: OpenTofu <abbr title="Command Line Interface">CLI</abbr> for infrastructure provisioning
         url: https://opentofu.org/
       - name: gcp-api-mock
         description: mock GCP API running locally to simulate cloud resources without real cloud costs (Cloud Storage and Cloud
@@ -224,7 +224,7 @@ levels:
     deadline: "2026-02-04T23:59:00+01:00"
     intro:
       - Three broken GitHub Actions workflows stand between CloudHaven and automated infrastructure governance. Fix
-        drift detection that creates PRs, PR validation with Trivy security scanning and service-container integration
+        drift detection that creates PRs, <abbr title="Pull Request">PR</abbr> validation with Trivy security scanning and service-container integration
         tests, and automatic apply on merge.
     backstory:
       - "After the Modular Metropolis refactoring, CloudHaven flourished. But with growth came risk. One night, a rogue
@@ -244,7 +244,7 @@ levels:
       - All three workflows must have succeeded at least once
     toolbox:
       - name: tofu
-        description: OpenTofu CLI for infrastructure provisioning
+        description: OpenTofu <abbr title="Command Line Interface">CLI</abbr> for infrastructure provisioning
         url: https://opentofu.org/
       - name: gcp-api-mock
         description: mock GCP API running locally (port set to public so GitHub Actions runners can access it)

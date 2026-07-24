@@ -14,11 +14,11 @@ tags:
 contributor:
   name: Katharina Sick
   url: https://ksick.dev/
-  about: DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native
+  about: <abbr title="Developer Relations">DevRel</abbr> at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native
     and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities,
     inline skating rinks, and quiz nights across Europe.
 backstory:
-  - Welcome aboard the GitOps Starliner, a multi-species engineering vessel orbiting the vibrant planet of Polaris-9.
+  - Welcome aboard the <abbr title="Git Operations">GitOps</abbr> Starliner, a multi-species engineering vessel orbiting the vibrant planet of Polaris-9.
     Life in this quadrant is wonderfully diverse, from the whispering cloud-dwellers of Nebulon to the rhythmic
     click-speakers of Crustacea Prime.
   - Communication between species used to be seamless, thanks to the Echo Server, a universal translator that instantly
@@ -34,7 +34,7 @@ levels:
     topics:
       - Argo CD
     learnings:
-      - Debug GitOps flows with Argo CD
+      - Debug <abbr title="Git Operations">GitOps</abbr> flows with Argo CD
       - ApplicationSet templating & pitfalls
       - Environment isolation & namespaces
       - "Sync policies: automated, prune & self-heal"
@@ -55,13 +55,13 @@ levels:
       - Confirm that updates roll out automatically without leaving stale resources behind
     toolbox:
       - name: kubectl
-        description: Kubernetes CLI for interacting with the cluster
+        description: Kubernetes <abbr title="Command Line Interface">CLI</abbr> for interacting with the cluster
         url: https://kubernetes.io/docs/reference/kubectl/
       - name: kubens
         description: fast way to switch between Kubernetes namespaces
         url: https://github.com/ahmetb/kubectx
       - name: k9s
-        description: terminal UI for managing and inspecting your cluster
+        description: terminal <abbr title="User Interface">UI</abbr> for managing and inspecting your cluster
         url: https://k9scli.io/
     services:
       - name: "Argo CD"
@@ -140,13 +140,13 @@ levels:
       - All rollouts complete successfully
     toolbox:
       - name: kubectl
-        description: Kubernetes CLI for interacting with the cluster
+        description: Kubernetes <abbr title="Command Line Interface">CLI</abbr> for interacting with the cluster
         url: https://kubernetes.io/docs/reference/kubectl/
       - name: kubens
         description: fast way to switch between Kubernetes namespaces
         url: https://github.com/ahmetb/kubectx
       - name: k9s
-        description: terminal UI for managing and inspecting your cluster
+        description: terminal <abbr title="User Interface">UI</abbr> for managing and inspecting your cluster
         url: https://k9scli.io/
       - name: Argo CD CLI
         description: manage Argo CD applications from the command line
@@ -280,19 +280,19 @@ levels:
         distributed tracing."
     objective:
       - Automated rollout progression to HotROD version 1.76.0 driven by observability signals
-      - OpenTelemetry Collector configured with an OTLP receiver for HotROD traces, a Spanmetrics connector converting
+      - OpenTelemetry Collector configured with an <abbr title="OpenTelemetry Protocol">OTLP</abbr> receiver for HotROD traces, a Spanmetrics connector converting
         traces to metrics, trace export to Jaeger, and metrics export to Prometheus
       - "Canary analysis with three PromQL queries: traffic detection (at least 0.05 req/s to prevent idle canaries),
         error rate below 5%, and 95th-percentile latency below 1000ms"
     toolbox:
       - name: kubectl
-        description: Kubernetes CLI for interacting with the cluster
+        description: Kubernetes <abbr title="Command Line Interface">CLI</abbr> for interacting with the cluster
         url: https://kubernetes.io/docs/reference/kubectl/
       - name: kubens
         description: fast way to switch between Kubernetes namespaces
         url: https://github.com/ahmetb/kubectx
       - name: k9s
-        description: terminal UI for managing and inspecting your cluster
+        description: terminal <abbr title="User Interface">UI</abbr> for managing and inspecting your cluster
         url: https://k9scli.io/
       - name: Argo CD CLI
         description: manage Argo CD applications from the command line
@@ -363,7 +363,7 @@ levels:
           ```
 
 
-          If you changed the OTel Collector config, restart it:
+          If you changed the <abbr title="OpenTelemetry">OTel</abbr> Collector config, restart it:
 
 
           ```sh

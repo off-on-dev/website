@@ -15,6 +15,7 @@ const ROUTES: Record<string, string> = {
   "/adventures/echoes-lost-in-orbit/levels/beginner/": "Broken Echoes - Echoes Lost in Orbit - OffOn",
   "/adventures/echoes-lost-in-orbit/levels/beginner/solution/":
     "Beginner Solution: Broken Echoes - Echoes Lost in Orbit - OffOn",
+  "/adventures/dead-reckoning/levels/expert/": "The Chronometer - Dead Reckoning - OffOn",
   "/challenges/": "Challenges - OffOn",
   "/challenges/opentelemetry/": "OpenTelemetry Challenges - OffOn",
   "/about/": "About OffOn - Building the contributors and maintainers of tomorrow",

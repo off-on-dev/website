@@ -14,7 +14,7 @@ tags:
 contributor:
   name: Katharina Sick
   url: https://ksick.dev/
-  about: DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native
+  about: <abbr title="Developer Relations">DevRel</abbr> at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native
     and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities,
     inline skating rinks, and quiz nights across Europe.
 backstory:
@@ -68,13 +68,13 @@ levels:
       - name: python
         description: programming language used for the HubSystem application
       - name: kubectl
-        description: Kubernetes CLI for interacting with the cluster
+        description: Kubernetes <abbr title="Command Line Interface">CLI</abbr> for interacting with the cluster
         url: https://kubernetes.io/docs/reference/kubectl/
       - name: kubens
         description: fast way to switch between Kubernetes namespaces
         url: https://github.com/ahmetb/kubectx
       - name: k9s
-        description: terminal UI for managing and inspecting your cluster
+        description: terminal <abbr title="User Interface">UI</abbr> for managing and inspecting your cluster
         url: https://k9scli.io/
     services:
       - name: "Jaeger"
@@ -85,7 +85,7 @@ levels:
         content: Wait ~10 minutes for all infrastructure to initialize.
       - title: Instrument the App
         content: |-
-          The application code is in `./hubsystem.py`. Add OpenTelemetry instrumentation using OpenLLMetry. The OTel
+          The application code is in `./hubsystem.py`. Add OpenTelemetry instrumentation using OpenLLMetry. The <abbr title="OpenTelemetry">OTel</abbr>
           Collector and Jaeger are already configured correctly; you only need to instrument the app. You do not need to
           interact with Kubernetes directly. The cluster is already running, so focus on the Python code.
       - title: Run and Investigate
@@ -115,7 +115,7 @@ levels:
       - Jaeger
       - Prometheus
     learnings:
-      - Instrument RAG pipelines with OpenLLMetry
+      - Instrument <abbr title="Retrieval-Augmented Generation">RAG</abbr> pipelines with OpenLLMetry
       - Create custom OpenTelemetry metrics in Python
       - Write PromQL queries & recording rules in Prometheus
     devcontainer: 03-the-ai-observatory_02-intermediate
@@ -123,7 +123,7 @@ levels:
     deadline: "2026-03-08T23:59:00+01:00"
     intro:
       - ART's RAG pipeline is retrieving entertainment data instead of navigation coordinates and won't calculate your
-        jump. Instrument the full retrieval pipeline with OpenLLMetry, build a custom OTel metric to quantify the
+        jump. Instrument the full retrieval pipeline with OpenLLMetry, build a custom <abbr title="OpenTelemetry">OTel</abbr> metric to quantify the
         distraction, and write a Prometheus recording rule to prove it.
     backstory:
       - You're a rogue SecUnit who just escaped from Preservation Station after being identified. A researcher helped
@@ -149,7 +149,7 @@ levels:
       - Restore the navigation system so ART successfully calculates jump coordinates to RaviHyral
     architecture:
       - The ART Pilot System runs as a local Python application outside Kubernetes, using a RAG (Retrieval-Augmented
-        Generation) architecture. AI infrastructure (Ollama for LLM, Qdrant for vector storage) and observability tools
+        Generation) architecture. AI infrastructure (Ollama for <abbr title="Large Language Model">LLM</abbr>, Qdrant for vector storage) and observability tools
         (OpenTelemetry Collector, Jaeger, Prometheus) run inside Kubernetes.
       - "This setup lets you focus on observability patterns: edit Python code, run it, and see traces and metrics
         immediately without a build or deploy cycle."
@@ -157,13 +157,13 @@ levels:
       - name: python
         description: programming language used for the ART application
       - name: kubectl
-        description: Kubernetes CLI for interacting with the cluster
+        description: Kubernetes <abbr title="Command Line Interface">CLI</abbr> for interacting with the cluster
         url: https://kubernetes.io/docs/reference/kubectl/
       - name: kubens
         description: fast way to switch between Kubernetes namespaces
         url: https://github.com/ahmetb/kubectx
       - name: k9s
-        description: terminal UI for managing and inspecting your cluster
+        description: terminal <abbr title="User Interface">UI</abbr> for managing and inspecting your cluster
         url: https://k9scli.io/
     services:
       - name: "Prometheus"
@@ -221,7 +221,7 @@ levels:
       - Jaeger
     learnings:
       - OpenTelemetry GenAI semantic conventions
-      - Tail sampling in the OTel Collector
+      - Tail sampling in the <abbr title="OpenTelemetry">OTel</abbr> Collector
     devcontainer: 03-the-ai-observatory_03-expert
     discussion_url: /t/reduce-telemetry-noise-adventure-03-expert-is-live/999/1
     deadline: "2026-03-08T23:59:00+01:00"
@@ -256,19 +256,19 @@ levels:
         than 5 seconds
     architecture:
       - "Same setup as the intermediate level: the ART Pilot System runs as a local Python application outside
-        Kubernetes with a RAG architecture. AI infrastructure (Ollama, Qdrant) and observability tools (OpenTelemetry
+        Kubernetes with a <abbr title='Retrieval-Augmented Generation'>RAG</abbr> architecture. AI infrastructure (Ollama, Qdrant) and observability tools (OpenTelemetry
         Collector, Jaeger) run inside Kubernetes."
     toolbox:
       - name: python
         description: programming language used for the ART application
       - name: kubectl
-        description: Kubernetes CLI for interacting with the cluster
+        description: Kubernetes <abbr title="Command Line Interface">CLI</abbr> for interacting with the cluster
         url: https://kubernetes.io/docs/reference/kubectl/
       - name: kubens
         description: fast way to switch between Kubernetes namespaces
         url: https://github.com/ahmetb/kubectx
       - name: k9s
-        description: terminal UI for managing and inspecting your cluster
+        description: terminal <abbr title="User Interface">UI</abbr> for managing and inspecting your cluster
         url: https://k9scli.io/
     services:
       - name: "Jaeger"
