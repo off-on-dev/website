@@ -1,0 +1,26 @@
+---
+import { Icon } from "astro-icon/components";
+import { BRAND_NAME } from "@/lib/site";
+
+const base = import.meta.env.BASE_URL;
+---
+
+<section aria-labelledby="sponsor-heading" class="bg-card border-y border-border py-16 px-6 md:px-16">
+  <div class="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    <div>
+      <h2 id="sponsor-heading" class="text-3xl md:text-4xl font-bold leading-tight tracking-tight text-primary">
+        Support {BRAND_NAME}
+      </h2>
+    </div>
+    <div class="flex flex-col gap-4">
+      <p class="font-sans text-base leading-relaxed text-dim">
+        Sponsor challenges, swag, or licenses and connect with the next generation of open source contributors.
+      </p>
+      <div>
+        <a href={`${base}sponsors/`} class="btn-primary">
+          Become a Sponsor <Icon name="lucide:arrow-right" width={14} height={14} aria-hidden="true" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

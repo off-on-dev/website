@@ -1,0 +1,72 @@
+---
+import { Icon } from "astro-icon/components";
+import communityLeadersData from "@/data/community-leaders.json";
+import AvatarLink from "@/components/AvatarLink.astro";
+
+type LeaderUser = { username: string; avatarUrl: string; count: number };
+type LeaderSection = { id: string; title: string; users: LeaderUser[] };
+
+interface Props {
+  /** Which section IDs to show. Omit to show all. */
+  sections?: string[];
+  /** Max users to show per section. Omit to show all. */
+  limit?: number;
+}
+
+const { sections: sectionFilter, limit } = Astro.props;
+
+const SECTION_ICONS: Record<string, string> = {
+  "top-contributors": "lucide:trophy",
+  "top-challenge-solvers": "lucide:target",
+  "challenge-rockstars": "lucide:star",
+  "challenge-grand-builders": "lucide:building-2",
+  "challenge-builders": "lucide:wrench",
+  "most-liked": "lucide:heart",
+  "most-replies": "lucide:message-circle",
+  "most-supportive": "lucide:hand-heart",
+};
+
+const ALL_SECTIONS = communityLeadersData.sections as LeaderSection[];
+
+const visibleSections = (
+  sectionFilter
+    ? sectionFilter
+        .map((id) => ALL_SECTIONS.find((s) => s.id === id))
+        .filter((s): s is LeaderSection => s !== undefined)
+    : ALL_SECTIONS
+).map((s) => (limit !== undefined ? { ...s, users: s.users.slice(0, limit) } : s));
+---
+
+<div class="rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
+  <h3 class="font-sans text-base font-semibold text-foreground mb-5">Community Leaders</h3>
+  <div class="space-y-5">
+    {visibleSections.map((section) => (
+      <div class="pb-5 border-b border-border last:border-b-0 last:pb-0">
+        <div>
+          <h4 class="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+            <span class="text-primary">
+              <Icon name={SECTION_ICONS[section.id]} width={14} height={14} aria-hidden="true" />
+            </span>
+            {section.title}
+          </h4>
+          <ol class="space-y-2.5" aria-label={section.title}>
+            {section.users.map((user, i) => (
+              <li class="flex items-center gap-3">
+                <span class="font-mono text-xs text-faint w-4 shrink-0 text-right" aria-hidden="true">{i + 1}</span>
+                <AvatarLink
+                  username={user.username}
+                  avatarUrl={user.avatarUrl}
+                  size={28}
+                  class="text-sm font-medium text-foreground min-w-0 flex-1"
+                />
+                <span class="text-xs font-mono text-dim tabular-nums shrink-0" aria-label={`${user.count} contributions`}>
+                  {user.count}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>

@@ -1,9 +1,21 @@
 ---
 import { getCollection } from "astro:content";
+import { Icon } from "astro-icon/components";
 import Layout from "@/layouts/Layout.astro";
 import Hero from "@/components/Hero.astro";
 import AdventureCard from "@/components/AdventureCard.astro";
+import SectionLabel from "@/components/SectionLabel.astro";
+import ChallengeHighlights from "@/components/ChallengeHighlights.astro";
+import CommunitySection from "@/components/CommunitySection.astro";
+import CommunityLeaders from "@/components/CommunityLeaders.astro";
+import SponsorStrip from "@/components/SponsorStrip.astro";
+import BottomCTA from "@/components/BottomCTA.astro";
 import { BRAND_NAME, BRAND_SHORT_DESCRIPTION } from "@/lib/site";
+
+const base = import.meta.env.BASE_URL;
+const PROPOSE_ADVENTURE_URL =
+  "https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea";
+const HOME_ADVENTURE_LIMIT = 6;
 
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 const monthKey = (m: string): number => {
@@ -21,22 +33,70 @@ const isLive = (a: { rewards?: { deadline?: string }; levels: { deadline?: strin
 const adventures = (await getCollection("adventures"))
   .map((a) => a.data)
   .sort((x, y) => monthKey(y.month) - monthKey(x.month));
+
+const adventureCount = adventures.length;
+const challengeCount = adventures.reduce((n, a) => n + a.levels.length, 0);
+const visibleAdventures = adventures.slice(0, HOME_ADVENTURE_LIMIT);
+const hasMore = adventures.length > HOME_ADVENTURE_LIMIT;
 ---
 
 <Layout title={`${BRAND_NAME} - Learn Open Source by Doing`} description={BRAND_SHORT_DESCRIPTION} path="/">
   <main id="main-content" tabindex="-1">
     <Hero />
 
-    <section id="challenges" aria-labelledby="challenges-heading" class="mx-auto max-w-6xl px-6 py-20">
-      <div class="mb-8 flex items-baseline justify-between">
-        <h2 id="challenges-heading" class="font-heading text-2xl font-bold text-foreground sm:text-3xl">
-          Open Source Adventures
+    <section id="challenges" aria-labelledby="challenges-heading" class="py-24 px-6 md:px-16">
+      <div class="mx-auto max-w-6xl">
+        <SectionLabel>Adventures</SectionLabel>
+        <h2 id="challenges-heading" class="mb-6 text-3xl font-bold text-primary md:text-4xl">
+          Choose Your Adventure
         </h2>
-        <a class="docs-ext-link text-sm" href={`${import.meta.env.BASE_URL}adventures/`}>View all</a>
-      </div>
-      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {adventures.map((a) => <AdventureCard adventure={{ ...a, isLive: isLive(a) }} />)}
+        <p class="mb-6 font-sans text-sm font-medium tracking-wide text-muted-foreground">
+          {adventureCount} {adventureCount === 1 ? "adventure" : "adventures"} · {challengeCount} {challengeCount === 1 ? "challenge" : "challenges"}
+        </p>
+        <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {visibleAdventures.map((a) => <AdventureCard adventure={{ ...a, isLive: isLive(a) }} />)}
+        </div>
+        {hasMore && (
+          <div class="mt-10 flex justify-center">
+            <a href={`${base}challenges/`} class="btn-ghost inline-flex items-center gap-2">
+              See all adventures
+              <Icon name="lucide:arrow-right" width={16} height={16} aria-hidden="true" />
+            </a>
+          </div>
+        )}
       </div>
     </section>
+
+    <ChallengeHighlights />
+
+    <section aria-labelledby="adventure-idea-heading" class="bg-primary py-16 px-6 md:px-16">
+      <div class="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <h2 id="adventure-idea-heading" class="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground">
+          <span class="block">Got an Idea</span>
+          <span class="block">for an Adventure?</span>
+        </h2>
+        <div class="flex flex-col gap-4">
+          <p class="font-sans text-base leading-relaxed text-background/90">
+            An adventure is a set of hands-on challenges built around one open source technology. Submit a scenario and help shape what the community learns next.
+          </p>
+          <div class="flex gap-3 flex-wrap mt-2">
+            <a href={PROPOSE_ADVENTURE_URL} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="btn-inverse">
+              Propose an Adventure Idea <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <CommunitySection>
+      <CommunityLeaders
+        slot="aside"
+        sections={["top-contributors", "challenge-rockstars", "challenge-grand-builders", "top-challenge-solvers", "challenge-builders", "most-supportive"]}
+        limit={3}
+      />
+    </CommunitySection>
+
+    <SponsorStrip />
+    <BottomCTA />
   </main>
 </Layout>

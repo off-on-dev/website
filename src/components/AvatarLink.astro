@@ -1,0 +1,37 @@
+---
+// Avatar + username row used in the community leaderboards. Despite the name it
+// is not an anchor (the React original renders a non-linked username too). The
+// avatar is external (Discourse); when a URL is present we render the image,
+// otherwise an initials chip. An inline onerror swaps a failed image for the
+// initials chip (CSP allows 'unsafe-inline'), matching the React fallback.
+interface Props {
+  username: string;
+  avatarUrl?: string;
+  size?: 24 | 28;
+  class?: string;
+}
+const { username, avatarUrl, size = 24, class: className = "" } = Astro.props;
+const sizeClass = size === 28 ? "h-7 w-7" : "h-6 w-6";
+const initials = username.slice(0, 2).toUpperCase();
+const chipClass = `flex ${sizeClass} shrink-0 items-center justify-center rounded-full bg-muted text-[0.6rem] font-semibold text-foreground`;
+---
+
+{avatarUrl ? (
+  <img
+    src={avatarUrl}
+    alt=""
+    aria-hidden="true"
+    width={size}
+    height={size}
+    loading="lazy"
+    decoding="async"
+    class={`${sizeClass} rounded-full shrink-0 object-cover`}
+    onerror={`this.style.display='none';this.nextElementSibling.style.display='flex';`}
+  />
+  <span class={chipClass} style="display:none" aria-hidden="true">{initials}</span>
+) : (
+  <span class={chipClass} aria-hidden="true">{initials}</span>
+)}
+<span class={className}>
+  <span class="truncate">{username}</span>
+</span>

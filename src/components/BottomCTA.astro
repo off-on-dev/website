@@ -1,0 +1,56 @@
+---
+import { Icon } from "astro-icon/components";
+import { BRAND_NAME, BRAND_SECONDARY_LINE_PARTS, COMMUNITY_URL } from "@/lib/site";
+
+const base = import.meta.env.BASE_URL;
+const secondaryLine = BRAND_SECONDARY_LINE_PARTS.join(" ");
+const CHALLENGES_REPO_URL = "https://github.com/off-on-dev/open-source-challenges";
+---
+
+<section aria-labelledby="bottom-cta-heading" class="bg-primary py-16 px-6 md:px-16 relative overflow-hidden">
+  <div class="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1fr_1fr_auto] gap-12 lg:gap-16 items-center">
+    {/* Left - headline */}
+    <div>
+      <h2 id="bottom-cta-heading" class="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground">
+        <span class="block">Start Curious.</span>
+        <span class="block">Break Things.</span>
+        <span class="block">Learn Together.</span>
+        <span class="block">Glow Brighter.</span>
+      </h2>
+    </div>
+
+    {/* Right - copy + buttons */}
+    <div class="flex flex-col gap-4">
+      <p class="font-sans text-base leading-relaxed text-background/90">
+        <strong class="font-medium text-primary-foreground">You bring your questions, your fixes, your ideas.</strong>{" "}
+        We bring the challenges, the tooling, and the practitioners who care about the same problems you do.
+      </p>
+      <p class="font-sans text-base leading-relaxed text-background/90">
+        Every spark starts with one person. Like Nyx, our firefly, together we brighten the whole open source ecosystem.
+      </p>
+      <p class="font-sans text-base font-medium text-background/90">
+        That's {BRAND_NAME}. {secondaryLine}
+      </p>
+      <div class="flex gap-3 flex-wrap mt-2">
+        <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="btn-inverse">
+          Join the Community <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+        </a>
+        <a href={CHALLENGES_REPO_URL} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="btn-ghost-inverse">
+          View Challenges on GitHub <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+        </a>
+      </div>
+    </div>
+
+    {/* Nyx mascot - third column, visible on lg+ only */}
+    <img
+      src={`${base}nyx.webp`}
+      alt=""
+      aria-hidden="true"
+      width={240}
+      height={240}
+      loading="lazy"
+      decoding="async"
+      class="hidden lg:block w-[240px] h-[240px] self-start"
+    />
+  </div>
+</section>
