@@ -353,7 +353,7 @@ UI labels use **title case (Chicago)**; body copy uses **sentence case**.
 
 ### Sitemap
 
-- `public/sitemap.xml` is currently a static file served as-is. **Follow-up:** a custom `src/pages/sitemap.xml.ts` endpoint should generate it from `getCollection()` + the static routes (excluding `/privacy/`), replacing the static file. Until then, add new static-page and adventure/level URLs to `public/sitemap.xml` by hand.
+- `/sitemap.xml` is generated at build time by `src/pages/sitemap.xml.ts` from `getCollection()` + the static route list. Adventure, level, solution, and challenge-tag URLs are automatic. When adding a new **static** page, add its path to the `staticPaths` array in that endpoint (unless it is noindex — `/privacy/` and `/presentation-templates/` are excluded).
 
 ### Routes
 
@@ -383,13 +383,14 @@ The `off-on-dev` org restricts third-party actions. Permitted: `actions/checkout
 State the result of each check explicitly before finishing.
 
 1. **Content gate:** `npm run sync` passes (Zod schema over adventure YAML).
-2. **REUSE lint:** `npm run lint:reuse` (or `reuse lint`) passes. `.astro`/`.vue` are covered by globs in `REUSE.toml`.
-3. **Build:** `npm run build` completes with no errors.
-4. **e2e + a11y:** `npm run test:e2e` passes. The axe audit runs the full WCAG tag set in dark and light. Kill any stray server on port 4321 first. Manual persona testing (ACCESSIBILITY.md) is still required.
-5. **Re-read every file you changed;** verify the final state.
-6. **Check call sites** for any changed prop/type/export. **Check imports** resolve; no unused imports.
-7. **Verify at 375 / 768 / 1280px** against the production build (`npm run preview`), not the dev server.
-8. If the change adds/modifies adventure levels, verify a per-level `*-posts.json` exists.
+2. **Lint:** `npm run lint` passes (ESLint for astro/vue/ts; `typescript` is pinned to 6.x because typescript-eslint does not support TS 7 yet).
+3. **REUSE lint:** `npm run lint:reuse` (or `reuse lint`) passes. `.astro`/`.vue` are covered by globs in `REUSE.toml`.
+4. **Build:** `npm run build` completes with no errors.
+5. **e2e + a11y:** `npm run test:e2e` passes. The axe audit runs the full WCAG tag set in dark and light. Kill any stray server on port 4321 first. Manual persona testing (ACCESSIBILITY.md) is still required.
+6. **Re-read every file you changed;** verify the final state.
+7. **Check call sites** for any changed prop/type/export. **Check imports** resolve; no unused imports.
+8. **Verify at 375 / 768 / 1280px** against the production build (`npm run preview`), not the dev server.
+9. If the change adds/modifies adventure levels, verify a per-level `*-posts.json` exists.
 
 ### Red flags — stop and flag to the user
 
@@ -448,4 +449,4 @@ Enumerate every transition before writing code. For each, list every system that
 
 ## Known follow-ups (post-migration)
 
-Tracked cleanups not yet done: add `eslint-plugin-astro`/`eslint-plugin-vue` + a `lint` script; the custom `sitemap.xml.ts` endpoint; the abbr JS tooltip (touch + viewport reposition; the CSS `::after` tooltip is `display:none` when hidden to avoid layout overflow); Shiki syntax highlighting for code blocks; click-event tracking; consent runtime regression tests; and pruning stale `REUSE.toml` entries (e.g. `*.generated.ts`, shadcn `ui/`).
+Tracked cleanups not yet done: the abbr JS tooltip (touch + viewport reposition; the CSS `::after` tooltip is `display:none` when hidden to avoid layout overflow); Shiki syntax highlighting for code blocks (`markdown.shikiConfig` is set but the pipeline doesn't highlight yet); GA4 click-event tracking; consent runtime regression tests (browser interaction over the state machine); and the component-by-component rewrite of `styleguide.md`.
