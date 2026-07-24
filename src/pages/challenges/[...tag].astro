@@ -9,7 +9,7 @@ import BottomCTA from "@/components/BottomCTA.astro";
 import StarterNudge from "@/components/StarterNudge.vue";
 import ChallengesFilter from "@/components/ChallengesFilter.vue";
 import { BRAND_NAME } from "@/lib/site";
-import { getChallengeData, tagToSlug } from "@/lib/challenges";
+import { getChallengeData, tagToSlug, isAdventureLive, sortAdventuresByMonthDesc } from "@/lib/challenges";
 
 export async function getStaticPaths() {
   const adventures = (await getCollection("adventures")).map((a) => a.data);
@@ -23,24 +23,12 @@ export async function getStaticPaths() {
 const { initialTag } = Astro.props;
 const base = import.meta.env.BASE_URL;
 
-const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
-const monthKey = (m: string): number => {
-  const [mon, year] = m.split(" ");
-  return Number(year) * 12 + Math.max(0, MONTHS.indexOf(mon));
-};
-const now = new Date();
-const isLive = (a: { rewards?: { deadline?: string }; levels: { deadline?: string }[] }): boolean =>
-  !!(a.rewards?.deadline && new Date(a.rewards.deadline) > now) ||
-  a.levels.some((l) => l.deadline && new Date(l.deadline) > now);
-
-const adventures = (await getCollection("adventures"))
-  .map((a) => a.data)
-  .sort((x, y) => monthKey(y.month) - monthKey(x.month));
+const adventures = sortAdventuresByMonthDesc((await getCollection("adventures")).map((a) => a.data));
 const { entries, tags } = getChallengeData(adventures);
 const adventureCount = adventures.length;
 
 // Starter nudge target: first live adventure and its beginner level.
-const starter = adventures.find((a) => isLive(a));
+const starter = adventures.find((a) => isAdventureLive(a));
 const starterLevel = starter?.levels.find((l) => l.difficulty === "Beginner");
 
 const title = initialTag ? `${initialTag} Challenges - ${BRAND_NAME}` : `Challenges - ${BRAND_NAME}`;
@@ -80,7 +68,7 @@ const path = initialTag ? `/challenges/${tagToSlug(initialTag)}/` : "/challenges
           client:load
         >
           {adventures.map((a) => (
-            <AdventureCard slot="adventures" adventure={{ ...a, isLive: isLive(a) }} />
+            <AdventureCard slot="adventures" adventure={{ ...a, isLive: isAdventureLive(a) }} />
           ))}
         </ChallengesFilter>
       </div>

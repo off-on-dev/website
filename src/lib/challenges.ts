@@ -8,6 +8,28 @@ export const DIFFICULTIES = ["Beginner", "Intermediate", "Expert"] as const;
 export const tagToSlug = (tag: string): string =>
   tag.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
+const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+const monthKey = (m: string): number => {
+  const [mon, year] = m.split(" ");
+  return Number(year) * 12 + Math.max(0, MONTHS.indexOf(mon));
+};
+
+/** Adventures newest-first by their "MON YYYY" month string (non-mutating). */
+export const sortAdventuresByMonthDesc = <T extends { month: string }>(adventures: T[]): T[] =>
+  [...adventures].sort((x, y) => monthKey(y.month) - monthKey(x.month));
+
+/** Build-time live check: an active rewards window or any future level deadline. */
+export const isAdventureLive = (a: {
+  rewards?: { deadline?: string };
+  levels: { deadline?: string }[];
+}): boolean => {
+  const now = Date.now();
+  return (
+    !!(a.rewards?.deadline && Date.parse(a.rewards.deadline) > now) ||
+    a.levels.some((l) => !!l.deadline && Date.parse(l.deadline) > now)
+  );
+};
+
 export type ChallengeEntry = {
   levelId: string;
   name: string;
