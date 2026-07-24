@@ -6,10 +6,10 @@ import { resolve } from "node:path";
 // live outside the Astro project root while nested. This makes DiscussionSection
 // and AdventureLeaderboard fully static (no client fetch), per the plan.
 //
-// Resolve from process.cwd() (the astro/ project root during `astro build`), not
+// Resolve from process.cwd() (the project root during `astro build`), not
 // import.meta.url: this module is bundled by Vite for page rendering, which
 // rewrites import.meta.url and would break a file-relative path.
-const ADVENTURES_DIR = resolve(process.cwd(), "../src/data/adventures");
+const ADVENTURES_DIR = resolve(process.cwd(), "src/data/adventures");
 
 export type DiscussionPost = {
   username: string;

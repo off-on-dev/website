@@ -19,12 +19,9 @@ import {
   buildServicesStepBody,
 } from "./lib/adventure-derive.mjs";
 
-// Read the real app's adventure YAML. Resolved from this file's location:
-// astro/src/content.config.ts -> ../../src/data/adventures.
-const ADVENTURES_DIR = resolve(
-  dirname(fileURLToPath(import.meta.url)),
-  "../../src/data/adventures",
-);
+// Adventure YAML lives in this app's own data dir (src/data/adventures),
+// resolved from this file's location (src/content.config.ts).
+const ADVENTURES_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "data/adventures");
 
 // Constants duplicated from src/data/constants.ts (the collection loader runs
 // outside the app's module graph). At cutover these import from the real

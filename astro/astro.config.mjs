@@ -1,4 +1,3 @@
-import { fileURLToPath } from "node:url";
 import { defineConfig } from "astro/config";
 import vue from "@astrojs/vue";
 import icon from "astro-icon";
@@ -41,23 +40,5 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
-    resolve: {
-      // Bridge for the React app's solution modules (src/data/solutions/*/*.ts),
-      // which import these two `@/` specifiers. Array form with exact `find`
-      // strings so the Astro app's own tsconfig `@/*` -> astro/src/* alias
-      // keeps handling every other import.
-      alias: [
-        {
-          find: "@/data/solutions/types",
-          replacement: fileURLToPath(new URL("../src/data/solutions/types.ts", import.meta.url)),
-        },
-        {
-          find: "@/data/adventures/contributors",
-          replacement: fileURLToPath(
-            new URL("../src/data/adventures/contributors.ts", import.meta.url),
-          ),
-        },
-      ],
-    },
   },
 });

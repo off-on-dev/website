@@ -1,0 +1,68 @@
+{
+  "discussionUrl": "https://community.offon.dev/t/repair-a-broken-backstage-software-template-july-2026-adventure-beginner/1657",
+  "discussionPosts": [
+    {
+      "username": "alvin",
+      "avatarUrl": "https://community.offon.dev/letter_avatar_proxy/v4/letter/a/b5a626/40.png",
+      "cooked": "I am picky and wasn’t too interested on the previous challenges hehe. IDP/ Backstage is something i always interest in so thanks for that Kath!",
+      "created_at": "2026-07-14T23:36:51.645Z",
+      "topicUrl": "https://community.offon.dev/t/repair-a-broken-backstage-software-template-july-2026-adventure-beginner/1657"
+    },
+    {
+      "username": "KatharinaSick",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
+      "cooked": "Intermediate just went live too:",
+      "created_at": "2026-07-14T10:51:01.867Z",
+      "topicUrl": "https://community.offon.dev/t/repair-a-broken-backstage-software-template-july-2026-adventure-beginner/1657"
+    },
+    {
+      "username": "KatharinaSick",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
+      "cooked": "I’m happy to read that. Thank you! And welcome back!",
+      "created_at": "2026-07-14T10:44:56.893Z",
+      "topicUrl": "https://community.offon.dev/t/repair-a-broken-backstage-software-template-july-2026-adventure-beginner/1657"
+    },
+    {
+      "username": "alvin",
+      "avatarUrl": "https://community.offon.dev/letter_avatar_proxy/v4/letter/a/b5a626/40.png",
+      "cooked": "Thanks for the challenge. Learned somethng new today",
+      "created_at": "2026-07-14T05:24:24.295Z",
+      "challengeSolved": true,
+      "topicUrl": "https://community.offon.dev/t/repair-a-broken-backstage-software-template-july-2026-adventure-beginner/1657"
+    },
+    {
+      "username": "iw4p",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
+      "cooked": "Completed the challenge.",
+      "created_at": "2026-07-07T22:00:32.947Z",
+      "challengeSolved": true,
+      "topicUrl": "https://community.offon.dev/t/repair-a-broken-backstage-software-template-july-2026-adventure-beginner/1657"
+    },
+    {
+      "username": "theharithsa",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
+      "cooked": "Here is the fix and done with the challenge. Now every manifest will reach the archive and ship to fleet registry. Make sure to run make backstage to run the backstage when it stopped.",
+      "created_at": "2026-07-07T10:06:27.016Z",
+      "challengeSolved": true,
+      "topicUrl": "https://community.offon.dev/t/repair-a-broken-backstage-software-template-july-2026-adventure-beginner/1657"
+    }
+  ],
+  "totalReplies": 6,
+  "solvers": [
+    {
+      "username": "theharithsa",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
+      "solvedAt": "2026-07-07T10:06:27.016Z"
+    },
+    {
+      "username": "iw4p",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
+      "solvedAt": "2026-07-07T22:00:32.947Z"
+    },
+    {
+      "username": "alvin",
+      "avatarUrl": "https://community.offon.dev/letter_avatar_proxy/v4/letter/a/b5a626/40.png",
+      "solvedAt": "2026-07-14T05:24:24.295Z"
+    }
+  ]
+}

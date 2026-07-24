@@ -1,15 +1,14 @@
-// Loads the React app's pre-built solution walkthroughs from
-// src/data/solutions/<adventureId>/<levelId>.ts (repo root). The glob matches
-// only files one directory deep, so the top-level index.ts, manifest.ts, and
-// types.ts are excluded automatically. The `@/` specifiers those modules use
-// are bridged via the resolve.alias entries in astro.config.mjs.
-import type { Solution } from "../../../src/data/solutions/types";
+// Loads the pre-built solution walkthroughs from src/data/solutions/<adventureId>/<levelId>.ts.
+// The glob matches only files one directory deep, so the top-level types.ts is
+// excluded automatically. The `@/data/solutions/types` and `@/data/adventures/contributors`
+// specifiers those modules use resolve via the app's `@/` -> src alias.
+import type { Solution } from "../data/solutions/types";
 
-export type { Solution, SolutionBlock, SolutionStep } from "../../../src/data/solutions/types";
+export type { Solution, SolutionBlock, SolutionStep } from "../data/solutions/types";
 
 type SolutionModule = { solution: Solution };
 
-const modules = import.meta.glob<SolutionModule>("../../../src/data/solutions/*/*.ts", {
+const modules = import.meta.glob<SolutionModule>("../data/solutions/*/*.ts", {
   eager: true,
 });
 
