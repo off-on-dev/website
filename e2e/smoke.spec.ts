@@ -79,10 +79,14 @@ test.describe("island hydration", () => {
   test("challenges filter hydrates and filters", async ({ page }) => {
     await page.goto("/challenges/");
     await page.waitForLoadState("load");
-    const before = await page.locator("main ul li").count();
+    // Unfiltered: adventure cards shown, level results hidden.
+    await expect(page.locator('[data-results="adventures"]')).toBeVisible();
+    await expect(page.locator('[data-results="levels"]')).toBeHidden();
     await page.getByRole("button", { name: "Beginner", exact: true }).click();
-    const after = await page.locator("main ul li").count();
-    expect(after).toBeLessThanOrEqual(before);
+    // Filtered: level cards shown, adventures hidden, URL reflects the difficulty.
+    await expect(page.locator('[data-results="levels"]')).toBeVisible();
+    await expect(page.locator('[data-results="adventures"]')).toBeHidden();
+    expect(await page.locator('[data-results="levels"] > li').count()).toBeGreaterThan(0);
     expect(new URL(page.url()).searchParams.get("difficulty")).toBe("Beginner");
   });
 });

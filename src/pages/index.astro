@@ -10,6 +10,9 @@ import CommunitySection from "@/components/CommunitySection.astro";
 import CommunityLeaders from "@/components/CommunityLeaders.astro";
 import SponsorStrip from "@/components/SponsorStrip.astro";
 import BottomCTA from "@/components/BottomCTA.astro";
+import StarterNudge from "@/components/StarterNudge.vue";
+import ChallengesFilter from "@/components/ChallengesFilter.vue";
+import { getChallengeData } from "@/lib/challenges";
 import { BRAND_NAME, BRAND_SHORT_DESCRIPTION } from "@/lib/site";
 
 const base = import.meta.env.BASE_URL;
@@ -35,9 +38,13 @@ const adventures = (await getCollection("adventures"))
   .sort((x, y) => monthKey(y.month) - monthKey(x.month));
 
 const adventureCount = adventures.length;
-const challengeCount = adventures.reduce((n, a) => n + a.levels.length, 0);
 const visibleAdventures = adventures.slice(0, HOME_ADVENTURE_LIMIT);
 const hasMore = adventures.length > HOME_ADVENTURE_LIMIT;
+
+const { entries, tags } = getChallengeData(adventures);
+// Starter nudge target: first live adventure and its beginner level.
+const starter = adventures.find((a) => isLive(a));
+const starterLevel = starter?.levels.find((l) => l.difficulty === "Beginner");
 ---
 
 <Layout title={`${BRAND_NAME} - Learn Open Source by Doing`} description={BRAND_SHORT_DESCRIPTION} path="/">
@@ -50,20 +57,30 @@ const hasMore = adventures.length > HOME_ADVENTURE_LIMIT;
         <h2 id="challenges-heading" class="mb-6 text-3xl font-bold text-primary md:text-4xl">
           Choose Your Adventure
         </h2>
-        <p class="mb-6 font-sans text-sm font-medium tracking-wide text-muted-foreground">
-          {adventureCount} {adventureCount === 1 ? "adventure" : "adventures"} · {challengeCount} {challengeCount === 1 ? "challenge" : "challenges"}
-        </p>
-        <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {visibleAdventures.map((a) => <AdventureCard adventure={{ ...a, isLive: isLive(a) }} />)}
-        </div>
-        {hasMore && (
-          <div class="mt-10 flex justify-center">
-            <a href={`${base}challenges/`} class="btn-ghost inline-flex items-center gap-2">
-              See all adventures
-              <Icon name="lucide:arrow-right" width={16} height={16} aria-hidden="true" />
-            </a>
-          </div>
+        {starter && starterLevel && (
+          <StarterNudge
+            client:idle
+            adventureId={starter.slug}
+            adventureTitle={starter.title}
+            tag={starter.tags[0]}
+            levelId={starterLevel.id}
+            base={base}
+          />
         )}
+        <ChallengesFilter
+          entries={entries}
+          tags={tags}
+          base={base}
+          initialTag={null}
+          adventureCount={adventureCount}
+          embedded
+          seeAllHref={hasMore ? `${base}challenges/` : undefined}
+          client:load
+        >
+          {visibleAdventures.map((a) => (
+            <AdventureCard slot="adventures" adventure={{ ...a, isLive: isLive(a) }} />
+          ))}
+        </ChallengesFilter>
       </div>
     </section>
 

@@ -1,19 +1,16 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, type Component } from "vue";
-import { Clock, Building2, Compass, Cloud, FlaskConical, Satellite, Scale, Telescope } from "lucide-vue-next";
+import { ref, computed, onMounted, onBeforeUnmount, type Component, type CSSProperties } from "vue";
+import {
+  Clock, ChevronDown, Check, X, ArrowRight,
+  Building2, Compass, Cloud, FlaskConical, Satellite, Scale, Telescope,
+} from "lucide-vue-next";
 import { tagToSlug, DIFFICULTIES, type ChallengeEntry } from "@/lib/challenges";
-import { difficultyStyle } from "@/lib/difficulty";
+import { difficultyStyle, DIFFICULTY_VAR } from "@/lib/difficulty";
 import { stripLinks } from "@/lib/markdown";
 
 // AdventureIcon equivalent for Vue islands (astro-icon can't render here).
 const ADVENTURE_ICONS: Record<string, Component> = {
-  Building2,
-  Compass,
-  Cloud,
-  FlaskConical,
-  Satellite,
-  Scale,
-  Telescope,
+  Building2, Compass, Cloud, FlaskConical, Satellite, Scale, Telescope,
 };
 
 const props = defineProps<{
@@ -21,13 +18,44 @@ const props = defineProps<{
   tags: string[];
   base: string;
   initialTag: string | null;
+  adventureCount: number;
+  // Home ("embedded") context: the page already has a visible section heading,
+  // so suppress the island's sr-only result headings to avoid a duplicate outline.
+  embedded?: boolean;
+  // When set and unfiltered, render a "See all adventures" link below the grid
+  // (used on the home page when adventures exceed the previewed count).
+  seeAllHref?: string;
 }>();
 
 // SSR-safe initial state: seed from the route tag (same on server and first
-// client render). URL params (?topics/?difficulty) are restored after mount to
-// avoid a hydration mismatch (they differ between prerender and the browser).
+// client render). URL params (?topics/?difficulty) are restored after mount.
 const activeTags = ref<string[]>(props.initialTag ? [props.initialTag] : []);
 const activeDifficulty = ref<string | null>(null);
+const hasFiltered = ref(false);
+
+// Dropdown (mobile/tablet) open state + refs for click-outside / focus return.
+const difficultyOpen = ref(false);
+const tagsOpen = ref(false);
+const difficultyRef = ref<HTMLElement | null>(null);
+const tagsRef = ref<HTMLElement | null>(null);
+const difficultyTrigger = ref<HTMLButtonElement | null>(null);
+const tagsTrigger = ref<HTMLButtonElement | null>(null);
+
+function handleClickOutside(e: MouseEvent): void {
+  const t = e.target as Node;
+  if (difficultyRef.value && !difficultyRef.value.contains(t)) difficultyOpen.value = false;
+  if (tagsRef.value && !tagsRef.value.contains(t)) tagsOpen.value = false;
+}
+function handleEscape(e: KeyboardEvent): void {
+  if (e.key !== "Escape") return;
+  if (difficultyOpen.value) {
+    difficultyOpen.value = false;
+    difficultyTrigger.value?.focus();
+  } else if (tagsOpen.value) {
+    tagsOpen.value = false;
+    tagsTrigger.value?.focus();
+  }
+}
 
 onMounted(() => {
   const params = new URLSearchParams(window.location.search);
@@ -37,9 +65,14 @@ onMounted(() => {
     activeTags.value = props.tags.filter((t) => slugs.includes(tagToSlug(t)));
   }
   const diff = params.get("difficulty");
-  if (diff && DIFFICULTIES.includes(diff as (typeof DIFFICULTIES)[number])) {
-    activeDifficulty.value = diff;
-  }
+  if (diff && DIFFICULTIES.includes(diff as (typeof DIFFICULTIES)[number])) activeDifficulty.value = diff;
+  if (activeTags.value.length > 0 || activeDifficulty.value !== null) hasFiltered.value = true;
+  document.addEventListener("mousedown", handleClickOutside);
+  document.addEventListener("keydown", handleEscape);
+});
+onBeforeUnmount(() => {
+  document.removeEventListener("mousedown", handleClickOutside);
+  document.removeEventListener("keydown", handleEscape);
 });
 
 function syncUrl(): void {
@@ -53,21 +86,26 @@ function syncUrl(): void {
   window.history.replaceState(null, "", window.location.pathname + (qs ? `?${qs}` : ""));
 }
 
+function setDifficulty(d: string | null): void {
+  hasFiltered.value = true;
+  activeDifficulty.value = activeDifficulty.value === d ? null : d;
+  syncUrl();
+}
+function setDifficultyExact(d: string | null): void {
+  hasFiltered.value = true;
+  activeDifficulty.value = d;
+  syncUrl();
+}
 function toggleTag(tag: string): void {
+  hasFiltered.value = true;
   activeTags.value = activeTags.value.includes(tag)
     ? activeTags.value.filter((t) => t !== tag)
     : [...activeTags.value, tag];
   syncUrl();
 }
-
-function toggleDifficulty(d: string): void {
-  activeDifficulty.value = activeDifficulty.value === d ? null : d;
-  syncUrl();
-}
-
-function clearAll(): void {
+function setAllTools(): void {
+  hasFiltered.value = true;
   activeTags.value = [];
-  activeDifficulty.value = null;
   syncUrl();
 }
 
@@ -78,51 +116,255 @@ const filtered = computed(() =>
       (!activeDifficulty.value || e.difficulty === activeDifficulty.value),
   ),
 );
-
 const hasFilters = computed(() => activeTags.value.length > 0 || activeDifficulty.value !== null);
+const challengeCount = computed(() => props.entries.length);
+
+const filteredCountText = computed(() => {
+  let s = `${filtered.value.length} ${filtered.value.length === 1 ? "challenge" : "challenges"}`;
+  if (activeDifficulty.value) s += ` · ${activeDifficulty.value}`;
+  if (activeTags.value.length) s += ` · ${activeTags.value.join(", ")}`;
+  return s;
+});
+const liveMsg = computed(() => {
+  if (!hasFiltered.value) return "";
+  if (hasFilters.value) return `Showing ${filteredCountText.value}`;
+  return `Filters cleared, showing ${props.adventureCount} ${props.adventureCount === 1 ? "adventure" : "adventures"} · ${challengeCount.value} ${challengeCount.value === 1 ? "challenge" : "challenges"}`;
+});
+
+// Pill styles (ported from the React ChallengeFilters). border-style must be
+// inline because the `filter-pill` border class is what makes borders render.
+function difficultyPillStyle(diff: string, isActive: boolean): CSSProperties {
+  const v = DIFFICULTY_VAR[diff];
+  return {
+    color: "hsl(var(--difficulty-text))",
+    backgroundColor: `hsl(var(--difficulty-${v}-bg))`,
+    borderStyle: "solid",
+    borderWidth: "2px",
+    borderColor: isActive ? `hsl(var(--difficulty-${v}))` : `hsl(var(--difficulty-${v}-border))`,
+  };
+}
+function allLevelsPillStyle(isActive: boolean): CSSProperties {
+  return {
+    borderStyle: "solid",
+    borderWidth: "2px",
+    backgroundColor: isActive ? "hsl(var(--foreground))" : "transparent",
+    borderColor: isActive ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.6)",
+    color: isActive ? "hsl(var(--background))" : "hsl(var(--foreground))",
+  };
+}
+function allToolsPillStyle(isActive: boolean): CSSProperties {
+  return {
+    borderStyle: "solid",
+    borderWidth: "2px",
+    backgroundColor: "transparent",
+    borderColor: isActive ? "hsl(var(--foreground))" : "hsl(var(--border))",
+    color: isActive ? "hsl(var(--foreground))" : "hsl(var(--text-secondary))",
+  };
+}
+function swatchStyle(diff: string): CSSProperties {
+  const v = DIFFICULTY_VAR[diff];
+  return { backgroundColor: `hsl(var(--difficulty-${v}-bg))`, border: `1px solid hsl(var(--difficulty-${v}-border))` };
+}
+function dropdownItemClass(isActive: boolean): string {
+  return [
+    "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-left transition-colors focus-ring",
+    isActive ? "text-primary bg-primary/10" : "text-dim hover:bg-primary/5 hover:text-foreground dark:hover:text-primary",
+  ].join(" ");
+}
+
+const DIFF_PILL_BASE =
+  "filter-pill inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none transition-all duration-200 focus-ring cursor-pointer";
+
+// Arrow-key navigation within an open dropdown panel.
+function navigatePanel(e: KeyboardEvent): void {
+  if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+  e.preventDefault();
+  const panel = (e.currentTarget as HTMLElement).closest<HTMLElement>('[role="group"]');
+  if (!panel) return;
+  const btns = Array.from(panel.querySelectorAll<HTMLButtonElement>("button"));
+  const idx = btns.indexOf(e.currentTarget as HTMLButtonElement);
+  if (idx === -1) return;
+  btns[(e.key === "ArrowDown" ? idx + 1 : idx - 1 + btns.length) % btns.length].focus();
+}
 </script>
 
 <template>
   <div>
-    <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Filter by difficulty">
-      <button
-        v-for="d in DIFFICULTIES"
-        :key="d"
-        type="button"
-        class="rounded-full border px-3 py-1 text-sm"
-        :class="activeDifficulty === d ? 'border-primary text-foreground' : 'border-border text-dim'"
-        :aria-pressed="activeDifficulty === d"
-        @click="toggleDifficulty(d)"
-      >
-        {{ d }}
-      </button>
+    <div class="mb-8">
+      <!-- Mobile / tablet: two dropdowns side by side -->
+      <div class="flex items-center gap-2 lg:hidden">
+        <div ref="difficultyRef" class="relative">
+          <button
+            ref="difficultyTrigger"
+            type="button"
+            class="filter-pill px-6 gap-2"
+            :class="activeDifficulty !== null ? 'pill-active' : 'pill-inactive'"
+            :style="activeDifficulty !== null && activeDifficulty in DIFFICULTY_VAR ? difficultyPillStyle(activeDifficulty, true) : allLevelsPillStyle(true)"
+            :aria-expanded="difficultyOpen"
+            aria-controls="difficulty-group"
+            @click="difficultyOpen = !difficultyOpen; tagsOpen = false"
+          >
+            {{ activeDifficulty ?? "All Levels" }}
+            <ChevronDown :size="14" aria-hidden="true" class="transition-transform duration-200" :class="difficultyOpen ? 'rotate-180' : ''" />
+          </button>
+          <div
+            id="difficulty-group"
+            role="group"
+            aria-label="Filter by difficulty"
+            :hidden="!difficultyOpen"
+            class="absolute top-full left-0 z-20 mt-2 min-w-[160px] rounded-xl border border-border bg-[hsl(var(--surface))] p-1.5 shadow-lg"
+          >
+            <button
+              type="button"
+              :aria-pressed="activeDifficulty === null"
+              :class="dropdownItemClass(activeDifficulty === null)"
+              @click="setDifficultyExact(null); difficultyOpen = false; difficultyTrigger?.focus()"
+              @keydown="navigatePanel"
+            >
+              <Check v-if="activeDifficulty === null" :size="13" aria-hidden="true" />
+              <span v-else class="w-[13px] shrink-0" />
+              All Levels
+            </button>
+            <button
+              v-for="d in DIFFICULTIES"
+              :key="d"
+              type="button"
+              :aria-pressed="activeDifficulty === d"
+              :class="dropdownItemClass(activeDifficulty === d)"
+              @click="setDifficultyExact(d); difficultyOpen = false; difficultyTrigger?.focus()"
+              @keydown="navigatePanel"
+            >
+              <span class="w-[13px] inline-flex items-center justify-center shrink-0">
+                <Check v-if="activeDifficulty === d" :size="13" aria-hidden="true" />
+                <span v-else class="h-2.5 w-2.5 rounded-sm" aria-hidden="true" :style="swatchStyle(d)" />
+              </span>
+              {{ d }}
+            </button>
+          </div>
+        </div>
+
+        <div ref="tagsRef" class="relative">
+          <button
+            ref="tagsTrigger"
+            type="button"
+            class="filter-pill px-6 gap-2"
+            :class="activeTags.length > 0 ? 'pill-active' : 'pill-inactive'"
+            :style="allToolsPillStyle(activeTags.length === 0)"
+            :aria-expanded="tagsOpen"
+            aria-controls="tags-group"
+            @click="tagsOpen = !tagsOpen; difficultyOpen = false"
+          >
+            {{ activeTags.length === 0 ? "All Tools" : `${activeTags.length} tool${activeTags.length !== 1 ? "s" : ""} selected` }}
+            <ChevronDown :size="14" aria-hidden="true" class="transition-transform duration-200" :class="tagsOpen ? 'rotate-180' : ''" />
+          </button>
+          <div
+            id="tags-group"
+            role="group"
+            aria-label="Filter by technology"
+            :hidden="!tagsOpen"
+            class="absolute top-full left-0 z-20 mt-2 min-w-[200px] rounded-xl border border-border bg-[hsl(var(--surface))] p-1.5 shadow-lg"
+          >
+            <button
+              type="button"
+              :aria-pressed="activeTags.length === 0"
+              :class="dropdownItemClass(activeTags.length === 0)"
+              @click="setAllTools(); tagsOpen = false; tagsTrigger?.focus()"
+              @keydown="navigatePanel"
+            >
+              <Check v-if="activeTags.length === 0" :size="13" aria-hidden="true" />
+              <span v-else class="w-[13px] shrink-0" />
+              All Tools
+            </button>
+            <button
+              v-for="tag in tags"
+              :key="tag"
+              type="button"
+              :aria-pressed="activeTags.includes(tag)"
+              :class="dropdownItemClass(activeTags.includes(tag))"
+              @click="toggleTag(tag)"
+              @keydown="navigatePanel"
+            >
+              <Check v-if="activeTags.includes(tag)" :size="13" aria-hidden="true" />
+              <span v-else class="w-[13px] shrink-0" />
+              {{ tag }}
+            </button>
+            <div class="mt-1 border-t border-border pt-1">
+              <button type="button" :class="dropdownItemClass(false)" @click="tagsOpen = false; tagsTrigger?.focus()" @keydown="navigatePanel">
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Desktop: two pill rows -->
+      <div class="hidden lg:block space-y-3">
+        <div role="group" aria-label="Filter by difficulty" class="flex flex-wrap items-center gap-2 pb-3 border-b border-border">
+          <button type="button" :aria-pressed="activeDifficulty === null" :class="DIFF_PILL_BASE" :style="allLevelsPillStyle(activeDifficulty === null)" @click="setDifficultyExact(null)">
+            All Levels
+          </button>
+          <button
+            v-for="d in DIFFICULTIES"
+            :key="d"
+            type="button"
+            :aria-pressed="activeDifficulty === d"
+            :class="DIFF_PILL_BASE"
+            :style="difficultyPillStyle(d, activeDifficulty === d)"
+            @click="setDifficulty(d)"
+          >
+            {{ d }}
+            <X v-if="activeDifficulty === d" :size="11" aria-hidden="true" />
+          </button>
+        </div>
+
+        <div role="group" aria-label="Filter by technology" class="flex flex-wrap items-center gap-2">
+          <button type="button" :aria-pressed="activeTags.length === 0" :class="DIFF_PILL_BASE" :style="allToolsPillStyle(activeTags.length === 0)" @click="setAllTools">
+            All Tools
+          </button>
+          <button
+            v-for="tag in tags"
+            :key="tag"
+            type="button"
+            :aria-pressed="activeTags.includes(tag)"
+            class="filter-pill"
+            :class="activeTags.includes(tag) ? 'pill-active' : 'pill-inactive'"
+            @click="toggleTag(tag)"
+          >
+            {{ tag }}
+            <X v-if="activeTags.includes(tag)" :size="11" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
     </div>
 
-    <div class="mt-3 flex flex-wrap gap-2" role="group" aria-label="Filter by technology">
-      <button
-        v-for="tag in tags"
-        :key="tag"
-        type="button"
-        class="rounded-full border px-3 py-1 text-xs"
-        :class="activeTags.includes(tag) ? 'border-primary text-foreground' : 'border-border text-dim'"
-        :aria-pressed="activeTags.includes(tag)"
-        @click="toggleTag(tag)"
-      >
-        {{ tag }}
-      </button>
-    </div>
+    <span aria-live="polite" aria-atomic="true" class="sr-only">{{ liveMsg }}</span>
 
-    <div class="mt-4 flex items-center justify-between">
-      <p class="text-sm text-faint" role="status" aria-live="polite">
-        {{ filtered.length }} {{ filtered.length === 1 ? "challenge" : "challenges" }}
+    <template v-if="hasFilters">
+      <h2 v-if="!embedded" class="sr-only">Filtered Challenges</h2>
+      <p class="animate-fade-up mb-6 font-sans text-sm font-medium tracking-wide text-muted-foreground">{{ filteredCountText }}</p>
+    </template>
+    <template v-else>
+      <h2 v-if="!embedded" class="sr-only">All Challenges</h2>
+      <p class="mb-6 font-sans text-sm font-medium tracking-wide text-muted-foreground">
+        {{ props.adventureCount }} {{ props.adventureCount === 1 ? "adventure" : "adventures" }} · {{ challengeCount }} {{ challengeCount === 1 ? "challenge" : "challenges" }}
       </p>
-      <button v-if="hasFilters" type="button" class="inline-flex min-h-6 items-center text-sm text-dim underline" @click="clearAll">
-        Clear filters
-      </button>
-    </div>
+    </template>
 
-    <h2 class="sr-only">Challenges</h2>
-    <ul class="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <!-- Unfiltered: SSR adventure cards (AdventureCard is .astro; passed as a slot). -->
+    <div v-show="!hasFilters" data-results="adventures" class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      <slot name="adventures" />
+    </div>
+    <template v-if="seeAllHref">
+      <div v-show="!hasFilters" class="mt-10 flex justify-center">
+        <a :href="seeAllHref" class="btn-ghost inline-flex items-center gap-2">
+          See all adventures
+          <ArrowRight :size="16" aria-hidden="true" />
+        </a>
+      </div>
+    </template>
+
+    <!-- Filtered: level cards rendered from entries. -->
+    <ul v-show="hasFilters" data-results="levels" class="animate-fade-up grid gap-5 md:grid-cols-2 lg:grid-cols-3">
       <li v-for="e in filtered" :key="`${e.adventureId}-${e.levelId}`" class="contents">
         <a
           :href="base + e.url.slice(1)"
@@ -131,7 +373,7 @@ const hasFilters = computed(() => activeTags.value.length > 0 || activeDifficult
         >
           <div class="mb-3 flex items-center justify-between">
             <span
-              class="inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 font-mono text-xs uppercase tracking-wider transition-colors"
+              class="inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 font-mono text-xs font-semibold uppercase tracking-wider transition-colors"
               :style="difficultyStyle(e.difficulty)"
               :data-difficulty="e.difficulty"
             >
@@ -167,10 +409,7 @@ const hasFilters = computed(() => activeTags.value.length > 0 || activeDifficult
           <div class="mt-auto flex flex-wrap items-center justify-between gap-1.5 pt-4">
             <div class="flex items-center gap-1.5">
               <span class="font-mono text-xs text-muted-foreground">Challenge</span>
-              <span
-                v-if="e.estimatedTime"
-                class="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 font-mono text-xs text-faint"
-              >
+              <span v-if="e.estimatedTime" class="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 font-mono text-xs text-faint">
                 <Clock :size="10" aria-hidden="true" />
                 {{ e.estimatedTime }}
               </span>
@@ -181,6 +420,6 @@ const hasFilters = computed(() => activeTags.value.length > 0 || activeDifficult
       </li>
     </ul>
 
-    <p v-if="!filtered.length" class="mt-6 text-dim">No challenges match these filters.</p>
+    <p v-if="hasFilters && !filtered.length" class="mt-6 text-dim">No challenges match these filters.</p>
   </div>
 </template>

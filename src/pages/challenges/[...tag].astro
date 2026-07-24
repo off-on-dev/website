@@ -1,9 +1,15 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
+import AdventureCard from "@/components/AdventureCard.astro";
+import PageHero from "@/components/PageHero.astro";
+import ChallengeBuildersSection from "@/components/ChallengeBuildersSection.astro";
+import CommunityLeaders from "@/components/CommunityLeaders.astro";
+import BottomCTA from "@/components/BottomCTA.astro";
+import StarterNudge from "@/components/StarterNudge.vue";
+import ChallengesFilter from "@/components/ChallengesFilter.vue";
 import { BRAND_NAME } from "@/lib/site";
 import { getChallengeData, tagToSlug } from "@/lib/challenges";
-import ChallengesFilter from "@/components/ChallengesFilter.vue";
 
 export async function getStaticPaths() {
   const adventures = (await getCollection("adventures")).map((a) => a.data);
@@ -15,9 +21,27 @@ export async function getStaticPaths() {
 }
 
 const { initialTag } = Astro.props;
-const adventures = (await getCollection("adventures")).map((a) => a.data);
-const { entries, tags } = getChallengeData(adventures);
 const base = import.meta.env.BASE_URL;
+
+const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+const monthKey = (m: string): number => {
+  const [mon, year] = m.split(" ");
+  return Number(year) * 12 + Math.max(0, MONTHS.indexOf(mon));
+};
+const now = new Date();
+const isLive = (a: { rewards?: { deadline?: string }; levels: { deadline?: string }[] }): boolean =>
+  !!(a.rewards?.deadline && new Date(a.rewards.deadline) > now) ||
+  a.levels.some((l) => l.deadline && new Date(l.deadline) > now);
+
+const adventures = (await getCollection("adventures"))
+  .map((a) => a.data)
+  .sort((x, y) => monthKey(y.month) - monthKey(x.month));
+const { entries, tags } = getChallengeData(adventures);
+const adventureCount = adventures.length;
+
+// Starter nudge target: first live adventure and its beginner level.
+const starter = adventures.find((a) => isLive(a));
+const starterLevel = starter?.levels.find((l) => l.difficulty === "Beginner");
 
 const title = initialTag ? `${initialTag} Challenges - ${BRAND_NAME}` : `Challenges - ${BRAND_NAME}`;
 const description = initialTag
@@ -27,20 +51,48 @@ const path = initialTag ? `/challenges/${tagToSlug(initialTag)}/` : "/challenges
 ---
 
 <Layout title={title} description={description} path={path}>
-  <main id="main-content" tabindex="-1" class="mx-auto max-w-4xl px-4 py-12">
-    <h1 class="text-3xl md:text-4xl font-bold text-foreground">
-      {initialTag ? `${initialTag} Challenges` : "Challenges"}
-    </h1>
-    <p class="mt-3 text-dim">Filter by technology and difficulty. Each challenge opens in GitHub Codespaces.</p>
+  <main id="main-content" tabindex="-1">
+    <PageHero
+      eyebrow="Challenges"
+      title="Open Source Challenges"
+      description="Each adventure focuses on one open source technology, with challenges at different difficulty levels. Pick your adventure, work through real-world scenarios hands-on, and share what you learn with the community."
+    />
 
-    <div class="mt-8">
-      <ChallengesFilter
-        entries={entries}
-        tags={tags}
-        base={base}
-        initialTag={initialTag}
-        client:load
+    <section class="py-24 px-6 md:px-16">
+      <div class="mx-auto max-w-6xl">
+        {starter && starterLevel && (
+          <StarterNudge
+            client:idle
+            adventureId={starter.slug}
+            adventureTitle={starter.title}
+            tag={starter.tags[0]}
+            levelId={starterLevel.id}
+            base={base}
+          />
+        )}
+
+        <ChallengesFilter
+          entries={entries}
+          tags={tags}
+          base={base}
+          initialTag={initialTag}
+          adventureCount={adventureCount}
+          client:load
+        >
+          {adventures.map((a) => (
+            <AdventureCard slot="adventures" adventure={{ ...a, isLive: isLive(a) }} />
+          ))}
+        </ChallengesFilter>
+      </div>
+    </section>
+
+    <ChallengeBuildersSection>
+      <CommunityLeaders
+        slot="aside"
+        sections={["top-challenge-solvers", "challenge-rockstars", "challenge-grand-builders", "challenge-builders"]}
       />
-    </div>
+    </ChallengeBuildersSection>
+
+    <BottomCTA />
   </main>
 </Layout>
