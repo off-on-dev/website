@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, nextTick, onBeforeUnmount } from "vue";
+import { ref, nextTick, onMounted, onBeforeUnmount } from "vue";
 import { Menu, X, ExternalLink } from "lucide-vue-next";
 
 // Mobile nav drawer, ported from the React Navbar's hamburger + useFocusTrap +
@@ -86,8 +86,29 @@ function toggle(): void {
   else void openMenu();
 }
 
+// This island is transition:persist, so it is NOT unmounted on client navigation
+// (onBeforeUnmount won't fire). Force-close on astro:before-swap so a click on a
+// nav-level link that is not a drawer link (e.g. the logo) can't leave the drawer
+// open with a live focus trap over the next page. Also close when the viewport
+// crosses to >=md, where the drawer is hidden but its trap/inert would persist.
+let desktopMq: MediaQueryList | null = null;
+function handleBeforeSwap(): void {
+  if (open.value) closeMenu(false);
+}
+function handleBreakpoint(e: MediaQueryListEvent): void {
+  if (e.matches && open.value) closeMenu(false);
+}
+
+onMounted(() => {
+  document.addEventListener("astro:before-swap", handleBeforeSwap);
+  desktopMq = window.matchMedia("(min-width: 768px)");
+  desktopMq.addEventListener("change", handleBreakpoint);
+});
+
 onBeforeUnmount(() => {
   document.removeEventListener("keydown", onKeydown);
+  document.removeEventListener("astro:before-swap", handleBeforeSwap);
+  desktopMq?.removeEventListener("change", handleBreakpoint);
   clearSiblingsInert();
 });
 

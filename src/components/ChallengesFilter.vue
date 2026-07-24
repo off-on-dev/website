@@ -82,8 +82,14 @@ function syncUrl(): void {
   if (activeDifficulty.value) params.set("difficulty", activeDifficulty.value);
   else params.delete("difficulty");
   const qs = params.toString();
-  // replaceState (not a navigation) preserves scroll position.
-  window.history.replaceState(null, "", window.location.pathname + (qs ? `?${qs}` : ""));
+  // On a /challenges/:tag/ route, clearing all tags must drop the path segment,
+  // otherwise the tag re-seeds the filter on reload/share/back (parity with the
+  // React handleTopicsChange navigation). replaceState preserves scroll position.
+  const targetPath =
+    props.initialTag !== null && activeTags.value.length === 0
+      ? `${props.base}challenges/`
+      : window.location.pathname;
+  window.history.replaceState(null, "", targetPath + (qs ? `?${qs}` : ""));
 }
 
 function setDifficulty(d: string | null): void {

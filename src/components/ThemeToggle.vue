@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import { Sun, Moon } from "lucide-vue-next";
 import { $theme, type Theme } from "@/stores/theme";
 
@@ -24,9 +24,20 @@ const buttonClass = computed(() =>
     .join(" "),
 );
 
+let unsubscribe: (() => void) | undefined;
+
 onMounted(() => {
   theme.value = document.documentElement.classList.contains("light") ? "light" : "dark";
+  // Keep the desktop + mobile toggle instances in sync: subscribe to the store
+  // post-mount so a toggle on one updates the other (they hold independent local
+  // refs). Never read $theme at render — it is a persistentAtom that reads
+  // localStorage at import time and would mismatch SSR.
+  unsubscribe = $theme.listen((value) => {
+    theme.value = value;
+  });
 });
+
+onUnmounted(() => unsubscribe?.());
 
 function toggle(): void {
   const next: Theme = theme.value === "dark" ? "light" : "dark";

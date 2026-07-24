@@ -44,9 +44,11 @@ const visibleSections = (
       <div class="pb-5 border-b border-border last:border-b-0 last:pb-0">
         <div>
           <h4 class="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-            <span class="text-primary">
-              <Icon name={SECTION_ICONS[section.id]} width={14} height={14} aria-hidden="true" />
-            </span>
+            {SECTION_ICONS[section.id] && (
+              <span class="text-primary">
+                <Icon name={SECTION_ICONS[section.id]} width={14} height={14} aria-hidden="true" />
+              </span>
+            )}
             {section.title}
           </h4>
           <ol class="space-y-2.5" aria-label={section.title}>

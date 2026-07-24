@@ -110,6 +110,28 @@ const fontPreloads = [
       const CHECK_SVG =
         '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
 
+      // Shared polite live region: a focused button's aria-label change is not
+      // reliably re-announced, so route the "copied" confirmation through here
+      // (parity with the React CodeBlock/MarkdownContent sr-only aria-live span).
+      // Created up front (before any copy) so assistive tech has observed it.
+      function ensureLiveRegion(): void {
+        if (document.getElementById("code-copy-status")) return;
+        const live = document.createElement("span");
+        live.id = "code-copy-status";
+        live.className = "sr-only";
+        live.setAttribute("aria-live", "polite");
+        live.setAttribute("aria-atomic", "true");
+        document.body.appendChild(live);
+      }
+      function announceCopied(): void {
+        const live = document.getElementById("code-copy-status");
+        if (!live) return;
+        live.textContent = "Code copied to clipboard";
+        window.setTimeout(() => {
+          live.textContent = "";
+        }, 1500);
+      }
+
       function makeCopyButton(getText: () => string): HTMLButtonElement {
         const btn = document.createElement("button");
         btn.type = "button";
@@ -122,6 +144,7 @@ const fontPreloads = [
             .then(() => {
               btn.innerHTML = CHECK_SVG + "<span>Copied</span>";
               btn.setAttribute("aria-label", "Code copied");
+              announceCopied();
               window.setTimeout(() => {
                 btn.innerHTML = COPY_SVG + "<span>Copy</span>";
                 btn.setAttribute("aria-label", "Copy code");
@@ -136,6 +159,7 @@ const fontPreloads = [
 
       function enhanceCodeBlocks(): void {
         const pres = document.querySelectorAll<HTMLPreElement>('#main-content pre[aria-label^="Code block"]');
+        if (pres.length > 0) ensureLiveRegion();
         pres.forEach((pre) => {
           if (pre.dataset.copyEnhanced) return;
           const code = pre.querySelector("code");
@@ -152,7 +176,12 @@ const fontPreloads = [
           }
 
           // Prose code block: inject a header bar (language label + Copy) above a flush body.
-          const label = (pre.getAttribute("aria-label") ?? "").replace(/^Code block:?\s*/, "") || "code";
+          // Prefer the fenced language (class="language-xxx" on <code>, preserved by
+          // rehype-sanitize), then the pre's aria-label title, then a generic fallback.
+          const langClass = Array.from(code.classList).find((c) => c.startsWith("language-"));
+          const label = langClass
+            ? langClass.slice("language-".length)
+            : (pre.getAttribute("aria-label") ?? "").replace(/^Code block:?\s*/, "") || "code";
           const header = document.createElement("div");
           header.className = "code-block-header";
           const span = document.createElement("span");

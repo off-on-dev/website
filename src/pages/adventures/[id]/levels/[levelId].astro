@@ -47,10 +47,13 @@ const discussionHref = level.discussionUrl || COMMUNITY_URL;
 const deadline = level.deadline ?? adventure.rewards?.deadline;
 const rewardsBelowFold = isDeadlinePast(deadline);
 
-// Solution walkthrough CTA: only once the deadline has passed and a solution
-// has been authored for this level.
+// Solution walkthrough CTA: shown once the solution is unlocked (no deadline, or
+// deadline passed — same predicate solution.astro gates on) and a solution has
+// been authored for this level. Note: distinct from rewardsBelowFold, which is
+// false when no deadline is set.
+const solutionUnlocked = !deadline || isDeadlinePast(deadline);
 const showSolutionCta =
-  rewardsBelowFold &&
+  solutionUnlocked &&
   getSolutions().some((s) => s.adventureId === adventure.slug && s.levelId === level.id);
 
 // Architecture diagram SVGs live in astro/src/assets/diagrams/ and are matched
