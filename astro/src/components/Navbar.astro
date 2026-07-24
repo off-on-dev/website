@@ -1,0 +1,47 @@
+---
+import { SITE_NAME, COMMUNITY_URL } from "@/lib/site";
+import ThemeToggle from "@/components/ThemeToggle.vue";
+
+const base = import.meta.env.BASE_URL;
+const path = Astro.url.pathname;
+const links = [
+  { href: "challenges/", label: "Challenges" },
+  { href: "about/", label: "About" },
+  { href: "contribute/", label: "Contribute" },
+  { href: "handbook/", label: "Handbook" },
+  { href: "sponsors/", label: "Sponsors" },
+];
+const isActive = (href: string): boolean => path.startsWith(base + href);
+// min-h-[44px] keeps links at the WCAG 2.5.8 touch-target size (matches the React Navbar).
+const linkCls =
+  "inline-flex items-center min-h-[44px] rounded px-1.5 -mx-1.5 text-sm text-dim hover:text-foreground focus-ring";
+---
+
+<nav aria-label="Main" class="border-b border-border">
+  <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
+    <a
+      href={base}
+      class="logo-link font-heading text-lg font-bold text-foreground focus-ring rounded-sm"
+      aria-label={`${SITE_NAME} home`}
+    >
+      OffOn
+    </a>
+    <div class="flex flex-wrap items-center gap-4">
+      {links.map((l) => (
+        <a href={base + l.href} class={linkCls} aria-current={isActive(l.href) ? "page" : undefined}>
+          {l.label}
+        </a>
+      ))}
+      <a
+        href={COMMUNITY_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-describedby="new-tab-hint"
+        class={linkCls}
+      >
+        Community
+      </a>
+      <ThemeToggle client:load transition:persist />
+    </div>
+  </div>
+</nav>

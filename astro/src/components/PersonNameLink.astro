@@ -1,0 +1,26 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  name: string;
+  url?: string;
+}
+const { name, url } = Astro.props;
+---
+
+{
+  url ? (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-describedby="new-tab-hint"
+      class="docs-ext-link text-base font-semibold"
+    >
+      {name}
+      <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+    </a>
+  ) : (
+    <span class="text-base font-semibold text-foreground">{name}</span>
+  )
+}

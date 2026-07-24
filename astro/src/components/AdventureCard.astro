@@ -1,0 +1,74 @@
+---
+import { Icon } from "astro-icon/components";
+import DifficultyBadge from "@/components/DifficultyBadge.astro";
+import ContributorBadge from "@/components/ContributorBadge.astro";
+import LivePill from "@/components/LivePill.astro";
+import AdventureIcon from "@/components/AdventureIcon.astro";
+import { stripHtml } from "@/lib/markdown";
+
+interface Props {
+  adventure: {
+    slug: string;
+    title: string;
+    story: string;
+    tags: string[];
+    icon?: string;
+    isLive?: boolean;
+    levels: { id: string; difficulty: string }[];
+    contributor?: { name: string; url?: string };
+  };
+}
+const { adventure } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const difficulties = adventure.levels.map((l) => l.difficulty).join(", ");
+const tagList = adventure.tags.slice(0, 4).join(", ");
+const label = tagList
+  ? `${adventure.title}: ${difficulties}, ${tagList}`
+  : `${adventure.title}: ${difficulties}`;
+---
+
+<a
+  href={`${base}adventures/${adventure.slug}/`}
+  aria-label={label}
+  class:list={[
+    "group card-glow relative flex flex-col rounded-xl border-2 bg-[hsl(var(--surface))] p-6 focus-ring",
+    adventure.isLive ? "border-primary/50" : "border-border",
+  ]}
+>
+  <div class="mb-3 flex items-center justify-between">
+    <span class="font-mono text-xs text-muted-foreground">Adventure</span>
+    <div class="flex items-center gap-2">
+      {adventure.isLive && <LivePill />}
+      <span
+        class="badge-levels inline-flex items-center gap-1.5 rounded-sm border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-xs uppercase tracking-wider text-primary"
+      >
+        <Icon name="lucide:layers" width={12} height={12} aria-hidden="true" />
+        {adventure.levels.length} Level{adventure.levels.length !== 1 ? "s" : ""}
+      </span>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-1">
+    <h3 class="text-lg font-semibold text-foreground transition-colors group-hover:text-primary">
+      {adventure.title}
+    </h3>
+    <AdventureIcon icon={adventure.icon} size={16} class="shrink-0 text-muted-foreground" />
+  </div>
+  <p class="mt-2 text-sm text-muted-foreground line-clamp-2">{stripHtml(adventure.story)}</p>
+
+  <div class="mt-4 flex flex-wrap items-center gap-2">
+    {adventure.levels.map((level) => <DifficultyBadge difficulty={level.difficulty} />)}
+  </div>
+
+  <div class="mt-4 flex flex-wrap gap-1.5">
+    {adventure.tags.slice(0, 4).map((tag) => (
+      <span class="rounded-sm border border-border px-2 py-0.5 text-xs text-faint">{tag}</span>
+    ))}
+  </div>
+
+  {adventure.contributor && (
+    <div class="mt-auto pt-4">
+      <ContributorBadge name={adventure.contributor.name} />
+    </div>
+  )}
+</a>

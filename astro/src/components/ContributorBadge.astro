@@ -1,0 +1,40 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  name: string;
+  url?: string;
+  glow?: boolean;
+  label?: string;
+}
+const { name, url, glow = false, label = "Challenge Builder" } = Astro.props;
+const pill = [
+  "contributor-pill inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-xs text-primary",
+  glow && "contributor-pill-glow",
+];
+---
+
+{
+  url ? (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-describedby="new-tab-hint"
+      class:list={[...pill, "hover:border-primary/40 hover:bg-primary/10 transition-colors focus-ring-tight"]}
+    >
+      <Icon name="lucide:hammer" width={11} height={11} aria-hidden="true" />
+      <span>{label}</span>
+      <span aria-hidden="true" class="inline-block h-3 w-px bg-current opacity-40" />
+      <span>{name}</span>
+      <Icon name="lucide:external-link" width={11} height={11} aria-hidden="true" />
+    </a>
+  ) : (
+    <span class:list={pill}>
+      <Icon name="lucide:hammer" width={11} height={11} aria-hidden="true" />
+      <span>{label}</span>
+      <span aria-hidden="true" class="inline-block h-3 w-px bg-current opacity-40" />
+      <span>{name}</span>
+    </span>
+  )
+}

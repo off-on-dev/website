@@ -1,0 +1,292 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+import { SITE_NAME, BRAND_NAME, CONTACT_EMAIL } from "@/lib/site";
+
+const base = import.meta.env.BASE_URL;
+
+const heading2 = "text-xl font-heading font-bold text-foreground mt-10 mb-3";
+const heading3 = "text-lg font-heading font-bold text-foreground mt-6 mb-2";
+const paragraph = "text-sm text-muted-foreground leading-relaxed mb-4";
+const list = "list-disc list-inside space-y-1 text-sm text-muted-foreground mb-4 ml-2";
+const link = "docs-ext-link";
+---
+
+<Layout
+  title={`Accessibility Statement - ${BRAND_NAME}`}
+  description={`${BRAND_NAME} accessibility statement: WCAG 2.2 AA commitment, supported environments, known limitations, and how to report a barrier.`}
+  path="/accessibility/"
+>
+  <main id="main-content" tabindex="-1" class="px-6 md:px-16 pt-28 pb-16">
+    <div class="mx-auto max-w-6xl">
+      <div class="max-w-3xl">
+        <h1 class="font-heading text-3xl font-bold text-foreground mb-10">Accessibility Statement</h1>
+
+        <p class={paragraph}>
+          {BRAND_NAME} is a platform for open source enthusiasts. We want everyone to be able
+          to read, browse, and contribute, regardless of disability, assistive technology, or
+          device. This document explains what we support today, how we test, and how to tell us
+          when we get it wrong.
+        </p>
+
+        <h2 class={heading2}>Our Commitment</h2>
+        <ul role="list" class={list}>
+          <li>
+            <strong>Target:</strong>{" "}
+            <a href="https://www.w3.org/TR/WCAG22/" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class={link}>
+              {/* Plain <abbr> (no tabIndex) inside a link: the link is the
+                  interactive element; AT reads the title attribute natively. */}
+              <abbr data-title="Web Content Accessibility Guidelines" aria-label="Web Content Accessibility Guidelines">WCAG</abbr> 2.2 Level <abbr data-title="double-A conformance level" aria-label="double-A conformance level">AA</abbr> <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+            </a>{" "}
+            across every page on {SITE_NAME}, with selected Level <span><abbr data-title="triple-A conformance level" aria-describedby="abbr-aaa-1" tabindex="0">AAA</abbr><span id="abbr-aaa-1" class="sr-only">triple-A conformance level</span></span> criteria applied wherever practical.
+          </li>
+          <li>
+            <strong>Both color modes:</strong> light and dark mode must meet contrast and focus
+            requirements. We do not ship a feature that only works in one mode.
+          </li>
+          <li>
+            <strong>Keyboard first:</strong> every interactive element is reachable and operable
+            from the keyboard alone.
+          </li>
+          <li>
+            <strong>No motion traps:</strong> we honor <code>prefers-reduced-motion</code> and
+            avoid auto-playing animation that the user did not request.
+          </li>
+        </ul>
+
+        <h2 class={heading2}>What We Support Today</h2>
+        <ul role="list" class={list}>
+          <li>Skip-to-content link as the first focusable element on every page.</li>
+          <li>Visible focus rings on all interactive elements, in both light and dark mode.</li>
+          <li>
+            Semantic landmarks: one <code>&lt;main id="main-content"&gt;</code>, plus{" "}
+            <code>&lt;nav&gt;</code>, <code>&lt;header&gt;</code>, <code>&lt;footer&gt;</code>,{" "}
+            <code>&lt;section&gt;</code>, and <code>&lt;article&gt;</code> where appropriate.
+          </li>
+          <li>One <code>&lt;h1&gt;</code> per page with no skipped heading levels. Section headings are used to organise all content areas.</li>
+          <li>
+            Meaningful <code>alt</code> text on informational images, empty{" "}
+            <code>alt=""</code> paired with <code>aria-hidden="true"</code> on decorative ones.
+          </li>
+          <li>Screen reader announcement of links that open in a new tab.</li>
+          <li>
+            Color contrast verified at 7:1 for body text and 4.5:1 for large text (<span><abbr data-title="Web Content Accessibility Guidelines" aria-describedby="abbr-wcag-1" tabindex="0">WCAG</abbr><span id="abbr-wcag-1" class="sr-only">Web Content Accessibility Guidelines</span></span> <span><abbr data-title="triple-A conformance level" aria-describedby="abbr-aaa-2" tabindex="0">AAA</abbr><span id="abbr-aaa-2" class="sr-only">triple-A conformance level</span></span> Enhanced Contrast), and 3:1 for <span><abbr data-title="user interface" aria-describedby="abbr-ui-1" tabindex="0">UI</abbr><span id="abbr-ui-1" class="sr-only">user interface</span></span> controls, in both modes.
+          </li>
+          <li>
+            Every link is unambiguous without surrounding context. Card links and call-to-action
+            buttons include a specific accessible name when the visible text alone could be ambiguous.
+          </li>
+          <li>
+            Abbreviations and technical terms are expanded on first use per page via{" "}
+            <code>&lt;abbr title="…"&gt;</code> or inline expansion.
+          </li>
+          <li>
+            Tested with{" "}
+            <a href="https://github.com/dequelabs/axe-core" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class={link}>
+              axe-core <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+            </a>{" "}
+            on every pull request preview, in both light and dark mode.
+          </li>
+          <li>Self-hosted fonts so users on restricted networks are not locked out.</li>
+          <li>
+            Google Analytics is opt-in only via the consent banner. No tracking runs until the
+            user accepts.
+          </li>
+          <li>
+            Page navigation is announced to screen readers via a polite live region on every
+            client-side route change, so users do not have to manually explore to discover
+            they have moved to a new page.
+          </li>
+          <li>
+            The mobile navigation menu traps focus while open. Content behind the menu is
+            hidden from assistive technology until the menu is dismissed, preventing screen
+            reader users from navigating into obscured content by mistake.
+          </li>
+          <li>
+            Interactive filter buttons announce the result count when a filter is applied, and
+            announce when a filter is cleared, so screen reader users receive confirmation
+            of both actions.
+          </li>
+          <li>
+            Scrollable code blocks are keyboard-focusable with a descriptive label, so
+            keyboard users can reach and scroll long code samples.
+          </li>
+          <li>
+            <code>prefers-contrast: more</code> is respected: borders and muted elements
+            increase in contrast when the user enables Increase Contrast in their <span><abbr data-title="operating system" aria-describedby="abbr-os-1" tabindex="0">OS</abbr><span id="abbr-os-1" class="sr-only">operating system</span></span> settings.
+          </li>
+          <li>
+            Windows High Contrast Mode is supported via a <code>forced-colors: active</code>{" "}
+            media query that restores interactive component boundaries using system color
+            keywords.
+          </li>
+        </ul>
+
+        <h2 class={heading2}>Supported Environments</h2>
+        <ul role="list" class={list}>
+          <li>
+            Modern evergreen browsers: Chrome, Edge, Firefox, Safari (current and previous major
+            versions).
+          </li>
+          <li>Mobile web on iOS Safari and Android Chrome.</li>
+          <li>
+            Screen readers we test against during manual spot checks: VoiceOver on macOS and
+            iOS, NVDA on Windows.
+          </li>
+          <li>
+            The site is fully static and served from GitHub Pages, so it works without
+            JavaScript for reading content. Some interactive features (theme toggle, consent
+            banner, filtering) require JavaScript.
+          </li>
+        </ul>
+
+        <h2 class={heading2}>Known Limitations</h2>
+        <ul role="list" class={list}>
+          <li>
+            We do not currently provide captions or transcripts because the site does not host
+            video or audio. If we add media, captions and transcripts will ship with it.
+          </li>
+          <li>
+            The community discussion content is hosted on a separate Discourse instance and
+            follows its own accessibility status.
+          </li>
+        </ul>
+        <p class={paragraph}>
+          If you find a barrier that is not listed here, please report it using the link below.
+          We treat this list as evidence-based, not aspirational.
+        </p>
+
+        <h2 class={heading2}>How We Test</h2>
+
+        <h3 class={heading3}>Automated</h3>
+        <ul role="list" class={list}>
+          <li>
+            <strong>eslint-plugin-jsx-a11y</strong> as part of <code>npm run lint</code>.
+            Static analysis that catches missing labels, invalid ARIA, and bad role usage
+            before a build runs.
+          </li>
+          <li>
+            <strong>axe-core via Playwright</strong> on every pull request and on a weekly
+            scheduled scan (Mondays). Runs in dark mode, light mode, and with{" "}
+            <code>prefers-reduced-motion: reduce</code> against the production build. The <span><abbr data-title="pull request" aria-describedby="abbr-pr-1" tabindex="0">PR</abbr><span id="abbr-pr-1" class="sr-only">pull request</span></span>{" "}
+            preview workflow blocks on these scans.
+          </li>
+          <li>
+            <strong>Vitest</strong> assertions on landmark roles, labels, and focus behavior
+            for components and hooks.
+          </li>
+        </ul>
+
+        <h3 class={heading3}>Manual</h3>
+        <p class={paragraph}>For <span><abbr data-title="user interface" aria-describedby="abbr-ui-2" tabindex="0">UI</abbr><span id="abbr-ui-2" class="sr-only">user interface</span></span> changes, contributors verify:</p>
+        <ul role="list" class={list}>
+          <li>Tab order matches the visual reading order.</li>
+          <li>Focus is visible on every interactive element in both modes.</li>
+          <li>
+            The page works at 200% browser zoom and at 375px, 768px, and 1280px widths.
+          </li>
+          <li>Screen reader spot check on the changed flow (VoiceOver or NVDA).</li>
+        </ul>
+
+        <h2 class={heading2}>Reporting an Accessibility Barrier</h2>
+        <p class={paragraph}>
+          If something on {SITE_NAME} blocks you or is hard to use,{" "}
+          <a
+            href="https://github.com/off-on-dev/website/issues/new?template=accessibility.yml"
+            target="_blank"
+            rel="noopener noreferrer" aria-describedby="new-tab-hint"
+            class={link}
+          >
+            open an accessibility issue <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+          </a>
+          . The form prompts for the page, your assistive technology, and severity, which helps
+          us reproduce and prioritize.
+        </p>
+        <ul role="list" class={list}>
+          <li>
+            <strong>Preferred:</strong> GitHub issue (link above). The fastest way to get a
+            response with a fix timeline.
+          </li>
+          <li>
+            <strong>Email:</strong>{" "}
+            <a href={`mailto:${CONTACT_EMAIL}`} class={link}>{CONTACT_EMAIL}</a>{" "}
+            if you cannot or prefer not to use GitHub.
+          </li>
+        </ul>
+        <p class={paragraph}>
+          We aim to acknowledge accessibility reports within five working days and to provide a
+          workaround or fix timeline in the same response.
+        </p>
+
+        <h3 class={heading3}>Severity We Use</h3>
+        <div class="overflow-x-auto mb-6">
+          <table class="w-full text-sm text-muted-foreground border-collapse">
+            <thead>
+              <tr class="border-b border-border">
+                <th scope="col" class="text-left font-semibold text-foreground py-2 pr-6 w-28">Severity</th>
+                <th scope="col" class="text-left font-semibold text-foreground py-2">Definition</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-border">
+                <td class="py-2 pr-6 align-top font-medium text-foreground">Critical</td>
+                <td class="py-2 align-top">Blocks a user from completing a core task (reading content, navigating to a challenge, accepting consent).</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="py-2 pr-6 align-top font-medium text-foreground">High</td>
+                <td class="py-2 align-top">Significant difficulty, but a workaround exists.</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="py-2 pr-6 align-top font-medium text-foreground">Medium</td>
+                <td class="py-2 align-top">Inconsistent or annoying experience that does not block the task.</td>
+              </tr>
+              <tr>
+                <td class="py-2 pr-6 align-top font-medium text-foreground">Low</td>
+                <td class="py-2 align-top">Minor issue with minimal impact on usability.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 class={heading2}>For Contributors</h2>
+        <p class={paragraph}>
+          If you are submitting a pull request, every <span><abbr data-title="user interface" aria-describedby="abbr-ui-3" tabindex="0">UI</abbr><span id="abbr-ui-3" class="sr-only">user interface</span></span> change should pass the accessibility
+          checklist in our pull request template. The full ruleset lives in{" "}
+          <a
+            href="https://github.com/off-on-dev/website/blob/main/ACCESSIBILITY.md"
+            target="_blank"
+            rel="noopener noreferrer" aria-describedby="new-tab-hint"
+            class={link}
+          >
+            ACCESSIBILITY.md <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+          </a>{" "}
+          and applies to every change.
+        </p>
+        <p class={paragraph}>
+          Thank you for helping us make {BRAND_NAME} usable by everyone.
+        </p>
+
+        <p class="text-sm text-muted-foreground mt-10">
+          Have a question?{" "}
+          <a href={`${base}about/`} class={link}>Reach out to the team</a>.
+        </p>
+
+        <hr class="my-8 border-t border-border" />
+        <p class={`${paragraph} text-xs`}>
+          The accessibility audit that informed this statement used guidance from{" "}
+          <a
+            href="https://github.com/mgifford/ACCESSIBILITY.md"
+            target="_blank"
+            rel="noopener noreferrer" aria-describedby="new-tab-hint"
+            class={link}
+          >
+            mgifford/ACCESSIBILITY.md <Icon name="lucide:external-link" width={10} height={10} aria-hidden="true" />
+          </a>
+          , a community resource for accessibility best practices, testing criteria, and
+          issue severity frameworks. Thank you to Mike Gifford and all contributors for
+          making that guidance openly available.
+        </p>
+      </div>
+    </div>
+  </main>
+</Layout>

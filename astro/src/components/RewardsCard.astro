@@ -1,0 +1,105 @@
+---
+// Ported from src/components/RewardsCard.tsx, including the compact sidebar
+// variant used by the challenge detail page.
+import { Icon } from "astro-icon/components";
+import InlineProse from "@/components/InlineProse.astro";
+import { COMMUNITY_URL } from "@/lib/site";
+import { formatDeadline } from "@/lib/utils";
+
+interface Props {
+  rewards: {
+    deadline: string;
+    eligibility: string;
+    tiers: { label: string; description: string }[];
+    rankingNote?: string;
+    rankingRulesUrl?: string;
+  };
+  compact?: boolean;
+  levelDeadline?: string;
+  deadlinePast?: boolean;
+}
+const { rewards, compact = false, levelDeadline, deadlinePast = false } = Astro.props;
+const deadlineShown = compact ? levelDeadline : rewards.deadline;
+---
+
+<div class="rounded-xl border border-primary/30 bg-[hsl(var(--surface))] p-5">
+  <div class="flex items-center gap-2 mb-4">
+    <Icon name="lucide:trophy" width={15} height={15} class="text-primary shrink-0" aria-hidden="true" />
+    <h2 class="font-sans text-base font-semibold text-foreground">Rewards</h2>
+  </div>
+
+  {
+    !compact &&
+      (deadlinePast ? (
+        <div class="text-xs text-dim leading-relaxed mb-4 space-y-2">
+          <p>The deadline has passed, but the adventure is still open. Play it, post your solution in the community.</p>
+          <p>
+            If you enjoyed the adventure and want to share what you learned, write a tutorial in{" "}
+            <a
+              href={`${COMMUNITY_URL}/c/community-voices/38`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-describedby="new-tab-hint"
+              class="docs-ext-link"
+            >
+              Community Voices
+              <Icon name="lucide:external-link" width={10} height={10} aria-hidden="true" />
+            </a>
+            .
+          </p>
+        </div>
+      ) : (
+        <p class="text-xs text-dim leading-relaxed mb-4">
+          <span class="md-inline" set:html={rewards.eligibility} />
+        </p>
+      ))
+  }
+
+  {
+    compact && deadlinePast && (
+      <p class="text-xs text-dim leading-relaxed mb-3">Deadline passed. Adventure still open.</p>
+    )
+  }
+
+  <div class:list={["space-y-2", !compact && "mb-4"]}>
+    {
+      rewards.tiers.map((tier) => (
+        <div>
+          <p class="text-xs font-semibold text-foreground">{tier.label}</p>
+          <InlineProse html={tier.description} class="text-xs text-dim" />
+        </div>
+      ))
+    }
+  </div>
+
+  {
+    !compact && rewards.rankingNote && (
+      <p class="text-xs text-faint leading-relaxed mt-4">
+        <span class="md-inline" set:html={rewards.rankingNote} />{" "}
+        {rewards.rankingRulesUrl && (
+          <a
+            href={rewards.rankingRulesUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-describedby="new-tab-hint"
+            class="docs-ext-link"
+          >
+            See the points &amp; ranking rules for the full breakdown
+            <Icon name="lucide:external-link" width={10} height={10} aria-hidden="true" />
+          </a>
+        )}
+      </p>
+    )
+  }
+
+  {
+    deadlineShown && (
+      <>
+        <div class="border-t border-border my-3"></div>
+        <p class="text-xs text-faint">
+          Deadline: <span class="font-medium text-foreground">{formatDeadline(deadlineShown)}</span>
+        </p>
+      </>
+    )
+  }
+</div>

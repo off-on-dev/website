@@ -1,0 +1,46 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import { BRAND_NAME } from "@/lib/site";
+import { getChallengeData, tagToSlug } from "@/lib/challenges";
+import ChallengesFilter from "@/components/ChallengesFilter.vue";
+
+export async function getStaticPaths() {
+  const adventures = (await getCollection("adventures")).map((a) => a.data);
+  const { tags } = getChallengeData(adventures);
+  return [
+    { params: { tag: undefined }, props: { initialTag: null } },
+    ...tags.map((tag) => ({ params: { tag: tagToSlug(tag) }, props: { initialTag: tag } })),
+  ];
+}
+
+const { initialTag } = Astro.props;
+const adventures = (await getCollection("adventures")).map((a) => a.data);
+const { entries, tags } = getChallengeData(adventures);
+const base = import.meta.env.BASE_URL;
+
+const title = initialTag ? `${initialTag} Challenges - ${BRAND_NAME}` : `Challenges - ${BRAND_NAME}`;
+const description = initialTag
+  ? `Hands-on open source challenges using ${initialTag}. Practice in real-world scenarios in GitHub Codespaces.`
+  : "Browse hands-on open source challenges. Filter by technology and difficulty, then solve them in GitHub Codespaces.";
+const path = initialTag ? `/challenges/${tagToSlug(initialTag)}/` : "/challenges/";
+---
+
+<Layout title={title} description={description} path={path}>
+  <main id="main-content" tabindex="-1" class="mx-auto max-w-4xl px-4 py-12">
+    <h1 class="text-3xl md:text-4xl font-bold text-foreground">
+      {initialTag ? `${initialTag} Challenges` : "Challenges"}
+    </h1>
+    <p class="mt-3 text-dim">Filter by technology and difficulty. Each challenge opens in GitHub Codespaces.</p>
+
+    <div class="mt-8">
+      <ChallengesFilter
+        entries={entries}
+        tags={tags}
+        base={base}
+        initialTag={initialTag}
+        client:load
+      />
+    </div>
+  </main>
+</Layout>

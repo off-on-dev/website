@@ -10,8 +10,10 @@ version = 1
 
 # --- Application source code: MIT ---
 # src/, e2e/, scripts/, schemas/ contents, plus root-level TS/JS/CSS.
+# .astro/.vue added for the Astro + Vue migration (astro/); reuse-tool does not
+# auto-recognize .astro, so this glob is what keeps `reuse lint` green for it.
 [[annotations]]
-path = ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.mjs", "**/*.cjs", "**/*.css", "**/*.html"]
+path = ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.mjs", "**/*.cjs", "**/*.css", "**/*.html", "**/*.astro", "**/*.vue"]
 SPDX-FileCopyrightText = "OffOn.dev contributors"
 SPDX-License-Identifier = "MIT"
 

@@ -1,0 +1,301 @@
+slug: building-cloudhaven
+title: Building CloudHaven
+icon: Building2
+month: JAN 2026
+community_category_id: 36
+story: Join the Infrastructure Guild and modernize CloudHaven's infrastructure from manual provisioning to a
+  self-service platform using Infrastructure as Code. A hands-on journey through infrastructure as code with
+  OpenTofu and GitHub Actions.
+tags:
+  - OpenTofu
+  - Terraform
+  - GitHub Actions
+  - Trivy
+  - TDD
+contributor:
+  name: Katharina Sick
+  url: https://ksick.dev/
+  about: DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native
+    and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities,
+    inline skating rinks, and quiz nights across Europe.
+backstory:
+  - Welcome to CloudHaven, a bustling digital metropolis where every district depends on essential services to thrive.
+    You've just joined the Infrastructure Guild, a team of platform engineers responsible for providing the tools and
+    services that keep the city running.
+  - CloudHaven is expanding rapidly. The Merchant's Quarter needs storage vaults for their goods and ledgers for
+    tracking inventory. The Scholar's District requires secure archives for ancient texts. The Artisan's Quarter demands
+    workshops with specialized tools. Each district has unique needs, but they all depend on the Guild to provide
+    reliable, scalable infrastructure services.
+  - The Guild used to provision everything manually through cloud consoles, a process that was slow, error-prone, and
+    impossible to track. Recently, they've started adopting Infrastructure as Code, but the transition is incomplete.
+  - The Guild Master has assigned you to complete the modernization journey.
+  - "Your mission: build the services and tools that will support CloudHaven's future growth."
+levels:
+  - level: beginner
+    name: The Foundation Stones
+    difficulty: Beginner
+    topics:
+      - OpenTofu
+    learnings:
+      - Infrastructure as Code with OpenTofu
+      - Remote state management with GCS backend
+      - Dynamic resource provisioning with for_each
+      - Conditional resources with the enabled meta-argument, new in OpenTofu
+    devcontainer: 02-building-cloudhaven_01-beginner
+    discussion_url: /t/practice-infrastructure-as-code-with-zero-setup-adventure-02-beginner/656
+    deadline: "2026-02-04T23:59:00+01:00"
+    intro:
+      - An incomplete OpenTofu configuration is blocking the Merchant's Quarter from going live. Fix the broken backend,
+        wire up dynamic resource provisioning with for_each, and use the new enabled meta-argument to conditionally
+        deploy the audit database.
+    backstory:
+      - The Merchant's Quarter needs essential services, but the previous Guild engineer left the OpenTofu
+        configuration incomplete and misconfigured. The state is stored locally, making collaboration impossible,
+        and some services remain half-configured or missing.
+      - "Your mission: fix the issues, complete the setup, and establish proper infrastructure management for the Guild."
+    objective:
+      - Provision storage vaults and ledger databases for each district dynamically
+      - Deploy the audit database only when there is more than one district
+      - Store state remotely in a GCS backend following best practices so the Guild can collaborate
+      - Resolve all TODOs in the code and successfully run tofu apply
+    toolbox:
+      - name: tofu
+        description: OpenTofu CLI for infrastructure provisioning
+        url: https://opentofu.org/
+      - name: gcp-api-mock
+        description: mock GCP API running locally to simulate cloud resources without real cloud costs (Cloud Storage and Cloud
+          SQL only)
+        url: https://github.com/KatharinaSick/gcp-api-mock
+    services:
+      - name: "GCP API Mock"
+        port: "30104"
+        description: "Explore the mock cloud resources created by your configuration (Cloud Storage and Cloud SQL)."
+    how_to_play:
+      - title: Wait for the Environment
+        content: Wait ~2 minutes for the environment to initialize.
+      - title: Find the TODOs
+        content: |-
+          All OpenTofu files are in `adventures/02-building-cloudhaven/beginner/`. Run:
+
+          ```sh
+          grep -r "TODO" .
+          ```
+
+          Files to review: `main.tf`, `state.tf`, `variables.tf`, `merchants.tf`, `audit.tf`, `outputs.tf`.
+      - title: Apply the Configuration
+        content: |-
+          After fixing the TODOs, run:
+
+          ```sh
+          tofu apply
+          ```
+
+          If you changed the backend configuration, run `tofu init -migrate-state` first.
+      - title: Run the Smoke Test
+        content: |-
+          Run the smoke test to verify your solution:
+
+          ```sh
+          ./smoke-test.sh
+          ```
+    helpful_links:
+      - title: OpenTofu documentation
+        url: https://opentofu.org/docs/
+      - title: OpenTofu meta-arguments
+        url: https://opentofu.org/docs/language/meta-arguments/count/
+      - title: OpenTofu backend configuration
+        url: https://opentofu.org/docs/language/settings/backends/configuration/
+      - title: Google Cloud provider
+        url: https://registry.terraform.io/providers/hashicorp/google/latest/docs
+    verification:
+      command: "./smoke-test.sh"
+      description: "Once you think you've solved the challenge, run the smoke test to verify your solution."
+  - level: intermediate
+    name: The Modular Metropolis
+    difficulty: Intermediate
+    topics:
+      - OpenTofu
+      - TDD
+    learnings:
+      - OpenTofu module testing with tofu test
+      - Test-Driven Development (TDD) workflow
+      - Input validation with custom rules
+      - Refactoring infrastructure safely with moved blocks
+    devcontainer: 02-building-cloudhaven_02-intermediate
+    discussion_url: /t/adventure-02-building-cloudhaven-intermediate-the-modular-metropolis/723/10
+    deadline: "2026-02-04T23:59:00+01:00"
+    intro:
+      - A senior engineer wrote the tests first and then left. The module code is buggy and the integration test is
+        incomplete. Fix the implementation to match the test expectations, complete the end-to-end test, and use moved
+        blocks to refactor without destroying state.
+    backstory:
+      - After fixing the Foundation Stones, CloudHaven is thriving. The city has grown to three districts, and the Guild
+        decided to refactor the infrastructure into reusable modules.
+      - A senior engineer started the work using Test-Driven Development, writing tests first then implementing. But
+        they were called away before finishing, leaving behind working tests and buggy code that doesn't match them.
+      - "Your mission: fix the bugs, complete the integration test, and deploy the infrastructure."
+    objective:
+      - All tests of the districts module pass
+      - A completed integration test that applies infrastructure against the mock GCP API to verify end-to-end
+        functionality
+      - Three districts deployed with correctly configured infrastructure (vaults and ledgers)
+    toolbox:
+      - name: tofu
+        description: OpenTofu CLI for infrastructure provisioning
+        url: https://opentofu.org/
+      - name: gcp-api-mock
+        description: mock GCP API running locally to simulate cloud resources without real cloud costs (Cloud Storage and Cloud
+          SQL only)
+        url: https://github.com/KatharinaSick/gcp-api-mock
+    services:
+      - name: "GCP API Mock"
+        port: "30104"
+        description: "Explore mock cloud resources to verify your module configuration."
+    how_to_play:
+      - title: Wait for the Environment
+        content: Wait ~2 minutes for the environment to initialize.
+      - title: Fix the Failing Tests
+        content: |-
+          All files are in `adventures/02-building-cloudhaven/intermediate/`. The tests define the expected behaviour: your job is to fix the implementation to match what the tests expect. Don't modify existing tests unless a comment tells you to.
+
+          ```
+          adventures/02-building-cloudhaven/intermediate/
+          ├── main.tf                    # Provider and backend configuration
+          ├── variables.tf               # Input variables
+          ├── districts.tf               # Module calls for each district
+          ├── outputs.tf                 # Infrastructure outputs
+          ├── moved.tf                   # Resource migration blocks
+          ├── modules/district/          # The district module (fix bugs here)
+          │   ├── main.tf                # Locals and tier configuration
+          │   ├── variables.tf           # Input validation
+          │   ├── vault.tf               # Storage bucket resource
+          │   ├── ledger.tf              # Cloud SQL resource
+          │   ├── outputs.tf             # Module outputs
+          │   └── tests/                 # Module tests (read these!)
+          └── tests/
+              └── integration.tftest.hcl # Complete this test
+          ```
+
+          Run tests to see what fails:
+
+          ```sh
+          make test
+          ```
+      - title: Apply the Infrastructure
+        content: |-
+          Once all tests pass, apply the infrastructure:
+
+          ```sh
+          make test
+          make apply
+          ```
+      - title: Run the Smoke Test
+        content: |-
+          Run the smoke test to verify your solution:
+
+          ```sh
+          ./smoke-test.sh
+          ```
+    helpful_links:
+      - title: OpenTofu testing
+        url: https://opentofu.org/docs/cli/commands/test/
+      - title: OpenTofu modules
+        url: https://opentofu.org/docs/language/modules/
+      - title: Input validation rules
+        url: https://opentofu.org/docs/language/values/variables/#custom-validation-rules
+      - title: Moved blocks
+        url: https://opentofu.org/docs/language/modules/develop/refactoring/
+    verification:
+      command: "./smoke-test.sh"
+      description: "Once you think you've solved the challenge, run the smoke test to verify your solution."
+  - level: expert
+    name: The Guardian Protocols
+    difficulty: Expert
+    topics:
+      - OpenTofu
+      - GitHub Actions
+      - Trivy
+    learnings:
+      - GitHub Actions for drift detection and plan/apply
+      - Integration tests with service containers
+      - Security scanning with Trivy
+    devcontainer: 02-building-cloudhaven_03-expert
+    discussion_url: /t/adventure-02-building-cloudhaven-expert-the-guardian-protocols/782/8
+    deadline: "2026-02-04T23:59:00+01:00"
+    intro:
+      - Three broken GitHub Actions workflows stand between CloudHaven and automated infrastructure governance. Fix
+        drift detection that creates PRs, PR validation with Trivy security scanning and service-container integration
+        tests, and automatic apply on merge.
+    backstory:
+      - "After the Modular Metropolis refactoring, CloudHaven flourished. But with growth came risk. One night, a rogue
+        change slipped through unnoticed and nearly brought down the North Market's trading vaults. The Council was
+        furious: how could this happen without anyone noticing?"
+      - The Guild Master summoned you urgently. "We need guardians," she said. "Automated sentinels that watch over our
+        infrastructure day and night. They must catch dangerous changes before they reach the city, detect when reality
+        drifts from our blueprints, and sound the alarm when threats appear."
+      - A previous engineer began building these Guardian Protocols using GitHub Actions, but was reassigned before
+        completing them. The workflows exist, but they're incomplete and broken.
+      - "Your mission: bring the Guardian Protocols online and protect CloudHaven from chaos."
+    objective:
+      - "Drift detection: run tofu plan and create a PR when drift is found"
+      - "PR validation: run tofu plan and comment results, run integration tests against the mock GCP API, scan for
+        security vulnerabilities with Trivy and fail on critical or high severity issues"
+      - "Automatic apply: apply infrastructure when a PR is merged to main"
+      - All three workflows must have succeeded at least once
+    toolbox:
+      - name: tofu
+        description: OpenTofu CLI for infrastructure provisioning
+        url: https://opentofu.org/
+      - name: gcp-api-mock
+        description: mock GCP API running locally (port set to public so GitHub Actions runners can access it)
+        url: https://github.com/KatharinaSick/gcp-api-mock
+      - name: GitHub Actions
+        description: the workflows you will fix are in .github/workflows/
+        url: https://docs.github.com/en/actions
+    services:
+      - name: "GCP API Mock"
+        port: "30104"
+        description: "Port is set to public so GitHub Actions runners can reach it during workflow runs. You may see a browser security warning. Click Continue to proceed."
+    how_to_play:
+      - title: Wait for the Environment
+        content: Wait ~2 minutes for the environment to initialize.
+      - title: Fix the Workflows
+        content: |-
+          Fix the three workflows in `.github/workflows/`:
+
+          - `adventure02-expert-detect-drift.yaml`
+          - `adventure02-expert-validate-changes.yaml`
+          - `adventure02-expert-apply-infrastructure.yaml`
+
+          The OpenTofu configuration is correct, focus only on the workflow files.
+      - title: Trigger Drift Detection
+        content: Commit and push to main. Go to the Actions tab, select the drift detection workflow, and click Run workflow. The
+          infrastructure has intentional drift, so the workflow should create a draft PR.
+      - title: Trigger Validation
+        content: Click Ready for Review on the draft PR to trigger the validation workflow. To re-trigger validation after pushing
+          new changes, convert the PR back to draft then Ready for Review again. Re-running a failed workflow uses the code
+          from the original run, so toggling draft state is how you pick up new changes pushed to main.
+      - title: Merge and Apply
+        content: When the PR is merged to main, the apply workflow runs automatically.
+      - title: Run the Smoke Test
+        content: |-
+          Run the smoke test to verify your solution:
+
+          ```sh
+          cd adventures/02-building-cloudhaven/expert
+          ./smoke-test.sh
+          ```
+    helpful_links:
+      - title: GitHub Actions documentation
+        url: https://docs.github.com/en/actions
+      - title: GitHub Actions service containers
+        url: https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/about-service-containers
+      - title: OpenTofu plan command
+        url: https://opentofu.org/docs/cli/commands/plan/
+      - title: Trivy action
+        url: https://github.com/aquasecurity/trivy-action
+      - title: TF-via-PR action
+        url: https://github.com/OP5dev/TF-via-PR
+    verification:
+      command: "./smoke-test.sh"
+      description: "Once you think you've solved the challenge, run the smoke test to verify your solution."

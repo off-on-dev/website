@@ -1,0 +1,42 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Hero from "@/components/Hero.astro";
+import AdventureCard from "@/components/AdventureCard.astro";
+import { BRAND_NAME, BRAND_SHORT_DESCRIPTION } from "@/lib/site";
+
+const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+const monthKey = (m: string): number => {
+  const [mon, year] = m.split(" ");
+  return Number(year) * 12 + Math.max(0, MONTHS.indexOf(mon));
+};
+
+// Build-time isLive: active rewards window or any future level deadline. Frozen
+// at build (same caveat as the React summaries); a client re-check can refine it later.
+const now = new Date();
+const isLive = (a: { rewards?: { deadline?: string }; levels: { deadline?: string }[] }): boolean =>
+  !!(a.rewards?.deadline && new Date(a.rewards.deadline) > now) ||
+  a.levels.some((l) => l.deadline && new Date(l.deadline) > now);
+
+const adventures = (await getCollection("adventures"))
+  .map((a) => a.data)
+  .sort((x, y) => monthKey(y.month) - monthKey(x.month));
+---
+
+<Layout title={`${BRAND_NAME} - Learn Open Source by Doing`} description={BRAND_SHORT_DESCRIPTION} path="/">
+  <main id="main-content" tabindex="-1">
+    <Hero />
+
+    <section id="challenges" aria-labelledby="challenges-heading" class="mx-auto max-w-6xl px-6 py-20">
+      <div class="mb-8 flex items-baseline justify-between">
+        <h2 id="challenges-heading" class="font-heading text-2xl font-bold text-foreground sm:text-3xl">
+          Open Source Adventures
+        </h2>
+        <a class="docs-ext-link text-sm" href={`${import.meta.env.BASE_URL}adventures/`}>View all</a>
+      </div>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {adventures.map((a) => <AdventureCard adventure={{ ...a, isLive: isLive(a) }} />)}
+      </div>
+    </section>
+  </main>
+</Layout>

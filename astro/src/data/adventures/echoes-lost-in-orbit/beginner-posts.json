@@ -1,0 +1,147 @@
+{
+  "discussionUrl": "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40",
+  "discussionPosts": [
+    {
+      "username": "iw4p",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
+      "cooked": "Thanks! Done",
+      "created_at": "2026-06-14T15:36:20.255Z",
+      "challengeSolved": true,
+      "topicUrl": "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
+    },
+    {
+      "username": "KatharinaSick",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
+      "cooked": "There’s another beginner challenge available now. It’s about Infrastructure as Code with OpenTofu. I hope you enjoy it Practice Infrastructure as Code with Zero Setup ( Adventure 02 | Beginner)",
+      "created_at": "2026-01-14T10:12:21.186Z",
+      "topicUrl": "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
+    },
+    {
+      "username": "enri-kapaj",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/enri-kapaj/40/165_2.png",
+      "cooked": "Done",
+      "created_at": "2025-12-09T22:06:24.552Z",
+      "challengeSolved": true,
+      "topicUrl": "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
+    },
+    {
+      "username": "KatharinaSick",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
+      "cooked": "No, you can also sync your fork to get the latest changes. You can find more details on how to do that here: Have fun playing",
+      "created_at": "2025-12-08T19:37:35.002Z",
+      "topicUrl": "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
+    },
+    {
+      "username": "RoelofW",
+      "avatarUrl": "https://community.offon.dev/letter_avatar_proxy/v4/letter/r/eb8c5e/40.png",
+      "cooked": "Do I need to fork it again if I have a fork on my own github repo with the easy one ?",
+      "created_at": "2025-12-08T19:17:46.692Z",
+      "topicUrl": "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
+    },
+    {
+      "username": "KatharinaSick",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
+      "cooked": "The intermediate challenge of this adventure is now live:",
+      "created_at": "2025-12-08T09:38:42.412Z",
+      "topicUrl": "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
+    },
+    {
+      "username": "yerakh-dyn",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/yerakh-dyn/40/157_2.png",
+      "cooked": "Done",
+      "created_at": "2025-12-04T09:01:42.977Z",
+      "challengeSolved": true,
+      "topicUrl": "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
+    },
+    {
+      "username": "KatharinaSick",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
+      "cooked": "No, that should be preinstalled @macca728. Could it be, that you started the Codespace with the default configuration instead of “Adventure 01 | Beginner (Broken Echoes)“? You can find more details about that here:",
+      "created_at": "2025-12-04T05:36:57.191Z",
+      "topicUrl": "https://community.offon.dev/t/adventure-01-echoes-lost-in-orbit-easy-broken-echoes/117/40"
+    }
+  ],
+  "totalReplies": 37,
+  "solvers": [
+    {
+      "username": "KatharinaSick",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
+      "solvedAt": "2025-11-21T08:48:02.790Z"
+    },
+    {
+      "username": "JoshHendrick",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/joshhendrick/40/45_2.png",
+      "solvedAt": "2025-11-23T19:47:45.300Z"
+    },
+    {
+      "username": "rohit_bc",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/rohit_bc/40/164_2.png",
+      "solvedAt": "2025-11-25T15:20:40.122Z"
+    },
+    {
+      "username": "daniel.y.rigney",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/daniel.y.rigney/40/106_2.png",
+      "solvedAt": "2025-11-25T21:08:31.028Z"
+    },
+    {
+      "username": "Jelleby",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/jelleby/40/113_2.png",
+      "solvedAt": "2025-11-25T21:20:12.884Z"
+    },
+    {
+      "username": "georgblumenschein",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/georgblumenschein/40/116_2.png",
+      "solvedAt": "2025-11-26T10:15:59.893Z"
+    },
+    {
+      "username": "RoelofW",
+      "avatarUrl": "https://community.offon.dev/letter_avatar_proxy/v4/letter/r/eb8c5e/40.png",
+      "solvedAt": "2025-11-26T13:07:34.190Z"
+    },
+    {
+      "username": "theharithsa",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png",
+      "solvedAt": "2025-11-26T14:47:48.141Z"
+    },
+    {
+      "username": "jayroam",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/jayroam/40/130_2.png",
+      "solvedAt": "2025-11-27T08:23:52.987Z"
+    },
+    {
+      "username": "alvin",
+      "avatarUrl": "https://community.offon.dev/letter_avatar_proxy/v4/letter/a/b5a626/40.png",
+      "solvedAt": "2025-11-27T20:53:12.206Z"
+    },
+    {
+      "username": "gsigmund",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/gsigmund/40/99_2.png",
+      "solvedAt": "2025-11-28T09:11:04.341Z"
+    },
+    {
+      "username": "justinrand",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/justinrand/40/140_2.png",
+      "solvedAt": "2025-11-29T17:53:47.161Z"
+    },
+    {
+      "username": "mikeadityas",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/mikeadityas/40/144_2.png",
+      "solvedAt": "2025-12-01T14:35:04.710Z"
+    },
+    {
+      "username": "yerakh-dyn",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/yerakh-dyn/40/157_2.png",
+      "solvedAt": "2025-12-04T09:01:42.977Z"
+    },
+    {
+      "username": "enri-kapaj",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/enri-kapaj/40/165_2.png",
+      "solvedAt": "2025-12-09T22:06:24.552Z"
+    },
+    {
+      "username": "iw4p",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
+      "solvedAt": "2026-06-14T15:36:20.255Z"
+    }
+  ]
+}

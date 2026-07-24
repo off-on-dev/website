@@ -1,0 +1,486 @@
+slug: blind-by-design
+title: "Blind by Design"
+icon: FlaskConical
+month: "MAY 2026"
+community_category_id: 41
+story: >-
+  Three levels of OpenFeature with flagd as the provider, in a Java + Spring Boot service.
+  Wire the SDK against a flagd sidecar (Beginner), layer evaluation context to target by cohort
+  (Intermediate), then instrument flag evaluations with OpenTelemetry and roll back a misbehaving
+  fractional rollout (Expert). All without redeploying.
+tags:
+  - OpenFeature
+  - flagd
+  - Spring Boot
+  - Java
+  - OpenTelemetry
+  - Grafana
+
+contributor:
+  name: "Simon Schrottner"
+  url: "https://schrottner.at/"
+  about: >-
+    CNCF Ambassador and maintainer of OpenFeature and JUnit Pioneer. Helps teams release faster
+    and with more confidence through open standards, feature flagging, and the communities that
+    make both possible. A familiar face at KubeCon EU, Devoxx, ContainerDays, and meetups across Europe.
+
+backstory:
+  - >-
+    The Aletheia Institute is running a multi-phase vision-enhancement trial. The lab is a
+    Spring Boot service whose one job is to record the vision_state of every subject who walks
+    through the protocol (blurry, sharp, enhanced, or clouded), because subjects don't all arrive
+    with the same biology, the same dose adherence, or the same trial-jurisdiction baseline. The
+    flag definitions that drive those readings live in flags.json, watched by a flagd sidecar;
+    the OpenFeature SDK is supposed to call that sidecar on every evaluation.
+  - >-
+    It hasn't been. For the past eight months, every subject through the door has been recorded
+    as "untreated": the integration was never finished, and the lab director assumed the system
+    was reading the chart. Worse, eight weeks ago the Institute opened its flagship Phase 3 trial:
+    a new amplifier variant rolled out fractionally to a cohort by a targeting rule in flags.json.
+    Four adverse-event reports have since been filed, each one a subject whose vision_state at
+    discharge was worse than at enrollment.
+  - >-
+    The monitoring is dark, not by accident, but because no one ever turned the lights on. Your
+    mission across three levels: stand up the lab so it reads the chart, read the chart by cohort
+    so outcomes can be tracked, then turn on the lights and roll back the Phase 3 variant before
+    the director signs off on the next enrollment batch.
+
+overview:
+  - >-
+    OpenFeature is a vendor-neutral standard for feature flags. The reference cloud-native
+    implementation is flagd, which serves flag definitions from a JSON file, locally or remotely,
+    and the OpenFeature SDK in your application calls it on every evaluation.
+  - >-
+    In this adventure, the lab uses OpenFeature exactly the way a real engineering team would:
+    a Spring Boot service holds the SDK client, flagd holds the flag definitions, and the
+    targeting rules in flags.json decide what reading every subject ends up with. By the end,
+    you'll have wired the SDK in from scratch, learned to record outcomes by cohort, and rolled
+    back a misbehaving Phase 3 trial without redeploying.
+
+rewards:
+  deadline: "2026-05-26T23:59:00+01:00"
+  tiers:
+    - label: "1st place"
+      description: "50% voucher for a Linux Foundation certification"
+    - label: "Top 3"
+      description: "Credly badge to showcase the achievement"
+
+levels:
+  - level: beginner
+    name: "Stand up the Lab"
+    difficulty: Beginner
+    deadline: "2026-05-26T23:59:00+01:00"
+    topics:
+      - OpenFeature
+      - flagd
+      - Spring Boot
+    audience: >-
+      Platform engineers, <abbr title="Site Reliability Engineers">SREs</abbr>, and developers curious about feature flags, with no prior OpenFeature
+      experience needed, but familiarity with Spring Boot and basic Java will help.
+    learnings:
+      - "How an OpenFeature client and provider work together: the SDK is provider-agnostic and the flagd provider plugs in via dependency only"
+      - "What remote provider means in practice: the SDK calls a separate flag service (flagd) over gRPC, not parsing flags.json itself"
+      - "What flags.json looks like for flagd (state, variants, defaultVariant)"
+      - "Why hot-reload of the flag file matters operationally: configuration without redeploy"
+    devcontainer: 04-blind-by-design_01-beginner
+    discussion_url: "/t/wire-openfeature-flagd-into-a-spring-boot-service-with-zero-setup-adventure-04-beginner/1419"
+    intro:
+      - >-
+        Wire the OpenFeature Java SDK and the flagd contrib provider into a Spring Boot service
+        so flag evaluations are resolved by a flagd sidecar against a flags.json file. Author your
+        first flag, then prove that editing flags.json flips the response on the next request: no
+        app restart, no flagd restart, no redeploy.
+    backstory:
+      - >-
+        The lab is on its first shift and it isn't reading the chart. Every subject who walks
+        through the door gets the same hard-coded reading on their record, no matter what the lab
+        director just signed off on. The label coming out of the lab is a literal string baked
+        into the controller, not a reading pulled from the chart.
+      - >-
+        Your mission: replace that hard-coded label with an OpenFeature client, point that client
+        at the flagd sidecar that already runs next to your Codespace, and let flags.json drive
+        what gets recorded as the subject's vision_state. Prove the lab can change what it records
+        without restarting anything.
+    architecture:
+      - >-
+        This level runs as two containers side-by-side in your Codespace: the Spring Boot lab
+        and a flagd sidecar.
+      - >-
+        The Spring Boot service runs on http://localhost:8080/ with one endpoint, GET /. flags.json
+        is mounted read-only into the flagd sidecar; edit it through the <abbr title="Integrated Development Environment">IDE</abbr> and flagd's file
+        watcher picks up the change within about a second. The flagd sidecar serves flag evaluations
+        over gRPC on :8013. The OpenFeature SDK reads FLAGD_HOST and FLAGD_PORT from the environment
+        (pre-set by the devcontainer), so there is no host or port to hard-code.
+    objective:
+      - "curl http://localhost:8080/ returns a vision_state reading resolved from flags.json (not the hard-coded 'untreated' fallback)"
+      - "The response payload includes OpenFeature evaluation details: flag key, variant, reason, and value"
+      - "Editing flags.json to change defaultVariant causes the next request to return the new variant without restarting the app or flagd"
+    toolbox:
+      - name: "./mvnw"
+        description: "Maven wrapper checked in next to pom.xml, builds and runs the Spring Boot lab"
+      - name: "curl"
+        description: "makes requests to http://localhost:8080/ and shows the reading the lab records"
+        url: "https://curl.se/"
+      - name: "jq"
+        description: "pretty-prints and filters the JSON evaluation details returned by the SDK"
+        url: "https://jqlang.org/"
+      - name: "flagd sidecar"
+        description: "already running in the devcontainer compose stack on the docker-internal network, no port forwarding needed"
+    services:
+      - name: "Spring Boot lab"
+        port: "8080"
+        description: "The lab endpoint. On first load you will see the hard-coded 'untreated' response. This is the broken state you are fixing."
+    how_to_play:
+      - title: "Start the Lab"
+        content: |
+          Run the lab from the terminal, or press F5 in VS Code with `Laboratory.java` open. The lab starts in the broken state, returning the hard-coded 'untreated' response:
+
+          ```sh
+          ./mvnw spring-boot:run
+          ```
+      - title: "Add Dependencies"
+        content: "Add the OpenFeature Java SDK and flagd contrib provider to `pom.xml`. GroupIds, artifactIds, and versions are in the OpenFeature Java SDK docs and the flagd Java provider README."
+      - title: "Configure the Provider"
+        content: "Create a Spring `@Configuration` class that builds a `FlagdProvider` in RPC mode and registers it on the OpenFeature API at startup. No host or port to configure: the devcontainer pre-sets `FLAGD_HOST` and `FLAGD_PORT`."
+      - title: "Author Your First Flag"
+        content: "Open `flags.json` and add a flag named `vision_state` with two string variants (for example 'blurry' and 'clouded') and a `defaultVariant`. flagd's file watcher picks up changes within about a second, no restart needed."
+      - title: "Wire the Evaluation"
+        content: "Replace the hard-coded return in `Trial` with an OpenFeature evaluation of `vision_state`, returning the full evaluation details (flag key, variant, value, reason)."
+      - title: "Test Hot Reload"
+        content: |
+          Restart the lab. Confirm the value resolves from `flags.json`, then edit `flags.json`, change `defaultVariant`, save, and re-run curl without restarting anything:
+
+          ```sh
+          curl -s http://localhost:8080/ | jq
+          ```
+    helpful_links:
+      - title: OpenFeature Java SDK
+        url: https://openfeature.dev/docs/reference/technologies/server/java/
+      - title: flagd Java provider
+        url: https://github.com/open-feature/java-sdk-contrib/tree/main/providers/flagd
+      - title: flagd flag definitions
+        url: https://flagd.dev/reference/flag-definitions/
+    meta_description: "Wire the OpenFeature Java SDK and flagd provider into a Spring Boot service. Author a flag in flags.json and prove hot-reload works without restarting the app."
+    verification:
+      command: "./verify.sh"
+      description: "Once you think you've solved the challenge, run the verification script. If it fails it will tell you which checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion."
+
+  - level: intermediate
+    name: "Outcome by Cohort"
+    difficulty: Intermediate
+    deadline: "2026-05-26T23:59:00+01:00"
+    topics:
+      - OpenFeature
+      - flagd
+      - Spring Boot
+      - Java
+    learnings:
+      - "How OpenFeature's transaction-context propagation works in a thread-per-request server, and why a ThreadLocalTransactionContextPropagator is the right primitive for Servlet-based apps"
+      - "The difference between request-scoped context (the subject's species) and global evaluation context (the trial's country), and when each is the right tool"
+      - "How hooks let you attach cross-cutting behaviour, audit logging today and OpenTelemetry tracing tomorrow, without modifying every flag evaluation call site"
+    devcontainer: 04-blind-by-design_02-intermediate
+    discussion_url: "/t/outcome-by-cohort-adventure-04-intermediate/1485"
+    intro:
+      - >-
+        Populate all three OpenFeature evaluation-context layers on a Spring Boot service and register an AuditHook.
+        Transaction context comes from a HandlerInterceptor, global context from the COUNTRY environment variable at
+        startup, and invocation context at the call site. The targeting in flags.json already has three branches for
+        species, dose, and country, but none fire yet because the context layers are missing.
+    backstory:
+      - >-
+        The trial is widening. Subjects from outside the lab's local population are getting the wrong reading on
+        their chart, and the lab director has just walked in holding a stack of complaint forms. She wants the audit
+        log to tell her, after the fact, exactly which vision_state the lab recorded for which subject, and she
+        wants the lab to read the chart properly before it records any more bad readings.
+      - >-
+        The protocol is the same for every subject; the lab is not varying the trial. What differs is the observed
+        outcome: some subjects have a biology that responds enhancedly to the same serum, some absorb less or more
+        than the protocol's standard dose, and the trial is registered in different jurisdictions with different
+        baselines.
+      - >-
+        Your shift: teach the lab to read each subject's species off the request, attach the trial's country of
+        registration (set on the JVM via the COUNTRY environment variable) to the global context, pass the dose as
+        invocation context at the moment of the flag evaluation, and register an audit hook that records every dose
+        with its variant and reason.
+    architecture_diagram: "blind-by-design-intermediate.svg"
+    diagram_alt: "HTTP flows through SpeciesInterceptor, Trial, and OpenFeature client left to right, then down through AuditHook and FlagdProvider, connecting via gRPC to a flagd sidecar."
+    objective:
+      - "curl /?species=zyklop returns 'enhanced' regardless of dose or country"
+      - "With COUNTRY=de, curl /?dose=standard returns 'sharp'; with COUNTRY=at, the same call falls through to the default"
+      - "curl /?dose=underdose returns 'clouded'; curl /?species=zyklop&dose=underdose returns 'enhanced' (species takes precedence)"
+      - "Every evaluation produces an [AUDIT] log line naming the flag, the resolved variant, the reason, and the attributes that drove the outcome"
+      - "The response is never 'untreated' (that fallback only fires when the SDK cannot reach flagd)"
+    toolbox:
+      - name: "Java 21 (Temurin)"
+        description: "pre-installed in the devcontainer"
+      - name: "./mvnw"
+        description: "Spring Boot Maven Wrapper, no global Maven install required"
+      - name: "curl"
+        description: "sends requests to http://localhost:8080/ to test each targeting branch"
+        url: "https://curl.se/"
+      - name: "jq"
+        description: "pretty-prints the JSON evaluation details"
+        url: "https://jqlang.org/"
+      - name: "tail -f"
+        description: "watches the application log live for [AUDIT] lines"
+    services:
+      - name: "Spring Boot lab"
+        port: "8080"
+        description: "The application under test. Access via the Ports tab or curl http://localhost:8080/."
+    how_to_play:
+      - title: "Wait for Setup"
+        content: "Wait ~2-3 minutes for the Java toolchain to install. Use `Cmd/Ctrl + Shift + P` then `View Creation Log` to watch progress. When the post-create finishes you'll have Java 21, the Maven wrapper, and the broken-state lab ready in `adventures/04-blind-by-design/intermediate/`."
+      - title: "Confirm the Broken State"
+        content: |
+          Start the lab and confirm the broken state, where no targeting fires yet:
+
+          ```sh
+          ./mvnw spring-boot:run
+          curl 'http://localhost:8080/?species=zyklop'
+          # returns 'blurry', wrong cohort, targeting can't fire
+          ```
+
+          That `"blurry"` is the starting point you want: even when the request shouts `species=zyklop`, the lab has nothing in its evaluation context, so flagd's targeting cannot fire and every subject drops to the default variant. Stop the app and start fixing.
+      - title: "Inspect the Starting Point"
+        content: |
+          The lab already has the OpenFeature SDK and the flagd contrib provider on the classpath, and the `FlagdProvider` is wired in `Resolver.RPC` mode against the flagd sidecar. Open `flags.json` and inspect the targeting. Three branches exist but none fire because nothing in the app populates `species`, `country`, or `dose` yet:
+
+          ```json
+          "targeting": {
+            "if": [
+              { "===": [{"var": "species"}, "zyklop"] },        "enhanced",
+              { "in":  [{"var": "dose"}, ["underdose", "overdose"]] }, "clouded",
+              { "===": [{"var": "country"}, "de"] },             "sharp"
+            ]
+          }
+          ```
+
+          Your job: populate `species`, `country`, and `dose` on the evaluation context so the targeting fires.
+      - title: "Build the SpeciesInterceptor"
+        content: >-
+          Create a Spring `HandlerInterceptor` named `SpeciesInterceptor`: in `preHandle`, read `?species=` and
+          put it on the transaction context; in `afterCompletion`, clear the context so values do not leak across
+          pooled threads. Register a `ThreadLocalTransactionContextPropagator` once on the OpenFeature API in a
+          static initializer. Without the propagator the SDK has no way to carry per-request context across the
+          call into the controller, and the transaction context silently stays empty.
+      - title: "Wire OpenFeatureConfig"
+        content: >-
+          Update `OpenFeatureConfig` to: register `SpeciesInterceptor` with Spring
+          (`WebMvcConfigurer.addInterceptors`), read the `COUNTRY` environment variable and set it as the global
+          evaluation context, and register `AuditHook` globally on the OpenFeature API. The three context layers,
+          global (`country`), transaction (`species` from the interceptor), and invocation (`dose` from `Trial`),
+          merge before flagd evaluates the rules. Precedence on conflict is invocation over transaction over global.
+      - title: "Update the Trial"
+        content: >-
+          Update `Trial` so each evaluation passes `dose` on the invocation context (the third argument to
+          `client.getStringDetails`). Default to `'standard'` most of the time but occasionally to `'underdose'` or
+          `'overdose'`, that is the lab tech mis-measuring, and it is what makes the improper-dosing branch in
+          `flags.json` fire at all. Make it overridable via `?dose=` so you can test each branch by hand. If the
+          invocation context does not carry `dose`, the targeting rule sees `null` and the branch never fires: every
+          non-zyklop request lands on either the country branch or the default.
+      - title: "Implement AuditHook"
+        content: >-
+          Implement `AuditHook`: in `after()`, write an `[AUDIT]` log line with flag name, variant, reason, and a
+          fixed allowlist of attributes (species, country, dose). Log at WARN when the variant is `'clouded'` so
+          the safety officer can grep for it, otherwise INFO. Implement `error()` so failed evaluations are not
+          silent. Use a fixed allowlist (`List.of("species", "country", "dose")`) rather than iterating the whole
+          context: audit logs outlive app logs, and logging only what you decided to log pays off the moment
+          something sensitive lands on the context.
+      - title: "Test All Targeting Branches"
+        content: |
+          Run the lab with country-specific scripts. These pipe output through `tee app.log`, which the verifier greps for `[AUDIT]` lines. If you run `./mvnw spring-boot:run` directly, add `| tee app.log` or the verifier has nothing to grep:
+
+          ```sh
+          ./run-germany.sh    # COUNTRY=de  (or: make lab-germany)
+          ./run-austria.sh    # COUNTRY=at
+          ```
+
+          Three named launch configs in `.vscode/launch.json` (Germany / Austria / No country) also let you switch cohorts from the Run and Debug view.
+
+          In another terminal, verify each branch:
+
+          ```sh
+          curl -s 'http://localhost:8080/?species=zyklop' | jq .value
+          # => "enhanced"
+
+          curl -s 'http://localhost:8080/?dose=standard' | jq .value
+          # => "sharp" (Germany) / "blurry" (Austria)
+
+          curl -s 'http://localhost:8080/?dose=underdose' | jq .value
+          # => "clouded"
+
+          curl -s 'http://localhost:8080/?species=zyklop&dose=underdose' | jq .value
+          # => "enhanced" (species wins)
+          ```
+
+          Check the audit trail:
+
+          ```sh
+          grep '\[AUDIT\]' app.log | head
+          ```
+
+          You should see one `[AUDIT] flag=vision_state variant=... reason=... species=... country=... dose=...` line per request. `clouded` outcomes log at WARN.
+    helpful_links:
+      - title: OpenFeature Java SDK
+        url: https://openfeature.dev/docs/reference/technologies/server/java/
+      - title: OpenFeature Hooks
+        url: https://openfeature.dev/docs/reference/concepts/hooks
+      - title: Spring HandlerInterceptor
+        url: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/HandlerInterceptor.html
+      - title: flagd flag definitions
+        url: https://flagd.dev/reference/flag-definitions/
+    meta_description: "Add OpenFeature evaluation context and an AuditHook to a Spring Boot service. Target flag evaluations by species, country, and dose to record cohort outcomes."
+    verification:
+      command: "./verify.sh"
+      description: "Once you think you've solved the challenge, run the verification script. If it fails it will tell you which checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion."
+
+  - level: expert
+    name: "Read the Chart"
+    difficulty: Expert
+    deadline: "2026-05-26T23:59:00+01:00"
+    audience: >-
+      Platform engineers, <abbr title="Site Reliability Engineers">SREs</abbr>, and observability-focused developers who have completed the
+      Beginner and Intermediate levels or are comfortable with OpenFeature evaluation context,
+      and want to learn how flag evaluations join distributed traces and metrics, and how to
+      use a flag flip as an operational lever for live rollbacks.
+    topics:
+      - OpenFeature
+      - OpenTelemetry
+      - Grafana
+      - Spring Boot
+    learnings:
+      - "How the OpenFeature OpenTelemetry hooks (TracesHook and MetricsHook) join flag evaluations to the rest of an application's telemetry without a separate ingestion path"
+      - "How to author your own Hook: a tiny class that copies merged-eval-context attributes onto the active OTel span, closing the loop between why a flag resolved the way it did and what the operator sees in Tempo"
+      - "How fractional rollout in flagd buckets users by targetingKey (same key, same bucket, every request) and how to read that bucketing off a dashboard"
+      - "How a flag flip is a faster operational lever than a redeploy when a rollout is misbehaving: the difference between a one-line config change and a twenty-minute deployment"
+    devcontainer: 04-blind-by-design_03-expert
+    discussion_url: "/t/read-the-chart-adventure-04-expert/1530"
+    intro:
+      - >-
+        Spans are already flowing into Tempo from the OpenFeature TracesHook, but the metrics
+        half is dead: the MeterProvider has no exporter and the MetricsHook was never registered.
+      - >-
+        The dashboard the operator wants to triage from is empty. The k6 loadgen is idle, waiting
+        for a flag flip to turn it on.
+    backstory:
+      - >-
+        The trial just went wide. Phase 3 of the new vision amplifier (vision_amplifier_v2) was
+        approved for the full cohort yesterday morning. The promise was straightforward: subjects
+        emerge with sharper eyesight than they walked in with. By mid-afternoon the audit log was
+        screaming. Subjects were stabilising 200ms slower, and roughly one in ten of them was
+        emerging blind, with containment failure recorded as an HTTP 500. The lab director pulled
+        up the Feature Flag Metrics dashboard expecting to triage visually. The dashboard was dark.
+        Someone had wired up traces but never finished the metrics half. There is no chart to read.
+        The lab is studying eyesight and the lab itself cannot see.
+      - >-
+        Your job, in order: turn on the lights, find the bad arm of the trial, and halt enrolment
+        on the amplifier, all without redeploying the lab. That last constraint is the whole point
+        of feature flags: when a rollout starts misbehaving in production, you need an operational
+        lever that does not take twenty minutes to pull. Save the file, watch the dose drop, watch
+        the 5xx rate fall back to baseline, watch the next batch of subjects walk out seeing.
+    architecture_diagram: "blind-by-design-expert.svg"
+    diagram_alt: "Architecture diagram showing four services: Spring Boot app sends traces via OTLP/gRPC to a Grafana LGTM stack, connects via OpenFeature SDK to flagd for feature flag evaluation, and a k6 load generator polls flagd and scrapes metrics from the LGTM stack."
+    objective:
+      - "Spans for fun-with-flags-java-spring are visible in Tempo with feature_flag.context.<key> attributes. Searching feature_flag.context.dose=underdose lights up requests where a subject was mis-dosed, with feature_flag.variant=clouded on the same span"
+      - "feature_flag_evaluation_requests_total is non-zero in Prometheus: flag evaluations show up as counters, not just spans"
+      - "The Feature Flag Metrics dashboard renders: variant distribution, error rate, and latency p99 are all populated from the metric counters"
+      - "The vision_amplifier_v2 rollout is rolled back to 100% off without redeploying the lab"
+      - "HTTP 5xx rate over the last minute drops below 1%: the bad arm is contained"
+    toolbox:
+      - name: "Java 21 (Temurin)"
+        description: "pre-installed in the devcontainer"
+        url: "https://adoptium.net/"
+      - name: "./mvnw"
+        description: "Spring Boot Maven Wrapper, no global Maven install required"
+      - name: "curl"
+        description: "sends requests to http://localhost:8080/ to test the lab, and to Prometheus on http://localhost:9090/ to query metrics directly"
+        url: "https://curl.se/"
+      - name: "Grafana"
+        description: "browser UI at http://localhost:3000 (admin/admin) for the Feature Flag Metrics dashboard and Tempo trace explorer"
+      - name: "jq"
+        description: "pretty-prints the JSON evaluation details"
+        url: "https://jqlang.org/"
+    services:
+      - name: "Spring Boot lab"
+        port: "8080"
+        description: "Add ?userId=subject-42 for a stable fractional-rollout bucketing key."
+      - name: "Grafana"
+        port: "3000"
+        credentials: "admin / admin"
+        description: "Open Dashboards > Feature Flag Metrics (empty until metrics are wired). Try Explore > Tempo to see flag evaluations as span events."
+      - name: "Prometheus"
+        port: "9090"
+        description: "Query metrics directly via the Prometheus UI or curl http://localhost:9090/api/v1/query."
+      - name: "Tempo"
+        port: "3200"
+        description: "Tempo HTTP API used by the verify script to assert traces are flowing."
+      - name: "flagd"
+        internal: true
+        description: "Runs on the docker-internal network only (flagd:8013). The lab and loadgen reach it as flagd:8013."
+    how_to_play:
+      - title: "Start Your Challenge"
+        content: |
+          The sibling containers (flagd, Grafana LGTM, k6 loadgen) start automatically as part of the devcontainer compose. Wait ~2-3 minutes for them to be ready before moving on.
+      - title: "Start the Lab"
+        content: |
+          The sibling containers are already up. Boot the Spring Boot lab by clicking **Run** on `Laboratory` in the Spring Boot Dashboard panel (or press **F5** with `Laboratory.java` open), or from the terminal:
+
+          ```sh
+          ./mvnw spring-boot:run
+          ```
+
+          Spans start flowing into Tempo on the first request. The trace pipeline is already wired. The metrics pipeline is dead (task 4a), so the Grafana dashboard panels stay empty until you fix it.
+      - title: "Turn On the Metrics Exporter"
+        content: |
+          OTel ships two parallel pipelines: traces (already flowing into Tempo) and metrics (dead). The OTel Java Agent attached to the lab JVM has both pipelines plumbed and pointed at the LGTM stack, but `otel.properties` (next to `pom.xml`) sets `otel.metrics.exporter=none`, so anything the meter records goes nowhere.
+
+          Open `otel.properties` and flip the exporter on. While you're there, look at the export interval. The default makes the next steps harder than they need to be.
+
+          Once the exporter is on, `MetricsHook` (next step) finds the working meter provider through `GlobalOpenTelemetry` without any further plumbing. You will need to restart the lab to pick up the change.
+      - title: "Register MetricsHook"
+        content: |
+          `OpenFeatureConfig.java` registers `TracesHook` but stops there. `MetricsHook` needs an `OpenTelemetry` handle to find the meter provider. The agent installs one globally at JVM start, so `GlobalOpenTelemetry.get()` is the way to reach it.
+
+          Register `MetricsHook` alongside `TracesHook` in `OpenFeatureConfig`. The Feature Flag Metrics dashboard stays empty until traffic drives through. That is what the loadgen step does.
+      - title: "Write and Register ContextSpanHook"
+        content: |
+          The two contrib hooks tell you *what* happened: which flag, which variant, which reason. What is missing is the *why* visible in Tempo. Write a `ContextSpanHook` that copies the merged eval context attributes onto the active OTel span as `feature_flag.context.<key>`:
+
+          ```text
+          before(hookCtx) {
+              span = active OTel span
+              for each allowlisted key in merged eval context:
+                  span.setAttribute("feature_flag.context." + key, value)
+          }
+          ```
+
+          `HookContext.getCtx()` returns the merged evaluation context (global + transaction + invocation). Use a fixed allowlist of `List.of("species", "country", "dose")`. Never iterate the whole context: `targetingKey` joins to PII in real apps, and span attributes are retained for days in Tempo at scale.
+
+          Register `ContextSpanHook` alongside `TracesHook` and `MetricsHook` in `OpenFeatureConfig`. The verifier searches Tempo for `feature_flag.context.dose=underdose` once you are done.
+      - title: "Turn On the Loadgen"
+        content: |
+          `flags.json` has two flags: `loadgen_active` (off by default) and the misbehaving `vision_amplifier_v2`. flagd watches the file and picks up changes within about a second.
+
+          Flip `loadgen_active` to on. The k6 loadgen polls it every two seconds and starts five virtual users hammering the lab. Within a minute, latency p99 should climb ~200ms and the 5xx rate ~10% on the dashboard, confirming that the bad arm of `vision_amplifier_v2` is active.
+      - title: "Roll Back the Rollout"
+        content: |
+          The dashboard's variant-distribution panel shows which variant is the culprit. Roll it back by editing `flags.json` to set `vision_amplifier_v2` to 100% off.
+
+          **No deploy. No rebuild. No restart of the lab.**
+
+          Watch the dashboard: the 5xx rate falls back to baseline, and the next batch of subjects walks out seeing.
+    helpful_links:
+      - title: "OpenFeature OTel contrib hooks (Java)"
+        url: "https://github.com/open-feature/java-sdk-contrib/tree/main/hooks/open-telemetry"
+      - title: "OpenTelemetry Java Agent configuration"
+        url: "https://opentelemetry.io/docs/zero-code/java/agent/configuration/"
+      - title: "OpenFeature Hooks concept"
+        url: "https://openfeature.dev/docs/reference/concepts/hooks"
+      - title: "flagd fractional operation"
+        url: "https://flagd.dev/reference/custom-operations/fractional-operation/"
+      - title: "OpenTelemetry security guidance"
+        url: "https://opentelemetry.io/docs/security/"
+    meta_description: "Wire OpenTelemetry metrics into an OpenFeature Java app, author a ContextSpanHook, then roll back a bad rollout by flipping a flag in flags.json. No redeploy."
+    verification:
+      command: "./verify.sh"
+      description: "Once you think you've solved the challenge, run the verification script. If it fails it will tell you which checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion."

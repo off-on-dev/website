@@ -1,0 +1,317 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+import {
+  BRAND_NAME,
+  BRAND_SECONDARY_LINE_PARTS,
+  COMMUNITY_URL,
+  CODE_OF_CONDUCT_URL,
+  CONTACT_EMAIL,
+} from "@/lib/site";
+
+const base = import.meta.env.BASE_URL;
+const extLink = "docs-ext-link";
+
+// BRAND_SECONDARY_LINE (all three parts joined with spaces) is used in the
+// bottom CTA. @/lib/site exposes the parts tuple, so join them here.
+const BRAND_SECONDARY_LINE = BRAND_SECONDARY_LINE_PARTS.join(" ");
+
+const policies = [
+  { label: "Trust Levels", href: `${COMMUNITY_URL}/t/trust-level-guide/1475` },
+  { label: "Questions & Feedback", href: `${COMMUNITY_URL}/t/questions-feedback/34` },
+  { label: "Code of Conduct", href: CODE_OF_CONDUCT_URL },
+  { label: "Privacy Policy", href: `${COMMUNITY_URL}/t/privacy-policy/22` },
+];
+
+const title = `Handbook - ${BRAND_NAME}`;
+const description = `Everything you need to participate in the ${BRAND_NAME} community. Get involved, take on challenges, and find community policies and resources.`;
+---
+
+<Layout title={title} description={description} path="/handbook/">
+  <main id="main-content" tabindex="-1">
+    {/* Page hero (ported from PageHero) */}
+    <section
+      aria-labelledby="page-hero-heading"
+      class="bg-primary pt-32 pb-20 px-6 md:px-16 overflow-hidden min-h-[560px] flex flex-col justify-center"
+    >
+      <div class="mx-auto max-w-6xl relative w-full">
+        <div class="max-w-2xl">
+          <span class="font-sans text-sm font-medium uppercase tracking-widest text-background/90 block mb-4">
+            Handbook
+          </span>
+          <h1
+            id="page-hero-heading"
+            class="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground mb-5"
+          >
+            Everything You Need to Participate
+          </h1>
+          <p class="font-sans text-base leading-relaxed text-background/90 max-w-2xl mb-8">
+            Community guidelines, policies, and resources to help get you started and grow in the {BRAND_NAME} community.
+          </p>
+          <div class="flex gap-3 flex-wrap">
+            <a
+              href={COMMUNITY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-describedby="new-tab-hint"
+              class="btn-inverse"
+            >
+              <span class="inline-flex items-center gap-2">
+                Meet the Community
+                <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="px-6 md:px-16 py-16">
+      <div class="mx-auto max-w-6xl">
+        <div class="space-y-8">
+          {/* Get Involved */}
+          <section aria-labelledby="get-involved">
+            <div class="mb-3">
+              <span class="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">
+                start here
+              </span>
+            </div>
+            <h2 id="get-involved" class="text-2xl font-bold text-foreground mb-6">Get Involved</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                <h3 class="font-semibold text-foreground">Join the Community</h3>
+                <p class="text-sm text-dim leading-relaxed flex-1">
+                  Create your account to access challenges, Q&amp;A, community discussions, and everything else.
+                </p>
+                <a
+                  href={`${COMMUNITY_URL}/signup`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-describedby="new-tab-hint"
+                  class={extLink}
+                >
+                  Create an account
+                  <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                </a>
+              </div>
+
+              <div class="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                <h3 class="font-semibold text-foreground">Introduce Yourself</h3>
+                <p class="text-sm text-dim leading-relaxed flex-1">
+                  Say hello and tell the community who you are and what you're working on. It's the first step.
+                </p>
+                <a
+                  href={`${COMMUNITY_URL}/c/general/introductions/18`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-describedby="new-tab-hint"
+                  class={extLink}
+                >
+                  Say hello
+                  <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                </a>
+              </div>
+
+              <div class="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                <h3 class="font-semibold text-foreground">
+                  {/* Abbr: inline abbreviation with accessible expansion (static markup) */}
+                  <span>
+                    <abbr data-title="Questions and Answers" aria-describedby="qa-abbr-expansion" tabindex="0">Q&amp;A</abbr>
+                    <span id="qa-abbr-expansion" class="sr-only">Questions and Answers</span>
+                  </span>
+                </h3>
+                <p class="text-sm text-dim leading-relaxed flex-1">
+                  Stuck on a technical problem? Post a clear question and get answers from the community. No question is too basic.
+                </p>
+                <a
+                  href={`${COMMUNITY_URL}/c/public-categories/q-a/10`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-describedby="new-tab-hint"
+                  class={extLink}
+                >
+                  Ask a question
+                  <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                </a>
+              </div>
+
+              <div class="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                <h3 class="font-semibold text-foreground">Community Voices</h3>
+                <p class="text-sm text-dim leading-relaxed flex-1">
+                  Share a tutorial, showcase a project, or write about what you've learned. Every contribution makes the community stronger.
+                </p>
+                <a
+                  href={`${COMMUNITY_URL}/c/community-voices/38`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-describedby="new-tab-hint"
+                  class={extLink}
+                >
+                  Share something
+                  <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                </a>
+              </div>
+            </div>
+          </section>
+
+          {/* Take on a Challenge */}
+          <section aria-labelledby="challenges">
+            <h2 id="challenges" class="text-2xl font-bold text-foreground mb-5">Take on a Challenge</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                <h3 class="font-semibold text-foreground">Learn by Doing</h3>
+                <p class="text-sm text-dim leading-relaxed flex-1">
+                  Hands-on scenarios with broken environments, misconfigured pipelines, and real-world failures to debug and fix. Post your solution and see how others approached it.
+                </p>
+                <a
+                  href={`${COMMUNITY_URL}/c/challenges/11`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-describedby="new-tab-hint"
+                  class={extLink}
+                >
+                  Start a challenge
+                  <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                </a>
+              </div>
+
+              <div class="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
+                <h3 class="font-semibold text-foreground">Propose an Adventure Idea</h3>
+                <p class="text-sm text-dim leading-relaxed flex-1">
+                  Bring your expertise and experience. Help build adventures for others to learn from open source tech with a broken scenario, a real-world failure, or a skill gap. Shape the next adventure.
+                </p>
+                <a
+                  href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-describedby="new-tab-hint"
+                  class={extLink}
+                >
+                  Submit an idea
+                  <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                </a>
+              </div>
+            </div>
+          </section>
+
+          {/* Policies */}
+          <section aria-labelledby="policies">
+            <h2 id="policies" class="text-2xl font-bold text-foreground mb-4">Policies</h2>
+            <ul role="list" class="space-y-1.5">
+              {policies.map((item) => (
+                <li class="flex items-center gap-2.5 text-sm">
+                  <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true"></span>
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-describedby="new-tab-hint"
+                    class={extLink}
+                  >
+                    {item.label}
+                    <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {/* Vendor-agnostic Policy */}
+          <section aria-labelledby="vendor-agnostic">
+            <h2 id="vendor-agnostic" class="text-2xl font-bold text-foreground mb-3">Vendor-Agnostic Policy</h2>
+            <p class="text-base text-dim leading-relaxed">
+              {BRAND_NAME} is vendor-agnostic. Technical product mentions are welcome when neutral and reproducible. Avoid promotional content. Marketing posts will be removed and repeated violations may lead to moderation actions.
+            </p>
+          </section>
+
+          {/* Contact */}
+          <section aria-labelledby="contact">
+            <h2 id="contact" class="text-2xl font-bold text-foreground mb-3">Contact</h2>
+            <ul role="list" class="space-y-2 text-sm text-dim">
+              <li class="flex items-start gap-2.5">
+                <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true"></span>
+                Flag posts that violate policy using the flag button on any post
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true"></span>
+                For sensitive issues, <a href={`${base}about/#board`} class={extLink}>reach out to the board</a>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true"></span>
+                Email <a href={`mailto:${CONTACT_EMAIL}`} class={extLink}>{CONTACT_EMAIL}</a>
+              </li>
+            </ul>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    {/* Bottom CTA (ported from BottomCTA) */}
+    <section
+      aria-labelledby="bottom-cta-heading"
+      class="bg-primary py-16 px-6 md:px-16 relative overflow-hidden"
+    >
+      <div class="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1fr_1fr_auto] gap-12 lg:gap-16 items-center">
+        <div>
+          <h2
+            id="bottom-cta-heading"
+            class="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground"
+          >
+            <span class="block">Start Curious.</span>
+            <span class="block">Break Things.</span>
+            <span class="block">Learn Together.</span>
+            <span class="block">Glow Brighter.</span>
+          </h2>
+        </div>
+
+        <div class="flex flex-col gap-4">
+          <p class="font-sans text-base leading-relaxed text-background/90">
+            <strong class="font-medium text-primary-foreground">
+              You bring your questions, your fixes, your ideas.
+            </strong>{" "}
+            We bring the challenges, the tooling, and the practitioners who care about the same problems you do.
+          </p>
+          <p class="font-sans text-base leading-relaxed text-background/90">
+            Every spark starts with one person. Like Nyx, our firefly, together we brighten the whole open source ecosystem.
+          </p>
+          <p class="font-sans text-base font-medium text-background/90">
+            That's {BRAND_NAME}. {BRAND_SECONDARY_LINE}
+          </p>
+          <div class="flex gap-3 flex-wrap mt-2">
+            <a
+              href={COMMUNITY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-describedby="new-tab-hint"
+              class="btn-inverse"
+            >
+              Join the Community
+              <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+            </a>
+            <a
+              href="https://github.com/off-on-dev/open-source-challenges"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-describedby="new-tab-hint"
+              class="btn-ghost-inverse"
+            >
+              View Challenges on GitHub
+              <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+            </a>
+          </div>
+        </div>
+
+        <img
+          src={`${base}nyx.webp`}
+          alt=""
+          aria-hidden="true"
+          width={240}
+          height={240}
+          loading="lazy"
+          decoding="async"
+          class="hidden lg:block w-[240px] h-[240px] self-start"
+        />
+      </div>
+    </section>
+  </main>
+</Layout>

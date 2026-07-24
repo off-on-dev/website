@@ -1,0 +1,39 @@
+---
+// "What was fixed" step jump-nav. Ported from the StepNav sub-component in
+// src/pages/SolutionDetail.tsx. Rendered twice on the solution page: in the
+// sidebar (desktop) and inline above the article (mobile).
+interface Props {
+  steps: { id: string; title: string }[];
+  class?: string;
+}
+const { steps, class: className = "" } = Astro.props;
+---
+
+<nav
+  aria-label="What was fixed"
+  class={`rounded-xl border border-border bg-[hsl(var(--surface))] p-5 ${className}`}
+>
+  <p class="mb-3 font-sans text-xs font-semibold uppercase tracking-wide text-primary">
+    what was fixed
+  </p>
+  <ul class="space-y-2" role="list">
+    {
+      steps.map((step, index) => (
+        <li class="flex items-baseline gap-2.5">
+          <span
+            class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xs font-bold leading-none text-primary tabular-nums"
+            aria-hidden="true"
+          >
+            {index + 1}
+          </span>
+          <a
+            href={`#${step.id}`}
+            class="focus-ring-tight rounded-sm text-sm leading-snug text-dim transition-colors hover:text-foreground"
+          >
+            {step.title}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
