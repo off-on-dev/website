@@ -32,7 +32,6 @@ export async function getStaticPaths() {
 }
 
 const { adventure, level } = Astro.props;
-const base = import.meta.env.BASE_URL;
 
 const discussion = getDiscussion(adventure.slug, level.id);
 const leaderboard = getLeaderboard(adventure.slug);

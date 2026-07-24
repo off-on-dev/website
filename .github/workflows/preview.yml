@@ -35,8 +35,7 @@ jobs:
       # Content validation gate: astro sync runs the Zod collection schema and
       # fails on invalid adventure YAML.
       - run: npm run sync
-      # TODO(cutover): add `npm run lint` once eslint-plugin-astro/eslint-plugin-vue
-      # config is added (the previous root ESLint was React-only and was removed).
+      - run: npm run lint
 
   build:
     if: github.event.action != 'closed'
