@@ -20,6 +20,7 @@ import { BRAND_NAME, SITE_URL, COMMUNITY_URL, COMMUNITY_DISPLAY_NAME } from "@/l
 import { stripLinks } from "@/lib/markdown";
 import { isDeadlinePast, escapeHtmlAttr } from "@/lib/utils";
 import { getDiscussion, getLeaderboard } from "@/lib/community-data";
+import { getSolutions } from "@/lib/solutions";
 
 export async function getStaticPaths() {
   const adventures = await getCollection("adventures");
@@ -45,6 +46,12 @@ const discussionHref = level.discussionUrl || COMMUNITY_URL;
 // Rewards move below the fold once the deadline has passed (build-time check).
 const deadline = level.deadline ?? adventure.rewards?.deadline;
 const rewardsBelowFold = isDeadlinePast(deadline);
+
+// Solution walkthrough CTA: only once the deadline has passed and a solution
+// has been authored for this level.
+const showSolutionCta =
+  rewardsBelowFold &&
+  getSolutions().some((s) => s.adventureId === adventure.slug && s.levelId === level.id);
 
 // Architecture diagram SVGs live in astro/src/assets/diagrams/ and are matched
 // by the level's architectureDiagram filename.
@@ -225,30 +232,40 @@ const walkthroughSteps = howToPlay && howToPlay.length > 0 ? [getStartedStep, ..
             </div>
           </section>
 
-          {/* Walkthrough (steps rendered expanded; no per-step toggle) */}
+          {/* Walkthrough — each step is an individually collapsible <details>
+              (native disclosure, no JS), matching the React per-step toggle. */}
           {
             walkthroughSteps.length > 0 && (
               <CollapsibleSection id="walkthrough" title="Walkthrough" headingLevel={2}>
                 <ol class="space-y-3">
                   {walkthroughSteps.map((step, i) => (
                     <li class="rounded-lg border border-border bg-background/40">
-                      <div class="flex w-full items-start gap-4 p-5 text-left">
-                        <span
-                          class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold"
-                          aria-hidden="true"
-                        >
-                          {i + 1}
-                        </span>
-                        <span class="min-w-0 flex-1 text-sm font-semibold text-foreground">
-                          {step.title ? <span class="md-inline" set:html={stripLinks(step.title)} /> : `Step ${i + 1}`}
-                        </span>
-                      </div>
-                      <div id={`walkthrough-step-${i}`} class="grid grid-cols-[1.25rem_minmax(0,1fr)] gap-4 px-5 pb-5">
-                        <div aria-hidden="true" />
-                        <div class="min-w-0 text-sm text-dim leading-relaxed">
-                          <div class="font-sans md-content" set:html={step.content} />
+                      <details class="group" open>
+                        <summary class="flex w-full cursor-pointer list-none items-start gap-4 p-5 text-left focus-ring [&::-webkit-details-marker]:hidden">
+                          <span
+                            class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold"
+                            aria-hidden="true"
+                          >
+                            {i + 1}
+                          </span>
+                          <span class="min-w-0 flex-1 text-sm font-semibold text-foreground">
+                            {step.title ? <span class="md-inline" set:html={stripLinks(step.title)} /> : `Step ${i + 1}`}
+                          </span>
+                          <Icon
+                            name="lucide:chevron-down"
+                            width={16}
+                            height={16}
+                            class="mt-0.5 shrink-0 text-faint transition-transform group-open:rotate-180"
+                            aria-hidden="true"
+                          />
+                        </summary>
+                        <div id={`walkthrough-step-${i}`} class="grid grid-cols-[1.25rem_minmax(0,1fr)] gap-4 px-5 pb-5">
+                          <div aria-hidden="true" />
+                          <div class="min-w-0 text-sm text-dim leading-relaxed">
+                            <div class="font-sans md-content" set:html={step.content} />
+                          </div>
                         </div>
-                      </div>
+                      </details>
                     </li>
                   ))}
                 </ol>
@@ -317,6 +334,28 @@ const walkthroughSteps = howToPlay && howToPlay.length > 0 ? [getStartedStep, ..
               </a>
             </p>
           </section>
+
+          {/* Solution walkthrough link — after the deadline passes and only when a solution is authored */}
+          {
+            showSolutionCta && (
+              <section class="mb-6 rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
+                <h2 class="font-sans text-sm font-semibold tracking-wide text-primary mb-1">
+                  Check Out the Solution Walkthrough
+                </h2>
+                <p class="text-sm text-dim leading-relaxed mb-3">
+                  See how we approached this challenge step by step. Found a better way? We'd love to hear about it in the discussion.
+                </p>
+                <a
+                  href={`${import.meta.env.BASE_URL}adventures/${adventure.slug}/levels/${level.id}/solution/`}
+                  aria-label={`View the solution walkthrough for ${level.name}`}
+                  class="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline focus-ring-tight rounded-sm"
+                >
+                  View the solution walkthrough
+                  <Icon name="lucide:arrow-right" width={14} height={14} aria-hidden="true" />
+                </a>
+              </section>
+            )
+          }
 
           {/* Toolbox + Helpful Documentation side-by-side */}
           {

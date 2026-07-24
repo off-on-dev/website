@@ -11,6 +11,8 @@ import TagChips from "@/components/TagChips.astro";
 import InlineProse from "@/components/InlineProse.astro";
 import RewardsCard from "@/components/RewardsCard.astro";
 import PersonNameLink from "@/components/PersonNameLink.astro";
+import CollapsibleSection from "@/components/CollapsibleSection.astro";
+import LeaderboardList from "@/components/LeaderboardList.astro";
 import { BRAND_NAME } from "@/lib/site";
 import { stripLinks } from "@/lib/markdown";
 import { isDeadlinePast } from "@/lib/utils";
@@ -68,8 +70,7 @@ const topRows = leaderboard?.rows?.slice(0, 5) ?? [];
       <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-10">
         <div class="space-y-8">
           {adventure.overview && adventure.overview.length > 0 && (
-            <section aria-labelledby="overview-heading">
-              <h2 id="overview-heading" class="mb-4 text-lg font-semibold text-foreground">Overview</h2>
+            <CollapsibleSection id="overview" title="Overview" headingLevel={2}>
               <ul role="list" class="space-y-2.5">
                 {adventure.overview.map((para) => (
                   <li class="flex items-start gap-2.5">
@@ -78,7 +79,7 @@ const topRows = leaderboard?.rows?.slice(0, 5) ?? [];
                   </li>
                 ))}
               </ul>
-            </section>
+            </CollapsibleSection>
           )}
 
           <section aria-labelledby="challenges-heading">
@@ -132,31 +133,23 @@ const topRows = leaderboard?.rows?.slice(0, 5) ?? [];
           {adventure.rewards && !deadlinePast && <RewardsCard rewards={adventure.rewards} deadlinePast={false} />}
 
           {adventure.backstory && adventure.backstory.length > 0 && (
-            <section aria-labelledby="story-heading">
-              <h2 id="story-heading" class="mb-4 text-lg font-semibold text-foreground">The Story</h2>
+            <CollapsibleSection id="story" title="The Story" headingLevel={2}>
               <div class="space-y-3">
                 {adventure.backstory.map((para) => (
                   <InlineProse html={para} class="text-sm leading-relaxed text-dim" />
                 ))}
               </div>
-            </section>
+            </CollapsibleSection>
           )}
 
           {adventure.rewards && deadlinePast && <RewardsCard rewards={adventure.rewards} deadlinePast={true} />}
         </div>
 
-        <aside aria-label="Adventure resources" class="mt-10 space-y-6 lg:mt-0 lg:sticky lg:top-8 lg:self-start">
+        <aside aria-label="Adventure resources" class="mt-10 space-y-6 lg:mt-0 lg:sticky lg:top-28 lg:self-start">
           {topRows.length > 0 && (
-            <div class="rounded-xl border border-border bg-[hsl(var(--surface))] px-5 py-4">
-              <p class="mb-3 font-mono text-xs uppercase tracking-widest text-faint">Leaderboard</p>
-              <ol class="space-y-1.5">
-                {topRows.map((row) => (
-                  <li class="flex items-center justify-between text-sm text-dim">
-                    <span><span class="text-faint">#{row.rank}</span> {row.username}</span>
-                    <span class="text-faint">{row.points} pts</span>
-                  </li>
-                ))}
-              </ol>
+            <div class="rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
+              <h2 class="font-sans text-base font-semibold text-foreground mb-4">Leaderboard</h2>
+              <LeaderboardList rows={topRows} label="Adventure leaderboard" />
             </div>
           )}
           {adventure.contributor && (
