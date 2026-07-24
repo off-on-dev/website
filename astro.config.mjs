@@ -3,21 +3,17 @@ import vue from "@astrojs/vue";
 import icon from "astro-icon";
 import tailwindcss from "@tailwindcss/vite";
 
-// Migration scaffold (Phase 1). Nested app during migration; the final swap
-// moves it to repo root. Reads the real app's assets/data via ../public and
-// ../src/data while nested.
+// offon.dev — Astro (static) + Vue islands. base is overridden for PR previews
+// via VITE_BASE_PATH (/pr-preview/pr-N/).
 const base = process.env.VITE_BASE_PATH ?? "/";
 
 export default defineConfig({
   site: "https://offon.dev",
   base,
   output: "static",
-  // GitHub Pages normalizes to trailing slashes; this replaces the RR `_.data`
-  // alias hack (create-data-aliases.mjs) entirely.
+  // GitHub Pages normalizes to trailing slashes (also removes the need for any
+  // RR-style `_.data` alias handling).
   trailingSlash: "always",
-  // Serve the real public/ (favicons, fonts, manifest, well-known, brand, etc.)
-  // without duplication while the app is nested.
-  publicDir: "../public",
   // Native prefetch replaces the hand-injected speculationrules script.
   prefetch: {
     prefetchAll: true,

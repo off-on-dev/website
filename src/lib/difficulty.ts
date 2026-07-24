@@ -1,19 +1,13 @@
-import type { CSSProperties } from "react";
-import type { Difficulty } from "@/data/adventures/filter-utils";
+// Ported from src/lib/difficulty.ts. Returns an inline style string (Astro
+// `style=` takes a string) using the --difficulty-* tokens from index.css.
 
-/** Maps Difficulty label to the CSS variable suffix used in --difficulty-{suffix}-bg/border tokens. */
-export const DIFFICULTY_VAR: Record<Difficulty, string> = {
+export const DIFFICULTY_VAR: Record<string, string> = {
   Beginner: "starter",
   Intermediate: "builder",
   Expert: "architect",
 };
 
-/** Base inline style for difficulty-colored elements (badge, pill, card). */
-export const difficultyStyle = (difficulty: Difficulty): CSSProperties => {
+export const difficultyStyle = (difficulty: string): string => {
   const v = DIFFICULTY_VAR[difficulty];
-  return {
-    color: `hsl(var(--difficulty-text))`,
-    borderColor: `hsl(var(--difficulty-${v}-border))`,
-    backgroundColor: `hsl(var(--difficulty-${v}-bg))`,
-  };
+  return `color:hsl(var(--difficulty-text));border-color:hsl(var(--difficulty-${v}-border));background-color:hsl(var(--difficulty-${v}-bg))`;
 };

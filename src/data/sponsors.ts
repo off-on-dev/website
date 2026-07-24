@@ -1,5 +1,7 @@
-import dtLogoDark from "@/assets/Dynatrace_Logo_color_negative_horizontal.svg";
-import dtLogoLight from "@/assets/Dynatrace_Logo_color_positive_horizontal.svg";
+// Sponsor data. Ported from src/data/sponsors.ts (React app).
+// In the React app the logos were Vite asset imports from src/assets/.
+// Here they are served from the shared public/ dir (publicDir: "../public");
+// values are path segments relative to BASE_URL (prepend `import.meta.env.BASE_URL`).
 
 export type Sponsor = {
   name: string;
@@ -17,8 +19,8 @@ export const SPONSORS: Sponsor[] = [
   {
     name: "Dynatrace",
     url: "https://dynatrace.com",
-    logoDark: dtLogoDark,
-    logoLight: dtLogoLight,
+    logoDark: "brand/Dynatrace_Logo_color_negative_horizontal.svg",
+    logoLight: "brand/Dynatrace_Logo_color_positive_horizontal.svg",
   },
 ];
 

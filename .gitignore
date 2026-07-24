@@ -42,3 +42,9 @@ tmp/
 *.njsproj
 *.sln
 *.sw?
+
+# Astro
+.astro/
+test-results/
+playwright-report/
+.vite/

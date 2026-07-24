@@ -32,13 +32,11 @@ jobs:
       - if: steps.node-cache.outputs.cache-hit != 'true'
         run: npm ci
 
-      # Content-layer gates: astro sync validates the Zod collection schema
-      # (build fails on invalid YAML); verify:content diffs the rendered fields
-      # against the retiring *.generated.ts until the generator is removed.
+      # Content validation gate: astro sync runs the Zod collection schema and
+      # fails on invalid adventure YAML.
       - run: npm run sync
-      - run: npm run verify:content
       # TODO(cutover): add `npm run lint` once eslint-plugin-astro/eslint-plugin-vue
-      # config is ported (the root ESLint currently only covers the React app).
+      # config is added (the previous root ESLint was React-only and was removed).
 
   build:
     if: github.event.action != 'closed'
