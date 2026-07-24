@@ -1,245 +1,146 @@
 # offon.dev
 
-Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for open source enthusiasts. The site is fully static with no backend. Pages are prerendered at build time using React Router v8 framework mode with `ssr: false`. It hosts hands-on open source challenges, community documentation, and links to the OffOn community.
+Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for open source enthusiasts. The site is fully static with no backend. Pages are prerendered at build time by **Astro**; interactivity is layered on as **Vue islands**. It hosts hands-on open source challenges, community documentation, and links to the OffOn community.
 
 ## Tech Stack
 
-- **React 19** + **TypeScript**: UI and type safety
-- **Vite**: build tooling and dev server
-- **Tailwind CSS**: utility-first styling
-- **shadcn/ui**: minimal component surface (`badge.tsx`, `tooltip.tsx`); most Radix UI packages were intentionally removed
-- **React Router v8**: client-side routing with static prerendering
-- **Vitest**: unit and component testing
-- **Playwright**: browser smoke tests (`e2e/`)
+- **Astro 7** (`output: 'static'`) + **TypeScript**: prerendered pages, zero JS by default
+- **Vue 3** islands via `@astrojs/vue`: interactivity hydrated with `client:*` directives
+- **nanostores**: shared state across islands (theme, consent)
+- **Tailwind CSS 4**: CSS-first via `src/styles/index.css` (`@theme`) and `@tailwindcss/vite`
+- **astro-icon** (lucide) in `.astro`, **lucide-vue-next** in islands; **Reka UI** for the tooltip
+- **Astro Content Collections** (Zod): adventure content authored as YAML, validated + rendered at build time
+- **Playwright** + **axe**: accessibility and SEO/smoke tests (`e2e/`)
 - **GitHub Pages**: hosting and deployment
 
 ## Getting Started
 
 ```sh
-# Clone the repo
 git clone https://github.com/off-on-dev/website
 cd website
-
-# Install dependencies
 npm install
-
-# Start the development server (http://localhost:8080)
-npm run dev
+npm run dev        # Astro dev server (http://localhost:4321)
 ```
 
-Node.js **26** is required. Version is pinned in `.nvmrc`, run `nvm use` to switch automatically.
+Node.js **26** is required (pinned in `.nvmrc`; `nvm use`).
 
 ## Scripts
 
 | Script | Description |
 | --- | --- |
-| `npm run dev` | Start local dev server at <http://localhost:8080> |
-| `npm run build` | SSG prerender build to `dist/client/` (React Router v8); postbuild creates `_.data` aliases for GitHub Pages trailing-slash compatibility |
-| `npm run build:dev` | Dev-mode build (source maps, no minification) |
-| `npm run preview` | Serve the production build locally. `serve.json` at the repo root sets `trailingSlash: true` to mirror GitHub Pages URL behaviour |
-| `npm run lint` | Run ESLint across the project |
+| `npm run dev` | Astro dev server at <http://localhost:4321> |
+| `npm run build` | Static build to `dist/` |
+| `npm run preview` | Serve the built `dist/` (`astro preview`) |
+| `npm run sync` | `astro sync` — runs the Zod content schema over adventure YAML; fails on invalid content |
+| `npm run test:e2e` | Playwright (a11y + SEO/smoke). Starts `astro preview` itself; no separate build needed |
 | `npm run lint:reuse` | REUSE licence compliance check (requires `pip install reuse` once) |
-| `npm test` | Run the full test suite once (Vitest) |
-| `npm run test:watch` | Run tests in watch mode |
-| `npm run test:coverage` | Run tests with v8 coverage report |
-| `npm run test:e2e` | Playwright smoke, SSG, accessibility, and hydration tests (requires `npm run build` first) |
-| `npm run test:visual` | Visual regression tests against baseline screenshots (requires `npm run build` first) |
-| `npm run test:visual:update` | Update visual regression baseline screenshots |
-| `npm run generate` | Regenerate TypeScript from adventure YAML files |
-| `npm run generate:validate` | Validate adventure YAML against schema without writing files |
-| `npm run generate:solutions` | Regenerate solution barrel index from `src/data/solutions/` TypeScript files |
-| `npm run generate:solutions:validate` | Validate solution TypeScript files without writing the barrel index |
 | `node .claude/templates/generate-reveal-zip.mjs` | Regenerate `public/downloads/offon-reveal-template.zip` |
 | `node .claude/templates/generate-pptx.mjs` | Regenerate `public/downloads/offon-deck-template.pptx` |
 
-Run `npm run lint` and `npm test` before marking any work done.
+There is no content generator — routes and rendered prose come from the content collection at build time.
 
-All UI changes must be verified at mobile (375px), tablet (768px), and desktop (1280px) viewports before being considered done. Always test against the production build (`npm run build && npm run preview`), never the dev server.
+Always verify UI changes at mobile (375px), tablet (768px), and desktop (1280px) against the production build (`npm run build && npm run preview`), never the dev server.
 
 ## Project Structure
 
 ```text
 src/
-  components/     # Reusable UI components (named exports, PascalCase files)
-  components/ui/  # shadcn/ui primitives, do not edit directly
-  pages/          # Route-level page components
-  data/           # Static content as typed TypeScript objects and arrays
-  data/adventures/<id>/adventure.yaml  # Adventure YAML source files
-  hooks/          # Custom React hooks
-  lib/            # Shared utilities
-  test/           # Vitest + Testing Library unit and component tests
-  root.tsx        # HTML shell rendered by React Router v8 (replaces index.html)
-  routes.ts       # Route definitions (React Router v8 config-based routing)
-  entry.client.tsx  # Client entry: hydrates the full document via HydratedRouter
-  entry.server.tsx  # Server/prerender entry: renderToPipeableStream for static HTML generation
-  Layout.tsx      # App shell with all providers and Outlet
+  pages/          # File-based routes (.astro); dynamic routes use getStaticPaths()
+    index.astro, adventures/[id].astro, adventures/[id]/levels/[levelId].astro,
+    adventures/[id]/levels/[levelId]/solution.astro, challenges/[...tag].astro,
+    404.astro, the static pages, and _app.ts (Vue appEntrypoint)
+  layouts/Layout.astro  # App shell: <head> (SEO, CSP, favicons, theme + GA4 bootstrap,
+                        # JSON-LD), ClientRouter, skip-nav, Navbar, <slot/>, Footer, ConsentBanner
+  components/      # *.astro (static, zero-JS) and *.vue islands (ThemeToggle, ChallengesFilter, ConsentBanner)
+  content.config.ts  # Content collection: Zod schema + custom loader + build-time markdown rendering
+  data/           # adventures/<id>/adventure.yaml + *-posts.json + leaderboard.json,
+                  # solutions/<id>/<level>.ts, contributors.ts, types.ts, sponsors.ts, team.ts
+  lib/            # markdown-pipeline.mjs, adventure-derive.mjs, community-data.ts, solutions.ts,
+                  # challenges.ts, difficulty.ts, markdown.ts, utils.ts, site.ts (constants), deadline.mjs
+  stores/         # nanostores: theme.ts ($theme), consent.ts ($consent + gtag injector)
+  styles/index.css  # Tailwind @theme, component classes, light-mode overrides
+  assets/diagrams/  # Architecture SVGs (imported per-level via import.meta.glob)
 e2e/
-  smoke.spec.ts      # Playwright smoke tests: route titles, axe a11y audit (requires npm run build first)
-  visual.spec.ts     # Visual regression tests: screenshot comparison against baselines (requires npm run build first)
-  wsg.spec.ts        # Web Sustainability Guidelines checks: page weight, third-party requests, image optimisation
-  a11y.spec.ts       # Targeted accessibility checks: keyboard navigation, Windows High Contrast Mode
-  hydration.spec.ts  # Hydration verification: confirms prerendered HTML matches client hydration
-schemas/
-  adventure.schema.json  # JSON Schema for adventure YAML validation
-scripts/
-  generate-adventures.mjs       # YAML -> TypeScript codegen (runs as prebuild hook)
-  generate-solutions.mjs        # Regenerate solution barrel index from src/data/solutions/
-  generate-community-sitemap.mjs # Regenerate community sitemap (community.offon.dev topics)
-  create-data-aliases.mjs       # Copy *.data files to <name>/_.data for trailing-slash GitHub Pages (runs as postbuild hook)
-  sync-adventure.mjs            # Fetch and transform adventure YAML from the challenges repo
-  set-discussion-url.mjs        # Set a Discourse thread URL on a level (called by add-discussion-url.yml)
-  refresh-discussions.mjs       # Fetch latest discussion posts per level (called by refresh-community-data.yml)
-  refresh-leaderboard.mjs       # Fetch leaderboard data (called by refresh-community-data.yml)
-  refresh-community-leaders.mjs # Fetch community leader data (called by refresh-community-data.yml)
-  check-docs.sh                 # Validate styleguide.md and README.md were updated alongside code changes
-  lib/
-    deadline.mjs                # Normalises human-readable deadline strings to ISO 8601
-    yaml-text-edit.mjs          # Targeted text-based helpers for editing adventure YAML without reformatting
-    level-constants.mjs         # Level difficulty and ordering constants shared by scripts
-    level-sync.mjs              # Pure helpers used by sync-adventure (level selection and "Coming Soon" computation)
-public/
-  fonts/          # Self-hosted Inter, Syne, and JetBrains Mono font files
-  sitemap.xml
-  robots.txt
-  og.png
+  a11y.spec.ts    # axe (dark/light/forced-colors) + touch targets + focus rings + 200% zoom
+  smoke.spec.ts   # per-route title/canonical/OG/h1 + island hydration
+scripts/          # refresh-*.mjs (community data), sync-adventure.mjs, set-discussion-url.mjs,
+                  # generate-community-sitemap.mjs, check-docs.sh, lib/
+public/           # copied verbatim to dist/ (fonts, favicons, brand, well-known, decks, sitemap.xml, og.png)
+astro.config.mjs, tsconfig.json, playwright.config.ts, package.json
 ```
 
 ### Adventure Content Pipeline
 
-Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and compiled to TypeScript by `scripts/generate-adventures.mjs`. The `prebuild` hook runs the generator automatically before every build.
+Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and loaded by `src/content.config.ts` (Astro Content Collection):
 
-- **Source of truth:** the YAML files. Never edit `*.generated.ts` or `index.ts` by hand.
-- **Schema:** `schemas/adventure.schema.json` (JSON Schema Draft 2020-12). Run `npm run generate:validate` to check.
-- **Sync from challenges repo:** use the `sync-adventure` GitHub Actions workflow (see Adding Adventures below).
-- **Generated outputs:** `<id>.generated.ts` (one per adventure) + `index.ts` (barrel with `ADVENTURES`, `ALL_TAGS`, `ADVENTURE_CONTRIBUTORS`, `getLevelsByTag`, `tagToSlug`, `slugToTag`).
-- **Generated files are committed** so the dev server works without an extra step.
+- **Source of truth:** the YAML files. There are no generated `*.ts` files to commit.
+- **Validation:** a Zod schema (`.strict()`) runs via `npm run sync`; invalid YAML fails the build.
+- **Rendering:** author markdown fields are converted to sanitised HTML in the collection loader (`src/lib/markdown-pipeline.mjs`) at build time. `getCollection('adventures')` returns data with HTML fields ready to render via `set:html`.
+- **Discussion/leaderboard** JSON is read at build time (`src/lib/community-data.ts`) and rendered statically. **Solutions** are pre-built TS objects loaded via `import.meta.glob`.
+- **Sync from challenges repo:** the `sync-adventure` GitHub Actions workflow writes the YAML + discussion stubs; routes appear automatically via `getStaticPaths()`.
 
 ## Routes
 
 | Path | Page | Purpose |
 | --- | --- | --- |
-| `/` | `Index.tsx` | Home page |
-| `/adventures` | `Adventures.tsx` | Adventure landing hub (links to /challenges) |
-| `/adventures/:id` | `AdventureDetail.tsx` | Adventure landing |
-| `/adventures/:id/levels/:levelId` | `ChallengeDetail.tsx` | Individual challenge |
-| `/adventures/:id/levels/:levelId/solution` | `SolutionDetail.tsx` | Solution walkthrough (post-deadline) |
-| `/contribute` | `Contribute.tsx` | How to contribute (technical and non-technical ways) |
-| `/sponsors` | `Sponsors.tsx` | Sponsorship info |
-| `/about` | `About.tsx` | About the community |
-| `/handbook` | `CommunityGuide.tsx` | Community handbook / documentation |
-| `/privacy` | `Privacy.tsx` | GDPR-compliant privacy policy |
-| `/accessibility` | `Accessibility.tsx` | WCAG accessibility statement |
-| `/brand` | `BrandGuidelines.tsx` | Brand guidelines: logos, colors, typography, voice |
-| `/presentation-templates` | `PresentationTemplates.tsx` | Slide template downloads (Reveal.js ZIP, PPTX); unlisted, noindex, excluded from sitemap and robots |
-| `/404` | `NotFound.tsx` | Prerendered 404 page |
-| `/community-guide` | redirects to `/handbook` | Legacy alias |
-| `/docs` | redirects to `/handbook` | Legacy alias |
-| `/docs/community-guide` | redirects to `/handbook` | Legacy alias |
-| `/challenges` | `Challenges.tsx` | All challenges across all adventures; filter by technology tag |
-| `/challenges/:tag` | `Challenges.tsx` | Challenges filtered by technology tag (SEO-friendly slug) |
-| `*` | `CatchAll.tsx` | Client-side 404 fallback (re-exports `NotFound.tsx`; required because React Router v8 needs unique files per route) |
+| `/` | `index.astro` | Home page |
+| `/adventures/` | `adventures/index.astro` | Adventures list |
+| `/adventures/:id/` | `adventures/[id].astro` | Adventure detail |
+| `/adventures/:id/levels/:levelId/` | `adventures/[id]/levels/[levelId].astro` | Individual challenge |
+| `/adventures/:id/levels/:levelId/solution/` | `.../solution.astro` | Solution walkthrough (post-deadline) |
+| `/challenges/` and `/challenges/:tag/` | `challenges/[...tag].astro` | All challenges; filter by technology tag (Vue island) |
+| `/contribute/`, `/sponsors/`, `/about/`, `/handbook/` | static `.astro` pages | Contribute, sponsors, about, handbook |
+| `/privacy/`, `/accessibility/`, `/brand/` | static `.astro` pages | Privacy (noindex), accessibility statement, brand guidelines |
+| `/presentation-templates/` | static `.astro` page | Slide template downloads (noindex) |
+| `/404/` | `404.astro` | 404 page (`dist/404.html`, served by GitHub Pages) |
+| `/docs`, `/docs/community-guide`, `/community-guide` | redirects → `/handbook/` | Legacy aliases (`redirects` in `astro.config.mjs`) |
 
-> **Technology tag filtering** is handled inline on the home page via local `useState`. Adventure detail and challenge detail pages link tags to `/challenges/:tag`. The `/challenges` page uses URL params for shareable filtered views.
+> The `/challenges` filter is a Vue island: it renders the full grid server-side (works without JS) and hydrates for topic/difficulty filtering, syncing `?topics`/`?difficulty` to the URL. Adventure and challenge pages link tags to `/challenges/:tag/`.
 
 ## SEO and Metadata
 
-### Web Manifest
-
-`public/site.webmanifest` defines the web app identity, used by browsers and PWA tools. It includes:
-
-- App name, short name, and description
-- Icon references (favicon and apple-touch-icon)
-- Theme and background colors
-- Display mode (standalone)
-
-### Schema.org Structured Data
-
-`src/root.tsx` includes two JSON-LD `<script>` blocks: one with `@type: "WebSite"` and one with `@type: "Organization"`. These help search engines understand the site's identity and content.
-
-### Open Graph Tags
-
-All pages include complete OG tags:
-
-- `og:title`, `og:description`, `og:url`, `og:image`
-- `og:image:width`, `og:image:height`, `og:image:alt` (required for proper image rendering in social previews; the alt text is the `OG_IMAGE_ALT` constant from `src/data/constants.ts` — a fixed description of the brand card, not the page title)
-- `og:site_name` (brand), `og:locale` (en_GB)
-- `og:type` (website or article, depending on page)
-
-All dynamic pages (adventure & challenge details) generate page-specific OG tags via React Router v8 `meta()` exports.
-
-### Twitter Card Tags
-
-All pages include:
-
-- `twitter:card` (summary_large_image)
-- `twitter:title`, `twitter:description`, `twitter:image`, `twitter:image:alt`
-
-### Canonical Links
-
-Each page declares its canonical URL to prevent duplicate indexing. Handled via React Router v8 `meta()` exports on each route module.
-
-### Sitemap and Robots
-
-- `public/sitemap.xml` lists all static routes with change frequency and priority.
-- `public/robots.txt` points search engines to the sitemap.
-
----
+- **Per-page meta** comes from the `<SEO>` component (`src/components/SEO.astro`), fed by `Layout.astro` props: `<title>`, `<meta name="description">`, canonical (`${SITE_URL}${path}`), Open Graph (`og:title/description/type/url/image` + width/height/`OG_IMAGE_ALT`, `og:site_name`, `og:locale` en_GB), and Twitter card tags. Legal pages pass `noindex`.
+- **Global head** (`Layout.astro`): charset, viewport, `color-scheme`, favicons, manifest, both `theme-color` tags, CSP meta, and two JSON-LD blocks (`WebSite` + `Organization`).
+- **Web manifest:** `public/site.webmanifest` (name, icons, theme/background colors, standalone display).
+- **Sitemap/robots:** `public/sitemap.xml` (static; a `sitemap.xml.ts` endpoint is a planned follow-up) and `public/robots.txt`.
 
 ## Analytics and Privacy
 
-The site uses Google Analytics 4 with Consent Mode v2 in **gated-load mode**. No data is sent to Google until the user clicks Accept on the cookie banner. The `gtag.js` script itself is not loaded until that point. Cross-domain measurement between `offon.dev` and `community.offon.dev` is configured in the GA4 admin UI, not in this codebase. See the Analytics and Consent section of `CLAUDE.md` for the full design.
+Google Analytics 4 with Consent Mode v2 in **gated-load mode**: no data is sent to Google until the user clicks Accept; `gtag.js` is not loaded until then. Cross-domain measurement is configured in the GA4 admin UI. See the Analytics and Consent section of `CLAUDE.md` for the full design.
 
-### Configuration
-
-The following constants in `src/data/constants.ts` drive the analytics setup:
-
-| Constant | Purpose |
+| Constant (`src/lib/site.ts`) | Purpose |
 | --- | --- |
-| `GA_MEASUREMENT_ID` | GA4 Measurement ID. Used by `useConsent.tsx` only, when it injects `gtag.js` on Accept. |
+| `GA_MEASUREMENT_ID` | GA4 Measurement ID (used by the consent store's gtag injector). |
 | `CONSENT_STORAGE_KEY` | `localStorage` key for the consent decision. |
 | `CONSENT_EXPIRY_MS` | Stored consent expiry (180 days). |
 
-### How it works
-
-- `src/root.tsx` ships a minimal inline `<head>` bootstrap that bootstraps `dataLayer`, defines `window.gtag` as the push shim, and sets all four GDPR consent signals to denied. It does not load gtag.js, does not push `js` or `config`, and does not read `localStorage`.
-- `src/hooks/useConsent.tsx` owns the React-side state and the `gtag.js` injector. On Accept (or on mount when localStorage records a granted decision), the injector pushes `consent update granted` + `js` + `config` into `dataLayer` synchronously before appending the `<script src="...gtag/js?id=...">` tag. A module-scoped boolean ensures the script is appended at most once per session.
-- `src/components/ConsentBanner.tsx` renders a fixed bottom bar until the user makes a choice. Once consent is set, it renders a floating cookie icon button (bottom-right) that calls `reset()` to reopen the banner.
-- `src/Layout.tsx` fires `page_view` on every route change and `click_event` for every `<a>`/`<button>` click via `useClickTracking`. Both gate on `consent === "granted"` so events do not accumulate in `dataLayer` while gtag.js is not loaded.
-- On Decline or Reset, the hook clears any `_ga*` cookies that gtag.js may have set during a prior granted session. The script tag is not removed.
-- `/privacy` (`src/pages/Privacy.tsx`) is the GDPR Art. 13 privacy policy. Contact: <offondev@gmail.com> and `${COMMUNITY_URL}/groups/moderators`.
-
----
+- `Layout.astro` ships the minimal inline `<head>` bootstrap (dataLayer + `gtag` shim + all four signals denied; no gtag.js, no `js`/`config`, no localStorage read).
+- `src/stores/consent.ts` owns the state (`$consent` nanostore) and the gtag injector; `src/components/ConsentBanner.vue` is the island. `page_view` fires on `astro:page-load` only when consent is granted. On Decline/Reset, `_ga*` cookies are cleared.
 
 ## Deployment
 
-Deployment is automated via GitHub Actions:
+- **Push to `main`** → [`deploy.yml`](.github/workflows/deploy.yml) builds `dist/` and deploys to GitHub Pages (<https://offon.dev>) via `JamesIves/github-pages-deploy-action`.
+- **Open a PR** → [`preview.yml`](.github/workflows/preview.yml) runs the content gate (`astro sync`), build, and the full Playwright suite, then deploys a preview at `/pr-preview/pr-<n>/`.
+- **PRs touching adventure data** → [`validate-adventures.yml`](.github/workflows/validate-adventures.yml) validates the YAML (Zod via `astro sync`), per-level discussion JSON, and `ADVENTURE_CATEGORIES` registration.
+- **PRs adding components/utilities/constants/scripts/workflows** → [`validate-docs.yml`](.github/workflows/validate-docs.yml) requires `styleguide.md`/`README.md` updates.
 
-- **Push to `main`** triggers [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which builds and deploys to GitHub Pages. Production URL: **<https://offon.dev>**.
-- **Open a PR** triggers [`.github/workflows/preview.yml`](.github/workflows/preview.yml), which runs lint, build, unit tests, and the full Playwright suite (axe, a11y, smoke) before deploying a preview at `/pr-preview/pr-<n>/`.
-- **PRs touching adventure data** also trigger [`.github/workflows/validate-adventures.yml`](.github/workflows/validate-adventures.yml), which validates YAML schema, checks that generated files are up-to-date (including `public/llms.txt`), and verifies sitemap/prerender/leaderboard consistency.
-- **PRs adding components, hooks, utilities, constants, scripts, or workflows** trigger [`.github/workflows/validate-docs.yml`](.github/workflows/validate-docs.yml), which runs `scripts/check-docs.sh` and fails if the relevant documentation (`styleguide.md` or `README.md`) was not updated in the same PR.
-
-`dist/client/404/index.html` (the prerendered 404 page) is copied to `dist/client/404.html` as a fallback for unknown routes. Each valid route has its own prerendered `index.html` so GitHub Pages serves a 200 directly.
-
-PR preview builds set the `VITE_BASE_PATH` environment variable to `/pr-preview/pr-<n>/` so all asset paths resolve correctly under the preview sub-path.
+Astro emits `dist/404.html` natively. PR preview builds set `VITE_BASE_PATH=/pr-preview/pr-<n>/` (→ Astro `base`) so assets resolve under the sub-path; `Layout.astro` marks such builds `noindex`.
 
 ## Adding Adventures and Levels
 
-Adventures are authored in [off-on-dev/open-source-challenges](https://github.com/off-on-dev/open-source-challenges) and pulled into this site via the **Sync Adventure from Challenges Repo** GitHub Actions workflow. The workflow fetches content, generates all TypeScript data files, and opens a PR with a checklist of steps to complete before merging.
-
-See [`ADVENTURES.md`](ADVENTURES.md) for the full guide, including how to complete the PR checklist, how to add a new level to an existing adventure, and what happens when you re-sync a PR that already has manual edits.
+Adventures are authored in [off-on-dev/open-source-challenges](https://github.com/off-on-dev/open-source-challenges) and pulled in via the **Sync Adventure from Challenges Repo** workflow, which writes the YAML + discussion stubs and opens a PR. See [`ADVENTURES.md`](ADVENTURES.md) for the full guide.
 
 ## Accessibility
 
-OffOn targets WCAG 2.2 Level AA across every page, in both light and dark mode. Automated axe-core scans run on every pull request preview via [`e2e/smoke.spec.ts`](e2e/smoke.spec.ts). The full statement, supported environments, known limitations, and how to report a barrier are in [`ACCESSIBILITY.md`](ACCESSIBILITY.md). Contributor rules are in the Accessibility section of [`CLAUDE.md`](CLAUDE.md#accessibility).
+OffOn targets WCAG 2.2 Level AA across every page, in both light and dark mode. Automated axe scans run on every PR preview via [`e2e/a11y.spec.ts`](e2e/a11y.spec.ts). The full statement is in [`ACCESSIBILITY.md`](ACCESSIBILITY.md); contributor rules are in the Accessibility section of [`CLAUDE.md`](CLAUDE.md#accessibility).
 
 ## Further Reading
 
-- [`ADVENTURES.md`](ADVENTURES.md): full guide to syncing, reviewing, and updating adventures and levels via GitHub Actions.
-- [`ACCESSIBILITY.md`](ACCESSIBILITY.md): public accessibility statement, supported environments, and how to report a barrier.
-- [`PERFORMANCE.md`](PERFORMANCE.md): performance targets, image rules, font preloading, and bundle size guidance.
-- [`styleguide.md`](styleguide.md): design system, color tokens, typography, component patterns, and light/dark mode rules.
-- [`CLAUDE.md`](CLAUDE.md): contributor conventions, code quality rules, commit format, testing requirements, and accessibility standards.
+- [`ADVENTURES.md`](ADVENTURES.md): syncing, reviewing, and updating adventures and levels.
+- [`ACCESSIBILITY.md`](ACCESSIBILITY.md): public accessibility statement and how to report a barrier.
+- [`PERFORMANCE.md`](PERFORMANCE.md): performance targets, image rules, font preloading, bundle size.
+- [`styleguide.md`](styleguide.md): design system, color tokens, typography, component patterns.
+- [`CLAUDE.md`](CLAUDE.md): contributor conventions, code quality, commit format, testing, accessibility.
 
 ## License
 
