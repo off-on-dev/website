@@ -449,4 +449,4 @@ Enumerate every transition before writing code. For each, list every system that
 
 ## Known follow-ups (post-migration)
 
-Tracked cleanups not yet done: the abbr JS tooltip (touch + viewport reposition; the CSS `::after` tooltip is `display:none` when hidden to avoid layout overflow); Shiki syntax highlighting for code blocks (`markdown.shikiConfig` is set but the pipeline doesn't highlight yet); GA4 click-event tracking; consent runtime regression tests (browser interaction over the state machine); and the component-by-component rewrite of `styleguide.md`.
+Tracked cleanups not yet done: the abbr JS tooltip (touch + viewport reposition; the CSS `::after` tooltip is `display:none` when hidden to avoid layout overflow); Shiki syntax highlighting for code blocks (`markdown.shikiConfig` is set but the pipeline doesn't highlight yet); GA4 click-event tracking; and the component-by-component rewrite of `styleguide.md`. (Consent runtime tests are done — `e2e/consent.spec.ts`.)
