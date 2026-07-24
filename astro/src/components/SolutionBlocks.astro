@@ -1,0 +1,99 @@
+---
+import { Icon } from "astro-icon/components";
+import type { SolutionBlock } from "@/lib/solutions";
+
+// Renders a SolutionBlock[] body (text, code, image, callout). Ported from the
+// BlockRenderer / Callout / SolutionImage sub-components in src/pages/SolutionDetail.tsx.
+interface Props {
+  blocks: SolutionBlock[];
+}
+const { blocks } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+const calloutConfig = {
+  tip: {
+    icon: "lucide:lightbulb",
+    label: "Tip",
+    class: "border-primary/30 bg-primary/5",
+    iconClass: "text-primary",
+  },
+  warning: {
+    icon: "lucide:triangle-alert",
+    label: "Warning",
+    class: "border-orange-500/30 bg-orange-500/5",
+    iconClass: "text-orange-400",
+  },
+  info: {
+    icon: "lucide:info",
+    label: "Info",
+    class: "border-blue-400/30 bg-blue-400/5",
+    iconClass: "text-blue-400",
+  },
+} as const;
+
+// Solution image srcs are stored root-absolute (/solutions/...); prefix the base
+// so they resolve in PR previews too.
+const resolveSrc = (src: string): string => (src.startsWith("/") ? base + src.slice(1) : src);
+---
+
+<div class="space-y-4">
+  {
+    blocks.map((block) => {
+      if (block.type === "text") {
+        return <div class="md-content" set:html={block.html} />;
+      }
+      if (block.type === "code") {
+        return (
+          <div>
+            {block.title && (
+              <p class="rounded-t-lg border border-b-0 border-border bg-[hsl(var(--surface))] px-4 py-2 font-mono text-xs text-dim">
+                {block.title}
+              </p>
+            )}
+            <pre
+              tabindex="0"
+              aria-label={block.title ? `Code block: ${block.title}` : "Code block"}
+              class={`overflow-x-auto border border-border bg-black/30 p-4 font-mono text-sm ${block.title ? "rounded-b-lg" : "rounded-lg"}`}><code>{block.code}</code></pre>
+          </div>
+        );
+      }
+      if (block.type === "image") {
+        return (
+          <figure class="my-4">
+            <img
+              src={resolveSrc(block.src)}
+              alt={block.alt}
+              class="w-full rounded-xl border border-border shadow-sm"
+              loading="lazy"
+              decoding="async"
+            />
+            {block.caption && (
+              <figcaption class="mt-2 text-center text-xs text-faint">{block.caption}</figcaption>
+            )}
+          </figure>
+        );
+      }
+      const config = calloutConfig[block.variant];
+      return (
+        <div class={`flex gap-3 rounded-lg border p-4 text-foreground ${config.class}`} role="note">
+          <Icon
+            name={config.icon}
+            width={16}
+            height={16}
+            class={`mt-0.5 shrink-0 ${config.iconClass}`}
+            aria-hidden="true"
+          />
+          <div class="min-w-0">
+            <p class="mb-1 text-xs font-semibold uppercase tracking-wider opacity-70">
+              {config.label}
+            </p>
+            <div
+              class="md-content text-sm leading-relaxed [&>p]:mb-0 [&>p:not(:last-child)]:mb-2"
+              set:html={block.html}
+            />
+          </div>
+        </div>
+      );
+    })
+  }
+</div>

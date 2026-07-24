@@ -1,0 +1,430 @@
+---
+import { getCollection } from "astro:content";
+import { Icon } from "astro-icon/components";
+import Layout from "@/layouts/Layout.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import ContributorBadge from "@/components/ContributorBadge.astro";
+import DifficultyBadge from "@/components/DifficultyBadge.astro";
+import SolutionBlocks from "@/components/SolutionBlocks.astro";
+import SolutionStepNav from "@/components/SolutionStepNav.astro";
+import { BRAND_NAME, COMMUNITY_URL } from "@/lib/site";
+import { tagToSlug } from "@/lib/challenges";
+import { isDeadlinePast, formatDeadline } from "@/lib/utils";
+import { getSolutions } from "@/lib/solutions";
+
+// Solution walkthrough page. Ported from src/pages/SolutionDetail.tsx. Only
+// levels with an authored solution module get a route, so the React "available
+// but no solution authored yet" branch never renders here.
+export async function getStaticPaths() {
+  const adventures = await getCollection("adventures");
+  return getSolutions().flatMap(({ adventureId, levelId, solution }) => {
+    const adventure = adventures.find((a) => a.id === adventureId)?.data;
+    const level = adventure?.levels.find((l) => l.id === levelId);
+    if (!adventure || !level) return [];
+    return [{ params: { id: adventureId, levelId }, props: { adventure, level, solution } }];
+  });
+}
+
+const { adventure, level, solution } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+// Build-time gating: level deadline wins, falling back to the rewards deadline.
+// The solution unlocks once the deadline has passed (or none is set).
+const deadline = level.deadline ?? adventure.rewards?.deadline;
+const unlocked = !deadline || isDeadlinePast(deadline);
+
+const challengeUrl = `${base}adventures/${adventure.slug}/levels/${level.id}/`;
+const discussionUrl = level.discussionUrl || COMMUNITY_URL;
+// Level backstory takes precedence; fall back to the adventure-level backstory.
+const backstory = level.backstory?.[0] ?? adventure.backstory?.[0];
+
+const title = unlocked
+  ? `${solution.title} - ${adventure.title} - ${BRAND_NAME}`
+  : `${level.name} Solution - ${adventure.title} - ${BRAND_NAME}`;
+const description = `Step-by-step solution walkthrough for the ${level.name} challenge in ${adventure.title}.`;
+---
+
+<Layout
+  title={title}
+  description={description}
+  path={`/adventures/${adventure.slug}/levels/${level.id}/solution/`}
+  ogType="article"
+  noindex={!unlocked}
+>
+  <main id="main-content" tabindex="-1" class="px-6 pb-24 pt-12 md:px-16">
+    <div class="mx-auto max-w-6xl">
+      <Breadcrumb
+        class="mb-10"
+        items={[
+          { label: "Adventures", href: "/adventures/" },
+          { label: adventure.title, href: `/adventures/${adventure.slug}/` },
+          { label: level.name, href: `/adventures/${adventure.slug}/levels/${level.id}/` },
+          { label: "Solution" },
+        ]}
+      />
+
+      {
+        !unlocked ? (
+          <div class="max-w-2xl">
+            <div class="mb-4 flex flex-wrap items-center gap-2">
+              <DifficultyBadge difficulty={level.difficulty} showDot />
+            </div>
+            <h1 class="mb-6 text-3xl font-bold text-foreground md:text-4xl">
+              {level.name}: Solution
+            </h1>
+            <div class="flex gap-4 rounded-xl border border-border bg-[hsl(var(--surface))] p-6">
+              <Icon
+                name="lucide:lock"
+                width={20}
+                height={20}
+                class="mt-0.5 shrink-0 text-faint"
+                aria-hidden="true"
+              />
+              <div>
+                <p class="mb-1 text-sm font-semibold text-foreground">Not yet available</p>
+                <p class="text-sm text-dim">
+                  This solution will be published after the challenge deadline{deadline ? `: ${formatDeadline(deadline)}` : ""}.
+                  Try solving it yourself first.
+                </p>
+                <a
+                  href={challengeUrl}
+                  class="focus-ring-tight mt-4 inline-flex items-center gap-1.5 rounded-sm text-sm font-medium text-primary hover:underline"
+                >
+                  <Icon name="lucide:arrow-left" width={14} height={14} aria-hidden="true" />
+                  Back to challenge
+                </a>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Hero */}
+            <div class="mb-8 overflow-hidden rounded-2xl border border-border">
+              <div class="bg-[hsl(var(--surface))] px-6 pb-6 pt-7 md:px-8">
+                {backstory && (
+                  <div
+                    role="note"
+                    class="md-content text-base italic leading-relaxed text-dim [&>p]:mb-0"
+                    set:html={backstory}
+                  />
+                )}
+              </div>
+              <div class="h-0.5 bg-primary" aria-hidden="true" />
+              <div class="bg-background/40 px-6 py-6 md:px-8">
+                <div class="mb-3 flex flex-wrap items-center gap-2">
+                  <DifficultyBadge difficulty={level.difficulty} showDot />
+                  <span class="text-xs uppercase tracking-wider text-faint">Solution</span>
+                </div>
+                <h1 class="mb-3 text-3xl font-bold text-foreground md:text-4xl">
+                  {solution.title}
+                </h1>
+                {solution.intro && (
+                  <p class="max-w-3xl leading-relaxed text-dim">{solution.intro}</p>
+                )}
+                {solution.contributor && (
+                  <div class="mt-3">
+                    <ContributorBadge
+                      name={solution.contributor.name}
+                      url={solution.contributor.url}
+                      label="Solution Contributor"
+                    />
+                  </div>
+                )}
+                {level.topics.length > 0 && (
+                  <ul class="mt-4 flex flex-wrap gap-2" role="list" aria-label="Topics covered">
+                    {level.topics.map((t) => (
+                      <li>
+                        <a
+                          href={`${base}challenges/${tagToSlug(t)}/`}
+                          class="focus-ring-tight rounded-full border border-border bg-background/40 px-2.5 py-1.5 font-mono text-xs text-dim transition-colors hover:border-primary/50 hover:text-foreground"
+                        >
+                          {t}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+
+            {/* Two-column layout */}
+            <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_17rem] lg:gap-12">
+              <article aria-label={solution.title}>
+                {solution.spoilerWarning && (
+                  <div
+                    class="mb-6 flex gap-3 rounded-xl border border-primary/25 bg-primary/5 p-4"
+                    role="note"
+                  >
+                    <Icon
+                      name="lucide:triangle-alert"
+                      width={16}
+                      height={16}
+                      class="mt-0.5 shrink-0 text-primary"
+                      aria-hidden="true"
+                    />
+                    <p class="text-sm leading-relaxed text-dim">{solution.spoilerWarning}</p>
+                  </div>
+                )}
+
+                {/* What Was Fixed: mobile only; desktop shows this in the sidebar */}
+                <SolutionStepNav steps={solution.steps} class="mb-4 lg:hidden" />
+
+                {solution.context && (
+                  <section
+                    aria-labelledby="context-heading"
+                    class="mb-3 rounded-xl border border-border bg-[hsl(var(--surface))] px-5 py-5"
+                  >
+                    <h2
+                      id="context-heading"
+                      class="mb-4 font-sans text-sm font-semibold uppercase tracking-wide text-primary"
+                    >
+                      {solution.context.title}
+                    </h2>
+                    <SolutionBlocks blocks={solution.context.body} />
+                  </section>
+                )}
+
+                {/* Step cards */}
+                <ol class="mt-3 space-y-3" aria-label="Solution steps">
+                  {solution.steps.map((step, index) => (
+                    <li>
+                      <details
+                        id={step.id}
+                        tabindex="-1"
+                        open={index === 0}
+                        class="group scroll-mt-28 rounded-xl"
+                      >
+                        <summary class="focus-ring flex cursor-pointer list-none items-center gap-4 rounded-xl border border-border bg-[hsl(var(--surface))] px-5 py-4 group-open:rounded-b-none group-open:border-b-0 [&::-webkit-details-marker]:hidden">
+                          <span
+                            class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground tabular-nums"
+                            aria-hidden="true"
+                          >
+                            {String(index + 1).padStart(2, "0")}
+                          </span>
+                          <h3 class="flex-1 text-base font-semibold text-foreground">
+                            {step.title}
+                          </h3>
+                          <Icon
+                            name="lucide:chevron-down"
+                            width={16}
+                            height={16}
+                            class="shrink-0 text-faint transition-transform group-open:rotate-180 motion-reduce:transition-none"
+                            aria-hidden="true"
+                          />
+                        </summary>
+                        <div class="space-y-5 rounded-b-xl border border-t-0 border-border bg-background/40 px-5 py-5">
+                          {step.intro && (
+                            <p class="text-sm leading-relaxed text-dim">{step.intro}</p>
+                          )}
+                          <SolutionBlocks blocks={step.body} />
+                          {step.takeaways && step.takeaways.length > 0 && (
+                            <div class="rounded-lg border border-primary/20 bg-primary/5 p-4">
+                              <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-primary">
+                                Key Takeaways
+                              </p>
+                              <ul class="space-y-2" role="list">
+                                {step.takeaways.map((item) => (
+                                  <li class="flex gap-2 text-sm leading-relaxed text-dim">
+                                    <span class="mt-0.5 shrink-0 text-primary" aria-hidden="true">
+                                      ›
+                                    </span>
+                                    {item}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      </details>
+                    </li>
+                  ))}
+                </ol>
+
+                {/* Complete solution */}
+                {solution.completeSolution && (
+                  <details open tabindex="-1" class="group mt-3 scroll-mt-28 rounded-xl">
+                    <summary class="focus-ring flex cursor-pointer list-none items-center gap-3 rounded-xl border border-primary/30 bg-primary/5 px-5 py-4 group-open:rounded-b-none group-open:border-b-0 [&::-webkit-details-marker]:hidden">
+                      <div class="min-w-0 flex-1">
+                        <p class="mb-0.5 text-xs font-semibold uppercase tracking-wider text-primary">
+                          Final Result
+                        </p>
+                        <span class="text-base font-semibold leading-snug text-foreground">
+                          {solution.completeSolution.title ?? "Complete Solution"}
+                        </span>
+                      </div>
+                      <Icon
+                        name="lucide:chevron-down"
+                        width={16}
+                        height={16}
+                        class="shrink-0 text-faint transition-transform group-open:rotate-180 motion-reduce:transition-none"
+                        aria-hidden="true"
+                      />
+                    </summary>
+                    <div class="rounded-b-xl border border-t-0 border-primary/25 bg-background/40 px-5 py-5">
+                      {solution.completeSolution.description && (
+                        <p class="mb-4 text-sm leading-relaxed text-dim">
+                          {solution.completeSolution.description}
+                        </p>
+                      )}
+                      <SolutionBlocks
+                        blocks={[
+                          {
+                            type: "code",
+                            language: solution.completeSolution.language,
+                            code: solution.completeSolution.code,
+                          },
+                        ]}
+                      />
+                    </div>
+                  </details>
+                )}
+
+                {/* Narrative ending */}
+                {solution.outro && (
+                  <section
+                    aria-labelledby="outro-heading"
+                    class="mt-6 overflow-hidden rounded-2xl border border-border"
+                  >
+                    <div class="h-0.5 bg-primary" aria-hidden="true" />
+                    <div class="bg-[hsl(var(--surface))] px-6 py-7">
+                      <div class="flex items-start gap-4">
+                        <span
+                          class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary"
+                          aria-hidden="true"
+                        >
+                          <Icon name="lucide:sparkles" width={16} height={16} />
+                        </span>
+                        <div class="w-full min-w-0">
+                          <h2 id="outro-heading" class="mb-3 text-base font-semibold text-foreground">
+                            {solution.outro.heading}
+                          </h2>
+                          <div
+                            class="md-content text-sm leading-relaxed text-dim [&>p:last-child]:mb-0 [&>p:not(:last-child)]:mb-3"
+                            set:html={solution.outro.html}
+                          />
+                          <a
+                            href={discussionUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-describedby="new-tab-hint"
+                            class="docs-ext-link mt-4 text-sm font-medium"
+                          >
+                            Browse the discussion
+                            <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                )}
+              </article>
+
+              {/* Sidebar */}
+              <aside
+                aria-label="Solution sidebar"
+                class="mt-10 space-y-4 lg:sticky lg:top-8 lg:mt-0 lg:self-start"
+              >
+                {level.codespacesUrl && (
+                  <div class="rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
+                    <p class="mb-2 font-sans text-xs font-semibold uppercase tracking-wide text-primary">
+                      solve along
+                    </p>
+                    <p class="mb-4 text-xs leading-relaxed text-dim">
+                      Haven&apos;t solved it yet? Open the challenge in Codespaces and follow each
+                      step as you go.
+                    </p>
+                    <a
+                      href={level.codespacesUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-describedby="new-tab-hint"
+                      class="btn-primary w-fit"
+                    >
+                      Open in Codespaces
+                      <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+                    </a>
+                    <p class="mt-2.5 font-mono text-xs text-faint">Free GitHub account required</p>
+                  </div>
+                )}
+
+                <SolutionStepNav steps={solution.steps} class="hidden lg:block" />
+
+                {solution.furtherReading && solution.furtherReading.length > 0 && (
+                  <div class="rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
+                    <p class="mb-2 font-sans text-xs font-semibold uppercase tracking-wide text-primary">
+                      further reading
+                    </p>
+                    <ul class="space-y-1" role="list">
+                      {solution.furtherReading.map((link) => (
+                        <li>
+                          <a
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-describedby="new-tab-hint"
+                            class="docs-ext-link text-sm"
+                          >
+                            {link.title}
+                            <Icon name="lucide:external-link" width={11} height={11} aria-hidden="true" />
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <div class="rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
+                  <p class="mb-3 font-sans text-xs font-semibold uppercase tracking-wide text-primary">
+                    challenge
+                  </p>
+                  <p class="mb-0.5 text-sm font-semibold text-foreground">{adventure.title}</p>
+                  <p class="mb-4 text-xs text-faint">{level.name}</p>
+                  <a
+                    href={challengeUrl}
+                    class="focus-ring-tight inline-flex items-center gap-1.5 rounded-sm text-sm font-medium text-primary hover:underline"
+                  >
+                    <Icon name="lucide:arrow-left" width={13} height={13} aria-hidden="true" />
+                    Back to challenge
+                  </a>
+                </div>
+
+                <div class="rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
+                  <p class="mb-2 font-sans text-xs font-semibold uppercase tracking-wide text-primary">
+                    discussion
+                  </p>
+                  <p class="mb-3 text-xs leading-relaxed text-dim">
+                    Found a better way? Share your approach and compare notes with others who solved
+                    it.
+                  </p>
+                  <a
+                    href={discussionUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-describedby="new-tab-hint"
+                    class="docs-ext-link text-sm font-medium"
+                  >
+                    Join the discussion
+                    <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                  </a>
+                </div>
+              </aside>
+            </div>
+          </>
+        )
+      }
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // Open the <details> element matching the URL hash (StepNav links scroll to a
+  // step but would leave it collapsed otherwise). astro:page-load fires on the
+  // initial load and after every ClientRouter swap.
+  const openMatchingStep = (hash: string): void => {
+    if (!hash) return;
+    const el = document.getElementById(hash.replace(/^#/, ""));
+    if (el instanceof HTMLDetailsElement) el.open = true;
+  };
+  document.addEventListener("astro:page-load", () => openMatchingStep(window.location.hash));
+  window.addEventListener("hashchange", () => openMatchingStep(window.location.hash));
+</script>
