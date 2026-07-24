@@ -20,10 +20,17 @@ export type DiscussionPost = {
   topicUrl?: string;
 };
 
+export type Solver = {
+  username: string;
+  avatarUrl?: string;
+  solvedAt: string;
+};
+
 export type Discussion = {
   discussionUrl: string;
   discussionPosts: DiscussionPost[];
   totalReplies: number;
+  solvers?: Solver[];
 };
 
 export type LeaderboardRow = {
@@ -32,6 +39,10 @@ export type LeaderboardRow = {
   avatarUrl?: string;
   points: number;
   challengesSolved: number;
+  beginnerPoints?: number;
+  intermediatePoints?: number;
+  expertPoints?: number;
+  singlePoints?: number;
 };
 
 export type Leaderboard = { updatedAt: string; rows: LeaderboardRow[] };

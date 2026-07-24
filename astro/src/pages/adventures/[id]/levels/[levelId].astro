@@ -1,8 +1,24 @@
 ---
+// Challenge detail page. Layout and styling ported from
+// src/pages/ChallengeDetail.tsx (StructuredLayout). Fully static: discussion
+// and leaderboard data come from the CI-refreshed JSON at build time.
 import { getCollection } from "astro:content";
+import { Icon } from "astro-icon/components";
+import type { ImageMetadata } from "astro";
 import Layout from "@/layouts/Layout.astro";
-import { BRAND_NAME } from "@/lib/site";
-import { stripHtml } from "@/lib/markdown";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import DifficultyBadge from "@/components/DifficultyBadge.astro";
+import TagChips from "@/components/TagChips.astro";
+import InlineProse from "@/components/InlineProse.astro";
+import CollapsibleSection from "@/components/CollapsibleSection.astro";
+import CodespacesButton from "@/components/CodespacesButton.astro";
+import RewardsCard from "@/components/RewardsCard.astro";
+import CommunitySidebar from "@/components/CommunitySidebar.astro";
+import OtherLevelsCard from "@/components/OtherLevelsCard.astro";
+import ChallengeShareLinks from "@/components/ChallengeShareLinks.astro";
+import { BRAND_NAME, SITE_URL, COMMUNITY_URL, COMMUNITY_DISPLAY_NAME } from "@/lib/site";
+import { stripLinks } from "@/lib/markdown";
+import { isDeadlinePast, escapeHtmlAttr } from "@/lib/utils";
 import { getDiscussion, getLeaderboard } from "@/lib/community-data";
 
 export async function getStaticPaths() {
@@ -16,10 +32,50 @@ export async function getStaticPaths() {
 }
 
 const { adventure, level } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
 const discussion = getDiscussion(adventure.slug, level.id);
 const leaderboard = getLeaderboard(adventure.slug);
-const posts = discussion?.discussionPosts?.slice(0, 5) ?? [];
-const topRows = leaderboard?.rows?.slice(0, 5) ?? [];
+
+const { intro, objective, toolbox, backstory, architecture, architectureDiagram, diagramAlt, architectureAscii, howToPlay, helpfulLinks, verification } = level;
+
+const levelUrl = `${SITE_URL}/adventures/${adventure.slug}/levels/${level.id}/`;
+const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(levelUrl)}`;
+const discussionHref = level.discussionUrl || COMMUNITY_URL;
+
+// Rewards move below the fold once the deadline has passed (build-time check).
+const deadline = level.deadline ?? adventure.rewards?.deadline;
+const rewardsBelowFold = isDeadlinePast(deadline);
+
+// Architecture diagram SVGs live in astro/src/assets/diagrams/ and are matched
+// by the level's architectureDiagram filename.
+const diagrams = import.meta.glob<{ default: ImageMetadata | string }>(
+  "../../../../assets/diagrams/*.svg",
+  { eager: true },
+);
+const diagramModule = architectureDiagram
+  ? Object.entries(diagrams).find(([path]) => path.endsWith(`/${architectureDiagram}`))?.[1]
+  : undefined;
+const diagramSrc = diagramModule
+  ? typeof diagramModule.default === "string"
+    ? diagramModule.default
+    : diagramModule.default.src
+  : undefined;
+const hasArchitecture = (architecture && architecture.length > 0) || diagramSrc || architectureAscii;
+
+const DEVCONTAINER_EXPANSION =
+  "development container: a portable, reproducible coding environment defined by a configuration file";
+
+// Synthetic "Get Started" step prepended to the walkthrough (same markup the
+// React page injects).
+const getStartedStep = {
+  title: "Get Started",
+  content: [
+    `<p><a href="${escapeHtmlAttr(level.codespacesUrl)}" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint">Open in GitHub Codespaces</a>. The <abbr data-title="${DEVCONTAINER_EXPANSION}" aria-describedby="abbr-devcontainer" tabindex="0">devcontainer</abbr><span id="abbr-devcontainer" class="sr-only">${DEVCONTAINER_EXPANSION}</span> is pre-configured and starts automatically. When you push from Codespaces, GitHub forks the repository to your account automatically.</p>`,
+    `<p>Prefer working locally? Clone the repo and open it in any editor that supports the Dev Containers specification (<abbr data-title="Visual Studio Code" aria-describedby="abbr-vscode" tabindex="0">VS Code</abbr><span id="abbr-vscode" class="sr-only">Visual Studio Code</span>, JetBrains, and others). The devcontainer config will be detected automatically.</p>`,
+  ].join("\n"),
+};
+const walkthroughSteps = howToPlay && howToPlay.length > 0 ? [getStartedStep, ...howToPlay] : [];
 ---
 
 <Layout
@@ -28,146 +84,341 @@ const topRows = leaderboard?.rows?.slice(0, 5) ?? [];
   path={`/adventures/${adventure.slug}/levels/${level.id}/`}
   ogType="article"
 >
-  <main id="main-content" tabindex="-1" class="mx-auto max-w-3xl px-4 py-12">
-    <nav aria-label="Breadcrumb" class="text-xs text-faint">
-      <a class="docs-ext-link" href={`${import.meta.env.BASE_URL}adventures/${adventure.slug}/`}>{adventure.title}</a>
-      <span> / {level.name}</span>
-    </nav>
+  <main id="main-content" tabindex="-1" class="px-6 pb-24 pt-12 md:px-16">
+    <div class="mx-auto max-w-6xl">
+      <Breadcrumb
+        class="mb-10"
+        items={[
+          { label: "Adventures", href: "/adventures/" },
+          { label: adventure.title, href: `/adventures/${adventure.slug}/` },
+          { label: level.name },
+        ]}
+      />
 
-    <div class="mt-3 flex flex-wrap items-center gap-3">
-      <h1 class="text-3xl md:text-4xl font-bold text-foreground">{level.name}</h1>
-      <span class="rounded-full border border-border px-3 py-1 text-xs text-dim">{level.difficulty}</span>
-      {level.estimatedTime ? <span class="text-xs text-faint">{level.estimatedTime}</span> : null}
-    </div>
+      {/* Header */}
+      <div class="mb-10">
+        <h1 class="text-3xl md:text-4xl font-bold text-foreground mb-4">{level.name}</h1>
 
-    {level.hook ? <div class="mt-4 text-lg text-dim md-content" set:html={level.hook} /> : null}
+        <div class="flex flex-wrap items-center gap-2 mb-5">
+          <DifficultyBadge difficulty={level.difficulty} showDot />
+          {
+            level.estimatedTime && (
+              <span class="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 font-mono text-xs text-dim">
+                <Icon name="lucide:clock" width={11} height={11} aria-hidden="true" />
+                {level.estimatedTime}
+              </span>
+            )
+          }
+          <TagChips tags={level.topics ?? adventure.tags} />
+        </div>
 
-    {level.intro?.length ? (
-      <div class="mt-4">
-        {level.intro.map((p) => <p class="mt-2 text-dim md-inline" set:html={p} />)}
+        {/* Intro as hook */}
+        {
+          intro && intro.length > 0 && (
+            <div class="space-y-3 mb-5 max-w-3xl">
+              {intro.map((p) => (
+                <InlineProse html={p} class="text-dim leading-relaxed" />
+              ))}
+            </div>
+          )
+        }
       </div>
-    ) : null}
 
-    <div class="mt-6 flex flex-wrap gap-3">
-      <a class="btn-primary" href={level.codespacesUrl} target="_blank" rel="noopener noreferrer">
-        Start in Codespaces
-      </a>
-      {level.discussionUrl ? (
-        <a class="btn-ghost" href={level.discussionUrl} target="_blank" rel="noopener noreferrer">
-          Discussion
-        </a>
-      ) : null}
-    </div>
+      {/* Two-column layout: main content + sidebar */}
+      <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-10">
+        <div class="min-w-0">
+          {/* Objective + Key Learnings side-by-side */}
+          <div class="grid gap-5 sm:grid-cols-2 mb-6">
+            {
+              objective && objective.length > 0 && (
+                <section id="objective" class="scroll-mt-28 rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
+                  <h2 class="font-sans text-sm font-semibold tracking-wide text-primary mb-3">Mission Objective</h2>
+                  <ul role="list" class="space-y-2">
+                    {objective.map((item) => (
+                      <li class="flex items-start gap-2.5 text-sm text-dim leading-relaxed">
+                        <Icon name="lucide:check" width={14} height={14} class="mt-0.5 shrink-0 text-primary" aria-hidden="true" />
+                        <span class="min-w-0 md-inline" set:html={item} />
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )
+            }
 
-    {level.audience ? (
-      <p class="mt-4 text-sm text-faint md-inline" set:html={level.audience} />
-    ) : null}
+            <section id="learnings" class="scroll-mt-28 rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
+              <h2 class="font-sans text-sm font-semibold tracking-wide text-primary mb-3">Key Learnings</h2>
+              <ul role="list" class="space-y-2">
+                {
+                  level.learnings.map((learning) => (
+                    <li class="flex items-start gap-2.5 text-sm text-dim leading-relaxed">
+                      <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                      <span class="min-w-0 md-inline" set:html={learning} />
+                    </li>
+                  ))
+                }
+              </ul>
+            </section>
+          </div>
 
-    {level.scenario ? (
-      <section aria-labelledby="scenario-heading" class="mt-10">
-        <h2 id="scenario-heading" class="text-lg font-semibold text-foreground">Scenario</h2>
-        <div class="mt-3 text-dim md-content" set:html={level.scenario} />
-      </section>
-    ) : null}
+          {/* Audience */}
+          {
+            level.audience && (
+              <CollapsibleSection id="audience" title="Best Suited For" headingLevel={2}>
+                <InlineProse html={level.audience} class="text-sm text-dim leading-relaxed" />
+              </CollapsibleSection>
+            )
+          }
 
-    {level.objective?.length ? (
-      <section aria-labelledby="objective-heading" class="mt-10">
-        <h2 id="objective-heading" class="text-lg font-semibold text-foreground">Objective</h2>
-        <ul class="mt-3 list-disc pl-6 text-dim">
-          {level.objective.map((o) => <li class="mt-1 md-inline" set:html={o} />)}
-        </ul>
-      </section>
-    ) : null}
+          {/* The Story */}
+          {
+            backstory && backstory.length > 0 && (
+              <CollapsibleSection id="backstory" title="The Story" headingLevel={2}>
+                <div class="space-y-3">
+                  {backstory.map((para) => (
+                    <InlineProse html={para} class="text-sm text-dim leading-relaxed" />
+                  ))}
+                </div>
+              </CollapsibleSection>
+            )
+          }
 
-    {level.toolbox?.length ? (
-      <section aria-labelledby="toolbox-heading" class="mt-10">
-        <h2 id="toolbox-heading" class="text-lg font-semibold text-foreground">Toolbox</h2>
-        <ul class="mt-3 grid gap-3 sm:grid-cols-2">
-          {level.toolbox.map((tool) => (
-            <li class="rounded-lg border border-border p-3">
-              <p class="font-medium text-foreground">
-                {tool.url ? (
-                  <a class="docs-ext-link" href={tool.url} target="_blank" rel="noopener noreferrer">{tool.name}</a>
-                ) : (
-                  tool.name
+          {/* Architecture */}
+          {
+            hasArchitecture && (
+              <CollapsibleSection id="architecture" title="Architecture" headingLevel={2}>
+                <div class="space-y-4">
+                  {diagramSrc ? (
+                    <img
+                      src={diagramSrc}
+                      alt={diagramAlt ?? "Architecture diagram"}
+                      loading="lazy"
+                      decoding="async"
+                      width={1200}
+                      height={560}
+                      class="w-full h-auto max-h-[560px] object-contain block rounded-lg"
+                    />
+                  ) : architectureAscii ? (
+                    <pre
+                      tabindex="0"
+                      aria-label="Architecture diagram"
+                      class="overflow-x-auto rounded-lg border border-border bg-background/60 px-4 py-3 font-mono text-xs text-foreground leading-relaxed whitespace-pre">{architectureAscii}</pre>
+                  ) : null}
+                  {architecture && architecture.length > 0 && (
+                    <div class="font-sans md-content" set:html={architecture.join("\n\n")} />
+                  )}
+                </div>
+              </CollapsibleSection>
+            )
+          }
+
+          {/* CTA card */}
+          <section aria-labelledby="cta-start-heading" class="mb-6 rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-6 lg:items-center">
+              <div>
+                <h2 id="cta-start-heading" class="text-sm font-semibold text-foreground mb-1">Ready to start?</h2>
+                <p class="text-xs text-dim">
+                  Launch in a preconfigured <abbr data-title={DEVCONTAINER_EXPANSION} aria-describedby="abbr-devcontainer-cta" tabindex="0">devcontainer</abbr><span id="abbr-devcontainer-cta" class="sr-only">{DEVCONTAINER_EXPANSION}</span>
+                </p>
+              </div>
+              <div class="mt-4 lg:mt-0 flex flex-col lg:items-end">
+                <CodespacesButton href={level.codespacesUrl} />
+              </div>
+            </div>
+          </section>
+
+          {/* Walkthrough (steps rendered expanded; no per-step toggle) */}
+          {
+            walkthroughSteps.length > 0 && (
+              <CollapsibleSection id="walkthrough" title="Walkthrough" headingLevel={2}>
+                <ol class="space-y-3">
+                  {walkthroughSteps.map((step, i) => (
+                    <li class="rounded-lg border border-border bg-background/40">
+                      <div class="flex w-full items-start gap-4 p-5 text-left">
+                        <span
+                          class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold"
+                          aria-hidden="true"
+                        >
+                          {i + 1}
+                        </span>
+                        <span class="min-w-0 flex-1 text-sm font-semibold text-foreground">
+                          {step.title ? <span class="md-inline" set:html={stripLinks(step.title)} /> : `Step ${i + 1}`}
+                        </span>
+                      </div>
+                      <div id={`walkthrough-step-${i}`} class="grid grid-cols-[1.25rem_1fr] gap-4 px-5 pb-5">
+                        <div aria-hidden="true" />
+                        <div class="min-w-0 text-sm text-dim leading-relaxed">
+                          <div class="font-sans md-content" set:html={step.content} />
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </CollapsibleSection>
+            )
+          }
+
+          {/* Completion section */}
+          <section id="completion" class="mb-6 scroll-mt-28 rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
+            <h2 class="font-sans text-sm font-semibold tracking-wide text-primary mb-3">Complete Your Challenge</h2>
+            <ul role="list" class="space-y-3">
+              <li class="flex items-start gap-2.5 text-sm text-dim leading-relaxed">
+                <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true"></span>
+                <span>
+                  When you push from Codespaces, GitHub forks the repository to your account automatically. If you are
+                  working locally, fork the repository on GitHub before pushing.
+                </span>
+              </li>
+              <li class="flex items-start gap-2.5 text-sm text-dim leading-relaxed">
+                <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true"></span>
+                {
+                  verification ? (
+                    <span>
+                      Verify your solution:
+                      <pre
+                        tabindex="0"
+                        aria-label="Verification command (scroll left or right to see the full command)"
+                        class="mt-2 overflow-x-auto rounded-lg border border-border bg-background/60 px-4 py-3 font-mono text-sm text-foreground"><code>{verification.command}</code></pre>
+                      <span class="mt-2 block text-faint">
+                        If it passes, it generates a Certificate of Completion you can paste into the discussion.
+                      </span>
+                    </span>
+                  ) : (
+                    <span>Commit and push your changes, then trigger the verification workflow on GitHub Actions.</span>
+                  )
+                }
+              </li>
+              <li class="flex items-start gap-2.5 text-sm text-dim leading-relaxed">
+                <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true"></span>
+                <span>
+                  Share your solutions in the{" "}
+                  <a
+                    href={discussionHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-describedby="new-tab-hint"
+                    class="docs-ext-link font-medium"
+                  >
+                    challenge thread <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                  </a>{" "}
+                  on {COMMUNITY_DISPLAY_NAME}.
+                </span>
+              </li>
+            </ul>
+            <p class="mt-4 pt-4 border-t border-border text-xs text-faint">
+              Completed the challenge?{" "}
+              <a
+                href={linkedinShareUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-describedby="new-tab-hint"
+                class="docs-ext-link text-xs"
+              >
+                Share your achievement on LinkedIn
+                <Icon name="lucide:external-link" width={11} height={11} aria-hidden="true" />
+              </a>
+            </p>
+          </section>
+
+          {/* Toolbox + Helpful Documentation side-by-side */}
+          {
+            ((toolbox && toolbox.length > 0) || (helpfulLinks && helpfulLinks.length > 0)) && (
+              <div class:list={["grid gap-5 mb-6", toolbox && toolbox.length > 0 && helpfulLinks && helpfulLinks.length > 0 && "sm:grid-cols-2"]}>
+                {toolbox && toolbox.length > 0 && (
+                  <section id="toolbox" class="scroll-mt-28 rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
+                    <h2 class="font-sans text-sm font-semibold tracking-wide text-primary mb-3">Toolbox</h2>
+                    <ul role="list" class="space-y-2">
+                      {toolbox.map((tool) => (
+                        <li class="flex items-start gap-2.5 text-sm text-dim leading-relaxed">
+                          <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                          <span>
+                            {tool.url ? (
+                              <a
+                                href={tool.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-describedby="new-tab-hint"
+                                class="docs-ext-link font-medium"
+                              >
+                                {tool.name}
+                                <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                              </a>
+                            ) : (
+                              <span class="font-medium text-foreground">{tool.name}</span>
+                            )}
+                            {tool.description && (
+                              <>
+                                {" "}- <span class="md-inline" set:html={tool.description} />
+                              </>
+                            )}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
                 )}
-              </p>
-              <p class="mt-1 text-sm text-dim md-inline" set:html={tool.description} />
-            </li>
-          ))}
-        </ul>
-      </section>
-    ) : null}
 
-    {level.howToPlay?.length ? (
-      <section aria-labelledby="walkthrough-heading" class="mt-10">
-        <h2 id="walkthrough-heading" class="text-lg font-semibold text-foreground">Walkthrough</h2>
-        <ol class="mt-4 space-y-6">
-          {level.howToPlay.map((step, i) => (
-            <li>
-              <h3 class="font-semibold text-foreground">
-                <span class="text-faint">{i + 1}. </span><span class="md-inline" set:html={step.title} />
-              </h3>
-              <div class="mt-2 text-dim md-content" set:html={step.content} />
-            </li>
-          ))}
-        </ol>
-      </section>
-    ) : null}
+                {helpfulLinks && helpfulLinks.length > 0 && (
+                  <section aria-labelledby="helpful-links-heading" class="rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
+                    <h2 id="helpful-links-heading" class="font-sans text-sm font-semibold tracking-wide text-primary mb-3">
+                      Helpful Documentation
+                    </h2>
+                    <ul role="list" class="space-y-2">
+                      {helpfulLinks.map((link) => (
+                        <li class="flex items-start gap-2.5 text-sm text-dim leading-relaxed">
+                          <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                          <span>
+                            <a
+                              href={link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-describedby="new-tab-hint"
+                              class="docs-ext-link font-medium"
+                            >
+                              {link.title}
+                              <Icon name="lucide:external-link" width={11} height={11} aria-hidden="true" />
+                            </a>
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+              </div>
+            )
+          }
+          <ChallengeShareLinks url={levelUrl} levelName={level.name} />
+        </div>
 
-    {level.verification ? (
-      <section aria-labelledby="verify-heading" class="mt-10">
-        <h2 id="verify-heading" class="text-lg font-semibold text-foreground">Verify</h2>
-        <p class="mt-2 text-dim">{level.verification.description}</p>
-        <pre tabindex="0" aria-label="Verification command" class="mt-2 overflow-x-auto rounded bg-black/30 p-3 text-sm"><code>{level.verification.command}</code></pre>
-      </section>
-    ) : null}
+        {/* Sidebar */}
+        <aside aria-label="Challenge resources" class="mt-10 lg:mt-0 space-y-4 lg:sticky lg:top-28 lg:self-start">
+          {
+            adventure.rewards && !rewardsBelowFold && (
+              <RewardsCard rewards={adventure.rewards} compact levelDeadline={level.deadline} deadlinePast={rewardsBelowFold} />
+            )
+          }
 
-    {level.helpfulLinks?.length ? (
-      <section aria-labelledby="links-heading" class="mt-10">
-        <h2 id="links-heading" class="text-lg font-semibold text-foreground">Further Reading</h2>
-        <ul class="mt-3 list-disc pl-6">
-          {level.helpfulLinks.map((link) => (
-            <li class="mt-1">
-              <a class="docs-ext-link" href={link.url} target="_blank" rel="noopener noreferrer">{link.title}</a>
-            </li>
-          ))}
-        </ul>
-      </section>
-    ) : null}
+          {/* CTA panel - hidden on mobile where inline CTA is shown */}
+          <div class="hidden lg:block rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
+            <CodespacesButton href={level.codespacesUrl} fullWidth />
+          </div>
 
-    {posts.length ? (
-      <section aria-labelledby="discussion-heading" class="mt-10">
-        <h2 id="discussion-heading" class="text-lg font-semibold text-foreground">
-          Community Discussion
-          {discussion?.totalReplies ? <span class="text-sm font-normal text-faint"> ({discussion.totalReplies} replies)</span> : null}
-        </h2>
-        <ul class="mt-4 space-y-3">
-          {posts.map((post) => (
-            <li class="rounded-lg border border-border p-3">
-              <p class="text-sm font-medium text-foreground">
-                {post.username}
-                {post.challengeSolved ? <span class="ml-2 text-xs text-faint">solved</span> : null}
-              </p>
-              <p class="mt-1 text-sm text-dim line-clamp-3">{stripHtml(post.cooked)}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
-    ) : null}
+          <CommunitySidebar
+            levelId={level.id}
+            discussionUrl={level.discussionUrl}
+            contributor={adventure.contributor}
+            discussion={discussion}
+            leaderboardRows={leaderboard?.rows ?? []}
+          />
 
-    {topRows.length ? (
-      <section aria-labelledby="leaderboard-heading" class="mt-10">
-        <h2 id="leaderboard-heading" class="text-lg font-semibold text-foreground">Leaderboard</h2>
-        <ol class="mt-3 space-y-1">
-          {topRows.map((row) => (
-            <li class="flex items-center justify-between text-sm text-dim">
-              <span><span class="text-faint">#{row.rank}</span> {row.username}</span>
-              <span class="text-faint">{row.points} pts</span>
-            </li>
-          ))}
-        </ol>
-      </section>
-    ) : null}
+          <OtherLevelsCard adventure={adventure} currentLevelId={level.id} />
+
+          {
+            adventure.rewards && rewardsBelowFold && (
+              <RewardsCard rewards={adventure.rewards} compact levelDeadline={level.deadline} deadlinePast={rewardsBelowFold} />
+            )
+          }
+        </aside>
+      </div>
+    </div>
   </main>
 </Layout>

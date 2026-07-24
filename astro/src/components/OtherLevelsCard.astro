@@ -1,0 +1,77 @@
+---
+// Ported from src/components/OtherLevelsCard.tsx.
+import { Icon } from "astro-icon/components";
+import { difficultyStyle } from "@/lib/difficulty";
+
+type LevelRef = { id: string; name: string; difficulty: string };
+type UpcomingRef = { name: string; difficulty: string };
+
+interface Props {
+  adventure: {
+    slug: string;
+    title: string;
+    levels: LevelRef[];
+    upcomingLevels?: UpcomingRef[];
+  };
+  currentLevelId: string;
+}
+const { adventure, currentLevelId } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const otherLevels = adventure.levels.filter((l) => l.id !== currentLevelId);
+const upcoming = adventure.upcomingLevels ?? [];
+---
+
+{
+  (otherLevels.length > 0 || upcoming.length > 0) && (
+    <div class="rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
+      <h2 class="font-sans text-base font-semibold text-foreground mb-4">More Levels</h2>
+
+      <ul role="list" class="space-y-2">
+        {otherLevels.map((level) => (
+          <li>
+            <a
+              href={`${base}adventures/${adventure.slug}/levels/${level.id}/`}
+              aria-label={`${level.name} – ${level.difficulty} level of ${adventure.title}`}
+              class="group inline-flex w-full items-center gap-2 rounded-sm border px-2.5 py-1.5 text-xs no-underline hover:brightness-95 transition-[filter] focus-ring-tight"
+              style={difficultyStyle(level.difficulty)}
+            >
+              <span class="shrink-0 uppercase font-medium">{level.difficulty}</span>
+              <span aria-hidden="true" class="inline-block w-px h-3 bg-current opacity-40" />
+              <span class="flex-1 truncate">{level.name}</span>
+              <Icon
+                name="lucide:arrow-right"
+                width={11}
+                height={11}
+                class="shrink-0 opacity-50 transition-opacity group-hover:opacity-100"
+                aria-hidden="true"
+              />
+            </a>
+          </li>
+        ))}
+
+        {upcoming.map((level) => {
+          const hasDistinctName = level.name.toLowerCase() !== level.difficulty.toLowerCase();
+          return (
+            <li>
+              <span
+                class="inline-flex w-full items-center gap-2 rounded-sm border border-dashed px-2.5 py-1.5 text-xs"
+                style={difficultyStyle(level.difficulty)}
+              >
+                <span class="shrink-0 uppercase font-medium">{level.difficulty}</span>
+                {hasDistinctName ? (
+                  <>
+                    <span aria-hidden="true" class="inline-block w-px h-3 bg-current opacity-40" />
+                    <span class="flex-1 truncate">{level.name}</span>
+                  </>
+                ) : (
+                  <span class="flex-1" />
+                )}
+                <span class="shrink-0 text-xs uppercase tracking-widest">Soon</span>
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  )
+}

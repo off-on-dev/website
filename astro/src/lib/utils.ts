@@ -20,3 +20,12 @@ export function isDeadlinePast(deadline?: string): boolean {
   const d = new Date(deadline);
   return !isNaN(d.getTime()) && d < new Date();
 }
+
+/** Escapes a string for safe interpolation into an HTML attribute value. */
+export function escapeHtmlAttr(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
