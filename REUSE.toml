@@ -118,3 +118,13 @@ SPDX-FileCopyrightText = [
   "Katharina Sick (https://ksick.dev/)",
 ]
 SPDX-License-Identifier = "CC-BY-4.0"
+
+# --- Scraped community data: CC0-1.0 (public domain dedication) ---
+# Usernames, avatar URLs, and post counts scraped from a Discourse instance.
+# Annotated CC0-1.0 (public domain dedication) as the most accurate tag for
+# factual data that does not qualify as a creative work under copyright law.
+# Placed last so it overrides the MIT **/*.json glob for this file.
+[[annotations]]
+path = ["src/data/community-leaders.json"]
+SPDX-FileCopyrightText = "OffOn.dev contributors"
+SPDX-License-Identifier = "CC0-1.0"
