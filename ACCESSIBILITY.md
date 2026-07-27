@@ -30,8 +30,9 @@ The following WCAG 2.2 Level AAA criteria are actively targeted on this site:
 
 - Skip-to-content link as the first focusable element on every page.
 - Visible focus rings on all interactive elements, in both light and dark mode.
-- Semantic landmarks: one `<main id="main-content">`, plus `<nav>`, `<header>`, `<footer>`, `<section>`, and `<article>` where appropriate.
-- One `<h1>` per page with no skipped heading levels.
+- Semantic landmarks: one `<main id="main-content">`, plus `<nav>`, `<header>`, `<footer>`, `<section>`, and `<article>` where appropriate. The site-wide `<nav aria-label="Main">` in `Navbar.astro` is wrapped in `<header>` so it provides the banner landmark. Never place the primary nav outside a `<header>` element.
+- Heading rules: one `<h1>` per page with no skipped heading levels. Never place a heading element (`<h1>`-`<h6>`) inside a `<summary>` element (which has `role="button"`); the ARIA spec forbids heading semantics in a button role. Use a screen-reader-only heading before `<details>` for document outline, and a `<span>` inside `<summary>` for the visible label.
+- One `<h1>` per page with no skipped heading levels (see heading rules above).
 - Meaningful `alt` text on informational images, empty `alt=""` paired with `aria-hidden="true"` on decorative ones.
 - Screen reader announcement of links that open in a new tab.
 - Color contrast verified at 7:1 for body text and 4.5:1 for large text (both WCAG AAA), and 3:1 for UI controls, in both modes.

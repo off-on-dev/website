@@ -164,7 +164,34 @@ function resolveCommunityPath(url: string): string {
   return `${COMMUNITY_URL}${path}`;
 }
 
-async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Record<string, unknown>> {
+interface RenderedLevel {
+  id: string;
+  name: string;
+  difficulty: "Beginner" | "Intermediate" | "Expert";
+  topics: string[];
+  learnings: string[];
+  codespacesUrl: string;
+  discussionUrl: string;
+  deadline?: string | null;
+  hook?: string;
+  intro?: string[];
+  backstory?: string[];
+  objective: string[];
+  audience?: string;
+  estimatedTime?: string;
+  scenario?: string;
+  architecture?: string[];
+  architectureDiagram?: string;
+  diagramAlt?: string;
+  architectureAscii?: string;
+  toolbox: { name: string; description: string; url?: string }[];
+  howToPlay: { title: string; content: string }[];
+  helpfulLinks?: { title: string; url: string; description?: string }[];
+  verification: { command: string; description: string };
+  metaDescription: string;
+}
+
+async function renderLevel(level: z.infer<typeof levelSchema>): Promise<RenderedLevel> {
   const difficulty = level.difficulty ?? LEVEL_DIFFICULTY_BY_EMOJI[level.emoji as string];
   const learnings = level.learnings ?? level.what_you_learn ?? [];
   const intro = level.intro ?? (level.summary ? [level.summary] : undefined);
@@ -277,6 +304,11 @@ function adventuresLoader(): Loader {
         // after editing the pipeline to force a re-render.
         if (store.get(entry.name)?.digest === digest) continue; // unchanged: skip re-render
         const data = await parseData({ id: entry.name, data: parseYaml(raw) });
+        if (data.slug !== entry.name) {
+          throw new Error(
+            `Adventure "${entry.name}": YAML slug "${data.slug}" must match the directory name. Rename one or the other.`,
+          );
+        }
         store.set({ id: entry.name, data, digest });
         watcher?.add(yamlPath);
       }

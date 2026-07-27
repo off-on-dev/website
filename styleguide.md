@@ -1898,7 +1898,9 @@ Used on `<span>` elements via the `SectionLabel` component in: `CommunitySection
 
 ### `.docs-ext-link`
 
-The standard class for all inline prose links across the site. Handles both modes correctly without any additional Tailwind utilities for color or hover state.
+The standard class for **external links** (opening in a new tab) and external-style inline prose links. Handles both modes correctly without any additional Tailwind utilities for color or hover state.
+
+> **Do not use on internal links.** Internal `<a href="...">` links within the site should use plain Tailwind utilities (`text-primary hover:underline underline-offset-2 font-medium focus-ring-tight rounded-sm`) rather than `docs-ext-link`. The `docs-ext-link` class is specifically for links that open externally or in a new tab.
 
 **Dark mode:** foreground text with amber (`--primary`) underline. Hover shifts text and underline to full `hsl(var(--primary))` (`#ffc034`).
 **Light mode:** near-black foreground text with `currentColor` underline. Hover shifts text and underline to `--link-hover-light` (`hsl(41 100% 21%)` ≈ `#6b4900`), dark amber, same hue as primary, ~7.5:1 contrast on bg-card. Passes WCAG AAA.

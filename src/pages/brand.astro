@@ -29,9 +29,6 @@ const TOC_ITEMS: TocItem[] = [
   { id: "accessibility", label: "Accessibility" },
 ];
 
-// Static default: the React page starts with "mission" active, then a scroll-spy
-// IntersectionObserver updates it. The scroll-spy is not ported (no JS here).
-const activeSection = "mission";
 
 const DARK_COLORS: ColorSwatch[] = [
   { name: "Amber Primary", token: "--primary", hex: "#ffc034", hsl: "41 100% 60%", textClass: "text-[#0a0a0a]", usage: "Fills, borders, focus rings, accent highlights. ~12:1 on dark bg." },
@@ -301,10 +298,10 @@ hsl(var(--foreground))`;
                 <code class="font-mono text-xs bg-[hsl(var(--surface))] px-1.5 py-0.5 rounded border border-border">src/index.css</code>. Reference tokens, not hardcoded hex values.
               </p>
 
-              {/* Side-by-side dark / light panels — each panel has its own correct background */}
+              {/* Side-by-side dark / light panels; each panel has its own correct background */}
               <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
 
-                {/* Dark mode panel — hardcoded dark surface tokens, always renders dark */}
+                {/* Dark mode panel: hardcoded dark surface tokens, always renders dark */}
                 <div class="rounded-xl overflow-hidden border" style="border-color:#2e4268">
                   <div class="px-5 py-3 border-b" style="background-color:#151519;border-color:#2e4268">
                     <span class="font-sans text-xs font-semibold uppercase tracking-widest" style="color:#8a8680">Dark Mode</span>
@@ -325,7 +322,7 @@ hsl(var(--foreground))`;
                   </div>
                 </div>
 
-                {/* Light mode panel — hardcoded light surface tokens, always renders light */}
+                {/* Light mode panel: hardcoded light surface tokens, always renders light */}
                 <div class="rounded-xl overflow-hidden border" style="border-color:#d8dbe2">
                   <div class="px-5 py-3 border-b" style="background-color:#f4f5f7;border-color:#d8dbe2">
                     <span class="font-sans text-xs font-semibold uppercase tracking-widest" style="color:#6b6760">Light Mode</span>
@@ -696,7 +693,7 @@ hsl(var(--foreground))`;
 
           </div>
 
-          {/* Sticky right TOC — visible to screen readers, not aria-hidden */}
+          {/* Sticky right TOC; visible to screen readers, not aria-hidden */}
           <aside aria-label="Page sections" class="hidden lg:block">
             <div class="sticky top-24 pt-16">
               <nav aria-label="On this page">
@@ -708,13 +705,7 @@ hsl(var(--foreground))`;
                     <li>
                       <a
                         href={`#${id}`}
-                        aria-current={activeSection === id ? "location" : undefined}
-                        class:list={[
-                          "block font-sans text-sm py-1.5 pl-3 border-l-2 transition-colors rounded-r-sm cursor-pointer focus-ring-tight",
-                          activeSection === id
-                            ? "border-primary text-foreground dark:text-primary font-medium"
-                            : "border-transparent text-dim hover:text-foreground hover:border-border",
-                        ]}
+                        class="block font-sans text-sm py-1.5 pl-3 border-l-2 border-transparent text-dim hover:text-foreground hover:border-border transition-colors rounded-r-sm cursor-pointer focus-ring-tight"
                       >
                         {label}
                       </a>

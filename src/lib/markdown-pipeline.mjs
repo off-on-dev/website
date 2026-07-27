@@ -27,7 +27,9 @@ const sanitizeSchema = {
 };
 
 // Unique id counter for abbr expansion spans, shared across the whole render
-// run. Given stable adventure/field iteration order, ids are deterministic.
+// run. IDs are deterministic only because the loader reads directories
+// synchronously and sequentially (readdirSync). Introducing concurrent async
+// rendering would make IDs non-deterministic between incremental and clean builds.
 let abbrExpansionCounter = 0;
 
 /** Reset the abbr counter so a run produces deterministic ids independent of
@@ -99,7 +101,10 @@ function annotateExternalLinks(html) {
   return html.replace(
     /<a href="(https?:\/\/[^"]+)"([^>]*)>([\s\S]*?)<\/a>/gi,
     (_, href, restAttrs, content) => {
-      if (isNonPublicUrl(href)) return content;
+      if (isNonPublicUrl(href)) {
+        console.warn(`[markdown-pipeline] Stripped non-public href: "${href}" — link text preserved.`);
+        return content;
+      }
       const attrs = restAttrs.includes("target=")
         ? restAttrs
         : ` target="_blank" rel="noopener noreferrer"${restAttrs}`;

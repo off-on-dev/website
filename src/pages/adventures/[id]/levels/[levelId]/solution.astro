@@ -41,7 +41,9 @@ const backstory = level.backstory?.[0] ?? adventure.backstory?.[0];
 const title = unlocked
   ? `${solution.title} - ${adventure.title} - ${BRAND_NAME}`
   : `${level.name} Solution - ${adventure.title} - ${BRAND_NAME}`;
-const description = `Step-by-step solution walkthrough for the ${level.name} challenge in ${adventure.title}.`;
+const description = unlocked
+  ? `Step-by-step solution walkthrough for the ${level.name} challenge in ${adventure.title}.`
+  : `Solution for the ${level.name} challenge in ${adventure.title}. Available after the challenge deadline.`;
 ---
 
 <Layout
@@ -185,6 +187,7 @@ const description = `Step-by-step solution walkthrough for the ${level.name} cha
                 )}
 
                 {/* Step cards */}
+                {!solution.context && <h2 class="sr-only">Solution Steps</h2>}
                 <ol class="mt-3 space-y-3" aria-label="Solution steps">
                   {solution.steps.map((step, index) => (
                     <li>

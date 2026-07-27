@@ -113,6 +113,7 @@ const MAX_TABS = 200;
 
 async function collectFocusViolations(page: Page): Promise<string[]> {
   let firstKey: string | null = null;
+  const seenKeys = new Set<string>();
   const violations: string[] = [];
   for (let i = 0; i < MAX_TABS; i++) {
     await page.keyboard.press("Tab");
@@ -132,8 +133,15 @@ async function collectFocusViolations(page: Page): Promise<string[]> {
       return { key, hasFocusRing: hasBoxShadow || hasOutline, html: el.outerHTML.slice(0, 120) };
     });
     if (!result) break;
-    if (firstKey === null) firstKey = result.key;
-    else if (result.key === firstKey) break;
+    if (firstKey === null) {
+      firstKey = result.key;
+    } else if (result.key === firstKey && seenKeys.size > 1) {
+      // Full cycle: we've seen other elements between this and the start.
+      // Requiring seenKeys.size > 1 prevents identical adjacent buttons (same key)
+      // from triggering an early exit before the real cycle completes.
+      break;
+    }
+    seenKeys.add(result.key);
     if (!result.hasFocusRing) violations.push(result.html);
   }
   return violations;

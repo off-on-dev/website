@@ -38,6 +38,7 @@ function dismiss(): void {
 </script>
 
 <template>
+  <div aria-live="polite" aria-atomic="true">
   <div
     v-if="show"
     class="-mt-2 mb-8 flex items-center justify-between gap-3 rounded-lg bg-primary px-4 py-3 text-sm"
@@ -62,5 +63,6 @@ function dismiss(): void {
     >
       <X :size="14" aria-hidden="true" />
     </button>
+  </div>
   </div>
 </template>

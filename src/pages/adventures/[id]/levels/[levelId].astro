@@ -48,7 +48,7 @@ const deadline = level.deadline ?? adventure.rewards?.deadline;
 const rewardsBelowFold = isDeadlinePast(deadline);
 
 // Solution walkthrough CTA: shown once the solution is unlocked (no deadline, or
-// deadline passed — same predicate solution.astro gates on) and a solution has
+// deadline passed, same predicate solution.astro gates on) and a solution has
 // been authored for this level. Note: distinct from rewardsBelowFold, which is
 // false when no deadline is set.
 const solutionUnlocked = !deadline || isDeadlinePast(deadline);
@@ -235,7 +235,7 @@ const walkthroughSteps = howToPlay && howToPlay.length > 0 ? [getStartedStep, ..
             </div>
           </section>
 
-          {/* Walkthrough — each step is an individually collapsible <details>
+          {/* Walkthrough: each step is an individually collapsible <details>
               (native disclosure, no JS), matching the React per-step toggle. */}
           {
             walkthroughSteps.length > 0 && (
@@ -338,7 +338,7 @@ const walkthroughSteps = howToPlay && howToPlay.length > 0 ? [getStartedStep, ..
             </p>
           </section>
 
-          {/* Solution walkthrough link — after the deadline passes and only when a solution is authored */}
+          {/* Solution walkthrough link: shown after the deadline passes and only when a solution is authored */}
           {
             showSolutionCta && (
               <section class="mb-6 rounded-xl border border-border bg-[hsl(var(--surface))] p-5">

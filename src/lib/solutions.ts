@@ -23,8 +23,13 @@ const PATH_RE = /solutions\/([^/]+)\/([^/]+)\.ts$/;
 export function getSolutions(): SolutionEntry[] {
   return Object.entries(modules).map(([path, mod]) => {
     const match = path.match(PATH_RE);
-    if (!match || !mod.solution) {
-      throw new Error(`Unexpected solution module shape or path: ${path}`);
+    if (!match) {
+      throw new Error(`Solution module path did not match expected pattern: ${path}`);
+    }
+    if (!mod.solution) {
+      throw new Error(
+        `Solution module at "${path}" must export a named 'solution' constant — found none.`,
+      );
     }
     return { adventureId: match[1], levelId: match[2], solution: mod.solution };
   });

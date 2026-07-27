@@ -12,19 +12,17 @@ import { BRAND_NAME } from "@/lib/site";
 import { getChallengeData, tagToSlug, isAdventureLive, sortAdventuresByMonthDesc } from "@/lib/challenges";
 
 export async function getStaticPaths() {
-  const adventures = (await getCollection("adventures")).map((a) => a.data);
-  const { tags } = getChallengeData(adventures);
+  const adventures = sortAdventuresByMonthDesc((await getCollection("adventures")).map((a) => a.data));
+  const { entries, tags } = getChallengeData(adventures);
   return [
-    { params: { tag: undefined }, props: { initialTag: null } },
-    ...tags.map((tag) => ({ params: { tag: tagToSlug(tag) }, props: { initialTag: tag } })),
+    { params: { tag: undefined }, props: { initialTag: null, adventures, entries, tags } },
+    ...tags.map((tag) => ({ params: { tag: tagToSlug(tag) }, props: { initialTag: tag, adventures, entries, tags } })),
   ];
 }
 
-const { initialTag } = Astro.props;
+const { initialTag, adventures, entries, tags } = Astro.props;
 const base = import.meta.env.BASE_URL;
 
-const adventures = sortAdventuresByMonthDesc((await getCollection("adventures")).map((a) => a.data));
-const { entries, tags } = getChallengeData(adventures);
 const adventureCount = adventures.length;
 
 // Starter nudge target: first live adventure and its beginner level.
@@ -42,7 +40,7 @@ const path = initialTag ? `/challenges/${tagToSlug(initialTag)}/` : "/challenges
   <main id="main-content" tabindex="-1">
     <PageHero
       eyebrow="Challenges"
-      title="Open Source Challenges"
+      title={initialTag ? `${initialTag} Challenges` : "Open Source Challenges"}
       description="Each adventure focuses on one open source technology, with challenges at different difficulty levels. Pick your adventure, work through real-world scenarios hands-on, and share what you learn with the community."
     />
 

@@ -4,6 +4,7 @@
 // Requires a production build in dist/ (webServer runs `astro preview`).
 
 import { test, expect } from "@playwright/test";
+import { solution as beginnerSolution } from "@/data/solutions/echoes-lost-in-orbit/beginner";
 
 const SITE_URL = "https://offon.dev";
 
@@ -14,7 +15,7 @@ const ROUTES: Record<string, string> = {
   "/adventures/echoes-lost-in-orbit/": "Echoes Lost in Orbit - OffOn Adventures",
   "/adventures/echoes-lost-in-orbit/levels/beginner/": "Broken Echoes - Echoes Lost in Orbit - OffOn",
   "/adventures/echoes-lost-in-orbit/levels/beginner/solution/":
-    "Beginner Solution: Broken Echoes - Echoes Lost in Orbit - OffOn",
+    `${beginnerSolution.title} - Echoes Lost in Orbit - OffOn`,
   "/adventures/dead-reckoning/levels/expert/": "The Chronometer - Dead Reckoning - OffOn",
   "/challenges/": "Challenges - OffOn",
   "/challenges/opentelemetry/": "OpenTelemetry Challenges - OffOn",

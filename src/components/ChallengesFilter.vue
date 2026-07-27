@@ -207,7 +207,6 @@ function navigatePanel(e: KeyboardEvent): void {
             :class="activeDifficulty !== null ? 'pill-active' : 'pill-inactive'"
             :style="activeDifficulty !== null && activeDifficulty in DIFFICULTY_VAR ? difficultyPillStyle(activeDifficulty, true) : allLevelsPillStyle(true)"
             :aria-expanded="difficultyOpen"
-            aria-controls="difficulty-group"
             @click="difficultyOpen = !difficultyOpen; tagsOpen = false"
           >
             {{ activeDifficulty ?? "All Levels" }}
@@ -257,7 +256,6 @@ function navigatePanel(e: KeyboardEvent): void {
             :class="activeTags.length > 0 ? 'pill-active' : 'pill-inactive'"
             :style="allToolsPillStyle(activeTags.length === 0)"
             :aria-expanded="tagsOpen"
-            aria-controls="tags-group"
             @click="tagsOpen = !tagsOpen; difficultyOpen = false"
           >
             {{ activeTags.length === 0 ? "All Tools" : `${activeTags.length} tool${activeTags.length !== 1 ? "s" : ""} selected` }}

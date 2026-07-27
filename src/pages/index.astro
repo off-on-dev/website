@@ -57,7 +57,7 @@ const starterLevel = starter?.levels.find((l) => l.difficulty === "Beginner");
           tags={tags}
           base={base}
           initialTag={null}
-          adventureCount={adventureCount}
+          adventureCount={visibleAdventures.length}
           embedded
           seeAllHref={hasMore ? `${base}challenges/` : undefined}
           client:visible

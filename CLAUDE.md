@@ -122,6 +122,7 @@ npm run preview      # Serve the built dist/ (astro preview)
 npm run sync         # astro sync — runs the Zod content schema; fails on invalid adventure YAML
 npm run test:e2e     # Playwright (a11y + smoke). Runs `astro preview` itself; no separate build needed
 npm run lint:reuse   # REUSE licence compliance (requires: pip install reuse)  [if present]
+rm -rf .astro        # Bust the content collection pipeline cache (after editing markdown-pipeline.mjs or adventure-derive.mjs)
 
 # Presentation templates (unchanged; run from repo root)
 node .claude/templates/generate-reveal-zip.mjs   # → public/downloads/offon-reveal-template.zip

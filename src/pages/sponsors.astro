@@ -1,8 +1,10 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
-import { COMMUNITY_URL, BRAND_NAME, CONTACT_EMAIL } from "@/lib/site";
+import { COMMUNITY_URL, BRAND_NAME, CONTACT_EMAIL, BRAND_SECONDARY_LINE_PARTS } from "@/lib/site";
 import { SPONSORS, SUPPORT_WAYS } from "@/data/sponsors";
+
+const BRAND_SECONDARY_LINE = BRAND_SECONDARY_LINE_PARTS.join(" ");
 
 const base = import.meta.env.BASE_URL;
 
@@ -280,7 +282,7 @@ const markerClass = "mt-0.5 shrink-0 text-foreground";
             Every spark starts with one person. Like Nyx, our firefly, together we brighten the whole open source ecosystem.
           </p>
           <p class="font-sans text-base font-medium text-background/90">
-            That's {BRAND_NAME}. always On. always Open. always Learning.
+            That's {BRAND_NAME}. {BRAND_SECONDARY_LINE}
           </p>
           <div class="flex gap-3 flex-wrap mt-2">
             <a

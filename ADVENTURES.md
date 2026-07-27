@@ -6,6 +6,8 @@ Adventures live in a separate repo ([open-source-challenges](https://github.com/
 
 Since the Astro migration there is **no code generation step**. Astro reads `adventure.yaml` directly through a Zod-validated content collection (`src/content.config.ts`) and renders the markdown prose to HTML at build time. Routes appear automatically via `getStaticPaths()`. The source of truth is the YAML; there are no `*.generated.ts` files.
 
+> **Slug constraint:** The `slug` field in `adventure.yaml` must exactly match the adventure directory name under `src/data/adventures/`. The content loader asserts this at build time. If they diverge, the build fails with a clear message. When renaming a directory, update the YAML `slug` field to match (or vice versa).
+
 ---
 
 ## How the Content Pipeline Works

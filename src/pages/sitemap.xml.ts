@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
 import { getChallengeData, tagToSlug } from "@/lib/challenges";
 import { getSolutions } from "@/lib/solutions";
+import { isDeadlinePast } from "@/lib/utils";
 import { SITE_URL } from "@/lib/site";
 
 // Generated at build time from the content collection + static routes. Replaces
@@ -29,9 +30,14 @@ export const GET: APIRoute = async () => {
     `/adventures/${a.slug}/`,
     ...a.levels.map((l) => `/adventures/${a.slug}/levels/${l.id}/`),
   ]);
-  const solutionPaths = getSolutions().map(
-    (s) => `/adventures/${s.adventureId}/levels/${s.levelId}/solution/`,
-  );
+  const solutionPaths = getSolutions()
+    .filter((s) => {
+      const adventure = adventures.find((a) => a.slug === s.adventureId);
+      const level = adventure?.levels.find((l) => l.id === s.levelId);
+      const deadline = level?.deadline ?? adventure?.rewards?.deadline;
+      return !deadline || isDeadlinePast(deadline);
+    })
+    .map((s) => `/adventures/${s.adventureId}/levels/${s.levelId}/solution/`);
   const tagPaths = tags.map((t) => `/challenges/${tagToSlug(t)}/`);
 
   const paths = [...staticPaths, ...adventurePaths, ...solutionPaths, ...tagPaths];

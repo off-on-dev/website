@@ -164,7 +164,7 @@ const fontPreloads = [
     {/* Abbreviation tooltips. Ported from the React useAbbrTooltips hook: replaces
         the CSS ::after tooltip with a position:fixed portal appended to <body>, so
         it escapes overflow-clipping ancestors (walkthrough cards, scroll containers)
-        and is clamped to the viewport right edge — fixing mobile overflow + cutoff.
+        and is clamped to the viewport right edge, fixing mobile overflow and cutoff.
         Tap forces focus (iOS), Escape dismisses. The CSS ::after is the no-JS
         fallback. Runs on astro:page-load; rebuilt after each View Transition. */}
     <script>

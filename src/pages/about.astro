@@ -8,6 +8,7 @@ import {
   BRAND_SECONDARY_LINE_PARTS,
 } from "@/lib/site";
 import { BOARD_MEMBERS, ADVENTURE_CONTRIBUTORS } from "@/data/team";
+import CommunityLeaders from "@/components/CommunityLeaders.astro";
 
 const base = import.meta.env.BASE_URL;
 
@@ -49,91 +50,6 @@ const VALUE_ITEMS = [
   },
 ];
 
-// Community Leaders sidebar data (mirrors src/data/community-leaders.json).
-// Refreshed hourly in the React app; embedded here as a build-time snapshot.
-const LEADER_SECTIONS = [
-  {
-    id: "top-contributors",
-    title: "Top Contributors",
-    users: [
-      { username: "KatharinaSick", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/KatharinaSick/40/9_2.png", count: 24 },
-      { username: "SinduriGuntupalli", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/SinduriGuntupalli/40/194_2.png", count: 16 },
-      { username: "adrianamvillela", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/adrianamvillela/40/46_2.png", count: 14 },
-      { username: "DavidHirsch", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/DavidHirsch/40/8_2.png", count: 14 },
-      { username: "theharithsa", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png", count: 4 },
-    ],
-  },
-  {
-    id: "challenge-grand-builders",
-    title: "Challenge Grand Builders",
-    users: [
-      { username: "KatharinaSick", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/KatharinaSick/40/9_2.png", count: 14 },
-    ],
-  },
-  {
-    id: "top-challenge-solvers",
-    title: "Top Challenge Solvers",
-    users: [
-      { username: "iw4p", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png", count: 9 },
-      { username: "theharithsa", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png", count: 9 },
-      { username: "gsigmund", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/gsigmund/40/99_2.png", count: 8 },
-      { username: "enri-kapaj", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/enri-kapaj/40/165_2.png", count: 6 },
-      { username: "justinrand", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/justinrand/40/140_2.png", count: 6 },
-      { username: "alvin", avatarUrl: "https://avatars.discourse-cdn.com/v4/letter/a/b5a626/40.png", count: 6 },
-    ],
-  },
-  {
-    id: "challenge-builders",
-    title: "Challenge Builders",
-    users: [
-      { username: "simon.schrottner", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/simon.schrottner/40/311_2.png", count: 3 },
-    ],
-  },
-  {
-    id: "most-liked",
-    title: "Most Liked",
-    users: [
-      { username: "KatharinaSick", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/KatharinaSick/40/9_2.png", count: 67 },
-      { username: "SinduriGuntupalli", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/SinduriGuntupalli/40/194_2.png", count: 31 },
-      { username: "theharithsa", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png", count: 28 },
-      { username: "adrianamvillela", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/adrianamvillela/40/46_2.png", count: 26 },
-      { username: "iw4p", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png", count: 17 },
-    ],
-  },
-  {
-    id: "most-replies",
-    title: "Most Replies",
-    users: [
-      { username: "KatharinaSick", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/KatharinaSick/40/9_2.png", count: 39 },
-      { username: "theharithsa", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png", count: 16 },
-      { username: "iw4p", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png", count: 11 },
-      { username: "enri-kapaj", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/enri-kapaj/40/165_2.png", count: 10 },
-      { username: "RoelofW", avatarUrl: "https://avatars.discourse-cdn.com/v4/letter/r/b5a626/40.png", count: 10 },
-    ],
-  },
-  {
-    id: "most-supportive",
-    title: "Most Supportive",
-    users: [
-      { username: "KatharinaSick", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/KatharinaSick/40/9_2.png", count: 104 },
-      { username: "SinduriGuntupalli", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/SinduriGuntupalli/40/194_2.png", count: 44 },
-      { username: "DavidHirsch", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/DavidHirsch/40/8_2.png", count: 44 },
-      { username: "theharithsa", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/40/297_2.png", count: 38 },
-      { username: "AgataWlodarczyk", avatarUrl: "https://community.offon.dev/user_avatar/community.offon.dev/AgataWlodarczyk/40/51_2.png", count: 20 },
-    ],
-  },
-];
-
-const SECTION_ICONS: Record<string, string> = {
-  "top-contributors": "lucide:trophy",
-  "top-challenge-solvers": "lucide:target",
-  "challenge-rockstars": "lucide:star",
-  "challenge-grand-builders": "lucide:building-2",
-  "challenge-builders": "lucide:wrench",
-  "most-liked": "lucide:heart",
-  "most-replies": "lucide:message-circle",
-  "most-supportive": "lucide:hand-heart",
-};
 ---
 
 <Layout
@@ -283,7 +199,7 @@ const SECTION_ICONS: Record<string, string> = {
                       {member.image ? (
                         <img
                           src={`${base}${member.image}`}
-                          alt={member.name}
+                          alt=""
                           width={AVATAR_SIZE}
                           height={AVATAR_SIZE}
                           loading="lazy"
@@ -325,44 +241,7 @@ const SECTION_ICONS: Record<string, string> = {
           {/* Community Leaders sidebar (lg+ only, sticky) */}
           <div class="hidden lg:block">
             <div class="sticky top-24">
-              <div class="rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
-                <h3 class="font-sans text-base font-semibold text-foreground mb-5">Community Leaders</h3>
-                <div class="space-y-5">
-                  {LEADER_SECTIONS.map((section) => (
-                    <div class="pb-5 border-b border-border last:border-b-0 last:pb-0">
-                      <div>
-                        <h4 class="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                          <span class="text-primary">
-                            <Icon name={SECTION_ICONS[section.id]} width={14} height={14} aria-hidden="true" />
-                          </span>
-                          {section.title}
-                        </h4>
-                        <ol class="space-y-2.5" aria-label={section.title}>
-                          {section.users.map((user, i) => (
-                            <li class="flex items-center gap-3">
-                              <span class="font-mono text-xs text-faint w-4 shrink-0 text-right" aria-hidden="true">{i + 1}</span>
-                              <img
-                                src={user.avatarUrl}
-                                alt=""
-                                aria-hidden="true"
-                                width={28}
-                                height={28}
-                                loading="lazy"
-                                decoding="async"
-                                class="h-7 w-7 rounded-full shrink-0 object-cover"
-                              />
-                              <span class="text-sm font-medium text-foreground min-w-0 flex-1">
-                                <span class="truncate">{user.username}</span>
-                              </span>
-                              <span class="text-xs font-mono text-dim tabular-nums shrink-0" aria-label={`${user.count} contributions`}>{user.count}</span>
-                            </li>
-                          ))}
-                        </ol>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <CommunityLeaders sections={["top-contributors", "challenge-grand-builders", "top-challenge-solvers", "challenge-builders", "most-liked", "most-replies", "most-supportive"]} />
             </div>
           </div>
         </div>
@@ -403,7 +282,7 @@ const SECTION_ICONS: Record<string, string> = {
                     {contributor.adventures.map(({ id, title }) => (
                       <li class="flex items-center gap-2 text-xs">
                         <span class="h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true"></span>
-                        <a href={`${base}adventures/${id}/`} class="docs-ext-link">
+                        <a href={`${base}adventures/${id}/`} class="text-primary hover:underline underline-offset-2 font-medium focus-ring-tight rounded-sm">
                           {title}
                         </a>
                       </li>

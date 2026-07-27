@@ -5,6 +5,7 @@
 import { Icon } from "astro-icon/components";
 import ContributorBadge from "@/components/ContributorBadge.astro";
 import { COMMUNITY_URL } from "@/lib/site";
+import { stripHtml } from "@/lib/markdown";
 import type { Discussion, DiscussionPost, LeaderboardRow } from "@/lib/community-data";
 
 const LEADERBOARD_ROWS_VISIBLE = 3;
@@ -133,7 +134,7 @@ const hasActivity = visible.length > 0;
               <p>
                 <span class="font-semibold text-foreground">{post.username}</span>
               </p>
-              <p class="text-dim line-clamp-2 leading-snug mt-0.5">{displaySnippet(post)}</p>
+              <p class="text-dim line-clamp-2 leading-snug mt-0.5">{stripHtml(displaySnippet(post))}</p>
             </div>
           ))}
         </div>
