@@ -1,6 +1,6 @@
 # Adventures
 
-This file covers both sides of the adventure process: **challenge authors** working in the challenges repo and **website reviewers** completing the PR checklist after a sync.
+This file covers the full adventure workflow: **challenge authors** working in the challenges repo, **website reviewers** completing the PR checklist after a sync, and **solution contributors** adding post-challenge walkthroughs.
 
 Adventures live in a separate repo ([open-source-challenges](https://github.com/off-on-dev/open-source-challenges)) and are pulled into this site via the **Sync Adventure** GitHub Actions workflow. You never write the generated TypeScript files by hand; the workflow and build scripts do that automatically.
 
@@ -18,14 +18,22 @@ Adventures live in a separate repo ([open-source-challenges](https://github.com/
 ## How the Content Pipeline Works
 
 ```text
-off-on-dev/open-source-challenges          offon.dev website repo
-  adventures/<id>/docs/
-    index.yaml          ──── Sync Adventure workflow ────►  src/data/adventures/<slug>/adventure.yaml
-    beginner.yaml                                            src/data/adventures/<slug>/<level>-posts.json
-    intermediate.yaml   ──── npm run generate (prebuild) ──►  src/data/adventures/<slug>.generated.ts
-    ...                                                       src/data/adventures/index.ts
-    diagrams/                                                 src/data/adventures/summaries.ts
-      <slug>-<level>.svg ─────────────────────────────────►  src/assets/diagrams/<slug>-<level>.svg
+Step 1 — Sync Adventure workflow (triggered manually via GitHub Actions):
+
+  off-on-dev/open-source-challenges        offon.dev website repo
+    adventures/<id>/docs/
+      index.yaml        ─┐               src/data/adventures/<slug>/adventure.yaml
+      beginner.yaml      ├──────────────► src/data/adventures/<slug>/<level>-posts.json (stubs)
+      intermediate.yaml  ┘               src/assets/diagrams/<slug>-<level>.svg (if present)
+      diagrams/*.svg    ─┘
+
+Step 2 — npm run generate (prebuild, runs automatically before every build):
+
+  src/data/adventures/<slug>/adventure.yaml
+    ────────────────────────────────────────► src/data/adventures/<slug>.generated.ts
+                                              src/data/adventures/index.ts
+                                              src/data/adventures/summaries.ts
+                                              public/sitemap.xml (adventure + tag entries)
 ```
 
 The sync workflow also regenerates `public/sitemap.xml`, `react-router.config.ts`, `e2e/smoke.spec.ts`, `src/test/seo.test.ts`, `src/test/prerender.test.ts`, and `scripts/refresh-leaderboard.mjs`. All of these appear in the PR diff; they are managed automatically and should not be edited by hand.
@@ -59,6 +67,10 @@ tags:
 # Optional: overrides the auto-generated SEO meta description for the adventure page.
 # Keep under 160 characters.
 # meta_description: "Fix broken Kyverno policies to restore proper admission control."
+
+# Optional: one-paragraph card summary shown on the adventure card on the home page.
+# Plain text only — no markdown. If omitted, derived from backstory[0].
+# story: "Fix broken GitOps setups across multiple environments and restore the services."
 
 # One or more story paragraphs. Markdown is supported.
 backstory:
@@ -255,7 +267,7 @@ Go to **Actions → Sync Adventure from Challenges Repo → Run workflow**.
 
 ## Completing the PR Checklist
 
-The PR body lists everything that needs to happen before merging. Complete the items in order; some steps depend on earlier ones.
+The PR body lists everything that needs to happen before merging. Complete the items in order; step 8 (leaderboard) requires step 3 (`community_category_id`) to be set first.
 
 ### 1. Add contributor block
 
@@ -356,13 +368,12 @@ Confirm the adventure appears under the Adventures section in `public/llms.txt` 
 
 ### 11. Run the a11y audit
 
-After the build passes, run the accessibility audit against any new or changed pages:
+After the build passes, run the accessibility audit against any new or changed pages.
 
-```sh
-/a11y-audit
-```
+- **With Claude Code:** use the `/a11y-audit` skill against any new adventure or level detail pages.
+- **Without Claude Code:** the axe audit runs automatically as part of `npm run test:e2e` (step 12). Review the output for WCAG violations and resolve all failures before merging.
 
-Target any new adventure or level detail pages. All severity-weighted findings must be resolved before merging.
+All severity-weighted findings must be resolved before merging.
 
 ### 12. Final checks
 
@@ -382,7 +393,7 @@ Each level can display an SVG diagram, an ASCII art fallback, and one or more pr
 | --- | --- | --- |
 | `architecture_diagram` | SVG filename | `<img>` (takes priority over `architecture_ascii`) |
 | `diagram_alt` | string | Accessible alt text for the SVG. Required when `architecture_diagram` is set. |
-| `architecture_ascii` | YAML block scalar (`\|`) | `<pre>` block, shown when no SVG is present |
+| `architecture_ascii` | YAML literal block scalar | `<pre>` block, shown when no SVG is present |
 | `architecture` | array of Markdown strings | Prose paragraphs always rendered below the diagram or ASCII block |
 
 ### SVG in the challenges repo (normal path)
@@ -474,39 +485,74 @@ When a new level is ready in the challenges repo after the first adventure PR ha
 
 ## Adding a Solution Walkthrough
 
-Solution walkthroughs live in `src/data/solutions/<adventure-id>/<level-id>.ts` and are committed to the repo.
+Solution walkthroughs live in `src/data/solutions/<adventure-id>/<level-id>.ts` and are committed to the repo. They are credited, gated behind the challenge deadline, and can be submitted as PRs at any point during a live challenge without spoiling anything for active participants.
 
 Before starting, make sure your local environment is set up: see [CONTRIBUTING.md](CONTRIBUTING.md) for Node version requirements and install steps.
 
-### Use the `/add-solution` skill
+### What a good walkthrough looks like
 
-The fastest way to add a solution is with the Claude Code skill:
+The `Solution` type gives you more than a wall of prose. Available block types: `text`, `code`, `image`, and `callout`. At the top level you can add a `context` section explaining the setup, per-step `takeaways` arrays, a `furtherReading` list, a `completeSolution` code card, and a closing `outro`. The annotated template at [`.ai/templates/solution/beginner.ts`](.ai/templates/solution/beginner.ts) shows every field with comments explaining what it does.
+
+The three Echoes Lost in Orbit solutions show the format in full:
+
+- [Beginner](https://offon.dev/adventures/echoes-lost-in-orbit/levels/beginner/solution/)
+- [Intermediate](https://offon.dev/adventures/echoes-lost-in-orbit/levels/intermediate/solution/)
+- [Expert](https://offon.dev/adventures/echoes-lost-in-orbit/levels/expert/solution/)
+
+### Use the `/add-solution` skill (Claude Code only)
+
+This is a Claude Code slash command. If you are using a different editor or AI tool, skip to [Without Claude Code](#without-claude-code) instead.
+
+Paste or attach the walkthrough content in any format: markdown, YAML, HTML, or plain text. The skill infers the adventure ID, level ID, and contributor name from the content where possible, confirms them with you, and then:
 
 ```sh
 /add-solution
 ```
 
-Paste or attach the walkthrough content in any format: markdown, YAML, HTML, or plain text. The skill infers the adventure ID, level ID, and contributor name from the content where possible, confirms them with you, and then:
-
 1. Parses the input into structured steps (`SolutionBlock[]` arrays with text, code, image, and callout blocks).
 2. Downloads any referenced images and converts them to WebP at quality 85 using `cwebp`. Images are saved to `public/solutions/<adventure-id>/`.
 3. Writes `src/data/solutions/<adventure-id>/<level-id>.ts` with the full typed `Solution` object.
-4. Runs `node scripts/generate-solutions.mjs` to rebuild the barrel index and patch region markers.
-5. Runs `npm run build`, `npm run lint`, `npm test`, and `npm run test:e2e` to verify the output compiles and all tests pass.
+4. Runs `npm run generate:solutions` to rebuild the barrel index and patch region markers.
+5. Runs `npm run build` and `npm run lint` to verify the output compiles.
 
 After the skill completes, run `/a11y-audit` against the new solution page before merging.
 
 ### Without Claude Code
 
 1. Confirm that `<adventure-id>` matches a directory in `src/data/adventures/` and that `<level-id>` is one of `beginner`, `intermediate`, or `expert`.
-2. Create `src/data/solutions/<adventure-id>/` if it does not exist.
-3. Copy an existing solution file as a starting point: `cp src/data/solutions/echoes-lost-in-orbit/beginner.ts src/data/solutions/<adventure-id>/<level-id>.ts`.
-4. Fill in the `Solution` object. See [`src/data/solutions/types.ts`](src/data/solutions/types.ts) for the full type definition including all optional fields (`context`, `spoilerWarning`, `furtherReading`, `completeSolution`, `outro`, and per-step `takeaways`).
-5. If the solution uses images, save them as `.webp` files in `public/solutions/<adventure-id>/` and reference them with absolute paths.
-6. Run `node scripts/generate-solutions.mjs` to rebuild the barrel index and patch region markers.
-7. Run `npm run build`, `npm run lint`, `npm test`, and `npm run build && npm run test:e2e` to verify everything passes.
+2. Copy the template folder into `src/data/solutions/`:
+
+    ```sh
+    cp -r .ai/templates/solution/ src/data/solutions/<adventure-id>/
+    ```
+
+    If your level is not `beginner`, rename the file inside:
+
+    ```sh
+    mv src/data/solutions/<adventure-id>/beginner.ts src/data/solutions/<adventure-id>/<level-id>.ts
+    ```
+
+3. Fill in the `Solution` object: update `adventureId`, `levelId`, `title`, `contributor`, and all content fields. See [`src/data/solutions/types.ts`](src/data/solutions/types.ts) for reference.
+4. If the solution uses images, convert them to WebP at quality 85 and save them in `public/solutions/<adventure-id>/`:
+
+    ```sh
+    cwebp -q 85 input.png -o public/solutions/<adventure-id>/step-name.webp
+    ```
+
+    Reference them with absolute paths in the `image` blocks (e.g. `/solutions/<adventure-id>/step-name.webp`).
+
+5. Run `npm run generate:solutions` to rebuild the barrel index and patch region markers. This step is not optional: without it your solution has no route and your PR fails CI.
+6. Start the dev server (`npm run dev`) and preview your solution at `http://localhost:8080/adventures/<adventure-id>/levels/<level-id>/solution/`.
+7. Run the mandatory checks — all three must pass with zero failures:
+
+    ```sh
+    npm run lint
+    npm test
+    npm run build && npm run test:e2e
+    ```
+
 8. Run `/a11y-audit` against the new solution page.
-9. Open a pull request.
+9. Open a PR against `main` on the upstream repo.
 
 ### Attribution
 
@@ -519,6 +565,23 @@ contributor: { name: KATHARINA_SICK.name, url: KATHARINA_SICK.url },
 ```
 
 If the contributor is not yet in `contributors.ts`, use the inline form directly.
+
+Licensing is handled centrally through `REUSE.toml`. You do not need to add SPDX headers to solution files. Code is MIT and written content is CC BY 4.0.
+
+### Deadline gating
+
+Solutions are not visible on the site until the challenge deadline has passed. The solution page checks `level.deadline` (falling back to `adventure.rewards.deadline`) and renders a locked state with the deadline date until that moment arrives. Once the deadline passes, the page shows the full walkthrough automatically with no code change needed.
+
+This means you can open a solution PR at any point during a live challenge without spoiling anything for active participants.
+
+### Output location
+
+```text
+src/data/solutions/<adventure-id>/<level-id>.ts   ← authored TypeScript (commit this)
+public/solutions/<adventure-id>/<level-id>-*.webp ← converted images (commit these)
+src/data/solutions/index.ts                       ← auto-generated barrel (commit this)
+src/data/solutions/manifest.ts                    ← auto-generated manifest (commit this)
+```
 
 ### What the generator updates
 
@@ -537,20 +600,6 @@ You do not need to touch any of these files manually when adding a solution.
 
 Run `npm run generate:solutions:validate` to check that the generator output is in sync without writing any files. CI runs this check automatically on PRs that touch `src/data/solutions/**` and fails with "Generated files are out of date" if the barrel or region markers are stale.
 
-### Deadline gating
-
-Solutions are not visible on the site until the challenge deadline has passed. The solution page checks `level.deadline` (falling back to `adventure.rewards.deadline`) and renders a locked state with the deadline date until that moment arrives. Once the deadline passes, the page shows the full walkthrough automatically with no code change needed.
-
-This means you can add a solution file to the repo at any point during the challenge period and it will not spoil anything for active participants.
-
-### Output location
-
-```text
-src/data/solutions/<adventure-id>/<level-id>.ts   ← authored TypeScript (commit this)
-public/solutions/<adventure-id>/<level-id>-*.webp ← converted images (commit these)
-src/data/solutions/index.ts                       ← auto-generated barrel (commit this)
-```
-
 ---
 
 ## Workflows at a Glance
@@ -559,7 +608,7 @@ src/data/solutions/index.ts                       ← auto-generated barrel (com
 | --- | --- | --- |
 | `sync-adventure.yml` | Manual (`workflow_dispatch`) | Sync adventure content from the challenges repo and open or update a PR |
 | `add-discussion-url.yml` | Manual (`workflow_dispatch`) | Set a Discourse thread URL for a level after it has been merged, and open a PR with updated YAML and initial posts |
-| `validate-adventures.yml` | PR (when adventure files change) | Validate YAML schema, check generated files are up-to-date, verify route/sitemap/prerender consistency |
+| `validate-adventures.yml` | PR (when adventure or solution files change) | Validate YAML schema, check generated files are up-to-date, verify route/sitemap/prerender consistency |
 | `deploy.yml` | Push to `main` | Build and deploy to GitHub Pages at [offon.dev](https://offon.dev) |
 | `preview.yml` | Open PR | Deploy a PR preview at `/pr-preview/pr-<n>/` |
 | `refresh-community-data.yml` | Hourly + manual | Refresh discussion posts, leaderboard data, and community leaders from Discourse |

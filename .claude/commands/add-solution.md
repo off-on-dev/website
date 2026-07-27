@@ -174,7 +174,7 @@ Rules:
 ## Step 5: Run the generator and verify
 
 ```bash
-node scripts/generate-solutions.mjs
+npm run generate:solutions
 npm run build
 npm run lint
 ```
