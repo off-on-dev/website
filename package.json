@@ -1,5 +1,5 @@
 {
-  "name": "astro-spike",
+  "name": "offon-website",
   "type": "module",
   "private": true,
   "scripts": {
@@ -8,7 +8,8 @@
     "preview": "astro preview",
     "sync": "astro sync",
     "test:e2e": "playwright test",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:reuse": "reuse lint"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.2.1",

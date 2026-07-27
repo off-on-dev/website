@@ -31,6 +31,9 @@ jobs:
 
       - run: npm ci
 
+      - run: npm run sync
+      - run: npm run lint
+
       # Astro static build → dist/ (not dist/client/). Astro emits dist/404.html
       # natively, so the old `cp .../404/index.html 404.html` step is gone.
       - run: npm run build

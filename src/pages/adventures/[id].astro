@@ -17,6 +17,7 @@ import { BRAND_NAME } from "@/lib/site";
 import { stripLinks } from "@/lib/markdown";
 import { isDeadlinePast } from "@/lib/utils";
 import { getLeaderboard } from "@/lib/community-data";
+import { isAdventureLive } from "@/lib/challenges";
 
 export async function getStaticPaths() {
   const adventures = await getCollection("adventures");
@@ -27,7 +28,7 @@ const { adventure } = Astro.props;
 const base = import.meta.env.BASE_URL;
 
 const deadlinePast = isDeadlinePast(adventure.rewards?.deadline);
-const isLive = !!adventure.rewards?.deadline && !deadlinePast;
+const isLive = isAdventureLive(adventure);
 const upcoming = adventure.upcomingLevels ?? [];
 const totalTiles = adventure.levels.length + upcoming.length;
 const gridCols = totalTiles === 2 ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3";

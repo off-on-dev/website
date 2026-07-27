@@ -207,6 +207,7 @@ function navigatePanel(e: KeyboardEvent): void {
             :class="activeDifficulty !== null ? 'pill-active' : 'pill-inactive'"
             :style="activeDifficulty !== null && activeDifficulty in DIFFICULTY_VAR ? difficultyPillStyle(activeDifficulty, true) : allLevelsPillStyle(true)"
             :aria-expanded="difficultyOpen"
+            aria-controls="difficulty-group"
             @click="difficultyOpen = !difficultyOpen; tagsOpen = false"
           >
             {{ activeDifficulty ?? "All Levels" }}
@@ -254,8 +255,9 @@ function navigatePanel(e: KeyboardEvent): void {
             type="button"
             class="filter-pill px-6 gap-2"
             :class="activeTags.length > 0 ? 'pill-active' : 'pill-inactive'"
-            :style="allToolsPillStyle(activeTags.length === 0)"
+            :style="activeTags.length === 0 ? allToolsPillStyle(true) : undefined"
             :aria-expanded="tagsOpen"
+            aria-controls="tags-group"
             @click="tagsOpen = !tagsOpen; difficultyOpen = false"
           >
             {{ activeTags.length === 0 ? "All Tools" : `${activeTags.length} tool${activeTags.length !== 1 ? "s" : ""} selected` }}
@@ -372,7 +374,7 @@ function navigatePanel(e: KeyboardEvent): void {
       <li v-for="e in filtered" :key="`${e.adventureId}-${e.levelId}`" class="contents">
         <a
           :href="base + e.url.slice(1)"
-          :aria-label="`${e.name}: ${e.difficulty}, ${e.adventureTitle}`"
+          :aria-label="`${e.name}: ${e.difficulty}${e.isLive ? ', live' : ''}, ${e.adventureTitle}`"
           class="group card-glow flex flex-col rounded-xl border border-border bg-[hsl(var(--surface))] p-6 focus-ring"
         >
           <div class="mb-3 flex items-center justify-between">

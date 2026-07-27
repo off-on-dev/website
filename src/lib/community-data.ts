@@ -48,7 +48,12 @@ export type LeaderboardRow = {
 export type Leaderboard = { updatedAt: string; rows: LeaderboardRow[] };
 
 function readJson<T>(path: string): T | null {
-  return existsSync(path) ? (JSON.parse(readFileSync(path, "utf8")) as T) : null;
+  if (!existsSync(path)) return null;
+  try {
+    return JSON.parse(readFileSync(path, "utf8")) as T;
+  } catch {
+    return null;
+  }
 }
 
 export function getDiscussion(adventureId: string, levelId: string): Discussion | null {

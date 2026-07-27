@@ -22,7 +22,6 @@ const HOME_ADVENTURE_LIMIT = 6;
 
 const adventures = sortAdventuresByMonthDesc((await getCollection("adventures")).map((a) => a.data));
 
-const adventureCount = adventures.length;
 const visibleAdventures = adventures.slice(0, HOME_ADVENTURE_LIMIT);
 const hasMore = adventures.length > HOME_ADVENTURE_LIMIT;
 

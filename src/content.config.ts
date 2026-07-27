@@ -18,16 +18,14 @@ import {
   buildAdventureMetaDescription,
   buildServicesStepBody,
 } from "./lib/adventure-derive.mjs";
+import { COMMUNITY_URL } from "./lib/site";
+import type { AdventureRewards } from "./data/adventures/types";
 
 // Adventure YAML lives in this app's own data dir (src/data/adventures),
 // resolved from this file's location (src/content.config.ts).
 const ADVENTURES_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "data/adventures");
 
-// Constants duplicated from src/data/constants.ts (the collection loader runs
-// outside the app's module graph). At cutover these import from the real
-// constants module.
 const CODESPACES_BASE = "https://codespaces.new/off-on-dev/open-source-challenges";
-const COMMUNITY_URL = "https://community.offon.dev";
 
 const EMOJI_ICON_MAP: Record<string, string> = {
   "🧪": "FlaskConical",
@@ -264,7 +262,7 @@ async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Rendered
 
 async function renderRewards(
   rewards: z.infer<typeof rewardsSchema>,
-): Promise<Record<string, unknown>> {
+): Promise<AdventureRewards> {
   const eligibility = await mdToInline(rewards.eligibility ?? DEFAULT_REWARDS_ELIGIBILITY);
   const rankingNote = await mdToInline(rewards.ranking_note ?? DEFAULT_REWARDS_RANKING_NOTE);
   const tiers = await Promise.all(
@@ -302,6 +300,7 @@ function adventuresLoader(): Loader {
         // persisted store. CI is unaffected (fresh npm ci → empty store → full
         // render); locally, clear node_modules/.astro/data-store.json (or .astro)
         // after editing the pipeline to force a re-render.
+        watcher?.add(yamlPath);
         if (store.get(entry.name)?.digest === digest) continue; // unchanged: skip re-render
         const data = await parseData({ id: entry.name, data: parseYaml(raw) });
         if (data.slug !== entry.name) {
@@ -310,7 +309,6 @@ function adventuresLoader(): Loader {
           );
         }
         store.set({ id: entry.name, data, digest });
-        watcher?.add(yamlPath);
       }
       // Drop entries whose YAML was deleted.
       for (const id of [...store.keys()]) if (!seen.has(id)) store.delete(id);

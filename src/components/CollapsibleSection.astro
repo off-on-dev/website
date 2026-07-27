@@ -13,12 +13,11 @@ const { id, title, defaultOpen = true, headingLevel = 2 } = Astro.props;
 const Heading = `h${headingLevel}` as "h2" | "h3" | "h4";
 ---
 
-<Heading class="sr-only">{title}</Heading>
 <details id={id} open={defaultOpen} class="card-glow group mb-6 scroll-mt-28 rounded-lg">
   <summary class="flex cursor-pointer list-none items-center gap-3 rounded-t-lg border border-border bg-[hsl(var(--surface))] px-4 py-3 group-open:rounded-b-none group-open:border-b-0 rounded-b-lg focus-ring [&::-webkit-details-marker]:hidden">
-    <span class="font-sans text-sm font-semibold tracking-wide text-primary flex-1 m-0">
+    <Heading class="font-sans text-sm font-semibold tracking-wide text-primary flex-1 m-0">
       {title}
-    </span>
+    </Heading>
     <Icon
       name="lucide:chevron-down"
       width={18}

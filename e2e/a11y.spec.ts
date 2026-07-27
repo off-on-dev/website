@@ -28,6 +28,7 @@ const PAGES = [
   "/sponsors/",
   "/brand/",
   "/presentation-templates/",
+  "/404/",
 ];
 
 test.describe("axe: dark mode", () => {

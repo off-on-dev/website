@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, onUnmounted } from "vue";
 import { useStore } from "@nanostores/vue";
 import { Cookie } from "lucide-vue-next";
 import { $consent, grant, deny, reset, initConsent, firePageView, trackClicks } from "@/stores/consent";
@@ -14,6 +14,9 @@ onMounted(() => {
   initConsent();
   document.addEventListener("astro:page-load", firePageView);
   trackClicks();
+});
+onUnmounted(() => {
+  document.removeEventListener("astro:page-load", firePageView);
 });
 </script>
 

@@ -22,9 +22,10 @@ const { adventure } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const difficulties = adventure.levels.map((l) => l.difficulty).join(", ");
 const tagList = adventure.tags.slice(0, 4).join(", ");
+const live = adventure.isLive ? ", live" : "";
 const label = tagList
-  ? `${adventure.title}: ${difficulties}, ${tagList}`
-  : `${adventure.title}: ${difficulties}`;
+  ? `${adventure.title}: ${difficulties}${live}, ${tagList}`
+  : `${adventure.title}: ${difficulties}${live}`;
 ---
 
 <a

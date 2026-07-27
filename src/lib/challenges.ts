@@ -69,14 +69,8 @@ export function getChallengeData(adventures: AdventureData[]): {
   entries: ChallengeEntry[];
   tags: string[];
 } {
-  // Build-time isLive: active rewards window or any future level deadline.
-  const now = Date.now();
-  const isLive = (a: AdventureData): boolean =>
-    !!(a.rewards?.deadline && Date.parse(a.rewards.deadline) > now) ||
-    a.levels.some((l) => l.deadline && Date.parse(l.deadline) > now);
-
   const entries: ChallengeEntry[] = adventures.flatMap((a) => {
-    const live = isLive(a);
+    const live = isAdventureLive(a);
     return a.levels.map((level) => ({
       levelId: level.id,
       name: level.name,

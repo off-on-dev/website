@@ -1,8 +1,7 @@
 // Prose fields (learnings, audience, objective, step titles and content,
 // tool descriptions, contributor bios, rewards text, story, intro, backstory,
-// scenario) contain pre-rendered HTML generated at build time by the
-// adventure generator. Always render them with dangerouslySetInnerHTML,
-// never as {value} directly.
+// scenario) contain pre-rendered HTML generated at build time by the content
+// loader. Render via set:html (Astro) or v-html (Vue); never as {value} directly.
 
 /** A tool that ships pre-configured inside the level's Codespace. */
 export type ToolboxItem = {
@@ -30,12 +29,6 @@ export type HelpfulLink = {
   description?: string;
 }
 
-/** A player entry for the top-players leaderboard. Currently defined on AdventureLevel but not consumed by any component. */
-export type TopPlayer = {
-  username: string;
-  count: number;
-}
-
 /** Placeholder for a level that hasn't shipped yet. Rendered in the "More levels" sidebar card. */
 export type UpcomingLevel = {
   name: string;
@@ -52,12 +45,12 @@ export type AdventureLevel = {
   learnings: string[];
   codespacesUrl: string;
   discussionUrl: string;
-  // Submission deadline for this level (e.g. "10 December 2025 at 09:00 CET"). Only shown when rewards are active.
+  // Submission deadline for this level (ISO 8601 string after parsing). Only shown when rewards are active.
   deadline?: string;
   // Short narrative hook shown directly under the page title.
   hook?: string;
   // Brief intro paragraph(s) shown under the page title before the main content.
-  intro: string[];
+  intro?: string[];
   // Narrative backstory paragraphs shown as a collapsible scenario section.
   backstory?: string[];
   // Concrete acceptance criteria shown as the "Objective" card.
@@ -84,12 +77,8 @@ export type AdventureLevel = {
   helpfulLinks?: HelpfulLink[];
   // Verification card rendered as the final section.
   verification: VerificationInfo;
-  // Optional SEO meta description (max 160 chars). When absent, ChallengeDetail.tsx generates one from level name, intro, and topics.
+  // Optional SEO meta description (max 160 chars).
   metaDescription?: string;
-  // Unused fields — real solver and leaderboard data is fetched at runtime by
-  // useDiscussionPosts and useAdventureLeaderboard. No component reads these.
-  solvedCount?: number;
-  topPlayers?: TopPlayer[];
 }
 
 export type AdventureRewardTier = {

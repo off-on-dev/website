@@ -111,4 +111,40 @@ test.describe("consent: gated load", () => {
     await expect(accept(page)).toHaveCount(0);
     await expect(cookieButton(page)).toBeVisible();
   });
+
+  test("granted → reset → denied clears stored value", async ({ page }) => {
+    await page.goto("/");
+    await page.waitForLoadState("load");
+    await accept(page).click();
+    expect(await storedConsent(page)).toBe("granted");
+    await cookieButton(page).click();
+    await expect(accept(page)).toBeVisible();
+    expect(await storedConsent(page)).toBeNull();
+    await decline(page).click();
+    expect(await storedConsent(page)).toBe("denied");
+  });
+
+  test("denied → reset → granted injects gtag.js", async ({ page }) => {
+    await page.goto("/");
+    await page.waitForLoadState("load");
+    await decline(page).click();
+    expect(await storedConsent(page)).toBe("denied");
+    await cookieButton(page).click();
+    await expect(accept(page)).toBeVisible();
+    await accept(page).click();
+    await expect(gtagScript(page)).toHaveCount(1);
+    expect(await storedConsent(page)).toBe("granted");
+  });
+
+  test("GPC active forces denied without prompting", async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, "globalPrivacyControl", { value: true, configurable: true });
+    });
+    await page.goto("/");
+    await page.waitForLoadState("load");
+    await expect(gtagScript(page)).toHaveCount(0);
+    await expect(accept(page)).toHaveCount(0);
+    await expect(cookieButton(page)).toBeVisible();
+    expect(await storedConsent(page)).toBe("denied");
+  });
 });

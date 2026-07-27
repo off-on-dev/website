@@ -51,7 +51,7 @@ export function buildAdventureMetaDescription(data) {
  *  or null when there are no externally accessible services. */
 export function buildServicesStepBody(services) {
   if (!services || services.length === 0) return null;
-  const accessible = services.filter((s) => !s.internal);
+  const accessible = services.filter((s) => !s.internal && s.port !== undefined);
   const internal = services.filter((s) => s.internal);
   if (accessible.length === 0) return null;
   let body = "Open the **Ports** tab and navigate to each service:\n\n";

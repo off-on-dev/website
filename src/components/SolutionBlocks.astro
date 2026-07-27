@@ -80,7 +80,8 @@ const resolveSrc = (src: string): string => (src.startsWith("/") ? base + src.sl
           </figure>
         );
       }
-      const config = calloutConfig[block.variant];
+      const config = calloutConfig[block.variant as keyof typeof calloutConfig];
+      if (!config) return null;
       return (
         <div class={`flex gap-3 rounded-lg border p-4 text-foreground ${config.class}`} role="note">
           <Icon

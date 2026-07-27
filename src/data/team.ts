@@ -1,7 +1,6 @@
-// Board member data. Ported from src/data/team.ts.
-// The React source pulled Katharina Sick's name/url/about from
-// src/data/adventures/contributors.ts (KATHARINA_SICK); those values are
-// inlined here so this module has no cross-source dependency.
+import type { AdventureContributor } from "./adventures/types";
+
+// Board member data.
 
 export type BoardMember = {
   name: string;
@@ -51,13 +50,6 @@ export const BOARD_MEMBERS: BoardMember[] = [
     about: "Board seat to be announced.",
   },
 ];
-
-export type AdventureContributor = {
-  name: string;
-  url?: string;
-  aboutHtml?: string;
-  adventures: { id: string; title: string }[];
-};
 
 // Build-time snapshot of ADVENTURE_CONTRIBUTORS, derived in the React app from
 // ADVENTURE_SUMMARIES (src/data/adventures/summaries.ts) and grouped by person.
