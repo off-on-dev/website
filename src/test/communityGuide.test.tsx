@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import CommunityGuide from "@/pages/CommunityGuide";
-import { CONTACT_EMAIL, COMMUNITY_URL, CODE_OF_CONDUCT_URL } from "@/data/constants";
+import { CONTACT_EMAIL, COMMUNITY_URL, CODE_OF_CONDUCT_URL, PROPOSE_ADVENTURE_URL } from "@/data/constants";
 
 function renderCommunityGuide(): ReturnType<typeof render> {
   return render(
@@ -102,7 +102,7 @@ describe("CommunityGuide - take on a challenge section", () => {
     renderCommunityGuide();
     const link = screen.getByRole("link", { name: /submit an idea/i });
     expect(link.getAttribute("href")).toBe(
-      "https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea"
+      PROPOSE_ADVENTURE_URL
     );
     expect(link.getAttribute("target")).toBe("_blank");
     expect(link.getAttribute("rel")).toBe("noopener noreferrer");

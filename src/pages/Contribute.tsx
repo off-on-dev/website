@@ -9,7 +9,7 @@ import { BottomCTA } from "@/components/BottomCTA";
 import { SectionLabel } from "@/components/SectionLabel";
 import { SidebarLayout } from "@/components/SidebarLayout";
 import { CommunityLeaders } from "@/components/CommunityLeaders";
-import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL, LINKEDIN_URL, BLUESKY_URL, X_URL } from "@/data/constants";
+import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL, LINKEDIN_URL, BLUESKY_URL, X_URL, PROPOSE_ADVENTURE_URL } from "@/data/constants";
 import { Abbr } from "@/components/Abbr";
 import { buildPageMeta } from "@/lib/meta";
 
@@ -83,7 +83,7 @@ const Contribute = (): JSX.Element => {
                   <p className="text-sm text-dim leading-relaxed flex-1">
                     Have a scenario that would make a great challenge? Submit your idea on GitHub. Ready to go further? Pick up an approved idea and implement the full adventure.
                   </p>
-                  <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={extLink}>
+                  <a href={PROPOSE_ADVENTURE_URL} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={extLink}>
                     Read the adventure ideas guide <ExternalLink size={12} aria-hidden="true" />
                   </a>
                   <a href="https://github.com/off-on-dev/open-source-challenges/issues?q=is%3Aissue+is%3Aopen+label%3A%22adventure+idea%22" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={extLink}>

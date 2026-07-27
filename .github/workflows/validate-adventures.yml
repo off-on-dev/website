@@ -94,8 +94,8 @@ jobs:
               ERRORS=$((ERRORS + 1))
             fi
 
-            # Extract live level IDs only (under `levels:`, not `upcoming_levels:`)
-            level_ids=$(awk '/^levels:/{s=1;next} /^[a-z]/{s=0} s && /- level:/{gsub(/.*- level: /,""); gsub(/"/,""); print}' "$adventure_dir/adventure.yaml" || true)
+            # Live level IDs parsed via the yaml package (avoids fragile awk line-matching)
+            level_ids=$(YAML_PATH="$adventure_dir/adventure.yaml" node -e "const y=require('yaml'),f=require('fs');(y.parse(f.readFileSync(process.env.YAML_PATH,'utf8')).levels||[]).forEach(l=>console.log(l.level));")
 
             # Check adventure landing page in prerender
             if ! grep -q "\"/adventures/$adventure_id\"" react-router.config.ts; then

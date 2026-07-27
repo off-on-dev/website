@@ -89,7 +89,7 @@ jobs:
       - if: steps.node-cache.outputs.cache-hit != 'true'
         run: npm ci
 
-      - uses: actions/download-artifact@v8
+      - uses: actions/download-artifact@v7
         with:
           name: dist-client
           path: dist/client/

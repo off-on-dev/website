@@ -10,7 +10,7 @@ import { CommunityLeaders } from "@/components/CommunityLeaders";
 import { SponsorStrip } from "@/components/SponsorStrip";
 import { BottomCTA } from "@/components/BottomCTA";
 import { Footer } from "@/components/Footer";
-import { BRAND_NAME, BRAND_SHORT_DESCRIPTION, BRAND_SLOGAN, SITE_URL } from "@/data/constants";
+import { BRAND_NAME, BRAND_SHORT_DESCRIPTION, BRAND_SLOGAN, SITE_URL, PROPOSE_ADVENTURE_URL } from "@/data/constants";
 import { buildPageMeta } from "@/lib/meta";
 
 export const links: LinksFunction = () => [
@@ -45,7 +45,7 @@ const Index = (): JSX.Element => {
               </p>
               <div className="flex gap-3 flex-wrap mt-2">
                 <a
-                  href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea"
+                  href={PROPOSE_ADVENTURE_URL}
                   target="_blank"
                   rel="noopener noreferrer" aria-describedby="new-tab-hint"
                   className="btn-inverse"
