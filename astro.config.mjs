@@ -29,7 +29,7 @@ export default defineConfig({
   integrations: [vue({ appEntrypoint: "/src/pages/_app" }), icon()],
   markdown: {
     // Build-time dual-theme highlighting (retires the custom CodeBlock highlighter).
-    // Field-level prose is sanitized separately in src/lib/md.ts.
+    // Field-level prose is sanitized separately in src/lib/markdown-pipeline.mjs.
     shikiConfig: {
       themes: { light: "github-light", dark: "github-dark" },
     },

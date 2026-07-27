@@ -171,7 +171,6 @@ interface RenderedLevel {
   codespacesUrl: string;
   discussionUrl: string;
   deadline?: string | null;
-  hook?: string;
   intro?: string[];
   backstory?: string[];
   objective: string[];
@@ -203,7 +202,6 @@ async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Rendered
     learningsHtml,
     audienceHtml,
     objectiveHtml,
-    hookHtml,
     introHtml,
     backstoryHtml,
     scenarioHtml,
@@ -214,7 +212,6 @@ async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Rendered
     mdToInlineArray(learnings),
     level.audience ? mdToInline(level.audience) : Promise.resolve(null),
     mdToInlineArray(level.objective),
-    level.hook ? mdToBlock(level.hook) : Promise.resolve(null),
     intro ? mdToInlineArray(intro) : Promise.resolve(null),
     level.backstory ? mdToInlineArray(level.backstory) : Promise.resolve(null),
     level.scenario ? mdToBlock(level.scenario) : Promise.resolve(null),
@@ -239,7 +236,6 @@ async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Rendered
     codespacesUrl: resolveCodespacesUrl(level.devcontainer, level.codespaces_machine),
     discussionUrl: resolveDiscussionUrl(level.discussion_url ?? level.community_url),
     ...(level.deadline ? { deadline: parseDeadline(level.deadline) } : {}),
-    ...(hookHtml ? { hook: hookHtml } : {}),
     ...(introHtml ? { intro: introHtml } : {}),
     ...(backstoryHtml ? { backstory: backstoryHtml } : {}),
     objective: objectiveHtml,

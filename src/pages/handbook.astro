@@ -7,6 +7,7 @@ import {
   COMMUNITY_URL,
   CODE_OF_CONDUCT_URL,
   CONTACT_EMAIL,
+  PROPOSE_ADVENTURE_URL,
 } from "@/lib/site";
 
 const base = import.meta.env.BASE_URL;
@@ -181,7 +182,7 @@ const description = `Everything you need to participate in the ${BRAND_NAME} com
                   Bring your expertise and experience. Help build adventures for others to learn from open source tech with a broken scenario, a real-world failure, or a skill gap. Shape the next adventure.
                 </p>
                 <a
-                  href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea"
+                  href={PROPOSE_ADVENTURE_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-describedby="new-tab-hint"

@@ -1,3 +1,5 @@
+// html fields in SolutionBlock are authored by trusted contributors (not user
+// input) and are rendered via set:html in SolutionBlocks.astro.
 export type SolutionBlock =
   | { type: "text"; html: string }
   | { type: "code"; language: string; title?: string; code: string }

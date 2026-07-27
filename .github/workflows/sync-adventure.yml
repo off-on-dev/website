@@ -94,13 +94,14 @@ jobs:
       - name: Create pull request
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          ADVENTURE_URL: ${{ inputs.adventure_url }}
         run: |
           SLUG=$(cat /tmp/adventure-slug)
           NAME=$(cat /tmp/adventure-name)
           LEVELS=$(cat /tmp/adventure-levels)
           MODE=$(cat /tmp/adventure-mode)
           BRANCH="feat/adventure-${SLUG}"
-          SOURCE_URL="${{ inputs.adventure_url }}"
+          SOURCE_URL="$ADVENTURE_URL"
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

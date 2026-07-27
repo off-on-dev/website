@@ -25,12 +25,12 @@ export function parseDeadline(value) {
   if (/^\d{4}-\d{2}-\d{2}T/.test(trimmed)) return trimmed;
   if (trimmed === "TODO") return trimmed;
 
-  // Expected: "[Weekday, ]D Month YYYY at HH:MM TZ" — anchored so partial matches don't slip through.
+  // Expected: "[Weekday, ]D Month YYYY at HH:MM TZ", anchored so partial matches don't slip through.
   const match = trimmed.match(
     /^(?:[A-Za-z]+,\s+)?(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})\s+at\s+(\d{2}):(\d{2})\s+([A-Z]+)$/
   );
   if (!match) {
-    console.warn(`  [deadline] Unrecognised format — leaving as-is: "${value}"`);
+    console.warn(`  [deadline] Unrecognised format, leaving as-is: "${value}"`);
     return value;
   }
 
@@ -39,11 +39,11 @@ export function parseDeadline(value) {
   const offset = TZ_OFFSETS[tzAbbr];
 
   if (!month) {
-    console.warn(`  [deadline] Unknown month "${monthName}" in "${value}" — leaving as-is`);
+    console.warn(`  [deadline] Unknown month "${monthName}" in "${value}", leaving as-is`);
     return value;
   }
   if (!offset) {
-    console.warn(`  [deadline] Unknown timezone "${tzAbbr}" in "${value}" — leaving as-is`);
+    console.warn(`  [deadline] Unknown timezone "${tzAbbr}" in "${value}", leaving as-is`);
     return value;
   }
 

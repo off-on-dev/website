@@ -32,11 +32,6 @@ const sanitizeSchema = {
 // rendering would make IDs non-deterministic between incremental and clean builds.
 let abbrExpansionCounter = 0;
 
-/** Reset the abbr counter so a run produces deterministic ids independent of
- *  prior renders (e.g. across the verification gate vs. a fresh build). */
-export function resetAbbrCounter() {
-  abbrExpansionCounter = 0;
-}
 
 /** Post-sanitize: turn <abbr title> into a focusable tooltip trigger whose
  *  expansion is exposed to assistive tech via an adjacent sr-only span. */
@@ -98,20 +93,21 @@ function isNonPublicUrl(href) {
 
 /** Add target/rel and the shared "opens in a new tab" hint to http/https <a> tags. */
 function annotateExternalLinks(html) {
+  // Match any <a> tag regardless of attribute order, then extract href.
   return html.replace(
-    /<a href="(https?:\/\/[^"]+)"([^>]*)>([\s\S]*?)<\/a>/gi,
-    (_, href, restAttrs, content) => {
+    /<a\b([^>]*)>([\s\S]*?)<\/a>/gi,
+    (_, attrs, content) => {
+      const hrefMatch = attrs.match(/\bhref="(https?:\/\/[^"]+)"/i);
+      if (!hrefMatch) return `<a${attrs}>${content}</a>`;
+      const href = hrefMatch[1];
       if (isNonPublicUrl(href)) {
-        console.warn(`[markdown-pipeline] Stripped non-public href: "${href}" — link text preserved.`);
+        console.warn(`[markdown-pipeline] Stripped non-public href: "${href}", link text preserved.`);
         return content;
       }
-      const attrs = restAttrs.includes("target=")
-        ? restAttrs
-        : ` target="_blank" rel="noopener noreferrer"${restAttrs}`;
-      const described = restAttrs.includes("aria-describedby=")
-        ? attrs
-        : `${attrs} aria-describedby="new-tab-hint"`;
-      return `<a href="${href}"${described}>${content}</a>`;
+      let newAttrs = attrs;
+      if (!attrs.includes("target=")) newAttrs += ' target="_blank" rel="noopener noreferrer"';
+      if (!attrs.includes("aria-describedby=")) newAttrs += ' aria-describedby="new-tab-hint"';
+      return `<a${newAttrs}>${content}</a>`;
     }
   );
 }

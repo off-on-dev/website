@@ -9,6 +9,7 @@ import {
   BLUESKY_URL,
   X_URL,
   BRAND_SECONDARY_LINE_PARTS,
+  PROPOSE_ADVENTURE_URL,
 } from "@/lib/site";
 import CommunityLeaders from "@/components/CommunityLeaders.astro";
 
@@ -103,7 +104,7 @@ const BRAND_SECONDARY_LINE = BRAND_SECONDARY_LINE_PARTS.join(" ");
                   <p class="text-sm text-dim leading-relaxed flex-1">
                     Have a scenario that would make a great challenge? Submit your idea on GitHub. Ready to go further? Pick up an approved idea and implement the full adventure.
                   </p>
-                  <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
+                  <a href={PROPOSE_ADVENTURE_URL} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
                     Read the adventure ideas guide <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
                   </a>
                   <a href="https://github.com/off-on-dev/open-source-challenges/issues?q=is%3Aissue+is%3Aopen+label%3A%22adventure+idea%22" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">

@@ -13,10 +13,12 @@ export const CONTACT_EMAIL = "offondev@gmail.com";
 export const LINKEDIN_URL = "https://www.linkedin.com/company/offondev";
 export const BLUESKY_URL = "https://bsky.app/profile/off-on-dev.bsky.social";
 export const X_URL = "https://x.com/OffonDev";
-export const CURRENT_YEAR = 2026;
+export const CURRENT_YEAR = new Date().getFullYear();
 export const GA_MEASUREMENT_ID = "G-YEYE9DFHWE";
 export const CONSENT_STORAGE_KEY = "analytics_consent";
 export const CONSENT_EXPIRY_MS = 1000 * 60 * 60 * 24 * 180;
+export const PROPOSE_ADVENTURE_URL =
+  "https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea";
 export const BRAND_SHORT_DESCRIPTION =
   "A welcoming open source community to learn through hands-on challenges, share knowledge, and build together.";
 export const BRAND_SLOGAN_PARTS = ["Vendor-Neutral", "Open Source", "Community-Driven"] as const;

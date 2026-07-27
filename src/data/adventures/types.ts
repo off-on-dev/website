@@ -120,7 +120,7 @@ export type Adventure = {
 export type AdventureContributor = {
   name: string;
   url?: string;
-  /** Pre-rendered HTML from markdown — always render via InlineProse or dangerouslySetInnerHTML. */
+  /** Pre-rendered HTML from markdown. Always render via InlineProse or set:html. */
   aboutHtml?: string;
   adventures: { id: string; title: string }[];
 };
