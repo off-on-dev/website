@@ -1,0 +1,1 @@
+import{t as e}from"./vendor-react-BNgfYwb6.js";var t=e(),n=/<(p|ul|ol|blockquote|h[1-6]|pre|table|hr|figure|div)\b/,r=({html:e,className:r})=>{let i=e=>[r?.trim(),e].filter(Boolean).join(` `);return n.test(e)?(0,t.jsx)(`div`,{className:i(`md-content`),dangerouslySetInnerHTML:{__html:e}}):(0,t.jsx)(`p`,{className:i(`md-inline`),dangerouslySetInnerHTML:{__html:e}})};export{r as t};
