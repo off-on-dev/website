@@ -270,6 +270,11 @@ function adventuresLoader(): Loader {
         seen.add(entry.name);
         const raw = readFileSync(yamlPath, "utf8");
         const digest = generateDigest(raw);
+        // Digest is over the YAML only, so a change to the RENDERING code
+        // (markdown-pipeline.mjs / adventure-derive.mjs) does not invalidate a
+        // persisted store. CI is unaffected (fresh npm ci → empty store → full
+        // render); locally, clear node_modules/.astro/data-store.json (or .astro)
+        // after editing the pipeline to force a re-render.
         if (store.get(entry.name)?.digest === digest) continue; // unchanged: skip re-render
         const data = await parseData({ id: entry.name, data: parseYaml(raw) });
         store.set({ id: entry.name, data, digest });

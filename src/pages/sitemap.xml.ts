@@ -10,7 +10,9 @@ import { SITE_URL } from "@/lib/site";
 export const GET: APIRoute = async () => {
   const adventures = (await getCollection("adventures")).map((a) => a.data);
   const { tags } = getChallengeData(adventures);
-  const lastmod = new Date().toISOString().slice(0, 10);
+  // No <lastmod>: every build runs at a fresh timestamp, so a build-time date
+  // would falsely mark every URL as changed on every deploy, training crawlers
+  // to distrust the signal. Omitting it is more honest than a per-build "now".
 
   const staticPaths = [
     "/",
@@ -36,7 +38,7 @@ export const GET: APIRoute = async () => {
   const body =
     `<?xml version="1.0" encoding="UTF-8"?>\n` +
     `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-    paths.map((p) => `  <url><loc>${SITE_URL}${p}</loc><lastmod>${lastmod}</lastmod></url>`).join("\n") +
+    paths.map((p) => `  <url><loc>${SITE_URL}${p}</loc></url>`).join("\n") +
     `\n</urlset>\n`;
 
   return new Response(body, { headers: { "Content-Type": "application/xml" } });

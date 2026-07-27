@@ -1,10 +1,8 @@
-// Build-time markdown-to-HTML pipeline for adventure prose fields.
-//
-// PORTED VERBATIM from scripts/generate-adventures.mjs (the current React app's
-// generator) so the Astro content collection produces byte-identical HTML.
-// Keep in sync until cutover, when the generator is removed and this becomes the
-// single source of truth. Any divergence here is what the Phase 2 verification
-// gate exists to catch.
+// Build-time markdown-to-HTML pipeline for adventure prose fields. This is the
+// single source of truth for prose HTML (the old React generator was removed at
+// cutover). Renders sanitised HTML with abbreviation-tooltip triggers, external-
+// link annotation, and code-block header markup — all at build time so pages
+// ship finished HTML (no client DOM restructuring / layout shift).
 
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -113,12 +111,41 @@ function annotateExternalLinks(html) {
   );
 }
 
+// Copy-icon markup shared by the build-time code-block header and (as the
+// "copied" swap) the Layout click-wirer. Inlined so no runtime icon lib is needed.
+const CODE_COPY_ICON =
+  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
+
+/** Build-time code-block chrome: wrap each `<pre><code>` in the header (language
+ *  label + Copy button) + flush body structure, so it renders server-side with
+ *  no layout shift and works without JS. Layout.astro only wires the Copy click. */
+function renderCodeBlockChrome(html) {
+  return html.replace(
+    /<pre tabindex="0" aria-label="Code block">(<code([^>]*)>[\s\S]*?<\/code>)<\/pre>/g,
+    (_match, codeInner, codeAttrs) => {
+      const langMatch = codeAttrs.match(/language-([\w-]+)/);
+      const lang = langMatch ? langMatch[1] : "code";
+      return (
+        '<div class="code-block-body" data-code-block>' +
+        '<div class="code-block-header">' +
+        `<span class="code-lang-label" aria-hidden="true">${lang}</span>` +
+        '<button type="button" class="code-header-btn" aria-label="Copy code" data-copy-code>' +
+        `${CODE_COPY_ICON}<span>Copy</span></button>` +
+        '</div>' +
+        `<div class="md-pre-group"><pre tabindex="0" aria-label="Code block">${codeInner}</pre></div>` +
+        "</div>"
+      );
+    },
+  );
+}
+
 /** Convert markdown to full block HTML (preserves <p>, <ul>, <pre>, headings). */
 export async function mdToBlock(str) {
   if (!str) return "";
   const result = await mdProcessor.process(str);
   let html = String(result).trim();
   html = html.replace(/<pre>/g, '<pre tabindex="0" aria-label="Code block">');
+  html = renderCodeBlockChrome(html);
   html = annotateExternalLinks(html);
   return html;
 }

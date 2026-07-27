@@ -43,17 +43,24 @@ const resolveSrc = (src: string): string => (src.startsWith("/") ? base + src.sl
         return <div class="md-content" set:html={block.html} />;
       }
       if (block.type === "code") {
+        // Same build-time header + Copy-button structure as prose code blocks
+        // (rendered by markdown-pipeline.mjs); Layout.astro wires the click only.
+        const label = block.title ?? block.language ?? "code";
         return (
-          <div>
-            {block.title && (
-              <p class="rounded-t-lg border border-b-0 border-border bg-[hsl(var(--surface))] px-4 py-2 font-mono text-xs text-dim">
-                {block.title}
-              </p>
-            )}
-            <pre
-              tabindex="0"
-              aria-label={block.title ? `Code block: ${block.title}` : "Code block"}
-              class={`overflow-x-auto border border-border bg-black/30 p-4 font-mono text-sm ${block.title ? "rounded-b-lg" : "rounded-lg"}`}><code>{block.code}</code></pre>
+          <div class="code-block-body" data-code-block>
+            <div class="code-block-header">
+              <span class="code-lang-label" aria-hidden="true">{label}</span>
+              <button type="button" class="code-header-btn" aria-label="Copy code" data-copy-code>
+                <Icon name="lucide:copy" width={12} height={12} aria-hidden="true" />
+                <span>Copy</span>
+              </button>
+            </div>
+            <div class="md-pre-group">
+              <pre
+                tabindex="0"
+                aria-label={block.title ? `Code block: ${block.title}` : "Code block"}
+                class="overflow-x-auto border border-border bg-black/30 p-4 font-mono text-sm rounded-b-lg"><code>{block.code}</code></pre>
+            </div>
           </div>
         );
       }
