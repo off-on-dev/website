@@ -222,7 +222,8 @@ async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Record<s
     ...(level.estimated_time ? { estimatedTime: level.estimated_time } : {}),
     ...(scenarioHtml ? { scenario: scenarioHtml } : {}),
     ...(architectureHtml ? { architecture: architectureHtml } : {}),
-    // TODO(phase-2b): architectureDiagram needs asset wiring (SVG import). Filename for now.
+    // architectureDiagram is a filename; the level page resolves it against the
+    // src/assets/diagrams glob (import.meta.glob) to a hashed, emitted asset URL.
     ...(level.architecture_diagram ? { architectureDiagram: level.architecture_diagram } : {}),
     ...(level.diagram_alt ? { diagramAlt: level.diagram_alt } : {}),
     ...(level.architecture_ascii ? { architectureAscii: level.architecture_ascii } : {}),

@@ -63,13 +63,13 @@ const activeCls =
           ),
         )}
       </ul>
-      <ThemeToggle variant="desktop" client:load transition:persist="theme-desktop" />
+      <ThemeToggle variant="desktop" client:media="(min-width: 768px)" transition:persist="theme-desktop" />
     </div>
 
     {/* Mobile: theme toggle + hamburger drawer */}
     <div class="flex md:hidden items-center gap-3">
-      <ThemeToggle variant="mobile" client:load transition:persist="theme-mobile" />
-      <MobileMenu links={navItems} client:load transition:persist="mobile-menu" />
+      <ThemeToggle variant="mobile" client:media="(max-width: 767px)" transition:persist="theme-mobile" />
+      <MobileMenu links={navItems} client:media="(max-width: 767px)" transition:persist="mobile-menu" />
     </div>
   </div>
 </nav>

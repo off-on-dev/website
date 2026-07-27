@@ -65,7 +65,7 @@ const path = initialTag ? `/challenges/${tagToSlug(initialTag)}/` : "/challenges
           base={base}
           initialTag={initialTag}
           adventureCount={adventureCount}
-          client:load
+          client:idle
         >
           {adventures.map((a) => (
             <AdventureCard slot="adventures" adventure={{ ...a, isLive: isAdventureLive(a) }} />

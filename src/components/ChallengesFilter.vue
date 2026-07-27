@@ -406,7 +406,7 @@ function navigatePanel(e: KeyboardEvent): void {
           </h3>
 
           <ul role="list" class="mt-3 space-y-1.5">
-            <li v-for="l in e.learnings.slice(0, 3)" :key="l" class="flex items-start gap-2 text-sm text-muted-foreground">
+            <li v-for="l in e.learnings" :key="l" class="flex items-start gap-2 text-sm text-muted-foreground">
               <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
               <span class="md-inline min-w-0" v-html="stripLinks(l)" />
             </li>

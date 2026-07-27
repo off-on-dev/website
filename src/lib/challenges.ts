@@ -30,11 +30,14 @@ export const isAdventureLive = (a: {
   );
 };
 
+// The filter cards preview at most this many learnings; entries are capped at
+// build so the (SSR-serialized) island payload stays small.
+const LEARNINGS_PREVIEW_COUNT = 3;
+
 export type ChallengeEntry = {
   levelId: string;
   name: string;
   difficulty: string;
-  topics: string[];
   learnings: string[];
   estimatedTime?: string;
   adventureId: string;
@@ -78,8 +81,7 @@ export function getChallengeData(adventures: AdventureData[]): {
       levelId: level.id,
       name: level.name,
       difficulty: level.difficulty,
-      topics: level.topics,
-      learnings: level.learnings ?? [],
+      learnings: (level.learnings ?? []).slice(0, LEARNINGS_PREVIEW_COUNT),
       estimatedTime: level.estimatedTime,
       adventureId: a.slug,
       adventureTitle: a.title,

@@ -60,7 +60,7 @@ const starterLevel = starter?.levels.find((l) => l.difficulty === "Beginner");
           adventureCount={adventureCount}
           embedded
           seeAllHref={hasMore ? `${base}challenges/` : undefined}
-          client:load
+          client:visible
         >
           {visibleAdventures.map((a) => (
             <AdventureCard slot="adventures" adventure={{ ...a, isLive: isAdventureLive(a) }} />
