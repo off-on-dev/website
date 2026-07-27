@@ -24,7 +24,7 @@ export const CONSENT_EXPIRY_MS = 1000 * 60 * 60 * 24 * 180;
 
 export const THEME_STORAGE_KEY = "theme";
 
-export const CURRENT_YEAR = new Date().getFullYear();
+export const CURRENT_YEAR = 2026; // Update manually each January
 
 export const PROPOSE_ADVENTURE_URL =
   "https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea";
