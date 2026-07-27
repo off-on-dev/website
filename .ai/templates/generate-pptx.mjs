@@ -11,7 +11,7 @@
  * Before running: place the four TTF files in tmp/ (gitignored at project root):
  *   Inter_18pt-Regular.ttf, Inter_18pt-SemiBold.ttf, Syne-Regular.ttf, Syne-Bold.ttf
  *
- * Run: node .claude/templates/generate-pptx.mjs
+ * Run: node .ai/templates/generate-pptx.mjs
  */
 
 import PptxGenJS from 'pptxgenjs';
