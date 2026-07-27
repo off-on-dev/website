@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Generate src/data/solutions/index.ts from authored TypeScript solution files.
+ * Rebuild src/data/solutions/index.ts, manifest.ts, and patch all GENERATED:solutions regions.
  *
  * Usage:
  *   node scripts/generate-solutions.mjs

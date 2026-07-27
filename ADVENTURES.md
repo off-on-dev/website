@@ -11,7 +11,10 @@ Adventures live in a separate repo ([open-source-challenges](https://github.com/
 - [Completing the PR Checklist](#completing-the-pr-checklist): what to do after the sync
 - [Architecture Diagrams](#architecture-diagrams): SVG, ASCII art, and prose fields
 - [Re-syncing an Open PR](#re-syncing-an-open-pr): updating an in-progress PR
+- [Adding a New Level to an Already-Merged Adventure](#adding-a-new-level-to-an-already-merged-adventure): promoting a Coming Soon level
 - [Adding a Solution Walkthrough](#adding-a-solution-walkthrough): post-challenge write-ups
+- [Workflows at a Glance](#workflows-at-a-glance): quick reference for all GitHub Actions workflows
+- [Refresh Scripts](#refresh-scripts): running data refresh scripts locally
 
 ---
 
@@ -366,6 +369,8 @@ git commit -s -m "chore: update llms.txt for <slug>"
 
 Confirm the adventure appears under the Adventures section in `public/llms.txt` with the correct title and URL before pushing.
 
+`public/llms-full.txt` is not patched by the generator. Update it manually when adding a new adventure or level, or when a level's description changes significantly.
+
 ### 11. Run the a11y audit
 
 After the build passes, run the accessibility audit against any new or changed pages.
@@ -503,16 +508,16 @@ The three Echoes Lost in Orbit solutions show the format in full:
 
 This is a Claude Code slash command. If you are using a different editor or AI tool, skip to [Without Claude Code](#without-claude-code) instead.
 
-Paste or attach the walkthrough content in any format: markdown, YAML, HTML, or plain text. The skill infers the adventure ID, level ID, and contributor name from the content where possible, confirms them with you, and then:
-
 ```sh
 /add-solution
 ```
 
+Paste or attach the walkthrough content in any format: markdown, YAML, HTML, or plain text. The skill infers the adventure ID, level ID, and contributor name from the content where possible, confirms them with you, and then:
+
 1. Parses the input into structured steps (`SolutionBlock[]` arrays with text, code, image, and callout blocks).
 2. Downloads any referenced images and converts them to WebP at quality 85 using `cwebp`. Images are saved to `public/solutions/<adventure-id>/`.
 3. Writes `src/data/solutions/<adventure-id>/<level-id>.ts` with the full typed `Solution` object.
-4. Runs `npm run generate:solutions` to rebuild the barrel index and patch region markers.
+4. Runs `npm run generate:solutions` to rebuild the solution index and patch region markers.
 5. Runs `npm run build` and `npm run lint` to verify the output compiles.
 
 After the skill completes, run `/a11y-audit` against the new solution page before merging.
@@ -520,39 +525,36 @@ After the skill completes, run `/a11y-audit` against the new solution page befor
 ### Without Claude Code
 
 1. Confirm that `<adventure-id>` matches a directory in `src/data/adventures/` and that `<level-id>` is one of `beginner`, `intermediate`, or `expert`.
-2. Copy the template folder into `src/data/solutions/`:
+2. Copy the template into `src/data/solutions/`:
 
     ```sh
-    cp -r .ai/templates/solution/ src/data/solutions/<adventure-id>/
-    ```
-
-    If your level is not `beginner`, rename the file inside:
-
-    ```sh
-    mv src/data/solutions/<adventure-id>/beginner.ts src/data/solutions/<adventure-id>/<level-id>.ts
+    mkdir -p src/data/solutions/<adventure-id>
+    cp .ai/templates/solution/beginner.ts src/data/solutions/<adventure-id>/<level-id>.ts
     ```
 
 3. Fill in the `Solution` object: update `adventureId`, `levelId`, `title`, `contributor`, and all content fields. See [`src/data/solutions/types.ts`](src/data/solutions/types.ts) for reference.
 4. If the solution uses images, convert them to WebP at quality 85 and save them in `public/solutions/<adventure-id>/`:
 
     ```sh
-    cwebp -q 85 input.png -o public/solutions/<adventure-id>/step-name.webp
+    cwebp -q 85 input.png -o public/solutions/<adventure-id>/<level-id>-step-name.webp
     ```
 
-    Reference them with absolute paths in the `image` blocks (e.g. `/solutions/<adventure-id>/step-name.webp`).
+    Reference them with absolute paths in the `image` blocks (e.g. `/solutions/<adventure-id>/<level-id>-step-name.webp`).
 
-5. Run `npm run generate:solutions` to rebuild the barrel index and patch region markers. This step is not optional: without it your solution has no route and your PR fails CI.
+5. Run `npm run generate:solutions` to rebuild the solution index and patch region markers. This step is not optional: without it your solution has no route and your PR fails CI.
 6. Start the dev server (`npm run dev`) and preview your solution at `http://localhost:8080/adventures/<adventure-id>/levels/<level-id>/solution/`.
-7. Run the mandatory checks — all three must pass with zero failures:
+7. Run the mandatory checks — all four must pass with zero failures:
 
     ```sh
     npm run lint
+    npm run lint:reuse
     npm test
     npm run build && npm run test:e2e
     ```
 
-8. Run `/a11y-audit` against the new solution page.
-9. Open a PR against `main` on the upstream repo.
+    `npm run test:e2e` includes the axe accessibility audit. Review the output for WCAG violations before opening a PR.
+
+8. Open a PR against `main` on the upstream repo.
 
 ### Attribution
 
@@ -579,7 +581,7 @@ This means you can open a solution PR at any point during a live challenge witho
 ```text
 src/data/solutions/<adventure-id>/<level-id>.ts   ← authored TypeScript (commit this)
 public/solutions/<adventure-id>/<level-id>-*.webp ← converted images (commit these)
-src/data/solutions/index.ts                       ← auto-generated barrel (commit this)
+src/data/solutions/index.ts                       ← auto-generated index file (commit this)
 src/data/solutions/manifest.ts                    ← auto-generated manifest (commit this)
 ```
 
@@ -589,7 +591,7 @@ src/data/solutions/manifest.ts                    ← auto-generated manifest (c
 
 | File | What gets patched |
 | --- | --- |
-| `src/data/solutions/index.ts` | Full barrel re-generated: one import per solution file, exported as `SOLUTIONS: Solution[]`. Never edit by hand. |
+| `src/data/solutions/index.ts` | Fully regenerated: one import per solution file, exported as `SOLUTIONS: Solution[]`. Never edit by hand. |
 | `src/data/solutions/manifest.ts` | Lightweight set of solution IDs regenerated on every run. Used to check solution availability without importing full solution data. Never edit by hand. |
 | `react-router.config.ts` | `GENERATED:solutions` region: one prerender entry per solution route (`/adventures/<id>/levels/<level>/solution`). |
 | `src/test/seo.test.ts` | `GENERATED:solutions` region: one route entry per solution. |
@@ -598,7 +600,7 @@ src/data/solutions/manifest.ts                    ← auto-generated manifest (c
 
 You do not need to touch any of these files manually when adding a solution.
 
-Run `npm run generate:solutions:validate` to check that the generator output is in sync without writing any files. CI runs this check automatically on PRs that touch `src/data/solutions/**` and fails with "Generated files are out of date" if the barrel or region markers are stale.
+Run `npm run generate:solutions:validate` to check that the generator output is in sync without writing any files. CI runs this check automatically on PRs that touch `src/data/solutions/**`. If `index.ts`, `manifest.ts`, or any `GENERATED:solutions` region is out of sync, the script prints `Out of sync: <filepath>` per file and exits non-zero.
 
 ---
 
@@ -608,7 +610,7 @@ Run `npm run generate:solutions:validate` to check that the generator output is 
 | --- | --- | --- |
 | `sync-adventure.yml` | Manual (`workflow_dispatch`) | Sync adventure content from the challenges repo and open or update a PR |
 | `add-discussion-url.yml` | Manual (`workflow_dispatch`) | Set a Discourse thread URL for a level after it has been merged, and open a PR with updated YAML and initial posts |
-| `validate-adventures.yml` | PR (when adventure or solution files change) | Validate YAML schema, check generated files are up-to-date, verify route/sitemap/prerender consistency |
+| `validate-adventures.yml` | PR (when adventure, solution, sitemap, or config files change) | Validate YAML schema; check adventure and solution generated files are up-to-date; verify route, sitemap, and prerender consistency; check all adventures are registered in leaderboard data |
 | `deploy.yml` | Push to `main` | Build and deploy to GitHub Pages at [offon.dev](https://offon.dev) |
 | `preview.yml` | Open PR | Deploy a PR preview at `/pr-preview/pr-<n>/` |
 | `refresh-community-data.yml` | Hourly + manual | Refresh discussion posts, leaderboard data, and community leaders from Discourse |
@@ -637,4 +639,4 @@ DISCOURSE_API_USERNAME=your_username
 
 The `.env` file is gitignored. For CI, set `DISCOURSE_API_KEY` and `DISCOURSE_API_USERNAME` as repository secrets in **Settings > Secrets and variables > Actions**.
 
-> The `COMMUNITY_BASE` constant in each refresh script is a necessary duplicate of `COMMUNITY_URL` in `src/data/constants.ts`. The scripts run in Node outside the Vite build and cannot import from `src/`. Always update all five places together if the community URL ever changes: `refresh-discussions.mjs`, `refresh-leaderboard.mjs`, `refresh-community-leaders.mjs`, `generate-community-sitemap.mjs`, and `src/data/constants.ts`.
+> The `COMMUNITY_BASE` constant in each of these scripts is a necessary duplicate of `COMMUNITY_URL` in `src/data/constants.ts`. The scripts run in Node outside the Vite build and cannot import from `src/`. Always update all six places together if the community URL ever changes: `refresh-discussions.mjs`, `refresh-leaderboard.mjs`, `refresh-community-leaders.mjs`, `generate-community-sitemap.mjs`, `set-discussion-url.mjs` (called by the `add-discussion-url.yml` workflow, not run directly), and `src/data/constants.ts`.
