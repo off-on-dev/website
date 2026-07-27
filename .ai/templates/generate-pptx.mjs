@@ -64,10 +64,12 @@ function addBg(s) {
   s.background = { color: BG };
 }
 
-function addSlide() {
+function addSlide({ logo } = {}) {
   const s = pptx.addSlide();
   addBg(s);
   s.addImage({ path: FAVICON, x: W - PX - 0.24, y: 0.18, w: 0.24, h: 0.31 });
+  if (logo === 'left')   s.addImage({ path: LOGO, x: PX,          y: PY, w: 1.6, h: 0.4 });
+  if (logo === 'center') s.addImage({ path: LOGO, x: W / 2 - 0.8, y: PY, w: 1.6, h: 0.4 });
   return s;
 }
 
@@ -129,13 +131,28 @@ function cardBg(s, x, y, w, h) {
   });
 }
 
+// Pill row — pills centered horizontally on the slide
+const GAP = 0.14;
+function renderPillRow(s, pills, py) {
+  pills.forEach(p => { p.pw = Math.max(p.text.length * 0.082 + 0.32, 0.9); });
+  const totalW = pills.reduce((acc, p) => acc + p.pw, 0) + (pills.length - 1) * GAP;
+  let px = (W - totalW) / 2;
+  pills.forEach(({ text, hi, pw }) => {
+    s.addShape(pptx.ShapeType.roundRect, {
+      x: px, y: py, w: pw, h: 0.28,
+      fill: { color: hi ? '120e00' : CARD },
+      line: { color: hi ? AMBER : BORD, width: hi ? 1 : 0.75 },
+      rectRadius: 0.06,
+    });
+    s.addText(text, { x: px, y: py, w: pw, h: 0.28, fontFace: INTER, fontSize: 8, color: hi ? AMBER : MUTED, align: 'center' });
+    px += pw + GAP;
+  });
+}
+
 // ── Slide 1: Cover ────────────────────────────────────────────────────────────
 
 {
-  const s = pptx.addSlide();
-  addBg(s);
-  s.addImage({ path: LOGO,    x: PX,            y: PY,   w: 1.6, h: 0.4 });
-  s.addImage({ path: FAVICON, x: W - PX - 0.24, y: 0.18, w: 0.24, h: 0.31 });
+  const s = addSlide({ logo: 'left' });
 
   s.addText('Presentation Title', {
     x: PX, y: PY + 0.72, w: CW, h: 0.76,
@@ -308,10 +325,7 @@ function cardBg(s, x, y, w, h) {
 // ── Slide 8: Join Us ──────────────────────────────────────────────────────────
 
 {
-  const s = pptx.addSlide();
-  addBg(s);
-  s.addImage({ path: FAVICON, x: W - PX - 0.24, y: 0.18, w: 0.24, h: 0.31 });
-  s.addImage({ path: LOGO, x: W / 2 - 0.8, y: PY, w: 1.6, h: 0.4 });
+  const s = addSlide({ logo: 'center' });
 
   heading(s, 'Join Us', PY + 0.64, { size: 38, color: AMBER, align: 'center' });
   s.addText(
@@ -330,27 +344,8 @@ function cardBg(s, x, y, w, h) {
     { text: '@OffonDev (X)' },
   ];
 
-  const ROW_H = 0.38;
-  const GAP   = 0.14;
-
-  function renderPillRow(pills, py2) {
-    pills.forEach(p => { p.pw = Math.max(p.text.length * 0.082 + 0.32, 0.9); });
-    const totalW = pills.reduce((acc, p) => acc + p.pw, 0) + (pills.length - 1) * GAP;
-    let px2 = (W - totalW) / 2;
-    pills.forEach(({ text, hi, pw }) => {
-      s.addShape(pptx.ShapeType.roundRect, {
-        x: px2, y: py2, w: pw, h: 0.28,
-        fill: { color: hi ? '120e00' : CARD },
-        line: { color: hi ? AMBER : BORD, width: hi ? 1 : 0.75 },
-        rectRadius: 0.06,
-      });
-      s.addText(text, { x: px2, y: py2, w: pw, h: 0.28, fontFace: INTER, fontSize: 8, color: hi ? AMBER : MUTED, align: 'center' });
-      px2 += pw + GAP;
-    });
-  }
-
-  renderPillRow(mainPills,   PY + 2.08);
-  renderPillRow(socialPills, PY + 2.08 + ROW_H + 0.1);
+  renderPillRow(s, mainPills,   PY + 2.08);
+  renderPillRow(s, socialPills, PY + 2.56);
 }
 
 // ── Write initial PPTX ────────────────────────────────────────────────────────
@@ -388,20 +383,23 @@ const EMBED = [
 
 const zip  = await JSZip.loadAsync(readFileSync(OUT));
 
-// Read and update presentation.xml + rels
-let presXml = await zip.file('ppt/presentation.xml').async('string');
-let relsXml = await zip.file('ppt/_rels/presentation.xml.rels').async('string');
+// Read all three entries in parallel; contentTypesXml processing must stay after the font loop
+// (zip.files needs the newly added font entries), but the fetch itself is independent.
+let [presXml, relsXml, contentTypesXml] = await Promise.all([
+  zip.file('ppt/presentation.xml').async('string'),
+  zip.file('ppt/_rels/presentation.xml.rels').async('string'),
+  zip.file('[Content_Types].xml').async('string'),
+]);
 
 // Find the highest existing rId
 const existingIds = [...relsXml.matchAll(/Id="rId(\d+)"/g)].map(m => parseInt(m[1], 10));
 let nextId = (existingIds.length ? Math.max(...existingIds) : 0) + 1;
 
 // Group by typeface
-const byFace = {};
-EMBED.forEach(f => {
-  if (!byFace[f.typeface]) byFace[f.typeface] = {};
-  byFace[f.typeface][f.variant] = f.ttf;
-});
+const byFace = EMBED.reduce((acc, { typeface, variant, ttf }) => {
+  (acc[typeface] ??= {})[variant] = ttf;
+  return acc;
+}, {});
 
 const newRels  = [];
 const fontXmls = [];
@@ -428,12 +426,10 @@ for (const [typeface, variants] of Object.entries(byFace)) {
     variantRids[variant] = rId;
   }
 
-  const parts = [
-    variantRids.regular    ? `<p:regular r:id="${variantRids.regular}"/>` : '',
-    variantRids.bold       ? `<p:bold r:id="${variantRids.bold}"/>` : '',
-    variantRids.italic     ? `<p:i r:id="${variantRids.italic}"/>` : '',
-    variantRids.boldItalic ? `<p:boldItalic r:id="${variantRids.boldItalic}"/>` : '',
-  ].join('');
+  const parts = Object.entries({ regular: 'regular', bold: 'bold', italic: 'i', boldItalic: 'boldItalic' })
+    .filter(([v]) => variantRids[v])
+    .map(([v, t]) => `<p:${t} r:id="${variantRids[v]}"/>`)
+    .join('');
 
   fontXmls.push(
     `<p:embeddedFont><p:font typeface="${typeface}"/>${parts}</p:embeddedFont>`,
@@ -457,8 +453,6 @@ zip.file('ppt/presentation.xml', presXml);
 //  2. Remove Override entries for parts pptxgenjs declares but never creates
 //     (e.g. slideMaster2-8.xml when only slideMaster1.xml exists).
 //     PowerPoint triggers repair when it finds declared parts with no backing file.
-let contentTypesXml = await zip.file('[Content_Types].xml').async('string');
-
 if (!contentTypesXml.includes('fntdata')) {
   contentTypesXml = contentTypesXml.replace(
     '</Types>',
