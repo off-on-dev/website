@@ -476,6 +476,8 @@ When a new level is ready in the challenges repo after the first adventure PR ha
 
 Solution walkthroughs live in `src/data/solutions/<adventure-id>/<level-id>.ts` and are committed to the repo.
 
+Before starting, make sure your local environment is set up: see [CONTRIBUTING.md](CONTRIBUTING.md) for Node version requirements and install steps.
+
 ### Use the `/add-solution` skill
 
 The fastest way to add a solution is with the Claude Code skill:
@@ -490,12 +492,37 @@ Paste or attach the walkthrough content in any format: markdown, YAML, HTML, or 
 2. Downloads any referenced images and converts them to WebP at quality 85 using `cwebp`. Images are saved to `public/solutions/<adventure-id>/`.
 3. Writes `src/data/solutions/<adventure-id>/<level-id>.ts` with the full typed `Solution` object.
 4. Runs `node scripts/generate-solutions.mjs` to rebuild the barrel index and patch region markers.
-5. Runs `npm run build` and `npm run lint` to verify the output compiles cleanly.
-6. Run `/a11y-audit` against the new solution page to catch any accessibility issues before merging.
+5. Runs `npm run build`, `npm run lint`, `npm test`, and `npm run test:e2e` to verify the output compiles and all tests pass.
+
+After the skill completes, run `/a11y-audit` against the new solution page before merging.
+
+### Without Claude Code
+
+1. Confirm that `<adventure-id>` matches a directory in `src/data/adventures/` and that `<level-id>` is one of `beginner`, `intermediate`, or `expert`.
+2. Create `src/data/solutions/<adventure-id>/` if it does not exist.
+3. Copy an existing solution file as a starting point: `cp src/data/solutions/echoes-lost-in-orbit/beginner.ts src/data/solutions/<adventure-id>/<level-id>.ts`.
+4. Fill in the `Solution` object. See [`src/data/solutions/types.ts`](src/data/solutions/types.ts) for the full type definition including all optional fields (`context`, `spoilerWarning`, `furtherReading`, `completeSolution`, `outro`, and per-step `takeaways`).
+5. If the solution uses images, save them as `.webp` files in `public/solutions/<adventure-id>/` and reference them with absolute paths.
+6. Run `node scripts/generate-solutions.mjs` to rebuild the barrel index and patch region markers.
+7. Run `npm run build`, `npm run lint`, `npm test`, and `npm run build && npm run test:e2e` to verify everything passes.
+8. Run `/a11y-audit` against the new solution page.
+9. Open a pull request.
+
+### Attribution
+
+The `contributor` field on `Solution` takes `{ name: string; url?: string }`. If the person is already listed in `src/data/adventures/contributors.ts`, import them and pick `name` and `url` rather than duplicating the values:
+
+```ts
+import { KATHARINA_SICK } from "@/data/adventures/contributors";
+
+contributor: { name: KATHARINA_SICK.name, url: KATHARINA_SICK.url },
+```
+
+If the contributor is not yet in `contributors.ts`, use the inline form directly.
 
 ### What the generator updates
 
-`scripts/generate-solutions.mjs` scans every `.ts` file in `src/data/solutions/<adventure-id>/` (excluding `index.ts`, `manifest.ts`, and `types.ts`) and rebuilds five files automatically:
+`scripts/generate-solutions.mjs` scans every `.ts` file in `src/data/solutions/<adventure-id>/` (excluding `index.ts`, `manifest.ts`, and `types.ts`) and rebuilds six files automatically:
 
 | File | What gets patched |
 | --- | --- |
@@ -507,6 +534,8 @@ Paste or attach the walkthrough content in any format: markdown, YAML, HTML, or 
 | `e2e/smoke.spec.ts` | `GENERATED:solutions` region: one `{ path, title }` smoke-test entry per solution. |
 
 You do not need to touch any of these files manually when adding a solution.
+
+Run `npm run generate:solutions:validate` to check that the generator output is in sync without writing any files. CI runs this check automatically on PRs that touch `src/data/solutions/**` and fails with "Generated files are out of date" if the barrel or region markers are stale.
 
 ### Deadline gating
 
