@@ -135,7 +135,7 @@ export type RelatedLevel = {
 /**
  * Lightweight level shape used for card and filter views on the home/challenges pages.
  * Contains only the fields needed to render AdventureCard and FilteredLevelCard.
- * Generated into summaries.ts. Do not import the full AdventureLevel where this suffices.
+ * Do not import the full AdventureLevel where this suffices.
  */
 export type AdventureLevelSummary = {
   id: string;
@@ -146,7 +146,7 @@ export type AdventureLevelSummary = {
   estimatedTime?: string;
 };
 
-/** Lightweight adventure shape for card grid views. Generated into summaries.ts. */
+/** Lightweight adventure shape for card grid views. */
 export type AdventureCardSummary = {
   id: string;
   title: string;

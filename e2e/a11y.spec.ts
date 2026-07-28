@@ -19,6 +19,7 @@ const PAGES = [
   "/adventures/blind-by-design/levels/beginner/",
   "/adventures/building-cloudhaven/",
   "/adventures/building-cloudhaven/levels/beginner/",
+  "/adventures/dead-reckoning/",
   "/adventures/dead-reckoning/levels/expert/",
   "/adventures/echoes-lost-in-orbit/",
   "/adventures/echoes-lost-in-orbit/levels/beginner/",

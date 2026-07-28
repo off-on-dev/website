@@ -1,5 +1,5 @@
 // Derives the flat, filterable level list and the tag set for /challenges,
-// from the adventures collection. Mirrors filter-utils.ts + tag-utils.ts:
+// from the adventures collection.
 // tags are ADVENTURE tags (OR match); levels are then filtered by difficulty.
 
 export const DIFFICULTIES = ["Beginner", "Intermediate", "Expert"] as const;

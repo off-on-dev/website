@@ -18,6 +18,7 @@ const ROUTES: Record<string, string> = {
   "/adventures/blind-by-design/levels/beginner/": "Stand up the Lab - Blind by Design - OffOn",
   "/adventures/building-cloudhaven/": "Building CloudHaven - OffOn Adventures",
   "/adventures/building-cloudhaven/levels/beginner/": "The Foundation Stones - Building CloudHaven - OffOn",
+  "/adventures/dead-reckoning/": "Dead Reckoning - OffOn Adventures",
   "/adventures/dead-reckoning/levels/expert/": "The Chronometer - Dead Reckoning - OffOn",
   "/adventures/echoes-lost-in-orbit/": "Echoes Lost in Orbit - OffOn Adventures",
   "/adventures/echoes-lost-in-orbit/levels/beginner/": "Broken Echoes - Echoes Lost in Orbit - OffOn",
