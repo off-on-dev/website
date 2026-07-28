@@ -2,7 +2,7 @@
  * Bundles deck-template/index.html with all local assets into a self-contained zip.
  * Users download, unzip, rename the deck-template folder, and open index.html in any browser.
  *
- * Run: node .claude/templates/generate-reveal-zip.mjs
+ * Run: node .ai/templates/generate-reveal-zip.mjs
  *
  * Re-vendor note: public/reveal/ is a hand-vendored four-file subset of reveal.js@6.0.1.
  * The full dist/ tree is NOT copied. When updating Reveal, copy only these four files from

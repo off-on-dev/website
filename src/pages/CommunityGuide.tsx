@@ -7,7 +7,7 @@ import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { BottomCTA } from "@/components/BottomCTA";
 import { SectionLabel } from "@/components/SectionLabel";
-import { CODE_OF_CONDUCT_URL, COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL } from "@/data/constants";
+import { CODE_OF_CONDUCT_URL, COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL, PROPOSE_ADVENTURE_URL } from "@/data/constants";
 import { Abbr } from "@/components/Abbr";
 import { CommunityLeaders } from "@/components/CommunityLeaders";
 import { SidebarLayout } from "@/components/SidebarLayout";
@@ -111,7 +111,7 @@ const CommunityGuide = (): JSX.Element => {
                 <p className="text-sm text-dim leading-relaxed flex-1">
                   Bring your expertise and experience. Help build adventures for others to learn from open source tech with a broken scenario, a real-world failure, or a skill gap. Shape the next adventure.
                 </p>
-                <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={extLink}>
+                <a href={PROPOSE_ADVENTURE_URL} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={extLink}>
                   Submit an idea <ExternalLink size={12} aria-hidden="true" />
                 </a>
               </div>

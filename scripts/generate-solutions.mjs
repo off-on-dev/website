@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 
 /**
- * Generate src/data/solutions/index.ts from authored TypeScript solution files.
+ * Rebuild src/data/solutions/index.ts, manifest.ts, and patch all GENERATED:solutions regions.
  *
  * Usage:
  *   node scripts/generate-solutions.mjs
  *   node scripts/generate-solutions.mjs --validate-only
  *
  * Scans src/data/solutions/<adventure-id>/<level-id>.ts (authored files, not generated)
- * and rebuilds the barrel index plus patches GENERATED:solutions regions in
- * react-router.config.ts, e2e/smoke.spec.ts, src/test/seo.test.ts, and
- * src/test/prerender.test.ts.
+ * and rebuilds six files: index.ts and manifest.ts (fully regenerated), plus
+ * patches GENERATED:solutions regions in react-router.config.ts,
+ * e2e/smoke.spec.ts, src/test/seo.test.ts, and src/test/prerender.test.ts.
  *
  * Never edit src/data/solutions/index.ts by hand.
  */

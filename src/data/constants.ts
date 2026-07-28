@@ -10,6 +10,9 @@ export const CODE_OF_CONDUCT_URL = `${COMMUNITY_URL}/t/code-of-conduct/31`;
 
 export const CODESPACES_BASE = "https://codespaces.new/off-on-dev/open-source-challenges";
 
+export const CHALLENGES_REPO_URL = "https://github.com/off-on-dev/open-source-challenges";
+export const PROPOSE_ADVENTURE_URL = `${CHALLENGES_REPO_URL}/blob/main/CONTRIBUTING.md#propose-an-adventure-idea`;
+
 export const SITE_URL = "https://offon.dev";
 export const SITE_NAME = "offon.dev";
 
@@ -24,7 +27,7 @@ export const CONSENT_EXPIRY_MS = 1000 * 60 * 60 * 24 * 180;
 
 export const THEME_STORAGE_KEY = "theme";
 
-export const CURRENT_YEAR = 2026; // Update manually each year
+export const CURRENT_YEAR = 2026; // Update manually each January
 
 export const CONTACT_EMAIL = "offondev@gmail.com";
 

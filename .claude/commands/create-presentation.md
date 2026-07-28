@@ -3,7 +3,7 @@ name: create-presentation
 description: >
   Create a presentation deck for an OffOn event or challenge.
   Supports Reveal.js HTML and editable PowerPoint PPTX.
-  Uses format-specific templates from public/ and .claude/templates/.
+  Uses format-specific templates from public/ and .ai/templates/.
 ---
 
 # Create Presentation Command
@@ -26,9 +26,9 @@ Ask for anything not already provided:
 
 - **Format**: which output format?
   - `html`: Reveal.js (self-contained HTML, opens in any browser, served from GitHub Pages)
-  - `pptx`: Editable Microsoft PowerPoint (run `node .claude/templates/generate-pptx.mjs` and customise the output)
+  - `pptx`: Editable Microsoft PowerPoint (run `node .ai/templates/generate-pptx.mjs` and customise the output)
 - **Topic**: event intro, challenge walkthrough, or other
-- **Output filename**: Reveal.js — an event slug that becomes the folder name, e.g. `open-source-talks` (written to `public/open-source-talks/index.html`). PPTX — a `.md` outline is not written as a file; edit `.claude/templates/generate-pptx.mjs` directly.
+- **Output filename**: Reveal.js — an event slug that becomes the folder name, e.g. `open-source-talks` (written to `public/open-source-talks/index.html`). PPTX — a `.md` outline is not written as a file; edit `.ai/templates/generate-pptx.mjs` directly.
 - **Slides outline**: list of topics to cover, or free-form description
 - **Speakers / contributors**: names and photos if applicable (photos go in `public/team/` for board members, `public/speakers/` for event speakers)
 
@@ -43,7 +43,7 @@ Read the template for the chosen format; it contains all boilerplate. Do not rec
 | Format | Template file |
 | --- | --- |
 | Reveal.js (`html`) | `public/deck-template/index.html` |
-| PowerPoint (`pptx`) | `.claude/templates/generate-pptx.mjs` (edit and run to regenerate) |
+| PowerPoint (`pptx`) | `.ai/templates/generate-pptx.mjs` (edit and run to regenerate) |
 
 Brand token reference (for writing slide content):
 
@@ -532,10 +532,10 @@ For scenario and architecture text, pull from the adventure's generated TypeScri
 6. Do not add any of these files to `src/routes.ts`, `public/sitemap.xml`, or `react-router.config.ts`.
 7. Confirm: `ls -lh <output-path>`
 
-**For PowerPoint (`pptx`):** edit `.claude/templates/generate-pptx.mjs` with the presentation content, then run:
+**For PowerPoint (`pptx`):** edit `.ai/templates/generate-pptx.mjs` with the presentation content, then run:
 
 ```sh
-node .claude/templates/generate-pptx.mjs
+node .ai/templates/generate-pptx.mjs
 ```
 
 This outputs `public/downloads/offon-deck-template.pptx`. Fonts (Inter 18pt, Syne) are embedded automatically. The slide background (`bg.png`) is the pre-rendered firefly gradient; do not regenerate it unless the design changes.

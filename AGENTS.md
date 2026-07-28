@@ -1,28 +1,30 @@
-# CLAUDE.md
+# AGENTS.md
 
 Guidance for AI coding agents working in this repository.
 
-> **Claude Code users:** this file is auto-loaded. If you are using a different AI tool, share [`AGENTS.md`](AGENTS.md) with your assistant instead. Keep both files in sync when updating project guidelines.
+> This is the vendor-neutral version of the project AI guidelines. It works with any AI assistant — paste it as a system prompt or load it into your tool's context. Claude Code users: your tool auto-loads `CLAUDE.md`, which contains the same rules plus Claude-specific slash commands and hooks. Keep both files in sync when updating project guidelines.
 
 ---
 
-## Project Commands
+## AI Prompts for Contributors
 
-Project-level Claude Code commands live in `.claude/commands/`. Invoke them with `/command-name` in Claude Code. These are committed to the repo and available to all contributors.
+Workflow-specific AI prompts live in [`.claude/commands/`](.claude/commands/). Any AI assistant can use them: paste the relevant file as a system prompt or opening message. The YAML frontmatter block at the top is harmless and can be ignored.
 
-| Command | When to use |
-| --- | --- |
-| `/a11y-audit` | On-demand accessibility audit using the Red Team / Blue Team persona pipeline. Run against a component or page to get a severity-weighted report. Invokes sub-commands below as needed. |
-| &nbsp;&nbsp;`/keyboard` | Sub-command: writing or reviewing any interactive element — buttons, modals, dropdowns, tabs, custom widgets. |
-| &nbsp;&nbsp;`/navigation` | Sub-command: working on nav components — primary nav, skip links, breadcrumbs, pagination, mobile menus. |
-| &nbsp;&nbsp;`/progressive-enhancement` | Sub-command: building any new feature or reviewing architecture. Ensures core content works without JS. |
-| &nbsp;&nbsp;`/user-personalization` | Sub-command: working on theme toggle, consent state, or any user preference persistence. |
-| `/add-solution` | Generate a structured TypeScript solution file from any input format (md, YAML, HTML, plain text). Downloads and converts images to WebP. |
-| `/create-presentation` | Create a presentation deck for an OffOn event or challenge. Supports two formats: Reveal.js HTML (`public/deck-template/index.html`) and editable PowerPoint PPTX (edit and run `.ai/templates/generate-pptx.mjs`). Reveal.js output goes to `public/<event-slug>/index.html`; PPTX outputs to `public/downloads/offon-deck-template.pptx`. |
+**Claude Code users:** invoke them as slash commands — `/command-name` in Claude Code.
 
-The `spec-first-coding` command is installed globally (`~/.claude/skills/`) and is not in this repo. It enforces W3C spec citations before generating any accessibility-related code.
+| Prompt | File | When to use |
+| --- | --- | --- |
+| a11y-audit | [`.claude/commands/a11y-audit.md`](.claude/commands/a11y-audit.md) | On-demand accessibility audit using the Red Team / Blue Team persona pipeline. Run against a component or page to get a severity-weighted report. |
+| &nbsp;&nbsp;keyboard | [`.claude/commands/keyboard.md`](.claude/commands/keyboard.md) | Sub-prompt: writing or reviewing any interactive element — buttons, modals, dropdowns, tabs, custom widgets. |
+| &nbsp;&nbsp;navigation | [`.claude/commands/navigation.md`](.claude/commands/navigation.md) | Sub-prompt: working on nav components — primary nav, skip links, breadcrumbs, pagination, mobile menus. |
+| &nbsp;&nbsp;progressive-enhancement | [`.claude/commands/progressive-enhancement.md`](.claude/commands/progressive-enhancement.md) | Sub-prompt: building any new feature or reviewing architecture. Ensures core content works without JS. |
+| &nbsp;&nbsp;user-personalization | [`.claude/commands/user-personalization.md`](.claude/commands/user-personalization.md) | Sub-prompt: working on theme toggle, consent state, or any user preference persistence. |
+| add-solution | [`.claude/commands/add-solution.md`](.claude/commands/add-solution.md) | Generate a structured TypeScript solution file from any input format (md, YAML, HTML, plain text). Downloads and converts images to WebP. |
+| create-presentation | [`.claude/commands/create-presentation.md`](.claude/commands/create-presentation.md) | Create a presentation deck for an OffOn event or challenge. Supports two formats: Reveal.js HTML and editable PowerPoint PPTX (edit and run `node .ai/templates/generate-pptx.mjs`). |
 
-Use `/a11y-audit` for all accessibility audits in this repo. The four sub-commands can also be invoked directly when working in their specific domain.
+A `spec-first-coding` prompt is available for Claude Code users (installed globally at `~/.claude/skills/`). It enforces W3C spec citations before generating any accessibility-related code. For other AI tools, cite the relevant W3C spec manually before implementing any accessibility feature.
+
+Use the `a11y-audit` prompt for all accessibility audits in this repo. The four sub-prompts can also be used independently when working in their specific domain.
 
 ---
 
@@ -115,9 +117,12 @@ public/
   solutions/    # Solution walkthrough screenshots, one subdirectory per adventure ID (e.g. solutions/echoes-lost-in-orbit/). Referenced by src/data/solutions/ with absolute paths.
   reveal/       # Self-hosted Reveal.js 6.0.1 library. Used by deck/index.html, deck-template/index.html, and all generated Reveal.js decks.
   deck/         # Reveal.js presentation for Open Source Talks events (public/deck/index.html). Served at /deck/. All asset paths use ../ to resolve sibling directories correctly regardless of trailing-slash normalization.
-  deck-template/ # Boilerplate template for /create-presentation (Reveal.js format). Edit deck-template/index.html to update the design system for all future decks. Asset paths use ../ so the file works both from the dev server (/deck-template/) and inside the standalone ZIP.
+  deck-template/ # Boilerplate template for the create-presentation prompt (Reveal.js format). Edit deck-template/index.html to update the design system for all future decks. Asset paths use ../ so the file works both from the dev server (/deck-template/) and inside the standalone ZIP.
   nyx.webp      # Nyx mascot illustration. Referenced in BottomCTA and About via import.meta.env.BASE_URL.
   nyx_peek.webp # Nyx peek variant. Referenced in About via import.meta.env.BASE_URL.
+.ai/
+  prompts/      # Vendor-neutral AI prompts for contributor workflows
+  templates/    # Reusable templates (solution starter, presentation generators)
 .github/
   workflows/
     deploy.yml                    # Production deploy to GitHub Pages (push to main)
@@ -158,10 +163,8 @@ npm run generate:solutions:validate  # Validate solution files without writing t
 npx shadcn@latest add <component>   # Add a shadcn/ui component
 
 # Regenerate downloadable presentation ZIPs and PPTX (run from repo root)
-node .ai/templates/generate-reveal-zip.mjs   # → public/downloads/offon-reveal-template.zip
-# pptxgenjs is not in devDependencies (not needed in CI). Install it locally first:
-#   npm install pptxgenjs
-node .ai/templates/generate-pptx.mjs         # → public/downloads/offon-deck-template.pptx
+node .ai/templates/generate-reveal-zip.mjs   # -> public/downloads/offon-reveal-template.zip
+node .ai/templates/generate-pptx.mjs         # -> public/downloads/offon-deck-template.pptx
 ```
 
 ---
@@ -248,7 +251,7 @@ When diagnosing a bug, especially in the production build, follow these rules wi
 - **TooltipProvider** is intentionally not mounted in `Layout.tsx` until a call site exists. Wrap only the subtree that uses `<Tooltip>` with `<TooltipProvider>` at that point.
 - **Author-controlled prose fields contain pre-rendered HTML.** Every YAML/TS field that holds prose written by a challenge author (`level.audience`, `tool.description`, `step.title`, `step.content`, `contributor.about`, `rewards.eligibility`, `tier.description`, `rewards.ranking_note`, `level.learnings`, `level.objective`, `level.intro`, `level.backstory`, `level.hook`, `level.scenario`, `level.architecture`, `adventure.story`, `adventure.backstory`) is converted from Markdown to sanitised HTML at build time by `scripts/generate-adventures.mjs`. Always render them with `dangerouslySetInnerHTML={{ __html: value }}` and the `md-inline` (inline prose) or `md-content` (block content) CSS class. Never render as `{value}` directly. Identifier fields (`id`, URLs, enum values like `difficulty`, emoji) are not author prose and are rendered directly.
   - **When the container is an interactive element** (e.g. a `<Link>` card or a `<button>`), call `stripLinks(html)` from `src/lib/markdown.ts` before passing to `dangerouslySetInnerHTML` to prevent nested `<a>` inside `<a>` or `<button>`, which is invalid HTML.
-  - **When placing a prose HTML field in a plain-text context** (e.g. a `<meta content="">` attribute), call `stripHtml(html)` from `src/lib/markdown.ts`. This strips tags *and* decodes HTML entities. Using a bare tag-strip regex leaves entities intact; React then double-encodes them in the attribute value (e.g. `&amp;` → `&amp;amp;`).
+  - **When placing a prose HTML field in a plain-text context** (e.g. a `<meta content="">` attribute), call `stripHtml(html)` from `src/lib/markdown.ts`. This strips tags *and* decodes HTML entities. Using a bare tag-strip regex leaves entities intact; React then double-encodes them in the attribute value (e.g. `&amp;` -> `&amp;amp;`).
   - **Exception: `adventure.story` in `AdventureCard` and `summaries.ts`:** The summary card and `ADVENTURE_SUMMARIES` store `story` as plain text (no HTML) so the home page renders it as a plain `<span>` with no markdown overhead. The generator emits a build-time warning if any story value contains markdown syntax (`*`, `_`, `` ` ``). Keep story field values as plain prose.
   - **The markdown pipeline (`unified`, `remark-parse`, `remark-gfm`, `remark-rehype`, `rehype-raw`, `rehype-sanitize`, `rehype-stringify`) is dev-only**, used only by `scripts/generate-adventures.mjs`. Do not import any of these packages in component or page files.
 
@@ -403,7 +406,7 @@ All analytics-related constants live in `src/data/constants.ts`:
 - When a page renders multiple navigation landmarks, use `within` from `@testing-library/react` to scope queries to the correct landmark before asserting link destinations.
 - **Testing hooks with dynamic imports:** Never use `vi.mock` for a dynamic import called inside a hook. Export a loader type and default loader; tests inject `vi.fn().mockResolvedValue(data)` via an optional argument. See `src/hooks/useDiscussionPosts.ts` for the reference implementation.
 - **Coverage:** run `npm run test:coverage` for v8 coverage reports. `@vitest/coverage-v8` is installed as a dev dependency.
-- **Axe incomplete flags:** When axe reports an "Incomplete" or "Needs Review" result, provide a definitive manual ruling (confirmed violation, confirmed pass, or cannot determine without AT testing) before merging. Do not leave incomplete flags unresolved. Use `/a11y-audit` to evaluate in context.
+- **Axe incomplete flags:** When axe reports an "Incomplete" or "Needs Review" result, provide a definitive manual ruling (confirmed violation, confirmed pass, or cannot determine without AT testing) before merging. Do not leave incomplete flags unresolved. Use the `a11y-audit` prompt to evaluate in context.
 
 ---
 
@@ -479,7 +482,7 @@ The `set-state-in-effect` disable is intentional: the mount effect corrects a kn
 
 ### JavaScript degradation testing
 
-Core content must be readable with JavaScript disabled. To verify: DevTools → Cmd+Shift+P → "Disable JavaScript" → reload the page.
+Core content must be readable with JavaScript disabled. To verify: DevTools -> Cmd+Shift+P -> "Disable JavaScript" -> reload the page.
 
 - Page headings, body text, images, and navigation links must be visible and functional.
 - Filters, theme toggle, and consent banner may degrade gracefully — they are JS-enhanced features.
@@ -720,7 +723,7 @@ Every code change must pass all of these checks before being considered done. St
 1. **Run lint:** `npm run lint` must exit with zero errors.
 2. **Run REUSE lint:** `npm run lint:reuse` must pass. Requires `pip install reuse` once. Run whenever a new file type or extension is added to the repo.
 3. **Run tests:** `npm test` must pass with zero failures.
-4. **Run e2e and a11y tests:** `npm run build && npm run test:e2e` must pass with zero failures. The axe audit runs tags `["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"]` in both light and dark mode. Never reduce this tag set. Axe catches roughly 30–40% of real issues — treat it as ground truth for mechanical violations, but manual persona testing (see ACCESSIBILITY.md) is always required.
+4. **Run e2e and a11y tests:** `npm run build && npm run test:e2e` must pass with zero failures. The axe audit runs tags `["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"]` in both light and dark mode. Never reduce this tag set. Axe catches roughly 30-40% of real issues — treat it as ground truth for mechanical violations, but manual persona testing (see ACCESSIBILITY.md) is always required.
 5. **Run build:** `npm run build` must complete with no TypeScript errors or bundling failures.
 6. **Re-read every file you changed:** verify the final state is correct. Never assume an edit landed correctly without checking.
 7. **Check all call sites:** if you changed a function signature, component props, or exported type, search for all usages and confirm they are updated.
@@ -782,7 +785,7 @@ A task is not done until the relevant docs are updated.
 1. **Did you add or change a component, hook, or utility?** Update `styleguide.md`.
 2. **Did you add or change a page or route?** Update the routes table in `README.md`.
 3. **Did you add or change an environment variable, constant, or config value?** Document it in `README.md`.
-4. **Did you change a build, deploy, or dev workflow?** Update the Commands section in both `CLAUDE.md` and `README.md`.
+4. **Did you change a build, deploy, or dev workflow?** Update the Commands section in `AGENTS.md`, keep `CLAUDE.md` in sync, and update `README.md`.
 
 After completing any task, explicitly state which checks applied, what was updated, or why it was skipped.
 
@@ -793,10 +796,10 @@ After completing any task, explicitly state which checks applied, what was updat
 | New utility function | styleguide.md: brief entry if it affects patterns |
 | New page or route | README.md routes table; sitemap.xml and prerender array for static routes |
 | New constant | README.md constants section, styleguide.md if visual |
-| New workflow step | README.md commands section, CLAUDE.md if it changes a rule |
+| New workflow step | README.md commands section, AGENTS.md (keep CLAUDE.md in sync) |
 | New brand or copy rule | styleguide.md first, then apply across codebase |
-| Bug fix that reveals a missing rule | CLAUDE.md: add the rule to prevent recurrence |
-| New test pattern | CLAUDE.md: add to Testing section if it sets a precedent |
+| Bug fix that reveals a missing rule | AGENTS.md: add the rule to prevent recurrence (keep CLAUDE.md in sync) |
+| New test pattern | AGENTS.md: add to Testing section if it sets a precedent (keep CLAUDE.md in sync) |
 
 ---
 

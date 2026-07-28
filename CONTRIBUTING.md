@@ -33,11 +33,12 @@ Open PRs from your fork against `main` on the upstream repo.
 
 ```sh
 npm run lint             # ESLint
+npm run lint:reuse       # REUSE licence compliance (requires: pip install reuse)
 npm test                 # Vitest unit tests
 npm run build && npm run test:e2e  # Playwright smoke, SSG, a11y, and hydration tests
 ```
 
-All three must pass with zero failures before opening a PR.
+All four must pass with zero failures before opening a PR.
 
 ## Conventions
 
@@ -60,7 +61,25 @@ git commit -s -m "feat: add contributor badge"
 - Tailwind utility classes directly on JSX. No inline styles.
 - Both light and dark mode must work for every UI change.
 
-Full rules are in [CLAUDE.md](CLAUDE.md) and [styleguide.md](styleguide.md).
+Full rules are in [AGENTS.md](AGENTS.md) (or [CLAUDE.md](CLAUDE.md) for Claude Code users) and [styleguide.md](styleguide.md).
+
+## AI assistance
+
+The project guidelines in [AGENTS.md](AGENTS.md) work with any AI assistant. Paste it as a system prompt or load it into your tool's context before starting work.
+
+Workflow-specific AI prompts live in [`.claude/commands/`](.claude/commands/). Paste the relevant file into your AI assistant as a system prompt or opening message. The YAML frontmatter block at the top is harmless and can be ignored.
+
+| Prompt | When to use |
+| --- | --- |
+| `add-solution.md` | Adding a solution walkthrough |
+| `create-presentation.md` | Creating a Reveal.js or PowerPoint deck |
+| `a11y-audit.md` | Accessibility audit of a component or page |
+| `keyboard.md` | Reviewing interactive element keyboard behaviour |
+| `navigation.md` | Reviewing nav components |
+| `progressive-enhancement.md` | Ensuring core content works without JS |
+| `user-personalization.md` | Reviewing theme or consent state changes |
+
+**Claude Code users:** these are available as slash commands (`/add-solution`, `/create-presentation`, `/a11y-audit`, etc.) — you do not need to paste them manually.
 
 ## Accessibility
 
