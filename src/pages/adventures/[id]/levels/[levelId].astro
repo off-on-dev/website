@@ -294,7 +294,7 @@ const walkthroughSteps = howToPlay && howToPlay.length > 0 ? [getStartedStep, ..
                 <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true"></span>
                 {
                   verification ? (
-                    <span>
+                    <span class="min-w-0 flex-1">
                       Verify your solution:
                       <pre
                         tabindex="0"
@@ -305,7 +305,7 @@ const walkthroughSteps = howToPlay && howToPlay.length > 0 ? [getStartedStep, ..
                       </span>
                     </span>
                   ) : (
-                    <span>Commit and push your changes, then trigger the verification workflow on GitHub Actions.</span>
+                    <span class="min-w-0 flex-1">Commit and push your changes, then trigger the verification workflow on GitHub Actions.</span>
                   )
                 }
               </li>
