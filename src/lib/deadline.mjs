@@ -1,5 +1,8 @@
 // Converts "D Month YYYY at HH:MM TZ" (challenges repo format) to ISO 8601; pass-throughs for ISO, TODO, null, undefined.
 
+/** Sentinel returned when a timezone abbreviation is unrecognised. Keeps the solution hidden. */
+export const UNRESOLVABLE_DEADLINE = "9999-12-31T23:59:59Z";
+
 const MONTH_INDEX = {
   January: 1, February: 2, March: 3, April: 4, May: 5, June: 6,
   July: 7, August: 8, September: 9, October: 10, November: 11, December: 12,
@@ -44,7 +47,7 @@ export function parseDeadline(value) {
   }
   if (!offset) {
     console.error(`[deadline] Unrecognized timezone abbreviation '${tzAbbr}' in: ${value} — treating deadline as not yet passed (solution will stay hidden)`);
-    return "9999-12-31T23:59:59Z";
+    return UNRESOLVABLE_DEADLINE;
   }
 
   const dd = dayStr.padStart(2, "0");

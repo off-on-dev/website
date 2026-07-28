@@ -98,13 +98,16 @@ let desktopMq: MediaQueryList | null = null;
 function handleBeforeSwap(): void {
   if (open.value) closeMenu(false);
 }
+function handleAfterSwap(): void {
+  currentPath.value = window.location.pathname;
+}
 function handleBreakpoint(e: MediaQueryListEvent): void {
   if (e.matches && open.value) closeMenu(false);
 }
 
 onMounted(() => {
   currentPath.value = window.location.pathname;
-  document.addEventListener('astro:after-swap', () => { currentPath.value = window.location.pathname; });
+  document.addEventListener('astro:after-swap', handleAfterSwap);
   document.addEventListener("astro:before-swap", handleBeforeSwap);
   desktopMq = window.matchMedia("(min-width: 768px)");
   desktopMq.addEventListener("change", handleBreakpoint);
@@ -112,6 +115,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   document.removeEventListener("keydown", onKeydown);
+  document.removeEventListener("astro:after-swap", handleAfterSwap);
   document.removeEventListener("astro:before-swap", handleBeforeSwap);
   desktopMq?.removeEventListener("change", handleBreakpoint);
   clearSiblingsInert();

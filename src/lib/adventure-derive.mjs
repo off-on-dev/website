@@ -3,8 +3,7 @@
 // the gate exercises the real code, not a copy.
 
 import { LEVEL_DIFFICULTY_BY_EMOJI } from "./level-constants.mjs";
-
-const BRAND_NAME = "OffOn";
+import { BRAND_NAME } from "./site.ts";
 
 /** Strip common markdown syntax so strings are safe for plain-text meta descriptions. */
 export function stripMarkdown(str) {
@@ -27,12 +26,12 @@ export function truncate(str, max) {
 /** Synthesize a level meta description from YAML fields. */
 export function buildLevelMetaDescription(level) {
   const name = level.name ?? level.title;
-  const difficulty = level.difficulty ?? LEVEL_DIFFICULTY_BY_EMOJI[level.emoji];
+  const difficulty = level.difficulty ?? LEVEL_DIFFICULTY_BY_EMOJI[level.emoji] ?? "";
   const rawIntro = Array.isArray(level.intro) ? level.intro[0] : level.summary || "";
   const intro = stripMarkdown(rawIntro);
   const topics = (level.topics || []).join(", ");
   const base = `${name}: ${intro}`;
-  const suffix = ` A ${difficulty.toLowerCase()} ${topics} challenge on ${BRAND_NAME}.`;
+  const suffix = difficulty ? ` A ${difficulty.toLowerCase()} ${topics} challenge on ${BRAND_NAME}.` : "";
   if (base.length + suffix.length <= 160) return base + suffix;
   return truncate(base, 160);
 }

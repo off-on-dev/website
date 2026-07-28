@@ -83,11 +83,13 @@ describe("difficultyStyle", () => {
       expect(() => difficultyStyle("Novice")).not.toThrow();
     });
 
-    it("includes 'undefined' in the CSS variable references when the level is unknown", () => {
-      // DIFFICULTY_VAR["Novice"] is undefined, so the template literal produces
-      // `--difficulty-undefined-border` and `--difficulty-undefined-bg`
+    it("falls back to the 'starter' CSS variable stem for unknown difficulty levels", () => {
+      // Unknown difficulty falls back to "starter" (the Beginner stem) so the output
+      // contains valid CSS variable references rather than `--difficulty-undefined-*`.
       const style = difficultyStyle("Novice");
-      expect(style).toContain("undefined");
+      expect(style).toContain("--difficulty-starter-border");
+      expect(style).toContain("--difficulty-starter-bg");
+      expect(style).not.toContain("undefined");
     });
   });
 

@@ -8,14 +8,13 @@ import {
   LINKEDIN_URL,
   BLUESKY_URL,
   X_URL,
-  BRAND_SECONDARY_LINE_PARTS,
   PROPOSE_ADVENTURE_URL,
 } from "@/lib/site";
 import CommunityLeaders from "@/components/CommunityLeaders.astro";
+import SectionLabel from "@/components/SectionLabel.astro";
+import BottomCTA from "@/components/BottomCTA.astro";
 
 const base = import.meta.env.BASE_URL;
-
-const BRAND_SECONDARY_LINE = BRAND_SECONDARY_LINE_PARTS.join(" ");
 
 ---
 
@@ -67,9 +66,7 @@ const BRAND_SECONDARY_LINE = BRAND_SECONDARY_LINE_PARTS.join(" ");
         <div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12">
           <div>
             <section aria-labelledby="ways-to-contribute">
-              <div class="mb-3">
-                <span class="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">get involved</span>
-              </div>
+              <SectionLabel>get involved</SectionLabel>
               <h2 id="ways-to-contribute" class="text-2xl font-bold text-foreground mb-4">How to Get Involved</h2>
               <p class="text-muted-foreground leading-relaxed mb-8 max-w-2xl">
                 Explore the platform, play an adventure, join discussions, follow the weekly digest, shape or build a challenge, improve the docs, or spread the word. Every action here is a genuine contribution.
@@ -215,9 +212,7 @@ const BRAND_SECONDARY_LINE = BRAND_SECONDARY_LINE_PARTS.join(" ");
       <div class="mx-auto max-w-6xl">
         <section aria-labelledby="sponsor-callout">
           <div class="max-w-2xl">
-            <div class="mb-3">
-              <span class="section-label font-sans text-sm font-medium uppercase tracking-widest text-primary">organisations</span>
-            </div>
+            <SectionLabel>organisations</SectionLabel>
             <h2 id="sponsor-callout" class="text-2xl font-bold text-foreground mb-4">Support the Community as a Sponsor</h2>
             <p class="text-muted-foreground leading-relaxed mb-6">
               If your organisation wants to invest in the open source ecosystem without commercial strings attached, sponsorship is how you do it. Sponsors provide financial and operational support while the community retains full editorial independence.
@@ -230,67 +225,6 @@ const BRAND_SECONDARY_LINE = BRAND_SECONDARY_LINE_PARTS.join(" ");
       </div>
     </div>
 
-    {/* Bottom CTA */}
-    <section aria-labelledby="bottom-cta-heading" class="bg-primary py-16 px-6 md:px-16 relative overflow-hidden">
-      <div class="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1fr_1fr_auto] gap-12 lg:gap-16 items-center">
-        {/* Left - headline */}
-        <div>
-          <h2 id="bottom-cta-heading" class="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground">
-            <span class="block">Start Curious.</span>
-            <span class="block">Break Things.</span>
-            <span class="block">Learn Together.</span>
-            <span class="block">Glow Brighter.</span>
-          </h2>
-        </div>
-
-        {/* Right - copy + buttons */}
-        <div class="flex flex-col gap-4">
-          <p class="font-sans text-base leading-relaxed text-background/90">
-            <strong class="font-medium text-primary-foreground">
-              You bring your questions, your fixes, your ideas.
-            </strong>{" "}
-            We bring the challenges, the tooling, and the practitioners who care about the same problems you do.
-          </p>
-          <p class="font-sans text-base leading-relaxed text-background/90">
-            Every spark starts with one person. Like Nyx, our firefly, together we brighten the whole open source ecosystem.
-          </p>
-          <p class="font-sans text-base font-medium text-background/90">
-            That's {BRAND_NAME}. {BRAND_SECONDARY_LINE}
-          </p>
-          <div class="flex gap-3 flex-wrap mt-2">
-            <a
-              href={COMMUNITY_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-describedby="new-tab-hint"
-              class="btn-inverse"
-            >
-              Join the Community <IconExternalLink width={14} height={14} aria-hidden="true" />
-            </a>
-            <a
-              href="https://github.com/off-on-dev/open-source-challenges"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-describedby="new-tab-hint"
-              class="btn-ghost-inverse"
-            >
-              View Challenges on GitHub <IconExternalLink width={14} height={14} aria-hidden="true" />
-            </a>
-          </div>
-        </div>
-
-        {/* Nyx mascot - third column, visible on lg+ only */}
-        <img
-          src={`${base}nyx.webp`}
-          alt=""
-          aria-hidden="true"
-          width={240}
-          height={240}
-          loading="lazy"
-          decoding="async"
-          class="hidden lg:block w-[240px] h-[240px] self-start"
-        />
-      </div>
-    </section>
+    <BottomCTA />
   </main>
 </Layout>

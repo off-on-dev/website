@@ -1,5 +1,4 @@
-// Site-level constants. Mirror of the relevant entries in src/data/constants.ts;
-// at cutover, pages import from the real constants module.
+// Site-level constants. Single source of truth for brand, URLs, and config.
 export const SITE_URL = "https://offon.dev";
 export const SITE_NAME = "offon.dev";
 export const BRAND_NAME = "OffOn";
@@ -22,6 +21,7 @@ export const PROPOSE_ADVENTURE_URL = `${CHALLENGES_REPO_URL}/blob/main/CONTRIBUT
 export const BRAND_SHORT_DESCRIPTION =
   "A welcoming open source community to learn through hands-on challenges, share knowledge, and build together.";
 export const BRAND_SLOGAN_PARTS = ["Vendor-Neutral", "Open Source", "Community-Driven"] as const;
+export const BRAND_SLOGAN = BRAND_SLOGAN_PARTS.join(". ");
 export const BRAND_SECONDARY_LINE_PARTS = ["always On.", "always Open.", "always Learning."] as const;
 
 /** Canonical URL for a path: SITE_URL + path, normalized to a trailing slash

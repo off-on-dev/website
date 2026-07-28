@@ -12,8 +12,13 @@ const SITE_URL = "https://offon.dev";
 
 // Route → expected exact <title>. Covers every layout type + all static pages.
 const ROUTES: Record<string, string> = {
-  "/": "OffOn - Learn Open Source by Doing",
+  "/": "OffOn - Vendor-Neutral. Open Source. Community-Driven",
   "/adventures/": "Adventures - OffOn",
+  "/adventures/blind-by-design/": "Blind by Design - OffOn Adventures",
+  "/adventures/blind-by-design/levels/beginner/": "Stand up the Lab - Blind by Design - OffOn",
+  "/adventures/building-cloudhaven/": "Building CloudHaven - OffOn Adventures",
+  "/adventures/building-cloudhaven/levels/beginner/": "The Foundation Stones - Building CloudHaven - OffOn",
+  "/adventures/dead-reckoning/levels/expert/": "The Chronometer - Dead Reckoning - OffOn",
   "/adventures/echoes-lost-in-orbit/": "Echoes Lost in Orbit - OffOn Adventures",
   "/adventures/echoes-lost-in-orbit/levels/beginner/": "Broken Echoes - Echoes Lost in Orbit - OffOn",
   "/adventures/echoes-lost-in-orbit/levels/beginner/solution/":
@@ -22,7 +27,10 @@ const ROUTES: Record<string, string> = {
     `${intermediateSolution.title} - Echoes Lost in Orbit - OffOn`,
   "/adventures/echoes-lost-in-orbit/levels/expert/solution/":
     `${expertSolution.title} - Echoes Lost in Orbit - OffOn`,
-  "/adventures/dead-reckoning/levels/expert/": "The Chronometer - Dead Reckoning - OffOn",
+  "/adventures/lex-imperfecta/": "Lex Imperfecta - OffOn Adventures",
+  "/adventures/lex-imperfecta/levels/beginner/": "The Twelve Tables - Lex Imperfecta - OffOn",
+  "/adventures/the-ai-observatory/": "The AI Observatory - OffOn Adventures",
+  "/adventures/the-ai-observatory/levels/beginner/": "Calibrating the Lens - The AI Observatory - OffOn",
   "/challenges/": "Challenges - OffOn",
   "/challenges/opentelemetry/": "OpenTelemetry Challenges - OffOn",
   "/about/": "About OffOn - Building the contributors and maintainers of tomorrow",

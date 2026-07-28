@@ -51,7 +51,8 @@ function readJson<T>(path: string): T | null {
   if (!existsSync(path)) return null;
   try {
     return JSON.parse(readFileSync(path, "utf8")) as T;
-  } catch {
+  } catch (err) {
+    console.error(`[community-data] Failed to parse ${path}:`, err);
     return null;
   }
 }

@@ -261,16 +261,13 @@ describe("ConsentBanner", () => {
 
   // ── focus management ────────────────────────────────────────────────────────
   //
-  // The component intends to move focus via a Vue `watch($consent, ...)` callback.
-  // However, `$consent` is a raw nanostore atom — not a Vue ref or reactive object —
-  // so Vue's `watch` treats it as an invalid source and the callback never fires
-  // (Vue emits "Invalid watch source" at runtime). This means the `cookieBtn.focus()`
-  // / `declineBtn.focus()` calls inside the watch are never reached.
+  // The component moves focus via a Vue `watch(consent, ...)` callback, where
+  // `consent` is the ReadonlyRef returned by `useStore($consent)` from
+  // @nanostores/vue. This IS a valid Vue reactive source, so the watch fires
+  // correctly on every consent state change.
   //
-  // The rendering transitions DO work because `useStore($consent)` from
-  // @nanostores/vue returns a proper Vue ReadonlyRef that re-renders the template
-  // when the atom changes. The tests below verify what actually works: that the
-  // target elements exist, are enabled, and are keyboard-reachable after transitions.
+  // After null → granted: focus moves to the cookie preferences button.
+  // After decided → null: focus moves to the Decline button.
 
   describe("focus management", () => {
     it("cookie button is not disabled and is keyboard-reachable when consent is granted", async () => {
@@ -298,7 +295,7 @@ describe("ConsentBanner", () => {
       wrapper.unmount();
     });
 
-    it("cookie button appears immediately after consent transitions null → granted (rendering works)", async () => {
+    it("focuses the cookie button after null → granted transition", async () => {
       $consent.set(null);
       const wrapper = mount(ConsentBanner, { attachTo: document.body });
       await flushPromises();
@@ -306,20 +303,19 @@ describe("ConsentBanner", () => {
       expect(wrapper.find('[aria-label="Change cookie preferences"]').exists()).toBe(false);
 
       $consent.set("granted");
-      await nextTick();
+      await nextTick(); // let the watch fire
+      await nextTick(); // let the watch's internal nextTick complete
+      await flushPromises();
 
       const cookieBtn = wrapper.find('[aria-label="Change cookie preferences"]');
       expect(cookieBtn.exists()).toBe(true);
-      // Element is present and enabled; programmatic focus via the watch callback
-      // does not fire (watch($consent, ...) is an invalid Vue watch source — nanostore
-      // atoms are not Vue reactive). The cookieBtn ref is wired correctly; only the
-      // watch trigger is broken.
       expect((cookieBtn.element as HTMLButtonElement).disabled).toBe(false);
+      expect(document.activeElement).toBe(cookieBtn.element);
 
       wrapper.unmount();
     });
 
-    it("Decline button appears immediately after consent transitions decided → null (rendering works)", async () => {
+    it("focuses the Decline button after decided → null transition", async () => {
       $consent.set("granted");
       const wrapper = mount(ConsentBanner, { attachTo: document.body });
       await flushPromises();
@@ -327,11 +323,14 @@ describe("ConsentBanner", () => {
       expect(wrapper.find('[aria-label="Decline analytics cookies"]').exists()).toBe(false);
 
       $consent.set(null);
-      await nextTick();
+      await nextTick(); // let the watch fire
+      await nextTick(); // let the watch's internal nextTick complete
+      await flushPromises();
 
       const declineBtn = wrapper.find('[aria-label="Decline analytics cookies"]');
       expect(declineBtn.exists()).toBe(true);
       expect((declineBtn.element as HTMLButtonElement).disabled).toBe(false);
+      expect(document.activeElement).toBe(declineBtn.element);
 
       wrapper.unmount();
     });

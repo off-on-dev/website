@@ -26,6 +26,8 @@ const buttonClass = computed(() =>
 );
 
 let unsubscribe: (() => void) | undefined;
+let t1: ReturnType<typeof setTimeout> | undefined;
+let t2: ReturnType<typeof setTimeout> | undefined;
 
 onMounted(() => {
   theme.value = document.documentElement.classList.contains("light") ? "light" : "dark";
@@ -38,7 +40,11 @@ onMounted(() => {
   });
 });
 
-onUnmounted(() => unsubscribe?.());
+onUnmounted(() => {
+  unsubscribe?.();
+  clearTimeout(t1);
+  clearTimeout(t2);
+});
 
 function toggle(): void {
   const next: Theme = theme.value === "dark" ? "light" : "dark";
@@ -54,11 +60,13 @@ function toggle(): void {
   }
   const statusEl = document.getElementById('theme-status');
   if (statusEl) {
+    clearTimeout(t1);
+    clearTimeout(t2);
     statusEl.textContent = '';
-    setTimeout(() => {
+    t1 = setTimeout(() => {
       statusEl.textContent = next === 'dark' ? 'Theme switched to dark mode' : 'Theme switched to light mode';
     }, 50);
-    setTimeout(() => { statusEl.textContent = ''; }, 1600);
+    t2 = setTimeout(() => { statusEl.textContent = ''; }, 1600);
   }
 }
 </script>

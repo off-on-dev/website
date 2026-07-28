@@ -70,7 +70,7 @@ function injectGtag(): void {
   window.gtag("js", new Date());
   window.gtag("config", GA_MEASUREMENT_ID, {
     cookie_flags: "SameSite=Lax;Secure",
-    cookie_expires: 15552000,
+    cookie_expires: CONSENT_EXPIRY_MS / 1000,
     send_page_view: false,
   });
   const script = document.createElement("script");

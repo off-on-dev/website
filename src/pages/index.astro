@@ -13,7 +13,7 @@ import BottomCTA from "@/components/BottomCTA.astro";
 import StarterNudge from "@/components/StarterNudge.vue";
 import ChallengesFilter from "@/components/ChallengesFilter.vue";
 import { getChallengeData, isAdventureLive, sortAdventuresByMonthDesc } from "@/lib/challenges";
-import { BRAND_NAME, BRAND_SHORT_DESCRIPTION, PROPOSE_ADVENTURE_URL } from "@/lib/site";
+import { BRAND_NAME, BRAND_SHORT_DESCRIPTION, BRAND_SLOGAN, PROPOSE_ADVENTURE_URL } from "@/lib/site";
 
 const base = import.meta.env.BASE_URL;
 const HOME_ADVENTURE_LIMIT = 6;
@@ -29,7 +29,7 @@ const starter = adventures.find((a) => isAdventureLive(a));
 const starterLevel = starter?.levels.find((l) => l.difficulty === "Beginner");
 ---
 
-<Layout title={`${BRAND_NAME} - Learn Open Source by Doing`} description={BRAND_SHORT_DESCRIPTION} path="/">
+<Layout title={`${BRAND_NAME} - ${BRAND_SLOGAN}`} description={BRAND_SHORT_DESCRIPTION} path="/">
   <main id="main-content" tabindex="-1">
     <Hero />
 
