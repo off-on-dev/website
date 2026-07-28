@@ -537,6 +537,8 @@ html {
 
 /* ─── Light mode overrides ───────────────────────────────── */
 
+.light .md-content pre code span { color: var(--shiki-light, inherit); }
+
 .light .card-glow:hover {
   box-shadow:
     0 0 0 1.5px hsl(var(--primary) / 0.45),
@@ -1017,6 +1019,10 @@ abbr[data-title]:focus-visible {
   border-radius: 0;
   font-size: 1em;
 }
+/* Shiki dual-theme token colors (defaultColor:false — only CSS vars on spans).
+   --shiki-dark / --shiki-light are defined inline on each token <span>.
+   Falls back to inherit when a span has no Shiki vars (un-highlighted blocks). */
+.md-content pre code span { color: var(--shiki-dark, inherit); }
 .md-content blockquote {
   position: relative;
   margin-bottom: 1.5rem;

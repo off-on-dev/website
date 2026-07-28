@@ -243,9 +243,12 @@ describe("mdToBlock", () => {
     });
 
     it("preserves the code content inside the block", async () => {
-      // rehype-stringify does not HTML-encode single quotes inside <code>
+      // Shiki wraps tokens in <span> elements, so the text may be split across
+      // spans. Strip tags and check the raw text is present.
       const result = await mdToBlock("```python\nprint('hi')\n```");
-      expect(result).toContain("print('hi')");
+      const text = result.replace(/<[^>]*>/g, "");
+      expect(text).toContain("print");
+      expect(text).toContain("'hi'");
     });
 
     it("falls back to 'code' as the language label when no lang is specified", async () => {

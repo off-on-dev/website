@@ -11,6 +11,43 @@ import remarkRehype from "remark-rehype";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import rehypeStringify from "rehype-stringify";
+import { createHighlighter, bundledLanguages } from "shiki";
+
+// Lazy singleton: initialised on the first code block that needs highlighting.
+// Shiki is bundled with Astro so no extra dependency is needed.
+let _highlighter = null;
+const _loadedLangs = new Set();
+
+async function getHighlighter() {
+  if (!_highlighter) {
+    _highlighter = await createHighlighter({
+      themes: ["github-dark", "github-light"],
+      langs: [],
+    });
+  }
+  return _highlighter;
+}
+
+async function highlightCode(rawCode, lang) {
+  if (!bundledLanguages[lang]) return null;
+  const h = await getHighlighter();
+  if (!_loadedLangs.has(lang)) {
+    try {
+      await h.loadLanguage(lang);
+      _loadedLangs.add(lang);
+    } catch {
+      return null;
+    }
+  }
+  const fullHtml = h.codeToHtml(rawCode, {
+    lang,
+    themes: { light: "github-light", dark: "github-dark" },
+    defaultColor: false,
+  });
+  // Extract the inner <code> content (highlighted token spans).
+  const match = fullHtml.match(/<code[^>]*>([\s\S]*)<\/code>/);
+  return match ? match[1] : null;
+}
 
 const sanitizeSchema = {
   ...defaultSchema,
@@ -117,25 +154,56 @@ const CODE_COPY_ICON =
 
 /** Build-time code-block chrome: wrap each `<pre><code>` in the header (language
  *  label + Copy button) + flush body structure, so it renders server-side with
- *  no layout shift and works without JS. Layout.astro only wires the Copy click. */
-function renderCodeBlockChrome(html) {
-  return html.replace(
-    /<pre tabindex="0" aria-label="Code block">(<code([^>]*)>[\s\S]*?<\/code>)<\/pre>/g,
-    (_match, codeInner, codeAttrs) => {
-      const langMatch = codeAttrs.match(/language-([\w-]+)/);
-      const lang = langMatch ? langMatch[1] : "code";
-      return (
-        '<div class="code-block-body" data-code-block>' +
-        '<div class="code-block-header">' +
-        `<span class="code-lang-label" aria-hidden="true">${lang}</span>` +
-        '<button type="button" class="code-header-btn" aria-label="Copy code" data-copy-code>' +
-        `${CODE_COPY_ICON}<span>Copy</span></button>` +
-        '</div>' +
-        `<div class="md-pre-group"><pre tabindex="0" aria-label="Code block">${codeInner}</pre></div>` +
-        "</div>"
-      );
-    },
-  );
+ *  no layout shift and works without JS. Layout.astro only wires the Copy click.
+ *  When the language is recognised by Shiki, the code tokens are syntax-coloured
+ *  using CSS custom properties (--shiki-light / --shiki-dark) for dual-theme. */
+async function renderCodeBlockChrome(html) {
+  const regex =
+    /<pre tabindex="0" aria-label="Code block"><code([^>]*)>([\s\S]*?)<\/code><\/pre>/g;
+
+  // Split around code block matches so we can process them asynchronously.
+  const segments = [];
+  let lastIndex = 0;
+  let m;
+  while ((m = regex.exec(html)) !== null) {
+    if (m.index > lastIndex) segments.push({ type: "text", value: html.slice(lastIndex, m.index) });
+    const langMatch = m[1].match(/language-([\w-]+)/);
+    segments.push({ type: "code", codeAttrs: m[1], rawContent: m[2], lang: langMatch?.[1] ?? null });
+    lastIndex = m.index + m[0].length;
+  }
+  if (lastIndex < html.length) segments.push({ type: "text", value: html.slice(lastIndex) });
+
+  const parts = await Promise.all(segments.map(async (seg) => {
+    if (seg.type === "text") return seg.value;
+
+    const { lang, rawContent } = seg;
+    const displayLang = lang ?? "code";
+
+    // Decode HTML entities that rehype-sanitize encoded in the code text.
+    const rawCode = rawContent
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&#39;/g, "'")
+      .replace(/&quot;/g, '"');
+
+    // Try Shiki — falls back to the sanitized plain content on unknown lang or error.
+    const highlighted = lang ? await highlightCode(rawCode, lang) : null;
+    const innerContent = highlighted ?? rawContent;
+
+    return (
+      '<div class="code-block-body" data-code-block>' +
+      '<div class="code-block-header">' +
+      `<span class="code-lang-label" aria-hidden="true">${displayLang}</span>` +
+      '<button type="button" class="code-header-btn" aria-label="Copy code" data-copy-code>' +
+      `${CODE_COPY_ICON}<span>Copy</span></button>` +
+      "</div>" +
+      `<div class="md-pre-group"><pre tabindex="0" aria-label="Code block"><code>${innerContent}</code></pre></div>` +
+      "</div>"
+    );
+  }));
+
+  return parts.join("");
 }
 
 /** Convert markdown to full block HTML (preserves <p>, <ul>, <pre>, headings). */
@@ -144,7 +212,7 @@ export async function mdToBlock(str) {
   const result = await mdProcessor.process(str);
   let html = String(result).trim();
   html = html.replace(/<pre>/g, '<pre tabindex="0" aria-label="Code block">');
-  html = renderCodeBlockChrome(html);
+  html = await renderCodeBlockChrome(html);
   html = annotateExternalLinks(html);
   return html;
 }
