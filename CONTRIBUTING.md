@@ -60,7 +60,7 @@ git commit -s -m "feat: add contributor badge"
 - Tailwind utility classes directly on JSX. No inline styles.
 - Both light and dark mode must work for every UI change.
 
-Full rules are in [AGENTS.md](AGENTS.md) and [styleguide.md](styleguide.md).
+Full rules are in [AGENTS.md](AGENTS.md) (or [CLAUDE.md](CLAUDE.md) for Claude Code users) and [styleguide.md](styleguide.md).
 
 ## AI assistance
 

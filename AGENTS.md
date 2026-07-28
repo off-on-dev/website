@@ -2,7 +2,7 @@
 
 Guidance for AI coding agents working in this repository.
 
-> This is the vendor-neutral version of the project AI guidelines. It works with any AI assistant — paste it as a system prompt or load it into your tool's context. Claude Code auto-loads `CLAUDE.md` instead; both files contain the same rules.
+> This is the vendor-neutral version of the project AI guidelines. It works with any AI assistant — paste it as a system prompt or load it into your tool's context. Claude Code users: your tool auto-loads `CLAUDE.md`, which contains the same rules plus Claude-specific slash commands and hooks. Keep both files in sync when updating project guidelines.
 
 ---
 

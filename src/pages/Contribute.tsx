@@ -9,7 +9,7 @@ import { BottomCTA } from "@/components/BottomCTA";
 import { SectionLabel } from "@/components/SectionLabel";
 import { SidebarLayout } from "@/components/SidebarLayout";
 import { CommunityLeaders } from "@/components/CommunityLeaders";
-import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL, LINKEDIN_URL, BLUESKY_URL, X_URL, PROPOSE_ADVENTURE_URL } from "@/data/constants";
+import { COMMUNITY_URL, SITE_URL, BRAND_NAME, CONTACT_EMAIL, LINKEDIN_URL, BLUESKY_URL, X_URL, CHALLENGES_REPO_URL, PROPOSE_ADVENTURE_URL } from "@/data/constants";
 import { Abbr } from "@/components/Abbr";
 import { buildPageMeta } from "@/lib/meta";
 
@@ -86,7 +86,7 @@ const Contribute = (): JSX.Element => {
                   <a href={PROPOSE_ADVENTURE_URL} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={extLink}>
                     Read the adventure ideas guide <ExternalLink size={12} aria-hidden="true" />
                   </a>
-                  <a href="https://github.com/off-on-dev/open-source-challenges/issues?q=is%3Aissue+is%3Aopen+label%3A%22adventure+idea%22" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={extLink}>
+                  <a href={`${CHALLENGES_REPO_URL}/issues?q=is%3Aissue+is%3Aopen+label%3A%22adventure+idea%22`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={extLink}>
                     Browse open adventure ideas <ExternalLink size={12} aria-hidden="true" />
                   </a>
                 </div>
@@ -152,7 +152,7 @@ const Contribute = (): JSX.Element => {
                   <p className="text-sm text-dim leading-relaxed flex-1">
                     Each adventure has level guides and missing solution walkthroughs. If you have solved a level, write it up. You can also improve this website by reporting an issue or contributing to the site. Typos and broken links across either repo need no issue, just open a <Abbr title="pull request">PR</Abbr>.
                   </p>
-                  <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={extLink}>
+                  <a href={`${CHALLENGES_REPO_URL}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={extLink}>
                     See the challenges contributing guide <ExternalLink size={12} aria-hidden="true" />
                   </a>
                   <a href="https://github.com/off-on-dev/website/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" className={extLink}>

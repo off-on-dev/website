@@ -8,8 +8,11 @@
  *  - Optional firefly background: insert public/downloads/offon-firefly-bg.svg
  *    as a full-slide image on any slide that needs the visual effect
  *
- * Before running: place the four TTF files in tmp/ (gitignored at project root):
- *   Inter_18pt-Regular.ttf, Inter_18pt-SemiBold.ttf, Syne-Regular.ttf, Syne-Bold.ttf
+ * Before running:
+ *   1. Install the local dependency (not in devDependencies — not needed in CI):
+ *        npm install pptxgenjs
+ *   2. Place the four TTF files in tmp/ (gitignored at project root):
+ *        Inter_18pt-Regular.ttf, Inter_18pt-SemiBold.ttf, Syne-Regular.ttf, Syne-Bold.ttf
  *
  * Run: node .ai/templates/generate-pptx.mjs
  */
@@ -134,10 +137,11 @@ function cardBg(s, x, y, w, h) {
 // Pill row — pills centered horizontally on the slide
 const GAP = 0.14;
 function renderPillRow(s, pills, py) {
-  pills.forEach(p => { p.pw = Math.max(p.text.length * 0.082 + 0.32, 0.9); });
-  const totalW = pills.reduce((acc, p) => acc + p.pw, 0) + (pills.length - 1) * GAP;
+  const widths = pills.map(p => Math.max(p.text.length * 0.082 + 0.32, 0.9));
+  const totalW = widths.reduce((acc, w) => acc + w, 0) + (pills.length - 1) * GAP;
   let px = (W - totalW) / 2;
-  pills.forEach(({ text, hi, pw }) => {
+  pills.forEach(({ text, hi }, i) => {
+    const pw = widths[i];
     s.addShape(pptx.ShapeType.roundRect, {
       x: px, y: py, w: pw, h: 0.28,
       fill: { color: hi ? '120e00' : CARD },
@@ -406,16 +410,18 @@ const fontXmls = [];
 
 for (const [typeface, variants] of Object.entries(byFace)) {
   const variantRids = {};
+  // One GUID per typeface — all variants share the same obfuscation key per ECMA-376 §15.2.1.
+  // The GUID is written into <p:fontKey> so PowerPoint can deobfuscate on load.
+  const typefaceGuid = randomUUID();
 
   for (const [variant, ttfFile] of Object.entries(variants)) {
     const ttfPath = resolve(FONTS, ttfFile);
     if (!existsSync(ttfPath)) { console.warn(`Skipping missing font: ${ttfFile}`); continue; }
 
-    const guid     = randomUUID();
     const rId      = `rId${nextId++}`;
     const fileName = `${typeface.replace(/\s+/g, '-')}-${variant}.fntdata`;
 
-    const obfuscated = obfuscateFont(readFileSync(ttfPath), guid);
+    const obfuscated = obfuscateFont(readFileSync(ttfPath), typefaceGuid);
     zip.file(`ppt/fonts/${fileName}`, obfuscated);
 
     newRels.push(
@@ -431,8 +437,10 @@ for (const [typeface, variants] of Object.entries(byFace)) {
     .map(([v, t]) => `<p:${t} r:id="${variantRids[v]}"/>`)
     .join('');
 
+  // OOXML requires <p:fontKey val="{GUID}"/> so the renderer can derive the deobfuscation key.
+  const fontKeyVal = `{${typefaceGuid.toUpperCase()}}`;
   fontXmls.push(
-    `<p:embeddedFont><p:font typeface="${typeface}"/>${parts}</p:embeddedFont>`,
+    `<p:embeddedFont><p:font typeface="${typeface}"/><p:fontKey val="${fontKeyVal}"/>${parts}</p:embeddedFont>`,
   );
 }
 

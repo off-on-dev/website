@@ -159,6 +159,8 @@ npx shadcn@latest add <component>   # Add a shadcn/ui component
 
 # Regenerate downloadable presentation ZIPs and PPTX (run from repo root)
 node .ai/templates/generate-reveal-zip.mjs   # → public/downloads/offon-reveal-template.zip
+# pptxgenjs is not in devDependencies (not needed in CI). Install it locally first:
+#   npm install pptxgenjs
 node .ai/templates/generate-pptx.mjs         # → public/downloads/offon-deck-template.pptx
 ```
 
