@@ -330,6 +330,8 @@ All analytics-related constants live in `src/data/constants.ts`:
 | `COMMUNITY_DISPLAY_NAME` | User-facing display name for the community URL. Use for visible text. |
 | `CODE_OF_CONDUCT_URL` | Canonical URL of the Code of Conduct topic on Discourse. Use instead of hardcoding `${COMMUNITY_URL}/t/code-of-conduct/31`. |
 | `CODESPACES_BASE` | GitHub Codespaces base URL for the challenges repo. Used by `CodespacesButton.tsx`. |
+| `CHALLENGES_REPO_URL` | GitHub URL of the challenges repo (`https://github.com/off-on-dev/open-source-challenges`). Use instead of hardcoding. |
+| `PROPOSE_ADVENTURE_URL` | Deep link to the adventure ideas section of the challenges repo CONTRIBUTING.md. Use instead of hardcoding. |
 | `SITE_URL` | `"https://offon.dev"`. Use for canonical URLs and OG tags. |
 | `SITE_NAME` | `"offon.dev"`. |
 | `CONTACT_EMAIL` | Contact email address. Used in `CommunityGuide.tsx`. Never hardcode. |

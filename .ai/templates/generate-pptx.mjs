@@ -246,7 +246,7 @@ function renderPillRow(s, pills, py) {
   ];
   let tx = PX, ty = by + 1.62;
   tags.forEach(({ text, hi }) => {
-    const tw = Math.max(text.length * 0.084 + 0.36, 0.9);
+    const tw = Math.max(text.length * 0.082 + 0.32, 0.9);
     s.addShape(pptx.ShapeType.roundRect, {
       x: tx, y: ty, w: tw, h: 0.3,
       fill: { color: hi ? '120e00' : CARD },
