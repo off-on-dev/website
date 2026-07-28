@@ -89,7 +89,7 @@ test.describe("island hydration", () => {
     // Unfiltered: adventure cards shown, level results hidden.
     await expect(page.locator('[data-results="adventures"]')).toBeVisible();
     await expect(page.locator('[data-results="levels"]')).toBeHidden();
-    await page.getByRole("button", { name: "Beginner", exact: true }).click();
+    await page.getByRole("radio", { name: "Beginner", exact: true }).click();
     // Filtered: level cards shown, adventures hidden, URL reflects the difficulty.
     await expect(page.locator('[data-results="levels"]')).toBeVisible();
     await expect(page.locator('[data-results="adventures"]')).toBeHidden();
