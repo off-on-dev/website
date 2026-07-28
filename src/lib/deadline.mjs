@@ -21,7 +21,7 @@ export function parseDeadline(value) {
   if (typeof value !== "string") {
     throw new Error(
       `[deadline] Expected a string but got ${typeof value} (${String(value)}). ` +
-      "The YAML parser may have auto-cast a timestamp — quote deadline values in YAML to prevent this."
+      "The YAML parser may have auto-cast a timestamp - quote deadline values in YAML to prevent this."
     );
   }
   const trimmed = value.trim();
@@ -46,7 +46,7 @@ export function parseDeadline(value) {
     return value;
   }
   if (!offset) {
-    console.error(`[deadline] Unrecognized timezone abbreviation '${tzAbbr}' in: ${value} — treating deadline as not yet passed (solution will stay hidden)`);
+    console.error(`[deadline] Unrecognized timezone abbreviation '${tzAbbr}' in: ${value} - treating deadline as not yet passed (solution will stay hidden)`);
     return UNRESOLVABLE_DEADLINE;
   }
 

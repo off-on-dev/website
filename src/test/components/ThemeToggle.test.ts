@@ -18,7 +18,7 @@ import { nextTick } from "vue";
 import ThemeToggle from "@/components/ThemeToggle.vue";
 import { $theme } from "@/stores/theme";
 
-/** Add #theme-status to body — the toggle() function writes into it. */
+/** Add #theme-status to body - the toggle() function writes into it. */
 function addStatusEl(): HTMLElement {
   const el = document.createElement("span");
   el.id = "theme-status";
@@ -100,7 +100,7 @@ describe("ThemeToggle", () => {
 
   // ── toggle behaviour ─────────────────────────────────────────────────────────
 
-  describe("toggle() — dark → light", () => {
+  describe("toggle() - dark → light", () => {
     let wrapper: ReturnType<typeof mount>;
 
     beforeEach(async () => {
@@ -140,7 +140,7 @@ describe("ThemeToggle", () => {
     });
   });
 
-  describe("toggle() — light → dark", () => {
+  describe("toggle() - light → dark", () => {
     let wrapper: ReturnType<typeof mount>;
 
     beforeEach(async () => {
@@ -242,7 +242,7 @@ describe("ThemeToggle", () => {
     });
 
     it("does not throw when #theme-status is absent from the DOM", async () => {
-      // No addStatusEl() call — toggle should be a no-op for status
+      // No addStatusEl() call - toggle should be a no-op for status
       document.documentElement.classList.remove("light");
       const wrapper = mount(ThemeToggle, { attachTo: document.body });
       await flushPromises();

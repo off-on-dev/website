@@ -11,6 +11,7 @@
 - [Challenges](https://offon.dev/challenges/): Browse all challenge levels; filter by technology tag.
 - [Community Guide / Handbook](https://offon.dev/handbook/): Getting started guide for the community.
 - [About](https://offon.dev/about/): What OffOn is and who it is for.
+- [Contribute](https://offon.dev/contribute/): How to submit solutions, participate in adventures, and contribute to the community.
 - [Sponsors](https://offon.dev/sponsors/): Organisations supporting the platform.
 - [Accessibility Statement](https://offon.dev/accessibility/): WCAG 2.2 AA commitment and known issues.
 - [Brand Guidelines](https://offon.dev/brand/): Logos, colors, typography, and voice for OffOn.
@@ -24,7 +25,7 @@ Each adventure is a scenario-driven challenge with beginner, intermediate, and e
   - [Beginner](https://offon.dev/adventures/dead-reckoning/levels/beginner/)
   - [Intermediate](https://offon.dev/adventures/dead-reckoning/levels/intermediate/)
   - [Expert](https://offon.dev/adventures/dead-reckoning/levels/expert/)
-- [Lex Imperfecta](https://offon.dev/adventures/lex-imperfecta/): The Roman Republic has built a sophisticated legal system to protect its citizens — but the laws were written in haste, and the exceptions were written too generously. Policies go unenforced, the wrong citizens are exempt, and something has slipped through the gates unnoticed. As a newly appointed Praetor, your mission is to restore order before chaos takes hold.
+- [Lex Imperfecta](https://offon.dev/adventures/lex-imperfecta/): The Roman Republic has built a sophisticated legal system to protect its citizens, but the laws were written in haste, and the exceptions were written too generously. Policies go unenforced, the wrong citizens are exempt, and something has slipped through the gates unnoticed. As a newly appointed Praetor, your mission is to restore order before chaos takes hold.
   - [Beginner](https://offon.dev/adventures/lex-imperfecta/levels/beginner/)
   - [Intermediate](https://offon.dev/adventures/lex-imperfecta/levels/intermediate/)
   - [Expert](https://offon.dev/adventures/lex-imperfecta/levels/expert/)

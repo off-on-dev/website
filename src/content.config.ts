@@ -279,7 +279,7 @@ async function renderRewards(
 
 // Custom loader: parses YAML with the `yaml` package (YAML 1.2 core), matching
 // the generator. Astro's built-in glob() YAML parser auto-casts unquoted ISO
-// timestamps to Date objects, corrupting deadline fields — this avoids that and
+// timestamps to Date objects, corrupting deadline fields; this avoids that and
 // gives digest-gated incremental rendering.
 function adventuresLoader(): Loader {
   return {

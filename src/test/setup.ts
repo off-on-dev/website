@@ -85,7 +85,7 @@ Object.defineProperty(window, "dataLayer", {
 });
 
 // ─── Per-test reset ───────────────────────────────────────────────────────────
-// Reset between tests — each describe can override these if needed.
+// Reset between tests. Each describe can override these if needed.
 beforeEach(() => {
   vi.clearAllMocks();
   localStorage.clear();

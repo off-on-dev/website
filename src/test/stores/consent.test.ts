@@ -5,11 +5,11 @@
 // Consent store unit tests
 //
 // Organisation:
-//   1. Static-import section — covers atom state, gtag consent-update calls,
+//   1. Static-import section - covers atom state, gtag consent-update calls,
 //      localStorage, and cookie clearing. Does NOT assert on script injection
 //      or gtag("js") / gtag("config"), because gtagScriptInjected is
 //      module-scoped and would already be true after the first grant().
-//   2. Module-guard sections — each describe resets the module registry via
+//   2. Module-guard sections - each describe resets the module registry via
 //      vi.resetModules() so gtagScriptInjected and clickTrackerBound start false.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -42,7 +42,7 @@ function gtagMock(): ReturnType<typeof vi.fn> {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Static-import tests — state machine transitions + feature behaviour
+// Static-import tests: state machine transitions + feature behaviour
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe("consent store", () => {
@@ -173,7 +173,7 @@ describe("consent store", () => {
 
   // ── granted / denied → null (Cookie Preferences / reset) ─────────────────
 
-  describe("reset() — granted/denied → null", () => {
+  describe("reset() - granted/denied → null", () => {
     it("sets $consent to null from granted", () => {
       grant();
       reset();
@@ -362,7 +362,7 @@ describe("consent store", () => {
     });
   });
 
-  // ── trackClicks() — behaviour ─────────────────────────────────────────────
+  // trackClicks() - behaviour ─────────────────────────────────────────────
   //
   // clickTrackerBound is module-scoped; once the listener is registered in the
   // first test that calls trackClicks(), subsequent calls are no-ops. That is
@@ -370,7 +370,7 @@ describe("consent store", () => {
   // controlling the atom value controls the outcome regardless of which test
   // first registered the listener.
 
-  describe("trackClicks() — behaviour", () => {
+  describe("trackClicks() - behaviour", () => {
     it("does not call gtag for button clicks when consent is null", () => {
       trackClicks();
       const btn = document.createElement("button");
@@ -478,7 +478,7 @@ describe("consent store", () => {
       span.textContent = "Child";
       btn.appendChild(span);
       document.body.appendChild(btn);
-      span.click(); // click the inner span — closest() should resolve to the button
+      span.click(); // click the inner span; closest() should resolve to the button
       document.body.removeChild(btn);
       expect(window.gtag).toHaveBeenCalledWith("event", "click_event", {
         element: "button",
@@ -489,10 +489,10 @@ describe("consent store", () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// gtagScriptInjected guard — requires fresh module state
+// gtagScriptInjected guard - requires fresh module state
 // ─────────────────────────────────────────────────────────────────────────────
 
-describe("consent store — gtagScriptInjected guard", () => {
+describe("consent store - gtagScriptInjected guard", () => {
   beforeEach(() => {
     vi.resetModules();
     // Re-stub gtag; a fresh module import may run before setup.ts stubs are in
@@ -587,10 +587,10 @@ describe("consent store — gtagScriptInjected guard", () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// clickTrackerBound guard — requires fresh module state
+// clickTrackerBound guard - requires fresh module state
 // ─────────────────────────────────────────────────────────────────────────────
 
-describe("consent store — clickTrackerBound guard", () => {
+describe("consent store - clickTrackerBound guard", () => {
   beforeEach(() => {
     vi.resetModules();
     window.gtag = vi.fn();

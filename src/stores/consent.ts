@@ -2,7 +2,7 @@ import { atom } from "nanostores";
 import { GA_MEASUREMENT_ID, CONSENT_STORAGE_KEY, CONSENT_EXPIRY_MS } from "@/lib/site";
 
 // Consent state machine ported from src/hooks/useConsent.tsx. See the CLAUDE.md
-// "Consent state machine" table — every transition here mirrors a row.
+// "Consent state machine" table - every transition here mirrors a row.
 //
 // Uses a plain atom (default null) rather than @nanostores/persistent so the
 // island's first client render matches SSR (null); localStorage is read in
@@ -62,7 +62,7 @@ function clearGaCookies(): void {
 
 // Queue consent update + js + config synchronously BEFORE appending the script,
 // so gtag.js drains the dataLayer in the correct order on load. On a re-grant
-// within the session, gtag.js is already running — flip consent only.
+// within the session, gtag.js is already running - flip consent only.
 function injectGtag(): void {
   if (typeof window.gtag !== "function") return;
   window.gtag("consent", "update", { analytics_storage: "granted" });
@@ -82,7 +82,7 @@ function injectGtag(): void {
 }
 
 // Denied consent update only. Does not remove the script, wipe dataLayer, or
-// replace window.gtag — gtag.js stops sending hits when analytics_storage flips.
+// replace window.gtag - gtag.js stops sending hits when analytics_storage flips.
 function revokeAnalyticsConsent(): void {
   if (typeof window.gtag !== "function") return;
   window.gtag("consent", "update", { analytics_storage: "denied" });
@@ -129,7 +129,7 @@ export function initConsent(): void {
   if (stored.value === "granted") injectGtag();
 }
 
-// Fire a GA4 page_view — only when consent is granted and gtag.js is loaded.
+// Fire a GA4 page_view - only when consent is granted and gtag.js is loaded.
 // Called on astro:page-load so client navigations are tracked without queueing
 // events while consent is undecided/denied.
 export function firePageView(): void {

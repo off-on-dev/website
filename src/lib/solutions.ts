@@ -28,7 +28,7 @@ export function getSolutions(): SolutionEntry[] {
     }
     if (!mod.solution) {
       throw new Error(
-        `Solution module at "${path}" must export a named 'solution' constant — found none.`,
+        `Solution module at "${path}" must export a named 'solution' constant: found none.`,
       );
     }
     return { adventureId: match[1], levelId: match[2], solution: mod.solution };

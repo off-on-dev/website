@@ -9,7 +9,7 @@
 //   - Mobile/tablet: two dropdown triggers with aria-controls pointing to
 //     role="group" panels with aria-pressed items
 //
-// Both sections are always in the DOM regardless of viewport — media-query CSS
+// Both sections are always in the DOM regardless of viewport - media-query CSS
 // classes are irrelevant in happy-dom. Tests target elements by their ARIA
 // roles and attributes, not by CSS visibility, so they break when ARIA is removed.
 //
@@ -75,9 +75,9 @@ describe("ChallengesFilter", () => {
     replaceStateSpy.mockRestore();
   });
 
-  // ── desktop radiogroup — structure ───────────────────────────────────────────
+  // ── desktop radiogroup - structure ───────────────────────────────────────────
 
-  describe("desktop radiogroup — structure", () => {
+  describe("desktop radiogroup - structure", () => {
     it("renders a radiogroup with role='radiogroup'", async () => {
       const wrapper = mountFilter();
       await flushPromises();
@@ -124,9 +124,9 @@ describe("ChallengesFilter", () => {
     });
   });
 
-  // ── desktop radiogroup — initial aria-checked state ─────────────────────────
+  // ── desktop radiogroup - initial aria-checked state ─────────────────────────
 
-  describe("desktop radiogroup — initial aria-checked state", () => {
+  describe("desktop radiogroup - initial aria-checked state", () => {
     it("'All Levels' radio has aria-checked='true' when no difficulty is selected", async () => {
       const wrapper = mountFilter();
       await flushPromises();
@@ -155,9 +155,9 @@ describe("ChallengesFilter", () => {
     });
   });
 
-  // ── desktop radiogroup — click selection ────────────────────────────────────
+  // ── desktop radiogroup - click selection ────────────────────────────────────
 
-  describe("desktop radiogroup — click selection", () => {
+  describe("desktop radiogroup - click selection", () => {
     it("clicking a difficulty radio sets its aria-checked to 'true'", async () => {
       const wrapper = mountFilter();
       await flushPromises();
@@ -222,9 +222,9 @@ describe("ChallengesFilter", () => {
     });
   });
 
-  // ── desktop radiogroup — arrow key navigation ────────────────────────────────
+  // ── desktop radiogroup - arrow key navigation ────────────────────────────────
 
-  describe("desktop radiogroup — arrow key navigation", () => {
+  describe("desktop radiogroup - arrow key navigation", () => {
     it("ArrowRight focuses and selects the next radio from All Levels", async () => {
       const wrapper = mountFilter();
       await flushPromises();
@@ -320,7 +320,7 @@ describe("ChallengesFilter", () => {
       await radiogroup.trigger("keydown", { key: "Enter" });
       await nextTick();
 
-      // No change — All Levels stays checked and focused
+      // No change - All Levels stays checked and focused
       expect(document.activeElement).toBe(radios[0].element);
       expect(radios[0].attributes("aria-checked")).toBe("true");
       wrapper.unmount();
@@ -331,7 +331,7 @@ describe("ChallengesFilter", () => {
       await flushPromises();
 
       const radiogroup = wrapper.find('[role="radiogroup"]');
-      // Do not focus any radio — document.activeElement is body
+      // Do not focus any radio - document.activeElement is body
 
       // Should not throw and should not change any checked state
       await radiogroup.trigger("keydown", { key: "ArrowRight" });
@@ -533,7 +533,7 @@ describe("ChallengesFilter", () => {
     });
 
     it("shows 'No challenges match these filters.' when filtered result is empty", async () => {
-      // Select 'Docker' tag — no entries have this tag
+      // Select 'Docker' tag - no entries have this tag
       const wrapper = mountFilter();
       await flushPromises();
 
@@ -563,7 +563,7 @@ describe("ChallengesFilter", () => {
       const wrapper = mountFilter();
       await flushPromises();
       const radios = wrapper.find('[role="radiogroup"]').findAll('[role="radio"]');
-      await radios[1].trigger("click"); // Beginner — 1 matching entry
+      await radios[1].trigger("click"); // Beginner - 1 matching entry
       await nextTick();
 
       expect(wrapper.text()).toMatch(/1 challenge/);
@@ -603,7 +603,7 @@ describe("ChallengesFilter", () => {
 
   // ── mobile dropdown difficulty filter ────────────────────────────────────────
 
-  describe("mobile dropdown — difficulty filter", () => {
+  describe("mobile dropdown - difficulty filter", () => {
     it("renders a trigger button with aria-controls='difficulty-group'", async () => {
       const wrapper = mountFilter();
       await flushPromises();
@@ -702,9 +702,9 @@ describe("ChallengesFilter", () => {
     });
   });
 
-  // ── mobile dropdown — technology tag filter ───────────────────────────────────
+  // ── mobile dropdown - technology tag filter ───────────────────────────────────
 
-  describe("mobile dropdown — technology tag filter", () => {
+  describe("mobile dropdown - technology tag filter", () => {
     it("renders a trigger button with aria-controls='tags-group'", async () => {
       const wrapper = mountFilter();
       await flushPromises();
@@ -742,7 +742,7 @@ describe("ChallengesFilter", () => {
       await nextTick();
       expect(wrapper.find("#difficulty-group").attributes("hidden")).toBeUndefined();
 
-      // Open tags dropdown — difficulty should close
+      // Open tags dropdown - difficulty should close
       await wrapper.find('[aria-controls="tags-group"]').trigger("click");
       await nextTick();
       expect(wrapper.find("#difficulty-group").attributes("hidden")).toBeDefined();

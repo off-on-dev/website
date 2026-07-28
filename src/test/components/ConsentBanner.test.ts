@@ -16,7 +16,7 @@ import { mount, flushPromises } from "@vue/test-utils";
 import { nextTick } from "vue";
 import ConsentBanner from "@/components/ConsentBanner.vue";
 
-// Hoist mock — Vitest moves vi.mock() calls before imports, so the named imports
+// Hoist mock - Vitest moves vi.mock() calls before imports, so the named imports
 // below receive the mocked versions.
 vi.mock("@/stores/consent", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/stores/consent")>();

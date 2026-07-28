@@ -6,7 +6,7 @@ export type Theme = "dark" | "light";
 // in Layout.astro). SSR renders the default "dark"; the client rehydrates.
 //
 // HYDRATION INVARIANT: this is a persistentAtom, so it reads localStorage at
-// import time — on the client it can already be "light" while SSR emitted the
+// import time - on the client it can already be "light" while SSR emitted the
 // "dark" default. NEVER read $theme in an island render body (e.g. useStore in a
 // template) or a hydration mismatch results for light-mode users. Islands must
 // seed a local ref to the server default and read the real value in onMounted

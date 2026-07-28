@@ -1,7 +1,7 @@
 // Build-time markdown-to-HTML pipeline for adventure prose fields. This is the
 // single source of truth for prose HTML (the old React generator was removed at
 // cutover). Renders sanitised HTML with abbreviation-tooltip triggers, external-
-// link annotation, and code-block header markup — all at build time so pages
+// link annotation, and code-block header markup - all at build time so pages
 // ship finished HTML (no client DOM restructuring / layout shift).
 
 import { unified } from "unified";
@@ -187,7 +187,7 @@ async function renderCodeBlockChrome(html) {
       .replace(/&#39;/g, "'")
       .replace(/&quot;/g, '"');
 
-    // Try Shiki — falls back to the sanitized plain content on unknown lang or error.
+    // Try Shiki - falls back to the sanitized plain content on unknown lang or error.
     const highlighted = lang ? await highlightCode(rawCode, lang) : null;
     const innerContent = highlighted ?? rawContent;
 

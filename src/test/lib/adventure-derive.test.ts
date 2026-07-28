@@ -62,7 +62,7 @@ describe("truncate", () => {
   });
 
   it("falls back to hard truncation when no suitable word boundary exists", () => {
-    // Single long word — no space before max/2
+    // Single long word - no space before max/2
     const long = "abcdefghijklmnopqrstuvwxyz";
     const result = truncate(long, 10);
     expect(result).toBe("abcdefghij");
