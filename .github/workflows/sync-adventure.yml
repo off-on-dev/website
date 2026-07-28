@@ -5,7 +5,7 @@ on:
     inputs:
       adventure_url:
         description: >
-          GitHub URL of the adventure folder in the challenges repo — any branch works.
+          GitHub URL of the adventure folder in the challenges repo (any branch works).
           main: https://github.com/off-on-dev/open-source-challenges/tree/main/adventures/05-lex-imperfecta
           PR branch: https://github.com/off-on-dev/open-source-challenges/tree/feat/my-branch/adventures/05-lex-imperfecta
         required: true
@@ -73,7 +73,7 @@ jobs:
             if git show "origin/$BRANCH:${YAML_PATH}" > /tmp/pr-adventure.yaml 2>/dev/null && [ -s /tmp/pr-adventure.yaml ]; then
               mkdir -p "src/data/adventures/${SLUG}"
               cp /tmp/pr-adventure.yaml "$YAML_PATH"
-              echo "Restored adventure.yaml from PR branch ${BRANCH} — manual edits (discussion_url, topics, architecture_diagram, diagram_alt, deadline) will be preserved by sync-adventure.mjs"
+              echo "Restored adventure.yaml from PR branch ${BRANCH}; manual edits (discussion_url, topics, architecture_diagram, diagram_alt, deadline) will be preserved by sync-adventure.mjs"
             else
               echo "PR branch ${BRANCH} exists but has no adventure.yaml yet — starting fresh from main"
             fi
@@ -96,6 +96,7 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           ADVENTURE_URL: ${{ inputs.adventure_url }}
         run: |
+          set -euo pipefail
           SLUG=$(cat /tmp/adventure-slug)
           NAME=$(cat /tmp/adventure-name)
           LEVELS=$(cat /tmp/adventure-levels)
@@ -126,7 +127,7 @@ jobs:
           git push --force origin "$BRANCH"
 
           if [ "$MODE" = "update" ]; then
-            PR_TITLE="feat(adventure): add levels to ${NAME} — ${LEVELS}"
+            PR_TITLE="feat(adventure): add levels to ${NAME}: ${LEVELS}"
           else
             PR_TITLE="feat(adventure): add ${NAME}"
           fi

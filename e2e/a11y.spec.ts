@@ -19,6 +19,8 @@ const PAGES = [
   "/adventures/blind-by-design/levels/beginner/",
   "/adventures/dead-reckoning/levels/expert/",
   "/adventures/echoes-lost-in-orbit/levels/beginner/solution/",
+  "/adventures/echoes-lost-in-orbit/levels/intermediate/solution/",
+  "/adventures/echoes-lost-in-orbit/levels/expert/solution/",
   "/challenges/opentelemetry/",
   "/about/",
   "/contribute/",

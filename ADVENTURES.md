@@ -127,23 +127,11 @@ Run this after `community_category_id` is set. It adds the adventure to the lead
 
 ### Verify devcontainer paths
 
-`generate-adventures.mjs` cross-checks each level's `devcontainer:` value against the actual folder names in [`off-on-dev/open-source-challenges/.devcontainer`](https://github.com/off-on-dev/open-source-challenges/tree/main/.devcontainer) via `gh api`.
-
-**In generate mode** (the default, including the sync workflow): if a value is wrong but an unambiguous match can be found by slug and difficulty, the YAML is patched in place and a warning is printed:
-
-```text
-Warning: <slug> levels[0]: devcontainer auto-corrected "<wrong>" → "<correct>" — update adventure.yaml in the challenges repo
-```
-
-If you see this warning, also fix the `devcontainer:` value upstream in the challenges repo so the next sync does not reintroduce the wrong value.
-
-**In `--validate-only` mode** (`npm run generate:validate`, used by CI): wrong values are always hard errors with no auto-correction.
-
-If `gh` is unavailable or unauthenticated, the check is skipped with a warning and generation proceeds.
+Devcontainer path verification is handled automatically by the `sync-adventure` workflow during import. If a `devcontainer:` value in the YAML does not match a folder in the challenges repo's `.devcontainer` directory, the workflow logs a warning in its output. If you see such a warning, update the `devcontainer:` value in `adventure.yaml` to match the correct folder name, and also fix the value upstream in the challenges repo so the next sync does not reintroduce the wrong value.
 
 ### Verify llms.txt
 
-`generate-adventures.mjs` automatically patches the adventure entry in `public/llms.txt`. After running `npm run generate`, confirm the adventure appears correctly in the file under the Adventures section with the right title and URL.
+Add the new adventure entry to `public/llms.txt` by hand, following the format of the existing entries in the Adventures section. Add the adventure URL and a one-sentence description. Once levels are published, add per-level URLs as sub-bullets.
 
 ### Run the a11y audit
 
@@ -241,7 +229,6 @@ This means you can add a solution file to the repo at any point during the chall
 ```text
 src/data/solutions/<adventure-id>/<level-id>.ts   ← authored TypeScript (commit this)
 public/solutions/<adventure-id>/<level-id>-*.webp ← converted images (commit these)
-src/data/solutions/index.ts                       ← auto-generated barrel (commit this)
 ```
 
 ---

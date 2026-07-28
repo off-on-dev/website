@@ -43,8 +43,8 @@ export function parseDeadline(value) {
     return value;
   }
   if (!offset) {
-    console.warn(`  [deadline] Unknown timezone "${tzAbbr}" in "${value}", leaving as-is`);
-    return value;
+    console.error(`[deadline] Unrecognized timezone abbreviation '${tzAbbr}' in: ${value} — treating deadline as not yet passed (solution will stay hidden)`);
+    return "9999-12-31T23:59:59Z";
   }
 
   const dd = dayStr.padStart(2, "0");

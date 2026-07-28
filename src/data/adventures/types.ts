@@ -10,7 +10,7 @@ export type ToolboxItem = {
   url?: string;
 }
 
-/** One step in the Walkthrough section. content is pre-rendered HTML generated at build time and rendered via dangerouslySetInnerHTML in MarkdownContent. */
+/** One step in the Walkthrough section. content is pre-rendered HTML generated at build time and rendered via set:html in Astro. */
 export type WalkthroughStep = {
   title: string;
   content: string;
@@ -109,7 +109,7 @@ export type Adventure = {
   backstory?: string[];
   // Context paragraphs explaining what technologies or concepts the adventure covers.
   overview?: string[];
-  // Lucide React icon name representing this adventure (e.g. 'FlaskConical').
+  // Lucide icon name representing this adventure (e.g. 'FlaskConical').
   icon?: string;
   rewards?: AdventureRewards;
   // Mock placeholders for levels that haven't shipped yet. Rendered in the

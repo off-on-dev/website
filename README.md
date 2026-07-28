@@ -8,7 +8,7 @@ Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for op
 - **Vue 3** islands via `@astrojs/vue`: interactivity hydrated with `client:*` directives
 - **nanostores**: shared state across islands (theme, consent)
 - **Tailwind CSS 4**: CSS-first via `src/styles/index.css` (`@theme`) and `@tailwindcss/vite`
-- **astro-icon** (lucide) in `.astro`, **lucide-vue-next** in islands; **Reka UI** for the tooltip
+- **astro-icon** (lucide) in `.astro`, **lucide-vue-next** in islands; custom `abbr[data-title]` tooltip portal in `Layout.astro`
 - **Astro Content Collections** (Zod): adventure content authored as YAML, validated + rendered at build time
 - **Playwright** + **axe**: accessibility and SEO/smoke tests (`e2e/`)
 - **GitHub Pages**: hosting and deployment
@@ -65,7 +65,7 @@ e2e/
   smoke.spec.ts   # per-route title/canonical/OG/h1 + island hydration
 scripts/          # refresh-*.mjs (community data), sync-adventure.mjs, set-discussion-url.mjs,
                   # generate-community-sitemap.mjs, check-docs.sh, lib/
-public/           # copied verbatim to dist/ (fonts, favicons, brand, well-known, decks, sitemap.xml, og.png)
+public/           # copied verbatim to dist/ (fonts, favicons, brand, well-known, decks, og.png)
 astro.config.mjs, tsconfig.json, playwright.config.ts, package.json
 ```
 
@@ -102,7 +102,7 @@ Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and
 - **Per-page meta** comes from the `<SEO>` component (`src/components/SEO.astro`), fed by `Layout.astro` props: `<title>`, `<meta name="description">`, canonical (`${SITE_URL}${path}`), Open Graph (`og:title/description/type/url/image` + width/height/`OG_IMAGE_ALT`, `og:site_name`, `og:locale` en_GB), and Twitter card tags. Legal pages pass `noindex`.
 - **Global head** (`Layout.astro`): charset, viewport, `color-scheme`, favicons, manifest, both `theme-color` tags, CSP meta, and two JSON-LD blocks (`WebSite` + `Organization`).
 - **Web manifest:** `public/site.webmanifest` (name, icons, theme/background colors, standalone display).
-- **Sitemap/robots:** `public/sitemap.xml` (static; a `sitemap.xml.ts` endpoint is a planned follow-up) and `public/robots.txt`.
+- **Sitemap/robots:** Sitemap generated at build time by `src/pages/sitemap.xml.ts`; and `public/robots.txt`.
 
 ## Analytics and Privacy
 

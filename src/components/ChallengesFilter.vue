@@ -181,6 +181,21 @@ function dropdownItemClass(isActive: boolean): string {
 const DIFF_PILL_BASE =
   "filter-pill inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none transition-all duration-200 focus-ring cursor-pointer";
 
+// Arrow-key navigation within the desktop radiogroup (difficulty pills).
+function handleDifficultyKey(e: KeyboardEvent): void {
+  if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return;
+  e.preventDefault();
+  const radios = (e.currentTarget as HTMLElement).querySelectorAll<HTMLElement>('[role="radio"]');
+  const current = Array.from(radios).findIndex(r => r === document.activeElement);
+  if (current === -1) return;
+  const dir = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1;
+  const next = (current + dir + radios.length) % radios.length;
+  const nextEl = radios[next];
+  nextEl.focus();
+  // Also apply the selection (activating the next radio)
+  nextEl.click();
+}
+
 // Arrow-key navigation within an open dropdown panel.
 function navigatePanel(e: KeyboardEvent): void {
   if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
@@ -307,15 +322,17 @@ function navigatePanel(e: KeyboardEvent): void {
 
       <!-- Desktop: two pill rows -->
       <div class="hidden lg:block space-y-3">
-        <div role="group" aria-label="Filter by difficulty" class="flex flex-wrap items-center gap-2 pb-3 border-b border-border">
-          <button type="button" :aria-pressed="activeDifficulty === null" :class="DIFF_PILL_BASE" :style="allLevelsPillStyle(activeDifficulty === null)" @click="setDifficultyExact(null)">
+        <div role="radiogroup" aria-label="Filter by difficulty" class="flex flex-wrap items-center gap-2 pb-3 border-b border-border" @keydown="handleDifficultyKey">
+          <button type="button" role="radio" :aria-checked="activeDifficulty === null" :tabindex="activeDifficulty === null ? 0 : -1" :class="DIFF_PILL_BASE" :style="allLevelsPillStyle(activeDifficulty === null)" @click="setDifficultyExact(null)">
             All Levels
           </button>
           <button
             v-for="d in DIFFICULTIES"
             :key="d"
             type="button"
-            :aria-pressed="activeDifficulty === d"
+            role="radio"
+            :aria-checked="activeDifficulty === d"
+            :tabindex="activeDifficulty === d ? 0 : -1"
             :class="DIFF_PILL_BASE"
             :style="difficultyPillStyle(d, activeDifficulty === d)"
             @click="setDifficulty(d)"

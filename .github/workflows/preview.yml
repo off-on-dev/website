@@ -137,7 +137,9 @@ jobs:
       # the preview with no per-directory asset-copy step. Layout.astro marks
       # /pr-preview/ builds noindex.
       - if: github.event.action != 'closed'
-        run: VITE_BASE_PATH=/pr-preview/pr-${{ github.event.number }}/ npm run build
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+        run: VITE_BASE_PATH=/pr-preview/pr-${PR_NUMBER}/ npm run build
 
       - uses: rossjrw/pr-preview-action@v1
         with:

@@ -12,6 +12,7 @@ type NavLink = { href: string; label: string; external?: boolean };
 const props = defineProps<{ links: NavLink[] }>();
 
 const open = ref(false);
+const currentPath = ref('');
 const triggerRef = ref<HTMLButtonElement | null>(null);
 const menuRef = ref<HTMLElement | null>(null);
 let inertSiblings: HTMLElement[] = [];
@@ -100,6 +101,8 @@ function handleBreakpoint(e: MediaQueryListEvent): void {
 }
 
 onMounted(() => {
+  currentPath.value = window.location.pathname;
+  document.addEventListener('astro:after-swap', () => { currentPath.value = window.location.pathname; });
   document.addEventListener("astro:before-swap", handleBeforeSwap);
   desktopMq = window.matchMedia("(min-width: 768px)");
   desktopMq.addEventListener("change", handleBreakpoint);
@@ -115,6 +118,11 @@ onBeforeUnmount(() => {
 // Shared link classes (match the React NavLinks link styling).
 const linkCls =
   "inline-flex items-center gap-1 min-h-[44px] text-sm font-medium text-dim hover:text-foreground dark:hover:text-primary transition-colors rounded px-1.5 -mx-1.5 focus-ring";
+
+function isActive(href: string): boolean {
+  if (!currentPath.value) return false;
+  return !href.includes('://') && currentPath.value.startsWith(href);
+}
 </script>
 
 <template>
@@ -122,7 +130,7 @@ const linkCls =
     ref="triggerRef"
     type="button"
     class="flex h-11 w-11 items-center justify-center rounded-md border border-border bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-ring"
-    :aria-label="open ? 'Close menu' : 'Open menu'"
+    aria-label="Menu"
     :aria-expanded="open"
     aria-controls="mobile-menu"
     @click="toggle"
@@ -159,7 +167,13 @@ const linkCls =
         >
           {{ l.label }} <ExternalLink :size="12" aria-hidden="true" />
         </a>
-        <a v-else :href="l.href" :class="linkCls" @click="closeMenu(false)">
+        <a
+          v-else
+          :href="l.href"
+          :class="[linkCls, isActive(l.href) ? 'font-semibold text-foreground' : '']"
+          :aria-current="isActive(l.href) ? 'page' : undefined"
+          @click="closeMenu(false)"
+        >
           {{ l.label }}
         </a>
       </li>

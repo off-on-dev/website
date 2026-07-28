@@ -7,7 +7,6 @@ on:
       - 'src/lib/**'
       - 'src/stores/**'
       - 'src/pages/**'
-      - 'src/lib/site.ts'
       - 'package.json'
       - '.github/workflows/*.yml'
 

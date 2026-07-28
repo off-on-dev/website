@@ -16,9 +16,9 @@ async function stubGtag(page: Page): Promise<void> {
 }
 
 const gtagScript = (page: Page) => page.locator('script[src*="googletagmanager.com/gtag/js"]');
-const accept = (page: Page) => page.getByRole("button", { name: "Accept" });
+const accept = (page: Page) => page.getByRole("button", { name: "Accept Analytics" });
 const decline = (page: Page) => page.getByRole("button", { name: "Decline" });
-const cookieButton = (page: Page) => page.getByRole("button", { name: "Cookie preferences" });
+const cookieButton = (page: Page) => page.getByRole("button", { name: "Change cookie preferences" });
 
 async function storedConsent(page: Page): Promise<string | null> {
   return page.evaluate((key) => {
@@ -96,7 +96,7 @@ test.describe("consent: gated load", () => {
     await themeToggle.click();
     expect(await clickEvents()).toBe(0);
 
-    await page.getByRole("button", { name: "Accept" }).click();
+    await page.getByRole("button", { name: "Accept Analytics" }).click();
     await themeToggle.click();
     expect(await clickEvents()).toBeGreaterThan(0);
   });
@@ -146,5 +146,38 @@ test.describe("consent: gated load", () => {
     await expect(accept(page)).toHaveCount(0);
     await expect(cookieButton(page)).toBeVisible();
     expect(await storedConsent(page)).toBe("denied");
+  });
+
+  test("granted → denied: Decline after a previously granted session revokes consent", async ({ page }) => {
+    // Start with stored granted — gtag.js should inject, cookie button shown, no banner.
+    await page.addInitScript((key) => {
+      localStorage.setItem(key, JSON.stringify({ value: "granted", timestamp: Date.now() }));
+    }, STORAGE_KEY);
+    await page.goto("/");
+    await page.waitForLoadState("load");
+    await expect(gtagScript(page)).toHaveCount(1);
+    await expect(accept(page)).toHaveCount(0);
+    // Open preferences, then decline.
+    await cookieButton(page).click();
+    await expect(accept(page)).toBeVisible();
+    await decline(page).click();
+    expect(await storedConsent(page)).toBe("denied");
+    // Script stays injected (not removed), but cookie button is shown again.
+    await expect(gtagScript(page)).toHaveCount(1);
+    await expect(cookieButton(page)).toBeVisible();
+  });
+
+  test("GPC active + stored granted still injects gtag.js (explicit prior consent wins)", async ({ page }) => {
+    await page.addInitScript((key) => {
+      Object.defineProperty(navigator, "globalPrivacyControl", { value: true, configurable: true });
+      localStorage.setItem(key, JSON.stringify({ value: "granted", timestamp: Date.now() }));
+    }, STORAGE_KEY);
+    await page.goto("/");
+    await page.waitForLoadState("load");
+    // Explicit prior grant overrides GPC: inject gtag.js, show cookie button.
+    await expect(gtagScript(page)).toHaveCount(1);
+    await expect(accept(page)).toHaveCount(0);
+    await expect(cookieButton(page)).toBeVisible();
+    expect(await storedConsent(page)).toBe("granted");
   });
 });

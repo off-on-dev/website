@@ -5,6 +5,8 @@
 
 import { test, expect } from "@playwright/test";
 import { solution as beginnerSolution } from "@/data/solutions/echoes-lost-in-orbit/beginner";
+import { solution as intermediateSolution } from "@/data/solutions/echoes-lost-in-orbit/intermediate";
+import { solution as expertSolution } from "@/data/solutions/echoes-lost-in-orbit/expert";
 
 const SITE_URL = "https://offon.dev";
 
@@ -16,6 +18,10 @@ const ROUTES: Record<string, string> = {
   "/adventures/echoes-lost-in-orbit/levels/beginner/": "Broken Echoes - Echoes Lost in Orbit - OffOn",
   "/adventures/echoes-lost-in-orbit/levels/beginner/solution/":
     `${beginnerSolution.title} - Echoes Lost in Orbit - OffOn`,
+  "/adventures/echoes-lost-in-orbit/levels/intermediate/solution/":
+    `${intermediateSolution.title} - Echoes Lost in Orbit - OffOn`,
+  "/adventures/echoes-lost-in-orbit/levels/expert/solution/":
+    `${expertSolution.title} - Echoes Lost in Orbit - OffOn`,
   "/adventures/dead-reckoning/levels/expert/": "The Chronometer - Dead Reckoning - OffOn",
   "/challenges/": "Challenges - OffOn",
   "/challenges/opentelemetry/": "OpenTelemetry Challenges - OffOn",

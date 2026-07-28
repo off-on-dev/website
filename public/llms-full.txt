@@ -136,6 +136,30 @@ Join the Infrastructure Guild and modernize CloudHaven's infrastructure from man
 
 ---
 
+### Dead Reckoning
+
+**URL:** https://offon.dev/adventures/dead-reckoning/
+
+The Grand Fleet's commission office is buried in complaints. Manifests are filed but nothing comes of them. Vessels that do sail arrive at port with the wrong cargo, and no one along the route can explain why. As the fleet's engineer, your mission is to restore order from keel to quayside and find out what the records are hiding.
+
+**Technologies:** Backstage, Gitea, Argo Events, Argo Workflows, Argo CD, OpenTelemetry, Jaeger
+
+**Levels:**
+
+- **Beginner — Laying the Keel** (https://offon.dev/adventures/dead-reckoning/levels/beginner/)
+  Topics: Backstage, Gitea
+  Fix a broken Backstage software template so the commission office can register new vessels for service.
+
+- **Intermediate — Sea Trial** (https://offon.dev/adventures/dead-reckoning/levels/intermediate/)
+  Topics: Backstage, Gitea, Argo Events, Argo Workflows, Argo CD
+  Fix the broken integration points in the delivery pipeline so that commissioning a vessel results in a running deployment.
+
+- **Expert — The Chronometer** (https://offon.dev/adventures/dead-reckoning/levels/expert/)
+  Topics: Backstage, Argo Workflows, Argo CD, OpenTelemetry, Jaeger
+  Repair the fleet's broken navigation log, then use the complete trace it produces to find why vessels arrive carrying the wrong cargo.
+
+---
+
 ### Echoes Lost in Orbit
 
 **URL:** https://offon.dev/adventures/echoes-lost-in-orbit/

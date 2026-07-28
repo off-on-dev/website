@@ -1,14 +1,6 @@
 // Pure prose helpers ported from src/lib/markdown.ts (the lucide section-icon
 // helpers are omitted; icons are handled by astro-icon in components).
 
-/** Converts a string to a lowercase, hyphen-separated URL slug. */
-export const slugify = (text: string): string =>
-  text
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-");
-
 /** Makes pre-rendered prose safe to embed inside an interactive element (a link
  *  card or button) by removing nested `<a>` tags, the sr-only new-tab spans, and
  *  the abbr tabindex/aria-describedby that would create invalid interactive nesting. */

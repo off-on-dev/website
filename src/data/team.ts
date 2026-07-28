@@ -51,9 +51,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
   },
 ];
 
-// Build-time snapshot of ADVENTURE_CONTRIBUTORS, derived in the React app from
-// ADVENTURE_SUMMARIES (src/data/adventures/summaries.ts) and grouped by person.
-// Regenerate when adventure contributor fields change.
+// Update manually when adventure contributor fields change.
 export const ADVENTURE_CONTRIBUTORS: AdventureContributor[] = [
   {
     name: "Katharina Sick",

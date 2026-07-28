@@ -51,6 +51,14 @@ function toggle(): void {
     c.remove("light");
     c.add("dark");
   }
+  const statusEl = document.getElementById('theme-status');
+  if (statusEl) {
+    statusEl.textContent = '';
+    setTimeout(() => {
+      statusEl.textContent = next === 'dark' ? 'Theme switched to dark mode' : 'Theme switched to light mode';
+    }, 50);
+    setTimeout(() => { statusEl.textContent = ''; }, 1600);
+  }
 }
 </script>
 

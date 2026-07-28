@@ -4,7 +4,7 @@ import SEO from "@/components/SEO.astro";
 import Navbar from "@/components/Navbar.astro";
 import Footer from "@/components/Footer.astro";
 import ConsentBanner from "@/components/ConsentBanner.vue";
-import { BRAND_NAME, SITE_URL, COMMUNITY_URL } from "@/lib/site";
+import { BRAND_NAME, SITE_NAME, SITE_URL, COMMUNITY_URL, LINKEDIN_URL, X_URL, BLUESKY_URL, BRAND_SHORT_DESCRIPTION } from "@/lib/site";
 import "@/styles/index.css";
 
 // App shell. Replaces src/root.tsx. Per-page SEO is delegated to <SEO>.
@@ -37,14 +37,15 @@ const gtagBootstrap = `window.dataLayer=window.dataLayer||[];function gtag(){dat
 // (Fires only on client navigation, not the initial load.)
 const themeAfterSwap = `document.addEventListener("astro:after-swap",function(){try{var t=localStorage.getItem("theme");var c=document.documentElement.classList;if(t==="light"){c.remove("dark");c.add("light");}else{c.remove("light");c.add("dark");}}catch(e){}var m=document.getElementById("main-content");if(m){m.focus({preventScroll:true});}});`;
 
-const webSiteJsonLd = `{"@context":"https://schema.org","@type":"WebSite","name":"${BRAND_NAME}","url":"${SITE_URL}","description":"A vendor-neutral community for open source enthusiasts. Learn through hands-on challenges, share what you know, and connect with people who love open source."}`;
+const webSiteJsonLd = `{"@context":"https://schema.org","@type":"WebSite","name":"${BRAND_NAME}","url":"${SITE_URL}","description":"${BRAND_SHORT_DESCRIPTION}"}`;
 
-const orgJsonLd = `{"@context":"https://schema.org","@type":"Organization","name":"${BRAND_NAME}","url":"${SITE_URL}","logo":"${SITE_URL}/brand/offon-logo-dark-color.png","sameAs":["https://www.linkedin.com/company/offondev","${COMMUNITY_URL}","https://github.com/off-on-dev/open-source-challenges"]}`;
+const orgJsonLd = `{"@context":"https://schema.org","@type":"Organization","name":"${BRAND_NAME}","url":"${SITE_URL}","logo":"${SITE_URL}/brand/offon-logo-dark-color.png","sameAs":["${LINKEDIN_URL}","${COMMUNITY_URL}","https://github.com/off-on-dev/open-source-challenges","${X_URL}","${BLUESKY_URL}"]}`;
 
 const fontPreloads = [
   "fonts/inter-latin-400-normal.woff2",
   "fonts/inter-latin-500-normal.woff2",
   "fonts/inter-latin-600-normal.woff2",
+  "fonts/inter-latin-700-normal.woff2",
   "fonts/syne-latin-700-normal.woff2",
 ];
 ---
@@ -53,7 +54,7 @@ const fontPreloads = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="author" content="offon.dev" />
+    <meta name="author" content={SITE_NAME} />
 
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
     <link rel="icon" href={`${base}favicon.png`} type="image/png" />
@@ -95,6 +96,7 @@ const fontPreloads = [
   </head>
   <body>
     <a href="#main-content" class="skip-nav">Skip to main content</a>
+    <span id="theme-status" role="status" class="sr-only" aria-live="polite" aria-atomic="true"></span>
     {/* Shared "opens in a new tab" description referenced via aria-describedby on external links. */}
     <span id="new-tab-hint" hidden>opens in a new tab</span>
     <Navbar />

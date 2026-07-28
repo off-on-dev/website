@@ -26,12 +26,10 @@ const sanitizeSchema = {
   strip: [...(defaultSchema.strip ?? []), "style"],
 };
 
-// Unique id counter for abbr expansion spans, shared across the whole render
-// run. IDs are deterministic only because the loader reads directories
-// synchronously and sequentially (readdirSync). Introducing concurrent async
-// rendering would make IDs non-deterministic between incremental and clean builds.
-let abbrExpansionCounter = 0;
-
+/** Derives a stable, content-based ID from an abbreviation's title text. */
+function makeAbbrId(text) {
+  return 'abbr-' + text.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim().replace(/\s+/g, '-').slice(0, 30);
+}
 
 /** Post-sanitize: turn <abbr title> into a focusable tooltip trigger whose
  *  expansion is exposed to assistive tech via an adjacent sr-only span. */
@@ -44,7 +42,7 @@ function expandAbbr() {
         const child = children[i];
         if (child.type === "element" && child.tagName === "abbr" && child.properties?.title) {
           const text = String(child.properties.title);
-          const id = `abbr-exp-${++abbrExpansionCounter}`;
+          const id = makeAbbrId(text);
           child.properties.dataTitle = text;
           child.properties.tabIndex = 0;
           child.properties.ariaDescribedBy = id;

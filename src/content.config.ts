@@ -171,6 +171,7 @@ interface RenderedLevel {
   codespacesUrl: string;
   discussionUrl: string;
   deadline?: string | null;
+  hook?: string;
   intro?: string[];
   backstory?: string[];
   objective: string[];
@@ -236,6 +237,7 @@ async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Rendered
     codespacesUrl: resolveCodespacesUrl(level.devcontainer, level.codespaces_machine),
     discussionUrl: resolveDiscussionUrl(level.discussion_url ?? level.community_url),
     ...(level.deadline ? { deadline: parseDeadline(level.deadline) } : {}),
+    ...(level.hook ? { hook: level.hook } : {}),
     ...(introHtml ? { intro: introHtml } : {}),
     ...(backstoryHtml ? { backstory: backstoryHtml } : {}),
     objective: objectiveHtml,
