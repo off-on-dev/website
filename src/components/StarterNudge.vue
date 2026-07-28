@@ -49,7 +49,7 @@ function dismiss(): void {
           New here?
           <a
             :href="`${props.base}adventures/${props.adventureId}/levels/${props.levelId}/`"
-            class="font-semibold underline decoration-2 underline-offset-2 hover:underline-offset-4 transition-all text-primary-foreground"
+            class="font-semibold underline decoration-2 underline-offset-2 hover:underline-offset-4 transition-all text-primary-foreground focus-ring rounded-sm"
           >
             Start with {{ props.adventureTitle }}, a {{ props.tag }} adventure
           </a>
@@ -58,7 +58,7 @@ function dismiss(): void {
       <button
         type="button"
         aria-label="Dismiss suggestion"
-        class="shrink-0 inline-flex min-h-6 min-w-6 items-center justify-center text-primary-foreground/60 hover:text-primary-foreground transition-colors focus-ring rounded-sm"
+        class="shrink-0 inline-flex min-h-8 min-w-8 items-center justify-center text-primary-foreground/60 hover:text-primary-foreground transition-colors focus-ring rounded-sm"
         @click="dismiss"
       >
         <IconX width="14" height="14" aria-hidden="true" />
