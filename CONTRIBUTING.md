@@ -33,11 +33,12 @@ Open PRs from your fork against `main` on the upstream repo.
 
 ```sh
 npm run lint             # ESLint
+npm run lint:reuse       # REUSE licence compliance (requires: pip install reuse)
 npm test                 # Vitest unit tests
 npm run build && npm run test:e2e  # Playwright smoke, SSG, a11y, and hydration tests
 ```
 
-All three must pass with zero failures before opening a PR.
+All four must pass with zero failures before opening a PR.
 
 ## Conventions
 

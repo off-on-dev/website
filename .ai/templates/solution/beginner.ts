@@ -1,25 +1,34 @@
-// Copy this folder to src/data/solutions/<adventure-id>/ and fill in your values.
-// If your level is not beginner, rename this file:
-//   mv src/data/solutions/<adventure-id>/beginner.ts src/data/solutions/<adventure-id>/intermediate.ts
-//   mv src/data/solutions/<adventure-id>/beginner.ts src/data/solutions/<adventure-id>/expert.ts
-// Run `npm run generate:solutions` after saving.
-// See src/data/solutions/types.ts for the full type definition.
+// Template for a solution walkthrough. Copy this file to the right location and fill in your values.
+// See ADVENTURES.md → "Adding a Solution Walkthrough" for the full submission guide.
+//
+// Step 1 — copy with the correct filename (replace <adventure-id> and <level-id>):
+//   mkdir -p src/data/solutions/<adventure-id>
+//   cp .ai/templates/solution/beginner.ts src/data/solutions/<adventure-id>/<level-id>.ts
+//
+// Step 2 — after filling in your values, register the route:
+//   npm run generate:solutions
+//
+// For the full type definition see src/data/solutions/types.ts.
 
 import type { Solution } from "@/data/solutions/types";
 
 export const solution: Solution = {
-  // Must match a directory name in src/data/adventures/
+  // The slug from the adventure URL on offon.dev.
+  // e.g. offon.dev/adventures/echoes-lost-in-orbit/ → "echoes-lost-in-orbit"
   adventureId: "your-adventure-id",
 
-  // One of: beginner | intermediate | expert
+  // The level slug from the URL.
+  // e.g. offon.dev/adventures/.../levels/beginner/ → "beginner"
+  // Typically one of: beginner | intermediate | expert
   levelId: "beginner",
 
   // Shown as the page <title> and the main heading
   title: "Beginner Solution: Your Challenge Name",
 
   // Optional — credit the person who wrote the walkthrough.
-  // If they are already in src/data/adventures/contributors.ts, import them there
-  // and use { name: THEIR_EXPORT.name, url: THEIR_EXPORT.url } instead.
+  // url is optional; omit it if you have no public profile to link.
+  // If the contributor is already in src/data/adventures/contributors.ts, import them and
+  // use { name: THEIR_EXPORT.name, url: THEIR_EXPORT.url } instead of duplicating the values.
   contributor: { name: "Your Name", url: "https://yoursite.com" },
 
   // Optional — shown at the top of the page before any content.
@@ -59,8 +68,10 @@ export const solution: Solution = {
       // Optional — a single sentence shown between the heading and the body blocks
       intro: "Brief description of what this step achieves.",
 
+      // Pick the block types you need and delete the rest.
+      // All four types are shown below as examples.
       body: [
-        // Text block — prose content as an HTML string
+        // Text block — write prose as an HTML string (use <p>, <ul>, <li>, <strong>, <code>, etc.)
         {
           type: "text",
           html: "<p>Explain what to observe, then what to do.</p>",
@@ -74,7 +85,7 @@ export const solution: Solution = {
           code: "echo hello",
         },
 
-        // Image block — WebP files go in public/solutions/<adventure-id>/
+        // Image block — add WebP images to public/solutions/<adventure-id>/
         {
           type: "image",
           src: "/solutions/your-adventure-id/step-one-screenshot.webp",

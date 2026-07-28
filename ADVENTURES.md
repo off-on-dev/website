@@ -506,7 +506,7 @@ The three Echoes Lost in Orbit solutions show the format in full:
 
 ### Use the `/add-solution` skill (Claude Code only)
 
-This is a Claude Code slash command. If you are using a different editor or AI tool, skip to [Without Claude Code](#without-claude-code) instead.
+This is a Claude Code slash command. If you are using a different AI tool, paste [`.claude/commands/add-solution.md`](.claude/commands/add-solution.md) as a system prompt or opening message and follow the same flow — the YAML frontmatter at the top is harmless and can be ignored. If you prefer to work without AI assistance, skip to [Without Claude Code](#without-claude-code) instead.
 
 ```sh
 /add-solution
@@ -524,7 +524,7 @@ After the skill completes, run `/a11y-audit` against the new solution page befor
 
 ### Without Claude Code
 
-1. Confirm that `<adventure-id>` matches a directory in `src/data/adventures/` and that `<level-id>` is one of `beginner`, `intermediate`, or `expert`.
+1. Find the adventure and level IDs from the challenge URL on offon.dev. For example, `offon.dev/adventures/echoes-lost-in-orbit/levels/beginner/` gives adventure ID `echoes-lost-in-orbit` and level ID `beginner`. Confirm the adventure ID matches a directory in `src/data/adventures/`.
 2. Copy the template into `src/data/solutions/`:
 
     ```sh
@@ -532,14 +532,8 @@ After the skill completes, run `/a11y-audit` against the new solution page befor
     cp .ai/templates/solution/beginner.ts src/data/solutions/<adventure-id>/<level-id>.ts
     ```
 
-3. Fill in the `Solution` object: update `adventureId`, `levelId`, `title`, `contributor`, and all content fields. See [`src/data/solutions/types.ts`](src/data/solutions/types.ts) for reference.
-4. If the solution uses images, convert them to WebP at quality 85 and save them in `public/solutions/<adventure-id>/`:
-
-    ```sh
-    cwebp -q 85 input.png -o public/solutions/<adventure-id>/<level-id>-step-name.webp
-    ```
-
-    Reference them with absolute paths in the `image` blocks (e.g. `/solutions/<adventure-id>/<level-id>-step-name.webp`).
+3. Fill in the `Solution` object: update `adventureId`, `levelId`, `title`, `contributor`, and all content fields. Every field has an inline comment in the template you copied in step 2 explaining what it does. For the full type definitions see [`src/data/solutions/types.ts`](src/data/solutions/types.ts).
+4. If the solution uses images, save them as WebP in `public/solutions/<adventure-id>/` and reference them with absolute paths in the `image` blocks (e.g. `/solutions/<adventure-id>/<level-id>-step-name.webp`).
 
 5. Run `npm run generate:solutions` to rebuild the solution index and patch region markers. This step is not optional: without it your solution has no route and your PR fails CI.
 6. Start the dev server (`npm run dev`) and preview your solution at `http://localhost:8080/adventures/<adventure-id>/levels/<level-id>/solution/`.
@@ -566,7 +560,7 @@ import { KATHARINA_SICK } from "@/data/adventures/contributors";
 contributor: { name: KATHARINA_SICK.name, url: KATHARINA_SICK.url },
 ```
 
-If the contributor is not yet in `contributors.ts`, use the inline form directly.
+If the contributor is not yet in `contributors.ts`, use the inline form directly — do not add a new entry to `contributors.ts` just for a solution. That file is maintained by the core team and entries are added when a contributor becomes a recurring presence.
 
 Licensing is handled centrally through `REUSE.toml`. You do not need to add SPDX headers to solution files. Code is MIT and written content is CC BY 4.0.
 
