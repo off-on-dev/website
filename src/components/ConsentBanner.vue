@@ -12,9 +12,8 @@ const cookieBtn = ref<HTMLButtonElement | null>(null);
 const declineBtn = ref<HTMLButtonElement | null>(null);
 
 // Move focus after consent transitions so keyboard/AT users are not stranded.
-// prev === undefined means the initial store subscription fire — skip it.
-watch($consent, async (v, prev) => {
-  if (prev === undefined) return;
+// Uses the Vue ref from useStore (not the raw atom) so Vue's watch fires correctly.
+watch(consent, async (v, prev) => {
   if (prev === null && v !== null) {
     // Banner dismissed (granted or denied): focus the cookie preferences button.
     await nextTick();

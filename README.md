@@ -32,6 +32,8 @@ Node.js **26** is required (pinned in `.nvmrc`; `nvm use`).
 | `npm run build` | Static build to `dist/` |
 | `npm run preview` | Serve the built `dist/` (`astro preview`) |
 | `npm run sync` | `astro sync` — runs the Zod content schema over adventure YAML; fails on invalid content |
+| `npm run test:unit` | Vitest unit tests (lib functions, consent store, Vue components) |
+| `npm run test:unit:watch` | Vitest in watch mode during development |
 | `npm run test:e2e` | Playwright (a11y + SEO/smoke). Starts `astro preview` itself; no separate build needed |
 | `npm run lint:reuse` | REUSE licence compliance check (requires `pip install reuse` once) |
 | `node .ai/templates/generate-reveal-zip.mjs` | Regenerate `public/downloads/offon-reveal-template.zip` |
