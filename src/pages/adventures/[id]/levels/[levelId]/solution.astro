@@ -1,6 +1,11 @@
 ---
 import { getCollection } from "astro:content";
-import { Icon } from "astro-icon/components";
+import IconLock from '~icons/lucide/lock';
+import IconArrowLeft from '~icons/lucide/arrow-left';
+import IconTriangleAlert from '~icons/lucide/triangle-alert';
+import IconChevronDown from '~icons/lucide/chevron-down';
+import IconSparkles from '~icons/lucide/sparkles';
+import IconExternalLink from '~icons/lucide/external-link';
 import Layout from "@/layouts/Layout.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import ContributorBadge from "@/components/ContributorBadge.astro";
@@ -75,8 +80,7 @@ const description = unlocked
               {level.name}: Solution
             </h1>
             <div class="flex gap-4 rounded-xl border border-border bg-[hsl(var(--surface))] p-6">
-              <Icon
-                name="lucide:lock"
+              <IconLock
                 width={20}
                 height={20}
                 class="mt-0.5 shrink-0 text-faint"
@@ -92,7 +96,7 @@ const description = unlocked
                   href={challengeUrl}
                   class="focus-ring-tight mt-4 inline-flex items-center gap-1.5 rounded-sm text-sm font-medium text-primary hover:underline"
                 >
-                  <Icon name="lucide:arrow-left" width={14} height={14} aria-hidden="true" />
+                  <IconArrowLeft width={14} height={14} aria-hidden="true" />
                   Back to challenge
                 </a>
               </div>
@@ -157,8 +161,7 @@ const description = unlocked
                     class="mb-6 flex gap-3 rounded-xl border border-primary/25 bg-primary/5 p-4"
                     role="note"
                   >
-                    <Icon
-                      name="lucide:triangle-alert"
+                    <IconTriangleAlert
                       width={16}
                       height={16}
                       class="mt-0.5 shrink-0 text-primary"
@@ -207,8 +210,7 @@ const description = unlocked
                           <h3 class="flex-1 text-base font-semibold text-foreground">
                             {step.title}
                           </h3>
-                          <Icon
-                            name="lucide:chevron-down"
+                          <IconChevronDown
                             width={16}
                             height={16}
                             class="shrink-0 text-faint transition-transform group-open:rotate-180 motion-reduce:transition-none"
@@ -255,8 +257,7 @@ const description = unlocked
                           {solution.completeSolution.title ?? "Complete Solution"}
                         </span>
                       </div>
-                      <Icon
-                        name="lucide:chevron-down"
+                      <IconChevronDown
                         width={16}
                         height={16}
                         class="shrink-0 text-faint transition-transform group-open:rotate-180 motion-reduce:transition-none"
@@ -295,7 +296,7 @@ const description = unlocked
                           class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary"
                           aria-hidden="true"
                         >
-                          <Icon name="lucide:sparkles" width={16} height={16} />
+                          <IconSparkles width={16} height={16} />
                         </span>
                         <div class="w-full min-w-0">
                           <h2 id="outro-heading" class="mb-3 text-base font-semibold text-foreground">
@@ -313,7 +314,7 @@ const description = unlocked
                             class="docs-ext-link mt-4 text-sm font-medium"
                           >
                             Browse the discussion
-                            <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                            <IconExternalLink width={12} height={12} aria-hidden="true" />
                           </a>
                         </div>
                       </div>
@@ -344,7 +345,7 @@ const description = unlocked
                       class="btn-primary w-fit"
                     >
                       Open in Codespaces
-                      <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+                      <IconExternalLink width={14} height={14} aria-hidden="true" />
                     </a>
                     <p class="mt-2.5 font-mono text-xs text-faint">Free GitHub account required</p>
                   </div>
@@ -368,7 +369,7 @@ const description = unlocked
                             class="docs-ext-link text-sm"
                           >
                             {link.title}
-                            <Icon name="lucide:external-link" width={11} height={11} aria-hidden="true" />
+                            <IconExternalLink width={11} height={11} aria-hidden="true" />
                           </a>
                         </li>
                       ))}
@@ -386,7 +387,7 @@ const description = unlocked
                     href={challengeUrl}
                     class="focus-ring-tight inline-flex items-center gap-1.5 rounded-sm text-sm font-medium text-primary hover:underline"
                   >
-                    <Icon name="lucide:arrow-left" width={13} height={13} aria-hidden="true" />
+                    <IconArrowLeft width={13} height={13} aria-hidden="true" />
                     Back to challenge
                   </a>
                 </div>
@@ -407,7 +408,7 @@ const description = unlocked
                     class="docs-ext-link text-sm font-medium"
                   >
                     Join the discussion
-                    <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                    <IconExternalLink width={12} height={12} aria-hidden="true" />
                   </a>
                 </div>
               </aside>

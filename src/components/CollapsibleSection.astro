@@ -1,7 +1,7 @@
 ---
 // Ported from src/components/CollapsibleSection.tsx. Uses a native
 // <details>/<summary> disclosure, so expand/collapse works without JS.
-import { Icon } from "astro-icon/components";
+import IconChevronDown from "~icons/lucide/chevron-down";
 
 interface Props {
   id: string;
@@ -18,8 +18,7 @@ const Heading = `h${headingLevel}` as "h2" | "h3" | "h4";
     <Heading class="font-sans text-sm font-semibold tracking-wide text-primary flex-1 m-0">
       {title}
     </Heading>
-    <Icon
-      name="lucide:chevron-down"
+    <IconChevronDown
       width={18}
       height={18}
       class="shrink-0 text-faint transition-transform group-open:rotate-180"

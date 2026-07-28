@@ -1,6 +1,9 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { Icon } from "astro-icon/components";
+import IconZap from '~icons/lucide/zap';
+import IconDownload from '~icons/lucide/download';
+import IconCheck from '~icons/lucide/check';
+import IconX from '~icons/lucide/x';
 import {
   BRAND_NAME,
   BRAND_SLOGAN_PARTS,
@@ -172,7 +175,7 @@ hsl(var(--foreground))`;
                 {VALUES.map((v) => (
                   <div class="rounded-lg border border-border bg-[hsl(var(--surface))] p-5">
                     <div class="flex items-center gap-2 mb-3">
-                      <Icon name="lucide:zap" width={14} height={14} class="text-primary shrink-0" aria-hidden="true" />
+                      <IconZap width={14} height={14} class="text-primary shrink-0" aria-hidden="true" />
                       <h3 class="font-sans font-semibold text-sm text-foreground">{v.name}</h3>
                     </div>
                     <p class="font-sans text-xs text-dim leading-relaxed">{v.description}</p>
@@ -206,7 +209,7 @@ hsl(var(--foreground))`;
                         <div class="flex flex-wrap gap-1.5">
                           {card.downloads.map((d) => (
                             <a href={d.href} download={d.filename} aria-label={`Download ${d.filename}`} class="inline-flex items-center gap-1 font-sans text-[11px] font-semibold tracking-wide text-dim hover:text-foreground border border-foreground/25 hover:border-foreground/50 rounded-full px-2.5 py-0.5 transition-colors focus-ring-tight">
-                              <Icon name="lucide:download" width={10} height={10} aria-hidden="true" />
+                              <IconDownload width={10} height={10} aria-hidden="true" />
                               {d.label}
                             </a>
                           ))}
@@ -247,7 +250,7 @@ hsl(var(--foreground))`;
                   <div class="flex flex-wrap gap-1.5 justify-center">
                     {ICON_DOWNLOADS.map((d) => (
                       <a href={d.href} download={d.filename} aria-label={`Download ${d.filename}`} class="inline-flex items-center gap-1 font-sans text-[11px] font-semibold tracking-wide text-dim hover:text-foreground border border-foreground/25 hover:border-foreground/50 rounded-full px-2.5 py-0.5 transition-colors focus-ring-tight">
-                        <Icon name="lucide:download" width={10} height={10} aria-hidden="true" />
+                        <IconDownload width={10} height={10} aria-hidden="true" />
                         {d.label}
                       </a>
                     ))}
@@ -260,7 +263,7 @@ hsl(var(--foreground))`;
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div class="rounded-lg border border-[hsl(85,48%,56%,0.35)] bg-[hsl(var(--surface))] p-5">
                   <h4 class="flex items-center gap-2 font-sans text-sm font-semibold text-foreground mb-3">
-                    <Icon name="lucide:check" width={13} height={13} class="text-[#15803d] shrink-0" aria-hidden="true" />
+                    <IconCheck width={13} height={13} class="text-[#15803d] shrink-0" aria-hidden="true" />
                     Do
                   </h4>
                   <ul role="list" class="font-sans text-sm text-dim space-y-1.5">
@@ -273,7 +276,7 @@ hsl(var(--foreground))`;
                 </div>
                 <div class="rounded-lg border border-[hsl(0,84%,60%,0.35)] bg-[hsl(var(--surface))] p-5">
                   <h4 class="flex items-center gap-2 font-sans text-sm font-semibold text-foreground mb-3">
-                    <Icon name="lucide:x" width={13} height={13} class="text-destructive shrink-0" aria-hidden="true" />
+                    <IconX width={13} height={13} class="text-destructive shrink-0" aria-hidden="true" />
                     Don't
                   </h4>
                   <ul role="list" class="font-sans text-sm text-dim space-y-1.5">
@@ -442,7 +445,7 @@ hsl(var(--foreground))`;
                       <div class="flex flex-wrap gap-1.5">
                         {NYX_FULL_DOWNLOADS.map((d) => (
                           <a href={d.href} download={d.filename} aria-label={`Download ${d.filename}`} class="inline-flex items-center gap-1 font-sans text-[11px] font-semibold tracking-wide text-dim hover:text-foreground border border-foreground/25 hover:border-foreground/50 rounded-full px-2.5 py-0.5 transition-colors focus-ring-tight">
-                            <Icon name="lucide:download" width={10} height={10} aria-hidden="true" />
+                            <IconDownload width={10} height={10} aria-hidden="true" />
                             {d.label}
                           </a>
                         ))}
@@ -469,7 +472,7 @@ hsl(var(--foreground))`;
                       <div class="flex flex-wrap gap-1.5">
                         {NYX_PEEK_DOWNLOADS.map((d) => (
                           <a href={d.href} download={d.filename} aria-label={`Download ${d.filename}`} class="inline-flex items-center gap-1 font-sans text-[11px] font-semibold tracking-wide text-dim hover:text-foreground border border-foreground/25 hover:border-foreground/50 rounded-full px-2.5 py-0.5 transition-colors focus-ring-tight">
-                            <Icon name="lucide:download" width={10} height={10} aria-hidden="true" />
+                            <IconDownload width={10} height={10} aria-hidden="true" />
                             {d.label}
                           </a>
                         ))}
@@ -498,7 +501,7 @@ hsl(var(--foreground))`;
                   <div class="flex flex-wrap gap-1.5">
                     {OG_DOWNLOADS.map((d) => (
                       <a href={d.href} download={d.filename} aria-label={`Download ${d.filename}`} class="inline-flex items-center gap-1 font-sans text-[11px] font-semibold tracking-wide text-dim hover:text-foreground border border-foreground/25 hover:border-foreground/50 rounded-full px-2.5 py-0.5 transition-colors focus-ring-tight">
-                        <Icon name="lucide:download" width={10} height={10} aria-hidden="true" />
+                        <IconDownload width={10} height={10} aria-hidden="true" />
                         {d.label}
                       </a>
                     ))}
@@ -520,7 +523,7 @@ hsl(var(--foreground))`;
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                 <div class="rounded-lg border border-[hsl(85,48%,56%,0.35)] bg-[hsl(var(--surface))] p-5">
                   <h3 class="flex items-center gap-2 font-sans text-sm font-semibold text-foreground mb-3">
-                    <Icon name="lucide:check" width={13} height={13} class="text-[#15803d] shrink-0" aria-hidden="true" />
+                    <IconCheck width={13} height={13} class="text-[#15803d] shrink-0" aria-hidden="true" />
                     Use
                   </h3>
                   <ul role="list" class="font-sans text-sm text-dim space-y-1.5">
@@ -534,7 +537,7 @@ hsl(var(--foreground))`;
                 </div>
                 <div class="rounded-lg border border-[hsl(0,84%,60%,0.35)] bg-[hsl(var(--surface))] p-5">
                   <h3 class="flex items-center gap-2 font-sans text-sm font-semibold text-foreground mb-3">
-                    <Icon name="lucide:x" width={13} height={13} class="text-destructive shrink-0" aria-hidden="true" />
+                    <IconX width={13} height={13} class="text-destructive shrink-0" aria-hidden="true" />
                     Avoid
                   </h3>
                   <ul role="list" class="font-sans text-sm text-dim space-y-1.5">
@@ -578,7 +581,7 @@ hsl(var(--foreground))`;
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div class="rounded-lg border border-[hsl(85,48%,56%,0.35)] bg-[hsl(var(--surface))] p-5">
                       <h4 class="flex items-center gap-2 font-sans text-sm font-semibold text-foreground mb-3">
-                        <Icon name="lucide:check" width={13} height={13} class="text-[#15803d] shrink-0" aria-hidden="true" />
+                        <IconCheck width={13} height={13} class="text-[#15803d] shrink-0" aria-hidden="true" />
                         Use
                       </h4>
                       <ul role="list" class="font-mono text-xs text-foreground space-y-2">
@@ -589,7 +592,7 @@ hsl(var(--foreground))`;
                     </div>
                     <div class="rounded-lg border border-[hsl(0,84%,60%,0.35)] bg-[hsl(var(--surface))] p-5">
                       <h4 class="flex items-center gap-2 font-sans text-sm font-semibold text-foreground mb-3">
-                        <Icon name="lucide:x" width={13} height={13} class="text-destructive shrink-0" aria-hidden="true" />
+                        <IconX width={13} height={13} class="text-destructive shrink-0" aria-hidden="true" />
                         Never write
                       </h4>
                       <ul role="list" class="font-mono text-xs text-faint space-y-2">

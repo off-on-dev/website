@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
-import { Icon } from "astro-icon/components";
+import IconClock from '~icons/lucide/clock';
+import IconArrowRight from '~icons/lucide/arrow-right';
 import Layout from "@/layouts/Layout.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import AdventureIcon from "@/components/AdventureIcon.astro";
@@ -98,7 +99,7 @@ const topRows = leaderboard?.rows?.slice(0, 5) ?? [];
                       <DifficultyBadge difficulty={level.difficulty} showDot />
                       {level.estimatedTime && (
                         <span class="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 font-mono text-xs text-dim">
-                          <Icon name="lucide:clock" width={11} height={11} aria-hidden="true" />
+                          <IconClock width={11} height={11} aria-hidden="true" />
                           {level.estimatedTime}
                         </span>
                       )}
@@ -114,7 +115,7 @@ const topRows = leaderboard?.rows?.slice(0, 5) ?? [];
                       aria-hidden="true"
                     >
                       Start Challenge
-                      <Icon name="lucide:arrow-right" width={12} height={12} aria-hidden="true" />
+                      <IconArrowRight width={12} height={12} aria-hidden="true" />
                     </span>
                   </a>
                 );

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { X } from "lucide-vue-next";
+import IconX from '~icons/lucide/x';
 
 // Dismissable "new here?" nudge, ported from the React StarterNudge. The starter
 // adventure/level is resolved at build time and passed in as props (the React
@@ -61,7 +61,7 @@ function dismiss(): void {
         class="shrink-0 inline-flex min-h-6 min-w-6 items-center justify-center text-primary-foreground/60 hover:text-primary-foreground transition-colors focus-ring rounded-sm"
         @click="dismiss"
       >
-        <X :size="14" aria-hidden="true" />
+        <IconX width="14" height="14" aria-hidden="true" />
       </button>
     </div>
   </div>

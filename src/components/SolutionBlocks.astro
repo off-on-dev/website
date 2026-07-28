@@ -1,5 +1,8 @@
 ---
-import { Icon } from "astro-icon/components";
+import IconCopy from "~icons/lucide/copy";
+import IconLightbulb from "~icons/lucide/lightbulb";
+import IconTriangleAlert from "~icons/lucide/triangle-alert";
+import IconInfo from "~icons/lucide/info";
 import type { SolutionBlock } from "@/lib/solutions";
 
 // Renders a SolutionBlock[] body (text, code, image, callout). Ported from the
@@ -12,23 +15,26 @@ const base = import.meta.env.BASE_URL;
 
 const calloutConfig = {
   tip: {
-    icon: "lucide:lightbulb",
     label: "Tip",
     class: "border-primary/30 bg-primary/5",
     iconClass: "text-primary",
   },
   warning: {
-    icon: "lucide:triangle-alert",
     label: "Warning",
     class: "border-orange-500/30 bg-orange-500/5",
     iconClass: "text-orange-400",
   },
   info: {
-    icon: "lucide:info",
     label: "Info",
     class: "border-blue-400/30 bg-blue-400/5",
     iconClass: "text-blue-400",
   },
+} as const;
+
+const calloutIconMap = {
+  tip: IconLightbulb,
+  warning: IconTriangleAlert,
+  info: IconInfo,
 } as const;
 
 // Solution image srcs are stored root-absolute (/solutions/...); prefix the base
@@ -51,7 +57,7 @@ const resolveSrc = (src: string): string => (src.startsWith("/") ? base + src.sl
             <div class="code-block-header">
               <span class="code-lang-label" aria-hidden="true">{label}</span>
               <button type="button" class="code-header-btn" aria-label="Copy code" data-copy-code>
-                <Icon name="lucide:copy" width={12} height={12} aria-hidden="true" />
+                <IconCopy width={12} height={12} aria-hidden="true" />
                 <span>Copy</span>
               </button>
             </div>
@@ -81,11 +87,11 @@ const resolveSrc = (src: string): string => (src.startsWith("/") ? base + src.sl
         );
       }
       const config = calloutConfig[block.variant as keyof typeof calloutConfig];
-      if (!config) return null;
+      const CalloutIcon = calloutIconMap[block.variant as keyof typeof calloutIconMap];
+      if (!config || !CalloutIcon) return null;
       return (
         <div class={`flex gap-3 rounded-lg border p-4 text-foreground ${config.class}`} role="note">
-          <Icon
-            name={config.icon}
+          <CalloutIcon
             width={16}
             height={16}
             class={`mt-0.5 shrink-0 ${config.iconClass}`}

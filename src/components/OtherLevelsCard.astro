@@ -1,6 +1,6 @@
 ---
 // Ported from src/components/OtherLevelsCard.tsx.
-import { Icon } from "astro-icon/components";
+import IconArrowRight from "~icons/lucide/arrow-right";
 import { difficultyStyle } from "@/lib/difficulty";
 
 type LevelRef = { id: string; name: string; difficulty: string };
@@ -38,8 +38,7 @@ const upcoming = adventure.upcomingLevels ?? [];
               <span class="shrink-0 uppercase font-medium">{level.difficulty}</span>
               <span aria-hidden="true" class="inline-block w-px h-3 bg-current opacity-40" />
               <span class="flex-1 truncate">{level.name}</span>
-              <Icon
-                name="lucide:arrow-right"
+              <IconArrowRight
                 width={11}
                 height={11}
                 class="shrink-0 opacity-50 transition-opacity group-hover:opacity-100"

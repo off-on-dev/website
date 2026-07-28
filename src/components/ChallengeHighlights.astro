@@ -1,23 +1,25 @@
 ---
-import { Icon } from "astro-icon/components";
+import { LUCIDE_ICONS } from "@/lib/lucide-icons";
 
-const highlights = [
+const rawHighlights = [
   {
-    icon: "lucide:book-open",
+    icon: "book-open",
     title: "Learn by Doing",
     desc: "Real-world, hands-on challenges. Broken pipelines, misconfigured systems, and more. All running in your browser via GitHub Codespaces, no setup needed.",
   },
   {
-    icon: "lucide:trending-up",
+    icon: "trending-up",
     title: "Build Real Skills",
     desc: "Build practical, hands-on experience with every challenge. Earn Credly badges and leaderboard points along the way.",
   },
   {
-    icon: "lucide:shield",
+    icon: "shield",
     title: "Open Source First",
     desc: "Everything runs on open source tools. Vendor-neutral and free from proprietary lock-in. Open, transparent, and reproducible by anyone.",
   },
 ];
+
+const highlights = rawHighlights.map((h) => ({ ...h, IconComponent: LUCIDE_ICONS[h.icon] }));
 ---
 
 <div class="bg-card py-16 px-6 md:px-16 border-y border-border">
@@ -25,7 +27,7 @@ const highlights = [
     {highlights.map((h) => (
       <div class="flex gap-4">
         <span class="mt-0.5 shrink-0 text-primary">
-          <Icon name={h.icon} width={22} height={22} aria-hidden="true" />
+          {h.IconComponent && <h.IconComponent width={22} height={22} aria-hidden="true" />}
         </span>
         <div>
           <p class="font-semibold text-foreground">{h.title}</p>

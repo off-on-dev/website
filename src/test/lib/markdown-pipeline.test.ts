@@ -17,7 +17,7 @@ describe("mdToInline", () => {
 
     it("returns empty string for null-ish input", async () => {
       // The function guards with `if (!str) return ""`
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       expect(await mdToInline(null as any)).toBe("");
     });
   });
@@ -275,7 +275,7 @@ describe("mdToInlineArray", () => {
   });
 
   it("returns an empty array for null/undefined input", async () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     expect(await mdToInlineArray(null as any)).toEqual([]);
   });
 
@@ -304,7 +304,7 @@ describe("mdToBlockArray", () => {
   });
 
   it("returns an empty array for null/undefined input", async () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     expect(await mdToBlockArray(null as any)).toEqual([]);
   });
 

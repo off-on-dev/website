@@ -1,7 +1,7 @@
 import { defineConfig } from "astro/config";
 import vue from "@astrojs/vue";
-import icon from "astro-icon";
 import tailwindcss from "@tailwindcss/vite";
+import Icons from "unplugin-icons/vite";
 
 // offon.dev — Astro (static) + Vue islands. base is overridden for PR previews
 // via VITE_BASE_PATH (/pr-preview/pr-N/).
@@ -26,7 +26,7 @@ export default defineConfig({
     "/docs/community-guide": "/handbook/",
     "/community-guide": "/handbook/",
   },
-  integrations: [vue({ appEntrypoint: "/src/pages/_app" }), icon()],
+  integrations: [vue({ appEntrypoint: "/src/pages/_app" })],
   markdown: {
     // Build-time dual-theme highlighting (retires the custom CodeBlock highlighter).
     // Field-level prose is sanitized separately in src/lib/markdown-pipeline.mjs.
@@ -35,6 +35,6 @@ export default defineConfig({
     },
   },
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss(), Icons({ compiler: "vue3" })],
   },
 });

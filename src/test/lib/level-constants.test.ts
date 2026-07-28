@@ -35,7 +35,7 @@ describe("LEVEL_DIFFICULTY_BY_EMOJI", () => {
   });
 
   it("returns undefined for an unknown emoji", () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     expect((LEVEL_DIFFICULTY_BY_EMOJI as any)["🔵"]).toBeUndefined();
   });
 });

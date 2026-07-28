@@ -11,7 +11,7 @@
 // currentPath is set in onMounted from window.location.pathname. Tests that
 // need a specific active path use history.pushState() before mounting.
 
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { mount, flushPromises } from "@vue/test-utils";
 import { nextTick } from "vue";
 import MobileMenu from "@/components/MobileMenu.vue";

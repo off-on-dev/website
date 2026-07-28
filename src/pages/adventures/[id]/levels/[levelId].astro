@@ -3,7 +3,11 @@
 // src/pages/ChallengeDetail.tsx (StructuredLayout). Fully static: discussion
 // and leaderboard data come from the CI-refreshed JSON at build time.
 import { getCollection } from "astro:content";
-import { Icon } from "astro-icon/components";
+import IconClock from '~icons/lucide/clock';
+import IconCheck from '~icons/lucide/check';
+import IconChevronDown from '~icons/lucide/chevron-down';
+import IconExternalLink from '~icons/lucide/external-link';
+import IconArrowRight from '~icons/lucide/arrow-right';
 import type { ImageMetadata } from "astro";
 import Layout from "@/layouts/Layout.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
@@ -113,7 +117,7 @@ const walkthroughSteps = howToPlay && howToPlay.length > 0 ? [getStartedStep, ..
           {
             level.estimatedTime && (
               <span class="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 font-mono text-xs text-dim">
-                <Icon name="lucide:clock" width={11} height={11} aria-hidden="true" />
+                <IconClock width={11} height={11} aria-hidden="true" />
                 {level.estimatedTime}
               </span>
             )
@@ -145,7 +149,7 @@ const walkthroughSteps = howToPlay && howToPlay.length > 0 ? [getStartedStep, ..
                   <ul role="list" class="space-y-2">
                     {objective.map((item) => (
                       <li class="flex items-start gap-2.5 text-sm text-dim leading-relaxed">
-                        <Icon name="lucide:check" width={14} height={14} class="mt-0.5 shrink-0 text-primary" aria-hidden="true" />
+                        <IconCheck width={14} height={14} class="mt-0.5 shrink-0 text-primary" aria-hidden="true" />
                         <span class="min-w-0 md-inline" set:html={item} />
                       </li>
                     ))}
@@ -254,8 +258,7 @@ const walkthroughSteps = howToPlay && howToPlay.length > 0 ? [getStartedStep, ..
                           <span class="min-w-0 flex-1 text-sm font-semibold text-foreground">
                             {step.title ? <span class="md-inline" set:html={stripLinks(step.title)} /> : `Step ${i + 1}`}
                           </span>
-                          <Icon
-                            name="lucide:chevron-down"
+                          <IconChevronDown
                             width={16}
                             height={16}
                             class="mt-0.5 shrink-0 text-faint transition-transform group-open:rotate-180"
@@ -317,7 +320,7 @@ const walkthroughSteps = howToPlay && howToPlay.length > 0 ? [getStartedStep, ..
                     aria-describedby="new-tab-hint"
                     class="docs-ext-link font-medium"
                   >
-                    challenge thread <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                    challenge thread <IconExternalLink width={12} height={12} aria-hidden="true" />
                   </a>{" "}
                   on {COMMUNITY_DISPLAY_NAME}.
                 </span>
@@ -333,7 +336,7 @@ const walkthroughSteps = howToPlay && howToPlay.length > 0 ? [getStartedStep, ..
                 class="docs-ext-link text-xs"
               >
                 Share your achievement on LinkedIn
-                <Icon name="lucide:external-link" width={11} height={11} aria-hidden="true" />
+                <IconExternalLink width={11} height={11} aria-hidden="true" />
               </a>
             </p>
           </section>
@@ -354,7 +357,7 @@ const walkthroughSteps = howToPlay && howToPlay.length > 0 ? [getStartedStep, ..
                   class="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline focus-ring-tight rounded-sm"
                 >
                   View the solution walkthrough
-                  <Icon name="lucide:arrow-right" width={14} height={14} aria-hidden="true" />
+                  <IconArrowRight width={14} height={14} aria-hidden="true" />
                 </a>
               </section>
             )
@@ -381,7 +384,7 @@ const walkthroughSteps = howToPlay && howToPlay.length > 0 ? [getStartedStep, ..
                                 class="docs-ext-link font-medium"
                               >
                                 {tool.name}
-                                <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                                <IconExternalLink width={12} height={12} aria-hidden="true" />
                               </a>
                             ) : (
                               <span class="font-medium text-foreground">{tool.name}</span>
@@ -416,7 +419,7 @@ const walkthroughSteps = howToPlay && howToPlay.length > 0 ? [getStartedStep, ..
                               class="docs-ext-link font-medium"
                             >
                               {link.title}
-                              <Icon name="lucide:external-link" width={11} height={11} aria-hidden="true" />
+                              <IconExternalLink width={11} height={11} aria-hidden="true" />
                             </a>
                           </span>
                         </li>

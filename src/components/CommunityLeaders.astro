@@ -1,5 +1,5 @@
 ---
-import { Icon } from "astro-icon/components";
+import { LUCIDE_ICONS } from "@/lib/lucide-icons";
 import communityLeadersData from "@/data/community-leaders.json";
 import AvatarLink from "@/components/AvatarLink.astro";
 
@@ -15,15 +15,15 @@ interface Props {
 
 const { sections: sectionFilter, limit } = Astro.props;
 
-const SECTION_ICONS: Record<string, string> = {
-  "top-contributors": "lucide:trophy",
-  "top-challenge-solvers": "lucide:target",
-  "challenge-rockstars": "lucide:star",
-  "challenge-grand-builders": "lucide:building-2",
-  "challenge-builders": "lucide:wrench",
-  "most-liked": "lucide:heart",
-  "most-replies": "lucide:message-circle",
-  "most-supportive": "lucide:hand-heart",
+const SECTION_ICON_NAMES: Record<string, string> = {
+  "top-contributors": "trophy",
+  "top-challenge-solvers": "target",
+  "challenge-rockstars": "star",
+  "challenge-grand-builders": "building-2",
+  "challenge-builders": "wrench",
+  "most-liked": "heart",
+  "most-replies": "message-circle",
+  "most-supportive": "hand-heart",
 };
 
 const ALL_SECTIONS = communityLeadersData.sections as LeaderSection[];
@@ -34,7 +34,9 @@ const visibleSections = (
         .map((id) => ALL_SECTIONS.find((s) => s.id === id))
         .filter((s): s is LeaderSection => s !== undefined)
     : ALL_SECTIONS
-).map((s) => (limit !== undefined ? { ...s, users: s.users.slice(0, limit) } : s));
+)
+  .map((s) => (limit !== undefined ? { ...s, users: s.users.slice(0, limit) } : s))
+  .map((s) => ({ ...s, IconComponent: LUCIDE_ICONS[SECTION_ICON_NAMES[s.id]] }));
 ---
 
 <div class="rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
@@ -44,9 +46,9 @@ const visibleSections = (
       <div class="pb-5 border-b border-border last:border-b-0 last:pb-0">
         <div>
           <h4 class="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-            {SECTION_ICONS[section.id] && (
+            {section.IconComponent && (
               <span class="text-primary">
-                <Icon name={SECTION_ICONS[section.id]} width={14} height={14} aria-hidden="true" />
+                <section.IconComponent width={14} height={14} aria-hidden="true" />
               </span>
             )}
             {section.title}

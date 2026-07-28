@@ -150,17 +150,17 @@ describe("parseDeadline", () => {
 
   describe("non-string input", () => {
     it("throws an error describing the type for a number", () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       expect(() => parseDeadline(42 as any)).toThrow("[deadline]");
     });
 
     it("throws an error for an object", () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       expect(() => parseDeadline({} as any)).toThrow("[deadline]");
     });
 
     it("throws an error for a boolean", () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       expect(() => parseDeadline(true as any)).toThrow("[deadline]");
     });
   });

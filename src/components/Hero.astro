@@ -1,5 +1,7 @@
 ---
-import { Icon } from "astro-icon/components";
+import IconZap from "~icons/lucide/zap";
+import IconArrowDown from "~icons/lucide/arrow-down";
+import IconExternalLink from "~icons/lucide/external-link";
 import { BRAND_SLOGAN_PARTS, BRAND_SECONDARY_LINE_PARTS, COMMUNITY_URL } from "@/lib/site";
 
 const base = import.meta.env.BASE_URL;
@@ -18,11 +20,11 @@ const fireflies = Array.from({ length: 8 });
     <div
       class="animate-fade-up hero-badge mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-[hsl(var(--surface))] px-4 py-1.5"
     >
-      <Icon name="lucide:zap" width={12} height={12} aria-hidden="true" class="text-foreground" />
+      <IconZap width={12} height={12} aria-hidden="true" class="text-foreground" />
       <span class="text-sm text-foreground">{BRAND_SLOGAN_PARTS[0]}</span>
-      <Icon name="lucide:zap" width={14} height={14} aria-hidden="true" class="text-foreground" />
+      <IconZap width={14} height={14} aria-hidden="true" class="text-foreground" />
       <span class="text-sm text-foreground">{BRAND_SLOGAN_PARTS[1]}</span>
-      <Icon name="lucide:zap" width={14} height={14} aria-hidden="true" class="text-foreground" />
+      <IconZap width={14} height={14} aria-hidden="true" class="text-foreground" />
       <span class="text-sm text-foreground">{BRAND_SLOGAN_PARTS[2]}</span>
     </div>
 
@@ -42,7 +44,7 @@ const fireflies = Array.from({ length: 8 });
     <div class="animate-fade-up-delay-3 mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
       <a href={`${base}challenges/`} class="btn-primary inline-flex items-center gap-1">
         Start a Challenge
-        <Icon name="lucide:arrow-down" width={16} height={16} aria-hidden="true" />
+        <IconArrowDown width={16} height={16} aria-hidden="true" />
       </a>
       <a
         href={COMMUNITY_URL}
@@ -52,7 +54,7 @@ const fireflies = Array.from({ length: 8 });
         class="btn-ghost inline-flex items-center gap-1"
       >
         Join the Community
-        <Icon name="lucide:external-link" width={16} height={16} aria-hidden="true" />
+        <IconExternalLink width={16} height={16} aria-hidden="true" />
       </a>
     </div>
   </div>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import { useStore } from "@nanostores/vue";
-import { Cookie } from "lucide-vue-next";
+import IconCookie from '~icons/lucide/cookie';
 import { $consent, grant, deny, reset, initConsent, firePageView, trackClicks } from "@/stores/consent";
 
 const consent = useStore($consent);
@@ -94,7 +94,7 @@ onUnmounted(() => {
       aria-label="Change cookie preferences"
       @click="reset"
     >
-      <Cookie :size="18" aria-hidden="true" />
+      <IconCookie width="18" height="18" aria-hidden="true" />
     </button>
   </div>
 </template>

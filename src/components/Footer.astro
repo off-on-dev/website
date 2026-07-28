@@ -1,5 +1,6 @@
 ---
-import { Icon } from "astro-icon/components";
+import IconExternalLink from "~icons/lucide/external-link";
+import IconZap from "~icons/lucide/zap";
 import {
   BRAND_NAME,
   BRAND_SHORT_DESCRIPTION,
@@ -57,10 +58,10 @@ const socialCls =
         <p class="font-sans font-normal text-xs uppercase tracking-widest text-faint mb-3">community</p>
         <div class="flex flex-col">
           <a href={COMMUNITY_URL} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class={linkCls}>
-            Community Hub <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+            Community Hub <IconExternalLink width={12} height={12} aria-hidden="true" />
           </a>
           <a href={CODE_OF_CONDUCT_URL} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class={linkCls}>
-            Code of Conduct <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+            Code of Conduct <IconExternalLink width={12} height={12} aria-hidden="true" />
           </a>
           <a href={`${base}privacy/`} class={linkCls}>Privacy Policy</a>
           <a href={`${base}accessibility/`} class={linkCls}>Accessibility</a>
@@ -75,11 +76,11 @@ const socialCls =
     <div class="mx-auto max-w-6xl flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
       <span class="text-xs text-faint shrink-0 sm:order-1">© {CURRENT_YEAR} {BRAND_NAME}. All rights reserved.</span>
       <span class="inline-flex items-center justify-center gap-1.5 text-xs text-faint sm:order-2 sm:flex-1">
-        <Icon name="lucide:zap" width={10} height={10} aria-hidden="true" />
+        <IconZap width={10} height={10} aria-hidden="true" />
         <span>{BRAND_SLOGAN_PARTS[0]}</span>
-        <Icon name="lucide:zap" width={10} height={10} aria-hidden="true" />
+        <IconZap width={10} height={10} aria-hidden="true" />
         <span>{BRAND_SLOGAN_PARTS[1]}</span>
-        <Icon name="lucide:zap" width={10} height={10} aria-hidden="true" />
+        <IconZap width={10} height={10} aria-hidden="true" />
         <span>{BRAND_SLOGAN_PARTS[2]}</span>
       </span>
       <div class="flex items-center gap-3 shrink-0 sm:order-3">

@@ -1,6 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { Icon } from "astro-icon/components";
+import IconExternalLink from '~icons/lucide/external-link';
 import { BRAND_NAME, CONTACT_EMAIL } from "@/lib/site";
 
 const base = import.meta.env.BASE_URL;
@@ -103,11 +103,11 @@ const list = "list-disc list-inside space-y-1 text-sm text-muted-foreground mb-4
           EU-U.S. Data Privacy Framework and Standard Contractual Clauses as appropriate
           safeguards. For more information, see{" "}
           <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
-            Google's Privacy Policy <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+            Google's Privacy Policy <IconExternalLink width={12} height={12} aria-hidden="true" />
           </a>{" "}
           and{" "}
           <a href="https://support.google.com/analytics/answer/6004245" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
-            Google Analytics data safeguards <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+            Google Analytics data safeguards <IconExternalLink width={12} height={12} aria-hidden="true" />
           </a>
           .
         </p>
@@ -172,7 +172,7 @@ const list = "list-disc list-inside space-y-1 text-sm text-muted-foreground mb-4
           protection authority in your country of residence or the country where the alleged
           violation occurred. A list of EU supervisory authorities is available from the{" "}
           <a href="https://edpb.europa.eu/about-edpb/about-edpb/members_en" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
-            European Data Protection Board <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+            European Data Protection Board <IconExternalLink width={12} height={12} aria-hidden="true" />
           </a>
           . We do ask that you contact us first so we have an opportunity to address the issue
           directly.

@@ -1,6 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { Icon } from "astro-icon/components";
+import IconExternalLink from '~icons/lucide/external-link';
 import {
   BRAND_NAME,
   COMMUNITY_URL,
@@ -53,7 +53,7 @@ const BRAND_SECONDARY_LINE = BRAND_SECONDARY_LINE_PARTS.join(" ");
               class="btn-inverse"
             >
               <span class="inline-flex items-center gap-2">
-                Join the Community <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+                Join the Community <IconExternalLink width={14} height={14} aria-hidden="true" />
               </span>
             </a>
           </div>
@@ -84,7 +84,7 @@ const BRAND_SECONDARY_LINE = BRAND_SECONDARY_LINE_PARTS.join(" ");
                     Browse the forum, see what the community is building, and sign up to get started. Introduce yourself and get a feel for how {BRAND_NAME} works.
                   </p>
                   <a href={`${COMMUNITY_URL}/signup`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
-                    Create an account <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                    Create an account <IconExternalLink width={12} height={12} aria-hidden="true" />
                   </a>
                 </div>
 
@@ -105,20 +105,20 @@ const BRAND_SECONDARY_LINE = BRAND_SECONDARY_LINE_PARTS.join(" ");
                     Have a scenario that would make a great challenge? Submit your idea on GitHub. Ready to go further? Pick up an approved idea and implement the full adventure.
                   </p>
                   <a href={PROPOSE_ADVENTURE_URL} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
-                    Read the adventure ideas guide <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                    Read the adventure ideas guide <IconExternalLink width={12} height={12} aria-hidden="true" />
                   </a>
                   <a href="https://github.com/off-on-dev/open-source-challenges/issues?q=is%3Aissue+is%3Aopen+label%3A%22adventure+idea%22" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
-                    Browse open adventure ideas <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                    Browse open adventure ideas <IconExternalLink width={12} height={12} aria-hidden="true" />
                   </a>
                 </div>
 
                 <div class="p-5 rounded-lg border border-border bg-card flex flex-col gap-3">
                   <h3 class="font-semibold text-foreground">Join the Conversation</h3>
                   <p class="text-sm text-dim leading-relaxed flex-1">
-                    <a href={`${COMMUNITY_URL}/c/public-categories/q-a/10`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">Ask a question <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" /></a>{" "}or answer one, take part in discussions, and support newcomers getting started. Share tutorials, post tips, and write about what you have learned. Introduce the community to open source tools you use or maintain.
+                    <a href={`${COMMUNITY_URL}/c/public-categories/q-a/10`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">Ask a question <IconExternalLink width={12} height={12} aria-hidden="true" /></a>{" "}or answer one, take part in discussions, and support newcomers getting started. Share tutorials, post tips, and write about what you have learned. Introduce the community to open source tools you use or maintain.
                   </p>
                   <a href={`${COMMUNITY_URL}/c/community-voices/38`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
-                    Post in Community Voices <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                    Post in Community Voices <IconExternalLink width={12} height={12} aria-hidden="true" />
                   </a>
                 </div>
 
@@ -129,7 +129,7 @@ const BRAND_SECONDARY_LINE = BRAND_SECONDARY_LINE_PARTS.join(" ");
                     Stay up to date with what is happening across the open source community. Answer the question of the week and tell us what topics you would like to see covered next.
                   </p>
                   <a href={`${COMMUNITY_URL}/tag/weekly-digest/95`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
-                    Read the weekly digest <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                    Read the weekly digest <IconExternalLink width={12} height={12} aria-hidden="true" />
                   </a>
                 </div>
 
@@ -139,7 +139,7 @@ const BRAND_SECONDARY_LINE = BRAND_SECONDARY_LINE_PARTS.join(" ");
                     Running a local meetup, user group, or open source community? Use {BRAND_NAME} as a vendor-agnostic home for your discussions and announcements. Find existing groups, join as a speaker, or bring open source to your local community.
                   </p>
                   <a href={`${COMMUNITY_URL}/c/local-meetups-and-groups/19`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
-                    Explore meetups and groups <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                    Explore meetups and groups <IconExternalLink width={12} height={12} aria-hidden="true" />
                   </a>
                 </div>
 
@@ -174,10 +174,10 @@ const BRAND_SECONDARY_LINE = BRAND_SECONDARY_LINE_PARTS.join(" ");
                     Each adventure has level guides and missing solution walkthroughs. If you have solved a level, write it up. You can also improve this website by reporting an issue or contributing to the site. Typos and broken links across either repo need no issue, just open a <span><abbr data-title="pull request" aria-describedby="abbr-pr" tabindex="0">PR</abbr><span id="abbr-pr" class="sr-only">pull request</span></span>.
                   </p>
                   <a href="https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
-                    See the challenges contributing guide <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                    See the challenges contributing guide <IconExternalLink width={12} height={12} aria-hidden="true" />
                   </a>
                   <a href="https://github.com/off-on-dev/website/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
-                    Contribute to the website <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                    Contribute to the website <IconExternalLink width={12} height={12} aria-hidden="true" />
                   </a>
                 </div>
 
@@ -191,10 +191,10 @@ const BRAND_SECONDARY_LINE = BRAND_SECONDARY_LINE_PARTS.join(" ");
               </p>
               <div class="flex flex-col gap-1.5">
                 <a href={`${COMMUNITY_URL}/c/general/site-feedback/2`} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
-                  Post in Site Feedback <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                  Post in Site Feedback <IconExternalLink width={12} height={12} aria-hidden="true" />
                 </a>
                 <a href="https://github.com/off-on-dev/website/issues" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link">
-                  Open a GitHub issue <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                  Open a GitHub issue <IconExternalLink width={12} height={12} aria-hidden="true" />
                 </a>
               </div>
             </div>
@@ -265,7 +265,7 @@ const BRAND_SECONDARY_LINE = BRAND_SECONDARY_LINE_PARTS.join(" ");
               aria-describedby="new-tab-hint"
               class="btn-inverse"
             >
-              Join the Community <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+              Join the Community <IconExternalLink width={14} height={14} aria-hidden="true" />
             </a>
             <a
               href="https://github.com/off-on-dev/open-source-challenges"
@@ -274,7 +274,7 @@ const BRAND_SECONDARY_LINE = BRAND_SECONDARY_LINE_PARTS.join(" ");
               aria-describedby="new-tab-hint"
               class="btn-ghost-inverse"
             >
-              View Challenges on GitHub <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+              View Challenges on GitHub <IconExternalLink width={14} height={14} aria-hidden="true" />
             </a>
           </div>
         </div>

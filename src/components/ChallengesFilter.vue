@@ -1,16 +1,24 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, type Component, type CSSProperties } from "vue";
-import {
-  Clock, ChevronDown, Check, X, ArrowRight,
-  Building2, Compass, Cloud, FlaskConical, Satellite, Scale, Telescope,
-} from "lucide-vue-next";
+import IconClock from '~icons/lucide/clock';
+import IconChevronDown from '~icons/lucide/chevron-down';
+import IconCheck from '~icons/lucide/check';
+import IconX from '~icons/lucide/x';
+import IconArrowRight from '~icons/lucide/arrow-right';
+import IconBuilding2 from '~icons/lucide/building-2';
+import IconCompass from '~icons/lucide/compass';
+import IconCloud from '~icons/lucide/cloud';
+import IconFlaskConical from '~icons/lucide/flask-conical';
+import IconSatellite from '~icons/lucide/satellite';
+import IconScale from '~icons/lucide/scale';
+import IconTelescope from '~icons/lucide/telescope';
 import { tagToSlug, DIFFICULTIES, type ChallengeEntry } from "@/lib/challenges";
 import { difficultyStyle, DIFFICULTY_VAR } from "@/lib/difficulty";
 import { stripLinks } from "@/lib/markdown";
 
-// AdventureIcon equivalent for Vue islands (astro-icon can't render here).
+// Adventure category icon map for the filter UI.
 const ADVENTURE_ICONS: Record<string, Component> = {
-  Building2, Compass, Cloud, FlaskConical, Satellite, Scale, Telescope,
+  Building2: IconBuilding2, Compass: IconCompass, Cloud: IconCloud, FlaskConical: IconFlaskConical, Satellite: IconSatellite, Scale: IconScale, Telescope: IconTelescope,
 };
 
 const props = defineProps<{
@@ -227,7 +235,7 @@ function navigatePanel(e: KeyboardEvent): void {
             @click="difficultyOpen = !difficultyOpen; tagsOpen = false"
           >
             {{ activeDifficulty ?? "All Levels" }}
-            <ChevronDown :size="14" aria-hidden="true" class="transition-transform duration-200" :class="difficultyOpen ? 'rotate-180' : ''" />
+            <IconChevronDown width="14" height="14" aria-hidden="true" class="transition-transform duration-200" :class="difficultyOpen ? 'rotate-180' : ''" />
           </button>
           <div
             id="difficulty-group"
@@ -243,7 +251,7 @@ function navigatePanel(e: KeyboardEvent): void {
               @click="setDifficultyExact(null); difficultyOpen = false; difficultyTrigger?.focus()"
               @keydown="navigatePanel"
             >
-              <Check v-if="activeDifficulty === null" :size="13" aria-hidden="true" />
+              <IconCheck v-if="activeDifficulty === null" width="13" height="13" aria-hidden="true" />
               <span v-else class="w-[13px] shrink-0" />
               All Levels
             </button>
@@ -257,7 +265,7 @@ function navigatePanel(e: KeyboardEvent): void {
               @keydown="navigatePanel"
             >
               <span class="w-[13px] inline-flex items-center justify-center shrink-0">
-                <Check v-if="activeDifficulty === d" :size="13" aria-hidden="true" />
+                <IconCheck v-if="activeDifficulty === d" width="13" height="13" aria-hidden="true" />
                 <span v-else class="h-2.5 w-2.5 rounded-sm" aria-hidden="true" :style="swatchStyle(d)" />
               </span>
               {{ d }}
@@ -278,7 +286,7 @@ function navigatePanel(e: KeyboardEvent): void {
             @click="tagsOpen = !tagsOpen; difficultyOpen = false"
           >
             {{ activeTags.length === 0 ? "All Tools" : `${activeTags.length} tool${activeTags.length !== 1 ? "s" : ""} selected` }}
-            <ChevronDown :size="14" aria-hidden="true" class="transition-transform duration-200" :class="tagsOpen ? 'rotate-180' : ''" />
+            <IconChevronDown width="14" height="14" aria-hidden="true" class="transition-transform duration-200" :class="tagsOpen ? 'rotate-180' : ''" />
           </button>
           <div
             id="tags-group"
@@ -294,7 +302,7 @@ function navigatePanel(e: KeyboardEvent): void {
               @click="setAllTools(); tagsOpen = false; tagsTrigger?.focus()"
               @keydown="navigatePanel"
             >
-              <Check v-if="activeTags.length === 0" :size="13" aria-hidden="true" />
+              <IconCheck v-if="activeTags.length === 0" width="13" height="13" aria-hidden="true" />
               <span v-else class="w-[13px] shrink-0" />
               All Tools
             </button>
@@ -307,7 +315,7 @@ function navigatePanel(e: KeyboardEvent): void {
               @click="toggleTag(tag)"
               @keydown="navigatePanel"
             >
-              <Check v-if="activeTags.includes(tag)" :size="13" aria-hidden="true" />
+              <IconCheck v-if="activeTags.includes(tag)" width="13" height="13" aria-hidden="true" />
               <span v-else class="w-[13px] shrink-0" />
               {{ tag }}
             </button>
@@ -338,7 +346,7 @@ function navigatePanel(e: KeyboardEvent): void {
             @click="setDifficulty(d)"
           >
             {{ d }}
-            <X v-if="activeDifficulty === d" :size="11" aria-hidden="true" />
+            <IconX v-if="activeDifficulty === d" width="11" height="11" aria-hidden="true" />
           </button>
         </div>
 
@@ -356,7 +364,7 @@ function navigatePanel(e: KeyboardEvent): void {
             @click="toggleTag(tag)"
           >
             {{ tag }}
-            <X v-if="activeTags.includes(tag)" :size="11" aria-hidden="true" />
+            <IconX v-if="activeTags.includes(tag)" width="11" height="11" aria-hidden="true" />
           </button>
         </div>
       </div>
@@ -383,7 +391,7 @@ function navigatePanel(e: KeyboardEvent): void {
       <div v-show="!hasFilters" class="mt-10 flex justify-center">
         <a :href="seeAllHref" class="btn-ghost inline-flex items-center gap-2">
           See all adventures
-          <ArrowRight :size="16" aria-hidden="true" />
+          <IconArrowRight width="16" height="16" aria-hidden="true" />
         </a>
       </div>
     </template>
@@ -435,7 +443,7 @@ function navigatePanel(e: KeyboardEvent): void {
             <div class="flex items-center gap-1.5">
               <span class="font-mono text-xs text-muted-foreground">Challenge</span>
               <span v-if="e.estimatedTime" class="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 font-mono text-xs text-faint">
-                <Clock :size="10" aria-hidden="true" />
+                <IconClock width="10" height="10" aria-hidden="true" />
                 {{ e.estimatedTime }}
               </span>
             </div>

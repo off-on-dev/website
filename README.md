@@ -8,7 +8,7 @@ Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for op
 - **Vue 3** islands via `@astrojs/vue`: interactivity hydrated with `client:*` directives
 - **nanostores**: shared state across islands (theme, consent)
 - **Tailwind CSS 4**: CSS-first via `src/styles/index.css` (`@theme`) and `@tailwindcss/vite`
-- **astro-icon** (lucide) in `.astro`, **lucide-vue-next** in islands; custom `abbr[data-title]` tooltip portal in `Layout.astro`
+- **unplugin-icons** (lucide) in both `.astro` and Vue islands via `~icons/lucide/*`; custom `abbr[data-title]` tooltip portal in `Layout.astro`
 - **Astro Content Collections** (Zod): adventure content authored as YAML, validated + rendered at build time
 - **Playwright** + **axe**: accessibility and SEO/smoke tests (`e2e/`)
 - **GitHub Pages**: hosting and deployment

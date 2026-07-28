@@ -1,5 +1,5 @@
 ---
-import { Icon } from "astro-icon/components";
+import IconExternalLink from "~icons/lucide/external-link";
 import { SITE_NAME, COMMUNITY_URL } from "@/lib/site";
 import ThemeToggle from "@/components/ThemeToggle.vue";
 import MobileMenu from "@/components/MobileMenu.vue";
@@ -48,7 +48,7 @@ const activeCls =
           item.external ? (
             <li class="contents">
               <a href={item.href} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class={linkCls}>
-                {item.label} <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                {item.label} <IconExternalLink width={12} height={12} aria-hidden="true" />
               </a>
             </li>
           ) : (

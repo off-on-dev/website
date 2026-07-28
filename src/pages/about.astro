@@ -1,6 +1,8 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { Icon } from "astro-icon/components";
+import IconMail from '~icons/lucide/mail';
+import IconUser from '~icons/lucide/user';
+import IconExternalLink from '~icons/lucide/external-link';
 import {
   BRAND_NAME,
   CONTACT_EMAIL,
@@ -76,7 +78,7 @@ const VALUE_ITEMS = [
             Our mission, vision, who we're for, and the values that shape everything we build.
           </p>
           <a href={`mailto:${CONTACT_EMAIL}`} class="btn-inverse">
-            <span class="inline-flex items-center gap-2"><Icon name="lucide:mail" width={14} height={14} aria-hidden="true" /> Contact Us</span>
+            <span class="inline-flex items-center gap-2"><IconMail width={14} height={14} aria-hidden="true" /> Contact Us</span>
           </a>
         </div>
       </div>
@@ -211,7 +213,7 @@ const VALUE_ITEMS = [
                           aria-hidden="true"
                           class="flex h-20 w-20 items-center justify-center rounded-full border border-border bg-muted"
                         >
-                          <Icon name="lucide:user" width={28} height={28} class="text-muted-foreground" />
+                          <IconUser width={28} height={28} class="text-muted-foreground" />
                         </div>
                       )}
                       <div class="mt-4">
@@ -224,7 +226,7 @@ const VALUE_ITEMS = [
                             class="docs-ext-link text-base font-semibold"
                           >
                             {member.name}
-                            <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                            <IconExternalLink width={12} height={12} aria-hidden="true" />
                           </a>
                         ) : (
                           <span class="text-base font-semibold text-foreground">{member.name}</span>
@@ -269,7 +271,7 @@ const VALUE_ITEMS = [
                       class="docs-ext-link text-base font-semibold"
                     >
                       {contributor.name}
-                      <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                      <IconExternalLink width={12} height={12} aria-hidden="true" />
                     </a>
                   ) : (
                     <span class="text-base font-semibold text-foreground">{contributor.name}</span>
@@ -331,7 +333,7 @@ const VALUE_ITEMS = [
               aria-describedby="new-tab-hint"
               class="btn-inverse"
             >
-              Join the Community <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+              Join the Community <IconExternalLink width={14} height={14} aria-hidden="true" />
             </a>
             <a
               href="https://github.com/off-on-dev/open-source-challenges"
@@ -340,7 +342,7 @@ const VALUE_ITEMS = [
               aria-describedby="new-tab-hint"
               class="btn-ghost-inverse"
             >
-              View Challenges on GitHub <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+              View Challenges on GitHub <IconExternalLink width={14} height={14} aria-hidden="true" />
             </a>
           </div>
         </div>

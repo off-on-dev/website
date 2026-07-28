@@ -1,5 +1,5 @@
 ---
-import { Icon } from "astro-icon/components";
+import IconExternalLink from "~icons/lucide/external-link";
 
 interface Props {
   name: string;
@@ -18,7 +18,7 @@ const { name, url } = Astro.props;
       class="docs-ext-link text-base font-semibold"
     >
       {name}
-      <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+      <IconExternalLink width={12} height={12} aria-hidden="true" />
     </a>
   ) : (
     <span class="text-base font-semibold text-foreground">{name}</span>

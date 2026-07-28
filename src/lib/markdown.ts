@@ -1,5 +1,4 @@
-// Pure prose helpers ported from src/lib/markdown.ts (the lucide section-icon
-// helpers are omitted; icons are handled by astro-icon in components).
+// Pure prose helpers for pre-rendered HTML fields.
 
 /** Makes pre-rendered prose safe to embed inside an interactive element (a link
  *  card or button) by removing nested `<a>` tags, the sr-only new-tab spans, and

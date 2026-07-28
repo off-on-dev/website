@@ -1,6 +1,9 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { Icon } from "astro-icon/components";
+import IconMail from '~icons/lucide/mail';
+import IconExternalLink from '~icons/lucide/external-link';
+import IconCheck from '~icons/lucide/check';
+import IconX from '~icons/lucide/x';
 import { COMMUNITY_URL, BRAND_NAME, CONTACT_EMAIL, BRAND_SECONDARY_LINE_PARTS } from "@/lib/site";
 import { SPONSORS, SUPPORT_WAYS } from "@/data/sponsors";
 
@@ -77,7 +80,7 @@ const markerClass = "mt-0.5 shrink-0 text-foreground";
           <div class="flex gap-3 flex-wrap">
             <a href={`mailto:${CONTACT_EMAIL}`} class="btn-inverse">
               <span class="inline-flex items-center gap-2">
-                <Icon name="lucide:mail" width={14} height={14} aria-hidden="true" /> Become a Sponsor
+                <IconMail width={14} height={14} aria-hidden="true" /> Become a Sponsor
               </span>
             </a>
             <a
@@ -88,7 +91,7 @@ const markerClass = "mt-0.5 shrink-0 text-foreground";
               class="btn-ghost-inverse"
             >
               <span class="inline-flex items-center gap-2">
-                Join the Community <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+                Join the Community <IconExternalLink width={14} height={14} aria-hidden="true" />
               </span>
             </a>
           </div>
@@ -155,7 +158,7 @@ const markerClass = "mt-0.5 shrink-0 text-foreground";
             <ul role="list" class="space-y-3">
               {dynatraceProvides.map((item) => (
                 <li class={liClass}>
-                  <Icon name="lucide:check" width={14} height={14} aria-hidden="true" class={markerClass} />
+                  <IconCheck width={14} height={14} aria-hidden="true" class={markerClass} />
                   {item}
                 </li>
               ))}
@@ -167,7 +170,7 @@ const markerClass = "mt-0.5 shrink-0 text-foreground";
             <ul role="list" class="space-y-3">
               {dynatraceDoesNot.map((item) => (
                 <li class={liClass}>
-                  <Icon name="lucide:x" width={14} height={14} aria-hidden="true" class={markerClass} />
+                  <IconX width={14} height={14} aria-hidden="true" class={markerClass} />
                   {item}
                 </li>
               ))}
@@ -195,7 +198,7 @@ const markerClass = "mt-0.5 shrink-0 text-foreground";
             <ul role="list" class="space-y-3">
               {sponsorsReceive.map((item) => (
                 <li class={liClass}>
-                  <Icon name="lucide:check" width={14} height={14} aria-hidden="true" class={markerClass} />
+                  <IconCheck width={14} height={14} aria-hidden="true" class={markerClass} />
                   {item}
                 </li>
               ))}
@@ -207,7 +210,7 @@ const markerClass = "mt-0.5 shrink-0 text-foreground";
             <ul role="list" class="space-y-3">
               {weAskInReturn.map((item) => (
                 <li class={liClass}>
-                  <Icon name="lucide:check" width={14} height={14} aria-hidden="true" class={markerClass} />
+                  <IconCheck width={14} height={14} aria-hidden="true" class={markerClass} />
                   {item}
                 </li>
               ))}
@@ -219,7 +222,7 @@ const markerClass = "mt-0.5 shrink-0 text-foreground";
             <ul role="list" class="space-y-3">
               {sponsorshipDoesNotInclude.map((item) => (
                 <li class={liClass}>
-                  <Icon name="lucide:x" width={14} height={14} aria-hidden="true" class={markerClass} />
+                  <IconX width={14} height={14} aria-hidden="true" class={markerClass} />
                   {item}
                 </li>
               ))}
@@ -250,7 +253,7 @@ const markerClass = "mt-0.5 shrink-0 text-foreground";
             ))}
           </div>
           <a href={`mailto:${CONTACT_EMAIL}`} class="btn-primary">
-            <Icon name="lucide:mail" width={14} height={14} aria-hidden="true" />
+            <IconMail width={14} height={14} aria-hidden="true" />
             Get in Touch
           </a>
         </section>
@@ -292,7 +295,7 @@ const markerClass = "mt-0.5 shrink-0 text-foreground";
               aria-describedby="new-tab-hint"
               class="btn-inverse"
             >
-              Join the Community <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+              Join the Community <IconExternalLink width={14} height={14} aria-hidden="true" />
             </a>
             <a
               href="https://github.com/off-on-dev/open-source-challenges"
@@ -301,7 +304,7 @@ const markerClass = "mt-0.5 shrink-0 text-foreground";
               aria-describedby="new-tab-hint"
               class="btn-ghost-inverse"
             >
-              View Challenges on GitHub <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+              View Challenges on GitHub <IconExternalLink width={14} height={14} aria-hidden="true" />
             </a>
           </div>
         </div>

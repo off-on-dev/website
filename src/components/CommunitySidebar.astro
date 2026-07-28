@@ -2,7 +2,8 @@
 // Ported from src/components/CommunitySidebar.tsx. Fully static: discussion and
 // leaderboard data are read at build time (no client fetch). Post ages are
 // omitted (the React app computes them client-side after mount).
-import { Icon } from "astro-icon/components";
+import IconMessageCircle from "~icons/lucide/message-circle";
+import IconExternalLink from "~icons/lucide/external-link";
 import ContributorBadge from "@/components/ContributorBadge.astro";
 import { COMMUNITY_URL } from "@/lib/site";
 import { stripHtml } from "@/lib/markdown";
@@ -156,9 +157,9 @@ const hasActivity = visible.length > 0;
       aria-describedby="new-tab-hint"
       class="btn-soft w-full"
     >
-      <Icon name="lucide:message-circle" width={14} height={14} aria-hidden="true" />
+      <IconMessageCircle width={14} height={14} aria-hidden="true" />
       {hasThread ? "Share & Discuss" : "Join the Community"}
-      <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+      <IconExternalLink width={14} height={14} aria-hidden="true" />
     </a>
     <p class="mt-2.5 text-xs text-faint font-mono text-center">Get help or share your solution</p>
   </div>

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, nextTick, onMounted, onBeforeUnmount } from "vue";
-import { Menu, X, ExternalLink } from "lucide-vue-next";
+import IconMenu from '~icons/lucide/menu';
+import IconX from '~icons/lucide/x';
+import IconExternalLink from '~icons/lucide/external-link';
 
 // Mobile nav drawer, ported from the React Navbar's hamburger + useFocusTrap +
 // useEscapeKey + inert-siblings behaviour. Rendered as an island because it
@@ -135,8 +137,8 @@ function isActive(href: string): boolean {
     aria-controls="mobile-menu"
     @click="toggle"
   >
-    <X v-if="open" :size="18" aria-hidden="true" />
-    <Menu v-else :size="18" aria-hidden="true" />
+    <IconX v-if="open" width="18" height="18" aria-hidden="true" />
+    <IconMenu v-else width="18" height="18" aria-hidden="true" />
   </button>
 
   <!-- Drawer: always in the DOM so aria-controls resolves. Positioned
@@ -165,7 +167,7 @@ function isActive(href: string): boolean {
           :class="linkCls"
           @click="closeMenu(false)"
         >
-          {{ l.label }} <ExternalLink :size="12" aria-hidden="true" />
+          {{ l.label }} <IconExternalLink width="12" height="12" aria-hidden="true" />
         </a>
         <a
           v-else

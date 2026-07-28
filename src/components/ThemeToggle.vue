@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from "vue";
-import { Sun, Moon } from "lucide-vue-next";
+import IconSun from '~icons/lucide/sun';
+import IconMoon from '~icons/lucide/moon';
 import { $theme, type Theme } from "@/stores/theme";
 
 // Hydration-safe: render the server-default ("dark") on first client render to
@@ -69,7 +70,7 @@ function toggle(): void {
     :aria-label="theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
     @click="toggle"
   >
-    <Sun v-if="theme === 'dark'" :size="18" aria-hidden="true" />
-    <Moon v-else :size="18" aria-hidden="true" />
+    <IconSun v-if="theme === 'dark'" width="18" height="18" aria-hidden="true" />
+    <IconMoon v-else width="18" height="18" aria-hidden="true" />
   </button>
 </template>

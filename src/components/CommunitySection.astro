@@ -1,38 +1,41 @@
 ---
-import { Icon } from "astro-icon/components";
+import { LUCIDE_ICONS } from "@/lib/lucide-icons";
 import { COMMUNITY_URL } from "@/lib/site";
 import SectionLabel from "@/components/SectionLabel.astro";
 
-const cards = [
+const rawCards = [
   {
-    icon: "lucide:megaphone",
+    icon: "megaphone",
     title: "Community Voices",
     desc: "Share tutorials, showcase projects, post open source news, and write about what you have learned. The home for community-created content.",
     cta: "Share Something",
     href: `${COMMUNITY_URL}/c/community-voices/38`,
   },
   {
-    icon: "lucide:circle-help",
+    icon: "circle-help",
     title: "Q&A",
     desc: "Stuck on a technical problem or not sure where to start? Post a question and get answers from the community. No question is too basic.",
     cta: "Ask a Question",
     href: `${COMMUNITY_URL}/c/general/q-a/10`,
   },
   {
-    icon: "lucide:user-plus",
+    icon: "user-plus",
     title: "Introduce Yourself",
     desc: "New here? Tell us about yourself. Share your role, what you're building or learning, and one thing you want to get out of the community.",
     cta: "Say Hello",
     href: `${COMMUNITY_URL}/c/general/introductions/18`,
   },
   {
-    icon: "lucide:calendar-days",
+    icon: "calendar-days",
     title: "Events & Meetups",
     desc: "Find upcoming events, add local meetups to the community calendar, and connect with members in your city.",
     cta: "See Upcoming Events",
     href: `${COMMUNITY_URL}/c/events-and-talks/12`,
   },
 ];
+
+const ExternalLinkIcon = LUCIDE_ICONS["external-link"];
+const cards = rawCards.map((c) => ({ ...c, IconComponent: LUCIDE_ICONS[c.icon] }));
 
 const hasAside = Astro.slots.has("aside");
 ---
@@ -50,12 +53,12 @@ const hasAside = Astro.slots.has("aside");
           {cards.map((card) => (
             <div class="card-glow flex flex-col rounded-xl border border-border bg-[hsl(var(--surface))] p-8">
               <span class="mb-4 text-primary">
-                <Icon name={card.icon} width={28} height={28} aria-hidden="true" />
+                {card.IconComponent && <card.IconComponent width={28} height={28} aria-hidden="true" />}
               </span>
               <h3 class="text-xl font-semibold text-foreground">{card.title}</h3>
               <p class="mt-2 text-sm leading-relaxed text-muted-foreground flex-1">{card.desc}</p>
               <a href={card.href} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class="docs-ext-link mt-5 text-sm font-medium">
-                {card.cta} <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+                {card.cta} {ExternalLinkIcon && <ExternalLinkIcon width={12} height={12} aria-hidden="true" />}
               </a>
             </div>
           ))}

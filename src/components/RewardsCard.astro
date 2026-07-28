@@ -1,7 +1,8 @@
 ---
 // Ported from src/components/RewardsCard.tsx, including the compact sidebar
 // variant used by the challenge detail page.
-import { Icon } from "astro-icon/components";
+import IconTrophy from "~icons/lucide/trophy";
+import IconExternalLink from "~icons/lucide/external-link";
 import InlineProse from "@/components/InlineProse.astro";
 import { COMMUNITY_URL } from "@/lib/site";
 import { formatDeadline } from "@/lib/utils";
@@ -24,7 +25,7 @@ const deadlineShown = compact ? levelDeadline : rewards.deadline;
 
 <div class="rounded-xl border border-primary/30 bg-[hsl(var(--surface))] p-5">
   <div class="flex items-center gap-2 mb-4">
-    <Icon name="lucide:trophy" width={15} height={15} class="text-primary shrink-0" aria-hidden="true" />
+    <IconTrophy width={15} height={15} class="text-primary shrink-0" aria-hidden="true" />
     <h2 class="font-sans text-base font-semibold text-foreground">Rewards</h2>
   </div>
 
@@ -43,7 +44,7 @@ const deadlineShown = compact ? levelDeadline : rewards.deadline;
               class="docs-ext-link"
             >
               Community Voices
-              <Icon name="lucide:external-link" width={10} height={10} aria-hidden="true" />
+              <IconExternalLink width={10} height={10} aria-hidden="true" />
             </a>
             .
           </p>
@@ -85,7 +86,7 @@ const deadlineShown = compact ? levelDeadline : rewards.deadline;
             class="docs-ext-link"
           >
             See the points &amp; ranking rules for the full breakdown
-            <Icon name="lucide:external-link" width={10} height={10} aria-hidden="true" />
+            <IconExternalLink width={10} height={10} aria-hidden="true" />
           </a>
         )}
       </p>

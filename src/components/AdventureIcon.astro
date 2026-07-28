@@ -1,8 +1,8 @@
 ---
-import { Icon } from "astro-icon/components";
+import { LUCIDE_ICONS } from "@/lib/lucide-icons";
 
-// Maps the stored icon name (Lucide PascalCase) to the astro-icon lucide slug.
-const MAP: Record<string, string> = {
+// Maps the stored icon name (Lucide PascalCase) to the kebab-case key in LUCIDE_ICONS.
+const PASCAL_TO_KEBAB: Record<string, string> = {
   Building2: "building-2",
   Compass: "compass",
   Cloud: "cloud",
@@ -18,7 +18,8 @@ interface Props {
   class?: string;
 }
 const { icon, size = 16, class: className } = Astro.props;
-const name = icon ? MAP[icon] : undefined;
+const kebab = icon ? PASCAL_TO_KEBAB[icon] : undefined;
+const IconComponent = kebab ? LUCIDE_ICONS[kebab] : undefined;
 ---
 
-{name && <Icon name={`lucide:${name}`} width={size} height={size} aria-hidden="true" class={className} />}
+{IconComponent && <IconComponent width={size} height={size} aria-hidden="true" class={className} />}

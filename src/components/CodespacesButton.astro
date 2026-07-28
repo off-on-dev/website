@@ -1,6 +1,6 @@
 ---
 // Ported from src/components/CodespacesButton.tsx.
-import { Icon } from "astro-icon/components";
+import IconExternalLink from "~icons/lucide/external-link";
 
 interface Props {
   href: string;
@@ -16,7 +16,7 @@ const { href, fullWidth = false } = Astro.props;
   aria-describedby="new-tab-hint"
   class={fullWidth ? "btn-primary w-full justify-center" : "btn-primary w-fit"}
 >
-  Open in Codespaces <Icon name="lucide:external-link" width={14} height={14} aria-hidden="true" />
+  Open in Codespaces <IconExternalLink width={14} height={14} aria-hidden="true" />
 </a>
 <p class:list={["mt-2.5 text-xs text-faint font-mono", fullWidth && "text-center"]}>
   Free GitHub account required

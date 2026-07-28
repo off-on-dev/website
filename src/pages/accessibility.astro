@@ -1,6 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { Icon } from "astro-icon/components";
+import IconExternalLink from '~icons/lucide/external-link';
 import { SITE_NAME, BRAND_NAME, CONTACT_EMAIL } from "@/lib/site";
 
 const base = import.meta.env.BASE_URL;
@@ -36,7 +36,7 @@ const link = "docs-ext-link";
             <a href="https://www.w3.org/TR/WCAG22/" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class={link}>
               {/* Plain <abbr> (no tabIndex) inside a link: the link is the
                   interactive element; AT reads the title attribute natively. */}
-              <abbr data-title="Web Content Accessibility Guidelines" aria-label="Web Content Accessibility Guidelines">WCAG</abbr> 2.2 Level <abbr data-title="double-A conformance level" aria-label="double-A conformance level">AA</abbr> <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+              <abbr data-title="Web Content Accessibility Guidelines" aria-label="Web Content Accessibility Guidelines">WCAG</abbr> 2.2 Level <abbr data-title="double-A conformance level" aria-label="double-A conformance level">AA</abbr> <IconExternalLink width={12} height={12} aria-hidden="true" />
             </a>{" "}
             across every page on {SITE_NAME}, with selected Level <span><abbr data-title="triple-A conformance level" aria-describedby="abbr-aaa-1" tabindex="0">AAA</abbr><span id="abbr-aaa-1" class="sr-only">triple-A conformance level</span></span> criteria applied wherever practical.
           </li>
@@ -83,7 +83,7 @@ const link = "docs-ext-link";
           <li>
             Tested with{" "}
             <a href="https://github.com/dequelabs/axe-core" target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class={link}>
-              axe-core <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+              axe-core <IconExternalLink width={12} height={12} aria-hidden="true" />
             </a>{" "}
             on every pull request preview, in both light and dark mode.
           </li>
@@ -197,7 +197,7 @@ const link = "docs-ext-link";
             rel="noopener noreferrer" aria-describedby="new-tab-hint"
             class={link}
           >
-            open an accessibility issue <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+            open an accessibility issue <IconExternalLink width={12} height={12} aria-hidden="true" />
           </a>
           . The form prompts for the page, your assistive technology, and severity, which helps
           us reproduce and prioritize.
@@ -258,7 +258,7 @@ const link = "docs-ext-link";
             rel="noopener noreferrer" aria-describedby="new-tab-hint"
             class={link}
           >
-            ACCESSIBILITY.md <Icon name="lucide:external-link" width={12} height={12} aria-hidden="true" />
+            ACCESSIBILITY.md <IconExternalLink width={12} height={12} aria-hidden="true" />
           </a>{" "}
           and applies to every change.
         </p>
@@ -280,7 +280,7 @@ const link = "docs-ext-link";
             rel="noopener noreferrer" aria-describedby="new-tab-hint"
             class={link}
           >
-            mgifford/ACCESSIBILITY.md <Icon name="lucide:external-link" width={10} height={10} aria-hidden="true" />
+            mgifford/ACCESSIBILITY.md <IconExternalLink width={10} height={10} aria-hidden="true" />
           </a>
           , a community resource for accessibility best practices, testing criteria, and
           issue severity frameworks. Thank you to Mike Gifford and all contributors for
