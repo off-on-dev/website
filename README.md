@@ -34,8 +34,8 @@ Node.js **26** is required (pinned in `.nvmrc`; `nvm use`).
 | `npm run sync` | `astro sync` — runs the Zod content schema over adventure YAML; fails on invalid content |
 | `npm run test:e2e` | Playwright (a11y + SEO/smoke). Starts `astro preview` itself; no separate build needed |
 | `npm run lint:reuse` | REUSE licence compliance check (requires `pip install reuse` once) |
-| `node .claude/templates/generate-reveal-zip.mjs` | Regenerate `public/downloads/offon-reveal-template.zip` |
-| `node .claude/templates/generate-pptx.mjs` | Regenerate `public/downloads/offon-deck-template.pptx` |
+| `node .ai/templates/generate-reveal-zip.mjs` | Regenerate `public/downloads/offon-reveal-template.zip` |
+| `node .ai/templates/generate-pptx.mjs` | Regenerate `public/downloads/offon-deck-template.pptx` |
 
 There is no content generator — routes and rendered prose come from the content collection at build time.
 

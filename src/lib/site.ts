@@ -17,8 +17,8 @@ export const CURRENT_YEAR = new Date().getFullYear();
 export const GA_MEASUREMENT_ID = "G-YEYE9DFHWE";
 export const CONSENT_STORAGE_KEY = "analytics_consent";
 export const CONSENT_EXPIRY_MS = 1000 * 60 * 60 * 24 * 180;
-export const PROPOSE_ADVENTURE_URL =
-  "https://github.com/off-on-dev/open-source-challenges/blob/main/CONTRIBUTING.md#propose-an-adventure-idea";
+export const CHALLENGES_REPO_URL = "https://github.com/off-on-dev/open-source-challenges";
+export const PROPOSE_ADVENTURE_URL = `${CHALLENGES_REPO_URL}/blob/main/CONTRIBUTING.md#propose-an-adventure-idea`;
 export const BRAND_SHORT_DESCRIPTION =
   "A welcoming open source community to learn through hands-on challenges, share knowledge, and build together.";
 export const BRAND_SLOGAN_PARTS = ["Vendor-Neutral", "Open Source", "Community-Driven"] as const;

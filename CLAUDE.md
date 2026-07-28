@@ -2,6 +2,8 @@
 
 Guidance for AI coding agents working in this repository.
 
+> **Claude Code users:** this file is auto-loaded. If you are using a different AI tool, share [`AGENTS.md`](AGENTS.md) with your assistant instead. Keep both files in sync when updating project guidelines.
+
 ---
 
 ## Project Commands
@@ -16,7 +18,7 @@ Project-level Claude Code commands live in `.claude/commands/`. Invoke them with
 | &nbsp;&nbsp;`/progressive-enhancement` | Sub-command: building any new feature or reviewing architecture. Ensures core content works without JS. |
 | &nbsp;&nbsp;`/user-personalization` | Sub-command: working on theme toggle, consent state, or any user preference persistence. |
 | `/add-solution` | Generate a structured TypeScript solution file (`src/data/solutions/<id>/<level>.ts`) from any input format. Downloads and converts images to WebP. Solutions are pre-built TS objects loaded by the app; there is no generator step. |
-| `/create-presentation` | Create a presentation deck for an OffOn event or challenge. Reveal.js HTML or editable PPTX. Output goes to `public/<event-slug>/index.html` or `public/downloads/`. |
+| `/create-presentation` | Create a presentation deck for an OffOn event or challenge. Supports two formats: Reveal.js HTML (`public/deck-template/index.html`) and editable PowerPoint PPTX (edit and run `.ai/templates/generate-pptx.mjs`). Reveal.js output goes to `public/<event-slug>/index.html`; PPTX outputs to `public/downloads/offon-deck-template.pptx`. |
 
 The `spec-first-coding` command is installed globally (`~/.claude/skills/`). Use `/a11y-audit` for all accessibility audits.
 
@@ -124,9 +126,11 @@ npm run test:e2e     # Playwright (a11y + smoke). Runs `astro preview` itself; n
 npm run lint:reuse   # REUSE licence compliance (requires: pip install reuse)  [if present]
 rm -rf .astro        # Bust the content collection pipeline cache (after editing markdown-pipeline.mjs or adventure-derive.mjs)
 
-# Presentation templates (unchanged; run from repo root)
-node .claude/templates/generate-reveal-zip.mjs   # → public/downloads/offon-reveal-template.zip
-node .claude/templates/generate-pptx.mjs         # → public/downloads/offon-deck-template.pptx
+# Regenerate downloadable presentation ZIPs and PPTX (run from repo root)
+node .ai/templates/generate-reveal-zip.mjs   # → public/downloads/offon-reveal-template.zip
+# pptxgenjs is not in devDependencies (not needed in CI). Install it locally first:
+#   npm install pptxgenjs
+node .ai/templates/generate-pptx.mjs         # → public/downloads/offon-deck-template.pptx
 ```
 
 There is **no** content generator, `npm run generate`, or `*.generated.ts` — routes and rendered prose come from the content collection at build time.
