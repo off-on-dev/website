@@ -40,7 +40,7 @@ Community activity happens on a separate Discourse instance (display name **comm
 - **Interactivity:** Vue 3 islands via `@astrojs/vue`, hydrated with `client:*` directives. Shared cross-island state uses **nanostores** (`src/stores/`).
 - **Styling:** Tailwind CSS 4, CSS-first via `src/styles/index.css` (`@theme` block) and the `@tailwindcss/vite` plugin. No `tailwind.config.ts`.
 - **Icons:** `astro-icon` (lucide set) in `.astro`; `lucide-vue-next` in `.vue` islands.
-- **UI primitives:** Reka UI (`reka-ui`) for the tooltip. There is no shadcn surface.
+- **UI primitives:** No shared component library. The abbreviation tooltip is a plain JS portal in `Layout.astro` (position:fixed, escapes overflow clipping). There is no shadcn or Reka UI surface.
 - **Content:** Astro Content Collections (Zod-validated) over authored YAML. See "Content collection".
 - **Routing:** Astro file-based routing + `getStaticPaths()`. Trailing slashes always.
 - **Testing:** Playwright + `@axe-core/playwright` in `e2e/` (a11y + SEO/smoke/hydration).
@@ -325,6 +325,7 @@ Static site. Apply on every page.
 ### Capitalisation
 
 UI labels use **title case (Chicago)**; body copy uses **sentence case**.
+
 - **Title case:** button/CTA labels, section headings (h2/h3), card/value titles, nav and footer links, pill/badge text. Capitalise every word except articles, prepositions under five letters, and coordinating conjunctions — unless they open or close the label.
 - **Sentence case:** body paragraphs, meta descriptions, `<p>` text, hero sub-headings, card descriptions.
 - **Exception:** overline labels use CSS `text-transform: uppercase`, so write source text lowercase.
