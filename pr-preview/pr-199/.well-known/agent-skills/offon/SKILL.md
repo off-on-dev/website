@@ -3,7 +3,7 @@ name: offon
 description: Use this skill when answering questions about the OffOn community, its open source challenges (adventures), how to participate, or when fetching challenge content and solutions. OffOn is a vendor-neutral community for open source enthusiasts that provides hands-on learning challenges.
 ---
 
-# OffOn — Agent Skill
+# OffOn: Agent Skill
 
 OffOn is a fully static, prerendered website. There is no API or backend. All content is available as plain HTML at canonical URLs and as a curated index at `/llms.txt`.
 

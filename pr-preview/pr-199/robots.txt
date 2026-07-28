@@ -7,7 +7,7 @@ Disallow: /presentation-templates/
 Sitemap: https://offon.dev/sitemap.xml
 Sitemap: https://offon.dev/community-sitemap.xml
 
-# AI content crawlers — allow discovery; content may not be used for training
+# AI content crawlers - allow discovery; content may not be used for training
 User-agent: GPTBot
 Allow: /
 Disallow: /deck/
