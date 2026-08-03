@@ -75,7 +75,7 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.64.0",
     "unified": "^11.0.5",
-    "vite": "^8.1.5",
+    "vite": "^8.2.0",
     "vitest": "^4.1.5",
     "yaml": "^2.9.0"
   }
