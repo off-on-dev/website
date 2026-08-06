@@ -2,6 +2,14 @@
   "discussionUrl": "https://community.offon.dev/t/repair-a-broken-backstage-software-template-july-2026-adventure-beginner/1657",
   "discussionPosts": [
     {
+      "username": "enri03",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/enri03/40/307_2.png",
+      "cooked": "Completed the challenge.",
+      "created_at": "2026-08-06T11:39:56.017Z",
+      "challengeSolved": true,
+      "topicUrl": "https://community.offon.dev/t/repair-a-broken-backstage-software-template-july-2026-adventure-beginner/1657"
+    },
+    {
       "username": "Debaashish-gif",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/debaashish-gif/40/431_2.png",
       "cooked": "Felt myself like a diver as I navigated that link.",
@@ -50,17 +58,9 @@
       "created_at": "2026-07-14T05:24:24.295Z",
       "challengeSolved": true,
       "topicUrl": "https://community.offon.dev/t/repair-a-broken-backstage-software-template-july-2026-adventure-beginner/1657"
-    },
-    {
-      "username": "iw4p",
-      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/40/345_2.png",
-      "cooked": "Completed the challenge.",
-      "created_at": "2026-07-07T22:00:32.947Z",
-      "challengeSolved": true,
-      "topicUrl": "https://community.offon.dev/t/repair-a-broken-backstage-software-template-july-2026-adventure-beginner/1657"
     }
   ],
-  "totalReplies": 9,
+  "totalReplies": 10,
   "solvers": [
     {
       "username": "theharithsa",
@@ -76,6 +76,11 @@
       "username": "alvin",
       "avatarUrl": "https://community.offon.dev/letter_avatar_proxy/v4/letter/a/b5a626/40.png",
       "solvedAt": "2026-07-14T05:24:24.295Z"
+    },
+    {
+      "username": "enri03",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/enri03/40/307_2.png",
+      "solvedAt": "2026-08-06T11:39:56.017Z"
     }
   ]
 }
