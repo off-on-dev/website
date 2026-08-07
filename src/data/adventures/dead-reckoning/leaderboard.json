@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-06T13:50:39.439Z",
+  "updatedAt": "2026-08-07T00:37:56.919Z",
   "rows": [
     {
       "rank": 1,
@@ -35,19 +35,19 @@
       "intermediatePoints": 95,
       "expertPoints": 90,
       "singlePoints": 0,
-      "breakdown": "🟡 Fix a Broken Delivery Pipeline | July 2026 Adventure: Intermediate [intermediate] rank #2 = 95 pts | 🔴 Trace a Silent Failure Across Your Delivery Pipeline | July 2026 Adventure: Expert [expert] rank #3 = 90 pts | 🟢 Repair a broken Backstage software template | July 2026 Adventure: Beginner [beginner] rank #3 = 90 pts"
+      "breakdown": "🟡 Fix a Broken Delivery Pipeline | July 2026 Adventure: Intermediate [intermediate] rank #2 = 95 pts | 🟢 Repair a broken Backstage software template | July 2026 Adventure: Beginner [beginner] rank #3 = 90 pts | 🔴 Trace a Silent Failure Across Your Delivery Pipeline | July 2026 Adventure: Expert [expert] rank #3 = 90 pts"
     },
     {
       "rank": 4,
       "username": "enri03",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/enri03/90/307.png",
-      "points": 60,
-      "challengesSolved": 1,
+      "points": 120,
+      "challengesSolved": 2,
       "beginnerPoints": 60,
-      "intermediatePoints": 0,
+      "intermediatePoints": 60,
       "expertPoints": 0,
       "singlePoints": 0,
-      "breakdown": "🟢 Repair a broken Backstage software template | July 2026 Adventure: Beginner [beginner] late = 60 pts"
+      "breakdown": "🟢 Repair a broken Backstage software template | July 2026 Adventure: Beginner [beginner] late = 60 pts | 🟡 Fix a Broken Delivery Pipeline | July 2026 Adventure: Intermediate [intermediate] late = 60 pts"
     }
   ]
 }
