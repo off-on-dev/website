@@ -314,6 +314,8 @@ No props. Two `<nav>` landmarks: `aria-label="Explore"` and `aria-label="Communi
 
 No props. `<section aria-labelledby="hero-heading">`. 8 firefly spans in an `aria-hidden` container. Staggered `.animate-fade-up-*` on badge, `<h1>`, `<p>`, and CTA row. Full-viewport height (`min-h-dvh`).
 
+Primary CTA is an in-page jump to `#challenges`, which is why its icon is a down arrow. Rendered only on the home page, so the target always exists; `html { scroll-padding-top }` keeps it clear of the fixed navbar.
+
 ---
 
 #### `InlineProse`
