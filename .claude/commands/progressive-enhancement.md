@@ -64,10 +64,10 @@ if ('fetch' in window && 'querySelector' in document) {
 
 ## Critical: Core Content Must Not Require JavaScript
 
-This site uses React Router v7 with `ssr: false` (static prerendering). Pages are
-prerendered at build time so content is in the HTML. Verify that:
+This site uses Astro with `output: 'static'`. Pages are prerendered at build time
+so content is in the HTML. Verify that:
 
-- Every page's core content is in the prerendered HTML output in `dist/client/`
+- Every page's core content is in the prerendered HTML output in `dist/`
 - No critical information is rendered exclusively client-side after hydration
 - Filter/search UI degrades gracefully (content visible even when JS filtering is unavailable)
 

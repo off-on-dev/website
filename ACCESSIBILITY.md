@@ -315,8 +315,8 @@ Use the correct keys for each control type:
   ```
 
 - Never use `aria-label` directly on `<svg>`. Support across assistive technologies is inconsistent. Use the `<title>` + `aria-labelledby` pattern instead.
-- For lucide-react icons: always pass `aria-hidden={true}` when the icon is decorative (next to visible text). For icon-only buttons, put `aria-label` on the parent `<button>` or `<a>`, not on the `<svg>`.
-- Brand SVGs (e.g. LinkedIn in `Footer.tsx`): set `aria-hidden="true"` on the `<svg>` and `aria-label` on the parent interactive element. Use `fill="currentColor"` so hover and theme color changes apply. See the Icons section of `styleguide.md`.
+- For icons from `unplugin-icons` (lucide set): always pass `aria-hidden={true}` when the icon is decorative (next to visible text). For icon-only buttons, put `aria-label` on the parent `<button>` or `<a>`, not on the `<svg>`.
+- Brand SVGs (e.g. LinkedIn in `Footer.astro`): set `aria-hidden="true"` on the `<svg>` and `aria-label` on the parent interactive element. Use `fill="currentColor"` so hover and theme color changes apply. See the Icons section of `styleguide.md`.
 
 ### ARIA
 

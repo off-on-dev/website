@@ -188,13 +188,13 @@ If lint or build fail, fix the issues before reporting done.
 Check the built HTML contains the solution title:
 
 ```bash
-grep -c "<solution-title-fragment>" dist/client/adventures/<adventure-id>/levels/<level-id>/solution/index.html
+grep -c "<solution-title-fragment>" dist/adventures/<adventure-id>/levels/<level-id>/solution/index.html
 ```
 
 Use a unique word from the solution title as the fragment. If a contributor was provided, also confirm their name appears:
 
 ```bash
-grep -c "<contributor-name>" dist/client/adventures/<adventure-id>/levels/<level-id>/solution/index.html
+grep -c "<contributor-name>" dist/adventures/<adventure-id>/levels/<level-id>/solution/index.html
 ```
 
 Report success with the path if both pass.

@@ -43,7 +43,7 @@ Go to **Actions → Sync Adventure from Challenges Repo → Run workflow**.
 2. If a PR branch (`feat/adventure-<slug>`) already exists, restores `adventure.yaml` from that branch so any manual edits already made survive the re-sync.
 3. Fetches `docs/index.yaml` and all level YAMLs from the challenges repo.
 4. Writes `src/data/adventures/<slug>/adventure.yaml` and creates `<level>-posts.json` stubs for each new live level.
-5. Validates the YAML with `astro sync` (Zod content schema) and registers the adventure in `ADVENTURE_CATEGORIES` (`scripts/refresh-leaderboard.mjs`). Routes, `public/sitemap.xml`, and `public/llms.txt` are updated by hand as part of the PR checklist (routes themselves are automatic via `getStaticPaths()`).
+5. Validates the YAML with `astro sync` (Zod content schema) and registers the adventure in `ADVENTURE_CATEGORIES` (`scripts/refresh-leaderboard.mjs`). Routes and sitemap entries are automatic via `getStaticPaths()` and `src/pages/sitemap.xml.ts`. `public/llms.txt` is updated by hand as part of the PR checklist.
 6. Opens (or updates) a PR on `feat/adventure-<slug>` with a checklist of steps to complete before merging.
 
 ---
