@@ -6,6 +6,7 @@ import type { Loader } from "astro/loaders";
 import { z } from "astro/zod";
 import { parse as parseYaml } from "yaml";
 import {
+  beginAbbrScope,
   mdToInline,
   mdToBlock,
   mdToInlineArray,
@@ -306,6 +307,9 @@ function adventuresLoader(): Loader {
         // after editing the pipeline to force a re-render.
         watcher?.add(yamlPath);
         if (store.get(entry.name)?.digest === digest) continue; // unchanged: skip re-render
+        // Scope this entry's abbreviation IDs so they cannot collide with
+        // another adventure's on pages that render several (home, /challenges/).
+        beginAbbrScope(entry.name);
         const data = await parseData({ id: entry.name, data: parseYaml(raw) });
         if (data.slug !== entry.name) {
           throw new Error(

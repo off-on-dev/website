@@ -1,10 +1,19 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
+  beginAbbrScope,
   mdToBlock,
   mdToInline,
   mdToInlineArray,
   mdToBlockArray,
 } from "@/lib/markdown-pipeline.mjs";
+
+// Abbreviation IDs are scoped and counted per content entry (see P10 in
+// markdown-pipeline.mjs). The scope is module state, so reset it between tests
+// exactly as the content loader does between adventures; otherwise the
+// occurrence counter carries over and ids gain a -N suffix.
+beforeEach(() => {
+  beginAbbrScope();
+});
 
 // ---------------------------------------------------------------------------
 // mdToInline
@@ -165,13 +174,52 @@ describe("mdToInline", () => {
       expect(result).toContain("Continuous Integration");
     });
 
-    it("generates a stable ID: same title always yields the same aria-describedby", async () => {
+    // ── ID uniqueness and stability (P10) ───────────────────────────────────
+    //
+    // Ids land in one document, so they must be unique there. They must also be
+    // reproducible, because the content loader caches rendered HTML per entry.
+
+    const idsIn = (html: string): string[] => [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
+
+    it("gives repeated occurrences of one abbreviation distinct IDs", async () => {
+      const html = await mdToInline(
+        '<abbr title="Pull Request">PR</abbr> and another <abbr title="Pull Request">PR</abbr>',
+      );
+      const ids = idsIn(html);
+      expect(ids).toEqual(["abbr-pull-request", "abbr-pull-request-2"]);
+      expect(new Set(ids).size).toBe(ids.length);
+    });
+
+    it("keeps counting across separate calls within the same scope", async () => {
       const r1 = await mdToInline('<abbr title="Pull Request">PR</abbr>');
       const r2 = await mdToInline('<abbr title="Pull Request">PR</abbr>');
-      const idMatch1 = r1.match(/aria-describedby="([^"]+)"/)?.[1];
-      const idMatch2 = r2.match(/aria-describedby="([^"]+)"/)?.[1];
-      expect(idMatch1).toBeDefined();
-      expect(idMatch1).toBe(idMatch2);
+      expect(idsIn(r1)).toEqual(["abbr-pull-request"]);
+      expect(idsIn(r2)).toEqual(["abbr-pull-request-2"]);
+    });
+
+    it("reproduces the same IDs after the scope is reset", async () => {
+      const first = await mdToInline('<abbr title="Pull Request">PR</abbr>');
+      beginAbbrScope();
+      const second = await mdToInline('<abbr title="Pull Request">PR</abbr>');
+      expect(second).toBe(first);
+    });
+
+    it("prefixes IDs with the scope so different entries cannot collide", async () => {
+      beginAbbrScope("the-ai-observatory");
+      const a = await mdToInline('<abbr title="OpenTelemetry">OTel</abbr>');
+      beginAbbrScope("blind-by-design");
+      const b = await mdToInline('<abbr title="OpenTelemetry">OTel</abbr>');
+      expect(idsIn(a)).toEqual(["abbr-the-ai-observatory-opentelemetry"]);
+      expect(idsIn(b)).toEqual(["abbr-blind-by-design-opentelemetry"]);
+    });
+
+    it("keeps aria-describedby pointing at its own sr-only span when suffixed", async () => {
+      const html = await mdToInline(
+        '<abbr title="Pull Request">PR</abbr> and another <abbr title="Pull Request">PR</abbr>',
+      );
+      const refs = [...html.matchAll(/aria-describedby="([^"]+)"/g)].map((m) => m[1]);
+      expect(refs).toEqual(["abbr-pull-request", "abbr-pull-request-2"]);
+      refs.forEach((r) => expect(html).toContain(`id="${r}"`));
     });
 
     it("derives the abbr ID correctly (makeAbbrId: lowercase, strip non-alnum, join with hyphens)", async () => {

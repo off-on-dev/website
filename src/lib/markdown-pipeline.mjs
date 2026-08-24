@@ -69,9 +69,39 @@ const sanitizeSchema = {
   strip: [...(defaultSchema.strip ?? []), "style"],
 };
 
-/** Derives a stable, content-based ID from an abbreviation's title text. */
+// Abbreviation IDs must be unique in the rendered DOCUMENT, but this pipeline
+// runs per adventure entry at content-load time and has no page context. Two
+// mechanisms combine to guarantee it:
+//
+//   1. a scope prefix (the adventure id), set by the loader before each entry,
+//      which keeps ids from different adventures apart on pages that mix them
+//      (the home and /challenges/ grids render learnings from every adventure);
+//   2. a per-scope occurrence counter, which disambiguates the same
+//      abbreviation used twice inside one adventure.
+//
+// Both are derived only from that adventure's own content, so ids stay stable
+// under the loader's digest cache: an unchanged entry re-serves identical HTML.
+//
+// Before this, ids were purely content-derived and collided, e.g. two "OTel"
+// abbreviations produced two id="abbr-opentelemetry" on /, which is invalid
+// HTML. The React generator avoided it with a global `abbr-exp-N` counter.
+let abbrScopePrefix = "";
+let abbrIdCounts = new Map();
+
+/** Starts a new abbreviation ID scope. Call once per content entry before
+ *  rendering its markdown fields. Omit `scope` to keep ids unprefixed. */
+export function beginAbbrScope(scope) {
+  abbrScopePrefix = scope ? `${scope}-` : "";
+  abbrIdCounts = new Map();
+}
+
+/** Derives a document-unique ID from an abbreviation's title text. */
 function makeAbbrId(text) {
-  return 'abbr-' + text.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim().replace(/\s+/g, '-').slice(0, 30);
+  const slug = text.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim().replace(/\s+/g, '-').slice(0, 30);
+  const base = `abbr-${abbrScopePrefix}${slug}`;
+  const seen = (abbrIdCounts.get(base) ?? 0) + 1;
+  abbrIdCounts.set(base, seen);
+  return seen === 1 ? base : `${base}-${seen}`;
 }
 
 /** Post-sanitize: turn <abbr title> into a focusable tooltip trigger whose
