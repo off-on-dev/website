@@ -202,18 +202,23 @@ function dropdownItemClass(isActive: boolean): string {
 const DIFF_PILL_BASE =
   "filter-pill inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 min-h-[44px] text-sm font-medium leading-none transition-all duration-200 focus-ring cursor-pointer";
 
-// Arrow-key navigation within the desktop radiogroup (difficulty pills).
+// Arrow-key roving focus across the difficulty radios. Bound to each radio
+// rather than the group: the radio is the element that actually has focus when
+// the key is pressed, so there is no reliance on the event bubbling up to a
+// deliberately non-focusable container.
 function handleDifficultyKey(e: KeyboardEvent): void {
   if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return;
-  e.preventDefault();
-  const radios = (e.currentTarget as HTMLElement).querySelectorAll<HTMLElement>('[role="radio"]');
-  const current = Array.from(radios).findIndex(r => r === document.activeElement);
+  const radio = e.currentTarget as HTMLElement;
+  const group = radio.closest<HTMLElement>('[role="radiogroup"]');
+  if (!group) return;
+  const radios = Array.from(group.querySelectorAll<HTMLElement>('[role="radio"]'));
+  const current = radios.indexOf(radio);
   if (current === -1) return;
+  e.preventDefault();
   const dir = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1;
-  const next = (current + dir + radios.length) % radios.length;
-  const nextEl = radios[next];
+  const nextEl = radios[(current + dir + radios.length) % radios.length];
   nextEl.focus();
-  // Also apply the selection (activating the next radio)
+  // Arrow keys both move and select, per the APG radiogroup pattern.
   nextEl.click();
 }
 
@@ -343,13 +348,10 @@ function navigatePanel(e: KeyboardEvent): void {
 
       <!-- Desktop: two pill rows -->
       <div class="hidden lg:block space-y-3">
-        <!-- APG radiogroup: the group is deliberately not focusable, the radios
-             inside carry roving tabindex. The keydown handler sits here to catch
-             arrow keys bubbling from those radios, which is what the rule below
-             misreads as an interactive-but-unfocusable element. -->
-        <!-- eslint-disable-next-line vuejs-accessibility/interactive-supports-focus -->
-        <div role="radiogroup" aria-label="Filter by difficulty" class="flex flex-wrap items-center gap-2 pb-3 border-b border-border" @keydown="handleDifficultyKey">
-          <button type="button" role="radio" :aria-checked="activeDifficulty === null" :tabindex="activeDifficulty === null ? 0 : -1" :class="DIFF_PILL_BASE" :style="allLevelsPillStyle(activeDifficulty === null)" @click="setDifficultyExact(null)">
+        <!-- APG radiogroup: the group itself is not focusable, the radios carry
+             roving tabindex and own the arrow-key handler. -->
+        <div role="radiogroup" aria-label="Filter by difficulty" class="flex flex-wrap items-center gap-2 pb-3 border-b border-border">
+          <button type="button" role="radio" :aria-checked="activeDifficulty === null" :tabindex="activeDifficulty === null ? 0 : -1" :class="DIFF_PILL_BASE" :style="allLevelsPillStyle(activeDifficulty === null)" @click="setDifficultyExact(null)" @keydown="handleDifficultyKey">
             All Levels
           </button>
           <button
@@ -362,6 +364,7 @@ function navigatePanel(e: KeyboardEvent): void {
             :class="DIFF_PILL_BASE"
             :style="difficultyPillStyle(d, activeDifficulty === d)"
             @click="setDifficulty(d)"
+            @keydown="handleDifficultyKey"
           >
             {{ d }}
             <IconX v-if="activeDifficulty === d" width="11" height="11" aria-hidden="true" />

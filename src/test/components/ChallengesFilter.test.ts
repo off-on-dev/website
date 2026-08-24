@@ -224,6 +224,15 @@ describe("ChallengesFilter", () => {
 
   // ── desktop radiogroup - arrow key navigation ────────────────────────────────
 
+  // The arrow-key handler is bound to each radio, not the group: the radio is the
+  // element that actually has focus when the key is pressed. Dispatch there, the
+  // same place a real key event would originate.
+  const focused = (radios: ReturnType<ReturnType<typeof mountFilter>["findAll"]>) => {
+    const hit = radios.find((r) => r.element === document.activeElement);
+    if (!hit) throw new Error("no radio is focused");
+    return hit;
+  };
+
   describe("desktop radiogroup - arrow key navigation", () => {
     it("ArrowRight focuses and selects the next radio from All Levels", async () => {
       const wrapper = mountFilter();
@@ -236,7 +245,7 @@ describe("ChallengesFilter", () => {
       (radios[0].element as HTMLElement).focus();
       expect(document.activeElement).toBe(radios[0].element);
 
-      await radiogroup.trigger("keydown", { key: "ArrowRight" });
+      await focused(radios).trigger("keydown", { key: "ArrowRight" });
       await nextTick();
 
       // Handler focuses and clicks the next radio (radios[1] = Beginner)
@@ -255,7 +264,7 @@ describe("ChallengesFilter", () => {
       // Focus the second radio (Beginner)
       (radios[1].element as HTMLElement).focus();
 
-      await radiogroup.trigger("keydown", { key: "ArrowLeft" });
+      await focused(radios).trigger("keydown", { key: "ArrowLeft" });
       await nextTick();
 
       expect(document.activeElement).toBe(radios[0].element);
@@ -271,7 +280,7 @@ describe("ChallengesFilter", () => {
       const radios = radiogroup.findAll('[role="radio"]');
 
       (radios[0].element as HTMLElement).focus();
-      await radiogroup.trigger("keydown", { key: "ArrowDown" });
+      await focused(radios).trigger("keydown", { key: "ArrowDown" });
       await nextTick();
 
       expect(document.activeElement).toBe(radios[1].element);
@@ -286,7 +295,7 @@ describe("ChallengesFilter", () => {
       const radios = radiogroup.findAll('[role="radio"]');
 
       (radios[1].element as HTMLElement).focus();
-      await radiogroup.trigger("keydown", { key: "ArrowUp" });
+      await focused(radios).trigger("keydown", { key: "ArrowUp" });
       await nextTick();
 
       expect(document.activeElement).toBe(radios[0].element);
@@ -302,7 +311,7 @@ describe("ChallengesFilter", () => {
       const lastIdx = radios.length - 1;
 
       (radios[lastIdx].element as HTMLElement).focus();
-      await radiogroup.trigger("keydown", { key: "ArrowRight" });
+      await focused(radios).trigger("keydown", { key: "ArrowRight" });
       await nextTick();
 
       expect(document.activeElement).toBe(radios[0].element);
@@ -326,19 +335,38 @@ describe("ChallengesFilter", () => {
       wrapper.unmount();
     });
 
-    it("arrow key does nothing when no radio is focused (current === -1 guard)", async () => {
+    it("ignores non-arrow keys", async () => {
       const wrapper = mountFilter();
       await flushPromises();
 
-      const radiogroup = wrapper.find('[role="radiogroup"]');
-      // Do not focus any radio - document.activeElement is body
+      const radios = wrapper.find('[role="radiogroup"]').findAll('[role="radio"]');
+      (radios[0].element as HTMLElement).focus();
 
-      // Should not throw and should not change any checked state
-      await radiogroup.trigger("keydown", { key: "ArrowRight" });
+      for (const key of ["Enter", " ", "Tab", "a", "Home"]) {
+        await radios[0].trigger("keydown", { key });
+      }
       await nextTick();
 
-      const radios = radiogroup.findAll('[role="radio"]');
+      expect(document.activeElement).toBe(radios[0].element);
       expect(radios[0].attributes("aria-checked")).toBe("true");
+      wrapper.unmount();
+    });
+
+    it("acts on the radio that received the key, not on document.activeElement", async () => {
+      const wrapper = mountFilter();
+      await flushPromises();
+
+      const radios = wrapper.find('[role="radiogroup"]').findAll('[role="radio"]');
+      // Focus something else entirely; the handler must still key off currentTarget.
+      const outside = document.createElement("button");
+      document.body.appendChild(outside);
+      outside.focus();
+
+      await radios[0].trigger("keydown", { key: "ArrowRight" });
+      await nextTick();
+
+      expect(radios[1].attributes("aria-checked")).toBe("true");
+      outside.remove();
       wrapper.unmount();
     });
   });
