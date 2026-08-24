@@ -30,13 +30,12 @@ const href = `${base}adventures/${adventureId}/levels/${levelId}/`;
       Each adventure focuses on one open source technology, with challenges at different difficulty
       levels.
       <span class="block mt-1">
-        New here?
+        New here?{" "}
         <a
           href={href}
           class="font-semibold underline decoration-2 underline-offset-2 hover:underline-offset-4 transition-all text-primary-foreground focus-ring rounded-sm"
+          >Start with {adventureTitle}, a {tag} adventure</a
         >
-          Start with {adventureTitle}, a {tag} adventure
-        </a>
       </span>
     </p>
     <button
