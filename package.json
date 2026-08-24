@@ -54,6 +54,7 @@
     "eslint-plugin-vue": "^10.10.0",
     "globals": "^17.8.0",
     "happy-dom": "^20.11.6",
+    "jszip": "^3.10.1",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.65.0",
     "vitest": "^4.1.11",

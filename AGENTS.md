@@ -163,6 +163,8 @@ npm run generate:solutions:validate  # Validate solution files without writing t
 npx shadcn@latest add <component>   # Add a shadcn/ui component
 
 # Regenerate downloadable presentation ZIPs and PPTX (run from repo root)
+# jszip is a devDependency, so this runs after a plain `npm ci`. reveal.js itself
+# is not needed: the deck assets come from the committed public/reveal/.
 node .ai/templates/generate-reveal-zip.mjs   # -> public/downloads/offon-reveal-template.zip
 node .ai/templates/generate-pptx.mjs         # -> public/downloads/offon-deck-template.pptx
 ```

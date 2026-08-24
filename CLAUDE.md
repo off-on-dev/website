@@ -128,6 +128,8 @@ npm run lint:reuse   # REUSE licence compliance (requires: pip install reuse)  [
 rm -rf .astro        # Bust the content collection pipeline cache (after editing markdown-pipeline.mjs or adventure-derive.mjs)
 
 # Regenerate downloadable presentation ZIPs and PPTX (run from repo root)
+# jszip is a devDependency, so this runs after a plain `npm ci`. reveal.js itself
+# is not needed: the deck assets come from the committed public/reveal/.
 node .ai/templates/generate-reveal-zip.mjs   # → public/downloads/offon-reveal-template.zip
 # pptxgenjs is not in devDependencies (not needed in CI). Install it locally first:
 #   npm install pptxgenjs
