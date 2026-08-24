@@ -1,0 +1,55 @@
+---
+import { canonicalUrl } from "@/lib/site";
+
+// Page-level schema.org JSON-LD, rendered into <head> via Layout's "head" slot.
+//
+// The BreadcrumbList is derived from the SAME crumb array that renders the
+// visual <Breadcrumb>, so a change to one always changes the other. Google's
+// BreadcrumbList is expected to start at Home, which the visual trail omits
+// (the navbar logo is the home affordance), so Home is prepended here only.
+//
+// Every `item` is an absolute production URL (canonicalUrl), never base-prefixed:
+// structured data must point at the canonical site even from a PR preview, the
+// same rule <link rel="canonical"> follows.
+
+export interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  /** The exact array passed to <Breadcrumb> on this page. */
+  breadcrumb: Crumb[];
+  /** Canonical path of this page. Supplies the item URL for the final crumb. */
+  path: string;
+  /** Additional schema.org objects (Course, LearningResource, ...) without @context. */
+  schemas?: Record<string, unknown>[];
+}
+
+const { breadcrumb, path, schemas = [] } = Astro.props;
+
+const trail: Crumb[] = [{ label: "Home", href: "/" }, ...breadcrumb];
+
+const breadcrumbJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: trail.map((crumb, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: crumb.label,
+    // The last crumb is the current page and carries no href by design.
+    item: canonicalUrl(crumb.href ?? path),
+  })),
+});
+---
+
+<script type="application/ld+json" is:inline set:html={breadcrumbJsonLd} />
+{
+  schemas.map((schema) => (
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify({ "@context": "https://schema.org", ...schema })}
+    />
+  ))
+}

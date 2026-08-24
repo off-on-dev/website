@@ -11,6 +11,7 @@ import IconArrowRight from '~icons/lucide/arrow-right';
 import type { ImageMetadata } from "astro";
 import Layout from "@/layouts/Layout.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
+import StructuredData from "@/components/StructuredData.astro";
 import DifficultyBadge from "@/components/DifficultyBadge.astro";
 import TagChips from "@/components/TagChips.astro";
 import InlineProse from "@/components/InlineProse.astro";
@@ -21,6 +22,7 @@ import CommunitySidebar from "@/components/CommunitySidebar.astro";
 import OtherLevelsCard from "@/components/OtherLevelsCard.astro";
 import ChallengeShareLinks from "@/components/ChallengeShareLinks.astro";
 import { BRAND_NAME, SITE_URL, COMMUNITY_URL, COMMUNITY_DISPLAY_NAME } from "@/lib/site";
+import { learningResourceSchema } from "@/lib/structured-data";
 import { stripLinks } from "@/lib/markdown";
 import { isDeadlinePast, escapeHtmlAttr } from "@/lib/utils";
 import { getDiscussion, getLeaderboard } from "@/lib/community-data";
@@ -89,24 +91,42 @@ const getStartedStep = {
   ].join("\n"),
 };
 const walkthroughSteps = howToPlay && howToPlay.length > 0 ? [getStartedStep, ...howToPlay] : [];
+
+const path = `/adventures/${adventure.slug}/levels/${level.id}/`;
+// One trail, rendered visually by <Breadcrumb> and as BreadcrumbList JSON-LD by
+// <StructuredData>, so the two can never disagree.
+const crumbs = [
+  { label: "Adventures", href: "/adventures/" },
+  { label: adventure.title, href: `/adventures/${adventure.slug}/` },
+  { label: level.name },
+];
 ---
 
 <Layout
   title={`${level.name} - ${adventure.title} - ${BRAND_NAME}`}
   description={level.metaDescription}
-  path={`/adventures/${adventure.slug}/levels/${level.id}/`}
+  path={path}
   ogType="article"
 >
+  <StructuredData
+    slot="head"
+    breadcrumb={crumbs}
+    path={path}
+    schemas={[
+      learningResourceSchema({
+        levelName: level.name,
+        description: level.metaDescription,
+        slug: adventure.slug,
+        levelId: level.id,
+        difficulty: level.difficulty,
+        learnings: level.learnings,
+        adventureTitle: adventure.title,
+      }),
+    ]}
+  />
   <main id="main-content" tabindex="-1" class="px-6 pb-24 pt-28 md:px-16">
     <div class="mx-auto max-w-6xl">
-      <Breadcrumb
-        class="mb-10"
-        items={[
-          { label: "Adventures", href: "/adventures/" },
-          { label: adventure.title, href: `/adventures/${adventure.slug}/` },
-          { label: level.name },
-        ]}
-      />
+      <Breadcrumb class="mb-10" items={crumbs} />
 
       {/* Header */}
       <div class="mb-10">

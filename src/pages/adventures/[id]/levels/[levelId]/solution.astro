@@ -8,6 +8,7 @@ import IconSparkles from '~icons/lucide/sparkles';
 import IconExternalLink from '~icons/lucide/external-link';
 import Layout from "@/layouts/Layout.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
+import StructuredData from "@/components/StructuredData.astro";
 import ContributorBadge from "@/components/ContributorBadge.astro";
 import DifficultyBadge from "@/components/DifficultyBadge.astro";
 import SolutionBlocks from "@/components/SolutionBlocks.astro";
@@ -49,26 +50,29 @@ const title = unlocked
 const description = unlocked
   ? `Step-by-step solution walkthrough for the ${level.name} challenge in ${adventure.title}.`
   : `Solution for the ${level.name} challenge in ${adventure.title}. Available after the challenge deadline.`;
+
+const path = `/adventures/${adventure.slug}/levels/${level.id}/solution/`;
+// One trail, rendered visually by <Breadcrumb> and as BreadcrumbList JSON-LD by
+// <StructuredData>, so the two can never disagree.
+const crumbs = [
+  { label: "Adventures", href: "/adventures/" },
+  { label: adventure.title, href: `/adventures/${adventure.slug}/` },
+  { label: level.name, href: `/adventures/${adventure.slug}/levels/${level.id}/` },
+  { label: "Solution" },
+];
 ---
 
 <Layout
   title={title}
   description={description}
-  path={`/adventures/${adventure.slug}/levels/${level.id}/solution/`}
+  path={path}
   ogType="article"
   noindex={!unlocked}
 >
+  <StructuredData slot="head" breadcrumb={crumbs} path={path} />
   <main id="main-content" tabindex="-1" class="px-6 pb-24 pt-28 md:px-16">
     <div class="mx-auto max-w-6xl">
-      <Breadcrumb
-        class="mb-10"
-        items={[
-          { label: "Adventures", href: "/adventures/" },
-          { label: adventure.title, href: `/adventures/${adventure.slug}/` },
-          { label: level.name, href: `/adventures/${adventure.slug}/levels/${level.id}/` },
-          { label: "Solution" },
-        ]}
-      />
+      <Breadcrumb class="mb-10" items={crumbs} />
 
       {
         !unlocked ? (

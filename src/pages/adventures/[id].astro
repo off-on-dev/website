@@ -4,6 +4,7 @@ import IconClock from '~icons/lucide/clock';
 import IconArrowRight from '~icons/lucide/arrow-right';
 import Layout from "@/layouts/Layout.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
+import StructuredData from "@/components/StructuredData.astro";
 import AdventureIcon from "@/components/AdventureIcon.astro";
 import ContributorBadge from "@/components/ContributorBadge.astro";
 import DifficultyBadge from "@/components/DifficultyBadge.astro";
@@ -15,6 +16,7 @@ import PersonNameLink from "@/components/PersonNameLink.astro";
 import CollapsibleSection from "@/components/CollapsibleSection.astro";
 import LeaderboardList from "@/components/LeaderboardList.astro";
 import { BRAND_NAME } from "@/lib/site";
+import { courseSchema } from "@/lib/structured-data";
 import { stripLinks } from "@/lib/markdown";
 import { isDeadlinePast } from "@/lib/utils";
 import { getLeaderboard } from "@/lib/community-data";
@@ -36,17 +38,35 @@ const gridCols = totalTiles === 2 ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-c
 const leaderboard = getLeaderboard(adventure.slug);
 const LEADERBOARD_PREVIEW_COUNT = 5;
 const topRows = leaderboard?.rows?.slice(0, LEADERBOARD_PREVIEW_COUNT) ?? [];
+
+const path = `/adventures/${adventure.slug}/`;
+// One trail, rendered visually by <Breadcrumb> and as BreadcrumbList JSON-LD by
+// <StructuredData>, so the two can never disagree.
+const crumbs = [{ label: "Adventures", href: "/adventures/" }, { label: adventure.title }];
 ---
 
 <Layout
   title={`${adventure.title} - ${BRAND_NAME} Adventures`}
   description={adventure.metaDescription}
-  path={`/adventures/${adventure.slug}/`}
+  path={path}
   ogType="article"
 >
+  <StructuredData
+    slot="head"
+    breadcrumb={crumbs}
+    path={path}
+    schemas={[
+      courseSchema({
+        title: adventure.title,
+        description: adventure.metaDescription,
+        slug: adventure.slug,
+        tags: adventure.tags,
+      }),
+    ]}
+  />
   <main id="main-content" tabindex="-1" class="px-6 pb-24 pt-28 md:px-16">
     <div class="mx-auto max-w-6xl">
-      <Breadcrumb items={[{ label: "Adventures", href: "/adventures/" }, { label: adventure.title }]} />
+      <Breadcrumb items={crumbs} />
 
       <div class="mb-10">
         <div class="mb-4 inline-flex items-center gap-3">

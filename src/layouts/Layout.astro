@@ -105,6 +105,9 @@ const fontPreloads = [
 
     <SEO title={title} description={description} path={canonicalPath} ogType={ogType} noindex={noindex} />
 
+    {/* Per-page <head> additions, e.g. <StructuredData> on adventure/level/solution pages. */}
+    <slot name="head" />
+
     <ClientRouter />
   </head>
   <body>
