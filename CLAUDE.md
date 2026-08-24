@@ -56,8 +56,8 @@ Community activity happens on a separate Discourse instance (display name **comm
 | Thing | Convention | Example |
 | --- | --- | --- |
 | Astro components / pages | PascalCase files (components), kebab or `[param]` (pages) | `AdventureCard.astro`, `adventures/[id].astro` |
-| Vue island components | PascalCase | `ThemeToggle.vue`, `ChallengesFilter.vue` |
-| nanostores | camelCase file, `$`-prefixed export | `stores/theme.ts` → `$theme` |
+| Vue island components | PascalCase | `ChallengesFilter.vue`, `MobileMenu.vue` |
+| nanostores | camelCase file, `$`-prefixed export | `stores/consent.ts` → `$consent` |
 | Module-level constants | SCREAMING_SNAKE_CASE | `BRAND_NAME`, `DIFFICULTIES` |
 | Route segments | kebab-case | `presentation-templates`, `handbook` |
 
@@ -100,7 +100,7 @@ src/
   lib/            # markdown-pipeline.mjs, adventure-derive.mjs, community-data.ts,
                   # solutions.ts, challenges.ts, difficulty.ts, markdown.ts, utils.ts,
                   # site.ts (constants), level-constants.mjs, deadline.mjs
-  stores/         # nanostores: theme.ts ($theme), consent.ts ($consent + gtag injector)
+  stores/         # nanostores: consent.ts ($consent + gtag injector)
   styles/index.css  # Tailwind @theme, component classes, light-mode overrides
   assets/diagrams/  # Architecture SVGs (imported per-level via import.meta.glob)
 e2e/
@@ -234,7 +234,7 @@ Adding an adventure requires only the YAML + per-level `*-posts.json` and regist
 
 ### Design system rules
 
-- Light mode uses `.light` on `<html>`, set by the theme pre-hydration script in `Layout.astro` and the `ThemeToggle` island (backed by the `$theme` nanostore, localStorage key `theme`).
+- Light mode uses `.light` on `<html>`, set by the inline pre-paint script in `Layout.astro` and by `ThemeToggle.astro`'s delegated click handler (localStorage key `theme`). `ThemeToggle` is static markup: CSS picks the icon and the sr-only accessible name off the `.dark` class, so it is correct before any JS runs.
 - Yellow `#ffc034` is accent-only in light mode; never a text colour.
 - Dark mode uses `:root`/`.dark`. Never modify these when fixing light mode.
 - `group-hover:*`/`group-focus:*` are not matched by `.light .classname`; add explicit `.light .group:hover` rules.
@@ -288,7 +288,7 @@ Google Analytics 4 with **Consent Mode v2 in gated-load mode**: no data of any k
 
 These patterns produce hydration mismatches and console errors. Never introduce them.
 
-- **An island's first client render must match its SSR output.** SSR runs with default state (dark theme, `null` consent). Read `localStorage`/`navigator`/the DOM in `onMounted`, then update reactive state — never in `<script setup>` top level or as a `ref` initializer. `$consent` is a plain atom (default `null`), safe to read via `useStore` since server and first-client render agree. `$theme` **is** a `persistentAtom` (it owns the localStorage write on `.set()`), so it reads localStorage at import time and must **never** be read in a render body (no `useStore($theme)` in a template) — islands seed a local ref to the server default (`"dark"`), read the real theme from the `<html>` class in `onMounted`, and use `$theme.listen`/`.set` only (see `ThemeToggle.vue`). Reading it at render would mismatch SSR for light-mode users.
+- **An island's first client render must match its SSR output.** SSR runs with default state (`null` consent). Read `localStorage`/`navigator`/the DOM in `onMounted`, then update reactive state — never in `<script setup>` top level or as a `ref` initializer. `$consent` is a plain atom (default `null`), safe to read via `useStore` since server and first-client render agree. Theme is not an island at all: `ThemeToggle.astro` renders both states and lets CSS choose off the `<html>` class, which sidesteps the mismatch rather than working around it.
 - **No non-deterministic values in a render body.** Build-time `.astro` frontmatter may use `new Date()` (it runs on the server); Vue island templates must not.
 - **`client:only` + ClientRouter** has a first-navigation hydration bug — prefer SSR islands (`client:visible`/`idle`/`load`). Islands in `Layout.astro` (theme toggle, consent) use `transition:persist` so they survive View Transitions.
 - **After each client navigation** (`astro:after-swap`), `Layout.astro` re-asserts the `<html>` theme class (prevents flash) and moves focus to `#main-content`. Astro's `<ClientRouter />` provides the route announcer and respects `prefers-reduced-motion`.

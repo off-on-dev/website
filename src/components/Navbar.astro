@@ -1,7 +1,7 @@
 ---
 import IconExternalLink from "~icons/lucide/external-link";
 import { SITE_NAME, COMMUNITY_URL } from "@/lib/site";
-import ThemeToggle from "@/components/ThemeToggle.vue";
+import ThemeToggle from "@/components/ThemeToggle.astro";
 import MobileMenu from "@/components/MobileMenu.vue";
 
 const base = import.meta.env.BASE_URL;
@@ -63,12 +63,12 @@ const activeCls =
           ),
         )}
       </ul>
-      <ThemeToggle variant="desktop" client:media="(min-width: 768px)" transition:persist="theme-desktop" />
+      <ThemeToggle variant="desktop" />
     </div>
 
     {/* Mobile: theme toggle + hamburger drawer */}
     <div class="flex md:hidden items-center gap-3">
-      <ThemeToggle variant="mobile" client:media="(max-width: 767px)" transition:persist="theme-mobile" />
+      <ThemeToggle variant="mobile" />
       <MobileMenu links={navItems} client:media="(max-width: 767px)" transition:persist="mobile-menu" />
     </div>
   </div>

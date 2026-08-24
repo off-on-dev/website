@@ -176,7 +176,7 @@ All animations respect `prefers-reduced-motion: reduce` (duration collapsed to 0
 
 ## Light mode
 
-Light mode is applied as `.light` on `<html>`. The pre-hydration inline script in `Layout.astro` sets this before first paint; `ThemeToggle.vue` updates it at runtime.
+Light mode is applied as `.light` on `<html>`. The inline script in `Layout.astro` sets this before first paint; `ThemeToggle.astro`'s delegated click handler updates it at runtime.
 
 Rules:
 - Light overrides live in the "Light mode overrides" section at the bottom of `index.css`, outside any `@layer`, scoped to `.light`.
@@ -342,7 +342,7 @@ Props: `class?: string`
 
 #### `Navbar`
 
-No props. `<header>` wrapping `<nav aria-label="Main">`. Logo anchor has `.logo-link`. Desktop nav links: `min-h-[44px]`, animated underline (`decoration-transparent` base, revealed on hover/active), `aria-current="page"` via `isActive()`. Hosts `ThemeToggle` (one per breakpoint, `client:media`) and `MobileMenu` (`client:media`).
+No props. `<header>` wrapping `<nav aria-label="Main">`. Logo anchor has `.logo-link`. Desktop nav links: `min-h-[44px]`, animated underline (`decoration-transparent` base, revealed on hover/active), `aria-current="page"` via `isActive()`. Hosts `ThemeToggle` (one per breakpoint, static `.astro`) and `MobileMenu` (`client:media`).
 
 ---
 
@@ -478,15 +478,15 @@ SSR renders nothing (`show = false`). Reveal deferred to `onMounted` + localStor
 
 ---
 
-#### `ThemeToggle`
+#### `ThemeToggle` (`.astro`)
 
 Props: `variant?: 'desktop' | 'mobile' (default 'mobile')`
 
-Hydration: `client:media` per breakpoint, `transition:persist` (Navbar.astro)
+Static markup, no island. Both icons and both accessible names are rendered, and CSS picks between them off the `.dark` class on `<html>` (`hidden dark:block` / `block dark:hidden`, the same technique as the Navbar logo). The control is therefore correct in the first painted frame for a returning light-mode visitor, with no JS.
 
-- SSR renders with `theme = 'dark'`. On mount reads actual theme from `document.documentElement`.
-- Uses `$theme.listen` / `.set` — **never** `useStore($theme)` — to avoid SSR mismatch for light-mode users (the `persistentAtom` reads localStorage at import time).
-- `aria-label` updates based on current theme. Announces via `#theme-status` sr-only polite live region in Layout.astro.
+- The accessible name comes from two `sr-only` spans rather than `aria-label`, because an attribute cannot be swapped by CSS.
+- One delegated `click` listener on `document`, matched via `[data-theme-toggle]`. It survives View Transitions without rebinding and covers every instance, so the two breakpoint copies need no shared state: both read the same `<html>` class.
+- Announces via the `#theme-status` sr-only polite live region in `Layout.astro`.
 
 ---
 
@@ -494,7 +494,6 @@ Hydration: `client:media` per breakpoint, `transition:persist` (Navbar.astro)
 
 | Store | File | Key |
 | --- | --- | --- |
-| `$theme` | `stores/theme.ts` | `theme` in localStorage. `persistentAtom` — read via `.listen`/`.get`/`.set` only, never `useStore`. |
 | `$consent` | `stores/consent.ts` | `analytics_consent` in localStorage. Plain atom, default `null`. Safe to read via `useStore` (SSR and first client render both default `null`). |
 
 ---
@@ -506,7 +505,7 @@ Hydration: `client:media` per breakpoint, `transition:persist` (Navbar.astro)
 | `client:load` | Above-the-fold islands that must hydrate immediately (ConsentBanner). |
 | `client:visible` | Below-fold islands — hydrate when entering the viewport (ChallengesFilter on home). |
 | `client:idle` | Non-critical islands that can wait until the browser is idle (StarterNudge). |
-| `client:media="..."` | Breakpoint-conditional islands (ThemeToggle, MobileMenu — one per breakpoint). |
+| `client:media="..."` | Breakpoint-conditional islands (MobileMenu). |
 
 `.astro` components cannot be rendered inside a `.vue` island. If an island needs a badge, pill, or icon, inline the markup and use `lucide-vue-next`.
 
