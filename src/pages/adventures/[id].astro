@@ -36,8 +36,10 @@ const upcoming = adventure.upcomingLevels ?? [];
 const totalTiles = adventure.levels.length + upcoming.length;
 const gridCols = totalTiles === 2 ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3";
 const leaderboard = getLeaderboard(adventure.slug);
-const LEADERBOARD_PREVIEW_COUNT = 5;
-const topRows = leaderboard?.rows?.slice(0, LEADERBOARD_PREVIEW_COUNT) ?? [];
+// Every row, no cap. The React AdventureLeaderboard passed `rows` straight
+// through; the migration's 5-row slice silently hid 11 of the 16 contributors
+// on echoes-lost-in-orbit with no way to see them.
+const leaderboardRows = leaderboard?.rows ?? [];
 
 const path = `/adventures/${adventure.slug}/`;
 // One trail, rendered visually by <Breadcrumb> and as BreadcrumbList JSON-LD by
@@ -169,10 +171,10 @@ const crumbs = [{ label: "Adventures", href: "/adventures/" }, { label: adventur
         </div>
 
         <aside aria-label="Adventure resources" class="mt-10 space-y-6 lg:mt-0 lg:sticky lg:top-28 lg:self-start">
-          {topRows.length > 0 && (
+          {leaderboardRows.length > 0 && (
             <div class="rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
               <h2 class="font-sans text-base font-semibold text-foreground mb-4">Leaderboard</h2>
-              <LeaderboardList rows={topRows} label="Adventure leaderboard" />
+              <LeaderboardList rows={leaderboardRows} label="Adventure leaderboard" />
             </div>
           )}
           {adventure.contributor && (
