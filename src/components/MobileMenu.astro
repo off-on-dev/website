@@ -1,0 +1,221 @@
+---
+import IconMenu from "~icons/lucide/menu";
+import IconX from "~icons/lucide/x";
+import IconExternalLink from "~icons/lucide/external-link";
+
+// Mobile nav drawer. Static markup plus one script; no island.
+//
+// The drawer is always in the DOM so `aria-controls` always resolves, and it
+// carries `hidden` while closed. `aria-current` is resolved at build time from
+// Astro.url.pathname by the caller, rather than re-derived in the browser: the
+// server already knows the current route, so the SSR markup is correct for
+// assistive tech before any script runs.
+
+export interface NavLink {
+  href: string;
+  label: string;
+  external?: boolean;
+  active?: boolean;
+}
+
+interface Props {
+  links: NavLink[];
+}
+const { links } = Astro.props;
+
+// Matches the desktop nav link styling minus the animated underline, which the
+// drawer does not use.
+const linkCls =
+  "inline-flex items-center gap-1 min-h-[44px] text-sm font-medium text-dim hover:text-foreground dark:hover:text-primary transition-colors rounded px-1.5 -mx-1.5 focus-ring";
+---
+
+{/* `group` + the aria-expanded variant keeps the icon in step with the state
+    the assistive tech sees, so there is only one thing for the script to set. */}
+<button
+  type="button"
+  data-mobile-menu-trigger
+  class="group flex h-11 w-11 items-center justify-center rounded-md border border-border bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-ring"
+  aria-label="Menu"
+  aria-expanded="false"
+  aria-controls="mobile-menu"
+>
+  <IconMenu width={18} height={18} aria-hidden="true" class="group-aria-expanded:hidden" />
+  <IconX width={18} height={18} aria-hidden="true" class="hidden group-aria-expanded:block" />
+</button>
+
+{/* Positioned absolute against the fixed <nav>, which is its containing block,
+    so it sits directly below the bar at full width. A plain <div>, not <nav>:
+    it lives inside <nav aria-label="Main"> and nesting a second navigation
+    landmark would create two overlapping regions. */}
+<div
+  id="mobile-menu"
+  hidden
+  data-mobile-menu
+  class="absolute inset-x-0 top-full z-40 border-b border-border bg-background px-6 py-2 md:hidden"
+>
+  <ul role="list" class="contents">
+    {
+      links.map((link) => (
+        <li class="contents">
+          {link.external ? (
+            <a
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-describedby="new-tab-hint"
+              class={linkCls}
+            >
+              {link.label} <IconExternalLink width={12} height={12} aria-hidden="true" />
+            </a>
+          ) : (
+            <a
+              href={link.href}
+              class:list={[linkCls, link.active && "font-semibold text-foreground"]}
+              aria-current={link.active ? "page" : undefined}
+            >
+              {link.label}
+            </a>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<script>
+  const DESKTOP_MQ = "(min-width: 768px)";
+
+  // The full set from the pre-migration focus trap. The drawer only holds links
+  // today, but a trap that silently ignores a form control it does not recognise
+  // is a trap with a hole in it.
+  const FOCUSABLE = [
+    "a[href]",
+    "button:not([disabled])",
+    "input:not([disabled])",
+    "select:not([disabled])",
+    "textarea:not([disabled])",
+    '[contenteditable]:not([contenteditable="false"])',
+    '[tabindex]:not([tabindex="-1"])',
+  ].join(", ");
+
+  // Classes that make the drawer a column when open. Applied by script because
+  // Tailwind's `flex` sets display:flex, which would defeat the `hidden`
+  // attribute if both were present at once.
+  const OPEN_CLASSES = ["flex", "flex-col", "gap-1"];
+
+  let teardown: (() => void) | null = null;
+
+  function initMobileMenu(): void {
+    teardown?.();
+    teardown = null;
+
+    const trigger = document.querySelector<HTMLButtonElement>("[data-mobile-menu-trigger]");
+    const drawer = document.querySelector<HTMLElement>("[data-mobile-menu]");
+    if (!trigger || !drawer) return;
+
+    let inertSiblings: HTMLElement[] = [];
+
+    const isOpen = (): boolean => trigger.getAttribute("aria-expanded") === "true";
+
+    const focusablesIn = (container: HTMLElement): HTMLElement[] =>
+      Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE));
+
+    // Hide every body child except the drawer's own top-level ancestor, so the
+    // page behind the drawer is unreachable by pointer, focus and screen reader.
+    function setSiblingsInert(): void {
+      let host: Element | null = drawer;
+      while (host && host.parentElement !== document.body) host = host.parentElement;
+      if (!host) return;
+      inertSiblings = Array.from(document.body.children).filter(
+        (el): el is HTMLElement => el instanceof HTMLElement && el !== host,
+      );
+      inertSiblings.forEach((el) => {
+        el.setAttribute("inert", "");
+        el.setAttribute("aria-hidden", "true");
+      });
+    }
+
+    function clearSiblingsInert(): void {
+      inertSiblings.forEach((el) => {
+        el.removeAttribute("inert");
+        el.removeAttribute("aria-hidden");
+      });
+      inertSiblings = [];
+    }
+
+    function onKeydown(event: KeyboardEvent): void {
+      if (event.key === "Escape") {
+        close(true);
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const items = focusablesIn(drawer);
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    function open(): void {
+      trigger.setAttribute("aria-expanded", "true");
+      drawer.hidden = false;
+      drawer.classList.add(...OPEN_CLASSES);
+      setSiblingsInert();
+      document.addEventListener("keydown", onKeydown);
+      focusablesIn(drawer)[0]?.focus();
+    }
+
+    // restoreFocus is false when focus is already going somewhere the user chose
+    // (a drawer link, a navigation), where pulling it back would be a steal.
+    function close(restoreFocus: boolean): void {
+      trigger.setAttribute("aria-expanded", "false");
+      drawer.hidden = true;
+      drawer.classList.remove(...OPEN_CLASSES);
+      document.removeEventListener("keydown", onKeydown);
+      clearSiblingsInert();
+      if (restoreFocus) trigger.focus();
+    }
+
+    function onTriggerClick(): void {
+      if (isOpen()) close(true);
+      else open();
+    }
+
+    function onDrawerClick(event: MouseEvent): void {
+      if ((event.target as Element | null)?.closest("a")) close(false);
+    }
+
+    // Crossing to desktop hides the drawer via CSS, which would otherwise strand
+    // the trap and the inert background with no way to reach the trigger.
+    const desktopMq = window.matchMedia(DESKTOP_MQ);
+    function onBreakpoint(event: MediaQueryListEvent): void {
+      if (event.matches && isOpen()) close(false);
+    }
+
+    trigger.addEventListener("click", onTriggerClick);
+    drawer.addEventListener("click", onDrawerClick);
+    desktopMq.addEventListener("change", onBreakpoint);
+
+    teardown = () => {
+      close(false);
+      trigger.removeEventListener("click", onTriggerClick);
+      drawer.removeEventListener("click", onDrawerClick);
+      desktopMq.removeEventListener("change", onBreakpoint);
+    };
+  }
+
+  document.addEventListener("astro:page-load", initMobileMenu);
+  // Drop the keydown listener and any inert attributes before the DOM is swapped.
+  document.addEventListener("astro:before-swap", () => {
+    teardown?.();
+    teardown = null;
+  });
+</script>

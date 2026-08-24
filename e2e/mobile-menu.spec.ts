@@ -171,3 +171,51 @@ test("following a drawer link navigates and leaves no trap behind", async ({ pag
   );
   expect(stuck, "inert must be cleared after navigating away").toBe(0);
 });
+
+test("the trigger icon tracks the open state", async ({ page }) => {
+  const icons = (): Promise<string[]> =>
+    page.evaluate((sel) =>
+      Array.from(document.querySelector(sel)!.querySelectorAll("svg"))
+        .filter((s) => getComputedStyle(s).display !== "none")
+        .map((s) =>
+          s.querySelector("path")?.getAttribute("d")?.includes("M4 5h16") ? "hamburger" : "close",
+        ), TRIGGER);
+
+  expect(await icons()).toEqual(["hamburger"]);
+  await openDrawer(page);
+  expect(await icons()).toEqual(["close"]);
+  await page.keyboard.press("Escape");
+  expect(await icons()).toEqual(["hamburger"]);
+});
+
+test("the trap includes form controls, not just links", async ({ page }) => {
+  // The drawer only holds links today. A trap whose selector silently skips an
+  // input is a trap with a hole in it, so prove the full selector is in use.
+  await openDrawer(page);
+  await page.evaluate(() => {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.id = "probe";
+    document.querySelector("#mobile-menu")!.appendChild(input);
+  });
+
+  const cycle: string[] = [];
+  for (let i = 0; i < 9; i++) {
+    await page.keyboard.press("Tab");
+    cycle.push(
+      await page.evaluate(() => document.activeElement?.id || document.activeElement?.tagName || "?"),
+    );
+  }
+  expect(cycle, `tab cycle was ${cycle.join(", ")}`).toContain("probe");
+});
+
+test("crossing to the desktop breakpoint while open releases the trap", async ({ page }) => {
+  await openDrawer(page);
+  await page.setViewportSize({ width: 1400, height: 900 });
+
+  const stuck = await page.evaluate(
+    () => Array.from(document.body.children).filter((el) => el.hasAttribute("inert")).length,
+  );
+  expect(stuck, "inert must clear when the breakpoint hides the drawer").toBe(0);
+  await expect(page.locator(TRIGGER)).toHaveAttribute("aria-expanded", "false");
+});

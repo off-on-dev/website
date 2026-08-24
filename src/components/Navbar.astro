@@ -2,7 +2,7 @@
 import IconExternalLink from "~icons/lucide/external-link";
 import { SITE_NAME, COMMUNITY_URL } from "@/lib/site";
 import ThemeToggle from "@/components/ThemeToggle.astro";
-import MobileMenu from "@/components/MobileMenu.vue";
+import MobileMenu from "@/components/MobileMenu.astro";
 
 const base = import.meta.env.BASE_URL;
 const path = Astro.url.pathname;
@@ -10,7 +10,7 @@ const logoDark = `${base}brand/offon-logo-dark-color.svg`;
 const logoLight = `${base}brand/offon-logo-light-mono.svg`;
 
 // Community sits between About and Contribute and is an external link. The same
-// list feeds the desktop cluster and the mobile drawer island, so it is defined once.
+// list feeds the desktop cluster and the mobile drawer, so it is defined once.
 const navItems = [
   { href: `${base}challenges/`, label: "Challenges" },
   { href: `${base}about/`, label: "About" },
@@ -69,7 +69,7 @@ const activeCls =
     {/* Mobile: theme toggle + hamburger drawer */}
     <div class="flex md:hidden items-center gap-3">
       <ThemeToggle variant="mobile" />
-      <MobileMenu links={navItems} client:media="(max-width: 767px)" transition:persist="mobile-menu" />
+      <MobileMenu links={navItems.map((item) => ({ ...item, active: isActive(item) }))} />
     </div>
   </div>
 </nav>

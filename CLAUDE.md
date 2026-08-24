@@ -56,7 +56,7 @@ Community activity happens on a separate Discourse instance (display name **comm
 | Thing | Convention | Example |
 | --- | --- | --- |
 | Astro components / pages | PascalCase files (components), kebab or `[param]` (pages) | `AdventureCard.astro`, `adventures/[id].astro` |
-| Vue island components | PascalCase | `ChallengesFilter.vue`, `MobileMenu.vue` |
+| Vue island components | PascalCase | `ChallengesFilter.vue`, `ConsentBanner.vue` |
 | nanostores | camelCase file, `$`-prefixed export | `stores/consent.ts` → `$consent` |
 | Module-level constants | SCREAMING_SNAKE_CASE | `BRAND_NAME`, `DIFFICULTIES` |
 | Route segments | kebab-case | `presentation-templates`, `handbook` |

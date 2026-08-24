@@ -342,7 +342,7 @@ Props: `class?: string`
 
 #### `Navbar`
 
-No props. `<header>` wrapping `<nav aria-label="Main">`. Logo anchor has `.logo-link`. Desktop nav links: `min-h-[44px]`, animated underline (`decoration-transparent` base, revealed on hover/active), `aria-current="page"` via `isActive()`. Hosts `ThemeToggle` (one per breakpoint, static `.astro`) and `MobileMenu` (`client:media`).
+No props. `<header>` wrapping `<nav aria-label="Main">`. Logo anchor has `.logo-link`. Desktop nav links: `min-h-[44px]`, animated underline (`decoration-transparent` base, revealed on hover/active), `aria-current="page"` via `isActive()`. Hosts `ThemeToggle` (one per breakpoint) and `MobileMenu`, both static `.astro`. Computes `isActive()` once and passes it to the drawer, so both navs agree.
 
 ---
 
@@ -454,17 +454,18 @@ No props. Hydration: `client:load transition:persist` (Layout.astro)
 
 ---
 
-#### `MobileMenu`
+#### `MobileMenu` (`.astro`)
 
-Props: `links: { href: string; label: string; external?: boolean }[]`
+Props: `links: { href: string; label: string; external?: boolean; active?: boolean }[]`
 
-Hydration: `client:media="(max-width: 767px)" transition:persist="mobile-menu"` (Navbar.astro)
+Static markup plus one script, no island. Navbar passes `active` already resolved from `Astro.url.pathname`, so `aria-current="page"` is correct in the SSR HTML rather than being re-derived in the browser.
 
-- Full focus trap: Tab / Shift+Tab cycles within drawer; Escape closes and returns focus to hamburger.
-- Sets `inert` + `aria-hidden` on all body siblings while open.
-- Drawer is always in the DOM (`aria-controls` resolves on SSR).
-- Auto-closes on `astro:before-swap` and on breakpoint change to `>=md`.
-- `aria-current="page"` on the active link.
+- Full focus trap: Tab / Shift+Tab cycle within the drawer; Escape closes and returns focus to the trigger. Uses the full 7-pattern focusable selector (links, buttons, `input`, `select`, `textarea`, `[contenteditable]`, `[tabindex]`), so a form control added later cannot fall outside the trap.
+- Sets `inert` + `aria-hidden` on all body siblings while open, clears them on close.
+- Drawer is always in the DOM and carries `hidden` while closed, so `aria-controls` always resolves.
+- The trigger icon is chosen by CSS from `aria-expanded` (`group-aria-expanded:*`), so the icon and the state assistive tech sees cannot disagree.
+- Open styling is applied as classes by script, because Tailwind's `flex` would otherwise override the `hidden` attribute.
+- Releases on `astro:before-swap` and on crossing to `>=md`.
 
 ---
 
@@ -505,7 +506,6 @@ Static markup, no island. Both icons and both accessible names are rendered, and
 | `client:load` | Above-the-fold islands that must hydrate immediately (ConsentBanner). |
 | `client:visible` | Below-fold islands — hydrate when entering the viewport (ChallengesFilter on home). |
 | `client:idle` | Non-critical islands that can wait until the browser is idle (StarterNudge). |
-| `client:media="..."` | Breakpoint-conditional islands (MobileMenu). |
 
 `.astro` components cannot be rendered inside a `.vue` island. If an island needs a badge, pill, or icon, inline the markup and use `lucide-vue-next`.
 
