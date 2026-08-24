@@ -39,7 +39,7 @@ Community activity happens on a separate Discourse instance (display name **comm
 - **Framework:** Astro 7 (static output), TypeScript. Check `package.json` for versions.
 - **Interactivity:** Vue 3 islands via `@astrojs/vue`, hydrated with `client:*` directives. Shared cross-island state uses **nanostores** (`src/stores/`).
 - **Styling:** Tailwind CSS 4, CSS-first via `src/styles/index.css` (`@theme` block) and the `@tailwindcss/vite` plugin. No `tailwind.config.ts`.
-- **Icons:** `astro-icon` (lucide set) in `.astro`; `lucide-vue-next` in `.vue` islands.
+- **Icons:** `unplugin-icons` (lucide set via `@iconify-json/lucide`) in both `.astro` and `.vue` islands.
 - **UI primitives:** No shared component library. The abbreviation tooltip is a plain JS portal in `Layout.astro` (position:fixed, escapes overflow clipping). There is no shadcn or Reka UI surface.
 - **Content:** Astro Content Collections (Zod-validated) over authored YAML. See "Content collection".
 - **Routing:** Astro file-based routing + `getStaticPaths()`. Trailing slashes always.
@@ -364,11 +364,11 @@ UI labels use **title case (Chicago)**; body copy uses **sentence case**.
 
 ### Routes
 
-- Routes come from file-based pages and `getStaticPaths()`. There is no prerender array to maintain. When adding a page, add it to `PAGES` in `e2e/a11y.spec.ts` and `ROUTES` in `e2e/smoke.spec.ts` (with the expected title), to `public/sitemap.xml` (except `/privacy/`), and to the routes table in `README.md`.
+- Routes come from file-based pages and `getStaticPaths()`. There is no prerender array to maintain. When adding a page, add it to `PAGES` in `e2e/a11y.spec.ts` and `ROUTES` in `e2e/smoke.spec.ts` (with the expected title), to the `staticPaths` array in `src/pages/sitemap.xml.ts` (except `/privacy/` and `/presentation-templates/`), and to the routes table in `README.md`.
 
 ### Adding an adventure or level
 
-See [`ADVENTURES.md`](ADVENTURES.md). In brief: add/extend the YAML at `src/data/adventures/<id>/adventure.yaml`, add each level's `*-posts.json`, register the id in `ADVENTURE_CATEGORIES` (`scripts/refresh-leaderboard.mjs`), and add the new URLs to `public/sitemap.xml`, the test route lists, `README.md`, and `public/llms.txt`. Routes generate automatically.
+See [`ADVENTURES.md`](ADVENTURES.md). In brief: add/extend the YAML at `src/data/adventures/<id>/adventure.yaml`, add each level's `*-posts.json`, register the id in `ADVENTURE_CATEGORIES` (`scripts/refresh-leaderboard.mjs`), and add the new URLs to the test route lists, `README.md`, and `public/llms.txt`. Adventure/level/solution URLs are auto-derived in `src/pages/sitemap.xml.ts` from `getCollection()` — no manual sitemap edit needed. Routes generate automatically.
 
 ---
 

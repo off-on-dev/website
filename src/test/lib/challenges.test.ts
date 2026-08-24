@@ -140,7 +140,7 @@ describe("sortAdventuresByMonthDesc", () => {
       { month: "FEB 2025" },
     ];
     const result = sortAdventuresByMonthDesc(adventures);
-    // FEB 2025 (key 12) > XXX 2025 (key 0), so FEB sorts first.
+    // FEB 2025 (key 24301) > XXX 2025 (key 24300), so FEB sorts first.
     expect(result[0].month).toBe("FEB 2025");
     expect(result[1].month).toBe("XXX 2025");
   });
