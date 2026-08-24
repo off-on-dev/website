@@ -12,14 +12,14 @@ export type AdventureIconName =
   | "Telescope";
 
 /** Maps legacy adventure emoji fields to their Lucide icon names. */
-export const EMOJI_TO_ICON: Record<string, AdventureIconName> = {
+export const EMOJI_TO_ICON = {
   "🧪": "FlaskConical",
   "🔭": "Telescope",
   "☁️": "Cloud",
   "🛰️": "Satellite",
   "⚖️": "Scale",
   "🧭": "Compass",
-};
+} satisfies Record<string, AdventureIconName>;
 
 /** Maps Lucide PascalCase icon names to their kebab-case keys in LUCIDE_ICONS. */
 export const ICON_TO_KEBAB: Record<AdventureIconName, string> = {

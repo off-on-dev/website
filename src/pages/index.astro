@@ -45,7 +45,7 @@ const starterLevel = starter?.levels.find((l) => l.difficulty === "Beginner");
             client:idle
             adventureId={starter.slug}
             adventureTitle={starter.title}
-            tag={starter.tags[0]}
+            tag={starter.tags[0] ?? ""}
             levelId={starterLevel.id}
             base={base}
           />
