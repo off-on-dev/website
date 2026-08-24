@@ -186,3 +186,40 @@ test.describe("skip link (WCAG 2.4.1)", () => {
     });
   }
 });
+
+// WAVE flags text under 10px as "very small text". The gate is set at that line
+// rather than at the type scale minimum (text-xs, 12px), because inline <code>
+// renders at 11.9px by design and would otherwise fail every prose page.
+//
+// Hidden elements are included deliberately: the avatar initials chips that
+// prompted this are display:none while the image loads and become visible the
+// moment it fails, so "currently hidden" is not a defence.
+test.describe("no very small text", () => {
+  const MIN_PX = 10;
+
+  for (const path of PAGES) {
+    test(path, async ({ page }) => {
+      await page.goto(path);
+      await page.waitForLoadState("load");
+
+      const tooSmall = await page.evaluate((min) => {
+        const out: string[] = [];
+        document.querySelectorAll<HTMLElement>("body *").forEach((el) => {
+          const own = Array.from(el.childNodes)
+            .filter((n) => n.nodeType === 3)
+            .map((n) => (n.textContent ?? "").trim())
+            .join(" ")
+            .trim();
+          if (!own) return;
+          const px = parseFloat(getComputedStyle(el).fontSize);
+          if (px < min) {
+            out.push(`${px}px <${el.tagName.toLowerCase()}> "${own.slice(0, 30)}"`);
+          }
+        });
+        return [...new Set(out)];
+      }, MIN_PX);
+
+      expect(tooSmall, `text below ${MIN_PX}px on ${path}`).toEqual([]);
+    });
+  }
+});
