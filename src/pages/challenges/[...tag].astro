@@ -7,7 +7,7 @@ import ChallengeBuildersSection from "@/components/ChallengeBuildersSection.astr
 import CommunityLeaders from "@/components/CommunityLeaders.astro";
 import BottomCTA from "@/components/BottomCTA.astro";
 import StarterNudge from "@/components/StarterNudge.astro";
-import ChallengesFilter from "@/components/ChallengesFilter.vue";
+import ChallengesFilter from "@/components/ChallengesFilter.astro";
 import { BRAND_NAME } from "@/lib/site";
 import { getChallengeData, getStarterTarget, isAdventureLive, sortAdventuresByMonthDesc, tagToSlug } from "@/lib/challenges";
 
@@ -72,7 +72,6 @@ const path = initialTag ? `/challenges/${tagToSlug(initialTag)}/` : "/challenges
           base={base}
           initialTag={initialTag}
           adventureCount={adventureCount}
-          client:load
         >
           {adventures.map((a) => (
             <AdventureCard slot="adventures" adventure={{ ...a, isLive: isAdventureLive(a) }} />

@@ -11,7 +11,7 @@ import CommunityLeaders from "@/components/CommunityLeaders.astro";
 import SponsorStrip from "@/components/SponsorStrip.astro";
 import BottomCTA from "@/components/BottomCTA.astro";
 import StarterNudge from "@/components/StarterNudge.astro";
-import ChallengesFilter from "@/components/ChallengesFilter.vue";
+import ChallengesFilter from "@/components/ChallengesFilter.astro";
 import { getChallengeData, getStarterTarget, isAdventureLive, sortAdventuresByMonthDesc } from "@/lib/challenges";
 import { BRAND_NAME, BRAND_SHORT_DESCRIPTION, BRAND_SLOGAN, PROPOSE_ADVENTURE_URL } from "@/lib/site";
 
@@ -48,15 +48,17 @@ const starter = getStarterTarget(adventures);
             base={base}
           />
         )}
+        {/* adventureCount is the real total, not the previewed slice: it feeds the
+            "N adventures" count line, which describes the catalogue rather than
+            this grid. */}
         <ChallengesFilter
           entries={entries}
           tags={tags}
           base={base}
           initialTag={null}
-          adventureCount={visibleAdventures.length}
+          adventureCount={adventures.length}
           embedded
           seeAllHref={hasMore ? `${base}challenges/` : undefined}
-          client:visible
         >
           {visibleAdventures.map((a) => (
             <AdventureCard slot="adventures" adventure={{ ...a, isLive: isAdventureLive(a) }} />
