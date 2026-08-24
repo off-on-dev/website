@@ -122,7 +122,7 @@ const linkCls =
 
     // Hide every body child except the drawer's own top-level ancestor, so the
     // page behind the drawer is unreachable by pointer, focus and screen reader.
-    function setSiblingsInert(): void {
+    const setSiblingsInert = (): void => {
       let host: Element | null = drawer;
       while (host && host.parentElement !== document.body) host = host.parentElement;
       if (!host) return;
@@ -133,17 +133,17 @@ const linkCls =
         el.setAttribute("inert", "");
         el.setAttribute("aria-hidden", "true");
       });
-    }
+    };
 
-    function clearSiblingsInert(): void {
+    const clearSiblingsInert = (): void => {
       inertSiblings.forEach((el) => {
         el.removeAttribute("inert");
         el.removeAttribute("aria-hidden");
       });
       inertSiblings = [];
-    }
+    };
 
-    function onKeydown(event: KeyboardEvent): void {
+    const onKeydown = (event: KeyboardEvent): void => {
       if (event.key === "Escape") {
         close(true);
         return;
@@ -162,43 +162,43 @@ const linkCls =
         event.preventDefault();
         first.focus();
       }
-    }
+    };
 
-    function open(): void {
+    const open = (): void => {
       trigger.setAttribute("aria-expanded", "true");
       drawer.hidden = false;
       drawer.classList.add(...OPEN_CLASSES);
       setSiblingsInert();
       document.addEventListener("keydown", onKeydown);
       focusablesIn(drawer)[0]?.focus();
-    }
+    };
 
     // restoreFocus is false when focus is already going somewhere the user chose
     // (a drawer link, a navigation), where pulling it back would be a steal.
-    function close(restoreFocus: boolean): void {
+    const close = (restoreFocus: boolean): void => {
       trigger.setAttribute("aria-expanded", "false");
       drawer.hidden = true;
       drawer.classList.remove(...OPEN_CLASSES);
       document.removeEventListener("keydown", onKeydown);
       clearSiblingsInert();
       if (restoreFocus) trigger.focus();
-    }
+    };
 
-    function onTriggerClick(): void {
+    const onTriggerClick = (): void => {
       if (isOpen()) close(true);
       else open();
-    }
+    };
 
-    function onDrawerClick(event: MouseEvent): void {
+    const onDrawerClick = (event: MouseEvent): void => {
       if ((event.target as Element | null)?.closest("a")) close(false);
-    }
+    };
 
     // Crossing to desktop hides the drawer via CSS, which would otherwise strand
     // the trap and the inert background with no way to reach the trigger.
     const desktopMq = window.matchMedia(DESKTOP_MQ);
-    function onBreakpoint(event: MediaQueryListEvent): void {
+    const onBreakpoint = (event: MediaQueryListEvent): void => {
       if (event.matches && isOpen()) close(false);
-    }
+    };
 
     trigger.addEventListener("click", onTriggerClick);
     drawer.addEventListener("click", onDrawerClick);

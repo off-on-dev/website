@@ -189,7 +189,9 @@ const dropdownItem =
               style={difficultyPillStyle(d, false)}
             >
               {d}
-              <IconX width={11} height={11} aria-hidden="true" data-clear hidden />
+              <span data-clear hidden>
+                <IconX width={11} height={11} aria-hidden="true" />
+              </span>
             </button>
           ))
         }
@@ -214,7 +216,9 @@ const dropdownItem =
               class:list={["filter-pill", activeTags.includes(tag) ? "pill-active" : "pill-inactive"]}
             >
               {tag}
-              <IconX width={11} height={11} aria-hidden="true" data-clear hidden={!activeTags.includes(tag)} />
+              <span data-clear hidden={!activeTags.includes(tag)}>
+                <IconX width={11} height={11} aria-hidden="true" />
+              </span>
             </button>
           ))
         }
@@ -354,7 +358,7 @@ const dropdownItem =
     const state: State = { tags: initialTag ? [initialTag] : [], difficulty: null, touched: false };
 
     // ── URL ────────────────────────────────────────────────────────────────
-    function readUrl(): void {
+    const readUrl = (): void => {
       const params = new URLSearchParams(window.location.search);
       const topics = params.get("topics");
       if (topics !== null) {
@@ -366,9 +370,9 @@ const dropdownItem =
       // `touched` stays false here on purpose. Arriving at a filtered URL is not
       // an interaction, and a live region that announces the state a page loaded
       // in is just noise. Only the action handlers set it.
-    }
+    };
 
-    function syncUrl(): void {
+    const syncUrl = (): void => {
       const params = new URLSearchParams(window.location.search);
       if (state.tags.length) params.set("topics", state.tags.map(tagToSlug).join(","));
       else params.delete("topics");
@@ -381,12 +385,12 @@ const dropdownItem =
       const path =
         initialTag !== null && state.tags.length === 0 ? `${base}challenges/` : window.location.pathname;
       window.history.replaceState(null, "", path + (qs ? `?${qs}` : ""));
-    }
+    };
 
     // ── Render ─────────────────────────────────────────────────────────────
     const plural = (n: number, word: string): string => `${n} ${n === 1 ? word : `${word}s`}`;
 
-    function apply(): void {
+    const apply = (): void => {
       const activeSlugs = state.tags.map(tagToSlug);
       let shown = 0;
 
@@ -425,9 +429,9 @@ const dropdownItem =
           : `Filters cleared, showing ${text}`;
 
       syncControls();
-    }
+    };
 
-    function syncControls(): void {
+    const syncControls = (): void => {
       for (const pill of tagPills) {
         const tag = pill.dataset.tagPill!;
         const on = tag ? state.tags.includes(tag) : state.tags.length === 0;
@@ -474,7 +478,7 @@ const dropdownItem =
       if (tagsLabel) tagsLabel.textContent = tagsText;
       const tagsTrigger = root.querySelector<HTMLButtonElement>('[aria-controls="tags-group"]');
       tagsTrigger?.setAttribute("aria-label", `Filter by technology: ${tagsText}`);
-    }
+    };
 
     const allLevelsPill = (on: boolean): string =>
       `border-style:solid;border-width:2px;background-color:${on ? "hsl(var(--foreground))" : "transparent"};border-color:${on ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.6)"};color:${on ? "hsl(var(--background))" : "hsl(var(--foreground))"}`;

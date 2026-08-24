@@ -22,8 +22,10 @@ export const sortAdventuresByMonthDesc = <T extends { month: string }>(adventure
 
 /** Build-time live check: an active rewards window or any future level deadline. */
 export const isAdventureLive = (a: {
-  rewards?: { deadline?: string };
-  levels: { deadline?: string }[];
+  // The content collection renders `deadline` as string | null | undefined, so
+  // the constraint has to admit null or callers fail to infer their own type.
+  rewards?: { deadline?: string | null };
+  levels: { deadline?: string | null }[];
 }): boolean => {
   const now = Date.now();
   return (
@@ -51,8 +53,8 @@ export type StarterTarget<A> = { adventure: A; levelId: string };
 export function getStarterTarget<
   A extends {
     month: string;
-    rewards?: { deadline?: string };
-    levels: { id: string; difficulty: string; deadline?: string }[];
+    rewards?: { deadline?: string | null };
+    levels: { id: string; difficulty: string; deadline?: string | null }[];
   },
 >(adventures: A[]): StarterTarget<A> | null {
   const newestFirst = sortAdventuresByMonthDesc(adventures);
@@ -92,7 +94,7 @@ type AdventureData = {
   title: string;
   tags: string[];
   icon?: string;
-  rewards?: { deadline?: string };
+  rewards?: { deadline?: string | null };
   levels: {
     id: string;
     name: string;
@@ -100,7 +102,7 @@ type AdventureData = {
     topics: string[];
     learnings?: string[];
     estimatedTime?: string;
-    deadline?: string;
+    deadline?: string | null;
   }[];
 };
 
