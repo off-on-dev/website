@@ -58,14 +58,16 @@ Raw `<button>` or `<a>` with a class from the table below. No `<Button>` wrapper
 
 | Class | Appearance | When to use |
 | --- | --- | --- |
-| `.btn-primary` | Filled amber, hover brightness +10 | Primary CTA |
+| `.btn-primary` | Filled amber, hover brightness +10. Darkened-amber border in light mode | Primary CTA |
 | `.btn-ghost` | Transparent + foreground border, hover amber border | Secondary action |
 | `.btn-secondary` | Solid inverted neutral (foreground fill, background text) | Paired action that must carry the same weight as `.btn-primary` (consent Decline) |
 | `.btn-soft` | Primary-tinted bg and border | Tertiary / low-emphasis action |
 | `.btn-inverse` | `bg-background`, primary border | CTA on `bg-primary` sections |
 | `.btn-ghost-inverse` | Transparent + background-coloured border | Secondary CTA on `bg-primary` sections |
 
-All five classes include `focus-ring`, `cursor-pointer`, and overrides for `forced-colors` and `prefers-reduced-motion`.
+All classes include `focus-ring`, `cursor-pointer`, and overrides for `forced-colors` and `prefers-reduced-motion`.
+
+`.btn-primary`, `.btn-secondary` and `.btn-ghost` all reserve a 1px border so they share a height; only `.btn-ghost` and light-mode `.btn-primary` colour it. The amber fill is ~1.6:1 against the near-white surfaces in light mode, so `--primary-border` (a darkened amber, ~5.1:1 against every surface in use) gives the control the visible boundary WCAG 1.4.11 wants. Dark mode needs none: the fill is ~11.9:1 there. Guarded by `e2e/btn-primary-contrast.spec.ts`, which checks every route in both themes.
 
 Touch target: interactive elements must meet WCAG 2.5.8 (≥24 × 24 px). Nav links use `min-h-[44px]`; footer links use `min-h-[48px]`.
 

@@ -264,6 +264,11 @@ html {
   .light {
     /* Core - barely-cool palette; slight cool/warm contrast against amber accents */
     --background: 220 12% 98%;
+    /* Boundary for the amber primary button. The amber fill itself is only
+       ~1.6:1 against the near-white surfaces it sits on, so the control needs a
+       visible edge to satisfy WCAG 1.4.11. Darkened amber rather than a neutral
+       so it reads as part of the button. ~5:1 against every surface in use. */
+    --primary-border: 41 100% 28%;
     --foreground: 240 25% 8%;
 
     --card: 220 10% 96%;
@@ -440,7 +445,7 @@ html {
 @layer components {
   /* Primary filled button: py-3 gives 12+20+12 = 44px (WCAG 2.5.5) */
   .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.97] focus-ring;
+    @apply inline-flex items-center gap-2 rounded-md border border-transparent bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.97] focus-ring;
     cursor: pointer;
   }
 
@@ -457,7 +462,7 @@ html {
      clears WCAG contrast in both themes: fill vs banner background is 19.1:1
      (dark) / 17.9:1 (light), and label vs fill is the same ratio. */
   .btn-secondary {
-    @apply inline-flex items-center gap-2 rounded-md bg-foreground px-5 py-3 text-sm font-semibold text-background transition-all duration-200 hover:bg-foreground/90 active:scale-[0.97] focus-ring;
+    @apply inline-flex items-center gap-2 rounded-md border border-transparent bg-foreground px-5 py-3 text-sm font-semibold text-background transition-all duration-200 hover:bg-foreground/90 active:scale-[0.97] focus-ring;
     cursor: pointer;
   }
 
@@ -546,6 +551,13 @@ html {
 }
 
 /* ─── Light mode overrides ───────────────────────────────── */
+
+/* WCAG 1.4.11: the amber fill is ~1.6:1 against the near-white surfaces in light
+   mode, so the button needs a visible boundary. Dark mode needs none, the fill
+   is ~11.9:1 there. The border box is reserved in both themes so nothing moves. */
+.light .btn-primary {
+  border-color: hsl(var(--primary-border));
+}
 
 .light .md-content pre code span { color: var(--shiki-light, inherit); }
 
