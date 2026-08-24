@@ -6,40 +6,10 @@
 
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { A11Y_PAGES as PAGES } from "./routes";
 
 const AXE_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"];
 
-// Representative routes across every layout type + all static pages.
-const PAGES = [
-  "/",
-  "/adventures/",
-  "/challenges/",
-  "/adventures/blind-by-design/",
-  "/adventures/blind-by-design/levels/beginner/",
-  "/adventures/building-cloudhaven/",
-  "/adventures/building-cloudhaven/levels/beginner/",
-  "/adventures/dead-reckoning/",
-  "/adventures/dead-reckoning/levels/expert/",
-  "/adventures/echoes-lost-in-orbit/",
-  "/adventures/echoes-lost-in-orbit/levels/beginner/",
-  "/adventures/echoes-lost-in-orbit/levels/beginner/solution/",
-  "/adventures/echoes-lost-in-orbit/levels/intermediate/solution/",
-  "/adventures/echoes-lost-in-orbit/levels/expert/solution/",
-  "/adventures/lex-imperfecta/",
-  "/adventures/lex-imperfecta/levels/beginner/",
-  "/adventures/the-ai-observatory/",
-  "/adventures/the-ai-observatory/levels/beginner/",
-  "/challenges/opentelemetry/",
-  "/about/",
-  "/contribute/",
-  "/handbook/",
-  "/privacy/",
-  "/accessibility/",
-  "/sponsors/",
-  "/brand/",
-  "/presentation-templates/",
-  "/404/",
-];
 
 test.describe("axe: dark mode", () => {
   for (const path of PAGES) {
@@ -194,6 +164,25 @@ test.describe("200% zoom: no horizontal overflow", () => {
         () => document.documentElement.scrollWidth > window.innerWidth,
       );
       expect(hasOverflow, `Horizontal overflow at 384px viewport on ${path}`).toBe(false);
+    });
+  }
+});
+
+// WCAG 2.4.1 Bypass Blocks. The skip link is the first thing a keyboard user
+// meets on every page; if it stops working, every page becomes a full tab
+// crawl through the nav. Checked on a representative sample rather than all
+// routes, since the link lives in the shared layout.
+test.describe("skip link (WCAG 2.4.1)", () => {
+  for (const path of ["/", "/adventures/", "/challenges/", "/handbook/"]) {
+    test(`${path}: is the first Tab stop and moves focus into main`, async ({ page }) => {
+      await page.goto(path);
+      await page.waitForLoadState("load");
+
+      await page.keyboard.press("Tab");
+      await expect(page.locator(":focus")).toContainText("Skip to main content");
+
+      await page.keyboard.press("Enter");
+      await expect(page.locator(":focus")).toHaveAttribute("id", "main-content");
     });
   }
 });
