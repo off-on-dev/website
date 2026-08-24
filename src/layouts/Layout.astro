@@ -37,9 +37,22 @@ const gtagBootstrap = `window.dataLayer=window.dataLayer||[];function gtag(){dat
 // (Fires only on client navigation, not the initial load.)
 const themeAfterSwap = `document.addEventListener("astro:after-swap",function(){try{var t=localStorage.getItem("theme");var c=document.documentElement.classList;if(t==="light"){c.remove("dark");c.add("light");}else{c.remove("light");c.add("dark");}}catch(e){}var m=document.getElementById("main-content");if(m){m.focus({preventScroll:true});}});`;
 
-const webSiteJsonLd = `{"@context":"https://schema.org","@type":"WebSite","name":"${BRAND_NAME}","url":"${SITE_URL}","description":"${BRAND_SHORT_DESCRIPTION}"}`;
+const webSiteJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: BRAND_NAME,
+  url: SITE_URL,
+  description: BRAND_SHORT_DESCRIPTION,
+});
 
-const orgJsonLd = `{"@context":"https://schema.org","@type":"Organization","name":"${BRAND_NAME}","url":"${SITE_URL}","logo":"${SITE_URL}/brand/offon-logo-dark-color.png","sameAs":["${LINKEDIN_URL}","${COMMUNITY_URL}","https://github.com/off-on-dev/open-source-challenges","${X_URL}","${BLUESKY_URL}"]}`;
+const orgJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: BRAND_NAME,
+  url: SITE_URL,
+  logo: `${SITE_URL}/brand/offon-logo-dark-color.png`,
+  sameAs: [LINKEDIN_URL, COMMUNITY_URL, "https://github.com/off-on-dev/open-source-challenges", X_URL, BLUESKY_URL],
+});
 
 const fontPreloads = [
   "fonts/inter-latin-400-normal.woff2",
@@ -110,6 +123,8 @@ const fontPreloads = [
         chrome works without JS. This only wires the Copy click on each
         [data-copy-code] button; re-runs on astro:page-load after View Transitions. */}
     <script>
+      const COPY_RESET_DELAY_MS = 1500;
+
       const CHECK_SVG =
         '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
       const COPY_SVG =
@@ -132,7 +147,7 @@ const fontPreloads = [
         live.textContent = "Code copied to clipboard";
         window.setTimeout(() => {
           live.textContent = "";
-        }, 1500);
+        }, COPY_RESET_DELAY_MS);
       }
 
       function wireCopyButtons(): void {
@@ -152,7 +167,7 @@ const fontPreloads = [
                 window.setTimeout(() => {
                   btn.innerHTML = COPY_SVG + "<span>Copy</span>";
                   btn.setAttribute("aria-label", "Copy code");
-                }, 1500);
+                }, COPY_RESET_DELAY_MS);
               })
               .catch(() => {
                 /* writeText can reject when the document is not focused */
@@ -171,6 +186,10 @@ const fontPreloads = [
         Tap forces focus (iOS), Escape dismisses. The CSS ::after is the no-JS
         fallback. Runs on astro:page-load; rebuilt after each View Transition. */}
     <script>
+      const TOOLTIP_MAX_WIDTH = 260;
+      const TOOLTIP_MIN_WIDTH = 80;
+      const TOOLTIP_EDGE_GAP = 16;
+
       let abbrTips: HTMLElement[] = [];
       let repositionActive: (() => void) | null = null;
 
@@ -224,7 +243,7 @@ const fontPreloads = [
           // Clamp below the abbr so the tooltip never overflows the viewport edges.
           const place = (): void => {
             const rect = abbrEl.getBoundingClientRect();
-            const tipMaxWidth = Math.min(260, Math.max(80, window.innerWidth - 16));
+            const tipMaxWidth = Math.min(TOOLTIP_MAX_WIDTH, Math.max(TOOLTIP_MIN_WIDTH, window.innerWidth - TOOLTIP_EDGE_GAP));
             const left = Math.max(8, Math.min(rect.left, window.innerWidth - tipMaxWidth - 8));
             tip.style.maxWidth = `${tipMaxWidth}px`;
             tip.style.top = `${rect.bottom + 6}px`;

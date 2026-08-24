@@ -110,6 +110,7 @@ const markerClass = "mt-0.5 shrink-0 text-foreground";
                 href={sponsor.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={sponsor.name}
                 aria-describedby="new-tab-hint"
                 class="card-glow inline-flex items-center rounded-xl border border-border bg-[hsl(var(--surface))] px-8 py-6 focus-ring"
               >
@@ -117,7 +118,7 @@ const markerClass = "mt-0.5 shrink-0 text-foreground";
                   <>
                     <img
                       src={`${base}${sponsor.logoDark}`}
-                      alt={sponsor.name}
+                      alt=""
                       width={240}
                       height={44}
                       class="h-12 w-auto max-w-full hidden dark:block"
@@ -126,7 +127,7 @@ const markerClass = "mt-0.5 shrink-0 text-foreground";
                     />
                     <img
                       src={`${base}${sponsor.logoLight}`}
-                      alt={sponsor.name}
+                      alt=""
                       width={240}
                       height={44}
                       class="h-12 w-auto max-w-full block dark:hidden"
@@ -135,7 +136,7 @@ const markerClass = "mt-0.5 shrink-0 text-foreground";
                     />
                   </>
                 ) : (
-                  <span class="text-xl font-semibold text-foreground group-hover:text-foreground/80 transition-colors">{sponsor.name}</span>
+                  <span class="text-xl font-semibold text-foreground hover:text-foreground/80 transition-colors">{sponsor.name}</span>
                 )}
               </a>
             ))}

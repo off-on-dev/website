@@ -27,11 +27,25 @@ declare global {
 // deny -> grant -> deny -> grant cycle.
 let gtagScriptInjected = false;
 
+function isValidStoredConsent(value: unknown): value is StoredConsent {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as Record<string, unknown>).timestamp === "number" &&
+    ((value as Record<string, unknown>).value === "granted" ||
+      (value as Record<string, unknown>).value === "denied")
+  );
+}
+
 function readStored(): StoredConsent | null {
   try {
     const raw = localStorage.getItem(CONSENT_STORAGE_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as StoredConsent;
+    const parsed: unknown = JSON.parse(raw);
+    if (!isValidStoredConsent(parsed)) {
+      localStorage.removeItem(CONSENT_STORAGE_KEY);
+      return null;
+    }
     if (Date.now() - parsed.timestamp > CONSENT_EXPIRY_MS) {
       localStorage.removeItem(CONSENT_STORAGE_KEY);
       return null;
@@ -144,22 +158,29 @@ export function firePageView(): void {
 // Delegated click tracking, gated on consent at click time. Registered once
 // (the consent island is transition:persist), so it survives View Transitions.
 let clickTrackerBound = false;
+let clickHandler: ((e: MouseEvent) => void) | null = null;
+
 export function trackClicks(): void {
   if (clickTrackerBound) return;
   clickTrackerBound = true;
-  document.addEventListener(
-    "click",
-    (e) => {
-      if ($consent.get() !== "granted" || typeof window.gtag !== "function") return;
-      const target = e.target as HTMLElement | null;
-      const el = target?.closest?.("a[href], button");
-      if (!el) return;
-      window.gtag("event", "click_event", {
-        element: el.tagName.toLowerCase(),
-        link_text: (el.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 100),
-        ...(el.tagName === "A" ? { link_url: (el as HTMLAnchorElement).href } : {}),
-      });
-    },
-    { capture: true },
-  );
+  clickHandler = (e: MouseEvent) => {
+    if ($consent.get() !== "granted" || typeof window.gtag !== "function") return;
+    const target = e.target as HTMLElement | null;
+    const el = target?.closest?.("a[href], button");
+    if (!el) return;
+    window.gtag("event", "click_event", {
+      element: el.tagName.toLowerCase(),
+      link_text: (el.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 100),
+      ...(el instanceof HTMLAnchorElement ? { link_url: el.href } : {}),
+    });
+  };
+  document.addEventListener("click", clickHandler, { capture: true });
+}
+
+export function stopTrackClicks(): void {
+  if (clickHandler) {
+    document.removeEventListener("click", clickHandler, { capture: true });
+    clickHandler = null;
+  }
+  clickTrackerBound = false;
 }

@@ -92,6 +92,42 @@ describe("mdToInline", () => {
       expect(result).toContain("internal");
       warnSpy.mockRestore();
     });
+
+    it("strips 10.x.x.x private-network URLs", async () => {
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+      const result = await mdToInline("[corp](http://10.0.1.5/admin)");
+      expect(result).not.toContain("<a");
+      expect(result).toContain("corp");
+      warnSpy.mockRestore();
+    });
+
+    it("strips 172.16-31.x.x private-network URLs", async () => {
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+      const result = await mdToInline("[vpc](http://172.20.0.1/api)");
+      expect(result).not.toContain("<a");
+      expect(result).toContain("vpc");
+      warnSpy.mockRestore();
+    });
+
+    it("strips .local mDNS URLs", async () => {
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+      const result = await mdToInline("[dev](http://mybox.local:8080/app)");
+      expect(result).not.toContain("<a");
+      expect(result).toContain("dev");
+      warnSpy.mockRestore();
+    });
+
+    it("strips 0.0.0.0 URLs", async () => {
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+      const result = await mdToInline("[all-interfaces](http://0.0.0.0:3000)");
+      expect(result).not.toContain("<a");
+      expect(result).toContain("all-interfaces");
+      warnSpy.mockRestore();
+    });
+
+    // Note: IPv6 loopback [::1] URLs can't be reliably round-tripped through
+    // markdown (the brackets conflict with link syntax), so the ::1 branch is
+    // covered by the isNonPublicUrl unit path rather than a full pipeline test.
   });
 
   describe("abbreviation expansion", () => {

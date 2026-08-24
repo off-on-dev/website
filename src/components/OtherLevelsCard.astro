@@ -1,10 +1,10 @@
 ---
 // Ported from src/components/OtherLevelsCard.tsx.
 import IconArrowRight from "~icons/lucide/arrow-right";
-import { difficultyStyle } from "@/lib/difficulty";
+import { difficultyStyle, type Difficulty } from "@/lib/difficulty";
 
-type LevelRef = { id: string; name: string; difficulty: string };
-type UpcomingRef = { name: string; difficulty: string };
+type LevelRef = { id: string; name: string; difficulty: Difficulty };
+type UpcomingRef = { name: string; difficulty: Difficulty };
 
 interface Props {
   adventure: {

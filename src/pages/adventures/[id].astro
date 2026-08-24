@@ -34,7 +34,8 @@ const upcoming = adventure.upcomingLevels ?? [];
 const totalTiles = adventure.levels.length + upcoming.length;
 const gridCols = totalTiles === 2 ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3";
 const leaderboard = getLeaderboard(adventure.slug);
-const topRows = leaderboard?.rows?.slice(0, 5) ?? [];
+const LEADERBOARD_PREVIEW_COUNT = 5;
+const topRows = leaderboard?.rows?.slice(0, LEADERBOARD_PREVIEW_COUNT) ?? [];
 ---
 
 <Layout

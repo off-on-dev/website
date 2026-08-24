@@ -2,7 +2,7 @@
 import { nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import { useStore } from "@nanostores/vue";
 import IconCookie from '~icons/lucide/cookie';
-import { $consent, grant, deny, reset, initConsent, firePageView, trackClicks } from "@/stores/consent";
+import { $consent, grant, deny, reset, initConsent, firePageView, trackClicks, stopTrackClicks } from "@/stores/consent";
 
 const consent = useStore($consent);
 const mounted = ref(false);
@@ -34,6 +34,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   document.removeEventListener("astro:page-load", firePageView);
+  stopTrackClicks();
 });
 </script>
 

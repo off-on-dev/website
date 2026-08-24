@@ -77,8 +77,8 @@ export type AdventureLevel = {
   helpfulLinks?: HelpfulLink[];
   // Verification card rendered as the final section.
   verification: VerificationInfo;
-  // Optional SEO meta description (max 160 chars).
-  metaDescription?: string;
+  // SEO meta description (max 160 chars). Always set by the content loader.
+  metaDescription: string;
 }
 
 export type AdventureRewardTier = {
@@ -100,8 +100,8 @@ export type Adventure = {
   title: string;
   month: string;
   story: string;
-  // SEO meta description (max 160 chars). Always set by the generator; can be overridden with meta_description in YAML.
-  metaDescription?: string;
+  // SEO meta description (max 160 chars). Always set by the content loader.
+  metaDescription: string;
   tags: string[];
   levels: AdventureLevel[];
   contributor?: { name: string; url?: string; aboutHtml?: string };
@@ -125,46 +125,3 @@ export type AdventureContributor = {
   adventures: { id: string; title: string }[];
 };
 
-/** A level with its parent adventure context, returned when filtering by tag. */
-export type RelatedLevel = {
-  level: AdventureLevel;
-  adventureId: string;
-  adventureTitle: string;
-};
-
-/**
- * Lightweight level shape used for card and filter views on the home/challenges pages.
- * Contains only the fields needed to render AdventureCard and FilteredLevelCard.
- * Do not import the full AdventureLevel where this suffices.
- */
-export type AdventureLevelSummary = {
-  id: string;
-  name: string;
-  difficulty: "Beginner" | "Intermediate" | "Expert";
-  topics: string[];
-  learnings: string[];
-  estimatedTime?: string;
-};
-
-/** Lightweight adventure shape for card grid views. */
-export type AdventureCardSummary = {
-  id: string;
-  title: string;
-  month: string;
-  story: string;
-  tags: string[];
-  levels: AdventureLevelSummary[];
-  contributor?: { name: string; url?: string; aboutHtml?: string };
-  /** True when the adventure has an active rewards window or any level deadline in the future. */
-  isLive?: boolean;
-  icon?: string;
-};
-
-/** A level summary with its parent adventure context, for filtered card views. */
-export type RelatedLevelSummary = {
-  level: AdventureLevelSummary;
-  adventureId: string;
-  adventureTitle: string;
-  isLive?: boolean;
-  adventureIcon?: string;
-};

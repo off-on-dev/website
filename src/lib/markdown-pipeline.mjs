@@ -39,14 +39,18 @@ async function highlightCode(rawCode, lang) {
       return null;
     }
   }
-  const fullHtml = h.codeToHtml(rawCode, {
-    lang,
-    themes: { light: "github-light", dark: "github-dark" },
-    defaultColor: false,
-  });
-  // Extract the inner <code> content (highlighted token spans).
-  const match = fullHtml.match(/<code[^>]*>([\s\S]*)<\/code>/);
-  return match ? match[1] : null;
+  try {
+    const fullHtml = h.codeToHtml(rawCode, {
+      lang,
+      themes: { light: "github-light", dark: "github-dark" },
+      defaultColor: false,
+    });
+    // Extract the inner <code> content (highlighted token spans).
+    const match = fullHtml.match(/<code[^>]*>([\s\S]*)<\/code>/);
+    return match ? match[1] : null;
+  } catch {
+    return null;
+  }
 }
 
 const sanitizeSchema = {
@@ -54,7 +58,9 @@ const sanitizeSchema = {
   attributes: {
     ...defaultSchema.attributes,
     // Preserve all default <a> attrs (including ARIA) and add target/rel for external links.
-    a: [...(defaultSchema.attributes?.a ?? []), "target", "rel"],
+    // Restrict target to "_blank" only — prevents authored HTML from setting
+    // target="_top"/_parent which would escape the browsing context.
+    a: [...(defaultSchema.attributes?.a ?? []), ["target", "_blank"], "rel"],
     code: ["className"],
   },
   tagNames: [...(defaultSchema.tagNames ?? []), "pre", "code", "abbr"],
@@ -140,7 +146,8 @@ function annotateExternalLinks(html) {
         return content;
       }
       let newAttrs = attrs;
-      if (!attrs.includes("target=")) newAttrs += ' target="_blank" rel="noopener noreferrer"';
+      if (!attrs.includes("target=")) newAttrs += ' target="_blank"';
+      if (!attrs.includes("rel=")) newAttrs += ' rel="noopener noreferrer"';
       if (!attrs.includes("aria-describedby=")) newAttrs += ' aria-describedby="new-tab-hint"';
       return `<a${newAttrs}>${content}</a>`;
     }

@@ -1,7 +1,7 @@
 // Returns an inline style string (Astro `style=` takes a string) using the
 // --difficulty-* tokens from index.css.
 
-type Difficulty = "Beginner" | "Intermediate" | "Expert";
+export type Difficulty = "Beginner" | "Intermediate" | "Expert";
 
 export const DIFFICULTY_VAR: Record<Difficulty, string> = {
   Beginner: "starter",
@@ -9,7 +9,7 @@ export const DIFFICULTY_VAR: Record<Difficulty, string> = {
   Expert: "architect",
 };
 
-export const difficultyStyle = (difficulty: string): string => {
-  const v = DIFFICULTY_VAR[difficulty as Difficulty] ?? "starter";
+export const difficultyStyle = (difficulty: Difficulty): string => {
+  const v = DIFFICULTY_VAR[difficulty] ?? "starter";
   return `color:hsl(var(--difficulty-text));border-color:hsl(var(--difficulty-${v}-border));background-color:hsl(var(--difficulty-${v}-bg))`;
 };

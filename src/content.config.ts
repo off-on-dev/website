@@ -19,6 +19,7 @@ import {
   buildServicesStepBody,
 } from "./lib/adventure-derive.mjs";
 import { COMMUNITY_URL } from "./lib/site";
+import { EMOJI_TO_ICON } from "./lib/adventure-icons";
 import type { AdventureRewards } from "./data/adventures/types";
 
 // Adventure YAML lives in this app's own data dir (src/data/adventures),
@@ -27,14 +28,6 @@ const ADVENTURES_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "data/ad
 
 const CODESPACES_BASE = "https://codespaces.new/off-on-dev/open-source-challenges";
 
-const EMOJI_ICON_MAP: Record<string, string> = {
-  "🧪": "FlaskConical",
-  "🔭": "Telescope",
-  "☁️": "Cloud",
-  "🛰️": "Satellite",
-  "⚖️": "Scale",
-  "🧭": "Compass",
-};
 
 const DEFAULT_REWARDS_ELIGIBILITY =
   "Complete all levels and post your solution in the community before the deadline to be eligible.";
@@ -141,6 +134,12 @@ const levelSchema = z
 
 // --- Resolvers (ported from the generator) ---
 
+function requireEither(a: string | undefined | null, b: string | undefined | null, field: string): string {
+  const value = a ?? b;
+  if (value != null && value !== "") return value;
+  throw new Error(`Content validation error: ${field} is required but was not provided`);
+}
+
 function resolveCodespacesUrl(devcontainer: string, machine?: string): string {
   const path = `.devcontainer/${devcontainer}/devcontainer.json`;
   const encoded = encodeURIComponent(path);
@@ -162,7 +161,7 @@ function resolveCommunityPath(url: string): string {
   return `${COMMUNITY_URL}${path}`;
 }
 
-interface RenderedLevel {
+type RenderedLevel = {
   id: string;
   name: string;
   difficulty: "Beginner" | "Intermediate" | "Expert";
@@ -190,7 +189,7 @@ interface RenderedLevel {
 }
 
 async function renderLevel(level: z.infer<typeof levelSchema>): Promise<RenderedLevel> {
-  const difficulty = level.difficulty ?? LEVEL_DIFFICULTY_BY_EMOJI[level.emoji as string];
+  const difficulty = level.difficulty ?? (level.emoji ? LEVEL_DIFFICULTY_BY_EMOJI[level.emoji] : undefined);
   const learnings = level.learnings ?? level.what_you_learn ?? [];
   const intro = level.intro ?? (level.summary ? [level.summary] : undefined);
 
@@ -230,7 +229,7 @@ async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Rendered
 
   return {
     id: level.level,
-    name: (level.name ?? level.title) as string,
+    name: requireEither(level.name, level.title, "level name/title"),
     difficulty,
     topics: level.topics,
     learnings: learningsHtml,
@@ -286,7 +285,14 @@ function adventuresLoader(): Loader {
     name: "adventures-loader",
     async load({ store, parseData, generateDigest, watcher }) {
       const seen = new Set<string>();
-      for (const entry of readdirSync(ADVENTURES_DIR, { withFileTypes: true })) {
+      let entries;
+      try {
+        entries = readdirSync(ADVENTURES_DIR, { withFileTypes: true });
+      } catch (err) {
+        console.error(`[adventures-loader] Cannot read adventures directory "${ADVENTURES_DIR}":`, err);
+        return;
+      }
+      for (const entry of entries) {
         if (!entry.isDirectory()) continue;
         const yamlPath = resolve(ADVENTURES_DIR, entry.name, "adventure.yaml");
         if (!existsSync(yamlPath)) continue;
@@ -338,10 +344,10 @@ const adventures = defineCollection({
     .strict()
     .refine((d) => d.title || d.name, { message: "adventure needs title or name" })
     .transform(async (data) => {
-      const title = (data.title ?? data.name) as string;
+      const title = requireEither(data.title, data.name, "adventure title/name");
       const story =
         data.story ?? (data.backstory && data.backstory.length > 0 ? data.backstory[0] : "");
-      const icon = data.icon ?? (data.emoji ? EMOJI_ICON_MAP[data.emoji] : undefined);
+      const icon = data.icon ?? (data.emoji ? EMOJI_TO_ICON[data.emoji] : undefined);
 
       const [storyHtml, aboutHtml, backstoryHtml, levels, rewards] = await Promise.all([
         mdToInline(story),

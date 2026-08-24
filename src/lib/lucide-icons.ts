@@ -46,7 +46,7 @@ import IconWrench from "~icons/lucide/wrench";
 import IconX from "~icons/lucide/x";
 import IconZap from "~icons/lucide/zap";
 
-export const LUCIDE_ICONS: Record<string, Component> = {
+export const LUCIDE_ICONS: Record<string, Component | undefined> = {
   "arrow-down": IconArrowDown,
   "arrow-left": IconArrowLeft,
   "arrow-right": IconArrowRight,

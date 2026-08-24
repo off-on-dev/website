@@ -1,16 +1,6 @@
 ---
 import { LUCIDE_ICONS } from "@/lib/lucide-icons";
-
-// Maps the stored icon name (Lucide PascalCase) to the kebab-case key in LUCIDE_ICONS.
-const PASCAL_TO_KEBAB: Record<string, string> = {
-  Building2: "building-2",
-  Compass: "compass",
-  Cloud: "cloud",
-  FlaskConical: "flask-conical",
-  Satellite: "satellite",
-  Scale: "scale",
-  Telescope: "telescope",
-};
+import { ICON_TO_KEBAB } from "@/lib/adventure-icons";
 
 interface Props {
   icon?: string;
@@ -18,7 +8,7 @@ interface Props {
   class?: string;
 }
 const { icon, size = 16, class: className } = Astro.props;
-const kebab = icon ? PASCAL_TO_KEBAB[icon] : undefined;
+const kebab = icon ? ICON_TO_KEBAB[icon as keyof typeof ICON_TO_KEBAB] : undefined;
 const IconComponent = kebab ? LUCIDE_ICONS[kebab] : undefined;
 ---
 

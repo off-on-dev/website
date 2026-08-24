@@ -2,6 +2,8 @@
 // from the adventures collection.
 // tags are ADVENTURE tags (OR match); levels are then filtered by difficulty.
 
+import { type Difficulty } from "@/lib/difficulty";
+
 export const DIFFICULTIES = ["Beginner", "Intermediate", "Expert"] as const;
 
 /** Convert a tag display name to a URL-safe slug. */
@@ -37,7 +39,7 @@ const LEARNINGS_PREVIEW_COUNT = 3;
 export type ChallengeEntry = {
   levelId: string;
   name: string;
-  difficulty: string;
+  difficulty: Difficulty;
   learnings: string[];
   estimatedTime?: string;
   adventureId: string;
@@ -57,7 +59,7 @@ type AdventureData = {
   levels: {
     id: string;
     name: string;
-    difficulty: string;
+    difficulty: Difficulty;
     topics: string[];
     learnings?: string[];
     estimatedTime?: string;
