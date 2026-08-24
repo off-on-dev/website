@@ -1,10 +1,8 @@
 // SPDX-FileCopyrightText: 2025 OffOn contributors
 // SPDX-License-Identifier: MIT
-// Brand page table-of-contents scrollspy (P14).
-//
-// The React BrandGuidelines page tracked the section in view with an
-// IntersectionObserver and marked the TOC link aria-current="location". The
-// Astro port shipped a static TOC with no script and no active state.
+// Brand page table-of-contents scrollspy: the link for the section currently in
+// the top band of the viewport must carry aria-current="location" and the active
+// border, and only ever one link at a time.
 import { test, expect } from "@playwright/test";
 
 const current = (page: import("@playwright/test").Page) =>

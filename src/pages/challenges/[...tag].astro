@@ -29,8 +29,8 @@ const adventureCount = adventures.length;
 const starter = adventures.find((a) => isAdventureLive(a));
 const starterLevel = starter?.levels.find((l) => l.difficulty === "Beginner");
 
-// Title/description strings are the ones Google has already indexed from the
-// React build. Do not "tidy" them; changing them costs ranking signal.
+// These exact strings are what Google has indexed for these two routes.
+// Do not "tidy" them; rewording costs ranking signal.
 const title = initialTag
   ? `${initialTag} Challenges - ${BRAND_NAME}`
   : `Open Source Challenges | ${BRAND_NAME}`;

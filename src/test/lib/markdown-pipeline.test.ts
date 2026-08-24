@@ -7,10 +7,10 @@ import {
   mdToBlockArray,
 } from "@/lib/markdown-pipeline.mjs";
 
-// Abbreviation IDs are scoped and counted per content entry (see P10 in
-// markdown-pipeline.mjs). The scope is module state, so reset it between tests
-// exactly as the content loader does between adventures; otherwise the
-// occurrence counter carries over and ids gain a -N suffix.
+// Abbreviation IDs are scoped and counted per content entry. The scope is module
+// state, so reset it between tests exactly as the content loader does between
+// adventures; otherwise the occurrence counter carries over and ids gain a
+// -N suffix.
 beforeEach(() => {
   beginAbbrScope();
 });
@@ -174,7 +174,7 @@ describe("mdToInline", () => {
       expect(result).toContain("Continuous Integration");
     });
 
-    // ── ID uniqueness and stability (P10) ───────────────────────────────────
+    // ── ID uniqueness and stability ─────────────────────────────────────────
     //
     // Ids land in one document, so they must be unique there. They must also be
     // reproducible, because the content loader caches rendered HTML per entry.

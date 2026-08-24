@@ -36,9 +36,8 @@ const upcoming = adventure.upcomingLevels ?? [];
 const totalTiles = adventure.levels.length + upcoming.length;
 const gridCols = totalTiles === 2 ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3";
 const leaderboard = getLeaderboard(adventure.slug);
-// Every row, no cap. The React AdventureLeaderboard passed `rows` straight
-// through; the migration's 5-row slice silently hid 11 of the 16 contributors
-// on echoes-lost-in-orbit with no way to see them.
+// Every row, no cap: there is no expand affordance, so a slice here would
+// silently hide contributors (echoes-lost-in-orbit has 16).
 const leaderboardRows = leaderboard?.rows ?? [];
 
 const path = `/adventures/${adventure.slug}/`;

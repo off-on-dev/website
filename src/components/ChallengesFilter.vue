@@ -55,13 +55,12 @@ function handleClickOutside(e: MouseEvent): void {
   if (tagsRef.value && !tagsRef.value.contains(t)) tagsOpen.value = false;
 }
 // Close a dropdown when focus leaves its wrapper entirely, so tabbing past an
-// open panel does not leave it floating over the grid. Ported from the React
-// handleDropdownBlur. Two deliberate details, both carried over:
-//   - `relatedTarget` null (focus went nowhere, e.g. a background click) is
+// open panel does not leave it floating over the grid. Two details matter:
+//   - a null `relatedTarget` (focus went nowhere, e.g. a background click) is
 //     ignored; handleClickOutside owns that case.
-//   - it must NOT move focus. Focus has already gone somewhere the user chose;
-//     restoring it to the trigger here would be a focus steal. Only Escape
-//     returns focus, which is the expected behaviour for a cancel.
+//   - this must NOT move focus. Focus has already gone where the user sent it,
+//     so restoring it to the trigger would be a focus steal. Only Escape returns
+//     focus, which is what a cancel should do.
 function handleDropdownFocusOut(e: FocusEvent, close: () => void): void {
   const next = e.relatedTarget as Node | null;
   const wrapper = e.currentTarget as HTMLElement;

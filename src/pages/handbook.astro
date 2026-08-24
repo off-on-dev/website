@@ -70,9 +70,8 @@ const description = `Everything you need to participate in the ${BRAND_NAME} com
 
     <div class="px-6 md:px-16 py-16">
       <div class="mx-auto max-w-6xl">
-        {/* Two-column grid with a sticky Community Leaders aside, matching the
-            React CommunityGuide's <SidebarLayout aside={<CommunityLeaders />}>.
-            Same shape as about.astro and CommunitySection.astro. */}
+        {/* Two-column grid with a sticky Community Leaders aside. Same shape as
+            about.astro and CommunitySection.astro. */}
         <div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12">
         <div class="space-y-8">
           {/* Get Involved */}
@@ -250,9 +249,9 @@ const description = `Everything you need to participate in the ${BRAND_NAME} com
           </section>
         </div>
 
-        {/* Community Leaders sidebar (lg+ only, sticky). No `sections` prop:
-            the component defaults to all sections, which is what the React
-            page rendered, and it stays correct if a section is added. */}
+        {/* Community Leaders sidebar (lg+ only, sticky). No `sections` prop, so
+            the component's "show all" default applies and this stays correct
+            when a section is added to community-leaders.json. */}
         <div class="hidden lg:block">
           <div class="sticky top-24">
             <CommunityLeaders />

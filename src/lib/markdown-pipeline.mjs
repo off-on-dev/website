@@ -81,10 +81,8 @@ const sanitizeSchema = {
 //
 // Both are derived only from that adventure's own content, so ids stay stable
 // under the loader's digest cache: an unchanged entry re-serves identical HTML.
-//
-// Before this, ids were purely content-derived and collided, e.g. two "OTel"
-// abbreviations produced two id="abbr-opentelemetry" on /, which is invalid
-// HTML. The React generator avoided it with a global `abbr-exp-N` counter.
+// A build-wide counter would not, because the loader skips unchanged entries and
+// would renumber depending on which adventures happened to re-render.
 let abbrScopePrefix = "";
 let abbrIdCounts = new Map();
 

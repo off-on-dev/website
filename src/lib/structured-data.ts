@@ -1,11 +1,10 @@
 import { SITE_URL, BRAND_NAME, canonicalUrl } from "@/lib/site";
 
-// schema.org objects for adventure, level and solution pages. Ported from the
-// meta() exports of the React AdventureDetail / ChallengeDetail / SolutionDetail
-// pages, which the Astro migration dropped. Field-for-field identical so the
-// rich results Google already indexes do not change shape.
+// schema.org objects for adventure, level and solution pages. These field names
+// and their nesting are a compatibility surface: Google indexes them for rich
+// results, so treat a rename as a breaking change.
 //
-// The BreadcrumbList is NOT built here: it is derived in StructuredData.astro
+// The BreadcrumbList is NOT built here. It is derived in StructuredData.astro
 // from the same crumb array that renders the visual <Breadcrumb>, so the two
 // cannot drift apart.
 

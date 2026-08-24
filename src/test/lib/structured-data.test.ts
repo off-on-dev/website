@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2025 OffOn contributors
 // SPDX-License-Identifier: MIT
 
-// Schema shape contract for the restored page-level JSON-LD (P1). The field
-// names and nesting here are what Google already indexes from the React build,
-// so they are a compatibility surface, not an implementation detail.
+// Shape contract for the page-level JSON-LD. Google indexes these field names
+// and their nesting for rich results, so they are a compatibility surface
+// rather than an implementation detail.
 
 import { describe, it, expect } from "vitest";
 import { courseSchema, learningResourceSchema, SCHEMA_PROVIDER } from "@/lib/structured-data";

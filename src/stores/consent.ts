@@ -159,8 +159,8 @@ export function firePageView(): void {
 // (the consent island is transition:persist), so it survives View Transitions.
 //
 // The payload is a compatibility surface: GA4 custom dimensions and saved
-// reports are keyed on these exact parameter names, so they match the React
-// useClickTracking hook field-for-field. Do not rename them.
+// reports are keyed on these exact parameter names. Renaming one silently
+// breaks every report that uses it, with no error anywhere. Do not rename them.
 
 const TRACKED_SELECTOR = "a, button";
 // GA4 silently truncates string parameter values at 100 chars. Truncate
@@ -191,7 +191,7 @@ export function trackClicks(): void {
     // Prefer aria-label so icon-only controls (theme toggle, cookie button,
     // copy, dismiss) report something meaningful instead of an empty string.
     // Internal whitespace is collapsed so multi-line labels do not fragment
-    // reports; the React hook only trimmed.
+    // into separate values in reports.
     const rawText =
       (tracked.getAttribute("aria-label") || tracked.textContent || "").replace(/\s+/g, " ").trim() ||
       "unknown";

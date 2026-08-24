@@ -1,11 +1,8 @@
 // SPDX-FileCopyrightText: 2025 OffOn contributors
 // SPDX-License-Identifier: MIT
-// ChallengesFilter dropdown dismissal (P12).
-//
-// The React ChallengeFilters closed a dropdown when focus left its wrapper
-// (handleDropdownBlur). The Vue port dropped it, so tabbing past an open panel
-// left it floating over the results grid. These cover all three dismissal paths
-// plus the focus-steal constraint.
+// ChallengesFilter dropdown dismissal: an open panel must close on Escape, on an
+// outside click, and when focus leaves it. Closing on focus-out must not pull
+// focus back to the trigger, since the user has already tabbed somewhere else.
 import { test, expect } from "@playwright/test";
 
 // The dropdowns are the mobile/tablet UI (lg:hidden), so stay under 1024px.

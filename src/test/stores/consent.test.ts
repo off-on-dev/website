@@ -494,12 +494,11 @@ describe("consent store", () => {
       });
     });
 
-    // ── payload parity with the React useClickTracking hook (P7) ──────────────
+    // ── click_event payload contract ──────────────────────────────────────────
     //
     // GA4 custom dimensions and saved reports are keyed on these exact parameter
-    // names and fallback values. The migration had renamed them to
-    // element/link_text/link_url and dropped click_page, silently breaking every
-    // existing report at cutover.
+    // names and fallback values, so they are pinned here. A rename breaks every
+    // report that uses them and raises no error anywhere.
 
     it("prefers aria-label over textContent so icon-only controls are identifiable", () => {
       grant();

@@ -1,17 +1,15 @@
 // SPDX-FileCopyrightText: 2025 OffOn contributors
 // SPDX-License-Identifier: MIT
 
-// ConsentBanner.vue hydration focus guard (P6)
+// ConsentBanner.vue hydration focus guard.
 //
-// Deliberately does NOT mock the consent store. The bug this covers only exists
-// when the real initConsent() runs during onMounted: it restores a stored choice
-// and that registers on $consent as a null -> granted/denied transition. The
-// focus watcher must ignore that transition, or every returning visitor has
-// focus yanked to the cookie button on every page load, destroying the skip-nav
-// link. The React ConsentBanner guarded this explicitly; the Vue port dropped it.
+// Deliberately does NOT mock the consent store. The behaviour under test only
+// appears when the real initConsent() runs during onMounted: it restores a
+// stored choice, which registers on $consent as a null -> granted/denied
+// transition. The focus watcher must ignore that transition, or every returning
+// visitor has focus yanked to the cookie button on load, past the skip-nav link.
 //
-// The sibling ConsentBanner.test.ts mocks initConsent, which is exactly why it
-// could not catch this.
+// The sibling ConsentBanner.test.ts mocks initConsent, so it cannot cover this.
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { mount, flushPromises } from "@vue/test-utils";

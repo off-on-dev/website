@@ -21,8 +21,8 @@ type TocItem = { readonly id: string; readonly label: string };
 type ColorSwatch = { name: string; token: string; hex: string; hsl: string; textClass: string; usage: string };
 type DownloadSpec = { href: string; filename: string; label: string };
 
-// TOC link styling. Split so the scrollspy script can swap the two states with
-// the same utility classes the React BrandGuidelines page used.
+// TOC link styling, split into base + the two states so the scrollspy script can
+// swap between them by toggling class tokens.
 const TOC_LINK_BASE =
   "block font-sans text-sm py-1.5 pl-3 border-l-2 transition-colors rounded-r-sm cursor-pointer focus-ring-tight";
 const TOC_LINK_IDLE = "border-transparent text-dim hover:text-foreground hover:border-border";
@@ -718,9 +718,8 @@ hsl(var(--foreground))`;
                 <ul class="space-y-0.5" role="list">
                   {TOC_ITEMS.map(({ id, label }, i) => (
                     <li>
-                      {/* The first section is rendered active so the state is
-                          correct before hydration and with JS disabled, matching
-                          the React page's initial activeSection. */}
+                      {/* The first section is rendered active so the TOC has a
+                          correct state before the script runs and with JS off. */}
                       <a
                         href={`#${id}`}
                         data-toc-link={id}
@@ -742,15 +741,14 @@ hsl(var(--foreground))`;
 
   </main>
 
-  {/* Table-of-contents scrollspy, ported from the React BrandGuidelines
-      IntersectionObserver. Marks the section currently in the top band of the
-      viewport with aria-current="location" and the active border. Progressive
-      enhancement: the first item is already active in the SSR HTML, so the TOC
-      is complete and navigable without this script. Re-binds on
+  {/* Table-of-contents scrollspy: marks the section currently in the top band of
+      the viewport with aria-current="location" and the active border.
+      Progressive enhancement only, the first item is already active in the SSR
+      HTML, so the TOC is complete and navigable without this script. Re-binds on
       astro:page-load, matching the Layout.astro scripts. */}
   <script>
     // Top band of the viewport: a section counts as current once it reaches
-    // 10% from the top and until it passes 20% down. Same values as React.
+    // 10% from the top and until it passes 20% down.
     const TOC_ROOT_MARGIN = "-10% 0% -80% 0%";
 
     let tocObserver: IntersectionObserver | null = null;

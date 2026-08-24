@@ -13,12 +13,10 @@ const declineBtn = ref<HTMLButtonElement | null>(null);
 
 // Focus must move only in response to a genuine user choice. initConsent()
 // restores a stored value during onMounted, which registers on the store as a
-// null -> granted/denied transition but is NOT a user action: focusing there
+// null -> granted/denied transition but is not a user action: focusing there
 // would steal focus from the skip-nav link on every page load for every
-// returning visitor. The React ConsentBanner guarded the same case explicitly
-// ("Skips the initial page-load case so the banner never steals focus from the
-// skip nav link"). Released one tick after mount, so the watcher job queued by
-// the restore has already been flushed and skipped.
+// returning visitor. Released one tick after mount, by which point the watcher
+// job queued by the restore has been flushed and skipped.
 let hydrating = true;
 
 // Move focus after consent transitions so keyboard/AT users are not stranded.
