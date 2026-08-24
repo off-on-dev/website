@@ -531,7 +531,13 @@ A framework earns its place when state drives markup that cannot reasonably be p
 
 - Bind on `astro:page-load` so the component survives View Transitions, or delegate from `document` where one handler can cover every instance.
 - Prefer letting CSS derive presentation from an ARIA attribute (`group-aria-expanded:*`, `.dark`) over having the script set both. One source of truth, and the visual state cannot drift from what assistive tech sees.
-- Release listeners, store subscriptions, and any `inert` on `astro:before-swap`. **This is mandatory, not optional.** Listeners that are not removed accumulate on `document` across navigations and fire multiple times on the second and subsequent visits. Use a module-scope `teardown` variable: assign the cleanup function on init, call and null it in the `astro:before-swap` handler. `MobileMenu.astro` is the canonical implementation to copy.
+- Release listeners and store subscriptions on `astro:before-swap` when those listeners target a **long-lived node** (`document`, `window`, or any node that survives a body swap) and were registered inside an `astro:page-load` handler. Listeners that are not removed accumulate across navigations and fire multiple times on the second and subsequent visits. Use a module-scope `teardown` variable: assign the cleanup function on init, call and null it in the `astro:before-swap` handler. `MobileMenu.astro` is the canonical implementation to copy.
+
+  **Two patterns are safe without `astro:before-swap` — do not add teardown to these:**
+
+  1. **Module-scope delegation on a surviving node** (`ThemeToggle.astro`): a single `document.addEventListener("click", handler)` at module scope runs once per session. `document` survives every swap; the handler matches by selector at event time, so there is no stale node reference and no accumulation. Adding teardown here would break the listener on the second navigation.
+
+  2. **Listeners bound to the component's own child nodes** (`StarterNudge.astro`): when ClientRouter swaps `<body>`, the component subtree is detached. Dead listeners on detached nodes can never fire and are GC-eligible. The next `astro:page-load` operates on fresh nodes from the new body. No teardown is needed or correct.
 
 ## Hydration quick-reference
 
