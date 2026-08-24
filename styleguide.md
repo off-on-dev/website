@@ -193,7 +193,7 @@ Rules:
 
 Props: `adventure: { slug, title, story, tags, icon?, isLive?, levels: {id, difficulty}[], contributor? }`
 
-Root element is `<a>` with a composite `aria-label` (title + difficulties + live status + tags). Calls `stripHtml` on `adventure.story` for the excerpt. `ContributorBadge` pinned to the bottom via `mt-auto pt-4`; passes both `name` and `url` so the badge renders as `<a>` when a URL is present. Applies `.card-glow` and `.focus-ring`.
+Root element is `<a>` with a composite `aria-label` (title + difficulties + live status + tags). Calls `stripHtml` on `adventure.story` for the excerpt. `ContributorBadge` pinned to the bottom via `mt-auto pt-4`; intentionally omits `url` (the card is already a link — a nested `<a>` would be invalid HTML). Applies `.card-glow` and `.focus-ring`.
 
 ---
 
