@@ -1,0 +1,1 @@
+import{r as e,s as t}from"./consent.Dsj-bPNX.js";document.addEventListener(`astro:page-load`,e),t();
