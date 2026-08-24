@@ -132,6 +132,26 @@ describe("sortAdventuresByMonthDesc", () => {
     expect(result[0].title).toBe("Alpha");
     expect(result[1].title).toBe("Beta");
   });
+
+  it("treats an unrecognised month abbreviation as January of its year", () => {
+    // MONTHS.indexOf returns -1 → Math.max(0, -1) = 0 → treated as Jan.
+    const adventures = [
+      { month: "XXX 2025" },
+      { month: "FEB 2025" },
+    ];
+    const result = sortAdventuresByMonthDesc(adventures);
+    // FEB 2025 (key 12) > XXX 2025 (key 0), so FEB sorts first.
+    expect(result[0].month).toBe("FEB 2025");
+    expect(result[1].month).toBe("XXX 2025");
+  });
+
+  it("does not throw when the month string is empty or malformed", () => {
+    const adventures = [
+      { month: "" },
+      { month: "JAN 2025" },
+    ];
+    expect(() => sortAdventuresByMonthDesc(adventures)).not.toThrow();
+  });
 });
 
 // ---------------------------------------------------------------------------

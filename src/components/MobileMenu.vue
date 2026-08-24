@@ -26,7 +26,7 @@ function setSiblingsInert(): void {
   let host: Element | null = menuRef.value;
   while (host && host.parentElement !== document.body) host = host.parentElement;
   if (!host) return;
-  inertSiblings = (Array.from(document.body.children) as HTMLElement[]).filter((el) => el !== host);
+  inertSiblings = Array.from<HTMLElement>(document.body.children).filter((el) => el !== host);
   inertSiblings.forEach((el) => {
     el.setAttribute("inert", "");
     el.setAttribute("aria-hidden", "true");
