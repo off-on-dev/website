@@ -1,6 +1,5 @@
-// Pure, framework-agnostic derivations ported from scripts/generate-adventures.mjs.
-// Shared by the content loader (content.config.ts) and the verification gate so
-// the gate exercises the real code, not a copy.
+// Pure, framework-agnostic derivations shared by the content loader
+// (content.config.ts) and the verification gate.
 
 import { LEVEL_DIFFICULTY_BY_EMOJI } from "./level-constants.mjs";
 import { BRAND_NAME } from "./site.ts";

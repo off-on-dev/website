@@ -7,7 +7,7 @@ import ConsentBanner from "@/components/ConsentBanner.vue";
 import { BRAND_NAME, SITE_NAME, SITE_URL, COMMUNITY_URL, LINKEDIN_URL, X_URL, BLUESKY_URL, BRAND_SHORT_DESCRIPTION } from "@/lib/site";
 import "@/styles/index.css";
 
-// App shell. Replaces src/root.tsx. Per-page SEO is delegated to <SEO>.
+// App shell. Per-page SEO is delegated to <SEO>.
 interface Props {
   title: string;
   description: string;
@@ -25,7 +25,7 @@ const base = import.meta.env.BASE_URL;
 // Narrow check so it never fires in production (BASE_URL="/").
 const isPreview = base.startsWith("/pr-preview/");
 
-// --- Ported verbatim from src/root.tsx (do not paraphrase these strings) ---
+// Inline scripts that must execute before any CSS/JS loads — do not paraphrase.
 const themeScript = `(function(){try{var t=localStorage.getItem("theme");if(t==="light"){document.documentElement.classList.remove("dark");document.documentElement.classList.add("light");}}catch(e){}})();`;
 
 const gtagBootstrap = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});`;
@@ -182,12 +182,11 @@ const fontPreloads = [
       document.addEventListener("astro:page-load", wireCopyButtons);
     </script>
 
-    {/* Abbreviation tooltips. Ported from the React useAbbrTooltips hook: replaces
-        the CSS ::after tooltip with a position:fixed portal appended to <body>, so
-        it escapes overflow-clipping ancestors (walkthrough cards, scroll containers)
-        and is clamped to the viewport right edge, fixing mobile overflow and cutoff.
-        Tap forces focus (iOS), Escape dismisses. The CSS ::after is the no-JS
-        fallback. Runs on astro:page-load; rebuilt after each View Transition. */}
+    {/* Abbreviation tooltips: a position:fixed portal appended to <body> so it
+        escapes overflow-clipping ancestors (walkthrough cards, scroll containers)
+        and is clamped to the viewport right edge. Tap forces focus (iOS), Escape
+        dismisses. The CSS ::after is the no-JS fallback. Runs on astro:page-load;
+        rebuilt after each View Transition. */}
     <script>
       const TOOLTIP_MAX_WIDTH = 260;
       const TOOLTIP_MIN_WIDTH = 80;

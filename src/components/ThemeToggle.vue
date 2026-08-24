@@ -14,8 +14,7 @@ const props = withDefaults(defineProps<{ variant?: "desktop" | "mobile" }>(), {
 
 const theme = ref<Theme>("dark");
 
-// Bordered 44x44 control matching the React NavThemeToggle. The desktop variant
-// adds a primary-tinted border on hover.
+// Bordered 44x44 control. The desktop variant adds a primary-tinted border on hover.
 const buttonClass = computed(() =>
   [
     "flex h-11 w-11 items-center justify-center rounded-md border border-border bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-ring",

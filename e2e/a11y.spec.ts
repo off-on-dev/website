@@ -1,5 +1,4 @@
-// Accessibility audit for the Astro build. Ported from the React app's
-// e2e/a11y.spec.ts + smoke.spec.ts axe audit. Requires a production build in
+// Accessibility audit. Requires a production build in
 // dist/ (the webServer runs `astro preview`).
 //
 // Uses waitForLoadState("load") rather than "networkidle": prefetchAll keeps the

@@ -4,11 +4,10 @@ import IconMenu from '~icons/lucide/menu';
 import IconX from '~icons/lucide/x';
 import IconExternalLink from '~icons/lucide/external-link';
 
-// Mobile nav drawer, ported from the React Navbar's hamburger + useFocusTrap +
-// useEscapeKey + inert-siblings behaviour. Rendered as an island because it
-// needs client state; the drawer markup is always in the DOM so aria-controls
-// has a valid target. The link list is passed in from Navbar.astro so it stays
-// defined once (SSR) alongside the desktop links.
+// Mobile nav drawer with focus trap, Escape-key dismiss, and inert-siblings.
+// Rendered as an island because it needs client state; the drawer markup is
+// always in the DOM so aria-controls has a valid target. The link list is passed
+// in from Navbar.astro so it stays defined once (SSR) alongside the desktop links.
 type NavLink = { href: string; label: string; external?: boolean };
 
 const props = defineProps<{ links: NavLink[] }>();
@@ -121,7 +120,7 @@ onBeforeUnmount(() => {
   clearSiblingsInert();
 });
 
-// Shared link classes (match the React NavLinks link styling).
+// Shared link classes for the mobile drawer nav links.
 const linkCls =
   "inline-flex items-center gap-1 min-h-[44px] text-sm font-medium text-dim hover:text-foreground dark:hover:text-primary transition-colors rounded px-1.5 -mx-1.5 focus-ring";
 

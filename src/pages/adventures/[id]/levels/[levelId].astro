@@ -1,7 +1,6 @@
 ---
-// Challenge detail page. Layout and styling ported from
-// src/pages/ChallengeDetail.tsx (StructuredLayout). Fully static: discussion
-// and leaderboard data come from the CI-refreshed JSON at build time.
+// Challenge detail page. Fully static: discussion and leaderboard data come
+// from the CI-refreshed JSON at build time.
 import { getCollection } from "astro:content";
 import IconClock from '~icons/lucide/clock';
 import IconCheck from '~icons/lucide/check';
@@ -81,8 +80,7 @@ const hasArchitecture = (architecture && architecture.length > 0) || diagramSrc 
 const DEVCONTAINER_EXPANSION =
   "development container: a portable, reproducible coding environment defined by a configuration file";
 
-// Synthetic "Get Started" step prepended to the walkthrough (same markup the
-// React page injects).
+// Synthetic "Get Started" step prepended to the walkthrough at build time.
 const getStartedStep = {
   title: "Get Started",
   content: [
@@ -259,8 +257,7 @@ const crumbs = [
             </div>
           </section>
 
-          {/* Walkthrough: each step is an individually collapsible <details>
-              (native disclosure, no JS), matching the React per-step toggle. */}
+          {/* Walkthrough: each step is a native <details> disclosure (no JS). */}
           {
             walkthroughSteps.length > 0 && (
               <CollapsibleSection id="walkthrough" title="Walkthrough" headingLevel={2}>

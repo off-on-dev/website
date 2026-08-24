@@ -1,7 +1,5 @@
-// Sponsor data. Ported from src/data/sponsors.ts (React app).
-// In the React app the logos were Vite asset imports from src/assets/.
-// Here they are served from the shared public/ dir (publicDir: "../public");
-// values are path segments relative to BASE_URL (prepend `import.meta.env.BASE_URL`).
+// Sponsor data. Logo paths are relative to BASE_URL (served from public/);
+// prepend `import.meta.env.BASE_URL` before use.
 
 export type Sponsor = {
   name: string;

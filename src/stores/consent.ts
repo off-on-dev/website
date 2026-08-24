@@ -1,14 +1,14 @@
 import { atom } from "nanostores";
 import { GA_MEASUREMENT_ID, CONSENT_STORAGE_KEY, CONSENT_EXPIRY_MS } from "@/lib/site";
 
-// Consent state machine ported from src/hooks/useConsent.tsx. See the CLAUDE.md
-// "Consent state machine" table - every transition here mirrors a row.
+// Consent state machine. See the CLAUDE.md "Consent state machine" table —
+// every transition here mirrors a row.
 //
 // Uses a plain atom (default null) rather than @nanostores/persistent so the
 // island's first client render matches SSR (null); localStorage is read in
 // initConsent() on mount, not at store init (which would cause a hydration
-// mismatch for returning users). The stored format ({value, timestamp} + 180d
-// expiry) is identical to the React app's, so existing consent survives cutover.
+// mismatch for returning users). The stored format is {value, timestamp} with
+// a 180-day expiry (key: CONSENT_STORAGE_KEY).
 
 export type ConsentValue = "granted" | "denied";
 type StoredConsent = { value: ConsentValue; timestamp: number };

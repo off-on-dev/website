@@ -2,10 +2,9 @@
 import { ref, onMounted } from "vue";
 import IconX from '~icons/lucide/x';
 
-// Dismissable "new here?" nudge, ported from the React StarterNudge. The starter
-// adventure/level is resolved at build time and passed in as props (the React
-// version read ADVENTURE_SUMMARIES at module load). localStorage + the delayed
-// reveal run on mount so SSR renders nothing (hydration-safe).
+// Dismissable "new here?" nudge. The starter adventure/level is resolved at
+// build time and passed as props. localStorage reads and the delayed reveal run
+// in onMounted so SSR renders nothing (hydration-safe).
 const props = defineProps<{
   adventureId: string;
   adventureTitle: string;

@@ -18,9 +18,8 @@ import { tagToSlug } from "@/lib/challenges";
 import { isDeadlinePast, formatDeadline } from "@/lib/utils";
 import { getSolutions } from "@/lib/solutions";
 
-// Solution walkthrough page. Ported from src/pages/SolutionDetail.tsx. Only
-// levels with an authored solution module get a route, so the React "available
-// but no solution authored yet" branch never renders here.
+// Solution walkthrough page. Only levels with an authored solution module get a
+// route; the "no solution yet" state is never rendered.
 export async function getStaticPaths() {
   const adventures = await getCollection("adventures");
   return getSolutions().flatMap(({ adventureId, levelId, solution }) => {

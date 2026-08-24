@@ -9,9 +9,8 @@ const path = Astro.url.pathname;
 const logoDark = `${base}brand/offon-logo-dark-color.svg`;
 const logoLight = `${base}brand/offon-logo-light-mono.svg`;
 
-// Community sits between About and Contribute and is an external link (matches
-// the React Navbar order). The same list feeds the desktop cluster and the
-// mobile drawer island, so it is defined once.
+// Community sits between About and Contribute and is an external link. The same
+// list feeds the desktop cluster and the mobile drawer island, so it is defined once.
 const navItems = [
   { href: `${base}challenges/`, label: "Challenges" },
   { href: `${base}about/`, label: "About" },

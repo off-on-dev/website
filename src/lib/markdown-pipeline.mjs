@@ -1,8 +1,7 @@
-// Build-time markdown-to-HTML pipeline for adventure prose fields. This is the
-// single source of truth for prose HTML (the old React generator was removed at
-// cutover). Renders sanitised HTML with abbreviation-tooltip triggers, external-
-// link annotation, and code-block header markup - all at build time so pages
-// ship finished HTML (no client DOM restructuring / layout shift).
+// Build-time markdown-to-HTML pipeline for adventure prose fields. Renders
+// sanitised HTML with abbreviation-tooltip triggers, external-link annotation,
+// and code-block header markup — all at build time so pages ship finished HTML
+// (no client DOM restructuring / layout shift).
 
 import { unified } from "unified";
 import remarkParse from "remark-parse";

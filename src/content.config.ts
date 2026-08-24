@@ -133,7 +133,7 @@ const levelSchema = z
     message: "level needs learnings or what_you_learn",
   });
 
-// --- Resolvers (ported from the generator) ---
+// --- Resolvers ---
 
 function requireEither(a: string | undefined | null, b: string | undefined | null, field: string): string {
   const value = a ?? b;
@@ -194,7 +194,7 @@ async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Rendered
   const learnings = level.learnings ?? level.what_you_learn ?? [];
   const intro = level.intro ?? (level.summary ? [level.summary] : undefined);
 
-  // Inject an "Explore the UIs" step from services (ported from the generator).
+  // Inject an "Explore the UIs" step from services at index 1.
   const steps: { title: string; content: string }[] = [...level.how_to_play];
   const servicesBody = buildServicesStepBody(level.services);
   if (servicesBody) steps.splice(1, 0, { title: "Explore the UIs", content: servicesBody });

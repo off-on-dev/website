@@ -1,7 +1,6 @@
 ---
-// Ported from src/components/CommunitySidebar.tsx. Fully static: discussion and
-// leaderboard data are read at build time (no client fetch). Post ages are
-// omitted (the React app computes them client-side after mount).
+// Fully static: discussion and leaderboard data are read at build time (no
+// client fetch). Post ages are omitted; displaying them requires a client mount.
 import IconMessageCircle from "~icons/lucide/message-circle";
 import IconExternalLink from "~icons/lucide/external-link";
 import ContributorBadge from "@/components/ContributorBadge.astro";

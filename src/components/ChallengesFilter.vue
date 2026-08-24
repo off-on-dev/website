@@ -103,9 +103,9 @@ function syncUrl(): void {
   if (activeDifficulty.value) params.set("difficulty", activeDifficulty.value);
   else params.delete("difficulty");
   const qs = params.toString();
-  // On a /challenges/:tag/ route, clearing all tags must drop the path segment,
-  // otherwise the tag re-seeds the filter on reload/share/back (parity with the
-  // React handleTopicsChange navigation). replaceState preserves scroll position.
+  // On a /challenges/:tag/ route, clearing all tags must drop the path segment;
+  // otherwise the tag re-seeds the filter on reload/share/back.
+  // replaceState preserves scroll position.
   const targetPath =
     props.initialTag !== null && activeTags.value.length === 0
       ? `${props.base}challenges/`
@@ -158,8 +158,8 @@ const liveMsg = computed(() => {
   return `Filters cleared, showing ${props.adventureCount} ${props.adventureCount === 1 ? "adventure" : "adventures"} · ${challengeCount.value} ${challengeCount.value === 1 ? "challenge" : "challenges"}`;
 });
 
-// Pill styles (ported from the React ChallengeFilters). border-style must be
-// inline because the `filter-pill` border class is what makes borders render.
+// border-style must be set inline: the `filter-pill` CSS class sets border-width
+// only, so borders won't render without an explicit border-style.
 function difficultyPillStyle(diff: string, isActive: boolean): CSSProperties {
   const v = DIFFICULTY_VAR[diff];
   return {
