@@ -16,7 +16,8 @@ interface Props {
     rankingRulesUrl?: string;
   };
   compact?: boolean;
-  levelDeadline?: string;
+  /** Collection levels render `deadline` as string | null | undefined. */
+  levelDeadline?: string | null;
   deadlinePast?: boolean;
 }
 const { rewards, compact = false, levelDeadline, deadlinePast = false } = Astro.props;

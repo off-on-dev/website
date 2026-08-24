@@ -394,15 +394,16 @@ The `off-on-dev` org restricts third-party actions. Permitted: `actions/checkout
 State the result of each check explicitly before finishing.
 
 1. **Content gate:** `npm run sync` passes (Zod schema over adventure YAML).
-2. **Lint:** `npm run lint` passes (ESLint for astro/vue/ts; `typescript` is pinned to 6.x because typescript-eslint does not support TS 7 yet).
-3. **REUSE lint:** `npm run lint:reuse` (or `reuse lint`) passes. `.astro`/`.vue` are covered by globs in `REUSE.toml`.
-4. **Build:** `npm run build` completes with no errors.
-5. **Unit tests:** `npm run test:unit` passes. Tests live in `src/test/` (lib, stores, Vue components).
-6. **e2e + a11y:** `npm run test:e2e` passes. The axe audit runs the full WCAG tag set in dark and light. Kill any stray server on port 4321 first. Manual persona testing (ACCESSIBILITY.md) is still required.
-7. **Re-read every file you changed;** verify the final state.
-8. **Check call sites** for any changed prop/type/export. **Check imports** resolve; no unused imports.
-9. **Verify at 375 / 768 / 1280px** against the production build (`npm run preview`), not the dev server.
-10. If the change adds/modifies adventure levels, verify a per-level `*-posts.json` exists.
+2. **Types:** `npm run check` (`astro check`) passes with zero errors. Gated in CI.
+3. **Lint:** `npm run lint` passes (ESLint for astro/vue/ts; `typescript` is pinned to 6.x because typescript-eslint does not support TS 7 yet).
+4. **REUSE lint:** `npm run lint:reuse` (or `reuse lint`) passes. `.astro`/`.vue` are covered by globs in `REUSE.toml`.
+5. **Build:** `npm run build` completes with no errors.
+6. **Unit tests:** `npm run test:unit` passes. Tests live in `src/test/` (lib, stores).
+7. **e2e + a11y:** `npm run test:e2e` passes. The axe audit runs the full WCAG tag set in dark and light. Kill any stray server on port 4321 first. Manual persona testing (ACCESSIBILITY.md) is still required.
+8. **Re-read every file you changed;** verify the final state.
+9. **Check call sites** for any changed prop/type/export. **Check imports** resolve; no unused imports.
+10. **Verify at 375 / 768 / 1280px** against the production build (`npm run preview`), not the dev server.
+11. If the change adds/modifies adventure levels, verify a per-level `*-posts.json` exists.
 
 ### Red flags — stop and flag to the user
 

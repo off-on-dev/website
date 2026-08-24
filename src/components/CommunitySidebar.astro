@@ -38,7 +38,7 @@ interface Props {
 const { levelId, discussionUrl, contributor, discussion, leaderboardRows } = Astro.props;
 
 const hasThread = !!discussionUrl && discussionUrl !== COMMUNITY_URL;
-const solvers = discussion?.solvers ?? [];
+const solvers: NonNullable<Discussion["solvers"]> = discussion?.solvers ?? [];
 const hasLeaderboard = solvers.length > 0;
 const topSolvers = solvers.slice(0, LEADERBOARD_ROWS_VISIBLE);
 
@@ -51,10 +51,10 @@ const LEVEL_POINT_KEY: Record<string, keyof LeaderboardRow> = {
 };
 const levelKey = LEVEL_POINT_KEY[levelId] ?? null;
 const pointsByUsername = Object.fromEntries(
-  leaderboardRows.map((r) => [r.username, levelKey !== null ? (r[levelKey] as number | undefined) : undefined]),
+  leaderboardRows.map((r: LeaderboardRow) => [r.username, levelKey !== null ? (r[levelKey] as number | undefined) : undefined]),
 );
 
-const posts = discussion?.discussionPosts ?? [];
+const posts: DiscussionPost[] = discussion?.discussionPosts ?? [];
 const nonCertPosts = posts.filter((p) => !isCertificatePost(p));
 // Show non-cert posts if available; fall back to cert posts so activity is never empty when posts exist
 const visible = nonCertPosts.length > 0 ? nonCertPosts.slice(0, POSTS_VISIBLE) : posts.slice(0, POSTS_VISIBLE);

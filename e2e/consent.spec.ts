@@ -90,7 +90,7 @@ test.describe("consent: gated load", () => {
     await page.waitForLoadState("load");
     const themeToggle = page.getByRole("button", { name: /switch to (light|dark) mode/i });
     const clickEvents = () =>
-      page.evaluate(() => (window.dataLayer ?? []).filter((a: unknown[]) => a[1] === "click_event").length);
+      page.evaluate(() => (window.dataLayer ?? []).filter((a) => (a as unknown[])[1] === "click_event").length);
 
     // Before consent: clicking a (non-navigating) button records nothing.
     await themeToggle.click();

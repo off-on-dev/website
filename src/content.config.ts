@@ -126,7 +126,7 @@ const levelSchema = z
   })
   .strict()
   .refine((l) => l.name || l.title, { message: "level needs name or title" })
-  .refine((l) => l.difficulty || (l.emoji && LEVEL_DIFFICULTY_BY_EMOJI[l.emoji]), {
+  .refine((l) => l.difficulty || (l.emoji && LEVEL_DIFFICULTY_BY_EMOJI[l.emoji as keyof typeof LEVEL_DIFFICULTY_BY_EMOJI]), {
     message: "level needs difficulty or a 🟢/🟡/🔴 emoji",
   })
   .refine((l) => l.learnings || l.what_you_learn, {
@@ -190,7 +190,7 @@ type RenderedLevel = {
 }
 
 async function renderLevel(level: z.infer<typeof levelSchema>): Promise<RenderedLevel> {
-  const difficulty = level.difficulty ?? (level.emoji ? LEVEL_DIFFICULTY_BY_EMOJI[level.emoji] : undefined);
+  const difficulty = level.difficulty ?? (level.emoji ? LEVEL_DIFFICULTY_BY_EMOJI[level.emoji as keyof typeof LEVEL_DIFFICULTY_BY_EMOJI] : undefined);
   const learnings = level.learnings ?? level.what_you_learn ?? [];
   const intro = level.intro ?? (level.summary ? [level.summary] : undefined);
 
@@ -231,7 +231,9 @@ async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Rendered
   return {
     id: level.level,
     name: requireEither(level.name, level.title, "level name/title"),
-    difficulty,
+    // The schema's refine() guarantees difficulty resolves from either the
+    // explicit field or the emoji, so it cannot be undefined here.
+    difficulty: difficulty as RenderedLevel["difficulty"],
     topics: level.topics,
     learnings: learningsHtml,
     codespacesUrl: resolveCodespacesUrl(level.devcontainer, level.codespaces_machine),
@@ -267,7 +269,7 @@ async function renderRewards(
     rewards.tiers.map(async (t) => ({ label: t.label, description: await mdToInline(t.description) })),
   );
   return {
-    deadline: rewards.deadline === "TODO" ? "" : parseDeadline(rewards.deadline),
+    deadline: rewards.deadline === "TODO" ? "" : (parseDeadline(rewards.deadline) ?? ""),
     eligibility,
     tiers,
     rankingNote,
@@ -351,7 +353,7 @@ const adventures = defineCollection({
       const title = requireEither(data.title, data.name, "adventure title/name");
       const story =
         data.story ?? (data.backstory && data.backstory.length > 0 ? data.backstory[0] : "");
-      const icon = data.icon ?? (data.emoji ? EMOJI_TO_ICON[data.emoji] : undefined);
+      const icon = data.icon ?? (data.emoji ? EMOJI_TO_ICON[data.emoji as keyof typeof EMOJI_TO_ICON] : undefined);
 
       const [storyHtml, aboutHtml, backstoryHtml, levels, rewards] = await Promise.all([
         mdToInline(story),

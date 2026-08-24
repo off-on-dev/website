@@ -5,6 +5,7 @@ import ContributorBadge from "@/components/ContributorBadge.astro";
 import LivePill from "@/components/LivePill.astro";
 import AdventureIcon from "@/components/AdventureIcon.astro";
 import { stripHtml } from "@/lib/markdown";
+import type { Difficulty } from "@/lib/difficulty";
 
 interface Props {
   adventure: {
@@ -14,7 +15,7 @@ interface Props {
     tags: string[];
     icon?: string;
     isLive?: boolean;
-    levels: { id: string; difficulty: string }[];
+    levels: { id: string; difficulty: Difficulty }[];
     contributor?: { name: string; url?: string };
   };
 }

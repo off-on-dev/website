@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { DIFFICULTY_VAR, difficultyStyle } from "@/lib/difficulty";
+import { DIFFICULTY_VAR, type Difficulty, difficultyStyle } from "@/lib/difficulty";
 
 // ---------------------------------------------------------------------------
 // DIFFICULTY_VAR
@@ -22,17 +22,21 @@ describe("DIFFICULTY_VAR", () => {
   });
 
   it("does not have an entry for an unknown difficulty level", () => {
-    expect(DIFFICULTY_VAR["Unknown"]).toBeUndefined();
+    // Deliberately unknown: the map must not invent an entry for it.
+    expect(DIFFICULTY_VAR["Unknown" as Difficulty]).toBeUndefined();
   });
 });
 
 // ---------------------------------------------------------------------------
 // difficultyStyle
 // ---------------------------------------------------------------------------
+// `as const` so the loop variable is Difficulty rather than string.
+const DIFFICULTIES = ["Beginner", "Intermediate", "Expert"] as const;
+
 describe("difficultyStyle", () => {
   describe("known difficulty levels", () => {
     it("returns a string containing the shared text token", () => {
-      for (const level of ["Beginner", "Intermediate", "Expert"]) {
+      for (const level of DIFFICULTIES) {
         expect(difficultyStyle(level)).toContain(
           "color:hsl(var(--difficulty-text))"
         );
@@ -72,7 +76,7 @@ describe("difficultyStyle", () => {
     });
 
     it("returns a non-empty string for every known level", () => {
-      for (const level of ["Beginner", "Intermediate", "Expert"]) {
+      for (const level of DIFFICULTIES) {
         expect(difficultyStyle(level).length).toBeGreaterThan(0);
       }
     });
@@ -80,13 +84,14 @@ describe("difficultyStyle", () => {
 
   describe("unknown difficulty level", () => {
     it("still returns a string (does not throw)", () => {
-      expect(() => difficultyStyle("Novice")).not.toThrow();
+      // Deliberately invalid: the point is that an unknown level degrades gracefully.
+      expect(() => difficultyStyle("Novice" as Difficulty)).not.toThrow();
     });
 
     it("falls back to the 'starter' CSS variable stem for unknown difficulty levels", () => {
       // Unknown difficulty falls back to "starter" (the Beginner stem) so the output
       // contains valid CSS variable references rather than `--difficulty-undefined-*`.
-      const style = difficultyStyle("Novice");
+      const style = difficultyStyle("Novice" as Difficulty);
       expect(style).toContain("--difficulty-starter-border");
       expect(style).toContain("--difficulty-starter-bg");
       expect(style).not.toContain("undefined");

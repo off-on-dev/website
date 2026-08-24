@@ -214,9 +214,11 @@ describe("isAdventureLive", () => {
 // ---------------------------------------------------------------------------
 describe("getChallengeData", () => {
   /** Minimal valid adventure used across tests. */
-  const makeAdventure = (
-    overrides: Partial<Parameters<typeof getChallengeData>[0][0]> = {}
-  ) => ({
+  type TestAdventure = Parameters<typeof getChallengeData>[0][0];
+
+  // Annotated, not inferred: without it the literal widens `difficulty` to
+  // string and the union with `overrides.levels` stops matching AdventureData.
+  const makeAdventure = (overrides: Partial<TestAdventure> = {}): TestAdventure => ({
     slug: "test-adventure",
     title: "Test Adventure",
     tags: ["rust"],
