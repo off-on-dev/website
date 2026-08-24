@@ -21,8 +21,13 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
-import { LEVEL_ORDER } from "./lib/level-constants.mjs";
-import { parseDeadline } from "./lib/deadline.mjs";
+import { LEVEL_ORDER } from "../src/lib/level-constants.mjs";
+import { parseDeadline } from "../src/lib/deadline.mjs";
+
+// This script writes its output back into adventure.yaml, so an unparseable
+// timezone must leave the author's original text alone rather than replace it
+// with the sentinel. The build still gates on it when it parses the file.
+const PRESERVE_TZ = { onUnknownTimezone: "preserve" };
 import {
   findMissingUpstreamLevels,
   selectActiveLevels,
@@ -123,12 +128,12 @@ function buildLevel(raw, adventureTags, rewardsDeadline) {
   const cleaned = transformStrings(rest, stripCodeInLinks);
   return {
     ...cleaned,
-    ...(cleaned.deadline && { deadline: parseDeadline(cleaned.deadline) }),
+    ...(cleaned.deadline && { deadline: parseDeadline(cleaned.deadline, PRESERVE_TZ) }),
     topics: cleaned.topics || deriveTopics(adventureTags),
     verification: cleaned.verification || VERIFICATION_STUB,
     // Fall back to the adventure-level rewards deadline when the level has no deadline of its own,
     // so the compact RewardsCard on ChallengeDetail always has a deadline to display.
-    ...(rewardsDeadline && !cleaned.deadline && { deadline: parseDeadline(rewardsDeadline) }),
+    ...(rewardsDeadline && !cleaned.deadline && { deadline: parseDeadline(rewardsDeadline, PRESERVE_TZ) }),
   };
 }
 
@@ -314,7 +319,7 @@ async function main() {
     ...(indexData.rewards && {
       rewards: {
         ...indexData.rewards,
-        ...(indexData.rewards.deadline && { deadline: parseDeadline(indexData.rewards.deadline) }),
+        ...(indexData.rewards.deadline && { deadline: parseDeadline(indexData.rewards.deadline, PRESERVE_TZ) }),
       },
     }),
     // Preserve contributor set by a reviewer; omit otherwise (PR checklist item)

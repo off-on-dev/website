@@ -16,7 +16,21 @@ const TZ_OFFSETS = {
   GMT:  "+00:00",
 };
 
-export function parseDeadline(value) {
+/**
+ * @param {string|null|undefined} value
+ * @param {{ onUnknownTimezone?: "sentinel" | "preserve" }} [options]
+ *   How to handle a timezone abbreviation that is not in TZ_OFFSETS.
+ *   - "sentinel" (default): return UNRESOLVABLE_DEADLINE, so anything gated on
+ *     the deadline stays gated. Correct for rendering, where guessing an offset
+ *     could reveal a solution early.
+ *   - "preserve": return the original string. Correct for the sync script, which
+ *     writes its result back into adventure.yaml: replacing an author's
+ *     human-readable deadline with the sentinel would destroy the source text
+ *     and hide the mistake. Rendering still gates it, because the build parses
+ *     the preserved string with the default.
+ */
+export function parseDeadline(value, options = {}) {
+  const { onUnknownTimezone = "sentinel" } = options;
   if (value === null || value === undefined) return value;
   if (typeof value !== "string") {
     throw new Error(
@@ -46,6 +60,10 @@ export function parseDeadline(value) {
     return value;
   }
   if (!offset) {
+    if (onUnknownTimezone === "preserve") {
+      console.warn(`  [deadline] Unrecognised timezone "${tzAbbr}" in "${value}", leaving as-is`);
+      return value;
+    }
     console.error(`[deadline] Unrecognized timezone abbreviation '${tzAbbr}' in: ${value} - treating deadline as not yet passed (solution will stay hidden)`);
     return UNRESOLVABLE_DEADLINE;
   }

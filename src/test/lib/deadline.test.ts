@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { parseDeadline } from "@/lib/deadline.mjs";
+import { parseDeadline, UNRESOLVABLE_DEADLINE } from "@/lib/deadline.mjs";
 
 describe("parseDeadline", () => {
   describe("null and undefined passthrough", () => {
@@ -120,6 +120,55 @@ describe("parseDeadline", () => {
       expect(errorSpy).toHaveBeenCalledOnce();
       expect(errorSpy.mock.calls[0][0]).toContain("EST");
       errorSpy.mockRestore();
+    });
+
+    it("exports the sentinel it returns, so callers can compare against it", () => {
+      const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      expect(parseDeadline("5 June 2024 at 14:30 BST")).toBe(UNRESOLVABLE_DEADLINE);
+      errorSpy.mockRestore();
+    });
+
+    it("gates rather than guesses: the sentinel is far enough out to never be past", () => {
+      expect(new Date(UNRESOLVABLE_DEADLINE).getTime()).toBeGreaterThan(Date.now());
+    });
+
+    // The sync script writes its result back into adventure.yaml. Replacing an
+    // author's human-readable deadline with the sentinel would destroy the source
+    // text, so that path opts out. Rendering keeps the strict default, so an
+    // unparseable deadline still gates whatever depends on it.
+    describe('onUnknownTimezone: "preserve"', () => {
+      const PRESERVE = { onUnknownTimezone: "preserve" } as const;
+
+      it("returns the original string instead of the sentinel", () => {
+        const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+        const raw = "5 June 2024 at 14:30 BST";
+        expect(parseDeadline(raw, PRESERVE)).toBe(raw);
+        warnSpy.mockRestore();
+      });
+
+      it("warns instead of erroring, naming the abbreviation", () => {
+        const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+        const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+        parseDeadline("5 June 2024 at 14:30 BST", PRESERVE);
+        expect(errorSpy).not.toHaveBeenCalled();
+        expect(warnSpy).toHaveBeenCalledOnce();
+        expect(warnSpy.mock.calls[0][0]).toContain("BST");
+        warnSpy.mockRestore();
+        errorSpy.mockRestore();
+      });
+
+      it("still converts a recognised timezone normally", () => {
+        expect(parseDeadline("5 June 2024 at 14:30 CET", PRESERVE)).toBe("2024-06-05T14:30:00+01:00");
+      });
+
+      it("a preserved value still hits the sentinel when parsed with the default", () => {
+        const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+        const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+        const preserved = parseDeadline("5 June 2024 at 14:30 BST", PRESERVE);
+        expect(parseDeadline(preserved)).toBe(UNRESOLVABLE_DEADLINE);
+        warnSpy.mockRestore();
+        errorSpy.mockRestore();
+      });
     });
   });
 
