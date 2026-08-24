@@ -54,6 +54,20 @@ function handleClickOutside(e: MouseEvent): void {
   if (difficultyRef.value && !difficultyRef.value.contains(t)) difficultyOpen.value = false;
   if (tagsRef.value && !tagsRef.value.contains(t)) tagsOpen.value = false;
 }
+// Close a dropdown when focus leaves its wrapper entirely, so tabbing past an
+// open panel does not leave it floating over the grid. Ported from the React
+// handleDropdownBlur. Two deliberate details, both carried over:
+//   - `relatedTarget` null (focus went nowhere, e.g. a background click) is
+//     ignored; handleClickOutside owns that case.
+//   - it must NOT move focus. Focus has already gone somewhere the user chose;
+//     restoring it to the trigger here would be a focus steal. Only Escape
+//     returns focus, which is the expected behaviour for a cancel.
+function handleDropdownFocusOut(e: FocusEvent, close: () => void): void {
+  const next = e.relatedTarget as Node | null;
+  const wrapper = e.currentTarget as HTMLElement;
+  if (next && !wrapper.contains(next)) close();
+}
+
 function handleEscape(e: KeyboardEvent): void {
   if (e.key !== "Escape") return;
   if (difficultyOpen.value) {
@@ -222,7 +236,7 @@ function navigatePanel(e: KeyboardEvent): void {
     <div class="mb-8">
       <!-- Mobile / tablet: two dropdowns side by side -->
       <div class="flex items-center gap-2 lg:hidden">
-        <div ref="difficultyRef" class="relative">
+        <div ref="difficultyRef" class="relative" @focusout="handleDropdownFocusOut($event, () => (difficultyOpen = false))">
           <button
             ref="difficultyTrigger"
             type="button"
@@ -273,7 +287,7 @@ function navigatePanel(e: KeyboardEvent): void {
           </div>
         </div>
 
-        <div ref="tagsRef" class="relative">
+        <div ref="tagsRef" class="relative" @focusout="handleDropdownFocusOut($event, () => (tagsOpen = false))">
           <button
             ref="tagsTrigger"
             type="button"
