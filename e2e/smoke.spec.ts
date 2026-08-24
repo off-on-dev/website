@@ -70,6 +70,21 @@ test.describe("SEO + smoke: every route", () => {
       await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", title);
       await expect(page.locator('meta[property="og:url"]')).toHaveAttribute("content", `${SITE_URL}${path}`);
 
+      // No duplicate id attributes. Abbreviation IDs are generated per content
+      // entry with no page context, so this is the only place the document-level
+      // uniqueness they promise can actually be checked. axe does not cover it:
+      // duplicate-id is deprecated and duplicate-id-aria only fires when the id
+      // is ARIA-referenced.
+      const dupes = await page.evaluate(() => {
+        const counts = new Map<string, number>();
+        document.querySelectorAll("[id]").forEach((el) => {
+          const id = el.id;
+          if (id) counts.set(id, (counts.get(id) ?? 0) + 1);
+        });
+        return [...counts].filter(([, n]) => n > 1).map(([id, n]) => `${id} x${n}`);
+      });
+      expect(dupes, `duplicate id attributes on ${path}`).toEqual([]);
+
       expect(errors, `page errors on ${path}`).toEqual([]);
     });
   }

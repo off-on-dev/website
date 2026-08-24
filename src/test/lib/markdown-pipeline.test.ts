@@ -204,6 +204,22 @@ describe("mdToInline", () => {
       expect(second).toBe(first);
     });
 
+    it("throws if a render path never started a scope", async () => {
+      // Fresh module instance: abbrScopeStarted is module state and the
+      // top-level beforeEach has already flipped it on the shared one.
+      vi.resetModules();
+      const fresh = await import("@/lib/markdown-pipeline.mjs");
+      await expect(fresh.mdToInline('<abbr title="Pull Request">PR</abbr>')).rejects.toThrow(
+        /beginAbbrScope\(\) must be called/,
+      );
+    });
+
+    it("does not throw for markdown without an abbreviation", async () => {
+      vi.resetModules();
+      const fresh = await import("@/lib/markdown-pipeline.mjs");
+      await expect(fresh.mdToInline("**bold**")).resolves.toBe("<strong>bold</strong>");
+    });
+
     it("prefixes IDs with the scope so different entries cannot collide", async () => {
       beginAbbrScope("the-ai-observatory");
       const a = await mdToInline('<abbr title="OpenTelemetry">OTel</abbr>');

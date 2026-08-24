@@ -85,16 +85,30 @@ const sanitizeSchema = {
 // would renumber depending on which adventures happened to re-render.
 let abbrScopePrefix = "";
 let abbrIdCounts = new Map();
+// Guards the contract below. Without it, a new render path that forgets
+// beginAbbrScope() would silently inherit the previous entry's prefix and
+// counter, producing ids that look fine but collide once two entries land on
+// one page. Failing loudly at build time is much cheaper than finding that in
+// shipped HTML.
+let abbrScopeStarted = false;
 
 /** Starts a new abbreviation ID scope. Call once per content entry before
  *  rendering its markdown fields. Omit `scope` to keep ids unprefixed. */
 export function beginAbbrScope(scope) {
   abbrScopePrefix = scope ? `${scope}-` : "";
   abbrIdCounts = new Map();
+  abbrScopeStarted = true;
 }
 
 /** Derives a document-unique ID from an abbreviation's title text. */
 function makeAbbrId(text) {
+  if (!abbrScopeStarted) {
+    throw new Error(
+      "markdown-pipeline: beginAbbrScope() must be called before rendering markdown that " +
+        "contains an <abbr>. Call it once per content entry (see the adventures loader in " +
+        "src/content.config.ts) so abbreviation IDs cannot collide across entries.",
+    );
+  }
   const slug = text.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim().replace(/\s+/g, '-').slice(0, 30);
   const base = `abbr-${abbrScopePrefix}${slug}`;
   const seen = (abbrIdCounts.get(base) ?? 0) + 1;
