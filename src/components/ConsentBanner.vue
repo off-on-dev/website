@@ -11,9 +11,20 @@ const privacyUrl = import.meta.env.BASE_URL + "privacy/";
 const cookieBtn = ref<HTMLButtonElement | null>(null);
 const declineBtn = ref<HTMLButtonElement | null>(null);
 
+// Focus must move only in response to a genuine user choice. initConsent()
+// restores a stored value during onMounted, which registers on the store as a
+// null -> granted/denied transition but is NOT a user action: focusing there
+// would steal focus from the skip-nav link on every page load for every
+// returning visitor. The React ConsentBanner guarded the same case explicitly
+// ("Skips the initial page-load case so the banner never steals focus from the
+// skip nav link"). Released one tick after mount, so the watcher job queued by
+// the restore has already been flushed and skipped.
+let hydrating = true;
+
 // Move focus after consent transitions so keyboard/AT users are not stranded.
 // Uses the Vue ref from useStore (not the raw atom) so Vue's watch fires correctly.
 watch(consent, async (v, prev) => {
+  if (hydrating) return;
   if (prev === null && v !== null) {
     // Banner dismissed (granted or denied): focus the cookie preferences button.
     await nextTick();
@@ -28,6 +39,11 @@ watch(consent, async (v, prev) => {
 onMounted(() => {
   mounted.value = true;
   initConsent();
+  // nextTick() resolves after the scheduler flush that runs the pre-flush watcher
+  // job queued by initConsent()'s restore, so that transition is always skipped.
+  void nextTick().then(() => {
+    hydrating = false;
+  });
   document.addEventListener("astro:page-load", firePageView);
   trackClicks();
 });
