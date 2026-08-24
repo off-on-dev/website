@@ -502,17 +502,69 @@ Static markup, no island. Both icons and both accessible names are rendered, and
 
 ---
 
+## Interactivity: which tool to reach for
+
+**Default to `.astro` + a vanilla `<script>`.** Reach for a framework only when the component has genuinely reactive state that a class toggle and a small script cannot express.
+
+**When a framework is warranted, it is Vue. Never React.** The `@astrojs/vue` integration stays installed even while nothing uses it, so adding an island is a one-file change rather than a toolchain decision. Do not remove `vue`, `@astrojs/vue`, `@vitejs/plugin-vue`, `@vue/test-utils`, `eslint-plugin-vue`, `eslint-plugin-vuejs-accessibility` or `vue-eslint-parser` as "unused dependencies" — they are deliberately retained.
+
+**The site currently ships zero islands.** Every interactive surface is `.astro` plus a script: theme toggle, mobile drawer, consent banner, starter nudge, challenge filter, code-copy buttons, abbreviation tooltips, the brand-page scrollspy.
+
+### What does not justify a framework
+
+These were all islands once and are now plain scripts. Use them as the bar:
+
+| Component | What it actually does |
+| --- | --- |
+| `ThemeToggle` | toggles a class on `<html>`, writes localStorage |
+| `MobileMenu` | shows/hides a drawer, focus trap, `inert` on siblings |
+| `ConsentBanner` | shows one of two states, writes localStorage |
+| `StarterNudge` | shows/hides a banner, writes localStorage |
+| `ChallengesFilter` | toggles `hidden` on server-rendered cards, syncs the URL |
+
+The last one is the useful reference: even a filter with two dropdowns, a roving-tabindex radiogroup, URL reconciliation and a live region came out smaller and lighter as markup plus a script, because the cards can be rendered server-side and filtered by attribute.
+
+A framework earns its place when state drives markup that cannot reasonably be pre-rendered — genuinely dynamic lists, editors, multi-step forms with derived state.
+
+### Patterns for the script
+
+- Bind on `astro:page-load` so the component survives View Transitions, or delegate from `document` where one handler can cover every instance.
+- Prefer letting CSS derive presentation from an ARIA attribute (`group-aria-expanded:*`, `.dark`) over having the script set both. One source of truth, and the visual state cannot drift from what assistive tech sees.
+- Release listeners and any `inert` on `astro:before-swap`.
+
 ## Hydration quick-reference
+
+Applies if and when an island is added back.
 
 | Directive | When to use |
 | --- | --- |
-| `client:load` | Above-the-fold islands that must hydrate immediately. Currently unused. |
-| `client:visible` | Below-fold islands — hydrate when entering the viewport (ChallengesFilter on home). |
-| `client:idle` | Non-critical islands that can wait until the browser is idle. Currently unused. |
+| `client:load` | Above-the-fold interactivity that must hydrate immediately |
+| `client:visible` | Below-fold islands — hydrate when entering the viewport |
+| `client:idle` | Non-critical islands that can wait until the browser is idle |
 
-`ChallengesFilter` is the only Vue island left, so Vue loads on the 27 routes that include it and on none of the other 42.
+`.astro` components cannot be rendered inside a `.vue` island. If an island needs a badge, pill, or icon, inline the markup and use an icon component.
 
-`.astro` components cannot be rendered inside a `.vue` island. If an island needs a badge, pill, or icon, inline the markup and use `lucide-vue-next`.
+---
+
+## Inline links in prose need explicit spaces
+
+Astro strips the whitespace between a text node and an adjacent element when the source has a newline between them. This markup renders as "See ourPrivacy Policyfor details.":
+
+```astro
+See our
+<a href={privacyUrl}>Privacy Policy</a>
+for details.
+```
+
+Add `{" "}` on both sides:
+
+```astro
+See our{" "}
+<a href={privacyUrl}>Privacy Policy</a>{" "}
+for details.
+```
+
+JSX behaves the same way; Vue's compiler did not, which is why the requirement is easy to lose when porting a `.vue` template. `e2e/inline-spacing.spec.ts` scans the build for a link abutting a word character and fails the suite, because nothing else catches it: the source reads correctly and no axe or smoke assertion looks at word spacing.
 
 ---
 

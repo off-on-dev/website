@@ -57,9 +57,25 @@ git commit -s -m "feat: add contributor badge"
 ## Code style
 
 - TypeScript with explicit return types on all functions and components.
-- Functional components with hooks only. No class components.
-- Tailwind utility classes directly on JSX. No inline styles.
+- Tailwind utility classes directly on elements. No inline styles.
 - Both light and dark mode must work for every UI change.
+- Inline links in prose need `{" "}` around them. Astro strips the whitespace
+  between text and an adjacent element when the source has a newline there, so
+  `See our\n<a>Privacy Policy</a>\nfor details.` renders with no spaces. See
+  [styleguide.md](styleguide.md) for the detail.
+
+### Interactive components
+
+- Default to a `.astro` component with a plain `<script>`. Reach for a framework
+  only when the component has genuinely reactive state that a class toggle and a
+  small script cannot express.
+- **When one is warranted, use Vue. Never React.** The `@astrojs/vue`
+  integration stays installed even though nothing currently uses it, so adding
+  an island is a one-file change. Do not remove the Vue packages as "unused".
+- The site currently ships zero islands. The theme toggle, mobile drawer,
+  consent banner, starter nudge and challenge filter were all islands once and
+  are now markup plus a script; they are the bar for what does *not* justify a
+  framework.
 
 Full rules are in [AGENTS.md](AGENTS.md) (or [CLAUDE.md](CLAUDE.md) for Claude Code users) and [styleguide.md](styleguide.md).
 

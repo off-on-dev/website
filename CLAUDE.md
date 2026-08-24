@@ -191,7 +191,9 @@ There is **no** content generator, `npm run generate`, or `*.generated.ts` — r
 
 ## Components
 
-- Static UI is a `.astro` component (zero JS shipped). Only make something a **Vue island** when it needs client state/interactivity, and hydrate it with the lightest directive that works: `client:visible` / `client:idle` by default, `client:load` only for above-the-fold interactivity (protects the Lighthouse baseline).
+- Static UI is a `.astro` component (zero JS shipped). For interactivity, default to a `.astro` component with a plain `<script>`; the site currently ships **zero islands**. Only reach for a **Vue island** when the component has genuinely reactive state that a class toggle and a small script cannot express, and hydrate it with the lightest directive that works: `client:visible` / `client:idle` by default, `client:load` only for above-the-fold interactivity (protects the Lighthouse baseline).
+- **Frameworks: Vue, never React.** `@astrojs/vue` and its toolchain stay installed even while unused, so adding an island is a one-file change. Do not strip them as unused dependencies.
+- **Inline links in prose need `{" "}` around them.** Astro removes the whitespace between text and an adjacent element when the source has a newline there. `e2e/inline-spacing.spec.ts` guards this.
 - `.astro` components cannot be rendered inside a `.vue` island. If an island needs a badge/pill/icon, inline the markup and use `lucide-vue-next`.
 - **Buttons:** raw `<button>` with the CSS utility classes in `src/styles/index.css` (`.btn-primary`, `.btn-ghost`, `.btn-soft`, `.btn-inverse`, `.btn-ghost-inverse`). No Button wrapper. See `styleguide.md`.
 - **Touch targets (WCAG 2.5.8):** nav/footer links and any blockified interactive element must be ≥24×24px. Nav links use `min-h-[44px]`, footer links `min-h-[48px]`.
