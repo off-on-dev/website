@@ -12,6 +12,17 @@ import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import rehypeStringify from "rehype-stringify";
 import { createHighlighter, bundledLanguages } from "shiki";
 
+// Both GitHub themes colour comments #6a737d, which fails WCAG 1.4.3 against our
+// code-block surfaces: 3.78:1 on the dark #151519 and 4.38:1 on the light
+// #f4f4f6, where 4.5:1 is the floor. Swap in GitHub's own accessible values,
+// which clear it at 5.97:1 and 5.75:1 respectively. Applied per theme via
+// Shiki's colorReplacements so every token using that colour is covered, not
+// just the ones we happen to have examples of.
+const THEME_CONTRAST_FIXES = {
+  "github-dark": { "#6a737d": "#8b949e" },
+  "github-light": { "#6a737d": "#57606a" },
+};
+
 // Lazy singleton: initialised on the first code block that needs highlighting.
 // Shiki is bundled with Astro so no extra dependency is needed.
 let _highlighter = null;
@@ -42,6 +53,7 @@ async function highlightCode(rawCode, lang) {
     const fullHtml = h.codeToHtml(rawCode, {
       lang,
       themes: { light: "github-light", dark: "github-dark" },
+      colorReplacements: THEME_CONTRAST_FIXES,
       defaultColor: false,
     });
     // Extract the inner <code> content (highlighted token spans).

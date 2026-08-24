@@ -32,6 +32,13 @@ export default defineConfig({
     // Field-level prose is sanitized separately in src/lib/markdown-pipeline.mjs.
     shikiConfig: {
       themes: { light: "github-light", dark: "github-dark" },
+      // Mirrors THEME_CONTRAST_FIXES in src/lib/markdown-pipeline.mjs: both
+      // GitHub themes use #6a737d for comments, which fails WCAG 1.4.3 against
+      // our code-block surfaces in either mode.
+      colorReplacements: {
+        "github-dark": { "#6a737d": "#8b949e" },
+        "github-light": { "#6a737d": "#57606a" },
+      },
     },
   },
   vite: {
