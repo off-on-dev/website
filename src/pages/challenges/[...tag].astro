@@ -29,10 +29,14 @@ const adventureCount = adventures.length;
 const starter = adventures.find((a) => isAdventureLive(a));
 const starterLevel = starter?.levels.find((l) => l.difficulty === "Beginner");
 
-const title = initialTag ? `${initialTag} Challenges - ${BRAND_NAME}` : `Challenges - ${BRAND_NAME}`;
+// Title/description strings are the ones Google has already indexed from the
+// React build. Do not "tidy" them; changing them costs ranking signal.
+const title = initialTag
+  ? `${initialTag} Challenges - ${BRAND_NAME}`
+  : `Open Source Challenges | ${BRAND_NAME}`;
 const description = initialTag
   ? `Hands-on open source challenges using ${initialTag}. Practice in real-world scenarios in GitHub Codespaces.`
-  : "Browse hands-on open source challenges. Filter by technology and difficulty, then solve them in GitHub Codespaces.";
+  : "Hands-on challenges built around open source tools. Filter by technology and learn by solving real-world scenarios in GitHub Codespaces.";
 const path = initialTag ? `/challenges/${tagToSlug(initialTag)}/` : "/challenges/";
 ---
 
