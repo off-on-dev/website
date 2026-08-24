@@ -157,6 +157,20 @@ export function firePageView(): void {
 
 // Delegated click tracking, gated on consent at click time. Registered once
 // (the consent island is transition:persist), so it survives View Transitions.
+//
+// The payload is a compatibility surface: GA4 custom dimensions and saved
+// reports are keyed on these exact parameter names, so they match the React
+// useClickTracking hook field-for-field. Do not rename them.
+
+const TRACKED_SELECTOR = "a, button";
+// GA4 silently truncates string parameter values at 100 chars. Truncate
+// ourselves so the limit is visible in the source rather than discovered
+// through missing-tail data in reports.
+const MAX_CLICK_TEXT_LENGTH = 100;
+// Skip-nav link target. Excluded because it fires on every keyboard Tab+Enter
+// and reflects assistive-tech navigation, not user intent.
+const SKIP_NAV_HREF = "#main-content";
+
 let clickTrackerBound = false;
 let clickHandler: ((e: MouseEvent) => void) | null = null;
 
@@ -165,13 +179,29 @@ export function trackClicks(): void {
   clickTrackerBound = true;
   clickHandler = (e: MouseEvent) => {
     if ($consent.get() !== "granted" || typeof window.gtag !== "function") return;
-    const target = e.target as HTMLElement | null;
-    const el = target?.closest?.("a[href], button");
-    if (!el) return;
+    const target = e.target as Element | null;
+    if (!target || typeof target.closest !== "function") return;
+    const tracked = target.closest(TRACKED_SELECTOR);
+    if (!tracked) return;
+
+    if (tracked instanceof HTMLAnchorElement && tracked.getAttribute("href") === SKIP_NAV_HREF) {
+      return;
+    }
+
+    // Prefer aria-label so icon-only controls (theme toggle, cookie button,
+    // copy, dismiss) report something meaningful instead of an empty string.
+    // Internal whitespace is collapsed so multi-line labels do not fragment
+    // reports; the React hook only trimmed.
+    const rawText =
+      (tracked.getAttribute("aria-label") || tracked.textContent || "").replace(/\s+/g, " ").trim() ||
+      "unknown";
+    const href = tracked instanceof HTMLAnchorElement ? tracked.href : "";
+
     window.gtag("event", "click_event", {
-      element: el.tagName.toLowerCase(),
-      link_text: (el.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 100),
-      ...(el instanceof HTMLAnchorElement ? { link_url: el.href } : {}),
+      click_text: rawText.slice(0, MAX_CLICK_TEXT_LENGTH),
+      click_url: href || tracked.getAttribute("data-url") || "no-url",
+      click_element: tracked.tagName.toLowerCase(),
+      click_page: window.location.pathname,
     });
   };
   document.addEventListener("click", clickHandler, { capture: true });

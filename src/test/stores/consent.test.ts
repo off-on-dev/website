@@ -403,12 +403,14 @@ describe("consent store", () => {
       btn.click();
       document.body.removeChild(btn);
       expect(window.gtag).toHaveBeenCalledWith("event", "click_event", {
-        element: "button",
-        link_text: "Submit",
+        click_element: "button",
+        click_text: "Submit",
+        click_url: "no-url",
+        click_page: window.location.pathname,
       });
     });
 
-    it("calls gtag click_event with link_url for an <a> when consent is granted", () => {
+    it("calls gtag click_event with click_url for an <a> when consent is granted", () => {
       grant();
       vi.clearAllMocks();
       trackClicks();
@@ -416,12 +418,16 @@ describe("consent store", () => {
       a.href = "https://offon.dev/adventures/";
       a.textContent = "Adventures";
       document.body.appendChild(a);
+      // Read the pathname before the click: happy-dom follows the anchor, so
+      // window.location has already changed by assertion time.
+      const pathAtClick = window.location.pathname;
       a.click();
       document.body.removeChild(a);
       expect(window.gtag).toHaveBeenCalledWith("event", "click_event", {
-        element: "a",
-        link_text: "Adventures",
-        link_url: a.href,
+        click_element: "a",
+        click_text: "Adventures",
+        click_url: a.href,
+        click_page: pathAtClick,
       });
     });
 
@@ -437,7 +443,7 @@ describe("consent store", () => {
       expect(window.gtag).not.toHaveBeenCalledWith("event", "click_event", expect.anything());
     });
 
-    it("truncates link_text to 100 characters", () => {
+    it("truncates click_text to 100 characters", () => {
       grant();
       vi.clearAllMocks();
       trackClicks();
@@ -450,10 +456,10 @@ describe("consent store", () => {
         (c) => c[0] === "event" && c[1] === "click_event",
       );
       expect(clickCall).toBeDefined();
-      expect((clickCall![2] as Record<string, string>).link_text).toHaveLength(100);
+      expect((clickCall![2] as Record<string, string>).click_text).toHaveLength(100);
     });
 
-    it("collapses internal whitespace in link_text", () => {
+    it("collapses internal whitespace in click_text", () => {
       grant();
       vi.clearAllMocks();
       trackClicks();
@@ -465,7 +471,7 @@ describe("consent store", () => {
       const clickCall = gtagMock().mock.calls.find(
         (c) => c[0] === "event" && c[1] === "click_event",
       );
-      expect((clickCall![2] as Record<string, string>).link_text).toBe("Hello World");
+      expect((clickCall![2] as Record<string, string>).click_text).toBe("Hello World");
     });
 
     it("tracks a click on a child element inside a <button>", () => {
@@ -481,9 +487,102 @@ describe("consent store", () => {
       span.click(); // click the inner span; closest() should resolve to the button
       document.body.removeChild(btn);
       expect(window.gtag).toHaveBeenCalledWith("event", "click_event", {
-        element: "button",
-        link_text: "ParentChild",
+        click_element: "button",
+        click_text: "ParentChild",
+        click_url: "no-url",
+        click_page: window.location.pathname,
       });
+    });
+
+    // ── payload parity with the React useClickTracking hook (P7) ──────────────
+    //
+    // GA4 custom dimensions and saved reports are keyed on these exact parameter
+    // names and fallback values. The migration had renamed them to
+    // element/link_text/link_url and dropped click_page, silently breaking every
+    // existing report at cutover.
+
+    it("prefers aria-label over textContent so icon-only controls are identifiable", () => {
+      grant();
+      vi.clearAllMocks();
+      trackClicks();
+      const btn = document.createElement("button");
+      btn.setAttribute("aria-label", "Switch to light mode");
+      btn.innerHTML = '<svg aria-hidden="true"></svg>';
+      document.body.appendChild(btn);
+      btn.click();
+      document.body.removeChild(btn);
+      expect(window.gtag).toHaveBeenCalledWith("event", "click_event", {
+        click_element: "button",
+        click_text: "Switch to light mode",
+        click_url: "no-url",
+        click_page: window.location.pathname,
+      });
+    });
+
+    it('falls back to "unknown" when there is no label and no text', () => {
+      grant();
+      vi.clearAllMocks();
+      trackClicks();
+      const btn = document.createElement("button");
+      document.body.appendChild(btn);
+      btn.click();
+      document.body.removeChild(btn);
+      const call = gtagMock().mock.calls.find((c) => c[1] === "click_event");
+      expect((call![2] as Record<string, string>).click_text).toBe("unknown");
+    });
+
+    it("falls back to data-url when the element is not an anchor", () => {
+      grant();
+      vi.clearAllMocks();
+      trackClicks();
+      const btn = document.createElement("button");
+      btn.textContent = "Open";
+      btn.setAttribute("data-url", "https://offon.dev/handbook/");
+      document.body.appendChild(btn);
+      btn.click();
+      document.body.removeChild(btn);
+      const call = gtagMock().mock.calls.find((c) => c[1] === "click_event");
+      expect((call![2] as Record<string, string>).click_url).toBe("https://offon.dev/handbook/");
+    });
+
+    it("does not track the skip-nav link", () => {
+      grant();
+      vi.clearAllMocks();
+      trackClicks();
+      const a = document.createElement("a");
+      a.setAttribute("href", "#main-content");
+      a.textContent = "Skip to main content";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      expect(window.gtag).not.toHaveBeenCalledWith("event", "click_event", expect.anything());
+    });
+
+    it("tracks an <a> with no href (the selector is 'a, button', not 'a[href]')", () => {
+      grant();
+      vi.clearAllMocks();
+      trackClicks();
+      const a = document.createElement("a");
+      a.textContent = "Placeholder";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      const call = gtagMock().mock.calls.find((c) => c[1] === "click_event");
+      expect(call).toBeDefined();
+      expect((call![2] as Record<string, string>).click_url).toBe("no-url");
+    });
+
+    it("reports the current pathname as click_page", () => {
+      grant();
+      vi.clearAllMocks();
+      trackClicks();
+      const btn = document.createElement("button");
+      btn.textContent = "Go";
+      document.body.appendChild(btn);
+      btn.click();
+      document.body.removeChild(btn);
+      const call = gtagMock().mock.calls.find((c) => c[1] === "click_event");
+      expect((call![2] as Record<string, string>).click_page).toBe(window.location.pathname);
     });
   });
 });
