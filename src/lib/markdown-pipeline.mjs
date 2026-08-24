@@ -28,40 +28,69 @@ const THEME_CONTRAST_FIXES = {
 let _highlighter = null;
 const _loadedLangs = new Set();
 
+// Returning null means "this block is not highlightable", which the caller
+// renders as plain <pre><code>. That is only ever a legitimate answer for an
+// unknown language. Every other failure is a bug in our setup, and it must not
+// borrow the same quiet fallback: highlighting would just disappear site-wide
+// with a green build and passing tests. Those paths throw instead.
+function highlighterFailure(stage, lang, cause) {
+  return new Error(
+    `[markdown-pipeline] Shiki ${stage} failed for language "${lang}". Code blocks would ` +
+      `silently render unhighlighted, so the build is stopped instead. Cause: ${cause}`,
+    { cause },
+  );
+}
+
 async function getHighlighter() {
   if (!_highlighter) {
-    _highlighter = await createHighlighter({
-      themes: ["github-dark", "github-light"],
-      langs: [],
-    });
+    try {
+      _highlighter = await createHighlighter({
+        themes: ["github-dark", "github-light"],
+        langs: [],
+      });
+    } catch (err) {
+      throw highlighterFailure("initialisation", "-", err);
+    }
   }
   return _highlighter;
 }
 
 async function highlightCode(rawCode, lang) {
+  // The only quiet fallback: a language Shiki does not ship a grammar for.
   if (!bundledLanguages[lang]) return null;
+
   const h = await getHighlighter();
+
   if (!_loadedLangs.has(lang)) {
     try {
       await h.loadLanguage(lang);
       _loadedLangs.add(lang);
-    } catch {
-      return null;
+    } catch (err) {
+      // The grammar is in bundledLanguages, so failing to load it is not a
+      // content problem.
+      throw highlighterFailure("grammar load", lang, err);
     }
   }
+
+  let fullHtml;
   try {
-    const fullHtml = h.codeToHtml(rawCode, {
+    fullHtml = h.codeToHtml(rawCode, {
       lang,
       themes: { light: "github-light", dark: "github-dark" },
       colorReplacements: THEME_CONTRAST_FIXES,
       defaultColor: false,
     });
-    // Extract the inner <code> content (highlighted token spans).
-    const match = fullHtml.match(/<code[^>]*>([\s\S]*)<\/code>/);
-    return match ? match[1] : null;
-  } catch {
-    return null;
+  } catch (err) {
+    throw highlighterFailure("rendering", lang, err);
   }
+
+  // Extract the inner <code> content (highlighted token spans). A shape change
+  // in Shiki's output would otherwise degrade to unhighlighted code unnoticed.
+  const match = fullHtml.match(/<code[^>]*>([\s\S]*)<\/code>/);
+  if (!match) {
+    throw highlighterFailure("output parsing", lang, "no <code> element in Shiki output");
+  }
+  return match[1];
 }
 
 const sanitizeSchema = {
