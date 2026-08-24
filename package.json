@@ -12,6 +12,7 @@
     "test:unit:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "lint": "eslint .",
+    "check": "astro check",
     "lint:reuse": "reuse lint"
   },
   "engines": {
@@ -43,6 +44,7 @@
     "yaml": "^2.9.0"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@axe-core/playwright": "^4.12.1",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.62.0",
@@ -51,7 +53,9 @@
     "@vue/test-utils": "^2.4.6",
     "eslint": "^10.8.0",
     "eslint-plugin-astro": "^3.0.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-vue": "^10.10.0",
+    "eslint-plugin-vuejs-accessibility": "^2.6.0",
     "globals": "^17.8.0",
     "happy-dom": "^20.11.6",
     "jszip": "^3.10.1",

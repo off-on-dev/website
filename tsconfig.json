@@ -8,6 +8,9 @@
       "@/*": ["src/*"]
     },
     "jsx": "preserve",
-    "jsxImportSource": "vue"
+    "jsxImportSource": "vue",
+    // vitest.config.ts sets globals: true, so describe/it/expect/vi are ambient.
+    // Without this, `astro check` reports them as undefined across every test file.
+    "types": ["vitest/globals"]
   }
 }

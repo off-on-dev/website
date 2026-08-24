@@ -343,6 +343,11 @@ function navigatePanel(e: KeyboardEvent): void {
 
       <!-- Desktop: two pill rows -->
       <div class="hidden lg:block space-y-3">
+        <!-- APG radiogroup: the group is deliberately not focusable, the radios
+             inside carry roving tabindex. The keydown handler sits here to catch
+             arrow keys bubbling from those radios, which is what the rule below
+             misreads as an interactive-but-unfocusable element. -->
+        <!-- eslint-disable-next-line vuejs-accessibility/interactive-supports-focus -->
         <div role="radiogroup" aria-label="Filter by difficulty" class="flex flex-wrap items-center gap-2 pb-3 border-b border-border" @keydown="handleDifficultyKey">
           <button type="button" role="radio" :aria-checked="activeDifficulty === null" :tabindex="activeDifficulty === null ? 0 : -1" :class="DIFF_PILL_BASE" :style="allLevelsPillStyle(activeDifficulty === null)" @click="setDifficultyExact(null)">
             All Levels
