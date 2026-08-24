@@ -427,11 +427,20 @@ describe("getChallengeData", () => {
 // had passed, which is exactly when a new visitor still needs a starting point.
 
 describe("getStarterTarget", () => {
-  const adv = (month: string, slug: string, difficulties: string[]) => ({
+  const FUTURE = "2999-01-01T00:00:00Z";
+  const PAST = "2000-01-01T00:00:00Z";
+
+  const adv = (
+    month: string,
+    slug: string,
+    difficulties: string[],
+    deadline?: string,
+  ) => ({
     month,
     slug,
     title: slug,
     tags: ["Tag"],
+    ...(deadline ? { rewards: { deadline } } : {}),
     levels: difficulties.map((d) => ({ id: d.toLowerCase(), difficulty: d })),
   });
 
@@ -458,11 +467,44 @@ describe("getStarterTarget", () => {
     expect(getStarterTarget(descending)?.adventure.slug).toBe("newest");
   });
 
-  it("ignores whether the adventure is live", () => {
-    // No deadlines anywhere, so nothing is live. A target is still returned.
-    const result = getStarterTarget([adv("JUL 2026", "expired", ALL)]);
-    expect(result).not.toBeNull();
-    expect(result?.adventure.slug).toBe("expired");
+  it("falls back to the most recent when nothing is live", () => {
+    // No deadlines anywhere, so nothing is live. A target is still returned:
+    // live is a preference, not a gate.
+    const result = getStarterTarget([
+      adv("JAN 2026", "older", ALL, PAST),
+      adv("JUL 2026", "newest-expired", ALL, PAST),
+    ]);
+    expect(result?.adventure.slug).toBe("newest-expired");
+  });
+
+  it("prefers a live adventure over a newer expired one", () => {
+    // The divergent case: preference and recency disagree.
+    const result = getStarterTarget([
+      adv("JUL 2026", "newer-expired", ALL, PAST),
+      adv("JAN 2026", "older-live", ALL, FUTURE),
+    ]);
+    expect(result?.adventure.slug).toBe("older-live");
+  });
+
+  it("picks the newest live one when several are live", () => {
+    const result = getStarterTarget([
+      adv("JAN 2026", "older-live", ALL, FUTURE),
+      adv("JUN 2026", "newer-live", ALL, FUTURE),
+      adv("JUL 2026", "newest-expired", ALL, PAST),
+    ]);
+    expect(result?.adventure.slug).toBe("newer-live");
+  });
+
+  it("treats a future level deadline as live, not just a rewards deadline", () => {
+    const withLiveLevel = {
+      month: "JAN 2026",
+      slug: "level-live",
+      title: "level-live",
+      tags: ["Tag"],
+      levels: [{ id: "beginner", difficulty: "Beginner", deadline: FUTURE }],
+    };
+    const result = getStarterTarget([adv("JUL 2026", "newer-expired", ALL, PAST), withLiveLevel]);
+    expect(result?.adventure.slug).toBe("level-live");
   });
 
   it("falls back to the easiest level present when there is no Beginner", () => {

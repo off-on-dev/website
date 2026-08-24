@@ -35,30 +35,38 @@ export const isAdventureLive = (a: {
 export type StarterTarget<A> = { adventure: A; levelId: string };
 
 /**
- * Where to send a newcomer: the easiest level of the most recent adventure.
+ * Where to send a newcomer: the easiest level of the newest live adventure, or
+ * of the most recent adventure when nothing is live.
  *
- * Deliberately not gated on `isAdventureLive`. Gating on it means the pointer
- * disappears entirely once every deadline has passed, which is precisely when a
- * new visitor still needs somewhere to start. The challenges stay solvable after
- * their rewards window closes, so "latest" is the useful answer, not "live".
+ * Preferring live matters because its rewards window is still open, so it is the
+ * most useful place to send someone. But live must not be a *gate*: when every
+ * deadline has passed the pointer would disappear entirely, which is precisely
+ * when a new visitor still needs somewhere to start. Challenges stay solvable
+ * after their rewards window closes.
  *
  * Sorts internally rather than trusting the caller's order, and falls back to
  * the easiest level present if an adventure ever ships without a Beginner, so a
- * data change cannot silently blank the pointer again.
+ * data change cannot silently blank the pointer.
  */
 export function getStarterTarget<
-  A extends { month: string; levels: { id: string; difficulty: string }[] },
+  A extends {
+    month: string;
+    rewards?: { deadline?: string };
+    levels: { id: string; difficulty: string; deadline?: string }[];
+  },
 >(adventures: A[]): StarterTarget<A> | null {
-  const latest = sortAdventuresByMonthDesc(adventures)[0];
-  if (!latest) return null;
+  const newestFirst = sortAdventuresByMonthDesc(adventures);
+  // find() on a newest-first list gives the newest live one, not just any.
+  const chosen = newestFirst.find((a) => isAdventureLive(a)) ?? newestFirst[0];
+  if (!chosen) return null;
 
   const rank = (difficulty: string): number => {
     const i = DIFFICULTIES.indexOf(difficulty as (typeof DIFFICULTIES)[number]);
     return i === -1 ? DIFFICULTIES.length : i;
   };
-  const easiest = [...latest.levels].sort((x, y) => rank(x.difficulty) - rank(y.difficulty))[0];
+  const easiest = [...chosen.levels].sort((x, y) => rank(x.difficulty) - rank(y.difficulty))[0];
 
-  return easiest ? { adventure: latest, levelId: easiest.id } : null;
+  return easiest ? { adventure: chosen, levelId: easiest.id } : null;
 }
 
 // The filter cards preview at most this many learnings; entries are capped at

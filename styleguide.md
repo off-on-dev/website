@@ -476,7 +476,7 @@ Props: `adventureId: string`, `adventureTitle: string`, `tag: string`, `levelId:
 
 Static markup plus one script, no island. Rendered `hidden`; the script reveals it only when `starter_nudge_dismissed` is absent from localStorage, so a visitor who dismissed it never sees it flash back. Dismiss button: `aria-label="Dismiss suggestion"`, `min-h-8 min-w-8` (32 px, WCAG 2.5.8). Wrapper: `aria-live="polite" aria-atomic` so screen readers announce the reveal.
 
-Target comes from `getStarterTarget()` in `src/lib/challenges.ts`: the easiest level of the most recent adventure. Deliberately not gated on `isAdventureLive` — challenges stay solvable after their rewards window closes, and gating on live blanked the pointer entirely once every deadline had passed.
+Target comes from `getStarterTarget()` in `src/lib/challenges.ts`: the easiest level of the newest **live** adventure, falling back to the most recent when nothing is live. Live is a preference, not a gate — an open rewards window is the most useful place to send someone, but gating on it blanked the pointer entirely once every deadline had passed.
 
 ---
 
