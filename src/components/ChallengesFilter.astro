@@ -544,18 +544,21 @@ const dropdownItem =
       });
     }
 
-    document.addEventListener("mousedown", (event) => {
+    const onMousedown = (event: MouseEvent) => {
       const t = event.target as Node;
       dropdowns.forEach((d) => !d.contains(t) && setOpen(d, false));
-    });
+    };
 
-    document.addEventListener("keydown", (event) => {
+    const onKeydown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
       const open = dropdowns.find(isOpen);
       if (!open) return;
       setOpen(open, false);
       triggerOf(open).focus();
-    });
+    };
+
+    document.addEventListener("mousedown", onMousedown);
+    document.addEventListener("keydown", onKeydown);
 
     // ── Wiring ─────────────────────────────────────────────────────────────
     for (const pill of tagPills) {
@@ -609,7 +612,19 @@ const dropdownItem =
 
     readUrl();
     apply();
+
+    filterTeardown = () => {
+      document.removeEventListener("mousedown", onMousedown);
+      document.removeEventListener("keydown", onKeydown);
+    };
   }
 
+  // Module-scope teardown; null when the filter is not mounted on this page.
+  let filterTeardown: (() => void) | null = null;
+
   document.addEventListener("astro:page-load", initChallengesFilter);
+  document.addEventListener("astro:before-swap", () => {
+    filterTeardown?.();
+    filterTeardown = null;
+  });
 </script>

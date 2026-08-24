@@ -1,14 +1,14 @@
 # offon.dev
 
-Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for open source enthusiasts. The site is fully static with no backend. Pages are prerendered at build time by **Astro**; interactivity is layered on as **Vue islands**. It hosts hands-on open source challenges, community documentation, and links to the OffOn community.
+Source for [offon.dev](https://offon.dev/), the home of OffOn: a platform for open source enthusiasts. The site is fully static with no backend. Pages are prerendered at build time by **Astro**; interactivity is added as `.astro` components with vanilla `<script>` blocks. It hosts hands-on open source challenges, community documentation, and links to the OffOn community.
 
 ## Tech Stack
 
 - **Astro 7** (`output: 'static'`) + **TypeScript**: prerendered pages, zero JS by default
-- **Vue 3** islands via `@astrojs/vue`: interactivity hydrated with `client:*` directives
-- **nanostores**: shared state across islands (theme, consent)
+- **Vue 3** via `@astrojs/vue`: retained for future islands; the site currently ships **zero islands** — all interactive surfaces are `.astro` + vanilla script
+- **nanostores**: shared store state (consent); read directly via `.subscribe()`/`.get()` in inline scripts
 - **Tailwind CSS 4**: CSS-first via `src/styles/index.css` (`@theme`) and `@tailwindcss/vite`
-- **unplugin-icons** (lucide) in both `.astro` and Vue islands via `~icons/lucide/*`; custom `abbr[data-title]` tooltip portal in `Layout.astro`
+- **unplugin-icons** (lucide) via `~icons/lucide/*`; custom `abbr[data-title]` tooltip portal in `Layout.astro`
 - **Astro Content Collections** (Zod): adventure content authored as YAML, validated + rendered at build time
 - **Playwright** + **axe**: accessibility and SEO/smoke tests (`e2e/`)
 - **GitHub Pages**: hosting and deployment
@@ -34,7 +34,7 @@ Node.js **26** is required (pinned in `.nvmrc`; `nvm use`).
 | `npm run sync` | `astro sync` — runs the Zod content schema over adventure YAML; fails on invalid content |
 | `npm run test:unit` | Vitest unit tests (lib functions, consent store, Vue components) |
 | `npm run test:unit:watch` | Vitest in watch mode during development |
-| `npm run test:e2e` | Playwright (a11y + SEO/smoke). Starts `astro preview` itself; no separate build needed |
+| `npm run test:e2e` | Playwright (a11y + SEO/smoke). Requires `npm run build` first; `astro preview` serves the built `dist/` |
 | `npm run lint:reuse` | REUSE licence compliance check (requires `pip install reuse` once) |
 | `node .ai/templates/generate-reveal-zip.mjs` | Regenerate `public/downloads/offon-reveal-template.zip` |
 | `node .ai/templates/generate-pptx.mjs` | Regenerate `public/downloads/offon-deck-template.pptx` |
@@ -53,13 +53,13 @@ src/
     404.astro, the static pages, and _app.ts (Vue appEntrypoint)
   layouts/Layout.astro  # App shell: <head> (SEO, CSP, favicons, theme + GA4 bootstrap,
                         # JSON-LD), ClientRouter, skip-nav, Navbar, <slot/>, Footer, ConsentBanner
-  components/      # *.astro (static, zero-JS) and *.vue islands (ThemeToggle, ChallengesFilter, ConsentBanner)
+  components/      # *.astro (static, zero-JS) with inline scripts; *.vue reserved for future islands
   content.config.ts  # Content collection: Zod schema + custom loader + build-time markdown rendering
   data/           # adventures/<id>/adventure.yaml + *-posts.json + leaderboard.json,
                   # solutions/<id>/<level>.ts, contributors.ts, types.ts, sponsors.ts, team.ts
   lib/            # markdown-pipeline.mjs, adventure-derive.mjs, community-data.ts, solutions.ts,
                   # challenges.ts, difficulty.ts, markdown.ts, utils.ts, site.ts (constants), deadline.mjs
-  stores/         # nanostores: theme.ts ($theme), consent.ts ($consent + gtag injector)
+  stores/         # nanostores: consent.ts ($consent + gtag injector)
   styles/index.css  # Tailwind @theme, component classes, light-mode overrides
   assets/diagrams/  # Architecture SVGs (imported per-level via import.meta.glob)
 e2e/
@@ -90,14 +90,14 @@ Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and
 | `/adventures/:id/` | `adventures/[id].astro` | Adventure detail |
 | `/adventures/:id/levels/:levelId/` | `adventures/[id]/levels/[levelId].astro` | Individual challenge |
 | `/adventures/:id/levels/:levelId/solution/` | `.../solution.astro` | Solution walkthrough (post-deadline) |
-| `/challenges/` and `/challenges/:tag/` | `challenges/[...tag].astro` | All challenges; filter by technology tag (Vue island) |
+| `/challenges/` and `/challenges/:tag/` | `challenges/[...tag].astro` | All challenges; filter by technology tag |
 | `/contribute/`, `/sponsors/`, `/about/`, `/handbook/` | static `.astro` pages | Contribute, sponsors, about, handbook |
 | `/privacy/`, `/accessibility/`, `/brand/` | static `.astro` pages | Privacy (noindex), accessibility statement, brand guidelines |
 | `/presentation-templates/` | static `.astro` page | Slide template downloads (noindex) |
 | `/404/` | `404.astro` | 404 page (`dist/404.html`, served by GitHub Pages) |
 | `/docs`, `/docs/community-guide`, `/community-guide` | redirects → `/handbook/` | Legacy aliases (`redirects` in `astro.config.mjs`) |
 
-> The `/challenges` filter is a Vue island: it renders the full grid server-side (works without JS) and hydrates for topic/difficulty filtering, syncing `?topics`/`?difficulty` to the URL. Adventure and challenge pages link tags to `/challenges/:tag/`.
+> The `/challenges` filter is a static `.astro` component with a vanilla script. The full grid is server-rendered (works without JS); the script handles topic/difficulty filtering and syncs `?topics`/`?difficulty` to the URL. Adventure and challenge pages link tags to `/challenges/:tag/`.
 
 ## SEO and Metadata
 

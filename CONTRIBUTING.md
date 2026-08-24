@@ -18,7 +18,7 @@ git clone https://github.com/<your-username>/website.git
 cd website
 nvm use
 npm install
-npm run dev        # http://localhost:8080
+npm run dev        # http://localhost:4321
 ```
 
 1. Add the upstream remote so you can pull in future changes:
@@ -34,7 +34,7 @@ Open PRs from your fork against `main` on the upstream repo.
 ```sh
 npm run lint             # ESLint
 npm run lint:reuse       # REUSE licence compliance (requires: pip install reuse)
-npm test                 # Vitest unit tests
+npm run test:unit        # Vitest unit tests
 npm run build && npm run test:e2e  # Playwright smoke, SSG, a11y, and hydration tests
 ```
 
@@ -103,7 +103,7 @@ Every component must meet WCAG 2.2 AA. Read [ACCESSIBILITY.md](ACCESSIBILITY.md)
 
 ## Adventure content
 
-Adventures are authored as YAML and compiled to TypeScript. Do not edit `*.generated.ts` files by hand. See [ADVENTURES.md](ADVENTURES.md) for the full content pipeline.
+Adventures are authored as YAML. The YAML is the source of truth; there are no generated files to commit or maintain. See [ADVENTURES.md](ADVENTURES.md) for the full content pipeline.
 
 ## Need help?
 

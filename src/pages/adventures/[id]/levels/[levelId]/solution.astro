@@ -425,13 +425,25 @@ const crumbs = [
 
 <script>
   // Open the <details> element matching the URL hash (StepNav links scroll to a
-  // step but would leave it collapsed otherwise). astro:page-load fires on the
-  // initial load and after every ClientRouter swap.
+  // step but would leave it collapsed otherwise).
   const openMatchingStep = (hash: string): void => {
     if (!hash) return;
     const el = document.getElementById(hash.replace(/^#/, ""));
     if (el instanceof HTMLDetailsElement) el.open = true;
   };
-  document.addEventListener("astro:page-load", () => openMatchingStep(window.location.hash));
-  window.addEventListener("hashchange", () => openMatchingStep(window.location.hash));
+
+  let onHash: (() => void) | null = null;
+
+  document.addEventListener("astro:page-load", () => {
+    openMatchingStep(window.location.hash);
+    onHash = () => openMatchingStep(window.location.hash);
+    window.addEventListener("hashchange", onHash);
+  });
+
+  document.addEventListener("astro:before-swap", () => {
+    if (onHash) {
+      window.removeEventListener("hashchange", onHash);
+      onHash = null;
+    }
+  });
 </script>

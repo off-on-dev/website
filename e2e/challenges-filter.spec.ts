@@ -188,3 +188,91 @@ test.describe("heading is stable across how the filter was reached", () => {
     expect(viaUrl).toBe(EXPECTED);
   });
 });
+
+// Regression: ChallengesFilter registered two document-level listeners
+// (mousedown + keydown) inside initChallengesFilter(), which ran on every
+// astro:page-load, but never removed them. Each trip to /challenges/ added
+// another pair on top of the survivors from previous visits. The fix attaches
+// a teardown on astro:before-swap that removes exactly the handlers added in
+// the current page lifecycle.
+test.describe("document listener lifecycle", () => {
+  test("no listener accumulation across repeated navigations", async ({ page }) => {
+    // Instrument EventTarget.prototype before any page script runs so we can
+    // measure the net number of active mousedown listeners on document.
+    await page.addInitScript(() => {
+      let added = 0;
+      let removed = 0;
+      const origAdd = EventTarget.prototype.addEventListener;
+      const origRemove = EventTarget.prototype.removeEventListener;
+      (EventTarget.prototype as any).addEventListener = function (
+        type: string,
+        listener: EventListenerOrEventListenerObject | null,
+        opts?: boolean | AddEventListenerOptions,
+      ) {
+        if (type === "mousedown" && (this as Node) === document) added++;
+        return origAdd.call(this, type, listener, opts);
+      };
+      (EventTarget.prototype as any).removeEventListener = function (
+        type: string,
+        listener: EventListenerOrEventListenerObject | null,
+        opts?: boolean | EventListenerOptions,
+      ) {
+        if (type === "mousedown" && (this as Node) === document) removed++;
+        return origRemove.call(this, type, listener, opts);
+      };
+      (window as any).__listenerStats = () => ({ added, removed, net: added - removed });
+    });
+
+    // Seed consent to dismiss the banner (not relevant to this test).
+    await page.addInitScript(() =>
+      localStorage.setItem(
+        "analytics_consent",
+        JSON.stringify({ value: "denied", timestamp: Date.now() }),
+      ),
+    );
+
+    // Start on /about/ — a page that does NOT include ChallengesFilter.
+    // There may be noise from Playwright's test harness, so we record a
+    // baseline net count before any ChallengesFilter navigations and assert
+    // relative to it, not against an absolute zero.
+    await page.goto("/about/");
+    await page.waitForLoadState("load");
+
+    const baselineNet = await page.evaluate(
+      () => (window as any).__listenerStats().net as number,
+    );
+
+    const challengesLink = () =>
+      page.getByRole("link", { name: "Challenges", exact: true }).first();
+    const aboutLink = () =>
+      page.getByRole("link", { name: "About", exact: true }).first();
+
+    // Three round-trips: about → challenges → about → challenges → …
+    for (let i = 0; i < 3; i++) {
+      await challengesLink().click();
+      await page.waitForURL("**/challenges/");
+      await page.waitForLoadState("networkidle");
+
+      if (i < 2) {
+        await aboutLink().click();
+        await page.waitForURL("**/about/");
+        await page.waitForLoadState("networkidle");
+      }
+    }
+
+    // Currently on /challenges/ (3rd arrival).
+    const { added, removed, net } = await page.evaluate(
+      () => (window as any).__listenerStats() as { added: number; removed: number; net: number },
+    );
+
+    // Each departure from /challenges/ must have removed the listener added on
+    // arrival; teardown ran on the two returns to /about/.
+    expect(removed, "teardown must fire on each astro:before-swap").toBeGreaterThanOrEqual(2);
+    // Each of the three arrivals at /challenges/ adds exactly one listener.
+    expect(added - baselineNet, "each navigation to /challenges/ adds one listener").toBe(3);
+    // Exactly one ChallengesFilter listener should be live right now. net above
+    // baseline by exactly 1 means: the current listener was added and the two
+    // from earlier trips were torn down. More than +1 means teardown didn't run.
+    expect(net - baselineNet, "only one listener active at a time").toBe(1);
+  });
+});

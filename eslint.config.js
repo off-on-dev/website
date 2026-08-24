@@ -12,6 +12,10 @@ export default tseslint.config(
       ".astro/",
       "node_modules/",
       "coverage/",
+      // Playwright creates this directory only after an e2e run; it is gitignored
+      // but ESLint's tree walk happens before ignores are applied, so it must be
+      // listed here to prevent an ENOENT crash on fresh checkouts.
+      "test-results/",
       // Static/vendored assets served as-is (reveal.js, decks, minified libs).
       "public/",
       // Presentation-template generators are standalone Node scripts.

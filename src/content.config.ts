@@ -292,8 +292,10 @@ function adventuresLoader(): Loader {
       try {
         entries = readdirSync(ADVENTURES_DIR, { withFileTypes: true });
       } catch (err) {
-        console.error(`[adventures-loader] Cannot read adventures directory "${ADVENTURES_DIR}":`, err);
-        return;
+        throw new Error(
+          `[adventures-loader] Cannot read adventures directory "${ADVENTURES_DIR}" — build aborted to prevent deploying a site with no adventure pages.`,
+          { cause: err },
+        );
       }
       for (const entry of entries) {
         if (!entry.isDirectory()) continue;

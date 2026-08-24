@@ -75,7 +75,7 @@ Touch target: interactive elements must meet WCAG 2.5.8 (≥24 × 24 px). Nav li
 
 ## Filter pills
 
-Used in `ChallengesFilter.vue`. Three classes compose the pill system:
+Used in `ChallengesFilter.astro`. Three classes compose the pill system:
 
 | Class | Purpose |
 | --- | --- |
@@ -428,25 +428,24 @@ Each tag is an anchor to `/challenges/[tag-slug]/` with class `.tag-chip-link`. 
 
 ---
 
-### Interactive islands (`.vue`)
+#### `ChallengesFilter` (`.astro`)
 
-#### `ChallengesFilter`
-
-Props: `entries: ChallengeEntry[]`, `tags: string[]`, `base: string`, `initialTag: string | null`, `adventureCount: number`, `embedded?: boolean`, `seeAllHref?: string`
-
-Slots: `adventures` (named — static `AdventureCard` elements for the unfiltered state)
-
-Hydration: `client:visible` (home), `client:load` (challenges page)
+No props passed from outside; all state is derived from the URL and the DOM on `astro:page-load`. Static markup plus a vanilla `<script>` — no island, no hydration directive.
 
 - Below `lg`: dropdown buttons. Above `lg`: `role="radiogroup"` difficulty selector + tag toggles with arrow-key navigation.
-- Dropdowns close on Escape, return focus to trigger.
-- `aria-live="polite"` announces result counts.
-- URL synced via `replaceState` (no navigation); state seeded from `initialTag`, restored from `?topics` / `?difficulty` on mount only.
-- `embedded` suppresses sr-only section headings to avoid duplicate document outline on the home page.
+- Dropdowns close on Escape, return focus to trigger. Outside-click handled by a `mousedown` listener on `document`.
+- `aria-live="polite"` live region announces result counts.
+- URL synced via `replaceState` (no navigation); state seeded from `?topics` / `?difficulty` on `astro:page-load`.
+- `embedded` attribute on the root element suppresses sr-only section headings to avoid duplicate document outline on the home page.
+- All listeners registered on `astro:page-load`, torn down on `astro:before-swap` (including the two document-level `mousedown`/`keydown` handlers).
 
 ---
 
 #### `ConsentBanner` (`.astro`)
+
+### Interactive islands (`.vue`)
+
+No islands exist yet. When the first one is added:
 
 No props. Static markup plus one script, no island. Both states are rendered and both start `hidden`; the script subscribes to `$consent` and reveals whichever matches. The state machine stays in `src/stores/consent.ts`.
 
@@ -532,7 +531,7 @@ A framework earns its place when state drives markup that cannot reasonably be p
 
 - Bind on `astro:page-load` so the component survives View Transitions, or delegate from `document` where one handler can cover every instance.
 - Prefer letting CSS derive presentation from an ARIA attribute (`group-aria-expanded:*`, `.dark`) over having the script set both. One source of truth, and the visual state cannot drift from what assistive tech sees.
-- Release listeners and any `inert` on `astro:before-swap`.
+- Release listeners, store subscriptions, and any `inert` on `astro:before-swap`. **This is mandatory, not optional.** Listeners that are not removed accumulate on `document` across navigations and fire multiple times on the second and subsequent visits. Use a module-scope `teardown` variable: assign the cleanup function on init, call and null it in the `astro:before-swap` handler. `MobileMenu.astro` is the canonical implementation to copy.
 
 ## Hydration quick-reference
 

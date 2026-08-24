@@ -37,7 +37,7 @@ Community activity happens on a separate Discourse instance (display name **comm
 ## Stack
 
 - **Framework:** Astro 7 (static output), TypeScript. Check `package.json` for versions.
-- **Interactivity:** Vue 3 islands via `@astrojs/vue`, hydrated with `client:*` directives. Shared cross-island state uses **nanostores** (`src/stores/`).
+- **Interactivity:** `@astrojs/vue` is installed and ready for Vue 3 islands, but the site currently ships **zero islands**. All interactive surfaces are `.astro` components with vanilla `<script>` blocks. Adding the first island is a one-file change. Shared store state uses **nanostores** (`src/stores/`), read directly via `.subscribe()`/`.get()` in inline scripts — not via `@nanostores/vue` (which is not installed; add it when the first Vue island needing shared state is created).
 - **Styling:** Tailwind CSS 4, CSS-first via `src/styles/index.css` (`@theme` block) and the `@tailwindcss/vite` plugin. No `tailwind.config.ts`.
 - **Icons:** `unplugin-icons` (lucide set via `@iconify-json/lucide`) in both `.astro` and `.vue` islands.
 - **UI primitives:** No shared component library. The abbreviation tooltip is a plain JS portal in `Layout.astro` (position:fixed, escapes overflow clipping). There is no shadcn or Reka UI surface.
@@ -56,7 +56,7 @@ Community activity happens on a separate Discourse instance (display name **comm
 | Thing | Convention | Example |
 | --- | --- | --- |
 | Astro components / pages | PascalCase files (components), kebab or `[param]` (pages) | `AdventureCard.astro`, `adventures/[id].astro` |
-| Vue island components | PascalCase | `ChallengesFilter.vue` |
+| Vue island components | PascalCase | `MyFeature.vue` (no islands exist yet; convention is ready) |
 | nanostores | camelCase file, `$`-prefixed export | `stores/consent.ts` → `$consent` |
 | Module-level constants | SCREAMING_SNAKE_CASE | `BRAND_NAME`, `DIFFICULTIES` |
 | Route segments | kebab-case | `presentation-templates`, `handbook` |
@@ -193,6 +193,7 @@ There is **no** content generator, `npm run generate`, or `*.generated.ts` — r
 
 - Static UI is a `.astro` component (zero JS shipped). For interactivity, default to a `.astro` component with a plain `<script>`; the site currently ships **zero islands**. Only reach for a **Vue island** when the component has genuinely reactive state that a class toggle and a small script cannot express, and hydrate it with the lightest directive that works: `client:visible` / `client:idle` by default, `client:load` only for above-the-fold interactivity (protects the Lighthouse baseline).
 - **Frameworks: Vue, never React.** `@astrojs/vue` and its toolchain stay installed even while unused, so adding an island is a one-file change. Do not strip them as unused dependencies.
+- **Listener and subscription lifecycle:** any event listener or store subscription registered in a component `<script>` must be registered under `astro:page-load` and torn down under `astro:before-swap`. `MobileMenu.astro` is the canonical reference implementation. A module-scope variable holds the teardown function; `astro:before-swap` calls it and nulls the reference. Init must be idempotent. Listeners that accumulate across navigations silently degrade from the second visit onward.
 - **Inline links in prose need `{" "}` around them.** Astro removes the whitespace between text and an adjacent element when the source has a newline there. `e2e/inline-spacing.spec.ts` guards this.
 - `.astro` components cannot be rendered inside a `.vue` island. If an island needs a badge/pill/icon, inline the markup and use `lucide-vue-next`.
 - **Buttons:** raw `<button>` with the CSS utility classes in `src/styles/index.css` (`.btn-primary`, `.btn-ghost`, `.btn-soft`, `.btn-inverse`, `.btn-ghost-inverse`). No Button wrapper. See `styleguide.md`.
@@ -448,7 +449,9 @@ State which checks applied and what was updated (or why skipped).
 
 ### Shared state
 
-State consumed by more than one island lives in a **nanostore** (`src/stores/`), read via `@nanostores/vue`'s `useStore`. Do not duplicate cross-island state in component refs.
+State consumed by more than one component lives in a **nanostore** (`src/stores/`). In `.astro` inline scripts, read the store directly via `.subscribe(callback)` or `.get()`. When the first Vue island needing shared state is created, install `@nanostores/vue` and use its `useStore` composable inside the island.
+
+Do not duplicate cross-island state in component refs.
 
 ### File extensions
 
