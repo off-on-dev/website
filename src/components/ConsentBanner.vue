@@ -55,15 +55,23 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <!-- aria-live so screen readers announce the banner when it appears post-hydration. -->
-  <div aria-live="polite">
+  <!-- aria-live so screen readers announce the banner when it appears post-hydration.
+       aria-atomic so the whole region is re-read on every transition (banner ->
+       cookie button and back), not just the changed subtree. -->
+  <div aria-live="polite" aria-atomic="true">
     <div
       v-if="consent === null && mounted"
       role="region"
       aria-labelledby="consent-banner-title"
       class="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 shadow-lg backdrop-blur"
     >
-      <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:flex-row sm:items-start sm:gap-8 sm:px-6">
+      <!-- max-h-[80vh] + overflow-y-auto keep the actions reachable at 400% zoom
+           and on short landscape viewports (WCAG 1.4.10). The safe-area padding
+           keeps them clear of the iOS home indicator. -->
+      <div
+        class="mx-auto flex max-h-[80vh] max-w-7xl flex-col gap-4 overflow-y-auto px-4 py-5 sm:flex-row sm:items-start sm:gap-8 sm:px-6"
+        style="padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px))"
+      >
         <!-- Left: title + description -->
         <div class="flex-1">
           <p id="consent-banner-title" class="text-sm font-semibold text-foreground">
@@ -79,8 +87,19 @@ onUnmounted(() => {
             for details.
           </p>
         </div>
-        <!-- Right: action buttons -->
+        <!-- Right: action buttons. Decline comes first in DOM and tab order, and
+             uses .btn-secondary (solid, same geometry as .btn-primary) so
+             declining is no harder or less obvious than accepting. -->
         <div class="flex shrink-0 gap-2">
+          <button
+            ref="declineBtn"
+            type="button"
+            class="btn-secondary"
+            aria-label="Decline analytics cookies"
+            @click="deny"
+          >
+            Decline
+          </button>
           <button
             type="button"
             class="btn-primary"
@@ -88,15 +107,6 @@ onUnmounted(() => {
             @click="grant"
           >
             Accept Analytics
-          </button>
-          <button
-            ref="declineBtn"
-            type="button"
-            class="btn-ghost"
-            aria-label="Decline analytics cookies"
-            @click="deny"
-          >
-            Decline
           </button>
         </div>
       </div>

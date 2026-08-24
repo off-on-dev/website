@@ -60,6 +60,7 @@ Raw `<button>` or `<a>` with a class from the table below. No `<Button>` wrapper
 | --- | --- | --- |
 | `.btn-primary` | Filled amber, hover brightness +10 | Primary CTA |
 | `.btn-ghost` | Transparent + foreground border, hover amber border | Secondary action |
+| `.btn-secondary` | Solid inverted neutral (foreground fill, background text) | Paired action that must carry the same weight as `.btn-primary` (consent Decline) |
 | `.btn-soft` | Primary-tinted bg and border | Tertiary / low-emphasis action |
 | `.btn-inverse` | `bg-background`, primary border | CTA on `bg-primary` sections |
 | `.btn-ghost-inverse` | Transparent + background-coloured border | Secondary CTA on `bg-primary` sections |

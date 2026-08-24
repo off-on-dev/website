@@ -450,6 +450,17 @@ html {
     cursor: pointer;
   }
 
+  /* Solid neutral secondary. Same geometry as .btn-primary (px-5 py-3, text-sm,
+     font-semibold, rounded-md) so a paired set of actions carries equal visual
+     weight. Used for consent Decline, where an outline button next to a filled
+     Accept makes declining look like the lesser option. Inverted neutral fill
+     clears WCAG contrast in both themes: fill vs banner background is 19.1:1
+     (dark) / 17.9:1 (light), and label vs fill is the same ratio. */
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 rounded-md bg-foreground px-5 py-3 text-sm font-semibold text-background transition-all duration-200 hover:bg-foreground/90 active:scale-[0.97] focus-ring;
+    cursor: pointer;
+  }
+
   /* Soft tinted button */
   .btn-soft {
     @apply inline-flex items-center justify-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-5 py-3 text-sm font-semibold text-primary transition-all duration-200 hover:bg-primary/20 active:scale-[0.97] focus-ring;
