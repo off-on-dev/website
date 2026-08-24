@@ -442,15 +442,16 @@ Hydration: `client:visible` (home), `client:load` (challenges page)
 
 ---
 
-#### `ConsentBanner`
+#### `ConsentBanner` (`.astro`)
 
-No props. Hydration: `client:load transition:persist` (Layout.astro)
+No props. Static markup plus one script, no island. Both states are rendered and both start `hidden`; the script subscribes to `$consent` and reveals whichever matches. The state machine stays in `src/stores/consent.ts`.
 
-- `aria-live="polite"` wrapper so screen readers announce the banner after hydration.
-- Banner: `role="region" aria-labelledby="consent-banner-title"`.
+- `aria-live="polite" aria-atomic="true"` wrapper around both states, always present so assistive tech has it registered before either appears.
+- Banner: `role="region" aria-labelledby="consent-banner-title"`. Inner container is `max-h-[80vh] overflow-y-auto` with safe-area padding, so the actions stay reachable at 400% zoom and clear of the iOS home indicator (WCAG 1.4.10).
+- Decline comes first in DOM and tab order and uses `.btn-secondary`, so declining carries the same weight as accepting.
 - Cookie preferences floating button: 44 × 44 px, `position:fixed` bottom-right with safe-area inset.
-- Focus management: null → granted/denied moves focus to cookie button; X → null (reset) moves focus to Decline button.
-- Wires `firePageView` on `astro:page-load`; calls `initConsent()` and `trackClicks()` on mount.
+- Focus moves **only** from the click handlers, never from the `$consent` subscription. `initConsent()` restoring a stored choice is a state change but not a user action; focusing there would steal focus from the skip-nav link on every page load.
+- Analytics lifecycle (`firePageView`, `trackClicks`) is **not** here. It has its own script in `Layout.astro`, so it does not depend on this component and cannot miss the first `page_view` of a session.
 
 ---
 

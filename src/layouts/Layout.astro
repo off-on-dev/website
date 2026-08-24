@@ -3,7 +3,7 @@ import { ClientRouter } from "astro:transitions";
 import SEO from "@/components/SEO.astro";
 import Navbar from "@/components/Navbar.astro";
 import Footer from "@/components/Footer.astro";
-import ConsentBanner from "@/components/ConsentBanner.vue";
+import ConsentBanner from "@/components/ConsentBanner.astro";
 import { BRAND_NAME, SITE_NAME, SITE_URL, COMMUNITY_URL, LINKEDIN_URL, X_URL, BLUESKY_URL, BRAND_SHORT_DESCRIPTION } from "@/lib/site";
 import "@/styles/index.css";
 
@@ -118,7 +118,21 @@ const fontPreloads = [
     <Navbar />
     <slot />
     <Footer />
-    <ConsentBanner client:load transition:persist />
+    <ConsentBanner />
+
+    {/* Analytics lifecycle, deliberately separate from the consent UI. It used to
+        live in the banner's mount hook, which coupled page_view and click
+        tracking to a component rendering, and risked missing the first
+        page_view if the island hydrated after astro:page-load had already
+        fired. Both are gated on consent at call time inside the store. */}
+    <script>
+      import { firePageView, trackClicks } from "@/stores/consent";
+
+      // astro:page-load fires on the initial load as well as after every client
+      // navigation, so this covers the first page_view of a session too.
+      document.addEventListener("astro:page-load", firePageView);
+      trackClicks();
+    </script>
 
     {/* Progressive enhancement: the code-block header + language label + Copy
         button are rendered at BUILD time (markdown-pipeline.mjs for prose,

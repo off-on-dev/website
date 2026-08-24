@@ -1,5 +1,5 @@
 // Runtime regression tests for the GA4 gated-load consent state machine
-// (src/stores/consent.ts + ConsentBanner.vue). Asserts the observable effects
+// (src/stores/consent.ts + ConsentBanner.astro). Asserts the observable effects
 // — banner state, localStorage, and whether the gtag.js script tag is injected —
 // without loading real Google Analytics: googletagmanager.com is routed to an
 // empty stub so the injected <script> "loads" but hits no external network.

@@ -1,0 +1,125 @@
+---
+import IconCookie from "~icons/lucide/cookie";
+
+// Analytics consent UI. Static markup plus one script; no island.
+//
+// Both states are rendered and both start `hidden`; the script reveals whichever
+// matches the stored choice. The state machine itself is untouched and still
+// lives in src/stores/consent.ts, which owns the storage format, the 180-day
+// expiry, GPC and the gtag injection order.
+//
+// Analytics lifecycle (page_view, click tracking) is deliberately NOT wired up
+// here. It lives in its own script in Layout.astro so it does not depend on this
+// component mounting.
+
+const privacyUrl = `${import.meta.env.BASE_URL}privacy/`;
+---
+
+{/* The live region wraps both states and is always present, so assistive tech
+    has it registered before either appears. aria-atomic so the whole region is
+    re-read on a transition, not just the changed subtree. */}
+<div aria-live="polite" aria-atomic="true">
+  <div
+    data-consent-banner
+    hidden
+    role="region"
+    aria-labelledby="consent-banner-title"
+    class="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 shadow-lg backdrop-blur"
+  >
+    {/* max-h-[80vh] + overflow-y-auto keep the actions reachable at 400% zoom
+        and on short landscape viewports (WCAG 1.4.10). The safe-area padding
+        keeps them clear of the iOS home indicator. */}
+    <div
+      class="mx-auto flex max-h-[80vh] max-w-7xl flex-col gap-4 overflow-y-auto px-4 py-5 sm:flex-row sm:items-start sm:gap-8 sm:px-6"
+      style="padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px))"
+    >
+      <div class="flex-1">
+        <p id="consent-banner-title" class="text-sm font-semibold text-foreground">
+          This site uses analytics cookies
+        </p>
+        <p class="mt-1 text-sm text-dim">
+          We use Google Analytics to understand how visitors use offon.dev. No data is sent to
+          Google until you accept. You can change your preference at any time. See our
+          <a
+            href={privacyUrl}
+            class="text-dim underline underline-offset-2 hover:text-foreground focus-ring rounded-sm"
+            >Privacy Policy</a
+          >
+          for details.
+        </p>
+      </div>
+      {/* Decline comes first in DOM and tab order and uses .btn-secondary
+          (solid, same geometry as .btn-primary), so declining is no harder or
+          less prominent than accepting. */}
+      <div class="flex shrink-0 gap-2">
+        <button
+          type="button"
+          data-consent-decline
+          class="btn-secondary"
+          aria-label="Decline analytics cookies"
+        >
+          Decline
+        </button>
+        <button
+          type="button"
+          data-consent-accept
+          class="btn-primary"
+          aria-label="Accept analytics cookies"
+        >
+          Accept Analytics
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <button
+    type="button"
+    data-consent-reset
+    hidden
+    class="focus-ring fixed right-4 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-dim shadow-sm hover:text-foreground"
+    style="bottom: calc(env(safe-area-inset-bottom, 0px) + 1.25rem)"
+    aria-label="Change cookie preferences"
+  >
+    <IconCookie width={18} height={18} aria-hidden="true" />
+  </button>
+</div>
+
+<script>
+  import { $consent, grant, deny, reset, initConsent } from "@/stores/consent";
+
+  const banner = document.querySelector<HTMLElement>("[data-consent-banner]");
+  const resetBtn = document.querySelector<HTMLButtonElement>("[data-consent-reset]");
+  const declineBtn = document.querySelector<HTMLButtonElement>("[data-consent-decline]");
+  const acceptBtn = document.querySelector<HTMLButtonElement>("[data-consent-accept]");
+
+  if (banner && resetBtn && declineBtn && acceptBtn) {
+    // Undecided shows the banner; decided shows the floating preferences button.
+    $consent.subscribe((value) => {
+      banner.hidden = value !== null;
+      resetBtn.hidden = value === null;
+    });
+
+    // Focus moves only from these handlers, never from the subscription above.
+    // initConsent() restoring a stored choice is a state change but not a user
+    // action, and focusing there would yank focus off the skip-nav link on every
+    // page load for every returning visitor.
+    acceptBtn.addEventListener("click", () => {
+      grant();
+      resetBtn.focus();
+    });
+
+    declineBtn.addEventListener("click", () => {
+      deny();
+      resetBtn.focus();
+    });
+
+    resetBtn.addEventListener("click", () => {
+      reset();
+      declineBtn.focus();
+    });
+
+    // GPC check plus restore of any stored choice. Runs after the subscription
+    // so the resulting state is rendered.
+    initConsent();
+  }
+</script>

@@ -56,7 +56,7 @@ Community activity happens on a separate Discourse instance (display name **comm
 | Thing | Convention | Example |
 | --- | --- | --- |
 | Astro components / pages | PascalCase files (components), kebab or `[param]` (pages) | `AdventureCard.astro`, `adventures/[id].astro` |
-| Vue island components | PascalCase | `ChallengesFilter.vue`, `ConsentBanner.vue` |
+| Vue island components | PascalCase | `ChallengesFilter.vue` |
 | nanostores | camelCase file, `$`-prefixed export | `stores/consent.ts` → `$consent` |
 | Module-level constants | SCREAMING_SNAKE_CASE | `BRAND_NAME`, `DIFFICULTIES` |
 | Route segments | kebab-case | `presentation-templates`, `handbook` |
@@ -257,7 +257,7 @@ Google Analytics 4 with **Consent Mode v2 in gated-load mode**: no data of any k
 
 - **`Layout.astro`** contains the minimal inline `<head>` bootstrap (`is:inline`): bootstrap `window.dataLayer`, define `window.gtag` as the `dataLayer.push` shim, and `gtag('consent','default',{...})` with all four signals denied. **No** `wait_for_update`, localStorage read, `js`, `config`, or `<script src=...googletagmanager...>`.
 - **`src/stores/consent.ts`** owns the state (a plain nanostore `$consent`, default `null`, so island SSR matches hydration) and the `gtag.js` injector. The injector is shared by Accept and the mount-restore path, gated by a module-scoped `gtagScriptInjected` boolean. On Accept it pushes `consent update` + `js` + `config` synchronously **before** appending the script tag. `config` passes only `cookie_flags: 'SameSite=Lax;Secure'`, `cookie_expires: 15552000`, `send_page_view: false`. The stored format (`{value, timestamp}` + 180-day expiry, key `analytics_consent`) is preserved from the React app.
-- **`src/components/ConsentBanner.vue`** (island, `client:load` + `transition:persist`) renders the banner until a choice is made, then a floating cookie button that calls `reset()`. Keeps `aria-live="polite"`. On mount it calls `initConsent()` (GPC + restore) and registers `firePageView` on `astro:page-load`.
+- **`src/components/ConsentBanner.astro`** is static markup plus one script: both states are rendered `hidden` and the script reveals whichever matches `$consent`. Keeps `aria-live="polite" aria-atomic="true"`. It calls `initConsent()` (GPC + restore) and moves focus only from the click handlers, never from the subscription. `firePageView` and `trackClicks` live in their own script in `Layout.astro`, independent of this component.
 - **`firePageView`** only fires when `$consent === "granted"` and `gtag` is loaded — never queue events while undecided/denied.
 
 ### Consent state machine (enumerate all transitions before touching this code)
