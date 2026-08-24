@@ -162,11 +162,15 @@ test.describe("heading is stable across how the filter was reached", () => {
       await page.waitForSelector("h1");
       expect(await page.locator("h1").innerText()).toBe(EXPECTED);
 
-      // The tag is still surfaced, just not as the page heading: once in the
-      // visible count line, once in the sr-only live region for screen readers.
+      // The tag is still surfaced, just not as the page heading.
       const count = new RegExp(`\\d+ challenges? · ${tag}`, "i");
       await expect(page.locator("p").filter({ hasText: count })).toBeVisible();
-      await expect(page.locator("span.sr-only[aria-live]").filter({ hasText: count })).toHaveCount(1);
+
+      // Not in the live region though: arriving at a filtered URL is not an
+      // interaction, and a live region must not announce the state a page
+      // loaded in. It only speaks once the user changes a filter, which
+      // challenges-filter-deep.spec.ts covers.
+      await expect(page.locator("[data-live-count]")).toBeEmpty();
     });
   }
 
