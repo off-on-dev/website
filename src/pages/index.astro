@@ -10,7 +10,7 @@ import CommunitySection from "@/components/CommunitySection.astro";
 import CommunityLeaders from "@/components/CommunityLeaders.astro";
 import SponsorStrip from "@/components/SponsorStrip.astro";
 import BottomCTA from "@/components/BottomCTA.astro";
-import StarterNudge from "@/components/StarterNudge.vue";
+import StarterNudge from "@/components/StarterNudge.astro";
 import ChallengesFilter from "@/components/ChallengesFilter.vue";
 import { getChallengeData, isAdventureLive, sortAdventuresByMonthDesc } from "@/lib/challenges";
 import { BRAND_NAME, BRAND_SHORT_DESCRIPTION, BRAND_SLOGAN, PROPOSE_ADVENTURE_URL } from "@/lib/site";
@@ -42,7 +42,6 @@ const starterLevel = starter?.levels.find((l) => l.difficulty === "Beginner");
         </h2>
         {starter && starterLevel && (
           <StarterNudge
-            client:idle
             adventureId={starter.slug}
             adventureTitle={starter.title}
             tag={starter.tags[0] ?? ""}

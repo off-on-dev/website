@@ -6,7 +6,7 @@ import PageHero from "@/components/PageHero.astro";
 import ChallengeBuildersSection from "@/components/ChallengeBuildersSection.astro";
 import CommunityLeaders from "@/components/CommunityLeaders.astro";
 import BottomCTA from "@/components/BottomCTA.astro";
-import StarterNudge from "@/components/StarterNudge.vue";
+import StarterNudge from "@/components/StarterNudge.astro";
 import ChallengesFilter from "@/components/ChallengesFilter.vue";
 import { BRAND_NAME } from "@/lib/site";
 import { getChallengeData, tagToSlug, isAdventureLive, sortAdventuresByMonthDesc } from "@/lib/challenges";
@@ -59,7 +59,6 @@ const path = initialTag ? `/challenges/${tagToSlug(initialTag)}/` : "/challenges
       <div class="mx-auto max-w-6xl">
         {starter && starterLevel && (
           <StarterNudge
-            client:idle
             adventureId={starter.slug}
             adventureTitle={starter.title}
             tag={starter.tags[0] ?? ""}

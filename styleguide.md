@@ -470,13 +470,13 @@ Static markup plus one script, no island. Navbar passes `active` already resolve
 
 ---
 
-#### `StarterNudge`
+#### `StarterNudge` (`.astro`)
 
 Props: `adventureId: string`, `adventureTitle: string`, `tag: string`, `levelId: string`, `base: string`
 
-Hydration: `client:idle`
+Static markup plus one script, no island. Rendered `hidden`; the script reveals it only when `starter_nudge_dismissed` is absent from localStorage, so a visitor who dismissed it never sees it flash back. Dismiss button: `aria-label="Dismiss suggestion"`, `min-h-8 min-w-8` (32 px, WCAG 2.5.8). Wrapper: `aria-live="polite" aria-atomic` so screen readers announce the reveal.
 
-SSR renders nothing (`show = false`). Reveal deferred to `onMounted` + localStorage check (`starter_nudge_dismissed`). Dismiss button: `aria-label="Dismiss suggestion"`, `min-h-8 min-w-8` (32 px, WCAG 2.5.8). Wrapper: `aria-live="polite" aria-atomic` so screen readers announce appearance.
+Only rendered at all when some adventure is live (a rewards or level deadline still in the future). With every deadline passed there is no starter challenge to point at and the component emits nothing.
 
 ---
 
@@ -504,9 +504,11 @@ Static markup, no island. Both icons and both accessible names are rendered, and
 
 | Directive | When to use |
 | --- | --- |
-| `client:load` | Above-the-fold islands that must hydrate immediately (ConsentBanner). |
+| `client:load` | Above-the-fold islands that must hydrate immediately. Currently unused. |
 | `client:visible` | Below-fold islands — hydrate when entering the viewport (ChallengesFilter on home). |
-| `client:idle` | Non-critical islands that can wait until the browser is idle (StarterNudge). |
+| `client:idle` | Non-critical islands that can wait until the browser is idle. Currently unused. |
+
+`ChallengesFilter` is the only Vue island left, so Vue loads on the 27 routes that include it and on none of the other 42.
 
 `.astro` components cannot be rendered inside a `.vue` island. If an island needs a badge, pill, or icon, inline the markup and use `lucide-vue-next`.
 

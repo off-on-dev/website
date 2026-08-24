@@ -1,0 +1,85 @@
+---
+import IconX from "~icons/lucide/x";
+
+// Dismissable "new here?" pointer at the starter challenge.
+//
+// Rendered `hidden` and revealed by script only when it has not been dismissed,
+// so a returning visitor who dismissed it never sees it flash. The starter
+// adventure and level are resolved at build time by the caller.
+
+interface Props {
+  adventureId: string;
+  adventureTitle: string;
+  tag: string;
+  levelId: string;
+  base: string;
+}
+const { adventureId, adventureTitle, tag, levelId, base } = Astro.props;
+const href = `${base}adventures/${adventureId}/levels/${levelId}/`;
+---
+
+{/* aria-live so the nudge is announced when the script reveals it, rather than
+    appearing silently after the page has settled. */}
+<div aria-live="polite" aria-atomic="true">
+  <div
+    data-starter-nudge
+    hidden
+    class="-mt-2 mb-8 flex items-center justify-between gap-3 rounded-lg bg-primary px-4 py-3 text-sm"
+  >
+    <p class="text-primary-foreground">
+      Each adventure focuses on one open source technology, with challenges at different difficulty
+      levels.
+      <span class="block mt-1">
+        New here?
+        <a
+          href={href}
+          class="font-semibold underline decoration-2 underline-offset-2 hover:underline-offset-4 transition-all text-primary-foreground focus-ring rounded-sm"
+        >
+          Start with {adventureTitle}, a {tag} adventure
+        </a>
+      </span>
+    </p>
+    <button
+      type="button"
+      data-starter-nudge-dismiss
+      aria-label="Dismiss suggestion"
+      class="shrink-0 inline-flex min-h-8 min-w-8 items-center justify-center text-primary-foreground/60 hover:text-primary-foreground transition-colors focus-ring rounded-sm"
+    >
+      <IconX width={14} height={14} aria-hidden="true" />
+    </button>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = "starter_nudge_dismissed";
+
+  function initStarterNudge(): void {
+    const nudge = document.querySelector<HTMLElement>("[data-starter-nudge]");
+    if (!nudge) return;
+
+    let dismissed: boolean;
+    try {
+      dismissed = !!localStorage.getItem(STORAGE_KEY);
+    } catch {
+      // Storage unavailable: leave the nudge hidden rather than showing something
+      // the visitor would have no way to dismiss for good.
+      return;
+    }
+    if (dismissed) return;
+
+    nudge.hidden = false;
+
+    nudge
+      .querySelector<HTMLButtonElement>("[data-starter-nudge-dismiss]")
+      ?.addEventListener("click", () => {
+        nudge.hidden = true;
+        try {
+          localStorage.setItem(STORAGE_KEY, "1");
+        } catch {
+          /* storage unavailable; the nudge returns next visit */
+        }
+      });
+  }
+
+  document.addEventListener("astro:page-load", initStarterNudge);
+</script>
