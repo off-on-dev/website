@@ -36,6 +36,7 @@ jobs:
       # fails on invalid adventure YAML.
       - run: npm run sync
       - run: npm run lint
+      - run: npm run test:unit:coverage
 
   build:
     if: github.event.action != 'closed'
