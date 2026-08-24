@@ -193,7 +193,7 @@ Rules:
 
 Props: `adventure: { slug, title, story, tags, icon?, isLive?, levels: {id, difficulty}[], contributor? }`
 
-Root element is `<a>` with a composite `aria-label` (title + difficulties + live status + tags). Calls `stripHtml` on `adventure.story` for the excerpt. `ContributorBadge` pinned bottom-right via `mt-auto`. Applies `.card-glow` and `.focus-ring`.
+Root element is `<a>` with a composite `aria-label` (title + difficulties + live status + tags). Calls `stripHtml` on `adventure.story` for the excerpt. `ContributorBadge` pinned to the bottom via `mt-auto pt-4`; passes both `name` and `url` so the badge renders as `<a>` when a URL is present. Applies `.card-glow` and `.focus-ring`.
 
 ---
 
@@ -297,7 +297,7 @@ Renders as `<a class="contributor-pill">` when `url` is present, `<span>` otherw
 
 #### `DifficultyBadge`
 
-Props: `difficulty: string`, `showDot?: boolean (default false)`
+Props: `difficulty: Difficulty` (`"Beginner" | "Intermediate" | "Expert"`), `showDot?: boolean (default false)`
 
 Uses `data-difficulty` attribute targeted by `.light [data-difficulty]` CSS overrides. Colours via inline CSS using `--difficulty-{variant}-bg/border/text` HSL vars. Dot (showDot) is `aria-hidden`.
 

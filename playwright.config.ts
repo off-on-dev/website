@@ -16,11 +16,15 @@ export default defineConfig({
     colorScheme: "dark",
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  // Astro 7 preview daemonizes by default (parent exits 0 immediately).
+  // Stop any leftover daemon first, start a fresh one with --background, then
+  // follow its logs so the webServer process stays alive for Playwright.
+  // globalTeardown stops the daemon after the suite finishes.
+  globalTeardown: "./e2e/teardown",
   webServer: {
-    command: "npm run preview",
+    command:
+      "astro preview stop 2>/dev/null; astro preview --background && astro preview logs --follow",
     url: "http://localhost:4321/",
-    // Always start a fresh preview: reusing a stray `astro dev`/`preview` on
-    // 4321 would test the wrong build (e.g. the dev toolbar fails focus-ring).
     reuseExistingServer: false,
     timeout: 120_000,
   },

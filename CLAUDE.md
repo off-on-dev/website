@@ -174,7 +174,7 @@ There is **no** content generator, `npm run generate`, or `*.generated.ts` — r
 
 ### Server / cache rules
 
-- Playwright's webServer uses `reuseExistingServer: false`; kill any stray `astro dev`/`astro preview` on port 4321 before running tests (a lingering **dev** server has the dev toolbar, which fails focus-ring tests).
+- Playwright's webServer uses `reuseExistingServer: false`; kill any stray `astro dev`/`astro preview` on port 4321 before running tests (a lingering **dev** server has the dev toolbar, which fails focus-ring tests). Astro 7 runs `astro preview` as a background daemon — if a prior run left one alive, stop it with `astro preview stop` before re-running tests.
 - If a build looks stale, `rm -rf dist .astro` and rebuild.
 
 ---
@@ -457,4 +457,4 @@ Enumerate every transition before writing code. For each, list every system that
 
 ## Known follow-ups (post-migration)
 
-Tracked cleanups not yet done: the component-by-component rewrite of `styleguide.md` (a current component inventory has been added in the interim). (Done: Shiki dual-theme syntax highlighting for code blocks, lint, sitemap endpoint, consent runtime tests `e2e/consent.spec.ts`, gated click-event tracking, the full React-parity restoration of the home/adventures/challenges pages + nav/footer chrome, the code-block header + Copy button, and the abbr JS tooltip — a `position:fixed` portal in `Layout.astro` that clamps to the viewport and escapes overflow clipping.)
+No open cleanups. (Done: Shiki dual-theme syntax highlighting for code blocks, lint, sitemap endpoint, consent runtime tests `e2e/consent.spec.ts`, gated click-event tracking, the full React-parity restoration of the home/adventures/challenges pages + nav/footer chrome, the code-block header + Copy button, the abbr JS tooltip — a `position:fixed` portal in `Layout.astro` that clamps to the viewport and escapes overflow clipping, and the full component-by-component `styleguide.md` rewrite with verified prop types.)
