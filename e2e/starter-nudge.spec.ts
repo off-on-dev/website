@@ -3,11 +3,10 @@
 
 // Starter nudge: appears for new visitors, stays gone once dismissed.
 //
-// It only renders when some adventure is live, i.e. has a rewards or level
-// deadline still in the future. With every deadline passed there is no starter
-// challenge to point at, so the correct output is nothing at all. The first test
-// pins that rule; the behavioural ones skip themselves when there is no live
-// adventure, and say so, rather than passing vacuously.
+// It points at the easiest level of the most recent adventure, and is not gated
+// on whether that adventure is still live. Gating on live meant the pointer
+// vanished entirely once every deadline had passed, which is exactly when a new
+// visitor still needs somewhere to start.
 
 import { test, expect, type Page } from "@playwright/test";
 
@@ -15,33 +14,45 @@ const NUDGE = "[data-starter-nudge]";
 const DISMISS = "[data-starter-nudge-dismiss]";
 const KEY = "starter_nudge_dismissed";
 
-/** True when the build has at least one live adventure, per the Live pill. */
-async function hasLiveAdventure(page: Page): Promise<boolean> {
+/** The adventure slug the /adventures/ grid lists first, i.e. the most recent. */
+async function latestAdventureSlug(page: Page): Promise<string> {
   await page.goto("/adventures/");
   await page.waitForLoadState("load");
-  return (await page.getByText("Live", { exact: true }).count()) > 0;
+  const href = await page
+    .locator('a[href*="/adventures/"]')
+    .filter({ hasNot: page.locator("[data-starter-nudge]") })
+    .first()
+    .getAttribute("href");
+  return href!.split("/adventures/")[1].split("/")[0];
 }
 
-test("renders only when an adventure is live", async ({ page }) => {
-  const live = await hasLiveAdventure(page);
+test("renders regardless of whether any adventure is live", async ({ page }) => {
+  const anyLive = (await page.getByText("Live", { exact: true }).count()) > 0;
 
   await page.goto("/");
   await page.waitForLoadState("load");
-  const present = (await page.locator(NUDGE).count()) > 0;
 
-  expect(
-    present,
-    live
-      ? "an adventure is live, so the nudge should be rendered"
-      : "no adventure is live, so the nudge should not be rendered at all",
-  ).toBe(live);
+  await expect(
+    page.locator(NUDGE),
+    `nudge must render whether or not an adventure is live (live: ${anyLive})`,
+  ).toBeVisible();
 });
 
-test.describe("when a starter challenge exists", () => {
-  test.beforeEach(async ({ page }) => {
-    test.skip(!(await hasLiveAdventure(page)), "no live adventure in this build");
-  });
+test("points at the most recent adventure", async ({ page }) => {
+  const latest = await latestAdventureSlug(page);
 
+  await page.goto("/");
+  const href = await page.locator(`${NUDGE} a`).getAttribute("href");
+  expect(href).toContain(`/adventures/${latest}/`);
+});
+
+test("points at the easiest level of that adventure", async ({ page }) => {
+  await page.goto("/");
+  const href = await page.locator(`${NUDGE} a`).getAttribute("href");
+  expect(href).toMatch(/\/levels\/beginner\/$/);
+});
+
+test.describe("behaviour", () => {
   for (const path of ["/", "/challenges/"]) {
     test(`${path}: shows for a new visitor and links to the starter level`, async ({ page }) => {
       await page.goto(path);

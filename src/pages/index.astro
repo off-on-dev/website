@@ -12,7 +12,7 @@ import SponsorStrip from "@/components/SponsorStrip.astro";
 import BottomCTA from "@/components/BottomCTA.astro";
 import StarterNudge from "@/components/StarterNudge.astro";
 import ChallengesFilter from "@/components/ChallengesFilter.vue";
-import { getChallengeData, isAdventureLive, sortAdventuresByMonthDesc } from "@/lib/challenges";
+import { getChallengeData, getStarterTarget, isAdventureLive, sortAdventuresByMonthDesc } from "@/lib/challenges";
 import { BRAND_NAME, BRAND_SHORT_DESCRIPTION, BRAND_SLOGAN, PROPOSE_ADVENTURE_URL } from "@/lib/site";
 
 const base = import.meta.env.BASE_URL;
@@ -25,9 +25,8 @@ const visibleAdventures = adventures.slice(0, HOME_ADVENTURE_LIMIT);
 const hasMore = adventures.length > HOME_ADVENTURE_LIMIT;
 
 const { entries, tags } = getChallengeData(adventures);
-// Starter nudge target: first live adventure and its beginner level.
-const starter = adventures.find((a) => isAdventureLive(a));
-const starterLevel = starter?.levels.find((l) => l.difficulty === "Beginner");
+// Starter nudge target: easiest level of the most recent adventure.
+const starter = getStarterTarget(adventures);
 ---
 
 <Layout title={`${BRAND_NAME} - ${BRAND_SLOGAN}`} description={BRAND_SHORT_DESCRIPTION} path="/">
@@ -40,12 +39,12 @@ const starterLevel = starter?.levels.find((l) => l.difficulty === "Beginner");
         <h2 id="challenges-heading" class="mb-6 text-3xl font-bold text-primary md:text-4xl">
           Choose Your Adventure
         </h2>
-        {starter && starterLevel && (
+        {starter && (
           <StarterNudge
-            adventureId={starter.slug}
-            adventureTitle={starter.title}
-            tag={starter.tags[0] ?? ""}
-            levelId={starterLevel.id}
+            adventureId={starter.adventure.slug}
+            adventureTitle={starter.adventure.title}
+            tag={starter.adventure.tags[0] ?? ""}
+            levelId={starter.levelId}
             base={base}
           />
         )}

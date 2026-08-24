@@ -32,6 +32,35 @@ export const isAdventureLive = (a: {
   );
 };
 
+export type StarterTarget<A> = { adventure: A; levelId: string };
+
+/**
+ * Where to send a newcomer: the easiest level of the most recent adventure.
+ *
+ * Deliberately not gated on `isAdventureLive`. Gating on it means the pointer
+ * disappears entirely once every deadline has passed, which is precisely when a
+ * new visitor still needs somewhere to start. The challenges stay solvable after
+ * their rewards window closes, so "latest" is the useful answer, not "live".
+ *
+ * Sorts internally rather than trusting the caller's order, and falls back to
+ * the easiest level present if an adventure ever ships without a Beginner, so a
+ * data change cannot silently blank the pointer again.
+ */
+export function getStarterTarget<
+  A extends { month: string; levels: { id: string; difficulty: string }[] },
+>(adventures: A[]): StarterTarget<A> | null {
+  const latest = sortAdventuresByMonthDesc(adventures)[0];
+  if (!latest) return null;
+
+  const rank = (difficulty: string): number => {
+    const i = DIFFICULTIES.indexOf(difficulty as (typeof DIFFICULTIES)[number]);
+    return i === -1 ? DIFFICULTIES.length : i;
+  };
+  const easiest = [...latest.levels].sort((x, y) => rank(x.difficulty) - rank(y.difficulty))[0];
+
+  return easiest ? { adventure: latest, levelId: easiest.id } : null;
+}
+
 // The filter cards preview at most this many learnings; entries are capped at
 // build so the (SSR-serialized) island payload stays small.
 const LEARNINGS_PREVIEW_COUNT = 3;

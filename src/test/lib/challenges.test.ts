@@ -1,12 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  DIFFICULTIES,
-  tagToSlug,
-  sortAdventuresByMonthDesc,
-  isAdventureLive,
-  getChallengeData,
-  type ChallengeEntry,
-} from "@/lib/challenges";
+import { DIFFICULTIES, getChallengeData, getStarterTarget, isAdventureLive, sortAdventuresByMonthDesc, tagToSlug, type ChallengeEntry } from "@/lib/challenges";
 
 // ---------------------------------------------------------------------------
 // DIFFICULTIES
@@ -424,5 +417,76 @@ describe("getChallengeData", () => {
       expect(entry).toHaveProperty("isLive");
       expect(entry).toHaveProperty("url");
     });
+  });
+});
+
+// ── getStarterTarget ─────────────────────────────────────────────────────────
+//
+// Where a newcomer is pointed. Deliberately independent of whether an adventure
+// is still live: gating on that blanked the pointer entirely once every deadline
+// had passed, which is exactly when a new visitor still needs a starting point.
+
+describe("getStarterTarget", () => {
+  const adv = (month: string, slug: string, difficulties: string[]) => ({
+    month,
+    slug,
+    title: slug,
+    tags: ["Tag"],
+    levels: difficulties.map((d) => ({ id: d.toLowerCase(), difficulty: d })),
+  });
+
+  const ALL = ["Beginner", "Intermediate", "Expert"];
+
+  it("picks the most recent adventure", () => {
+    const result = getStarterTarget([
+      adv("JAN 2026", "older", ALL),
+      adv("JUL 2026", "newest", ALL),
+      adv("MAY 2026", "middle", ALL),
+    ]);
+    expect(result?.adventure.slug).toBe("newest");
+  });
+
+  it("picks the Beginner level of that adventure", () => {
+    const result = getStarterTarget([adv("JUL 2026", "a", ALL)]);
+    expect(result?.levelId).toBe("beginner");
+  });
+
+  it("does not depend on the caller's ordering", () => {
+    const ascending = [adv("JAN 2026", "older", ALL), adv("JUL 2026", "newest", ALL)];
+    const descending = [...ascending].reverse();
+    expect(getStarterTarget(ascending)?.adventure.slug).toBe("newest");
+    expect(getStarterTarget(descending)?.adventure.slug).toBe("newest");
+  });
+
+  it("ignores whether the adventure is live", () => {
+    // No deadlines anywhere, so nothing is live. A target is still returned.
+    const result = getStarterTarget([adv("JUL 2026", "expired", ALL)]);
+    expect(result).not.toBeNull();
+    expect(result?.adventure.slug).toBe("expired");
+  });
+
+  it("falls back to the easiest level present when there is no Beginner", () => {
+    const result = getStarterTarget([adv("JUL 2026", "a", ["Expert", "Intermediate"])]);
+    expect(result?.levelId).toBe("intermediate");
+  });
+
+  it("sorts unknown difficulties last rather than picking them", () => {
+    const result = getStarterTarget([adv("JUL 2026", "a", ["Mystery", "Expert"])]);
+    expect(result?.levelId).toBe("expert");
+  });
+
+  it("returns null when there are no adventures", () => {
+    expect(getStarterTarget([])).toBeNull();
+  });
+
+  it("returns null when the latest adventure has no levels", () => {
+    expect(getStarterTarget([adv("JUL 2026", "a", [])])).toBeNull();
+  });
+
+  it("does not mutate the input array", () => {
+    const input = [adv("JAN 2026", "older", ALL), adv("JUL 2026", "newest", ALL)];
+    const order = input.map((a) => a.slug);
+    getStarterTarget(input);
+    expect(input.map((a) => a.slug)).toEqual(order);
   });
 });

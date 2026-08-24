@@ -9,7 +9,7 @@ import BottomCTA from "@/components/BottomCTA.astro";
 import StarterNudge from "@/components/StarterNudge.astro";
 import ChallengesFilter from "@/components/ChallengesFilter.vue";
 import { BRAND_NAME } from "@/lib/site";
-import { getChallengeData, tagToSlug, isAdventureLive, sortAdventuresByMonthDesc } from "@/lib/challenges";
+import { getChallengeData, getStarterTarget, isAdventureLive, sortAdventuresByMonthDesc, tagToSlug } from "@/lib/challenges";
 
 export async function getStaticPaths() {
   const adventures = sortAdventuresByMonthDesc((await getCollection("adventures")).map((a) => a.data));
@@ -25,9 +25,8 @@ const base = import.meta.env.BASE_URL;
 
 const adventureCount = adventures.length;
 
-// Starter nudge target: first live adventure and its beginner level.
-const starter = adventures.find((a) => isAdventureLive(a));
-const starterLevel = starter?.levels.find((l) => l.difficulty === "Beginner");
+// Starter nudge target: easiest level of the most recent adventure.
+const starter = getStarterTarget(adventures);
 
 // These exact strings are what Google has indexed for these two routes.
 // Do not "tidy" them; rewording costs ranking signal.
@@ -57,12 +56,12 @@ const path = initialTag ? `/challenges/${tagToSlug(initialTag)}/` : "/challenges
 
     <section class="py-24 px-6 md:px-16">
       <div class="mx-auto max-w-6xl">
-        {starter && starterLevel && (
+        {starter && (
           <StarterNudge
-            adventureId={starter.slug}
-            adventureTitle={starter.title}
-            tag={starter.tags[0] ?? ""}
-            levelId={starterLevel.id}
+            adventureId={starter.adventure.slug}
+            adventureTitle={starter.adventure.title}
+            tag={starter.adventure.tags[0] ?? ""}
+            levelId={starter.levelId}
             base={base}
           />
         )}
