@@ -42,9 +42,16 @@ const path = initialTag ? `/challenges/${tagToSlug(initialTag)}/` : "/challenges
 
 <Layout title={title} description={description} path={path}>
   <main id="main-content" tabindex="-1">
+    {/* The h1 names the page, not the filter. A tag route is the same page with
+        one filter pre-applied, and that state is already conveyed by the active
+        pill and the "N challenges · Tag" count line. Making the h1 tag-specific
+        meant the identical filtered view had two different headings depending on
+        whether you arrived via /challenges/<tag>/ or by clicking a pill on
+        /challenges/. The <title> stays tag-specific, which is what
+        distinguishes these routes in search results and browser tabs. */}
     <PageHero
       eyebrow="Challenges"
-      title={initialTag ? `${initialTag} Challenges` : "Open Source Challenges"}
+      title="Open Source Challenges"
       description="Each adventure focuses on one open source technology, with challenges at different difficulty levels. Pick your adventure, work through real-world scenarios hands-on, and share what you learn with the community."
     />
 

@@ -142,3 +142,45 @@ test.describe("difficulty radiogroup keyboard", () => {
     expect(state.total).toBeGreaterThan(2);
   });
 });
+
+// A tag route and the in-page filter produce the same view, so they must produce
+// the same heading. They did not: /challenges/<tag>/ rendered "<Tag> Challenges"
+// while filtering by pill left "Open Source Challenges", and the pre-migration
+// app used the latter on both.
+test.describe("heading is stable across how the filter was reached", () => {
+  test.use({ viewport: { width: 1400, height: 900 } });
+
+  const EXPECTED = "Open Source Challenges";
+
+  for (const tag of ["backstage", "kubernetes", "opentelemetry"]) {
+    test(`/challenges/${tag}/ keeps the page heading`, async ({ page }) => {
+      await gotoChallenges(page, "h1");
+      const unfiltered = await page.locator("h1").innerText();
+      expect(unfiltered).toBe(EXPECTED);
+
+      await page.goto(`/challenges/${tag}/`);
+      await page.waitForSelector("h1");
+      expect(await page.locator("h1").innerText()).toBe(EXPECTED);
+
+      // The tag is still surfaced, just not as the page heading: once in the
+      // visible count line, once in the sr-only live region for screen readers.
+      const count = new RegExp(`\\d+ challenges? · ${tag}`, "i");
+      await expect(page.locator("p").filter({ hasText: count })).toBeVisible();
+      await expect(page.locator("span.sr-only[aria-live]").filter({ hasText: count })).toHaveCount(1);
+    });
+  }
+
+  test("filtering by pill and by URL agree", async ({ page }) => {
+    await gotoChallenges(page, "h1");
+    await page.getByRole("button", { name: "Backstage", exact: true }).first().click();
+    await page.waitForTimeout(150);
+    const viaPill = await page.locator("h1").innerText();
+
+    await page.goto("/challenges/backstage/");
+    await page.waitForSelector("h1");
+    const viaUrl = await page.locator("h1").innerText();
+
+    expect(viaPill).toBe(viaUrl);
+    expect(viaUrl).toBe(EXPECTED);
+  });
+});
