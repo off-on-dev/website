@@ -5,27 +5,33 @@
  * from the Discourse API, and writes back `discussionPosts` and `totalReplies`.
  * Only writes if data changed. JSON files contain only discussion data.
  *
+ * No credentials required — uses the public Discourse topic API.
+ *
  * Usage: node scripts/refresh-discussions.mjs
  */
 
-import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { atomicWrite, fetchWithRetry } from "./discourse-utils.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const COMMUNITY_BASE = "https://community.offon.dev";
 const ADVENTURES_DIR = resolve(__dirname, "../src/data/adventures");
 
 /**
- * Resolves a Discourse avatar_template to a full URL.
- * Templates can be relative paths (/user_avatar/...) or full URLs (https://...).
+ * Resolves a Discourse avatar_template to a full HTTPS URL.
+ * Returns undefined for http:// URLs (non-HTTPS) and unrecognised forms.
+ * Exported for unit-testing.
  */
-function resolveAvatarUrl(template, size = "40") {
+export function resolveAvatarUrl(template, size = "40") {
   if (!template) return undefined;
   const resolved = template.replace("{size}", size);
-  if (resolved.startsWith("http")) return resolved;
-  return `${COMMUNITY_BASE}${resolved}`;
+  if (resolved.startsWith("https://")) return resolved;
+  if (resolved.startsWith("/")) return `${COMMUNITY_BASE}${resolved}`;
+  return undefined;
 }
+
 /**
  * Extracts user-written plain text from a Discourse "cooked" HTML post.
  * Removes onebox embeds, images, URLs, and metadata.
@@ -101,13 +107,20 @@ function findLevelFiles(dir) {
 
 async function fetchTopicPosts(topicId, topicUrl) {
   try {
-    const res = await fetch(`${COMMUNITY_BASE}/t/${topicId}.json`);
+    const res = await fetchWithRetry(`${COMMUNITY_BASE}/t/${topicId}.json`);
     if (!res.ok) {
       console.warn(`  Skipping ${topicUrl}: HTTP ${res.status}`);
       return null;
     }
 
-    const data = await res.json();
+    let data;
+    try {
+      data = await res.json();
+    } catch {
+      console.warn(`  Skipping ${topicUrl}: malformed JSON in topic response`);
+      return null;
+    }
+
     const firstPagePosts = data.post_stream?.posts ?? [];
     const allPostIds = data.post_stream?.stream ?? [];
 
@@ -120,10 +133,22 @@ async function fetchTopicPosts(topicId, topicUrl) {
     for (let i = 0; i < remainingIds.length; i += 20) {
       const chunk = remainingIds.slice(i, i + 20);
       const params = chunk.map((id) => `post_ids[]=${id}`).join("&");
-      const chunkRes = await fetch(`${COMMUNITY_BASE}/t/${topicId}/posts.json?${params}`);
+      const chunkRes = await fetchWithRetry(
+        `${COMMUNITY_BASE}/t/${topicId}/posts.json?${params}`
+      );
       if (chunkRes.ok) {
-        const chunkData = await chunkRes.json();
+        let chunkData;
+        try {
+          chunkData = await chunkRes.json();
+        } catch {
+          console.warn(`  Failed to parse chunk JSON (posts ${chunk[0]}…${chunk[chunk.length - 1]})`);
+          continue;
+        }
         allPosts = allPosts.concat(chunkData.post_stream?.posts ?? []);
+      } else {
+        console.warn(
+          `  Failed to fetch chunk (posts ${chunk[0]}…${chunk[chunk.length - 1]}): HTTP ${chunkRes.status}`
+        );
       }
     }
 
@@ -199,7 +224,7 @@ async function main() {
     const oldJson = readFileSync(filePath, "utf-8");
 
     if (newJson !== oldJson) {
-      writeFileSync(filePath, newJson);
+      atomicWrite(filePath, newJson);
       updated++;
       console.log(`Updated: ${filePath}`);
     }
@@ -208,7 +233,9 @@ async function main() {
   console.log(`Done. ${updated} file(s) updated out of ${levelFiles.length} levels.`);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

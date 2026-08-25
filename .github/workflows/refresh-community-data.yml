@@ -21,7 +21,7 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v3
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         id: app-token
         with:
           client-id: ${{ vars.APP_ID }}
@@ -96,14 +96,22 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh issue create \
-            --title "Refresh community data: JSON validation failed" \
-            --label "bug" \
-            --body "The scheduled \`refresh-community-data\` workflow failed JSON structure validation and did not commit new data to \`main\`.
+          TITLE="Refresh community data: JSON validation failed"
+          OPEN=$(gh issue list \
+            --state open \
+            --search "\"${TITLE}\" in:title" \
+            --json number \
+            --jq 'length' 2>/dev/null || echo "0")
+          if [ "$OPEN" -eq 0 ]; then
+            gh issue create \
+              --title "${TITLE}" \
+              --label "bug" \
+              --body "The scheduled \`refresh-community-data\` workflow failed JSON structure validation and did not commit new data to \`main\`.
 
           **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
           Check the run log for which file failed and which field was missing or malformed. Fix the upstream script that writes that file, then re-run the workflow manually via workflow_dispatch."
+          fi
 
       - name: Commit if changed
         id: commit

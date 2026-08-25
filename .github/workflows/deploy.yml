@@ -9,7 +9,7 @@ on:
     - cron: "0 2 * * *"
 
 permissions:
-  contents: write
+  contents: read   # All jobs read-only by default; deploy job overrides to write
 
 concurrency:
   group: pages
@@ -21,6 +21,8 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required by JamesIves/github-pages-deploy-action to push gh-pages
     steps:
       - uses: actions/checkout@v7
 
@@ -48,7 +50,7 @@ jobs:
       - run: npm run build
 
       - name: Deploy to gh-pages
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 # v4
         with:
           branch: gh-pages
           folder: dist

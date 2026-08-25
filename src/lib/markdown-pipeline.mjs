@@ -210,7 +210,7 @@ function isNonPublicUrl(href) {
     if (!host.includes(".")) return true;
     return false;
   } catch {
-    return false;
+    return true;
   }
 }
 

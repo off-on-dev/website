@@ -19,9 +19,10 @@
  * NOTE: community.offon.dev is the actual Discourse server URL used for API calls.
  */
 
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { atomicWrite, fetchWithRetry } from "./discourse-utils.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -64,10 +65,20 @@ function loadDotEnv() {
   }
 }
 
-function resolveAvatarUrl(url) {
+/**
+ * Resolves a Discourse avatar URL to an absolute HTTPS URL.
+ * Returns undefined for any URL that does not resolve to https://.
+ * Exported for unit-testing.
+ */
+export function resolveAvatarUrl(url) {
   if (!url) return undefined;
-  const absolute = url.startsWith("http") ? url : `${COMMUNITY_BASE}${url}`;
-  return absolute.replace("/user_avatar/community.open-ecosystem.com/", "/user_avatar/community.offon.dev/");
+  if (!url.startsWith("https://") && !url.startsWith("/")) return undefined;
+  const absolute = url.startsWith("https://") ? url : `${COMMUNITY_BASE}${url}`;
+  const normalized = absolute.replace(
+    "/user_avatar/community.open-ecosystem.com/",
+    "/user_avatar/community.offon.dev/"
+  );
+  return normalized.startsWith("https://") ? normalized : undefined;
 }
 
 async function fetchLeaderboard(adventureId, { categoryId, has_beginner, has_intermediate, has_expert, has_single }, apiKey, apiUsername) {
@@ -80,7 +91,7 @@ async function fetchLeaderboard(adventureId, { categoryId, has_beginner, has_int
     "params[has_single]":      String(has_single),
   });
 
-  const res = await fetch(url, {
+  const res = await fetchWithRetry(url, {
     method: "POST",
     headers: {
       "Api-Key": apiKey,
@@ -94,7 +105,12 @@ async function fetchLeaderboard(adventureId, { categoryId, has_beginner, has_int
     throw new Error(`HTTP ${res.status} for ${adventureId}`);
   }
 
-  const data = await res.json();
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error(`Malformed JSON in leaderboard response for ${adventureId}`);
+  }
 
   if (!data.success) {
     throw new Error(`Query failed for ${adventureId}: ${JSON.stringify(data.errors)}`);
@@ -149,7 +165,12 @@ async function main() {
   let changed = 0;
   let errors = 0;
 
-  for (const [adventureId, config] of Object.entries(ADVENTURE_CATEGORIES)) {
+  const entries = Object.entries(ADVENTURE_CATEGORIES);
+  for (let i = 0; i < entries.length; i++) {
+    const [adventureId, config] = entries[i];
+    // 2 s delay between adventures to stay within Discourse's admin rate limit
+    if (i > 0) await new Promise((r) => setTimeout(r, 2000));
+
     const activeCount = [config.has_beginner, config.has_intermediate, config.has_expert, config.has_single].filter(Boolean).length;
     const outPath = resolve(ADVENTURES_DIR, adventureId, "leaderboard.json");
     console.log(`  Fetching leaderboard: ${adventureId} (category ${config.categoryId}, ${activeCount} active levels)`);
@@ -163,7 +184,7 @@ async function main() {
       const existingRows = JSON.stringify(existingParsed.rows ?? []);
 
       if (existingRows !== JSON.stringify(rows)) {
-        writeFileSync(outPath, payload);
+        atomicWrite(outPath, payload);
         console.log(`    Updated: ${rows.length} entries`);
         changed++;
       } else {
@@ -179,7 +200,9 @@ async function main() {
   if (errors > 0) process.exit(1);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

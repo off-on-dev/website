@@ -45,7 +45,7 @@ const DIFFICULTY = z.enum(["Beginner", "Intermediate", "Expert"]);
 // gate: unknown fields fail the build (via `astro sync` / `astro build`).
 
 const contributorSchema = z
-  .object({ name: z.string(), url: z.string().url().optional(), about: z.string().optional() })
+  .object({ name: z.string(), url: z.url().optional(), about: z.string().optional() })
   .strict();
 
 const rewardsSchema = z
@@ -63,7 +63,7 @@ const upcomingLevelSchema = z
   .strict();
 
 const toolboxItemSchema = z
-  .object({ name: z.string(), description: z.string(), url: z.string().url().optional() })
+  .object({ name: z.string(), description: z.string(), url: z.url().optional() })
   .strict();
 
 const serviceSchema = z
@@ -83,7 +83,7 @@ const howToPlayStepSchema = z
 const verificationSchema = z.object({ command: z.string(), description: z.string() }).strict();
 
 const helpfulLinkSchema = z
-  .object({ title: z.string(), url: z.string().url(), description: z.string().optional() })
+  .object({ title: z.string(), url: z.url(), description: z.string().optional() })
   .strict();
 
 const levelSchema = z

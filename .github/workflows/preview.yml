@@ -59,6 +59,7 @@ jobs:
       - if: steps.node-cache.outputs.cache-hit != 'true'
         run: npm ci
 
+      - run: npm run sync
       - run: npm run build
 
       - uses: actions/upload-artifact@v7
@@ -139,10 +140,13 @@ jobs:
       # the preview with no per-directory asset-copy step. Layout.astro marks
       # /pr-preview/ builds noindex.
       - if: github.event.action != 'closed'
+        run: npm run sync
+
+      - if: github.event.action != 'closed'
         env:
           PR_NUMBER: ${{ github.event.number }}
         run: VITE_BASE_PATH=/pr-preview/pr-${PR_NUMBER}/ npm run build
 
-      - uses: rossjrw/pr-preview-action@v1
+      - uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1
         with:
           source-dir: dist/
