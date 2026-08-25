@@ -11,14 +11,12 @@ import type { Discussion, DiscussionPost, LeaderboardRow } from "@/lib/community
 const LEADERBOARD_ROWS_VISIBLE = 3;
 const POSTS_VISIBLE = 3;
 
-// Mirror of makeAvatarPalette(0.25) from src/lib/avatar-utils.ts, as inline
-// style strings (Astro style= takes a string).
+// Inline avatar palette: bg color at 0.25 opacity, foreground text (Astro style= takes a string).
 const AVATAR_COLORS = ["--primary", "--difficulty-architect", "--teal", "--difficulty-builder", "--destructive"];
 const avatarPalette = AVATAR_COLORS.map(
   (c) => `background-color:hsl(var(${c}) / 0.25);color:hsl(var(--foreground))`,
 );
 
-// Mirror of src/lib/discussion-utils.ts.
 const isCertificatePost = (post: DiscussionPost): boolean => post.challengeSolved === true;
 const displaySnippet = (post: DiscussionPost): string => {
   if (!isCertificatePost(post)) return post.cooked;

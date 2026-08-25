@@ -848,7 +848,7 @@ html {
 }
 
 /* ─── Markdown inline content ────────────────────────────── */
-/* Applied to dangerouslySetInnerHTML containers rendering pre-compiled
+/* Applied to set:html containers rendering pre-compiled
    inline HTML (learnings, audience, objective, step titles, contributor bios,
    rewards text, story). Styles <code>, <strong>, <em>, and <a> within them. */
 .md-inline code {
@@ -873,8 +873,8 @@ abbr {
 }
 /* Custom abbr tooltip via data-title attribute.
    Using data-title instead of title avoids the browser's native title tooltip
-   (which would show alongside our custom one). The generate pipeline and
-   MarkdownContent.tsx convert title→data-title; aria-label carries the
+   (which would show alongside our custom one). The markdown pipeline converts
+   title→data-title; aria-label carries the
    expansion for screen readers.
    display:inline-block gives <abbr> a proper containing block so the ::after
    tooltip positions reliably. Rule is global so it works in generated content,
@@ -921,9 +921,9 @@ abbr[data-title]:hover::after,
 abbr[data-title]:focus::after {
   display: block;
 }
-/* MarkdownContent.tsx replaces the ::after tooltip with a JS DOM tooltip for
-   correct sizing on narrow viewports and touch support. The CSS ::after is
-   suppressed for those elements via this class. */
+/* The JS abbr portal in Layout.astro replaces the ::after tooltip with a DOM
+   tooltip for correct sizing on narrow viewports and touch support. The CSS
+   ::after is suppressed for those elements via this class. */
 abbr.abbr-js-tooltip::after {
   content: none;
 }
@@ -971,7 +971,7 @@ abbr[data-title]:focus-visible {
 }
 
 /* ─── Markdown block content ─────────────────────────────── */
-/* Applied to dangerouslySetInnerHTML containers rendering pre-compiled
+/* Applied to set:html containers rendering pre-compiled
    markdown HTML (step.content, architecture). Styles injected HTML elements
    that Tailwind utility classes cannot reach from the outside. */
 .md-content {
@@ -1142,7 +1142,7 @@ abbr[data-title]:focus-visible {
   -webkit-mask-position: center;
   mask-position: center;
 }
-/* Code block - header bar + body structure shared by CodeBlock component and MarkdownContent DOM injection */
+/* Code block - header bar + body structure shared by CodeBlock component and the markdown pipeline's DOM injection */
 .code-block-header {
   display: flex;
   align-items: center;

@@ -103,12 +103,12 @@ Dragon NaturallySpeaking and iOS Voice Control navigate by speaking visible link
 If `aria-label` differs from visible text, the user cannot activate the link by speaking
 what they see. **The accessible name must contain the visible text.**
 
-## SPA/React Router Note
+## SPA Navigation Note
 
-After route changes, screen reader users hear nothing unless focus is managed. When React
-Router navigates, move focus to the new page's `<h1>` or the skip link target, and ensure
-the page title updates. This is already handled by React Router v7's framework mode —
-verify it is not broken when adding new routes.
+After route changes, screen reader users hear nothing unless focus is managed. Astro's
+`<ClientRouter />` emits a route announcer and moves focus to `#main-content` after each
+client-side navigation — this is wired in `Layout.astro`. Verify it is not broken when
+adding new routes.
 
 ## Definition of Done Checklist
 

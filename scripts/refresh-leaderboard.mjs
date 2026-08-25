@@ -30,8 +30,7 @@ const COMMUNITY_BASE = "https://community.offon.dev";
 const QUERY_ID = 5;
 
 // Maps adventure ID -> Discourse category ID and which difficulty levels are active.
-// Generated from src/data/adventures/<id>/adventure.yaml by scripts/generate-adventures.mjs.
-// Do not edit the GENERATED block by hand — change adventure.yaml instead.
+// Updated by the sync-adventure workflow. Do not edit the GENERATED block by hand — change adventure.yaml instead.
 // Category IDs are from: GET https://community.offon.dev/categories.json
 const ADVENTURE_CATEGORIES = {
   // GENERATED:adventures

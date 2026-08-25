@@ -48,8 +48,9 @@ Each adventure is a scenario-driven challenge with beginner, intermediate, and e
 
 ## Challenge Technologies
 
-ArgoCD, Argo Rollouts, flagd, GitHub Actions, Grafana, Jaeger, Java, OpenFeature,
-OpenLLMetry, OpenTelemetry, OpenTofu, Prometheus, PromQL, Python, Spring Boot,
+Argo CD, Argo Events, Argo Rollouts, Argo Workflows, Backstage, flagd, Gitea,
+GitHub Actions, Grafana, Jaeger, Java, Kubernetes, Kyverno, OpenFeature, OpenLLMetry,
+OpenTelemetry, OpenTofu, Policy Reporter, Prometheus, PromQL, Python, Spring Boot,
 TDD, Terraform, Trivy.
 
 ## Machine-Readable Resources
