@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-06T10:05:36.298Z",
+  "updatedAt": "2026-08-26T16:12:51.750Z",
   "rows": [
     {
       "rank": 1,
@@ -23,7 +23,7 @@
       "intermediatePoints": 60,
       "expertPoints": 60,
       "singlePoints": 0,
-      "breakdown": "🟡 Fix a broken Kyverno policy estate | June 2026 Adventure: Intermediate [intermediate] late = 60 pts | 🟢 Restore proper admission control using Kyverno | June 2026 Adventure: Beginner [beginner] late = 60 pts | 🔴 Catch the intruder the Guard couldn't see | June 2026 Adventure: Expert [expert] late = 60 pts"
+      "breakdown": "🟢 Restore proper admission control using Kyverno | June 2026 Adventure: Beginner [beginner] late = 60 pts | 🟡 Fix a broken Kyverno policy estate | June 2026 Adventure: Intermediate [intermediate] late = 60 pts | 🔴 Catch the intruder the Guard couldn't see | June 2026 Adventure: Expert [expert] late = 60 pts"
     },
     {
       "rank": 3,
