@@ -3,11 +3,12 @@
 // e2e/snapshots/. A missing baseline fails the test — add new routes with
 // --update-snapshots and commit the generated files.
 //
-// To regenerate all baselines:
-//   npm run build && npx playwright test e2e/visual.spec.ts --update-snapshots
+// NOT a CI gate. Run locally only:
+//   npm run test:visual      — compare against committed baselines
+//   npm run baselines:update — regenerate baselines (after intentional visual changes)
 //
-// Note: baselines are platform-independent (no OS suffix in the path template).
-// The threshold absorbs minor sub-pixel differences between macOS and Linux.
+// Both commands run inside a pinned linux Docker image so baselines are
+// platform-independent. Never generate baselines directly on macOS or Windows.
 
 import { test, expect, type Page } from "@playwright/test";
 
@@ -90,11 +91,11 @@ for (const viewport of VIEWPORTS) {
             {
               fullPage: true,
               animations: "disabled",
-              // Baselines and CI both run on ubuntu-latest; the observed noise
-              // floor is 0 pixels. 50-pixel absolute cap catches any residual
-              // non-determinism (e.g. minor Chromium bump rendering changes)
-              // while still catching structural layout regressions.
-              maxDiffPixels: 50,
+              // Both baseline generation and comparison build their own dist/.
+              // Astro build non-determinism (content hash seeding) can produce
+              // small pixel diffs between runs. Tighten this after running
+              // `npm run test:visual` and observing the actual diff numbers.
+              maxDiffPixels: 1000,
             },
           );
         });

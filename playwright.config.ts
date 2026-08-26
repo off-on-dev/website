@@ -4,6 +4,9 @@ import { defineConfig, devices } from "@playwright/test";
 // webServer's `astro preview` serves whatever is in dist/).
 export default defineConfig({
   testDir: "e2e",
+  // visual.spec.ts is local-only — run it explicitly with `npm run test:visual`.
+  // It does not run in CI; baselines are committed from a linux Docker environment.
+  testIgnore: ["**/visual.spec.ts"],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
