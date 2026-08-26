@@ -40,6 +40,37 @@ npm run build && npm run test:e2e  # Playwright smoke, SSG, a11y, and hydration 
 
 All four must pass with zero failures before opening a PR.
 
+## Visual regression baselines
+
+`e2e/visual.spec.ts` compares 48 full-page screenshots (12 routes × 2 viewports × 2 themes) against committed baselines in `e2e/snapshots/`. A missing or mismatched baseline fails CI.
+
+**Baselines must be generated on linux only.** macOS and Windows use different font renderers (CoreText / DirectWrite vs FreeType) that produce pixel-level differences even for identical HTML, breaking the comparison on CI.
+
+### Regenerating baselines
+
+Two equivalent routes — use whichever suits your setup:
+
+**Option A — local Docker (requires Docker Desktop or Colima):**
+
+```sh
+npm run baselines:update
+```
+
+This runs the exact Playwright Docker image used as the reference. The image tag in `package.json` (`mcr.microsoft.com/playwright:v<version>-noble`) **must be kept in sync with the `@playwright/test` version in `package-lock.json`**. When you bump Playwright, bump the image tag in the same commit.
+
+**Option B — GitHub Actions (no local Docker needed):**
+
+1. Push your branch.
+2. Go to **Actions → Regenerate visual baselines → Run workflow** and select your branch.
+3. The workflow commits updated baselines back to the branch.
+4. Re-trigger the PR e2e job (push a follow-up commit or re-run it manually) to confirm CI passes.
+
+### When to regenerate
+
+- After an intentional visual change (layout, colour, component).
+- After adding a new route to `e2e/visual.spec.ts` (CI fails with "missing snapshot" until baselines exist).
+- After bumping `@playwright/test` (the Docker image and workflow use the same Chromium version; mismatches produce spurious diffs).
+
 ## Conventions
 
 **Branch naming:** `type/short-description` (e.g. `feat/hero-section`, `fix/nav-scroll`)

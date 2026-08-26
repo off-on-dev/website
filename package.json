@@ -11,6 +11,7 @@
     "test:unit:watch": "vitest",
     "test:unit:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
+    "baselines:update": "docker run --rm --ipc=host -v ${PWD}:/work -w /work -e PLAYWRIGHT_BROWSERS_PATH=/ms-playwright mcr.microsoft.com/playwright:v1.62.1-noble bash -c 'npm ci && npm run build && npx playwright test e2e/visual.spec.ts --update-snapshots'",
     "lint": "eslint .",
     "check": "astro check",
     "lint:reuse": "reuse lint"
