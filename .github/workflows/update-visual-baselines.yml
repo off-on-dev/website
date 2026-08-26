@@ -16,6 +16,16 @@ name: Regenerate visual baselines
 # should match CI; this workflow is the authoritative source and overwrites them.
 
 on:
+  # workflow_dispatch becomes available on the default branch after this PR merges.
+  # During the bootstrap phase on feat/astro-migration the push trigger fires once,
+  # generates linux baselines, and commits them. After merge, the push branch entry
+  # is inert (the branch no longer exists) and workflow_dispatch takes over.
+  push:
+    branches: [feat/astro-migration]
+    paths:
+      - "e2e/visual.spec.ts"
+      - "e2e/snapshots/**"
+      - ".github/workflows/update-visual-baselines.yml"
   workflow_dispatch:
 
 permissions:
