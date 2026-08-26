@@ -7,8 +7,9 @@
 //   npm run test:visual      — compare against committed baselines
 //   npm run baselines:update — regenerate baselines (after intentional visual changes)
 //
-// Both commands run inside a pinned linux Docker image so baselines are
-// platform-independent. Never generate baselines directly on macOS or Windows.
+// Baselines are generated on macOS (CoreText rendering). Contributors on Linux
+// or Windows must run baselines:update before test:visual is meaningful on
+// their machine — the committed snapshots will not match their renderer.
 
 import { test, expect, type Page } from "@playwright/test";
 

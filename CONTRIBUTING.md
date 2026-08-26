@@ -51,21 +51,19 @@ npm run test:visual      # compare current build against committed baselines
 npm run baselines:update # regenerate baselines (after an intentional visual change)
 ```
 
-Both commands run inside a pinned linux Docker image (`mcr.microsoft.com/playwright:v<version>-noble`). **Never run either command directly on macOS or Windows** — CoreText and DirectWrite render fonts differently from FreeType; baselines generated on those platforms will not match anyone else's environment and will produce spurious CI-like failures.
+Both commands run natively using your local Playwright installation. No Docker required.
 
-You need Docker Desktop or Colima running locally.
+### Platform note
+
+The committed baselines in `e2e/snapshots/` are generated on macOS using CoreText font rendering. **This is a deliberate tradeoff, not an oversight** — VRT is a local-only check and CI never runs it, so there is no shared environment to target. The consequence: if you are on Linux or Windows, Chromium's font stack differs (FreeType vs. DirectWrite vs. CoreText) and the comparison will fail on text-heavy regions even when the layout is identical. Before `test:visual` is meaningful on a non-macOS machine, regenerate baselines for your platform with `npm run baselines:update`, but do not commit them — the macOS baselines are the shared reference.
 
 ### When to regenerate baselines
 
 - After an intentional visual change (layout, colour, component).
 - After adding a new route to `e2e/visual.spec.ts` (the comparison fails with "missing snapshot" until a baseline exists for that route).
-- After bumping `@playwright/test`: update the image tag in the `test:visual` and `baselines:update` scripts in `package.json` to match the new version, then run `npm run baselines:update` to regenerate.
+- After bumping `@playwright/test`: run `npm run baselines:update` to regenerate with the new Playwright version.
 
 After regenerating, commit the updated files in `e2e/snapshots/` alongside the visual change. Run `npm run test:visual` once more after committing to confirm zero diff.
-
-### Keeping the Docker image in sync
-
-The image tag in `package.json` (`mcr.microsoft.com/playwright:v<version>-noble`) must stay in sync with the `@playwright/test` version in `package-lock.json`. Bump them in the same commit when upgrading Playwright.
 
 ## Conventions
 

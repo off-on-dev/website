@@ -5,7 +5,8 @@ import { defineConfig, devices } from "@playwright/test";
 export default defineConfig({
   testDir: "e2e",
   // visual.spec.ts is local-only — run it explicitly with `npm run test:visual`.
-  // It does not run in CI; baselines are committed from a linux Docker environment.
+  // It does not run in CI; baselines are macOS-generated and must be regenerated
+  // on other platforms before the comparison is meaningful.
   testIgnore: ["**/visual.spec.ts"],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -19,9 +20,8 @@ export default defineConfig({
     colorScheme: "dark",
   },
   snapshotDir: "e2e/snapshots",
-  // Flat path: e2e/snapshots/<name>.png — no OS suffix so baselines are
-  // platform-independent. The threshold in visual.spec.ts absorbs the small
-  // rendering differences between macOS and Linux Chromium.
+  // Flat path: e2e/snapshots/<name>.png — no OS suffix. Baselines are
+  // macOS-generated; contributors on other platforms must regenerate locally.
   snapshotPathTemplate: "{snapshotDir}/{arg}{ext}",
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   // Astro 7 preview daemonizes by default (parent exits 0 immediately).
