@@ -99,13 +99,32 @@ src/
     solutions/<id>/<level>.ts (pre-built Solution objects), sponsors.ts, team.ts
   lib/            # markdown-pipeline.mjs, adventure-derive.mjs, community-data.ts,
                   # solutions.ts, challenges.ts, difficulty.ts, markdown.ts, utils.ts,
-                  # site.ts (constants), level-constants.mjs, deadline.mjs
+                  # site.ts (constants), level-constants.mjs, deadline.mjs,
+                  # adventure-icons.ts, lucide-icons.ts, structured-data.ts
   stores/         # nanostores: consent.ts ($consent + gtag injector)
   styles/index.css  # Tailwind @theme, component classes, light-mode overrides
   assets/diagrams/  # Architecture SVGs (imported per-level via import.meta.glob)
 e2e/
-  a11y.spec.ts    # axe (dark/light/forced-colors) + touch targets + focus rings + zoom
-  smoke.spec.ts   # per-route title/canonical/OG/h1 + island hydration
+  a11y.spec.ts              # axe (dark/light/forced-colors) + touch targets + focus rings + zoom
+  smoke.spec.ts             # per-route title/canonical/OG/h1 + island hydration
+  consent.spec.ts           # consent state machine + page_view accounting
+  consent-ui.spec.ts        # ConsentBanner visibility and focus management
+  theme-toggle.spec.ts      # ThemeToggle SSR correctness and persistence
+  mobile-menu.spec.ts       # focus trap, ESC, restore
+  challenges-filter.spec.ts # radiogroup keyboard, URL sync
+  challenges-filter-deep.spec.ts  # filter combinations and deep-link
+  btn-primary-contrast.spec.ts    # WCAG 1.4.11 boundary for primary/ghost/secondary
+  solution-hashchange.spec.ts     # step hashchange listener lifecycle
+  starter-nudge.spec.ts     # nudge rendering and dismiss persistence
+  inline-spacing.spec.ts    # whitespace around inline links in prose
+  brand-toc.spec.ts         # /brand/ TOC keyboard navigation
+  hero-cta.spec.ts          # hero CTA target and text
+  budget.spec.ts            # /adventures/ page budget display
+  avatar-fallback.spec.ts   # community avatar error handling
+  route-coverage.spec.ts    # every route returns 200 and has a canonical
+  visual.spec.ts            # VRT baselines (local-only; excluded from CI)
+  routes.ts                 # shared SMOKE_ROUTES map
+  teardown.ts               # global teardown (server stop)
 public/           # copied verbatim to dist/ (fonts, favicons, brand, well-known, decks, etc.)
 astro.config.mjs, tsconfig.json, playwright.config.ts, package.json
 .github/workflows/  # deploy, preview, validate-adventures, sync-adventure,
@@ -123,7 +142,7 @@ npm run build        # Static build -> dist/
 npm run preview      # Serve the built dist/ (astro preview)
 npm run sync         # astro sync — runs the Zod content schema; fails on invalid adventure YAML
 npm run test:unit    # Vitest unit tests (lib, stores, Vue components) — fast, no server needed
-npm run test:e2e     # Playwright (a11y + smoke). Runs `astro preview` itself; no separate build needed
+npm run test:e2e     # Playwright (a11y + smoke). Requires `npm run build` first; runs `astro preview` internally
 npm run lint:reuse   # REUSE licence compliance (requires: pip install reuse)  [if present]
 rm -rf .astro        # Bust the content collection pipeline cache (after editing markdown-pipeline.mjs or adventure-derive.mjs)
 
@@ -199,7 +218,7 @@ There is **no** content generator, `npm run generate`, or `*.generated.ts` — r
   2. **Listeners on the component's own child nodes** (`StarterNudge.astro`): when ClientRouter swaps `<body>`, the component's subtree is detached. Dead listeners on detached nodes can never fire and are GC-eligible. The next `astro:page-load` call operates on fresh nodes. No teardown needed.
 - **Inline links in prose need `{" "}` around them.** Astro removes the whitespace between text and an adjacent element when the source has a newline there. `e2e/inline-spacing.spec.ts` guards this.
 - `.astro` components cannot be rendered inside a `.vue` island. If an island needs a badge/pill/icon, inline the markup and use `lucide-vue-next`.
-- **Buttons:** raw `<button>` with the CSS utility classes in `src/styles/index.css` (`.btn-primary`, `.btn-ghost`, `.btn-soft`, `.btn-inverse`, `.btn-ghost-inverse`). No Button wrapper. See `styleguide.md`.
+- **Buttons:** raw `<button>` with the CSS utility classes in `src/styles/index.css` (`.btn-primary`, `.btn-secondary`, `.btn-ghost`, `.btn-soft`, `.btn-inverse`, `.btn-ghost-inverse`). No Button wrapper. See `styleguide.md`.
 - **Touch targets (WCAG 2.5.8):** nav/footer links and any blockified interactive element must be ≥24×24px. Nav links use `min-h-[44px]`, footer links `min-h-[48px]`.
 - **Author-controlled prose is pre-rendered, sanitised HTML.** The content collection converts author markdown fields (`level.audience`, `tool.description`, `step.title`, `step.content`, `contributor.about`, `rewards.eligibility`, `tier.description`, `rewards.rankingNote`, `level.learnings`, `level.objective`, `level.intro`, `level.backstory`, `level.scenario`, `level.architecture`, `adventure.story`, `adventure.backstory`) to sanitised HTML at build time via `src/lib/markdown-pipeline.mjs`. Render with `set:html={value}` and the `md-inline` (inline) or `md-content` (block) class — via `<InlineProse html={...} />`, which picks the wrapper automatically. Never render `{value}` raw.
   - **Inside an interactive element** (a link card or button): call `stripLinks(html)` from `@/lib/markdown` first, to avoid nested `<a>`/`<button>`.

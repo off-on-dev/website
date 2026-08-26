@@ -559,6 +559,14 @@ html {
   border-color: hsl(var(--primary-border));
 }
 
+/* WCAG 1.4.11: the ghost border is foreground/35 in both themes. In dark mode
+   that alpha gives ~3.3:1 against the near-black background — passes. In light
+   mode it drops to ~2.3:1 against the near-white background — fails. Raise to
+   /55 here to reach ~3.7:1 on every light-mode surface. Dark mode untouched. */
+.light .btn-ghost {
+  border-color: hsl(var(--foreground) / 0.55);
+}
+
 .light .md-content pre code span { color: var(--shiki-light, inherit); }
 
 .light .card-glow:hover {

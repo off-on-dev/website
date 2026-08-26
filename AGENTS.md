@@ -233,6 +233,11 @@ document.addEventListener("astro:page-load", initMyComponent);
 document.addEventListener("astro:before-swap", () => { teardown?.(); teardown = null; });
 ```
 
+Two patterns are safe without `astro:before-swap` teardown — do not add teardown to these:
+
+1. **Module-scope delegation on a surviving node** (`ThemeToggle.astro`): `document.addEventListener("click", handler)` at module scope runs exactly once per session. `document` is never swapped; delegation matches at event time. No accumulation, no teardown needed.
+2. **Listeners on the component's own child nodes** (`StarterNudge.astro`): when ClientRouter swaps `<body>`, the component's subtree is detached. Dead listeners on detached nodes can never fire and are GC-eligible. The next `astro:page-load` operates on fresh nodes. No teardown needed.
+
 ### Component CSS patterns
 
 - `hero-badge` on the Hero pill; `logo-link` on the Navbar logo; `data-difficulty` on `DifficultyBadge`; `contributor-pill` / `contributor-pill-glow` on `ContributorBadge`.

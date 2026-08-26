@@ -117,7 +117,7 @@ Google Analytics 4 with Consent Mode v2 in **gated-load mode**: no data is sent 
 | `CONSENT_EXPIRY_MS` | Stored consent expiry (180 days). |
 
 - `Layout.astro` ships the minimal inline `<head>` bootstrap (dataLayer + `gtag` shim + all four signals denied; no gtag.js, no `js`/`config`, no localStorage read).
-- `src/stores/consent.ts` owns the state (`$consent` nanostore) and the gtag injector; `src/components/ConsentBanner.vue` is the island. `page_view` fires on `astro:page-load` only when consent is granted. On Decline/Reset, `_ga*` cookies are cleared.
+- `src/stores/consent.ts` owns the state (`$consent` nanostore) and the gtag injector; `src/components/ConsentBanner.astro` is the static component. `page_view` fires on `astro:page-load` only when consent is granted. On Decline/Reset, `_ga*` cookies are cleared.
 
 ## Deployment
 
