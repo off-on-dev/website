@@ -4,7 +4,7 @@
 
 import type { Page } from "@playwright/test";
 
-export const GTAG_HOST = "**/googletagmanager.com/**";
+export const GTAG_HOST = "**googletagmanager.com/**";
 export const STORAGE_KEY = "analytics_consent";
 
 // Realistic gtag.js stub: processes the queued dataLayer config command and
@@ -30,20 +30,20 @@ export const GA_STUB = `(function(){
 // Returns a snapshot function: call it to read accumulated event names.
 export async function setupCollectInterception(page: Page): Promise<() => string[]> {
   const hits: string[] = [];
-  await page.route("**/googletagmanager.com/gtag/js*", (route) =>
-    route.fulfill({ status: 200, contentType: "application/javascript", body: GA_STUB }),
-  );
+  // Catch-all registered first (lower LIFO priority) — silences any other
+  // googletagmanager.com requests (init pixel, etc.) so CSP tests see no violations.
   await page.route(GTAG_HOST, (route) =>
     route.fulfill({ status: 200, contentType: "application/javascript", body: "" }),
   );
-  for (const pattern of [
-    "**/google-analytics.com/g/collect*",
-    "**/region1.google-analytics.com/g/collect*",
-  ]) {
-    await page.route(pattern, (route) => {
-      hits.push(new URL(route.request().url()).searchParams.get("en") ?? "");
-      return route.fulfill({ status: 204, body: "" });
-    });
-  }
+  // gtag/js* registered last (highest LIFO priority) — intercepts the script
+  // request and responds with GA_STUB instead of the real gtag.js.
+  await page.route("**googletagmanager.com/gtag/js*", (route) =>
+    route.fulfill({ status: 200, contentType: "application/javascript", body: GA_STUB }),
+  );
+  // Single pattern matches both www.google-analytics.com and region1.google-analytics.com.
+  await page.route("**google-analytics.com/g/collect*", (route) => {
+    hits.push(new URL(route.request().url()).searchParams.get("en") ?? "");
+    return route.fulfill({ status: 204, body: "" });
+  });
   return () => [...hits];
 }

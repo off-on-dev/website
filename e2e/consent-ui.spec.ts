@@ -10,7 +10,7 @@
 import { test, expect, type Page } from "@playwright/test";
 
 const STORAGE_KEY = "analytics_consent";
-const GTAG_HOST = "**/googletagmanager.com/**";
+const GTAG_HOST = "**googletagmanager.com/**";
 
 const banner = (page: Page) => page.getByRole("region", { name: "This site uses analytics cookies" });
 const accept = (page: Page) => page.getByRole("button", { name: "Accept analytics cookies" });
