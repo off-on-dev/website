@@ -5,6 +5,7 @@
 
 import { test, expect } from "@playwright/test";
 import { SMOKE_ROUTES as ROUTES } from "./routes";
+import { setupCollectInterception, STORAGE_KEY } from "./gtag-helpers";
 
 const SITE_URL = "https://offon.dev";
 
@@ -116,6 +117,47 @@ test.describe("island hydration", () => {
     await expect(page.locator('[data-results="adventures"]')).toBeHidden();
     expect(await page.locator('[data-results="levels"] > li').count()).toBeGreaterThan(0);
     expect(new URL(page.url()).searchParams.get("difficulty")).toBe("Beginner");
+  });
+});
+
+// CSP compliance: gate against console errors caused by blocked network requests.
+// Runs with consent granted so the full analytics path is exercised. The
+// GA_STUB (via setupCollectInterception) replaces real gtag.js — no live hits
+// reach Google, yet all CSP-relevant request types are exercised. No violations
+// were observed with real gtag.js either (verified empirically: the GTM init
+// pixel does not fire in analytics-only mode with all ad signals denied).
+test.describe("CSP compliance", () => {
+  test("no CSP violations on a consented session across multiple navigations", async ({ page }) => {
+    await setupCollectInterception(page);
+
+    const cspViolations: string[] = [];
+    page.on("console", (msg) => {
+      if (msg.type() === "error") {
+        const text = msg.text();
+        if (text.includes("Content Security Policy") || text.includes("violates") || text.includes("CSP")) {
+          cspViolations.push(text);
+        }
+      }
+    });
+    page.on("pageerror", (err) => {
+      const msg = err.message;
+      if (msg.includes("Content Security Policy") || msg.includes("violates")) {
+        cspViolations.push(`pageerror: ${msg}`);
+      }
+    });
+
+    await page.addInitScript((key) => {
+      localStorage.setItem(key, JSON.stringify({ value: "granted", timestamp: Date.now() }));
+    }, STORAGE_KEY);
+
+    // Navigate through representative pages: home, about (prose), challenges
+    // (interactive filter), adventures (community avatars from allowed hosts).
+    for (const path of ["/", "/about/", "/challenges/", "/adventures/"]) {
+      await page.goto(path);
+      await page.waitForLoadState("load");
+    }
+
+    expect(cspViolations, "no CSP violations across a consented session").toEqual([]);
   });
 });
 

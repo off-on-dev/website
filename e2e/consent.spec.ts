@@ -5,9 +5,7 @@
 // empty stub so the injected <script> "loads" but hits no external network.
 
 import { test, expect, type Page } from "@playwright/test";
-
-const GTAG_HOST = "**/googletagmanager.com/**";
-const STORAGE_KEY = "analytics_consent";
+import { GTAG_HOST, STORAGE_KEY, setupCollectInterception } from "./gtag-helpers";
 
 async function stubGtag(page: Page): Promise<void> {
   await page.route(GTAG_HOST, (route) =>
@@ -25,47 +23,6 @@ async function storedConsent(page: Page): Promise<string | null> {
     const raw = localStorage.getItem(key);
     return raw ? (JSON.parse(raw).value as string) : null;
   }, STORAGE_KEY);
-}
-
-// Realistic gtag.js stub: processes the queued dataLayer config command and
-// fires a GA4 collect request when send_page_view is not explicitly false.
-// Intercepts the collect endpoint so tests can assert on page_view delivery
-// without network calls to Google. Other googletagmanager.com requests (e.g.
-// the init pixel) are caught by the GTAG_HOST catch-all below and served empty.
-const GA_STUB = `(function(){
-  var dl=window.dataLayer||[];
-  var mid='';
-  try{mid=new URL(document.currentScript.src).searchParams.get('id')||'';}catch(e){}
-  if(!mid)return;
-  for(var i=0;i<dl.length;i++){
-    var cmd=dl[i];
-    if(cmd&&cmd[0]==='config'&&cmd[1]===mid&&(!cmd[2]||cmd[2].send_page_view!==false)){
-      fetch('https://www.google-analytics.com/g/collect?v=2&tid='+encodeURIComponent(mid)+'&en=page_view&dp='+encodeURIComponent(location.pathname),{keepalive:true}).catch(function(){});
-      break;
-    }
-  }
-})();`;
-
-async function setupCollectInterception(page: Page): Promise<() => string[]> {
-  const hits: string[] = [];
-  // Specific route first: realistic stub for the gtag.js script itself.
-  await page.route("**/googletagmanager.com/gtag/js*", (route) =>
-    route.fulfill({ status: 200, contentType: "application/javascript", body: GA_STUB }),
-  );
-  // Catch-all: any other googletagmanager.com request (init pixel, etc.) served empty.
-  await page.route(GTAG_HOST, (route) =>
-    route.fulfill({ status: 200, contentType: "application/javascript", body: "" }),
-  );
-  for (const pattern of [
-    "**/google-analytics.com/g/collect*",
-    "**/region1.google-analytics.com/g/collect*",
-  ]) {
-    await page.route(pattern, (route) => {
-      hits.push(new URL(route.request().url()).searchParams.get("en") ?? "");
-      return route.fulfill({ status: 204, body: "" });
-    });
-  }
-  return () => [...hits];
 }
 
 test.describe("consent: gated load", () => {
