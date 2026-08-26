@@ -181,3 +181,112 @@ test.describe("consent: gated load", () => {
     expect(await storedConsent(page)).toBe("granted");
   });
 });
+
+// Helper: count page_view entries pushed to window.dataLayer.
+// gtag() is the dataLayer.push shim (defined in the inline bootstrap), so every
+// gtag('event','page_view',{...}) call is captured synchronously before gtag.js
+// even loads. Arguments objects serialise as array-like: [0]='event', [1]=name.
+const countPageViews = (page: Page) =>
+  page.evaluate(() =>
+    (window.dataLayer ?? []).filter(
+      (a) => (a as unknown[])[0] === "event" && (a as unknown[])[1] === "page_view",
+    ).length,
+  );
+
+test.describe("consent: page_view accounting", () => {
+  test.beforeEach(async ({ page }) => {
+    await stubGtag(page);
+  });
+
+  // Regression test for the first-grant under-count: a new visitor who accepts
+  // consent on the landing page and leaves without navigating produced zero
+  // page_views before grant() began calling firePageView() directly.
+  // This test MUST fail if the firePageView() call is removed from grant().
+  test("first-grant on landing page sends exactly one page_view", async ({ page }) => {
+    await page.goto("/");
+    await page.waitForLoadState("load");
+
+    // Before consent: no page_view should have been pushed.
+    expect(await countPageViews(page)).toBe(0);
+
+    await accept(page).click();
+
+    // grant() calls firePageView() synchronously; the push is immediate via the
+    // dataLayer shim. No navigation occurred, so astro:page-load did not re-fire.
+    expect(await countPageViews(page)).toBe(1);
+  });
+
+  // Double-count guard: a returning visitor whose consent is already stored
+  // must produce exactly one page_view on the landing page — not two. The
+  // risk is that gtag('config', {send_page_view:false}) is bypassed somehow
+  // and the tag fires its own automatic page_view alongside our manual one.
+  test("returning granted visitor: exactly one page_view on landing", async ({ page }) => {
+    await page.addInitScript((key) => {
+      localStorage.setItem(key, JSON.stringify({ value: "granted", timestamp: Date.now() }));
+    }, STORAGE_KEY);
+
+    await page.goto("/");
+    await page.waitForLoadState("load");
+
+    expect(await countPageViews(page)).toBe(1);
+  });
+
+  // Double-count guard for client-side navigations: each View Transition hop
+  // must add exactly one page_view to the running total, not two. firePageView()
+  // is called once per astro:page-load; the 'config' call with send_page_view:false
+  // does not re-fire on subsequent navigations (injectGtag is guarded by a
+  // module-scope flag), so there is no second automatic page_view to collide with.
+  test("each client-side navigation adds exactly one page_view", async ({ page }) => {
+    await page.addInitScript((key) => {
+      localStorage.setItem(key, JSON.stringify({ value: "granted", timestamp: Date.now() }));
+    }, STORAGE_KEY);
+
+    await page.goto("/");
+    await page.waitForLoadState("load");
+    expect(await countPageViews(page)).toBe(1);
+
+    await page.click('a[href="/about/"]');
+    await page.waitForURL("/about/");
+    await page.waitForLoadState("load");
+    expect(await countPageViews(page)).toBe(2);
+
+    await page.click('a[href="/challenges/"]');
+    await page.waitForURL("/challenges/");
+    await page.waitForLoadState("load");
+    expect(await countPageViews(page)).toBe(3);
+  });
+
+  // The only session ordering where both grant() → firePageView() and
+  // astro:page-load → firePageView() both fire. A double-count would show up
+  // here as count=4 instead of 3, or as wrong page_paths on the second and
+  // third events. Also verifies page_path is correct on all three events.
+  test("first-grant then navigate: correct count and page_path for all three events", async ({
+    page,
+  }) => {
+    const pageViewPaths = () =>
+      page.evaluate(() =>
+        (window.dataLayer ?? [])
+          .filter((a) => (a as unknown[])[0] === "event" && (a as unknown[])[1] === "page_view")
+          .map((a) => ((a as unknown[])[2] as Record<string, string>).page_path),
+      );
+
+    await page.goto("/");
+    await page.waitForLoadState("load");
+
+    // Accept on the landing page — grant() fires firePageView() for /.
+    await accept(page).click();
+    expect(await pageViewPaths()).toEqual(["/"]);
+
+    // First client-side navigation — astro:page-load fires firePageView() for /about/.
+    await page.click('a[href="/about/"]');
+    await page.waitForURL("/about/");
+    await page.waitForLoadState("load");
+    expect(await pageViewPaths()).toEqual(["/", "/about/"]);
+
+    // Second client-side navigation — astro:page-load fires firePageView() for /challenges/.
+    await page.click('a[href="/challenges/"]');
+    await page.waitForURL("/challenges/");
+    await page.waitForLoadState("load");
+    expect(await pageViewPaths()).toEqual(["/", "/about/", "/challenges/"]);
+  });
+});

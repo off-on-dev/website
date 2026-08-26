@@ -135,8 +135,11 @@ const fontPreloads = [
       import "@/scripts/brand-toc";
       import "@/scripts/solution-hash";
 
-      // astro:page-load fires on the initial load as well as after every client
-      // navigation, so this covers the first page_view of a session too.
+      // astro:page-load fires on the initial load and after every client-side
+      // navigation. For returning visitors (stored consent) this covers the first
+      // page_view of a session. New visitors who accept consent on the landing
+      // page get their first page_view from grant() → firePageView() in
+      // consent.ts, because astro:page-load does not re-fire on a banner click.
       document.addEventListener("astro:page-load", firePageView);
       trackClicks();
     </script>
