@@ -90,9 +90,11 @@ for (const viewport of VIEWPORTS) {
             {
               fullPage: true,
               animations: "disabled",
-              // 0.2% pixel ratio tolerance absorbs cross-platform sub-pixel
-              // rendering differences without masking structural regressions.
-              maxDiffPixelRatio: 0.002,
+              // Baselines and CI both run on ubuntu-latest; the observed noise
+              // floor is 0 pixels. 50-pixel absolute cap catches any residual
+              // non-determinism (e.g. minor Chromium bump rendering changes)
+              // while still catching structural layout regressions.
+              maxDiffPixels: 50,
             },
           );
         });
