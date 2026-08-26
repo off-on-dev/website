@@ -15,6 +15,11 @@ export default defineConfig({
     // site default regardless of the runner's setting.
     colorScheme: "dark",
   },
+  snapshotDir: "e2e/snapshots",
+  // Flat path: e2e/snapshots/<name>.png — no OS suffix so baselines are
+  // platform-independent. The threshold in visual.spec.ts absorbs the small
+  // rendering differences between macOS and Linux Chromium.
+  snapshotPathTemplate: "{snapshotDir}/{arg}{ext}",
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   // Astro 7 preview daemonizes by default (parent exits 0 immediately).
   // Stop any leftover daemon first, start a fresh one with --background, then
