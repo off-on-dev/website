@@ -120,193 +120,25 @@ const fontPreloads = [
     <Footer />
     <ConsentBanner />
 
-    {/* Analytics lifecycle, deliberately separate from the consent UI. It used to
-        live in the banner's mount hook, which coupled page_view and click
-        tracking to a component rendering, and risked missing the first
-        page_view if the island hydrated after astro:page-load had already
-        fired. Both are gated on consent at call time inside the store. */}
+    {/* Site-wide script bundle. Analytics lifecycle + all interactive progressive
+        enhancements (theme toggle, mobile menu, starter nudge, code-block copy,
+        abbr tooltips). Consolidated into one block so Rollup's shared-dependency
+        graph externalises the entire bundle — preventing inline <script type="module">
+        tags that trigger Astro's sentinel data: URI on client navigation. */}
     <script>
       import { firePageView, trackClicks } from "@/stores/consent";
+      import "@/scripts/theme-toggle";
+      import "@/scripts/mobile-menu";
+      import "@/scripts/starter-nudge";
+      import "@/scripts/copy-buttons";
+      import "@/scripts/abbr-tooltips";
+      import "@/scripts/brand-toc";
+      import "@/scripts/solution-hash";
 
       // astro:page-load fires on the initial load as well as after every client
       // navigation, so this covers the first page_view of a session too.
       document.addEventListener("astro:page-load", firePageView);
       trackClicks();
-    </script>
-
-    {/* Progressive enhancement: the code-block header + language label + Copy
-        button are rendered at BUILD time (markdown-pipeline.mjs for prose,
-        SolutionBlocks.astro for solutions), so there is no layout shift and the
-        chrome works without JS. This only wires the Copy click on each
-        [data-copy-code] button; re-runs on astro:page-load after View Transitions. */}
-    <script>
-      const COPY_RESET_DELAY_MS = 1500;
-
-      const CHECK_SVG =
-        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
-      const COPY_SVG =
-        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
-
-      // Shared polite live region: a focused button's aria-label change is not
-      // reliably re-announced, so route the "copied" confirmation through here.
-      function ensureLiveRegion(): void {
-        if (document.getElementById("code-copy-status")) return;
-        const live = document.createElement("span");
-        live.id = "code-copy-status";
-        live.className = "sr-only";
-        live.setAttribute("aria-live", "polite");
-        live.setAttribute("aria-atomic", "true");
-        document.body.appendChild(live);
-      }
-      function announceCopied(): void {
-        const live = document.getElementById("code-copy-status");
-        if (!live) return;
-        live.textContent = "Code copied to clipboard";
-        window.setTimeout(() => {
-          live.textContent = "";
-        }, COPY_RESET_DELAY_MS);
-      }
-
-      function wireCopyButtons(): void {
-        const buttons = document.querySelectorAll<HTMLButtonElement>("[data-copy-code]");
-        if (buttons.length > 0) ensureLiveRegion();
-        buttons.forEach((btn) => {
-          if (btn.dataset.copyWired) return;
-          btn.dataset.copyWired = "1";
-          const code = btn.closest("[data-code-block]")?.querySelector("pre code");
-          btn.addEventListener("click", () => {
-            navigator.clipboard
-              ?.writeText(code?.textContent ?? "")
-              .then(() => {
-                btn.innerHTML = CHECK_SVG + "<span>Copied</span>";
-                btn.setAttribute("aria-label", "Code copied");
-                announceCopied();
-                window.setTimeout(() => {
-                  btn.innerHTML = COPY_SVG + "<span>Copy</span>";
-                  btn.setAttribute("aria-label", "Copy code");
-                }, COPY_RESET_DELAY_MS);
-              })
-              .catch(() => {
-                /* writeText can reject when the document is not focused */
-              });
-          });
-        });
-      }
-
-      document.addEventListener("astro:page-load", wireCopyButtons);
-    </script>
-
-    {/* Abbreviation tooltips: a position:fixed portal appended to <body> so it
-        escapes overflow-clipping ancestors (walkthrough cards, scroll containers)
-        and is clamped to the viewport right edge. Tap forces focus (iOS), Escape
-        dismisses. The CSS ::after is the no-JS fallback. Runs on astro:page-load;
-        rebuilt after each View Transition. */}
-    <script>
-      const TOOLTIP_MAX_WIDTH = 260;
-      const TOOLTIP_MIN_WIDTH = 80;
-      const TOOLTIP_EDGE_GAP = 16;
-
-      let abbrTips: HTMLElement[] = [];
-      let repositionActive: (() => void) | null = null;
-
-      function clearAbbrTooltips(): void {
-        abbrTips.forEach((t) => t.remove());
-        abbrTips = [];
-        repositionActive = null;
-      }
-
-      function enhanceAbbrTooltips(): void {
-        clearAbbrTooltips();
-        const container = document.getElementById("main-content");
-        if (!container) return;
-
-        // Safety net: raw <abbr title> that never went through the pipeline.
-        container.querySelectorAll("abbr[title]").forEach((abbr) => {
-          const text = abbr.getAttribute("title") ?? "";
-          abbr.setAttribute("data-title", text);
-          abbr.removeAttribute("title");
-          const next = abbr.nextElementSibling;
-          if (!(next && next.classList.contains("sr-only"))) {
-            const span = document.createElement("span");
-            span.className = "sr-only";
-            span.textContent = text;
-            abbr.after(span);
-          }
-        });
-
-        container.querySelectorAll<HTMLElement>("abbr[data-title]").forEach((abbrEl) => {
-          const title = abbrEl.getAttribute("data-title") ?? "";
-          const tip = document.createElement("span");
-          tip.setAttribute("aria-hidden", "true");
-          tip.style.cssText =
-            "position:fixed;z-index:9999;display:none;padding:0.25rem 0.5rem;" +
-            "font-size:0.75rem;line-height:1rem;background:hsl(var(--foreground));" +
-            "color:hsl(var(--background));border-radius:0.25rem;word-break:break-word;" +
-            "white-space:normal;box-shadow:0 2px 8px rgba(0,0,0,0.3);";
-          tip.textContent = title;
-          document.body.appendChild(tip);
-          abbrTips.push(tip);
-          // Suppress the CSS ::after fallback now the portal is live.
-          abbrEl.classList.add("abbr-js-tooltip");
-
-          let hideTimer: ReturnType<typeof setTimeout> | null = null;
-          const clearHide = (): void => {
-            if (hideTimer !== null) {
-              clearTimeout(hideTimer);
-              hideTimer = null;
-            }
-          };
-          // Clamp below the abbr so the tooltip never overflows the viewport edges.
-          const place = (): void => {
-            const rect = abbrEl.getBoundingClientRect();
-            const tipMaxWidth = Math.min(TOOLTIP_MAX_WIDTH, Math.max(TOOLTIP_MIN_WIDTH, window.innerWidth - TOOLTIP_EDGE_GAP));
-            const left = Math.max(8, Math.min(rect.left, window.innerWidth - tipMaxWidth - 8));
-            tip.style.maxWidth = `${tipMaxWidth}px`;
-            tip.style.top = `${rect.bottom + 6}px`;
-            tip.style.left = `${left}px`;
-          };
-          const show = (): void => {
-            clearHide();
-            place();
-            tip.style.display = "block";
-            repositionActive = place;
-          };
-          const scheduleHide = (): void => {
-            hideTimer = setTimeout(() => {
-              tip.style.display = "none";
-              if (repositionActive === place) repositionActive = null;
-              hideTimer = null;
-            }, 100);
-          };
-          const immediateHide = (): void => {
-            clearHide();
-            tip.style.display = "none";
-            if (repositionActive === place) repositionActive = null;
-          };
-          const onTipMouseLeave = (): void => {
-            if (document.activeElement !== abbrEl) scheduleHide();
-          };
-
-          abbrEl.addEventListener("mouseenter", show);
-          abbrEl.addEventListener("mouseleave", scheduleHide);
-          tip.addEventListener("mouseenter", clearHide);
-          tip.addEventListener("mouseleave", onTipMouseLeave);
-          abbrEl.addEventListener("click", () => abbrEl.focus());
-          abbrEl.addEventListener("focus", show);
-          abbrEl.addEventListener("blur", immediateHide);
-          abbrEl.addEventListener("keydown", (e) => {
-            if ((e as KeyboardEvent).key === "Escape") {
-              e.preventDefault();
-              immediateHide();
-            }
-          });
-        });
-      }
-
-      // One shared scroll/resize handler repositions whichever tooltip is visible.
-      window.addEventListener("scroll", () => repositionActive?.(), { capture: true });
-      window.addEventListener("resize", () => repositionActive?.());
-      document.addEventListener("astro:page-load", enhanceAbbrTooltips);
     </script>
   </body>
 </html>
