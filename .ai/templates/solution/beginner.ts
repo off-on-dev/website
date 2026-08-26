@@ -5,8 +5,9 @@
 //   mkdir -p src/data/solutions/<adventure-id>
 //   cp .ai/templates/solution/beginner.ts src/data/solutions/<adventure-id>/<level-id>.ts
 //
-// Step 2 — after filling in your values, register the route:
-//   npm run generate:solutions
+// Step 2 — after filling in your values, no registration step is needed.
+//   Routes are discovered automatically via import.meta.glob in src/lib/solutions.ts.
+//   Add the solution URL to e2e/smoke.spec.ts (SMOKE_ROUTES) and e2e/a11y.spec.ts (A11Y_PAGES).
 //
 // For the full type definition see src/data/solutions/types.ts.
 

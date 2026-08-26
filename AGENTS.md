@@ -105,7 +105,7 @@ src/
     _app.ts       # Vue appEntrypoint (island-wide setup)
   layouts/
     Layout.astro  # App shell: <head> (SEO, CSP, favicons, theme + GA4 bootstrap, JSON-LD),
-                  # ClientRouter, skip-nav, Navbar, <slot/>, Footer, ConsentBanner
+                  # skip-nav, Navbar, <slot/>, Footer, ConsentBanner
   components/      # *.astro (static, zero-JS) and *.vue (reserved for islands)
   content.config.ts  # Content collection: Zod schema + custom loader + markdown rendering
   data/
@@ -271,7 +271,7 @@ Google Analytics 4 with **Consent Mode v2 in gated-load mode**: no data of any k
 
 - **`Layout.astro`** contains the minimal inline `<head>` bootstrap: sets up `dataLayer`, defines `window.gtag`, and calls `gtag('consent','default',...)` with all four signals denied.
 - **`src/stores/consent.ts`** owns the state (`$consent` atom, default `null`) and the `gtag.js` injector. Read via `.subscribe()`/`.get()` in inline scripts.
-- **`src/components/ConsentBanner.astro`** is static markup plus a script that registers under `astro:page-load` and tears down under `astro:before-swap`.
+- **`src/components/ConsentBanner.astro`** is static markup plus a script that registers under `DOMContentLoaded` and calls `initConsent()` (GPC check + stored-choice restore) after subscribing to `$consent`. No teardown needed — full-page navigation destroys the document.
 
 ### Do not
 
@@ -288,7 +288,7 @@ These patterns produce hydration mismatches and console errors. Never introduce 
 
 - **An island's first client render must match its SSR output.** Read `localStorage`/`navigator`/the DOM in `onMounted`, not in `<script setup>` top level or as a `ref` initializer.
 - **No non-deterministic values in a render body.** Build-time `.astro` frontmatter may use `new Date()`; Vue island templates must not.
-- **After each client navigation** (`astro:after-swap`), `Layout.astro` re-asserts the `<html>` theme class.
+- **Theme class on every load:** the inline pre-paint script in `<head>` sets the `<html>` class before first paint; no post-navigation re-assertion is needed or correct.
 - **Progressive enhancement:** core content must render server-side and work with JS disabled.
 
 ---

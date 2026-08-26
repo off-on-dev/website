@@ -103,12 +103,12 @@ Dragon NaturallySpeaking and iOS Voice Control navigate by speaking visible link
 If `aria-label` differs from visible text, the user cannot activate the link by speaking
 what they see. **The accessible name must contain the visible text.**
 
-## SPA Navigation Note
+## Full-Page Navigation Note
 
-After route changes, screen reader users hear nothing unless focus is managed. Astro's
-`<ClientRouter />` emits a route announcer and moves focus to `#main-content` after each
-client-side navigation — this is wired in `Layout.astro`. Verify it is not broken when
-adding new routes.
+This site uses real page loads — there is no SPA router. Focus management on navigation is
+handled by a `DOMContentLoaded` listener in `Layout.astro`: when `document.referrer` is
+same-origin, focus is restored to `#main-content` (which carries `tabindex="-1"` on every
+page). Verify that any new page you add has `<main id="main-content" tabindex="-1">`.
 
 ## Definition of Done Checklist
 

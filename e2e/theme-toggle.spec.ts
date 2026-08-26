@@ -101,7 +101,7 @@ test.describe("toggling", () => {
     expect(await visibleToggleNames(page)).toContain("Switch to dark mode");
   });
 
-  test("persists across a client-side navigation", async ({ page }) => {
+  test("persists across a full-page navigation via localStorage", async ({ page }) => {
     await page.goto("/");
     await page.locator(TOGGLE).filter({ visible: true }).first().click();
     await expect(page.locator("html")).toHaveClass(/light/);
@@ -112,7 +112,7 @@ test.describe("toggling", () => {
     expect(await visibleToggleNames(page)).toContain("Switch to dark mode");
   });
 
-  test("still works after a client-side navigation", async ({ page }) => {
+  test("still works on a subsequent page after navigation", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("link", { name: "Challenges", exact: true }).first().click();
     await page.waitForURL("**/challenges/");

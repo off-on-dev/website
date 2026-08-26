@@ -19,8 +19,7 @@ function announce(theme: "dark" | "light"): void {
   }, ANNOUNCE_CLEAR_MS);
 }
 
-// Delegated on document, so it survives View Transitions without rebinding and
-// covers every toggle instance at once. The module runs once per page load.
+// Delegated on document so one handler covers every toggle instance on the page.
 document.addEventListener("click", (event) => {
   const target = event.target as Element | null;
   if (!target?.closest?.("[data-theme-toggle]")) return;

@@ -73,11 +73,11 @@ This site manages two user preferences:
 **Theme (light/dark):** Handled by `ThemeToggle.astro` and an inline pre-paint script in `Layout.astro`.
 - Stored in `localStorage` under the `theme` key
 - The pre-paint script reads it before first paint to avoid FOUC; `ThemeToggle.astro` toggles it via a delegated `click` listener on `document`
-- Never read `localStorage` during server-side render — only in the inline pre-paint script or in an `astro:page-load` handler
+- Never read `localStorage` during server-side render — only in the inline pre-paint script or in a `DOMContentLoaded` handler
 
 **Analytics consent:** State lives in the `$consent` nanostore (`src/stores/consent.ts`).
 - Stored in `localStorage` under `analytics_consent` key
-- `ConsentBanner.astro` is the personalization UI; its script re-subscribes to `$consent` on every `astro:page-load`
+- `ConsentBanner.astro` is the personalization UI; its `DOMContentLoaded` handler runs `initConsent()` once per full page load to restore stored consent state
 - All `localStorage` access must be in `try/catch` blocks
 
 ## Moderate: Safe localStorage Pattern

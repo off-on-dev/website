@@ -113,8 +113,7 @@ const fontPreloads = [
     {/* Site-wide script bundle. Analytics lifecycle + all interactive progressive
         enhancements (theme toggle, mobile menu, starter nudge, code-block copy,
         abbr tooltips). Consolidated into one block so Rollup's shared-dependency
-        graph externalises the entire bundle — preventing inline <script type="module">
-        tags that trigger Astro's sentinel data: URI on client navigation. */}
+        graph externalises the entire bundle into a single hashed asset. */}
     <script>
       import { trackClicks } from "@/stores/consent";
       import "@/scripts/theme-toggle";

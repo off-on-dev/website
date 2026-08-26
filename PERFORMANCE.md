@@ -91,7 +91,7 @@ Target these thresholds at the 75th percentile of real users:
 ## Visibility-aware rendering
 
 - For pages with long lists of off-screen content (e.g. a large challenges grid), consider `content-visibility: auto` with `contain-intrinsic-size` to defer layout and paint for content below the fold.
-- Intersection Observer is the correct API for any lazy behaviour tied to scroll position. Create observers inside `astro:page-load` (for `.astro` scripts) or `onMounted` (for Vue islands), never at module level.
+- Intersection Observer is the correct API for any lazy behaviour tied to scroll position. Create observers inside `DOMContentLoaded` (for `.astro` scripts) or `onMounted` (for Vue islands), never at module level.
 - Never use scroll or resize listeners for visibility detection. They run on the main thread every frame and should be replaced with Intersection Observer.
 
 ---

@@ -194,10 +194,3 @@ export function trackClicks(): void {
   document.addEventListener("click", clickHandler, { capture: true });
 }
 
-export function stopTrackClicks(): void {
-  if (clickHandler) {
-    document.removeEventListener("click", clickHandler, { capture: true });
-    clickHandler = null;
-  }
-  clickTrackerBound = false;
-}

@@ -110,7 +110,7 @@ test.describe("behaviour", () => {
     await expect(live).toHaveAttribute("aria-atomic", "true");
   });
 
-  test("survives a client-side navigation", async ({ page }) => {
+  test("renders on a subsequent page after navigation", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator(NUDGE)).toBeVisible();
     await page.getByRole("link", { name: "Challenges", exact: true }).first().click();

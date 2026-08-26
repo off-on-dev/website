@@ -52,7 +52,7 @@ src/
     adventures/[id]/levels/[levelId]/solution.astro, challenges/[...tag].astro,
     404.astro, the static pages, and _app.ts (Vue appEntrypoint)
   layouts/Layout.astro  # App shell: <head> (SEO, CSP, favicons, theme + GA4 bootstrap,
-                        # JSON-LD), ClientRouter, skip-nav, Navbar, <slot/>, Footer, ConsentBanner
+                        # JSON-LD), skip-nav, Navbar, <slot/>, Footer, ConsentBanner
   components/      # *.astro (static, zero-JS) with inline scripts; *.vue reserved for future islands
   content.config.ts  # Content collection: Zod schema + custom loader + build-time markdown rendering
   data/           # adventures/<id>/adventure.yaml + *-posts.json + leaderboard.json,
@@ -117,7 +117,7 @@ Google Analytics 4 with Consent Mode v2 in **gated-load mode**: no data is sent 
 | `CONSENT_EXPIRY_MS` | Stored consent expiry (180 days). |
 
 - `Layout.astro` ships the minimal inline `<head>` bootstrap (dataLayer + `gtag` shim + all four signals denied; no gtag.js, no `js`/`config`, no localStorage read).
-- `src/stores/consent.ts` owns the state (`$consent` nanostore) and the gtag injector; `src/components/ConsentBanner.astro` is the static component. `page_view` fires on `astro:page-load` only when consent is granted. On Decline/Reset, `_ga*` cookies are cleared.
+- `src/stores/consent.ts` owns the state (`$consent` nanostore) and the gtag injector; `src/components/ConsentBanner.astro` is the static component. GA4 fires one `page_view` automatically per load via the `gtag('config', ...)` call in the injector (no `send_page_view: false`). On Decline/Reset, `_ga*` cookies are cleared.
 
 ## Deployment
 

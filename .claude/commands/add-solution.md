@@ -18,8 +18,7 @@ Generate a structured TypeScript solution walkthrough for an OffOn challenge.
 2. Parses the solution input (any format) into structured steps.
 3. Downloads any referenced images and converts them to WebP using `cwebp`.
 4. Writes `src/data/solutions/<adventure-id>/<level-id>.ts` with the structured content.
-5. Runs the generator to update `src/data/solutions/index.ts` and all region patches.
-6. Runs the build to verify the output compiles.
+5. Runs the build to verify the output compiles and lint to confirm no issues.
 
 ---
 
@@ -43,10 +42,11 @@ Confirm all inferred values with the user before proceeding. A single confirmati
 
 ## Step 1: Locate the adventure
 
-Find the adventure in `src/data/adventures/index.ts` or the generated files to confirm the IDs are valid:
+Adventures live as YAML files at `src/data/adventures/<adventure-id>/adventure.yaml`. Confirm the adventure and level exist:
 
 ```bash
-grep -r "id: \"<adventure-id>\"" src/data/adventures/
+ls src/data/adventures/<adventure-id>/adventure.yaml
+grep -A2 "level: <level-id>" src/data/adventures/<adventure-id>/adventure.yaml
 ```
 
 Also confirm the level exists within that adventure. If either ID does not match, stop and report it.
@@ -171,10 +171,11 @@ Rules:
 
 ---
 
-## Step 5: Run the generator and verify
+## Step 5: Verify the build
+
+No generator step is needed — `import.meta.glob` in `src/lib/solutions.ts` picks up the new file automatically at build time.
 
 ```bash
-npm run generate:solutions
 npm run build
 npm run lint
 ```
