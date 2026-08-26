@@ -146,6 +146,20 @@ export function initConsent(): void {
 // Fire a GA4 page_view - only when consent is granted and gtag.js is loaded.
 // Called on astro:page-load so client navigations are tracked without queueing
 // events while consent is undecided/denied.
+//
+// Known limitation — CWV attribution on client-side navigations:
+// Sending page_view signals gtag.js to restart its Core Web Vitals observers
+// (LCP, INP, CLS) for the "new page". View Transitions are same-document
+// navigations: no PerformanceNavigationTiming entry is created, and the browser
+// does not reset the LCP/INP observation context the way a full navigation would.
+// gtag's web-vitals observer restart crashes in a requestIdleCallback on the
+// deployed preview on every consented client-side navigation:
+//   Uncaught TypeError: Cannot read properties of undefined (reading 'startTime')
+//   at et.reportAllChanges (VM-numbered frame = the injected gtag.js script tag)
+// GA4 will show page_view hits for those navigations but no associated CWV data.
+// Local reproduction across 24 instrumented navigations was inconclusive (did not
+// reproduce), not exonerating. This is a gtag limitation with SPA navigation signals;
+// dropping page_view would fix the crash but break session and pageview counts.
 export function firePageView(): void {
   if ($consent.get() !== "granted" || typeof window.gtag !== "function") return;
   window.gtag("event", "page_view", {

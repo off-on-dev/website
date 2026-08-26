@@ -102,6 +102,41 @@ test.describe("island hydration", () => {
   });
 });
 
+// Gate limitation: one confirmed error class is structurally invisible to these tests.
+//
+// The PR preview showed a confirmed crash: gtag.js throws inside a requestIdleCallback
+// when it restarts its web-vitals observers after receiving a page_view event during
+// a View Transition. The error, observed on the deployed preview on every consented
+// client-side navigation, is:
+//   Uncaught TypeError: Cannot read properties of undefined (reading 'startTime')
+//   at et.reportAllChanges
+// in a VM-numbered frame (the dynamically appended gtag.js script tag). It fired
+// twice per navigation before commit f2b39df (duplicate listener registration) and
+// once after. Local reproduction across 24 instrumented navigations with consent
+// granted did not reproduce it — that is inconclusive, not exonerating.
+//
+// Three reasons it does not surface here:
+//
+// 1. The multi-navigation test below never grants consent, so gtag.js is never
+//    injected and the observer restart cannot occur.
+//
+// 2. The consent-persistence test (which does grant consent) asserts
+//    `errors.toEqual([])` synchronously after waitForLoadState("load"). The
+//    requestIdleCallback fires asynchronously when the browser is next idle,
+//    which is after the assertion and after the test tears down its page.
+//
+// 3. Playwright's `pageerror` hook may not propagate uncaught exceptions from
+//    dynamically injected scripts (VM-numbered frames) to the test process in
+//    all Chromium configurations. The hook is reliable for first-party scripts
+//    evaluated in the main document realm; third-party scripts appended via
+//    createElement('script') sit in a separate realm in some versions.
+//
+// This class of error — third-party, async, idle-scheduled, from a dynamically
+// injected script — cannot be caught by synchronous post-navigation assertions.
+// Closing the gap would require: grant consent, navigate, wait for idle (>500 ms
+// wall time), then assert. Even then, the pageerror hook limitation (point 3)
+// means the error may only be observable via a window-level 'error' event
+// listener injected via page.evaluate() before navigation.
 test.describe("client-side navigation", () => {
   test("no console errors across several View Transition navigations", async ({ page }) => {
     const errors: string[] = [];
