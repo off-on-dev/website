@@ -92,11 +92,11 @@ for (const viewport of VIEWPORTS) {
             {
               fullPage: true,
               animations: "disabled",
-              // Both baseline generation and comparison build their own dist/.
-              // Astro build non-determinism (content hash seeding) can produce
-              // small pixel diffs between runs. Tighten this after running
-              // `npm run test:visual` and observing the actual diff numbers.
-              maxDiffPixels: 1000,
+              // Noise floor is exactly 0 across repeated runs on macOS (build is
+              // deterministic; renders are stable). 50 provides headroom against
+              // any edge case without masking real changes: the smallest
+              // detectable visual change observed in calibration was 307px.
+              maxDiffPixels: 50,
             },
           );
         });
