@@ -13,7 +13,9 @@ export const tagToSlug = (tag: string): string =>
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 const monthKey = (m: string): number => {
   const [mon, year] = m.split(" ");
-  return Number(year) * 12 + Math.max(0, MONTHS.indexOf(mon));
+  const idx = MONTHS.indexOf(mon ?? "");
+  if (idx === -1) throw new Error(`Unrecognised month abbreviation "${mon}" in "${m}". Expected one of ${MONTHS.join(", ")}.`);
+  return Number(year) * 12 + idx;
 };
 
 /** Adventures newest-first by their "MON YYYY" month string (non-mutating). */

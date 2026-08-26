@@ -52,6 +52,9 @@ function readStored(): StoredConsent | null {
     }
     return parsed;
   } catch {
+    // JSON.parse threw: the stored value is corrupt. Remove it so the banner
+    // does not re-show on every subsequent page load.
+    try { localStorage.removeItem(CONSENT_STORAGE_KEY); } catch { /* storage unavailable */ }
     return null;
   }
 }
@@ -64,13 +67,35 @@ function writeStored(value: ConsentValue): void {
   }
 }
 
-// Clears any _ga* cookies a prior granted session set (host-only, no Domain).
+// Clears any _ga* cookies a prior granted session set.
+// GA4 uses cookie_domain='auto', which for a real hostname resolves to the
+// dot-prefixed registrable domain (e.g. .offon.dev). A deletion without a
+// matching Domain attribute only removes host-only cookies and leaves the
+// domain-scoped ones intact. We attempt deletion for every variant the
+// browser might have accepted: host-only, exact hostname, dot-prefixed
+// hostname, and (when a subdomain is present) both forms of the registrable
+// domain. Redundant attempts are silently ignored by the browser.
+//
+// Note: on localhost and in Playwright previews, browsers only accept host-
+// only cookies, so the domain variants are no-ops there. Verify against the
+// production deployment (offon.dev) to confirm domain-scoped clearance.
 function clearGaCookies(): void {
   const expired = "expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  const hostname = location.hostname;
+  const domains = new Set(["", hostname, `.${hostname}`]);
+  const parts = hostname.split(".");
+  if (parts.length > 2) {
+    const registrable = parts.slice(-2).join(".");
+    domains.add(registrable);
+    domains.add(`.${registrable}`);
+  }
   document.cookie.split(";").forEach((entry) => {
     const name = entry.split("=")[0]?.trim();
     if (!name || !name.startsWith("_ga")) return;
-    document.cookie = `${name}=; path=/; ${expired}`;
+    for (const domain of domains) {
+      const domainAttr = domain ? `; domain=${domain}` : "";
+      document.cookie = `${name}=; path=/${domainAttr}; ${expired}`;
+    }
   });
 }
 

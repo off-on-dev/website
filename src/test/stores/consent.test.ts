@@ -261,6 +261,12 @@ describe("consent store", () => {
       expect($consent.get()).toBeNull();
     });
 
+    it("removes a corrupt localStorage entry so the banner does not re-show every load", () => {
+      localStorage.setItem(CONSENT_STORAGE_KEY, "{bad json{{");
+      initConsent();
+      expect(localStorage.getItem(CONSENT_STORAGE_KEY)).toBeNull();
+    });
+
     it("forces denied when GPC is active and no stored value", () => {
       Object.defineProperty(navigator, "globalPrivacyControl", {
         value: true,

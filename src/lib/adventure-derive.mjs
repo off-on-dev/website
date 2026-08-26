@@ -19,7 +19,7 @@ export function stripMarkdown(str) {
 export function truncate(str, max) {
   if (str.length <= max) return str;
   const cut = str.lastIndexOf(" ", max - 3);
-  return cut > max / 2 ? str.slice(0, cut) + "..." : str.slice(0, max);
+  return cut > max / 2 ? str.slice(0, cut) + "..." : str.slice(0, max - 3) + "...";
 }
 
 /** Synthesize a level meta description from YAML fields. */

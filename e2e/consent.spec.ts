@@ -165,6 +165,43 @@ test.describe("consent: gated load", () => {
     await expect(cookieButton(page)).toBeVisible();
   });
 
+  test("Decline clears pre-seeded _ga* cookies and leaves unrelated cookies intact", async ({ page }) => {
+    // In e2e, gtag.js is stubbed with an empty body so GA4 never runs and never
+    // sets its own cookies. We seed _ga* cookies manually to test that
+    // clearGaCookies() removes them. On localhost, browsers only accept host-only
+    // cookies (domain-scoped entries with domain=.localhost are rejected), so
+    // this test cannot verify the production domain=.offon.dev fix directly —
+    // verify that empirically against the deployed site after granting consent.
+    const ctx = page.context();
+    await ctx.addCookies([
+      { name: "_ga", value: "GA1.1.seeded", domain: "localhost", path: "/" },
+      { name: "_ga_YEYE9DFHWE", value: "GS1.1.seeded", domain: "localhost", path: "/" },
+      { name: "session", value: "keep-this", domain: "localhost", path: "/" },
+    ]);
+    await page.goto("/");
+    await page.waitForLoadState("load");
+    await decline(page).click();
+    const cookies = await ctx.cookies();
+    expect(cookies.filter((c) => c.name.startsWith("_ga")), "_ga* cleared after Decline").toHaveLength(0);
+    expect(cookies.find((c) => c.name === "session"), "unrelated cookie preserved").toBeDefined();
+  });
+
+  test("Reset clears pre-seeded _ga* cookies", async ({ page }) => {
+    const ctx = page.context();
+    await ctx.addCookies([
+      { name: "_ga", value: "GA1.1.seeded", domain: "localhost", path: "/" },
+    ]);
+    // Start from denied so the cookie button is shown without needing to decline first.
+    await page.addInitScript((key) => {
+      localStorage.setItem(key, JSON.stringify({ value: "denied", timestamp: Date.now() }));
+    }, STORAGE_KEY);
+    await page.goto("/");
+    await page.waitForLoadState("load");
+    await cookieButton(page).click(); // triggers reset()
+    const cookies = await ctx.cookies();
+    expect(cookies.filter((c) => c.name.startsWith("_ga")), "_ga* cleared after Reset").toHaveLength(0);
+  });
+
   test("GPC active + stored granted still injects gtag.js (explicit prior consent wins)", async ({ page }) => {
     await page.addInitScript((key) => {
       Object.defineProperty(navigator, "globalPrivacyControl", { value: true, configurable: true });

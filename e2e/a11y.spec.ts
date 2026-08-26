@@ -94,6 +94,12 @@ const MAX_TABS = 200;
 
 async function collectFocusViolations(page: Page): Promise<string[]> {
   let firstKey: string | null = null;
+  // Count how many times the first-focusable element's key has been seen.
+  // We break on the third occurrence (second re-appearance) rather than the
+  // second, so that a mid-cycle element sharing firstKey's fingerprint does
+  // not cause an early exit that skips everything after it. One extra cycle
+  // costs ~N extra Tab presses but ensures every focusable element is visited.
+  let firstKeyCount = 0;
   const seenKeys = new Set<string>();
   const violations: string[] = [];
   for (let i = 0; i < MAX_TABS; i++) {
@@ -116,14 +122,17 @@ async function collectFocusViolations(page: Page): Promise<string[]> {
     if (!result) break;
     if (firstKey === null) {
       firstKey = result.key;
-    } else if (result.key === firstKey && seenKeys.size > 1) {
-      // Full cycle: we've seen other elements between this and the start.
-      // Requiring seenKeys.size > 1 prevents identical adjacent buttons (same key)
-      // from triggering an early exit before the real cycle completes.
-      break;
+      firstKeyCount = 1;
+    } else if (result.key === firstKey) {
+      firstKeyCount++;
+      if (firstKeyCount >= 3) break;
     }
-    seenKeys.add(result.key);
-    if (!result.hasFocusRing) violations.push(result.html);
+    // Deduplicate: seenKeys guards against double-counting violations when
+    // elements are revisited during the extra confirmation cycle.
+    if (!seenKeys.has(result.key)) {
+      seenKeys.add(result.key);
+      if (!result.hasFocusRing) violations.push(result.html);
+    }
   }
   return violations;
 }

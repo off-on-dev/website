@@ -61,11 +61,12 @@ describe("truncate", () => {
     expect(result.length).toBeLessThanOrEqual(20 + 3);
   });
 
-  it("falls back to hard truncation when no suitable word boundary exists", () => {
-    // Single long word - no space before max/2
+  it("falls back to truncation with ellipsis when no suitable word boundary exists", () => {
+    // Single long word: lastIndexOf(" ", 7) = -1, which is ≤ max/2=5, so
+    // the fallback fires: slice(0, 10-3) + "..." = "abcdefg..."
     const long = "abcdefghijklmnopqrstuvwxyz";
     const result = truncate(long, 10);
-    expect(result).toBe("abcdefghij");
+    expect(result).toBe("abcdefg...");
     expect(result.length).toBe(10);
   });
 

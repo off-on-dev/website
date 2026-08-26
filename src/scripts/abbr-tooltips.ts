@@ -100,6 +100,7 @@ function enhanceAbbrTooltips(): void {
 }
 
 // One shared scroll/resize handler repositions whichever tooltip is visible.
-window.addEventListener("scroll", () => repositionActive?.(), { capture: true });
-window.addEventListener("resize", () => repositionActive?.());
+// rAF batches rapid scroll/resize ticks into one reflow per frame.
+window.addEventListener("scroll", () => { if (repositionActive) requestAnimationFrame(repositionActive); }, { capture: true });
+window.addEventListener("resize", () => { if (repositionActive) requestAnimationFrame(repositionActive); });
 document.addEventListener("DOMContentLoaded", enhanceAbbrTooltips);

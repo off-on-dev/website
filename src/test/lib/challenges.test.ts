@@ -126,24 +126,23 @@ describe("sortAdventuresByMonthDesc", () => {
     expect(result[1].title).toBe("Beta");
   });
 
-  it("treats an unrecognised month abbreviation as January of its year", () => {
-    // MONTHS.indexOf returns -1 → Math.max(0, -1) = 0 → treated as Jan.
+  it("throws for an unrecognised month abbreviation (data error is visible, not silent)", () => {
+    // monthKey() throws rather than silently mapping -1 to January.
+    // In production this is prevented at build time by the Zod z.refine() on
+    // the content schema, so this throw is a last-resort developer safeguard.
     const adventures = [
       { month: "XXX 2025" },
       { month: "FEB 2025" },
     ];
-    const result = sortAdventuresByMonthDesc(adventures);
-    // FEB 2025 (key 24301) > XXX 2025 (key 24300), so FEB sorts first.
-    expect(result[0].month).toBe("FEB 2025");
-    expect(result[1].month).toBe("XXX 2025");
+    expect(() => sortAdventuresByMonthDesc(adventures)).toThrow(/Unrecognised month abbreviation/);
   });
 
-  it("does not throw when the month string is empty or malformed", () => {
+  it("throws for an empty or malformed month string", () => {
     const adventures = [
       { month: "" },
       { month: "JAN 2025" },
     ];
-    expect(() => sortAdventuresByMonthDesc(adventures)).not.toThrow();
+    expect(() => sortAdventuresByMonthDesc(adventures)).toThrow(/Unrecognised month abbreviation/);
   });
 });
 

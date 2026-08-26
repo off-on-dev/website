@@ -337,7 +337,10 @@ const adventures = defineCollection({
       name: z.string().optional(),
       emoji: z.string().optional(),
       icon: z.string().optional(),
-      month: z.string().regex(/^[A-Z]{3} \d{4}$/),
+      month: z.string().regex(/^[A-Z]{3} \d{4}$/).refine(
+        (m) => ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"].includes(m.slice(0, 3)),
+        { message: "month abbreviation must be one of JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC" },
+      ),
       story: z.string().optional(),
       tags: z.array(z.string()).min(1),
       contributor: contributorSchema.optional(),
