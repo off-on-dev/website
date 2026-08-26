@@ -93,10 +93,17 @@ for (const viewport of VIEWPORTS) {
               fullPage: true,
               animations: "disabled",
               // Noise floor is exactly 0 across repeated runs on macOS (build is
-              // deterministic; renders are stable). 50 provides headroom against
-              // any edge case without masking real changes: the smallest
-              // detectable visual change observed in calibration was 307px.
-              maxDiffPixels: 50,
+              // deterministic; renders are stable). 0 is correct: there is
+              // nothing to absorb. A nonzero diff without a code change means
+              // something in the build pipeline is non-deterministic, which is
+              // itself worth knowing.
+              //
+              // Known blind spot: a sufficiently subtle colour shift on a thin
+              // element (e.g. border opacity /20 → /30 on the hero-badge pill)
+              // produces 0 differing pixels and is undetectable at any tolerance.
+              // This suite does not catch all visual changes — it catches layout
+              // regressions and changes that affect a meaningful run of pixels.
+              maxDiffPixels: 0,
             },
           );
         });
