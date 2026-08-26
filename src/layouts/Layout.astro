@@ -126,6 +126,19 @@ const fontPreloads = [
       import "@/scripts/solution-hash";
 
       trackClicks();
+
+      // Restore focus to main content on in-site navigations. All pages already
+      // carry tabindex="-1" on <main id="main-content">, so focus() lands there.
+      // Direct visits and external referrers keep the browser's default behaviour.
+      document.addEventListener("DOMContentLoaded", () => {
+        if (!document.referrer) return;
+        try {
+          if (new URL(document.referrer).origin !== location.origin) return;
+        } catch {
+          return;
+        }
+        document.getElementById("main-content")?.focus({ preventScroll: true });
+      });
     </script>
   </body>
 </html>

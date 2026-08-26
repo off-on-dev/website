@@ -27,6 +27,47 @@ async function storedConsent(page: Page): Promise<string | null> {
   }, STORAGE_KEY);
 }
 
+// Realistic gtag.js stub: processes the queued dataLayer config command and
+// fires a GA4 collect request when send_page_view is not explicitly false.
+// Intercepts the collect endpoint so tests can assert on page_view delivery
+// without network calls to Google. Other googletagmanager.com requests (e.g.
+// the init pixel) are caught by the GTAG_HOST catch-all below and served empty.
+const GA_STUB = `(function(){
+  var dl=window.dataLayer||[];
+  var mid='';
+  try{mid=new URL(document.currentScript.src).searchParams.get('id')||'';}catch(e){}
+  if(!mid)return;
+  for(var i=0;i<dl.length;i++){
+    var cmd=dl[i];
+    if(cmd&&cmd[0]==='config'&&cmd[1]===mid&&(!cmd[2]||cmd[2].send_page_view!==false)){
+      fetch('https://www.google-analytics.com/g/collect?v=2&tid='+encodeURIComponent(mid)+'&en=page_view&dp='+encodeURIComponent(location.pathname),{keepalive:true}).catch(function(){});
+      break;
+    }
+  }
+})();`;
+
+async function setupCollectInterception(page: Page): Promise<() => string[]> {
+  const hits: string[] = [];
+  // Specific route first: realistic stub for the gtag.js script itself.
+  await page.route("**/googletagmanager.com/gtag/js*", (route) =>
+    route.fulfill({ status: 200, contentType: "application/javascript", body: GA_STUB }),
+  );
+  // Catch-all: any other googletagmanager.com request (init pixel, etc.) served empty.
+  await page.route(GTAG_HOST, (route) =>
+    route.fulfill({ status: 200, contentType: "application/javascript", body: "" }),
+  );
+  for (const pattern of [
+    "**/google-analytics.com/g/collect*",
+    "**/region1.google-analytics.com/g/collect*",
+  ]) {
+    await page.route(pattern, (route) => {
+      hits.push(new URL(route.request().url()).searchParams.get("en") ?? "");
+      return route.fulfill({ status: 204, body: "" });
+    });
+  }
+  return () => [...hits];
+}
+
 test.describe("consent: gated load", () => {
   test.beforeEach(async ({ page }) => {
     await stubGtag(page);
@@ -179,6 +220,43 @@ test.describe("consent: gated load", () => {
     await expect(accept(page)).toHaveCount(0);
     await expect(cookieButton(page)).toBeVisible();
     expect(await storedConsent(page)).toBe("granted");
+  });
+});
+
+// page_view delivery: pins the changed analytics behaviour after removing
+// send_page_view:false. With send_page_view:false gone, gtag fires one automatic
+// page_view per config() call. A realistic gtag.js stub (GA_STUB) forwards that
+// event to a stubbed collect endpoint so Playwright can count actual hits.
+test.describe("consent: page_view delivery", () => {
+  test("returning granted visitor: exactly one page_view per load", async ({ page }) => {
+    const collectHits = await setupCollectInterception(page);
+    await page.addInitScript((key) => {
+      localStorage.setItem(key, JSON.stringify({ value: "granted", timestamp: Date.now() }));
+    }, STORAGE_KEY);
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+    expect(collectHits().filter((e) => e === "page_view"), "one page_view per granted load").toHaveLength(1);
+  });
+
+  test("first grant: exactly one page_view fires for the landing page", async ({ page }) => {
+    const collectHits = await setupCollectInterception(page);
+    await page.goto("/");
+    await page.waitForLoadState("load");
+    expect(collectHits(), "no collect before grant").toHaveLength(0);
+    await accept(page).click();
+    await expect
+      .poll(() => collectHits().filter((e) => e === "page_view").length, { timeout: 5000 })
+      .toBe(1);
+  });
+
+  test("denied visitor: no collect requests", async ({ page }) => {
+    const collectHits = await setupCollectInterception(page);
+    await page.addInitScript((key) => {
+      localStorage.setItem(key, JSON.stringify({ value: "denied", timestamp: Date.now() }));
+    }, STORAGE_KEY);
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+    expect(collectHits(), "no collect when denied").toHaveLength(0);
   });
 });
 

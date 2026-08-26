@@ -74,6 +74,26 @@ test.describe("uniqueness", () => {
   });
 });
 
+test.describe("focus management", () => {
+  test("focus moves to #main-content after an in-site navigation", async ({ page }) => {
+    // Seed denied consent so the banner is not an extra focus stop.
+    await page.addInitScript(() =>
+      localStorage.setItem("analytics_consent", JSON.stringify({ value: "denied", timestamp: Date.now() })),
+    );
+    await page.goto("/");
+    await page.waitForLoadState("load");
+
+    // Navigate to a different page via a real link click.
+    await page.click('a[href="/about/"]');
+    await page.waitForURL("/about/");
+    await page.waitForLoadState("load");
+
+    // DOMContentLoaded focus restoration logic should have moved focus to main.
+    const activeId = await page.evaluate(() => document.activeElement?.id ?? "");
+    expect(activeId, "focus should be on #main-content after in-site navigation").toBe("main-content");
+  });
+});
+
 test.describe("island hydration", () => {
   test("theme toggle hydrates and switches theme", async ({ page }) => {
     await page.goto("/");
