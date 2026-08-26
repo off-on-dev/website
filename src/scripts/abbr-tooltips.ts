@@ -102,4 +102,4 @@ function enhanceAbbrTooltips(): void {
 // One shared scroll/resize handler repositions whichever tooltip is visible.
 window.addEventListener("scroll", () => repositionActive?.(), { capture: true });
 window.addEventListener("resize", () => repositionActive?.());
-document.addEventListener("astro:page-load", enhanceAbbrTooltips);
+document.addEventListener("DOMContentLoaded", enhanceAbbrTooltips);

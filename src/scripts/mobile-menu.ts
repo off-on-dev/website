@@ -18,12 +18,7 @@ const FOCUSABLE = [
 // attribute if both were present at once.
 const OPEN_CLASSES = ["flex", "flex-col", "gap-1"];
 
-let teardown: (() => void) | null = null;
-
 function initMobileMenu(): void {
-  teardown?.();
-  teardown = null;
-
   const trigger = document.querySelector<HTMLButtonElement>("[data-mobile-menu-trigger]");
   const drawer = document.querySelector<HTMLElement>("[data-mobile-menu]");
   if (!trigger || !drawer) return;
@@ -118,18 +113,6 @@ function initMobileMenu(): void {
   trigger.addEventListener("click", onTriggerClick);
   drawer.addEventListener("click", onDrawerClick);
   desktopMq.addEventListener("change", onBreakpoint);
-
-  teardown = () => {
-    close(false);
-    trigger.removeEventListener("click", onTriggerClick);
-    drawer.removeEventListener("click", onDrawerClick);
-    desktopMq.removeEventListener("change", onBreakpoint);
-  };
 }
 
-document.addEventListener("astro:page-load", initMobileMenu);
-// Drop the keydown listener and any inert attributes before the DOM is swapped.
-document.addEventListener("astro:before-swap", () => {
-  teardown?.();
-  teardown = null;
-});
+document.addEventListener("DOMContentLoaded", initMobileMenu);

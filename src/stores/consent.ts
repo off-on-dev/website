@@ -85,7 +85,6 @@ function injectGtag(): void {
   window.gtag("config", GA_MEASUREMENT_ID, {
     cookie_flags: "SameSite=Lax;Secure",
     cookie_expires: CONSENT_EXPIRY_MS / 1000,
-    send_page_view: false,
   });
   const script = document.createElement("script");
   script.id = "gtag-script";
@@ -106,12 +105,6 @@ export function grant(): void {
   writeStored("granted");
   $consent.set("granted");
   injectGtag();
-  // Send the landing page_view immediately. astro:page-load fires on navigation,
-  // not on a consent-banner click, so without this call a new visitor who accepts
-  // on the landing page and never navigates produces zero page_views for that
-  // session. No double-fire risk: by the time astro:page-load next fires, the
-  // user has navigated and window.location already reflects the new page.
-  firePageView();
 }
 
 export function deny(): void {
@@ -149,39 +142,8 @@ export function initConsent(): void {
   if (stored.value === "granted") injectGtag();
 }
 
-// Fire a GA4 page_view - only when consent is granted and gtag.js is loaded.
-// Called on astro:page-load so client navigations are tracked without queueing
-// events while consent is undecided/denied.
-//
-// Known limitation — CWV attribution on client-side navigations:
-// Sending page_view signals gtag.js to restart its Core Web Vitals observers
-// (LCP, INP, CLS) for the "new page". The restart calls reportAllChanges(),
-// which reads .startTime off the first element in the observer's own accumulated
-// entries array (LCP candidates, layout shifts, etc.). On initial hard load those
-// arrays are populated before the first idle period. After a View Transition the
-// browser has not emitted new LCP/CLS entries into the restarted observation window
-// yet, so the array is empty at the moment the idle callback drains it:
-//   Uncaught TypeError: Cannot read properties of undefined (reading 'startTime')
-//   at et.reportAllChanges (VM-numbered frame = the injected gtag.js script tag)
-// The crash is in gtag's idle callback; page_view delivery completes before it.
-// GA4 will show page_view hits for those navigations but no associated CWV data.
-// Local reproduction across 24 instrumented navigations was inconclusive (did not
-// reproduce), not exonerating. No lever eliminates this without suppressing
-// page_view delivery or disabling CWV collection: gtag('config',{update:true})
-// avoids the restart but suppresses the hit; GTM uses the same code path;
-// Measurement Protocol has no client-side crash but requires a server and loses
-// session attribution. Accepted limitation; documented 2025-08.
-export function firePageView(): void {
-  if ($consent.get() !== "granted" || typeof window.gtag !== "function") return;
-  window.gtag("event", "page_view", {
-    page_path: window.location.pathname,
-    page_location: window.location.href,
-    page_title: document.title,
-  });
-}
-
 // Delegated click tracking, gated on consent at click time. Registered once
-// (the consent island is transition:persist), so it survives View Transitions.
+// at module scope so it persists for the page's lifetime.
 //
 // The payload is a compatibility surface: GA4 custom dimensions and saved
 // reports are keyed on these exact parameter names. Renaming one silently

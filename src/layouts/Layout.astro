@@ -1,5 +1,4 @@
 ---
-import { ClientRouter } from "astro:transitions";
 import SEO from "@/components/SEO.astro";
 import Navbar from "@/components/Navbar.astro";
 import Footer from "@/components/Footer.astro";
@@ -29,13 +28,6 @@ const isPreview = base.startsWith("/pr-preview/");
 const themeScript = `(function(){try{var t=localStorage.getItem("theme");if(t==="light"){document.documentElement.classList.remove("dark");document.documentElement.classList.add("light");}}catch(e){}})();`;
 
 const gtagBootstrap = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});`;
-
-// With <ClientRouter />, re-assert the theme class after each swap, before paint,
-// so the theme does not flash on client navigation (research-confirmed gotcha).
-// Also move focus to #main-content after each swap: Astro's router restores prior
-// focus but does not move focus into the landmark; do that for keyboard/AT users.
-// (Fires only on client navigation, not the initial load.)
-const themeAfterSwap = `document.addEventListener("astro:after-swap",function(){try{var t=localStorage.getItem("theme");var c=document.documentElement.classList;if(t==="light"){c.remove("dark");c.add("light");}else{c.remove("light");c.add("dark");}}catch(e){}var m=document.getElementById("main-content");if(m){m.focus({preventScroll:true});}});`;
 
 const webSiteJsonLd = JSON.stringify({
   "@context": "https://schema.org",
@@ -96,8 +88,7 @@ const fontPreloads = [
 
     {/* Theme set before paint to prevent flash of wrong theme */}
     <script is:inline set:html={themeScript} />
-    <script is:inline set:html={themeAfterSwap} />
-    {/* Consent Mode v2 default-denied bootstrap. gtag.js loads later, only on Accept (Phase 4). */}
+    {/* Consent Mode v2 default-denied bootstrap. gtag.js loads later, only on Accept. */}
     <script is:inline set:html={gtagBootstrap} />
 
     <script type="application/ld+json" is:inline set:html={webSiteJsonLd} />
@@ -108,7 +99,6 @@ const fontPreloads = [
     {/* Per-page <head> additions, e.g. <StructuredData> on adventure/level/solution pages. */}
     <slot name="head" />
 
-    <ClientRouter />
   </head>
   <body>
     <a href="#main-content" class="skip-nav">Skip to main content</a>
@@ -126,7 +116,7 @@ const fontPreloads = [
         graph externalises the entire bundle — preventing inline <script type="module">
         tags that trigger Astro's sentinel data: URI on client navigation. */}
     <script>
-      import { firePageView, trackClicks } from "@/stores/consent";
+      import { trackClicks } from "@/stores/consent";
       import "@/scripts/theme-toggle";
       import "@/scripts/mobile-menu";
       import "@/scripts/starter-nudge";
@@ -135,12 +125,6 @@ const fontPreloads = [
       import "@/scripts/brand-toc";
       import "@/scripts/solution-hash";
 
-      // astro:page-load fires on the initial load and after every client-side
-      // navigation. For returning visitors (stored consent) this covers the first
-      // page_view of a session. New visitors who accept consent on the landing
-      // page get their first page_view from grant() → firePageView() in
-      // consent.ts, because astro:page-load does not re-fire on a banner click.
-      document.addEventListener("astro:page-load", firePageView);
       trackClicks();
     </script>
   </body>

@@ -149,7 +149,7 @@ Author-controlled markdown prose is pre-rendered to sanitised HTML at build time
 
 ## Code blocks
 
-Code blocks rendered from author prose use a three-class structure built at build time by `renderCodeBlockChrome` in `markdown-pipeline.mjs`. The Layout.astro script wires the Copy button click handler on `astro:page-load`.
+Code blocks rendered from author prose use a three-class structure built at build time by `renderCodeBlockChrome` in `markdown-pipeline.mjs`. The Layout.astro script wires the Copy button click handler on `DOMContentLoaded`.
 
 | Class | Element | Purpose |
 | --- | --- | --- |
@@ -430,14 +430,14 @@ Each tag is an anchor to `/challenges/[tag-slug]/` with class `.tag-chip-link`. 
 
 #### `ChallengesFilter` (`.astro`)
 
-No props passed from outside; all state is derived from the URL and the DOM on `astro:page-load`. Static markup plus a vanilla `<script>` — no island, no hydration directive.
+No props passed from outside; all state is derived from the URL and the DOM on `DOMContentLoaded`. Static markup plus a vanilla `<script>` — no island, no hydration directive.
 
 - Below `lg`: dropdown buttons. Above `lg`: `role="radiogroup"` difficulty selector + tag toggles with arrow-key navigation.
 - Dropdowns close on Escape, return focus to trigger. Outside-click handled by a `mousedown` listener on `document`.
 - `aria-live="polite"` live region announces result counts.
-- URL synced via `replaceState` (no navigation); state seeded from `?topics` / `?difficulty` on `astro:page-load`.
+- URL synced via `replaceState` (no navigation); state seeded from `?topics` / `?difficulty` on `DOMContentLoaded`.
 - `embedded` attribute on the root element suppresses sr-only section headings to avoid duplicate document outline on the home page.
-- All listeners registered on `astro:page-load`, torn down on `astro:before-swap` (including the two document-level `mousedown`/`keydown` handlers).
+- Document-level `mousedown`/`keydown` listeners for dropdown close are registered on `DOMContentLoaded`.
 
 ---
 
@@ -454,7 +454,7 @@ No props. Static markup plus one script, no island. Both states are rendered and
 - Decline comes first in DOM and tab order and uses `.btn-secondary`, so declining carries the same weight as accepting.
 - Cookie preferences floating button: 44 × 44 px, `position:fixed` bottom-right with safe-area inset.
 - Focus moves **only** from the click handlers, never from the `$consent` subscription. `initConsent()` restoring a stored choice is a state change but not a user action; focusing there would steal focus from the skip-nav link on every page load.
-- Analytics lifecycle (`firePageView`, `trackClicks`) is **not** here. It has its own script in `Layout.astro`, so it does not depend on this component and cannot miss the first `page_view` of a session.
+- Click tracking (`trackClicks`) is **not** here. It has its own script in `Layout.astro`, registered once at module scope.
 
 ---
 
@@ -469,7 +469,7 @@ Static markup plus one script, no island. Navbar passes `active` already resolve
 - Drawer is always in the DOM and carries `hidden` while closed, so `aria-controls` always resolves.
 - The trigger icon is chosen by CSS from `aria-expanded` (`group-aria-expanded:*`), so the icon and the state assistive tech sees cannot disagree.
 - Open styling is applied as classes by script, because Tailwind's `flex` would otherwise override the `hidden` attribute.
-- Releases on `astro:before-swap` and on crossing to `>=md`.
+- Closes and clears focus-trap state on crossing to `>=md`.
 
 ---
 
@@ -490,7 +490,7 @@ Props: `variant?: 'desktop' | 'mobile' (default 'mobile')`
 Static markup, no island. Both icons and both accessible names are rendered, and CSS picks between them off the `.dark` class on `<html>` (`hidden dark:block` / `block dark:hidden`, the same technique as the Navbar logo). The control is therefore correct in the first painted frame for a returning light-mode visitor, with no JS.
 
 - The accessible name comes from two `sr-only` spans rather than `aria-label`, because an attribute cannot be swapped by CSS.
-- One delegated `click` listener on `document`, matched via `[data-theme-toggle]`. It survives View Transitions without rebinding and covers every instance, so the two breakpoint copies need no shared state: both read the same `<html>` class.
+- One delegated `click` listener on `document`, matched via `[data-theme-toggle]`. Registered once at module scope; covers every instance so the two breakpoint copies share no state — both read the same `<html>` class.
 - Announces via the `#theme-status` sr-only polite live region in `Layout.astro`.
 
 ---
@@ -529,15 +529,9 @@ A framework earns its place when state drives markup that cannot reasonably be p
 
 ### Patterns for the script
 
-- Bind on `astro:page-load` so the component survives View Transitions, or delegate from `document` where one handler can cover every instance.
+- The site uses real page navigations — no SPA router. Initialize in `DOMContentLoaded` (fires once per load); no teardown is needed since the page replaces itself on navigation.
+- Prefer module-scope delegation on `document` where one handler covers every instance (e.g. `ThemeToggle`).
 - Prefer letting CSS derive presentation from an ARIA attribute (`group-aria-expanded:*`, `.dark`) over having the script set both. One source of truth, and the visual state cannot drift from what assistive tech sees.
-- Release listeners and store subscriptions on `astro:before-swap` when those listeners target a **long-lived node** (`document`, `window`, or any node that survives a body swap) and were registered inside an `astro:page-load` handler. Listeners that are not removed accumulate across navigations and fire multiple times on the second and subsequent visits. Use a module-scope `teardown` variable: assign the cleanup function on init, call and null it in the `astro:before-swap` handler. `MobileMenu.astro` is the canonical implementation to copy.
-
-  **Two patterns are safe without `astro:before-swap` — do not add teardown to these:**
-
-  1. **Module-scope delegation on a surviving node** (`ThemeToggle.astro`): a single `document.addEventListener("click", handler)` at module scope runs once per session. `document` survives every swap; the handler matches by selector at event time, so there is no stale node reference and no accumulation. Adding teardown here would break the listener on the second navigation.
-
-  2. **Listeners bound to the component's own child nodes** (`StarterNudge.astro`): when ClientRouter swaps `<body>`, the component subtree is detached. Dead listeners on detached nodes can never fire and are GC-eligible. The next `astro:page-load` operates on fresh nodes from the new body. No teardown is needed or correct.
 
 ## Hydration quick-reference
 

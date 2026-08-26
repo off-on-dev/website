@@ -87,9 +87,6 @@ const privacyUrl = `${import.meta.env.BASE_URL}privacy/`;
 <script>
   import { $consent, grant, deny, reset, initConsent } from "@/stores/consent";
 
-  // Module-scope teardown; null when no page is mounted.
-  let teardown: (() => void) | null = null;
-
   function initConsentBanner(): void {
     const banner = document.querySelector<HTMLElement>("[data-consent-banner]");
     const resetBtn = document.querySelector<HTMLButtonElement>("[data-consent-reset]");
@@ -99,9 +96,7 @@ const privacyUrl = `${import.meta.env.BASE_URL}privacy/`;
     if (!banner || !resetBtn || !declineBtn || !acceptBtn) return;
 
     // Undecided shows the banner; decided shows the floating preferences button.
-    // Re-run the subscription immediately so the Reset button reflects the
-    // current state after navigation (it starts `hidden` in the server HTML).
-    const unsubscribe = $consent.subscribe((value) => {
+    $consent.subscribe((value) => {
       banner.hidden = value !== null;
       resetBtn.hidden = value === null;
     });
@@ -110,38 +105,14 @@ const privacyUrl = `${import.meta.env.BASE_URL}privacy/`;
     // initConsent() restoring a stored choice is a state change but not a user
     // action, and focusing there would yank focus off the skip-nav link on every
     // page load for every returning visitor.
-    const onAccept = () => {
-      grant();
-      resetBtn.focus();
-    };
-    const onDecline = () => {
-      deny();
-      resetBtn.focus();
-    };
-    const onReset = () => {
-      reset();
-      declineBtn.focus();
-    };
-
-    acceptBtn.addEventListener("click", onAccept);
-    declineBtn.addEventListener("click", onDecline);
-    resetBtn.addEventListener("click", onReset);
-
-    teardown = () => {
-      unsubscribe();
-      acceptBtn.removeEventListener("click", onAccept);
-      declineBtn.removeEventListener("click", onDecline);
-      resetBtn.removeEventListener("click", onReset);
-    };
+    acceptBtn.addEventListener("click", () => { grant(); resetBtn.focus(); });
+    declineBtn.addEventListener("click", () => { deny(); resetBtn.focus(); });
+    resetBtn.addEventListener("click", () => { reset(); declineBtn.focus(); });
 
     // GPC check plus restore of any stored choice. Runs after the subscription
     // so the resulting state is rendered.
     initConsent();
   }
 
-  document.addEventListener("astro:page-load", initConsentBanner);
-  document.addEventListener("astro:before-swap", () => {
-    teardown?.();
-    teardown = null;
-  });
+  document.addEventListener("DOMContentLoaded", initConsentBanner);
 </script>

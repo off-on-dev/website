@@ -6,17 +6,7 @@ const openMatchingStep = (hash: string): void => {
   if (el instanceof HTMLDetailsElement) el.open = true;
 };
 
-let onHash: (() => void) | null = null;
-
-document.addEventListener("astro:page-load", () => {
+document.addEventListener("DOMContentLoaded", () => {
   openMatchingStep(window.location.hash);
-  onHash = () => openMatchingStep(window.location.hash);
-  window.addEventListener("hashchange", onHash);
-});
-
-document.addEventListener("astro:before-swap", () => {
-  if (onHash) {
-    window.removeEventListener("hashchange", onHash);
-    onHash = null;
-  }
+  window.addEventListener("hashchange", () => openMatchingStep(window.location.hash));
 });

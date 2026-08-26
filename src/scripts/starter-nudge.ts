@@ -28,4 +28,4 @@ function initStarterNudge(): void {
     });
 }
 
-document.addEventListener("astro:page-load", initStarterNudge);
+document.addEventListener("DOMContentLoaded", initStarterNudge);

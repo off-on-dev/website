@@ -612,19 +612,7 @@ const dropdownItem =
 
     readUrl();
     apply();
-
-    filterTeardown = () => {
-      document.removeEventListener("mousedown", onMousedown);
-      document.removeEventListener("keydown", onKeydown);
-    };
   }
 
-  // Module-scope teardown; null when the filter is not mounted on this page.
-  let filterTeardown: (() => void) | null = null;
-
-  document.addEventListener("astro:page-load", initChallengesFilter);
-  document.addEventListener("astro:before-swap", () => {
-    filterTeardown?.();
-    filterTeardown = null;
-  });
+  document.addEventListener("DOMContentLoaded", initChallengesFilter);
 </script>

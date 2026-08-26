@@ -19,7 +19,6 @@ import {
   deny,
   reset,
   initConsent,
-  firePageView,
   trackClicks,
 } from "@/stores/consent";
 import { CONSENT_STORAGE_KEY, CONSENT_EXPIRY_MS, GA_MEASUREMENT_ID } from "@/lib/site";
@@ -323,45 +322,6 @@ describe("consent store", () => {
     });
   });
 
-  // ── firePageView() ────────────────────────────────────────────────────────
-
-  describe("firePageView()", () => {
-    it("does nothing when consent is null", () => {
-      expect($consent.get()).toBeNull();
-      firePageView();
-      expect(window.gtag).not.toHaveBeenCalledWith("event", "page_view", expect.anything());
-    });
-
-    it("does nothing when consent is denied", () => {
-      deny();
-      vi.clearAllMocks();
-      firePageView();
-      expect(window.gtag).not.toHaveBeenCalledWith("event", "page_view", expect.anything());
-    });
-
-    it("does nothing when window.gtag is not a function", () => {
-      grant();
-      const original = window.gtag;
-      try {
-        (window as any).gtag = undefined;
-        expect(() => firePageView()).not.toThrow();
-      } finally {
-        window.gtag = original;
-      }
-    });
-
-    it("fires page_view when consent is granted and gtag is a function", () => {
-      grant();
-      vi.clearAllMocks();
-      firePageView();
-      expect(window.gtag).toHaveBeenCalledWith("event", "page_view", {
-        page_path: window.location.pathname,
-        page_location: window.location.href,
-        page_title: document.title,
-      });
-    });
-  });
-
   // trackClicks() - behaviour ─────────────────────────────────────────────
   //
   // clickTrackerBound is module-scoped; once the listener is registered in the
@@ -621,7 +581,6 @@ describe("consent store - gtagScriptInjected guard", () => {
     expect(window.gtag).toHaveBeenCalledWith("config", GA_MEASUREMENT_ID, {
       cookie_flags: "SameSite=Lax;Secure",
       cookie_expires: CONSENT_EXPIRY_MS / 1000,
-      send_page_view: false,
     });
   });
 

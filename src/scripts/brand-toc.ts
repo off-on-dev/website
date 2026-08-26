@@ -43,5 +43,4 @@ function initBrandToc(): void {
   });
 }
 
-document.addEventListener("astro:page-load", initBrandToc);
-document.addEventListener("astro:before-swap", teardownToc);
+document.addEventListener("DOMContentLoaded", initBrandToc);

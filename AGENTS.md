@@ -214,29 +214,9 @@ There is **no** content generator, `npm run generate`, or `*.generated.ts`. Rout
   - Inside an interactive element: call `stripLinks(html)` from `@/lib/markdown` first.
   - In a plain-text context (e.g. a meta attribute): call `stripHtml(html)` from `@/lib/markdown`.
 
-### Listener lifecycle (mandatory)
+### Script initialization
 
-Any event listener or store subscription registered in a component `<script>` must be registered under `astro:page-load` and torn down under `astro:before-swap`. `MobileMenu.astro` is the canonical reference. Astro's ClientRouter replaces `<body>` on every client-side navigation; ES module scripts do not re-run; listeners on old DOM nodes are dead.
-
-```ts
-let teardown: (() => void) | null = null;
-
-function initMyComponent(): void {
-  const el = document.querySelector("[data-my-component]");
-  if (!el) return;
-  const onEvent = () => { /* ... */ };
-  el.addEventListener("click", onEvent);
-  teardown = () => el.removeEventListener("click", onEvent);
-}
-
-document.addEventListener("astro:page-load", initMyComponent);
-document.addEventListener("astro:before-swap", () => { teardown?.(); teardown = null; });
-```
-
-Two patterns are safe without `astro:before-swap` teardown — do not add teardown to these:
-
-1. **Module-scope delegation on a surviving node** (`ThemeToggle.astro`): `document.addEventListener("click", handler)` at module scope runs exactly once per session. `document` is never swapped; delegation matches at event time. No accumulation, no teardown needed.
-2. **Listeners on the component's own child nodes** (`StarterNudge.astro`): when ClientRouter swaps `<body>`, the component's subtree is detached. Dead listeners on detached nodes can never fire and are GC-eligible. The next `astro:page-load` operates on fresh nodes. No teardown needed.
+The site uses real page navigations — no SPA router. `<script>` modules re-execute fresh on every load. Initialize in `DOMContentLoaded`; no teardown pattern is needed. Prefer module-scope delegation on `document` (e.g. `ThemeToggle`) where one handler covers every instance across the page lifetime.
 
 ### Component CSS patterns
 

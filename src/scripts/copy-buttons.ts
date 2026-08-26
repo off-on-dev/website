@@ -51,4 +51,4 @@ function wireCopyButtons(): void {
   });
 }
 
-document.addEventListener("astro:page-load", wireCopyButtons);
+document.addEventListener("DOMContentLoaded", wireCopyButtons);

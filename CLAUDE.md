@@ -90,7 +90,7 @@ src/
     _app.ts       # Vue appEntrypoint (island-wide setup)
   layouts/
     Layout.astro  # App shell: <head> (SEO, CSP, favicons, theme + GA4 bootstrap, JSON-LD),
-                  # ClientRouter, skip-nav, Navbar, <slot/>, Footer, ConsentBanner
+                  # skip-nav, Navbar, <slot/>, Footer, ConsentBanner
   components/      # *.astro (static, zero-JS) and *.vue (islands)
   content.config.ts  # Content collection: Zod schema + custom loader + markdown rendering
   data/
@@ -212,10 +212,7 @@ There is **no** content generator, `npm run generate`, or `*.generated.ts` — r
 
 - Static UI is a `.astro` component (zero JS shipped). For interactivity, default to a `.astro` component with a plain `<script>`; the site currently ships **zero islands**. Only reach for a **Vue island** when the component has genuinely reactive state that a class toggle and a small script cannot express, and hydrate it with the lightest directive that works: `client:visible` / `client:idle` by default, `client:load` only for above-the-fold interactivity (protects the Lighthouse baseline).
 - **Frameworks: Vue, never React.** `@astrojs/vue` and its toolchain stay installed even while unused, so adding an island is a one-file change. Do not strip them as unused dependencies.
-- **Listener and subscription lifecycle:** any event listener or store subscription that targets a **long-lived node** (`document`, `window`, or any node that survives ClientRouter swaps) and is registered inside an `astro:page-load` handler must be torn down under `astro:before-swap`. `MobileMenu.astro` is the canonical reference implementation. A module-scope variable holds the teardown function; `astro:before-swap` calls it and nulls the reference. Init must be idempotent. Listeners that accumulate across navigations silently degrade from the second visit onward.
-  Two patterns are safe without `astro:before-swap` — do not add teardown to these:
-  1. **Module-scope delegation on a surviving node** (`ThemeToggle.astro`): `document.addEventListener("click", handler)` at module scope runs exactly once per session. `document` is never swapped; delegation matches at event time, so there is no stale node reference and no accumulation.
-  2. **Listeners on the component's own child nodes** (`StarterNudge.astro`): when ClientRouter swaps `<body>`, the component's subtree is detached. Dead listeners on detached nodes can never fire and are GC-eligible. The next `astro:page-load` call operates on fresh nodes. No teardown needed.
+- **Navigation model: real page loads, no SPA router.** The site does not use `<ClientRouter />`. Every in-site link triggers a full browser navigation. `<script>` modules re-execute fresh on each load, so there is no listener accumulation across pages. Initialize in `DOMContentLoaded` (fires once per load); no teardown or `astro:page-load` / `astro:before-swap` listeners are needed or correct. Prefer module-scope delegation on `document` (e.g. `ThemeToggle`) where one handler covers every instance.
 - **Inline links in prose need `{" "}` around them.** Astro removes the whitespace between text and an adjacent element when the source has a newline there. `e2e/inline-spacing.spec.ts` guards this.
 - `.astro` components cannot be rendered inside a `.vue` island. If an island needs a badge/pill/icon, inline the markup and use `lucide-vue-next`.
 - **Buttons:** raw `<button>` with the CSS utility classes in `src/styles/index.css` (`.btn-primary`, `.btn-secondary`, `.btn-ghost`, `.btn-soft`, `.btn-inverse`, `.btn-ghost-inverse`). No Button wrapper. See `styleguide.md`.
@@ -315,8 +312,7 @@ These patterns produce hydration mismatches and console errors. Never introduce 
 
 - **An island's first client render must match its SSR output.** SSR runs with default state (`null` consent). Read `localStorage`/`navigator`/the DOM in `onMounted`, then update reactive state — never in `<script setup>` top level or as a `ref` initializer. `$consent` is a plain atom (default `null`); once `@nanostores/vue` is installed, it is safe to read via `useStore` since server and first-client render agree. Theme is not an island at all: `ThemeToggle.astro` renders both states and lets CSS choose off the `<html>` class, which sidesteps the mismatch rather than working around it.
 - **No non-deterministic values in a render body.** Build-time `.astro` frontmatter may use `new Date()` (it runs on the server); Vue island templates must not.
-- **`client:only` + ClientRouter** has a first-navigation hydration bug — prefer SSR islands (`client:visible`/`idle`/`load`). The global chrome (theme toggle, mobile menu, consent, starter nudge) is plain `.astro` plus scripts, so nothing in it needs `transition:persist`; scripts bind on `astro:page-load` or delegate from `document`.
-- **After each client navigation** (`astro:after-swap`), `Layout.astro` re-asserts the `<html>` theme class (prevents flash) and moves focus to `#main-content`. Astro's `<ClientRouter />` provides the route announcer and respects `prefers-reduced-motion`.
+- Prefer SSR islands (`client:visible`/`idle`/`load`); `client:load` only for above-the-fold interactivity. The global chrome is plain `.astro` plus scripts — no islands, no hydration directives.
 - **Wide content** (code blocks) must scroll inside its own `overflow-x:auto` container; grid tracks holding it need `minmax(0,1fr)`, not `1fr`.
 - **Progressive enhancement:** core content (headings, prose, nav, cards) must render server-side and work with JS disabled. Filters/theme/consent may degrade. Verify: DevTools → Disable JavaScript → reload; and inspect `dist/`.
 
