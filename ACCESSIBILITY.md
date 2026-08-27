@@ -350,7 +350,7 @@ All tooltip implementations on this site must satisfy three conditions:
 ### Skip navigation
 
 - Every page must have a skip link as the first focusable element targeting `#main-content`.
-- The skip link uses the `.skip-nav` class in `src/index.css`. Never remove this class or its focus rules.
+- The skip link uses the `.skip-nav` class in `src/styles/index.css`. Never remove this class or its focus rules.
 - When adding a new page, always add `id="main-content" tabIndex={-1}` to its `<main>` element. Without `tabIndex={-1}`, activating the skip link scrolls the page but does not move keyboard focus -- the link is broken for keyboard users in Chromium and Safari.
 
 ### Keyboard-scrollable overflow blocks

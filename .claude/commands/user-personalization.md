@@ -39,7 +39,7 @@ See <https://overlayfactsheet.com/>.
 ## Serious: CSS Media Queries Must Come First
 
 Respect OS-level preferences before adding any custom controls. This site handles these
-in `src/index.css`. Check every new animation or color change against these queries.
+in `src/styles/index.css`. Check every new animation or color change against these queries.
 
 ```css
 @media (prefers-reduced-motion: reduce) {

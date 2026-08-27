@@ -104,7 +104,7 @@ Once you have created the Discourse thread for a level, use the **Add Discussion
 | `level_id` | `beginner`, `intermediate`, or `expert` |
 | `discussion_url` | Full Discourse thread URL, e.g. `https://community.offon.dev/t/slug/1419` |
 
-The workflow updates `discussion_url` in `adventure.yaml`, fetches the initial posts from Discourse, regenerates TypeScript, and opens a PR. Run it once per level. If the thread is brand-new and has no posts yet, the PR will contain an empty `discussionPosts` array; the hourly `refresh-community-data` workflow will populate it once posts appear.
+The workflow updates `discussion_url` in `adventure.yaml`, fetches the initial posts from Discourse into `[level]-posts.json`, and opens a PR. Run it once per level. If the thread is brand-new and has no posts yet, the PR will contain an empty `discussionPosts` array; the hourly `refresh-community-data` workflow will populate it once posts appear.
 
 `discussion_url` in `adventure.yaml` is a website-only field. It is never in the challenges repo and survives every re-sync automatically.
 

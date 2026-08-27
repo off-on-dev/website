@@ -7,7 +7,9 @@ import { SITE_URL } from "@/lib/site";
 
 // Generated at build time from the content collection + static routes. Replaces
 // the hand-maintained public/sitemap.xml. `/privacy/` and `/presentation-templates/`
-// are noindex and excluded; `/404/` is excluded.
+// are noindex and excluded; `/404/` is excluded. `/deck/` and `/deck-template/` are
+// static HTML in public/ and are intentionally excluded: they are presentation assets,
+// carry their own noindex meta tag, and are disallowed in robots.txt.
 export const GET: APIRoute = async () => {
   const adventures = (await getCollection("adventures")).map((a) => a.data);
   const { tags } = getChallengeData(adventures);

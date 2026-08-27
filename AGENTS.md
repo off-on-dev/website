@@ -208,7 +208,7 @@ There is **no** content generator, `npm run generate`, or `*.generated.ts`. Rout
 - **Frameworks: Vue, never React.** `@astrojs/vue` stays installed even while unused. Do not strip it.
 - **Inline links in prose need `{" "}` around them.** Astro removes whitespace between text and an adjacent element when the source has a newline there.
 - `.astro` components cannot be rendered inside a `.vue` island. If an island needs a badge/pill/icon, inline the markup.
-- **Buttons:** raw `<button>` with the CSS utility classes in `src/styles/index.css` (`.btn-primary`, `.btn-ghost`, `.btn-soft`, `.btn-inverse`, `.btn-ghost-inverse`). No Button wrapper. See `styleguide.md`.
+- **Buttons:** raw `<button>` with the CSS utility classes in `src/styles/index.css` (`.btn-primary`, `.btn-secondary`, `.btn-ghost`, `.btn-soft`, `.btn-inverse`, `.btn-ghost-inverse`). No Button wrapper. See `styleguide.md`.
 - **Touch targets (WCAG 2.5.8):** nav/footer links and any blockified interactive element must be at least 24x24 px. Nav links use `min-h-[44px]`, footer links `min-h-[48px]`.
 - **Author prose is pre-rendered HTML.** Render with `set:html={value}` and the `md-inline` or `md-content` class, or via `<InlineProse html={...} />`. Never render `{value}` raw.
   - Inside an interactive element: call `stripLinks(html)` from `@/lib/markdown` first.

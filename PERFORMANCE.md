@@ -98,7 +98,7 @@ Target these thresholds at the 75th percentile of real users:
 
 ## Scrollbar gutter
 
-- Add `scrollbar-gutter: stable` to the `html` or `body` element in `src/index.css` to reserve scrollbar space. This prevents a horizontal layout shift when navigating between pages where content overflows vs. pages where it does not.
+- Add `scrollbar-gutter: stable` to the `html` or `body` element in `src/styles/index.css` to reserve scrollbar space. This prevents a horizontal layout shift when navigating between pages where content overflows vs. pages where it does not.
 
 ---
 

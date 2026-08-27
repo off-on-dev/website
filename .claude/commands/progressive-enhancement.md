@@ -87,7 +87,7 @@ so content is in the HTML. Verify that:
 
 `prefers-reduced-motion`, `prefers-color-scheme`, `prefers-contrast`, and
 `forced-colors` are Layer 2 responsibilities. This site handles `prefers-reduced-motion`
-via `@media (prefers-reduced-motion: no-preference)` guards in `src/index.css`.
+via `@media (prefers-reduced-motion: no-preference)` guards in `src/styles/index.css`.
 Check that every new animation is gated the same way.
 
 ## What to Avoid

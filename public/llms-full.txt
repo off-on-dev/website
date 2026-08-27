@@ -199,7 +199,7 @@ The OffOn community is hosted at https://community.offon.dev (a Discourse forum)
 
 ## Challenge Technologies (full list)
 
-Argo CD, Argo Rollouts, flagd, GitHub Actions, Grafana, Jaeger, Java, Kubernetes, Kyverno, OpenFeature, OpenLLMetry, OpenTelemetry, OpenTofu, Policy Reporter, Prometheus, PromQL, Python, Spring Boot, TDD, Terraform, Trivy.
+Argo CD, Argo Events, Argo Rollouts, Argo Workflows, Backstage, flagd, Gitea, GitHub Actions, Grafana, Jaeger, Java, Kubernetes, Kyverno, OpenFeature, OpenLLMetry, OpenTelemetry, OpenTofu, Policy Reporter, Prometheus, PromQL, Python, Spring Boot, TDD, Terraform, Trivy.
 
 ---
 
@@ -211,6 +211,7 @@ Argo CD, Argo Rollouts, flagd, GitHub Actions, Grafana, Jaeger, Java, Kubernetes
 | Adventures | https://offon.dev/adventures/ | All multi-level challenge adventures |
 | Challenges | https://offon.dev/challenges/ | All levels across all adventures; filter by tag |
 | Community Guide | https://offon.dev/handbook/ | How to participate, submit solutions, and use the community |
+| Contribute | https://offon.dev/contribute/ | How to submit solutions, participate in adventures, and contribute |
 | About | https://offon.dev/about/ | Mission, values, and team behind OffOn |
 | Sponsors | https://offon.dev/sponsors/ | Organisations supporting the platform |
 | Accessibility | https://offon.dev/accessibility/ | WCAG 2.2 AA commitment and known issues |

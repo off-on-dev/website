@@ -26,7 +26,7 @@ The `spec-first-coding` command is installed globally (`~/.claude/skills/`). Use
 
 ## Project Overview
 
-**offon.dev** is the main website for OffOn, a platform for open source enthusiasts. It is fully static with no backend and no database. Pages are prerendered at build time by **Astro** (`output: 'static'`); interactivity is layered on as **Vue islands**.
+**offon.dev** is the main website for OffOn, a platform for open source enthusiasts. It is fully static with no backend and no database. Pages are prerendered at build time by **Astro** (`output: 'static'`); interactivity is layered on as `.astro` components with vanilla `<script>` blocks.
 
 > This project was migrated from React Router v8 to Astro + Vue. If you find a reference to `root.tsx`, `entry.server`, `routes.ts`, `*.generated.ts`, `useConsent`, `useTheme`, or `scripts/generate-adventures.mjs`, it is stale — those no longer exist.
 
