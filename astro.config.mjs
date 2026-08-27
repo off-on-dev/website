@@ -41,6 +41,13 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    // Inline all stylesheets into HTML to eliminate the render-blocking CSS
+    // network request. Trade-off: HTML is heavier but removes a ~300ms block
+    // on first paint. GitHub Pages has only 10m cache TTL anyway so the
+    // repeat-visit caching loss is minor.
+    inlineStylesheets: "always",
+  },
   vite: {
     plugins: [tailwindcss(), Icons({ compiler: "vue3" })],
   },
