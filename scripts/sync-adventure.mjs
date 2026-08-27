@@ -2,7 +2,8 @@
 
 /**
  * Fetches adventure YAML files from the challenges repo and produces a
- * website-compatible adventure.yaml, discussion JSON stubs, and regenerated TS.
+ * website-compatible adventure.yaml, discussion JSON stubs, ADVENTURE_CATEGORIES
+ * in scripts/refresh-leaderboard.mjs, and routes in e2e/routes.ts.
  *
  * Environment variables:
  *   ADVENTURE_URL  - GitHub URL of the adventure folder in the challenges repo
@@ -462,6 +463,10 @@ async function main() {
     console.log(`  Upcoming (not live yet): ${upcomingLevels.map((u) => u.difficulty).join(", ")}`);
   }
 
+  // All levels that will be live after this sync (existing + newly synced).
+  // Used for ADVENTURE_CATEGORIES flags and e2e/routes.ts generation below.
+  const allLiveLevels = mergeLevels(existing?.levels, activeLevels, rawFetchedLevels);
+
   // Build the combined adventure object using challenges repo field names.
   // The generator accepts all aliases (name/title, emoji → icon, etc.).
   const adventure = {
@@ -488,7 +493,7 @@ async function main() {
     // Preserve contributor set by a reviewer; omit otherwise (PR checklist item)
     ...(existing?.contributor && { contributor: existing.contributor }),
     ...(upcomingLevels.length > 0 && { upcoming_levels: upcomingLevels }),
-    levels: mergeLevels(existing?.levels, activeLevels, rawFetchedLevels),
+    levels: allLiveLevels,
   };
 
   mkdirSync(adventureDir, { recursive: true });
@@ -507,7 +512,90 @@ async function main() {
     }
   }
 
+  // Register (or update) the adventure in ADVENTURE_CATEGORIES so the validate
+  // job and refresh-leaderboard.mjs can find it. categoryId stays 0 until
+  // community_category_id is set in the YAML and ADVENTURE_CATEGORIES is updated.
+  const leaderboardPath = resolve(ROOT, "scripts/refresh-leaderboard.mjs");
+  const leaderboardSrc = readFileSync(leaderboardPath, "utf-8");
+  const categoryId = existing?.community_category_id ?? 0;
+  const hasLevels = {
+    beginner: allLiveLevels.some((l) => l.level === "beginner"),
+    intermediate: allLiveLevels.some((l) => l.level === "intermediate"),
+    expert: allLiveLevels.some((l) => l.level === "expert"),
+    single: allLiveLevels.some((l) => l.level === "single"),
+  };
+  const todoComment = categoryId === 0 ? " // TODO: set categoryId — look up at https://community.offon.dev/categories.json" : "";
+  const newEntry = `  "${slug}": { categoryId: ${categoryId}, has_beginner: ${hasLevels.beginner}, has_intermediate: ${hasLevels.intermediate}, has_expert: ${hasLevels.expert}, has_single: ${hasLevels.single} },${todoComment}`;
+  const GEN_START = "// GENERATED:adventures";
+  const GEN_END = "// /GENERATED:adventures";
+  const si = leaderboardSrc.indexOf(GEN_START);
+  const ei = leaderboardSrc.indexOf(GEN_END);
+  if (si === -1 || ei === -1) {
+    console.warn("Warning: GENERATED:adventures block not found in refresh-leaderboard.mjs — ADVENTURE_CATEGORIES not updated");
+  } else {
+    const before = leaderboardSrc.slice(0, si + GEN_START.length);
+    const block = leaderboardSrc.slice(si + GEN_START.length, ei);
+    const after = leaderboardSrc.slice(ei);
+    const existingLine = new RegExp(`^[^\n]*"${slug}":[^\n]*\n`, "m");
+    const updatedBlock = existingLine.test(block)
+      ? block.replace(existingLine, `${newEntry}\n`)
+      : `\n${newEntry}${block}`;
+    writeFileSync(leaderboardPath, before + updatedBlock + after);
+    console.log(`Updated ADVENTURE_CATEGORIES in scripts/refresh-leaderboard.mjs`);
+  }
+
   const adventureName = indexData.title || indexData.name || slug;
+
+  // Update e2e/routes.ts so the route-coverage drift gate passes without a manual edit.
+  // SMOKE_ROUTES gets the adventure index + one representative level (the first in LEVEL_ORDER).
+  // A11Y_PAGES gets the adventure index + every live level.
+  const routesPath = resolve(ROOT, "e2e/routes.ts");
+  let routesSrc = readFileSync(routesPath, "utf-8");
+  const sortedLiveLevels = allLiveLevels
+    .slice()
+    .sort((a, b) => (LEVEL_ORDER[a.level] ?? 99) - (LEVEL_ORDER[b.level] ?? 99));
+  const repLevel = sortedLiveLevels[0];
+  const smokeBlockStart = `  // GENERATED:${slug}-smoke`;
+  const smokeBlockEnd = `  // /GENERATED:${slug}-smoke`;
+  const smokeBlock = [
+    smokeBlockStart,
+    `  "/adventures/${slug}/": "${adventureName} - OffOn Adventures",`,
+    ...(repLevel ? [`  "/adventures/${slug}/levels/${repLevel.level}/": "${repLevel.name} - ${adventureName} - OffOn",`] : []),
+    smokeBlockEnd,
+  ].join("\n");
+  const a11yBlockStart = `  // GENERATED:${slug}-a11y`;
+  const a11yBlockEnd = `  // /GENERATED:${slug}-a11y`;
+  const a11yBlock = [
+    a11yBlockStart,
+    `  "/adventures/${slug}/",`,
+    ...sortedLiveLevels.map((l) => `  "/adventures/${slug}/levels/${l.level}/",`),
+    a11yBlockEnd,
+  ].join("\n");
+
+  function upsertRoutesBlock(src, blockStart, blockEnd, blockContent, closingMarker, sectionAnchor) {
+    const bsi = src.indexOf(blockStart);
+    const bei = src.indexOf(blockEnd);
+    if (bsi !== -1 && bei !== -1) {
+      return src.slice(0, bsi) + blockContent + src.slice(bei + blockEnd.length);
+    }
+    const anchorPos = src.indexOf(sectionAnchor);
+    if (anchorPos === -1) {
+      console.warn(`Warning: "${sectionAnchor}" not found in e2e/routes.ts — routes not updated`);
+      return src;
+    }
+    const closingPos = src.indexOf(closingMarker, anchorPos);
+    if (closingPos === -1) {
+      console.warn(`Warning: closing "${closingMarker}" not found in e2e/routes.ts — routes not updated`);
+      return src;
+    }
+    return src.slice(0, closingPos) + "\n" + blockContent + src.slice(closingPos);
+  }
+
+  routesSrc = upsertRoutesBlock(routesSrc, smokeBlockStart, smokeBlockEnd, smokeBlock, "\n};", "export const SMOKE_ROUTES");
+  routesSrc = upsertRoutesBlock(routesSrc, a11yBlockStart, a11yBlockEnd, a11yBlock, "\n];", "export const A11Y_PAGES");
+  writeFileSync(routesPath, routesSrc);
+  console.log(`Updated e2e/routes.ts with routes for ${slug}`);
+
   // Report only the newly promoted levels so the PR title and checklist are accurate.
   const newLevelIds = activeLevels
     .filter((l) => !existingLiveIds.has(l.level))

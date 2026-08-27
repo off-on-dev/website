@@ -121,7 +121,8 @@ jobs:
             src/assets/diagrams/ \
             src/lib/adventure-icons.ts \
             src/lib/lucide-icons.ts \
-            scripts/refresh-leaderboard.mjs
+            scripts/refresh-leaderboard.mjs \
+            e2e/routes.ts
           git commit -m "feat: sync adventure ${SLUG} from challenges repo (${MODE})"
 
           # The branch is owned by this workflow, so a plain --force is safe here and
