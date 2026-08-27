@@ -24,6 +24,7 @@ path = [
   "**/*.config.js", "**/*.config.ts", "components.json",
   ".gitignore", ".npmrc", ".nvmrc", ".markdownlintignore",
   "**/*.xml", "**/*.ico", "**/*.webmanifest", "public/robots.txt",
+  "public/CNAME",
   "public/.well-known/api-catalog",
   ".github/**", "schemas/**", "scripts/**", "e2e/**",
 ]
