@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-15T09:56:19.318Z",
+  "updatedAt": "2026-08-26T16:12:52.332Z",
   "rows": [
     {
       "rank": 1,
@@ -123,18 +123,6 @@
     },
     {
       "rank": 11,
-      "username": "theharithsa",
-      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/90/297.png",
-      "points": 70,
-      "challengesSolved": 1,
-      "beginnerPoints": 70,
-      "intermediatePoints": 0,
-      "expertPoints": 0,
-      "singlePoints": 0,
-      "breakdown": "Adventure 01: Echoes Lost In Orbit | 🟢 Beginner: Broken Echoes [beginner] rank #8 = 70 pts"
-    },
-    {
-      "rank": 12,
       "username": "jayroam",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/jayroam/90/130.png",
       "points": 70,
@@ -146,7 +134,7 @@
       "breakdown": "Adventure 01: Echoes Lost In Orbit | 🟢 Beginner: Broken Echoes [beginner] rank #9 = 70 pts"
     },
     {
-      "rank": 13,
+      "rank": 12,
       "username": "RoelofW",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/RoelofW/90/1.png",
       "points": 70,
@@ -158,19 +146,19 @@
       "breakdown": "Adventure 01: Echoes Lost In Orbit | 🟢 Beginner: Broken Echoes [beginner] rank #7 = 70 pts"
     },
     {
-      "rank": 14,
-      "username": "yerakh-dyn",
-      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/yerakh-dyn/90/157.png",
-      "points": 60,
+      "rank": 13,
+      "username": "theharithsa",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/theharithsa/90/297.png",
+      "points": 70,
       "challengesSolved": 1,
-      "beginnerPoints": 60,
+      "beginnerPoints": 70,
       "intermediatePoints": 0,
       "expertPoints": 0,
       "singlePoints": 0,
-      "breakdown": "Adventure 01: Echoes Lost In Orbit | 🟢 Beginner: Broken Echoes [beginner] late = 60 pts"
+      "breakdown": "Adventure 01: Echoes Lost In Orbit | 🟢 Beginner: Broken Echoes [beginner] rank #8 = 70 pts"
     },
     {
-      "rank": 15,
+      "rank": 14,
       "username": "iw4p",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/iw4p/90/345.png",
       "points": 60,
@@ -182,9 +170,21 @@
       "breakdown": "Adventure 01: Echoes Lost In Orbit | 🟢 Beginner: Broken Echoes [beginner] late = 60 pts"
     },
     {
-      "rank": 16,
+      "rank": 15,
       "username": "mikeadityas",
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/mikeadityas/90/144.png",
+      "points": 60,
+      "challengesSolved": 1,
+      "beginnerPoints": 60,
+      "intermediatePoints": 0,
+      "expertPoints": 0,
+      "singlePoints": 0,
+      "breakdown": "Adventure 01: Echoes Lost In Orbit | 🟢 Beginner: Broken Echoes [beginner] late = 60 pts"
+    },
+    {
+      "rank": 16,
+      "username": "yerakh-dyn",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/yerakh-dyn/90/157.png",
       "points": 60,
       "challengesSolved": 1,
       "beginnerPoints": 60,

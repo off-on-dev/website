@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-15T09:56:19.221Z",
+  "updatedAt": "2026-08-26T16:12:52.180Z",
   "rows": [
     {
       "rank": 1,
@@ -11,7 +11,7 @@
       "intermediatePoints": 95,
       "expertPoints": 100,
       "singlePoints": 0,
-      "breakdown": "Adventure 02: Building CloudHaven | 🔴 Expert: The Guardian Protocols [expert] rank #1 = 100 pts | Practice Infrastructure as Code with Zero Setup (🌆 Adventure 02 | Beginner) [beginner] rank #1 = 100 pts | Adventure 02: Building CloudHaven | 🟡 Intermediate: The Modular Metropolis [intermediate] rank #2 = 95 pts"
+      "breakdown": "Practice Infrastructure as Code with Zero Setup (🌆 Adventure 02 | Beginner) [beginner] rank #1 = 100 pts | Adventure 02: Building CloudHaven | 🔴 Expert: The Guardian Protocols [expert] rank #1 = 100 pts | Adventure 02: Building CloudHaven | 🟡 Intermediate: The Modular Metropolis [intermediate] rank #2 = 95 pts"
     },
     {
       "rank": 2,
