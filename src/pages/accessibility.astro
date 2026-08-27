@@ -193,9 +193,17 @@ const link = "docs-ext-link";
 
         <h2 class={heading2}>Reporting an Accessibility Barrier</h2>
         <p class={paragraph}>
-          If something on {SITE_NAME} blocks you or is hard to use, please tell us. The form
-          prompts for the page, your assistive technology, and severity, which helps us
-          reproduce and prioritize.
+          If something on {SITE_NAME} blocks you or is hard to use, please{" "}
+          <a
+            href="https://github.com/off-on-dev/website/issues/new?template=accessibility.yml"
+            target="_blank"
+            rel="noopener noreferrer" aria-describedby="new-tab-hint"
+            class={link}
+          >
+            open an accessibility issue <IconExternalLink width={12} height={12} aria-hidden="true" />
+          </a>
+          . The form prompts for the page, your assistive technology, and severity, which helps
+          us reproduce and prioritize.
         </p>
         <ul role="list" class={list}>
           <li>
