@@ -52,6 +52,10 @@ export type StarterTarget<A> = { adventure: A; levelId: string };
  * the easiest level present if an adventure ever ships without a Beginner, so a
  * data change cannot silently blank the pointer.
  */
+// The difficulty constraint is deliberately `string` rather than `Difficulty`
+// so callers do not have to satisfy the full AdventureLevel type. AdventureData
+// (below) uses the tighter Difficulty; this generic is intentionally looser
+// to work across call sites with different collection-entry shapes.
 export function getStarterTarget<
   A extends {
     month: string;

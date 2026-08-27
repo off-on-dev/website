@@ -1,5 +1,6 @@
 import { SITE_URL, canonicalUrl } from "@/lib/site";
 import { stripHtml } from "@/lib/markdown";
+import type { Difficulty } from "@/lib/difficulty";
 
 // schema.org objects for adventure, level and solution pages. These field names
 // and their nesting are a compatibility surface: Google indexes them for rich
@@ -47,7 +48,7 @@ export type LearningResourceInput = {
   description: string;
   slug: string;
   levelId: string;
-  difficulty: string;
+  difficulty: Difficulty;
   /** Level learnings, as pre-rendered HTML. Stripped to plain text for schema. */
   learnings: string[];
   adventureTitle: string;

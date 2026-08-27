@@ -46,7 +46,8 @@ export type AdventureLevel = {
   codespacesUrl: string;
   discussionUrl: string;
   // Submission deadline for this level (ISO 8601 string after parsing). Only shown when rewards are active.
-  deadline?: string;
+  // null is possible when parseDeadline receives a truthy input and returns null (unresolvable timezone sentinel path).
+  deadline?: string | null;
   // Short narrative hook shown directly under the page title.
   hook?: string;
   // Brief intro paragraph(s) shown under the page title before the main content.

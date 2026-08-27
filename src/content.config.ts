@@ -20,7 +20,7 @@ import {
 } from "./lib/adventure-derive.mjs";
 import { COMMUNITY_URL } from "./lib/site";
 import { EMOJI_TO_ICON } from "./lib/adventure-icons";
-import type { AdventureRewards } from "./data/adventures/types";
+import type { AdventureLevel, AdventureRewards } from "./data/adventures/types";
 
 // Adventure YAML lives in this app's own data dir (src/data/adventures),
 // resolved from this file's location (src/content.config.ts).
@@ -162,34 +162,10 @@ function resolveCommunityPath(url: string): string {
   return `${COMMUNITY_URL}${path}`;
 }
 
-type RenderedLevel = {
-  id: string;
-  name: string;
-  difficulty: "Beginner" | "Intermediate" | "Expert";
-  topics: string[];
-  learnings: string[];
-  codespacesUrl: string;
-  discussionUrl: string;
-  deadline?: string | null;
-  hook?: string;
-  intro?: string[];
-  backstory?: string[];
-  objective: string[];
-  audience?: string;
-  estimatedTime?: string;
-  scenario?: string;
-  architecture?: string[];
-  architectureDiagram?: string;
-  diagramAlt?: string;
-  architectureAscii?: string;
-  toolbox: { name: string; description: string; url?: string }[];
-  howToPlay: { title: string; content: string }[];
-  helpfulLinks?: { title: string; url: string; description?: string }[];
-  verification: { command: string; description: string };
-  metaDescription: string;
-}
-
-async function renderLevel(level: z.infer<typeof levelSchema>): Promise<RenderedLevel> {
+// AdventureLevel (from data/adventures/types.ts) is the single source of truth
+// for the rendered level shape. renderLevel's return type is checked against it,
+// so the two cannot drift silently.
+async function renderLevel(level: z.infer<typeof levelSchema>): Promise<AdventureLevel> {
   const difficulty = level.difficulty ?? (level.emoji ? LEVEL_DIFFICULTY_BY_EMOJI[level.emoji as keyof typeof LEVEL_DIFFICULTY_BY_EMOJI] : undefined);
   const learnings = level.learnings ?? level.what_you_learn ?? [];
   const intro = level.intro ?? (level.summary ? [level.summary] : undefined);
@@ -233,7 +209,7 @@ async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Rendered
     name: requireEither(level.name, level.title, "level name/title"),
     // The schema's refine() guarantees difficulty resolves from either the
     // explicit field or the emoji, so it cannot be undefined here.
-    difficulty: difficulty as RenderedLevel["difficulty"],
+    difficulty: difficulty as AdventureLevel["difficulty"],
     topics: level.topics,
     learnings: learningsHtml,
     codespacesUrl: resolveCodespacesUrl(level.devcontainer, level.codespaces_machine),

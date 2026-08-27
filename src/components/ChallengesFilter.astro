@@ -329,7 +329,10 @@ const dropdownItem =
   import { tagToSlug, DIFFICULTIES } from "@/lib/challenges";
   import { DIFFICULTY_VAR, type Difficulty } from "@/lib/difficulty";
 
-  type State = { tags: string[]; difficulty: string | null; touched: boolean };
+  const isDifficulty = (d: string): d is Difficulty =>
+    (DIFFICULTIES as readonly string[]).includes(d);
+
+  type State = { tags: string[]; difficulty: Difficulty | null; touched: boolean };
 
   function initChallengesFilter(): void {
     const root = document.querySelector<HTMLElement>("[data-challenges-filter]");
@@ -366,7 +369,7 @@ const dropdownItem =
         state.tags = allTagNames.filter((t) => slugs.includes(tagToSlug(t)));
       }
       const diff = params.get("difficulty");
-      if (diff && (DIFFICULTIES as readonly string[]).includes(diff)) state.difficulty = diff;
+      if (diff && isDifficulty(diff)) state.difficulty = diff;
       // `touched` stays false here on purpose. Arriving at a filtered URL is not
       // an interaction, and a live region that announces the state a page loaded
       // in is just noise. Only the action handlers set it.
@@ -422,14 +425,16 @@ const dropdownItem =
         opt.dataset.url = computeUrl(nextTags, state.difficulty);
       }
       for (const radio of diffRadios) {
-        const d = radio.dataset.difficultyRadio || null;
+        const rawD = radio.dataset.difficultyRadio ?? "";
+        const d: Difficulty | null = isDifficulty(rawD) ? rawD : null;
         // Radios toggle when d is non-null; "All Levels" (d=null) always clears.
         const nextDiff = d !== null ? (state.difficulty === d ? null : d) : null;
         radio.dataset.url = computeUrl(state.tags, nextDiff);
       }
       for (const opt of diffOptions) {
         // Dropdown options always set (no toggle), so project directly to d.
-        const d = opt.dataset.difficultyOption || null;
+        const rawD = opt.dataset.difficultyOption ?? "";
+        const d: Difficulty | null = isDifficulty(rawD) ? rawD : null;
         opt.dataset.url = computeUrl(state.tags, d);
       }
     };
@@ -494,15 +499,17 @@ const dropdownItem =
         opt.querySelector<HTMLElement>("[data-check]")?.toggleAttribute("hidden", !on);
       }
       for (const radio of diffRadios) {
-        const d = radio.dataset.difficultyRadio!;
+        const raw = radio.dataset.difficultyRadio ?? "";
+        const d: Difficulty | null = isDifficulty(raw) ? raw : null;
         const on = d ? state.difficulty === d : state.difficulty === null;
         radio.setAttribute("aria-checked", String(on));
         radio.tabIndex = on ? 0 : -1;
         radio.querySelector<HTMLElement>("[data-clear]")?.toggleAttribute("hidden", !on);
-        radio.setAttribute("style", d ? diffPill(d as Difficulty, on) : allLevelsPill(on));
+        radio.setAttribute("style", d ? diffPill(d, on) : allLevelsPill(on));
       }
       for (const opt of diffOptions) {
-        const d = opt.dataset.difficultyOption!;
+        const raw = opt.dataset.difficultyOption ?? "";
+        const d: Difficulty | null = isDifficulty(raw) ? raw : null;
         const on = d ? state.difficulty === d : state.difficulty === null;
         opt.setAttribute("aria-pressed", String(on));
         opt.querySelector<HTMLElement>("[data-check]")?.toggleAttribute("hidden", !on);
@@ -516,7 +523,7 @@ const dropdownItem =
       if (diffTrigger)
         diffTrigger.setAttribute(
           "style",
-          state.difficulty ? diffPill(state.difficulty as Difficulty, true) : allLevelsPill(true),
+          state.difficulty ? diffPill(state.difficulty, true) : allLevelsPill(true),
         );
 
       const tagsLabel = root.querySelector<HTMLElement>("[data-tags-label]");
@@ -537,7 +544,7 @@ const dropdownItem =
     };
 
     // ── Actions ────────────────────────────────────────────────────────────
-    function setDifficulty(d: string | null, toggle: boolean): void {
+    function setDifficulty(d: Difficulty | null, toggle: boolean): void {
       state.touched = true;
       state.difficulty = toggle && state.difficulty === d ? null : d;
       apply();
@@ -628,7 +635,8 @@ const dropdownItem =
       });
     }
     for (const radio of diffRadios) {
-      const d = radio.dataset.difficultyRadio || null;
+      const rawD = radio.dataset.difficultyRadio ?? "";
+      const d: Difficulty | null = isDifficulty(rawD) ? rawD : null;
       radio.addEventListener("click", () => setDifficulty(d, d !== null));
       radio.addEventListener("keydown", (event) => {
         const key = (event as KeyboardEvent).key;
@@ -642,7 +650,8 @@ const dropdownItem =
       });
     }
     for (const opt of diffOptions) {
-      const d = opt.dataset.difficultyOption || null;
+      const rawD = opt.dataset.difficultyOption ?? "";
+      const d: Difficulty | null = isDifficulty(rawD) ? rawD : null;
       opt.addEventListener("click", () => {
         setDifficulty(d, false);
         const dd = opt.closest<HTMLElement>("[data-dropdown]")!;

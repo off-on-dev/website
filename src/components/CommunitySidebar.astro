@@ -41,15 +41,18 @@ const hasLeaderboard = solvers.length > 0;
 const topSolvers = solvers.slice(0, LEADERBOARD_ROWS_VISIBLE);
 
 // Points for this specific level, keyed by username.
-const LEVEL_POINT_KEY: Record<string, keyof LeaderboardRow> = {
+// Narrowing the value type to the numeric-only fields means r[levelKey] resolves
+// to number | undefined without an assertion.
+type LevelPointKey = keyof Pick<LeaderboardRow, "beginnerPoints" | "intermediatePoints" | "expertPoints" | "singlePoints">;
+const LEVEL_POINT_KEY: Record<string, LevelPointKey> = {
   beginner: "beginnerPoints",
   intermediate: "intermediatePoints",
   expert: "expertPoints",
   single: "singlePoints",
 };
-const levelKey = LEVEL_POINT_KEY[levelId] ?? null;
+const levelKey: LevelPointKey | null = LEVEL_POINT_KEY[levelId] ?? null;
 const pointsByUsername = Object.fromEntries(
-  leaderboardRows.map((r: LeaderboardRow) => [r.username, levelKey !== null ? (r[levelKey] as number | undefined) : undefined]),
+  leaderboardRows.map((r: LeaderboardRow) => [r.username, levelKey !== null ? r[levelKey] : undefined]),
 );
 
 const posts: DiscussionPost[] = discussion?.discussionPosts ?? [];

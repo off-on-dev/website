@@ -14,7 +14,7 @@ export function formatDeadline(iso: string): string {
 }
 
 /** True when a deadline is in the past. Build-time evaluation (may be stale). */
-export function isDeadlinePast(deadline?: string): boolean {
+export function isDeadlinePast(deadline?: string | null): boolean {
   if (!deadline) return false;
   const d = new Date(deadline);
   return !isNaN(d.getTime()) && d < new Date();

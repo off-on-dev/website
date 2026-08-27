@@ -51,7 +51,10 @@ import IconZap from "~icons/lucide/zap";
 // which surfaces as "X is not a valid component" at every dynamic call site.
 type LucideIcon = typeof IconArrowDown;
 
-export const LUCIDE_ICONS: Record<string, LucideIcon | undefined> = {
+// Private concrete-typed map used only to derive LucideIconKey. LUCIDE_ICONS
+// keeps its Record<string, ...> annotation so callers can index it with runtime
+// strings without TypeScript errors.
+const _LUCIDE_ICONS_MAP = {
   accessibility: IconAccessibility,
   "arrow-down": IconArrowDown,
   "arrow-left": IconArrowLeft,
@@ -95,4 +98,9 @@ export const LUCIDE_ICONS: Record<string, LucideIcon | undefined> = {
   wrench: IconWrench,
   x: IconX,
   zap: IconZap,
-};
+} satisfies Record<string, LucideIcon>;
+
+/** Union of all valid kebab-case icon keys in LUCIDE_ICONS. */
+export type LucideIconKey = keyof typeof _LUCIDE_ICONS_MAP;
+
+export const LUCIDE_ICONS: Record<string, LucideIcon | undefined> = _LUCIDE_ICONS_MAP;
