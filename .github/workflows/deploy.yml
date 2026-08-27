@@ -40,6 +40,18 @@ jobs:
       - if: steps.npm-cache.outputs.cache-hit != 'true'
         run: npm ci
 
+      - name: Verify SKILL.md digest
+        run: |
+          actual=$(sha256sum public/.well-known/agent-skills/offon/SKILL.md | cut -d' ' -f1)
+          stored=$(node -e "const j=require('./public/.well-known/agent-skills/index.json'); console.log(j.skills[0].digest.replace('sha256:', ''))")
+          if [ "$actual" != "$stored" ]; then
+            echo "SKILL.md digest mismatch — update the digest in index.json after editing SKILL.md"
+            echo "  index.json: sha256:$stored"
+            echo "  computed:   sha256:$actual"
+            exit 1
+          fi
+          echo "SKILL.md digest OK: sha256:$actual"
+
       - run: npm run sync
       - run: npm run lint
       - run: npm run check

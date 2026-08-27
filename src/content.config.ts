@@ -16,7 +16,6 @@ import { LEVEL_DIFFICULTY_BY_EMOJI } from "./lib/level-constants.mjs";
 import { parseDeadline } from "./lib/deadline.mjs";
 import {
   buildLevelMetaDescription,
-  buildAdventureMetaDescription,
   buildServicesStepBody,
 } from "./lib/adventure-derive.mjs";
 import { COMMUNITY_URL } from "./lib/site";
@@ -345,7 +344,7 @@ const adventures = defineCollection({
       tags: z.array(z.string()).min(1),
       contributor: contributorSchema.optional(),
       community_category_id: z.number().int().optional(),
-      meta_description: z.string().max(160).optional(),
+      meta_description: z.string().max(160),
       backstory: z.array(z.string()).optional(),
       overview: z.array(z.string()).optional(),
       rewards: rewardsSchema.optional(),
@@ -373,7 +372,7 @@ const adventures = defineCollection({
         title,
         month: data.month,
         story: storyHtml,
-        metaDescription: data.meta_description || buildAdventureMetaDescription(data),
+        metaDescription: data.meta_description,
         tags: data.tags,
         ...(icon ? { icon } : {}),
         ...(data.contributor

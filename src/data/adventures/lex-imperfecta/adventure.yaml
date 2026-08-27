@@ -2,6 +2,7 @@ slug: lex-imperfecta
 community_category_id: 43
 name: Lex Imperfecta
 emoji: ⚖️
+meta_description: "Fix broken Kyverno policies: repair CEL admission rules, scope a multi-namespace estate with PolicyException, and fix a Falco rule for runtime threat detection."
 month: JUN 2026
 tags:
   - Kyverno

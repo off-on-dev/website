@@ -26,6 +26,72 @@ Validate the YAML any time with `npm run sync` (runs the Zod schema; the build a
 
 ---
 
+## adventure.yaml Field Reference
+
+The authoritative schema is in [`src/content.config.ts`](src/content.config.ts) (Zod `.strict()` — unknown fields fail the build). This table is derived from it; when the two diverge, the code wins.
+
+### Top-level (adventure) fields
+
+| Field | Status | Type / Constraint | Notes |
+| --- | --- | --- | --- |
+| `slug` | **Required** | `[a-z0-9][a-z0-9-]*[a-z0-9]` | Must match the directory name under `src/data/adventures/`. Build fails on mismatch. |
+| `title` or `name` | **One required** | string | `title` for icon-based adventures; `name` for emoji-based. At least one must be set. |
+| `icon` | Optional | Lucide icon name (e.g. `Satellite`) | If absent, the transform derives an icon from `emoji` via an internal lookup. Set explicitly when the emoji does not map to a suitable icon. |
+| `emoji` | Optional | emoji character | Shown on the adventure card. If `icon` is absent, `emoji` is used to derive one from a lookup table. |
+| `month` | **Required** | `MMM YYYY` | Three-letter uppercase abbreviation + four-digit year. Allowed: `JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC`. Validated by Zod regex; wrong format fails sync. |
+| `tags` | **Required** | `string[]` (min 1) | Technology/topic labels shown as filter chips. The first three are used in the generated meta description template when `meta_description` is absent. |
+| `meta_description` | **Required** | string, max 160 chars | Validated by the Zod schema; missing field fails `npm run sync`. Max 160 chars. No em dashes; no ` - ` used as a dash. |
+| `story` | Optional | markdown string | Short description shown on adventure cards and at the top of the adventure page. Card views strip HTML; set:html prose uses the rendered version. |
+| `backstory` | Optional | `string[]` (markdown) | Thematic narrative paragraphs rendered on the adventure page. |
+| `overview` | Optional | `string[]` (markdown) | Technical/content summary rendered on the adventure page. |
+| `contributor` | Optional | object | `name` (required), `url` (optional URL), `about` (optional markdown). Survives every re-sync once set. |
+| `community_category_id` | Optional | integer | Discourse category ID. Survives every re-sync once set; position is kept directly after `slug`. |
+| `rewards` | Optional | object | `deadline` (required inside; see format below), `eligibility` (markdown), `tiers` (array of `{label, description}`), `ranking_note` (markdown), `ranking_rules_url` (URL). |
+| `upcoming_levels` | Optional | object[] | Coming-soon placeholders: `{level?, name, difficulty}`. Survives re-syncs for levels not yet in the challenges repo. |
+| `levels` | **Required** | object[] (min 1) | See level fields below. |
+
+**`rewards.deadline` format and timezone handling.** Preferred: ISO 8601 (`"2026-07-01T23:59:00+01:00"`). Also accepted: `"Weekday, D Month YYYY at HH:MM TZ"` (e.g. `"Tuesday, 1 July 2026 at 23:59 CET"`). Supported timezone abbreviations: `CET` (+01:00), `CEST` (+02:00), `UTC` (+00:00), `GMT` (+00:00). Unrecognised abbreviations are left as-is and logged as warnings. The string `"TODO"` is accepted and renders as an empty deadline (no gating).
+
+### Level fields
+
+Each entry in the `levels` array accepts the following fields.
+
+| Field | Status | Type / Constraint | Notes |
+| --- | --- | --- | --- |
+| `level` | **Required** | string | Level identifier and URL segment: `beginner`, `intermediate`, or `expert`. |
+| `name` or `title` | **One required** | string | Display name for the level. |
+| `devcontainer` | **Required** | string | Devcontainer folder name in the challenges repo `.devcontainer/` directory. |
+| `topics` | **Required** | `string[]` | Technologies covered by this level. An empty `[]` is valid and stays empty; inheriting adventure `tags` is done by the sync workflow, not the schema. |
+| `objective` | **Required** | `string[]` (markdown) | Success criteria list shown to participants. |
+| `toolbox` | **Required** | object[] | `{name, description, url?}` — tools available in the level environment. |
+| `how_to_play` | **Required** | object[] | `{id?, title, content}` — ordered step-by-step instructions. |
+| `emoji` | Optional | `🟢` / `🟡` / `🔴` | Difficulty emoji. |
+| `difficulty` | Optional | `Beginner` \| `Intermediate` \| `Expert` | Inferred from `emoji` when absent. |
+| `community_url` | Optional | URL string | Discourse thread URL for this level. Website-only; never overwritten by re-syncs. |
+| `discussion_url` | Optional | URL string | Deprecated alias for `community_url`; preserved independently on re-sync. |
+| `deadline` | Optional | ISO 8601 or human-readable | Level-specific deadline. Overrides `rewards.deadline` for solution page gating. Same format rules as `rewards.deadline` above. |
+| `summary` | Optional | string | One-sentence summary for card views (plain text; not markdown). |
+| `intro` | Optional | `string[]` (markdown) | Opening paragraphs shown below the level heading. |
+| `backstory` | Optional | `string[]` (markdown) | Level-specific narrative paragraphs. |
+| `architecture` | Optional | `string[]` (markdown) | Architecture description paragraphs. |
+| `architecture_diagram` | Optional | SVG filename | Filename only (e.g. `echoes-beginner.svg`) in `src/assets/diagrams/`. Add the SVG manually; the sync workflow strips this field from incoming content. Survives re-syncs once set manually. |
+| `diagram_alt` | Optional | string | Alt text for the architecture diagram image. |
+| `architecture_ascii` | Optional | string | ASCII art fallback for environments that cannot render SVG. |
+| `audience` | Optional | string (markdown) | Description of who the level is aimed at. |
+| `estimated_time` | Optional | string | Human-readable time estimate (e.g. `"2–4 hours"`). |
+| `scenario` | Optional | string (markdown) | Scenario prose shown before the how-to-play steps. |
+| `services` | Optional | object[] | Ports exposed by the devcontainer: `{name, port?, credentials?, description, internal?}`. An injected "Explore the UIs" step is generated automatically when `services` is non-empty and contains at least one non-internal port. |
+| `helpful_links` | Optional | object[] | Reference links shown at the bottom of the level: `{title, url, description?}`. |
+| `meta_description` | Optional | string, max 160 chars | Level-specific meta description. When absent, the generator builds one from `name`/`title` + `intro[0]` + difficulty + topics. |
+| `what_you_learn` or `learnings` | **One required** | `string[]` (min 1 when present) | Learning objectives list. A Zod `.refine()` requires at least one of the two to be set; if both are absent the build fails. |
+| `verification` | **Required** | object | `{command, description}` — the verification gate command and its description. |
+| `codespaces_machine` | Optional | `"4core"` | Machine size override for Codespaces. Only `"4core"` is accepted; other values fail the Zod schema. |
+| `hook` | Optional | string | Verification hook command. |
+| `solved_count` | Optional | integer | Override for the displayed solved count. |
+| `top_players` | Optional | object[] | System-populated leaderboard data: `{username, count}`. Set by the leaderboard refresh script; do not edit by hand. |
+
+---
+
 ## Syncing a New Adventure
 
 ### 1. Trigger the workflow
@@ -88,11 +154,11 @@ rewards.deadline: "2026-07-01T23:59:00+01:00"
 rewards.deadline: "Tuesday, 1 July 2026 at 23:59 CET"
 ```
 
-Supported timezone abbreviations: `CET` (+01:00), `CEST` (+02:00), `UTC` (+00:00), `GMT` (+00:00). Unrecognised abbreviations are left as-is and logged as warnings during generation.
+See the `rewards.deadline` entry in the [Field Reference](#adventureyaml-field-reference) above for the full format and supported timezone abbreviations.
 
 ### Review topics
 
-Each level's `topics:` list defaults to all adventure tags. Refine it to the subset of technologies that are actually used in that level. This list is preserved on re-sync only if the challenges repo did not set it explicitly (see Re-syncing below).
+Each level's `topics:` list is set by the sync workflow to the adventure's full `tags` list if the challenges repo does not set it explicitly. Refine it to the subset of technologies actually used in that level. This list is preserved on re-sync only if the challenges repo did not set it explicitly (see Re-syncing below).
 
 ### Update discussion_url
 

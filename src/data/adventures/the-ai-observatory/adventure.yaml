@@ -1,5 +1,6 @@
 slug: the-ai-observatory
 title: The AI Observatory
+meta_description: "Add OpenLLMetry to a Python AI application: trace LLM calls, add RAG spans and a retrieval metric, then configure the Collector for tail-based sampling."
 icon: Telescope
 month: FEB 2026
 community_category_id: 37

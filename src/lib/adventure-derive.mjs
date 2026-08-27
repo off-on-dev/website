@@ -35,16 +35,6 @@ export function buildLevelMetaDescription(level) {
   return truncate(base, 160);
 }
 
-/** Synthesize an adventure meta description from YAML fields. */
-export function buildAdventureMetaDescription(data) {
-  const title = data.title ?? data.name;
-  if (data.overview && data.overview.length > 0) {
-    return truncate(stripMarkdown(data.overview[0]), 160);
-  }
-  const tags = (data.tags || []).slice(0, 3).join(", ");
-  return truncate(`${title}: a hands-on ${tags} adventure on ${BRAND_NAME}.`, 160);
-}
-
 /** Build the markdown body of the injected "Explore the UIs" how_to_play step,
  *  or null when there are no externally accessible services. */
 export function buildServicesStepBody(services) {

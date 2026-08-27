@@ -3,7 +3,6 @@ import {
   stripMarkdown,
   truncate,
   buildLevelMetaDescription,
-  buildAdventureMetaDescription,
   buildServicesStepBody,
 } from "@/lib/adventure-derive.mjs";
 
@@ -127,44 +126,6 @@ describe("buildLevelMetaDescription", () => {
     };
     const desc = buildLevelMetaDescription(level);
     expect(desc.length).toBeLessThanOrEqual(160);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// buildAdventureMetaDescription
-// ---------------------------------------------------------------------------
-describe("buildAdventureMetaDescription", () => {
-  it("uses the first overview paragraph when present", () => {
-    const data = {
-      title: "Echoes Lost in Orbit",
-      overview: ["An adventure about broken observability in space."],
-      tags: ["OpenTelemetry"],
-    };
-    const desc = buildAdventureMetaDescription(data);
-    expect(desc).toContain("broken observability");
-  });
-
-  it("falls back to title + tags when overview is absent", () => {
-    const data = {
-      title: "Echoes Lost in Orbit",
-      tags: ["OpenTelemetry", "Grafana", "Prometheus"],
-    };
-    const desc = buildAdventureMetaDescription(data);
-    expect(desc).toContain("Echoes Lost in Orbit");
-    expect(desc).toContain("OpenTelemetry");
-  });
-
-  it("produces a description within 160 chars", () => {
-    const data = {
-      title: "A very long adventure title that goes on forever",
-      tags: ["tag1", "tag2", "tag3"],
-    };
-    expect(buildAdventureMetaDescription(data).length).toBeLessThanOrEqual(160);
-  });
-
-  it("uses name as title fallback", () => {
-    const data = { name: "Dead Reckoning", tags: ["Git"] };
-    expect(buildAdventureMetaDescription(data)).toContain("Dead Reckoning");
   });
 });
 
