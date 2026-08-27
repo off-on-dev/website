@@ -581,6 +581,32 @@ async function main() {
 
   routesSrc = upsertRoutesBlock(routesSrc, smokeBlockStart, smokeBlockEnd, smokeBlock, "\n};", "export const SMOKE_ROUTES", routesPath);
   routesSrc = upsertRoutesBlock(routesSrc, a11yBlockStart, a11yBlockEnd, a11yBlock, "\n];", "export const A11Y_PAGES", routesPath);
+
+  // Each unique tag generates a /challenges/<slug>/ route. The drift gate in
+  // route-coverage.spec.ts requires every built route to be acknowledged in
+  // ROUTES_WITHOUT_FULL_COVERAGE (or fully covered). We upsert a GENERATED block
+  // so new tags are automatically registered; duplicates with the manual list or
+  // other adventure blocks are harmless (Set-deduplicated at test time).
+  const tagToSlug = (tag) =>
+    tag.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  const allAdventureTags = [
+    ...new Set(
+      allLiveLevels
+        .flatMap((l) => (l.topics ?? []).map((t) => (typeof t === "string" ? t : (t.name ?? ""))))
+        .filter(Boolean),
+    ),
+  ];
+  if (allAdventureTags.length > 0) {
+    const challengeBlockStart = `  // GENERATED:${slug}-challenges`;
+    const challengeBlockEnd = `  // /GENERATED:${slug}-challenges`;
+    const challengeBlock = [
+      challengeBlockStart,
+      ...allAdventureTags.map((tag) => `  "/challenges/${tagToSlug(tag)}/",`),
+      challengeBlockEnd,
+    ].join("\n");
+    routesSrc = upsertRoutesBlock(routesSrc, challengeBlockStart, challengeBlockEnd, challengeBlock, "\n];", "export const ROUTES_WITHOUT_FULL_COVERAGE", routesPath);
+  }
+
   writeFileSync(routesPath, routesSrc);
   console.log(`Updated e2e/routes.ts with routes for ${slug}`);
 
