@@ -36,10 +36,10 @@ The authoritative schema is in [`src/content.config.ts`](src/content.config.ts) 
 | --- | --- | --- | --- |
 | `slug` | **Required** | `[a-z0-9][a-z0-9-]*[a-z0-9]` | Must match the directory name under `src/data/adventures/`. Build fails on mismatch. |
 | `title` or `name` | **One required** | string | `title` for icon-based adventures; `name` for emoji-based. At least one must be set. |
-| `icon` | Optional | Lucide icon name (e.g. `Satellite`) | If absent, the transform derives an icon from `emoji` via an internal lookup. Set explicitly when the emoji does not map to a suitable icon. |
-| `emoji` | Optional | emoji character | Shown on the adventure card. If `icon` is absent, `emoji` is used to derive one from a lookup table. |
+| `icon` | Optional | Lucide icon name (e.g. `Satellite`) | The sync workflow auto-registers the icon (imports, type union, emoji mapping) and writes `icon:` directly into `adventure.yaml`. Set explicitly in the challenges repo when the emoji alone is insufficient. |
+| `emoji` | Optional | emoji character | Shown on the adventure card. The sync workflow maps it to a Lucide icon via the `EMOJI_TO_ICON` table; add the mapping there first if the emoji is new. |
 | `month` | **Required** | `MMM YYYY` | Three-letter uppercase abbreviation + four-digit year. Allowed: `JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC`. Validated by Zod regex; wrong format fails sync. |
-| `tags` | **Required** | `string[]` (min 1) | Technology/topic labels shown as filter chips. The first three are used in the generated meta description template when `meta_description` is absent. |
+| `tags` | **Required** | `string[]` (min 1) | Technology/topic labels shown as filter chips. Used when the auto-generated `meta_description` falls back to name + backstory. |
 | `meta_description` | **Required** | string, max 160 chars | Validated by the Zod schema; missing field fails `npm run sync`. Max 160 chars. No em dashes; no ` - ` used as a dash. |
 | `story` | Optional | markdown string | Short description shown on adventure cards and at the top of the adventure page. Card views strip HTML; set:html prose uses the rendered version. |
 | `backstory` | Optional | `string[]` (markdown) | Thematic narrative paragraphs rendered on the adventure page. |
@@ -80,7 +80,7 @@ Each entry in the `levels` array accepts the following fields.
 | `audience` | Optional | string (markdown) | Description of who the level is aimed at. |
 | `estimated_time` | Optional | string | Human-readable time estimate (e.g. `"2–4 hours"`). |
 | `scenario` | Optional | string (markdown) | Scenario prose shown before the how-to-play steps. |
-| `services` | Optional | object[] | Ports exposed by the devcontainer: `{name, port?, credentials?, description, internal?}`. An injected "Explore the UIs" step is generated automatically when `services` is non-empty and contains at least one non-internal port. |
+| `services` | Optional | object[] | Services exposed by the devcontainer: `{name, port?, url?, credentials?, description, internal?}`. Use `port` for a bare port number or `url` for a full URL (e.g. `http://localhost:5173`). An injected "Explore the UIs" step is generated automatically when at least one non-internal service has a `port` or `url`. |
 | `helpful_links` | Optional | object[] | Reference links shown at the bottom of the level: `{title, url, description?}`. |
 | `meta_description` | Optional | string, max 160 chars | Level-specific meta description. When absent, the generator builds one from `name`/`title` + `intro[0]` + difficulty + topics. |
 | `what_you_learn` or `learnings` | **One required** | `string[]` (min 1 when present) | Learning objectives list. A Zod `.refine()` requires at least one of the two to be set; if both are absent the build fails. |

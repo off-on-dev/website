@@ -119,6 +119,8 @@ jobs:
           git add \
             src/data/adventures/${SLUG}/ \
             src/assets/diagrams/ \
+            src/lib/adventure-icons.ts \
+            src/lib/lucide-icons.ts \
             scripts/refresh-leaderboard.mjs
           git commit -m "feat: sync adventure ${SLUG} from challenges repo (${MODE})"
 
@@ -189,6 +191,7 @@ jobs:
             \`\`\`
           - [ ] Confirm \`month:\` is correct for the planned release
           - [ ] Set \`community_category_id:\` in \`src/data/adventures/${SLUG}/adventure.yaml\` (look up at https://community.offon.dev/categories.json)          - [ ] Update \`rewards.deadline:\` from \`TODO\` to ISO 8601 (e.g. \`2026-07-01T23:59:00+01:00\`)
+          - [ ] Review \`meta_description:\` in \`adventure.yaml\` — auto-generated from the first level summary; refine to cover all levels in one technical sentence (max 160 chars)
           - [ ] Review \`topics:\` on each level, auto-set to all adventure tags, refine to level-specific subset if needed
           - [ ] Update \`discussion_url:\` in each level once the Discourse threads are created
           - [ ] Update \`discussionUrl\` in each \`*-posts.json\` stub

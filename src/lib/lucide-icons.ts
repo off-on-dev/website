@@ -2,6 +2,7 @@
 // All icons are imported statically so unplugin-icons can inline them at build time.
 // Add an entry here before using a new icon name dynamically.
 
+import IconAccessibility from "~icons/lucide/accessibility";
 import IconArrowDown from "~icons/lucide/arrow-down";
 import IconArrowLeft from "~icons/lucide/arrow-left";
 import IconArrowRight from "~icons/lucide/arrow-right";
@@ -51,6 +52,7 @@ import IconZap from "~icons/lucide/zap";
 type LucideIcon = typeof IconArrowDown;
 
 export const LUCIDE_ICONS: Record<string, LucideIcon | undefined> = {
+  accessibility: IconAccessibility,
   "arrow-down": IconArrowDown,
   "arrow-left": IconArrowLeft,
   "arrow-right": IconArrowRight,

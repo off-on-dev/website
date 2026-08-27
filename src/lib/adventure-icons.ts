@@ -3,6 +3,7 @@
 // for the emoji→icon and PascalCase→kebab mappings used across the codebase.
 
 export type AdventureIconName =
+  | "Accessibility"
   | "Building2"
   | "Cloud"
   | "Compass"
@@ -13,6 +14,7 @@ export type AdventureIconName =
 
 /** Maps legacy adventure emoji fields to their Lucide icon names. */
 export const EMOJI_TO_ICON = {
+  "♿": "Accessibility",
   "🧪": "FlaskConical",
   "🔭": "Telescope",
   "☁️": "Cloud",
@@ -23,6 +25,7 @@ export const EMOJI_TO_ICON = {
 
 /** Maps Lucide PascalCase icon names to their kebab-case keys in LUCIDE_ICONS. */
 export const ICON_TO_KEBAB: Record<AdventureIconName, string> = {
+  Accessibility: "accessibility",
   Building2: "building-2",
   Cloud: "cloud",
   Compass: "compass",

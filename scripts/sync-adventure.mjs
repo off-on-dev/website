@@ -39,6 +39,8 @@ const execAsync = promisify(exec);
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const ADVENTURES_DIR = resolve(ROOT, "src/data/adventures");
+const ADVENTURE_ICONS_PATH = resolve(ROOT, "src/lib/adventure-icons.ts");
+const LUCIDE_ICONS_PATH = resolve(ROOT, "src/lib/lucide-icons.ts");
 
 const VERIFICATION_STUB = {
   command: "./verify.sh",
@@ -109,6 +111,42 @@ function stripCodeInLinks(s) {
   return s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, url) => `[${text.replace(/`/g, "")}](${url})`);
 }
 
+// Minimal markdown stripper for plain-text meta descriptions (links, bold, italic, code).
+function stripMarkdown(s) {
+  return s
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/[*_`]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function truncateAtWord(s, max) {
+  if (s.length <= max) return s;
+  const cut = s.slice(0, max - 3).replace(/\s+\S*$/, "");
+  return cut + "...";
+}
+
+// Prefer the most technical source: first level summary > overview > backstory.
+// Reviewers should refine this to cover all levels for multi-level adventures.
+function buildAdventureMetaDescription(indexData, activeLevels) {
+  const firstSummary = activeLevels?.[0]?.summary;
+  if (firstSummary) {
+    const plain = stripMarkdown(firstSummary);
+    if (plain.length <= 160) return plain;
+    return truncateAtWord(plain, 160);
+  }
+  const overviewFirst = Array.isArray(indexData.overview) ? indexData.overview[0] : "";
+  if (overviewFirst) {
+    const plain = stripMarkdown(overviewFirst);
+    if (plain.length <= 160) return plain;
+    return truncateAtWord(plain, 160);
+  }
+  const name = indexData.title || indexData.name || "";
+  const backstoryFirst = Array.isArray(indexData.backstory) ? indexData.backstory[0] || "" : "";
+  const full = stripMarkdown(`${name}: ${backstoryFirst}`);
+  return truncateAtWord(full, 160);
+}
+
 function transformStrings(value, fn) {
   if (typeof value === "string") return fn(value);
   if (Array.isArray(value)) return value.map((v) => transformStrings(v, fn));
@@ -118,6 +156,111 @@ function transformStrings(value, fn) {
     return out;
   }
   return value;
+}
+
+// --- Lucide icon auto-registration ---
+// Reads and patches adventure-icons.ts + lucide-icons.ts so new icons from the
+// challenges repo are committed alongside the adventure YAML in the same PR.
+
+function iconNameToKebab(pascal) {
+  return pascal
+    .replace(/([A-Z])/g, (c, _, i) => (i > 0 ? "-" : "") + c.toLowerCase())
+    .replace(/([a-z])(\d)/g, "$1-$2");
+}
+
+function ensureIconRegistered(iconName, emoji) {
+  const kebab = iconNameToKebab(iconName);
+
+  const lucideSet = JSON.parse(readFileSync(resolve(ROOT, "node_modules/@iconify-json/lucide/icons.json"), "utf8"));
+  if (!lucideSet.icons[kebab]) {
+    fail(`Lucide icon "${kebab}" not found in @iconify-json/lucide. Check https://lucide.dev/icons/ and correct the icon name in docs/index.yaml.`);
+  }
+
+  let ai = readFileSync(ADVENTURE_ICONS_PATH, "utf8");
+  let li = readFileSync(LUCIDE_ICONS_PATH, "utf8");
+  let changed = false;
+
+  if (!ai.includes(`"${iconName}"`)) {
+    ai = addToTypeUnion(ai, iconName);
+    ai = addToIconToKebab(ai, iconName, kebab);
+    li = addIconImport(li, iconName, kebab);
+    li = addToLucideIconsMap(li, iconName, kebab);
+    changed = true;
+    console.log(`  Registered Lucide icon: ${iconName} (${kebab})`);
+  }
+
+  if (emoji && !ai.includes(`"${emoji}": `)) {
+    ai = addToEmojiToIcon(ai, emoji, iconName);
+    changed = true;
+    console.log(`  Added emoji mapping: ${emoji} → ${iconName}`);
+  }
+
+  if (changed) {
+    writeFileSync(ADVENTURE_ICONS_PATH, ai);
+    writeFileSync(LUCIDE_ICONS_PATH, li);
+  }
+}
+
+function addToTypeUnion(content, iconName) {
+  const re = /(export type AdventureIconName =\n)((?:  \| "[^"]+"\n)*  \| "[^"]+";)/;
+  const m = content.match(re);
+  if (!m) throw new Error("Cannot locate AdventureIconName union in adventure-icons.ts");
+  const existing = [...m[2].matchAll(/\| "([^"]+)"/g)].map((x) => x[1]);
+  if (existing.includes(iconName)) return content;
+  const sorted = [...existing, iconName].sort();
+  const block = sorted.map((n, i) => `  | "${n}"${i === sorted.length - 1 ? ";" : ""}`).join("\n");
+  return content.replace(re, m[1] + block);
+}
+
+function addToEmojiToIcon(content, emoji, iconName) {
+  const re = /(export const EMOJI_TO_ICON = \{)([\s\S]*?)(\} satisfies Record<string, AdventureIconName>;)/;
+  const m = content.match(re);
+  if (!m) throw new Error("Cannot locate EMOJI_TO_ICON in adventure-icons.ts");
+  if (m[2].includes(`"${emoji}"`)) return content;
+  const entries = [...m[2].matchAll(/"([^"]+)":\s*"([^"]+)"/g)].map((x) => ({ emoji: x[1], icon: x[2] }));
+  entries.push({ emoji, icon: iconName });
+  entries.sort((a, b) => a.icon.localeCompare(b.icon));
+  const block = "\n" + entries.map((e) => `  "${e.emoji}": "${e.icon}",`).join("\n") + "\n";
+  return content.replace(re, m[1] + block + m[3]);
+}
+
+function addToIconToKebab(content, iconName, kebab) {
+  const re = /(export const ICON_TO_KEBAB: Record<AdventureIconName, string> = \{)([\s\S]*?)(\};)/;
+  const m = content.match(re);
+  if (!m) throw new Error("Cannot locate ICON_TO_KEBAB in adventure-icons.ts");
+  if (m[2].includes(`${iconName}:`)) return content;
+  const entries = [...m[2].matchAll(/(\w+):\s*"([^"]+)"/g)].map((x) => ({ name: x[1], kebab: x[2] }));
+  entries.push({ name: iconName, kebab });
+  entries.sort((a, b) => a.name.localeCompare(b.name));
+  const block = "\n" + entries.map((e) => `  ${e.name}: "${e.kebab}",`).join("\n") + "\n";
+  return content.replace(re, m[1] + block + m[3]);
+}
+
+function addIconImport(content, iconName, kebab) {
+  const line = `import Icon${iconName} from "~icons/lucide/${kebab}";`;
+  if (content.includes(line)) return content;
+  const re = /import Icon(\w+) from "~icons\/lucide\/[^"]+";/g;
+  const matches = [...content.matchAll(re)];
+  const after = matches.find((x) => x[1] > iconName);
+  if (after) return content.slice(0, after.index) + line + "\n" + content.slice(after.index);
+  const last = matches[matches.length - 1];
+  const pos = last.index + last[0].length;
+  return content.slice(0, pos) + "\n" + line + content.slice(pos);
+}
+
+function addToLucideIconsMap(content, iconName, kebab) {
+  const re = /(export const LUCIDE_ICONS: Record<string, LucideIcon \| undefined> = \{)([\s\S]*?)(\};)/;
+  const m = content.match(re);
+  if (!m) throw new Error("Cannot locate LUCIDE_ICONS map in lucide-icons.ts");
+  const needsQuotes = /[^a-z0-9]/.test(kebab);
+  const key = needsQuotes ? `"${kebab}"` : kebab;
+  if (m[2].includes(key + ":")) return content;
+  const entryRe = /  (?:"([^"]+)"|([a-z][a-z0-9]*)):\s*Icon\w+,/g;
+  const entries = [...m[2].matchAll(entryRe)].map((x) => ({ key: x[1] || x[2], raw: x[0].trim() }));
+  entries.push({ key: kebab, raw: `${key}: Icon${iconName},` });
+  entries.sort((a, b) => a.key.localeCompare(b.key));
+  const block = "\n" + entries.map((e) => `  ${e.raw}`).join("\n") + "\n";
+  return content.replace(re, m[1] + block + m[3]);
 }
 
 function buildLevel(raw, adventureTags, rewardsDeadline) {
@@ -204,6 +347,25 @@ async function main() {
   if (!indexData) fail(`docs/index.yaml not found at ${adventurePath}/docs/`);
 
   const adventureTags = indexData.tags || [];
+
+  // Resolve the Lucide icon name. The content transform's EMOJI_TO_ICON lookup is
+  // unreliable in Astro builds, so we always write `icon:` explicitly into the YAML.
+  let resolvedIconName = indexData.icon || null;
+
+  if (indexData.icon) {
+    // Challenges repo specifies the icon directly — auto-register if new.
+    ensureIconRegistered(indexData.icon, indexData.emoji);
+  } else if (indexData.emoji) {
+    // Resolve from the existing EMOJI_TO_ICON mapping in adventure-icons.ts.
+    const aiContent = readFileSync(ADVENTURE_ICONS_PATH, "utf8");
+    const mapped = aiContent.match(new RegExp(`"${indexData.emoji}":\\s*"([^"]+)"`));
+    if (mapped) {
+      resolvedIconName = mapped[1];
+      console.log(`  Resolved icon from emoji mapping: ${indexData.emoji} → ${resolvedIconName}`);
+    } else {
+      console.warn(`  Warning: emoji "${indexData.emoji}" has no Lucide icon mapping. Add \`icon: <LucideName>\` to docs/index.yaml in the challenges repo to auto-register it.`);
+    }
+  }
 
   const levelFileNames = docsFiles.filter((f) => f.endsWith(".yaml") && f !== "index.yaml").sort();
   if (levelFileNames.length === 0) fail("No level YAML files found in docs/");
@@ -306,10 +468,11 @@ async function main() {
     slug,
     // Preserve community_category_id right after slug so its position stays stable on re-syncs.
     ...(existing?.community_category_id !== undefined && { community_category_id: existing.community_category_id }),
-    // Preserve a manually-set meta description; the generator auto-builds one from tags if absent.
-    ...(existing?.meta_description && { meta_description: existing.meta_description }),
+    // Preserve a manually-set meta description; auto-generate for new adventures (required by the schema).
+    meta_description: existing?.meta_description || buildAdventureMetaDescription(indexData, activeLevels),
     // Use whichever title field the challenges repo provides
     ...(indexData.title ? { title: indexData.title } : { name: indexData.name }),
+    ...(resolvedIconName && { icon: resolvedIconName }),
     emoji: indexData.emoji,
     // Preserve month if a previous PR already set it
     month: existing?.month || currentMonth(),

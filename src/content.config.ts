@@ -69,6 +69,7 @@ const serviceSchema = z
   .object({
     name: z.string(),
     port: z.union([z.string(), z.number()]).optional(),
+    url: z.string().optional(),
     credentials: z.string().optional(),
     description: z.string(),
     internal: z.boolean().optional(),

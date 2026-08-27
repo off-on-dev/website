@@ -39,13 +39,20 @@ export function buildLevelMetaDescription(level) {
  *  or null when there are no externally accessible services. */
 export function buildServicesStepBody(services) {
   if (!services || services.length === 0) return null;
-  const accessible = services.filter((s) => !s.internal && s.port !== undefined);
+  const accessible = services.filter((s) => !s.internal && (s.port !== undefined || s.url));
   const internal = services.filter((s) => s.internal);
   if (accessible.length === 0) return null;
   let body = "Open the **Ports** tab and navigate to each service:\n\n";
   for (const svc of accessible) {
     const creds = svc.credentials ? ` (${svc.credentials})` : "";
-    body += `- **Port ${String(svc.port)}:** ${svc.name}${creds}. ${svc.description}\n`;
+    if (svc.port !== undefined) {
+      body += `- **Port ${String(svc.port)}:** ${svc.name}${creds}. ${svc.description}\n`;
+    } else {
+      // Service defined by URL rather than port number (e.g. http://localhost:5173).
+      const portFromUrl = svc.url ? new URL(svc.url).port : "";
+      const portLabel = portFromUrl ? `Port ${portFromUrl}` : svc.url;
+      body += `- **${portLabel}:** ${svc.name}${creds}. ${svc.description}\n`;
+    }
   }
   if (internal.length > 0) {
     body += "\n";

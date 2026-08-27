@@ -144,9 +144,28 @@ describe("buildServicesStepBody", () => {
     expect(buildServicesStepBody(services)).toBeNull();
   });
 
-  it("returns null when external services have no port", () => {
+  it("returns null when external services have no port or url", () => {
     const services = [{ internal: false, name: "Web", description: "App server" }];
     expect(buildServicesStepBody(services)).toBeNull();
+  });
+
+  it("uses port extracted from url when port field is absent", () => {
+    const services = [
+      { internal: false, url: "http://localhost:5173", name: "Vite", description: "Dev server" },
+    ];
+    const body = buildServicesStepBody(services);
+    expect(body).not.toBeNull();
+    expect(body).toContain("Port 5173");
+    expect(body).toContain("Vite");
+  });
+
+  it("falls back to full url label when url has no port", () => {
+    const services = [
+      { internal: false, url: "http://localhost", name: "App", description: "Web app" },
+    ];
+    const body = buildServicesStepBody(services);
+    expect(body).not.toBeNull();
+    expect(body).toContain("http://localhost");
   });
 
   it("includes accessible service port and name in the body", () => {
