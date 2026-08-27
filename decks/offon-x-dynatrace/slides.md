@@ -2,6 +2,7 @@
 theme: offon
 title: Open Source Talks by OffOn x Dynatrace
 layout: cover
+transition: fade
 ---
 
 <div class="cobrand">
@@ -207,7 +208,7 @@ Both talks are 25 minutes with 5 minutes for questions.
     <p style="margin-top: 1.4em; font-size: 0.38em; color: #ffc034;">always on. always open. always learning.</p>
   </div>
   <div style="display: flex; align-items: flex-end; justify-content: flex-end;">
-    <img src="./brand/offon-nyx-peek.png" alt="" aria-hidden="true" style="height: 345px; object-fit: contain; opacity: 0.6;">
+    <img src="./brand/offon-nyx-peek.png" alt="" aria-hidden="true" style="height: 176px; object-fit: contain; opacity: 0.6;">
   </div>
 </div>
 
@@ -252,10 +253,10 @@ We want to create a space to preserve community knowledge, give a safe space for
     </div>
   </div>
   <div style="flex: 1; display: flex; flex-direction: column; gap: 0.5em; min-width: 0; overflow: hidden; margin-top: 1.8em;">
-    <img src="./screenshots/challenges-grid.webp" alt="Adventure challenges grid" style="width: 100%; height: 290px; object-fit: cover; object-position: top; border-radius: 6px; flex-shrink: 0;">
+    <img src="./screenshots/challenges-grid.webp" alt="Adventure challenges grid" style="width: 100%; height: 148px; object-fit: cover; object-position: top; border-radius: 6px; flex-shrink: 0;">
     <div style="display: flex; gap: 0.5em; overflow: hidden;">
-      <img src="./screenshots/challenge-detail.webp" alt="Challenge detail view" style="flex: 1; height: 210px; object-fit: cover; object-position: top left; border-radius: 6px; min-width: 0;">
-      <img src="./screenshots/challenge-rewards.webp" alt="Challenge rewards and leaderboard" style="height: 210px; width: auto; border-radius: 6px; flex-shrink: 0;">
+      <img src="./screenshots/challenge-detail.webp" alt="Challenge detail view" style="flex: 1; height: 107px; object-fit: cover; object-position: top left; border-radius: 6px; min-width: 0;">
+      <img src="./screenshots/challenge-rewards.webp" alt="Challenge rewards and leaderboard" style="height: 107px; width: auto; border-radius: 6px; flex-shrink: 0;">
     </div>
   </div>
 </div>
@@ -299,7 +300,7 @@ Check out the challenges at offon.dev/challenges.
     </div>
   </div>
   <div style="flex: 1; display: flex; flex-direction: column; gap: 0.5em; min-width: 0; overflow: hidden; margin-top: 1.8em;">
-    <img src="./screenshots/community-threads.webp" alt="Community Voices thread list" style="width: 100%; height: 320px; object-fit: cover; object-position: top; border-radius: 6px; flex-shrink: 0;">
+    <img src="./screenshots/community-threads.webp" alt="Community Voices thread list" style="width: 100%; height: 163px; object-fit: cover; object-position: top; border-radius: 6px; flex-shrink: 0;">
     <img src="./screenshots/community-post.webp" alt="Example community post" style="width: 100%; border-radius: 6px; flex-shrink: 0;">
   </div>
 </div>

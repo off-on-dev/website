@@ -17,7 +17,7 @@
   gap: 0.8em;
   margin-bottom: 1em;
 }
-.cover-layout :deep(.cobrand img) { height: 126px; }
+.cover-layout :deep(.cobrand img) { height: 64px; }
 .cover-layout :deep(.cobrand .xsep) { font-size: 2em; }
 .cover-layout :deep(.cobrand .partner) { font-size: 1.5em; }
 </style>

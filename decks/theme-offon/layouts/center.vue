@@ -14,7 +14,7 @@
 }
 
 .center-layout :deep(.cobrand) { justify-content: center; margin-bottom: 0.6em; }
-.center-layout :deep(.cobrand img) { height: 54px; }
+.center-layout :deep(.cobrand img) { height: 28px; }
 .center-layout :deep(.cobrand .partner) { font-size: 0.72em; }
 .center-layout :deep(.cobrand .xsep) { font-size: 0.85em; }
 .center-layout :deep(h2) { font-size: 1.4em; margin-bottom: 0.3em; color: var(--amber); }

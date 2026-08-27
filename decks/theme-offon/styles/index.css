@@ -349,7 +349,7 @@ html, body { background: var(--bg) !important; }
   gap: 0.65em;
   margin-bottom: 0.85em;
 }
-.cobrand img { height: 54px; width: auto; }
+.cobrand img { height: 28px; width: auto; }
 .cobrand .xsep {
   font-family: 'Syne', sans-serif;
   font-weight: 700;
@@ -429,9 +429,9 @@ html, body { background: var(--bg) !important; }
 /* ── Deck logo (rendered by GlobalTop, outside slide transform) ── */
 #deck-logo {
   position: fixed;
-  top: 30px;
-  right: 42px;
-  height: 66px;
+  top: 16px;
+  right: 22px;
+  height: 34px;
   pointer-events: none;
   z-index: 9999;
 }
