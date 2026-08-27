@@ -65,6 +65,25 @@ describe("learningResourceSchema", () => {
     expect(lr.learningResourceType).toBe("Challenge");
   });
 
+  it("strips HTML tags and decodes entities from learnings before emitting teaches", () => {
+    const lr2 = learningResourceSchema({
+      levelName: "Signal Lost",
+      description: "Find the missing traces.",
+      slug: "echoes-lost-in-orbit",
+      levelId: "beginner",
+      difficulty: "Beginner",
+      learnings: [
+        'How <a href="https://example.com" target="_blank">software templates</a> work',
+        "Using <code>fetch:template</code> actions",
+      ],
+      adventureTitle: "Echoes Lost in Orbit",
+    });
+    expect(lr2.teaches).toEqual([
+      "How software templates work",
+      "Using fetch:template actions",
+    ]);
+  });
+
   it("nests the parent adventure as a Course under isPartOf", () => {
     expect(lr.isPartOf).toEqual({
       "@type": "Course",

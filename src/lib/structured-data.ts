@@ -1,4 +1,5 @@
 import { SITE_URL, BRAND_NAME, canonicalUrl } from "@/lib/site";
+import { stripHtml } from "@/lib/markdown";
 
 // schema.org objects for adventure, level and solution pages. These field names
 // and their nesting are a compatibility surface: Google indexes them for rich
@@ -62,7 +63,7 @@ export function learningResourceSchema({
     description,
     url: canonicalUrl(`/adventures/${slug}/levels/${levelId}/`),
     educationalLevel: difficulty,
-    teaches: learnings,
+    teaches: learnings.map(stripHtml),
     learningResourceType: "Challenge",
     isPartOf: {
       "@type": "Course",
