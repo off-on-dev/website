@@ -7,11 +7,11 @@
 
 import { describe, it, expect } from "vitest";
 import { courseSchema, learningResourceSchema, SCHEMA_PROVIDER } from "@/lib/structured-data";
-import { SITE_URL, BRAND_NAME } from "@/lib/site";
+import { SITE_URL } from "@/lib/site";
 
 describe("SCHEMA_PROVIDER", () => {
-  it("is an Organization pointing at the canonical site", () => {
-    expect(SCHEMA_PROVIDER).toEqual({ "@type": "Organization", name: BRAND_NAME, url: SITE_URL });
+  it("is an @id reference to the canonical organization", () => {
+    expect(SCHEMA_PROVIDER).toEqual({ "@id": `${SITE_URL}/#organization` });
   });
 });
 
@@ -23,13 +23,20 @@ describe("courseSchema", () => {
     tags: ["Argo CD", "Prometheus"],
   });
 
-  it("emits a Course with the canonical adventure URL", () => {
+  it("emits a Course with the canonical adventure URL and a stable @id", () => {
     expect(course["@type"]).toBe("Course");
+    expect(course["@id"]).toBe(`${SITE_URL}/adventures/echoes-lost-in-orbit/`);
     expect(course.url).toBe(`${SITE_URL}/adventures/echoes-lost-in-orbit/`);
   });
 
   it("joins tags into a comma-separated keywords string", () => {
     expect(course.keywords).toBe("Argo CD, Prometheus");
+  });
+
+  it("omits keywords entirely when the adventure has no tags", () => {
+    const noTags = courseSchema({ title: "T", description: "D", slug: "s", tags: [] });
+    expect(noTags.keywords).toBeUndefined();
+    expect(Object.prototype.hasOwnProperty.call(noTags, "keywords")).toBe(false);
   });
 
   it("carries name, description and provider", () => {
@@ -38,8 +45,14 @@ describe("courseSchema", () => {
     expect(course.provider).toEqual(SCHEMA_PROVIDER);
   });
 
-  it("emits empty keywords for an adventure with no tags", () => {
-    expect(courseSchema({ title: "T", description: "D", slug: "s", tags: [] }).keywords).toBe("");
+  it("strips HTML from description", () => {
+    const html = courseSchema({
+      title: "T",
+      description: "Learn <code>kubectl</code> basics",
+      slug: "s",
+      tags: [],
+    });
+    expect(html.description).toBe("Learn kubectl basics");
   });
 });
 
@@ -54,8 +67,9 @@ describe("learningResourceSchema", () => {
     adventureTitle: "Echoes Lost in Orbit",
   });
 
-  it("emits a LearningResource with the canonical level URL", () => {
+  it("emits a LearningResource with the canonical level URL and a stable @id", () => {
     expect(lr["@type"]).toBe("LearningResource");
+    expect(lr["@id"]).toBe(`${SITE_URL}/adventures/echoes-lost-in-orbit/levels/beginner/`);
     expect(lr.url).toBe(`${SITE_URL}/adventures/echoes-lost-in-orbit/levels/beginner/`);
   });
 
@@ -84,15 +98,29 @@ describe("learningResourceSchema", () => {
     ]);
   });
 
-  it("nests the parent adventure as a Course under isPartOf", () => {
+  it("strips HTML from description", () => {
+    const lr2 = learningResourceSchema({
+      levelName: "T",
+      description: "Use <code>helm</code> to deploy",
+      slug: "s",
+      levelId: "beginner",
+      difficulty: "Beginner",
+      learnings: [],
+      adventureTitle: "A",
+    });
+    expect(lr2.description).toBe("Use helm to deploy");
+  });
+
+  it("nests the parent adventure as a Course with @id under isPartOf", () => {
     expect(lr.isPartOf).toEqual({
       "@type": "Course",
+      "@id": `${SITE_URL}/adventures/echoes-lost-in-orbit/`,
       name: "Echoes Lost in Orbit",
       url: `${SITE_URL}/adventures/echoes-lost-in-orbit/`,
     });
   });
 
-  it("carries the shared provider", () => {
+  it("carries the shared provider reference", () => {
     expect(lr.provider).toEqual(SCHEMA_PROVIDER);
   });
 });

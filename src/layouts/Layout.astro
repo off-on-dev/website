@@ -32,6 +32,7 @@ const gtagBootstrap = `window.dataLayer=window.dataLayer||[];function gtag(){dat
 const webSiteJsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": `${SITE_URL}/#website`,
   name: BRAND_NAME,
   url: SITE_URL,
   description: BRAND_SHORT_DESCRIPTION,
@@ -40,9 +41,15 @@ const webSiteJsonLd = JSON.stringify({
 const orgJsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": `${SITE_URL}/#organization`,
   name: BRAND_NAME,
   url: SITE_URL,
-  logo: `${SITE_URL}/brand/offon-logo-dark-color.png`,
+  logo: {
+    "@type": "ImageObject",
+    url: `${SITE_URL}/brand/offon-logo-dark-color.png`,
+    width: 2763,
+    height: 698,
+  },
   sameAs: [LINKEDIN_URL, COMMUNITY_URL, "https://github.com/off-on-dev/open-source-challenges", X_URL, BLUESKY_URL],
 });
 
