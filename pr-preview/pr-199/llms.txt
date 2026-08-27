@@ -42,6 +42,9 @@ Each adventure is a scenario-driven challenge with beginner, intermediate, and e
   - [Intermediate](https://offon.dev/adventures/building-cloudhaven/levels/intermediate/)
   - [Expert](https://offon.dev/adventures/building-cloudhaven/levels/expert/)
 - [Echoes Lost in Orbit](https://offon.dev/adventures/echoes-lost-in-orbit/): Restore interstellar communications by fixing broken GitOps setups, progressive delivery systems, and observability pipelines across three galactic missions.
+  - [Beginner](https://offon.dev/adventures/echoes-lost-in-orbit/levels/beginner/)
+  - [Intermediate](https://offon.dev/adventures/echoes-lost-in-orbit/levels/intermediate/)
+  - [Expert](https://offon.dev/adventures/echoes-lost-in-orbit/levels/expert/)
   - [Broken Echoes solution](https://offon.dev/adventures/echoes-lost-in-orbit/levels/beginner/solution/)
   - [The Silent Canary solution](https://offon.dev/adventures/echoes-lost-in-orbit/levels/intermediate/solution/)
   - [Hyperspace Operations & Transport solution](https://offon.dev/adventures/echoes-lost-in-orbit/levels/expert/solution/)
