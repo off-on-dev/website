@@ -34,6 +34,7 @@ import {
   selectActiveLevels,
   computeUpcomingLevels,
 } from "./lib/level-sync.mjs";
+import { escapeTsString, escapeRegExp, upsertRoutesBlock } from "./lib/sync-codegen.mjs";
 
 const execAsync = promisify(exec);
 
@@ -359,7 +360,7 @@ async function main() {
   } else if (indexData.emoji) {
     // Resolve from the existing EMOJI_TO_ICON mapping in adventure-icons.ts.
     const aiContent = readFileSync(ADVENTURE_ICONS_PATH, "utf8");
-    const mapped = aiContent.match(new RegExp(`"${indexData.emoji}":\\s*"([^"]+)"`));
+    const mapped = aiContent.match(new RegExp(`"${escapeRegExp(indexData.emoji)}":\\s*"([^"]+)"`));
     if (mapped) {
       resolvedIconName = mapped[1];
       console.log(`  Resolved icon from emoji mapping: ${indexData.emoji} → ${resolvedIconName}`);
@@ -525,7 +526,7 @@ async function main() {
     single: allLiveLevels.some((l) => l.level === "single"),
   };
   const todoComment = categoryId === 0 ? " // TODO: set categoryId — look up at https://community.offon.dev/categories.json" : "";
-  const newEntry = `  "${slug}": { categoryId: ${categoryId}, has_beginner: ${hasLevels.beginner}, has_intermediate: ${hasLevels.intermediate}, has_expert: ${hasLevels.expert}, has_single: ${hasLevels.single} },${todoComment}`;
+  const newEntry = `  "${escapeTsString(slug)}": { categoryId: ${categoryId}, has_beginner: ${hasLevels.beginner}, has_intermediate: ${hasLevels.intermediate}, has_expert: ${hasLevels.expert}, has_single: ${hasLevels.single} },${todoComment}`;
   const GEN_START = "// GENERATED:adventures";
   const GEN_END = "// /GENERATED:adventures";
   const si = leaderboardSrc.indexOf(GEN_START);
@@ -536,7 +537,7 @@ async function main() {
     const before = leaderboardSrc.slice(0, si + GEN_START.length);
     const block = leaderboardSrc.slice(si + GEN_START.length, ei);
     const after = leaderboardSrc.slice(ei);
-    const existingLine = new RegExp(`^[^\n]*"${slug}":[^\n]*\n`, "m");
+    const existingLine = new RegExp(`^[^\n]*"${escapeRegExp(slug)}":[^\n]*\n`, "m");
     const updatedBlock = existingLine.test(block)
       ? block.replace(existingLine, `${newEntry}\n`)
       : `\n${newEntry}${block}`;
@@ -557,42 +558,29 @@ async function main() {
   const repLevel = sortedLiveLevels[0];
   const smokeBlockStart = `  // GENERATED:${slug}-smoke`;
   const smokeBlockEnd = `  // /GENERATED:${slug}-smoke`;
+  const escapedAdventureName = escapeTsString(adventureName);
+  if (repLevel && !repLevel.name && !repLevel.title) {
+    fail(`Level "${repLevel.level}" of adventure "${slug}" has neither name nor title — check the upstream YAML`);
+  }
+  const repLevelName = repLevel?.name ?? repLevel?.title;
   const smokeBlock = [
     smokeBlockStart,
-    `  "/adventures/${slug}/": "${adventureName} - OffOn Adventures",`,
-    ...(repLevel ? [`  "/adventures/${slug}/levels/${repLevel.level}/": "${repLevel.name} - ${adventureName} - OffOn",`] : []),
+    `  "/adventures/${escapeTsString(slug)}/": "${escapedAdventureName} - OffOn Adventures",`,
+    ...(repLevel ? [`  "/adventures/${escapeTsString(slug)}/levels/${repLevel.level}/": "${escapeTsString(repLevelName)} - ${escapedAdventureName} - OffOn",`] : []),
     smokeBlockEnd,
   ].join("\n");
   const a11yBlockStart = `  // GENERATED:${slug}-a11y`;
   const a11yBlockEnd = `  // /GENERATED:${slug}-a11y`;
+  const escapedSlug = escapeTsString(slug);
   const a11yBlock = [
     a11yBlockStart,
-    `  "/adventures/${slug}/",`,
-    ...sortedLiveLevels.map((l) => `  "/adventures/${slug}/levels/${l.level}/",`),
+    `  "/adventures/${escapedSlug}/",`,
+    ...sortedLiveLevels.map((l) => `  "/adventures/${escapedSlug}/levels/${l.level}/",`),
     a11yBlockEnd,
   ].join("\n");
 
-  function upsertRoutesBlock(src, blockStart, blockEnd, blockContent, closingMarker, sectionAnchor) {
-    const bsi = src.indexOf(blockStart);
-    const bei = src.indexOf(blockEnd);
-    if (bsi !== -1 && bei !== -1) {
-      return src.slice(0, bsi) + blockContent + src.slice(bei + blockEnd.length);
-    }
-    const anchorPos = src.indexOf(sectionAnchor);
-    if (anchorPos === -1) {
-      console.warn(`Warning: "${sectionAnchor}" not found in e2e/routes.ts — routes not updated`);
-      return src;
-    }
-    const closingPos = src.indexOf(closingMarker, anchorPos);
-    if (closingPos === -1) {
-      console.warn(`Warning: closing "${closingMarker}" not found in e2e/routes.ts — routes not updated`);
-      return src;
-    }
-    return src.slice(0, closingPos) + "\n" + blockContent + src.slice(closingPos);
-  }
-
-  routesSrc = upsertRoutesBlock(routesSrc, smokeBlockStart, smokeBlockEnd, smokeBlock, "\n};", "export const SMOKE_ROUTES");
-  routesSrc = upsertRoutesBlock(routesSrc, a11yBlockStart, a11yBlockEnd, a11yBlock, "\n];", "export const A11Y_PAGES");
+  routesSrc = upsertRoutesBlock(routesSrc, smokeBlockStart, smokeBlockEnd, smokeBlock, "\n};", "export const SMOKE_ROUTES", routesPath);
+  routesSrc = upsertRoutesBlock(routesSrc, a11yBlockStart, a11yBlockEnd, a11yBlock, "\n];", "export const A11Y_PAGES", routesPath);
   writeFileSync(routesPath, routesSrc);
   console.log(`Updated e2e/routes.ts with routes for ${slug}`);
 
