@@ -9,7 +9,7 @@ on:
     - cron: "0 2 * * *"
 
 permissions:
-  contents: write
+  contents: read   # All jobs read-only by default; deploy job overrides to write
 
 concurrency:
   group: pages
@@ -21,6 +21,8 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required by JamesIves/github-pages-deploy-action to push gh-pages
     steps:
       - uses: actions/checkout@v7
 
@@ -29,17 +31,41 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
-      - run: npm ci
+      - uses: actions/cache@v6
+        id: npm-cache
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
+      - if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Verify SKILL.md digest
+        run: |
+          actual=$(sha256sum public/.well-known/agent-skills/offon/SKILL.md | cut -d' ' -f1)
+          stored=$(node -e "const j=require('./public/.well-known/agent-skills/index.json'); console.log(j.skills[0].digest.replace('sha256:', ''))")
+          if [ "$actual" != "$stored" ]; then
+            echo "SKILL.md digest mismatch — update the digest in index.json after editing SKILL.md"
+            echo "  index.json: sha256:$stored"
+            echo "  computed:   sha256:$actual"
+            exit 1
+          fi
+          echo "SKILL.md digest OK: sha256:$actual"
+
+      - run: npm run sync
+      - run: npm run lint
+      - run: npm run check
+      - run: npm run test:unit:coverage
+
+      # Astro static build → dist/ (not dist/client/). Astro emits dist/404.html
+      # natively, so the old `cp .../404/index.html 404.html` step is gone.
       - run: npm run build
 
-      - run: cp dist/client/404/index.html dist/client/404.html
-
       - name: Deploy to gh-pages
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 # v4
         with:
           branch: gh-pages
-          folder: dist/client
+          folder: dist
           force: false
           clean: true
           clean-exclude: |

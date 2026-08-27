@@ -25,6 +25,8 @@ jobs:
 
       - run: npm ci
 
+      - run: npm run sync
+
       - run: npm run build
 
       - uses: actions/cache@v6

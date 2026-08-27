@@ -16,7 +16,7 @@ Generate a presentation that matches the OffOn design system, in the format of y
 2. Reads the appropriate template file.
 3. Generates slide content and fills in the placeholders.
 4. Writes the output file to `public/`.
-5. Does not touch `public/sitemap.xml`, `react-router.config.ts`, or `src/routes.ts`.
+5. Does not touch `src/pages/sitemap.xml.ts`, `astro.config.mjs` redirects, or test route lists — presentations go in `public/` and are not Astro pages.
 
 ---
 
@@ -517,7 +517,7 @@ When creating a deck for a challenge walkthrough:
 - Slides 3–N: One slide per major step. Use `.sh` header with step number as overline label.
 - Final slide: What the learner accomplished + link to the challenge on offon.dev.
 
-For scenario and architecture text, pull from the adventure's generated TypeScript in `src/data/adventures/<id>/<id>.generated.ts`. The `scenario`, `architecture`, `backstory`, and `objective` fields are pre-rendered HTML; strip tags or paraphrase for slide copy; do not paste raw HTML into the deck.
+For scenario and architecture text, pull from the adventure YAML at `src/data/adventures/<id>/adventure.yaml`. The `scenario`, `architecture`, `backstory`, and `objective` fields contain markdown; paraphrase for slide copy. Do not use or look for `*.generated.ts` files — they no longer exist.
 
 ---
 
@@ -529,7 +529,7 @@ For scenario and architecture text, pull from the adventure's generated TypeScri
 4. Update the title in `<title>` (Reveal.js).
 5. Write to:
    - Reveal.js: `public/<event-slug>/index.html` (create the subfolder if it does not exist)
-6. Do not add any of these files to `src/routes.ts`, `public/sitemap.xml`, or `react-router.config.ts`.
+6. Do not add any of these files to `src/pages/sitemap.xml.ts` or the test route lists in `e2e/` — presentations live under `public/` and are not Astro pages.
 7. Confirm: `ls -lh <output-path>`
 
 **For PowerPoint (`pptx`):** edit `.ai/templates/generate-pptx.mjs` with the presentation content, then run:

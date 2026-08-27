@@ -30,8 +30,9 @@ The following WCAG 2.2 Level AAA criteria are actively targeted on this site:
 
 - Skip-to-content link as the first focusable element on every page.
 - Visible focus rings on all interactive elements, in both light and dark mode.
-- Semantic landmarks: one `<main id="main-content">`, plus `<nav>`, `<header>`, `<footer>`, `<section>`, and `<article>` where appropriate.
-- One `<h1>` per page with no skipped heading levels.
+- Semantic landmarks: one `<main id="main-content">`, plus `<nav>`, `<header>`, `<footer>`, `<section>`, and `<article>` where appropriate. The site-wide `<nav aria-label="Main">` in `Navbar.astro` is wrapped in `<header>` so it provides the banner landmark. Never place the primary nav outside a `<header>` element.
+- Heading rules: one `<h1>` per page with no skipped heading levels. Never place a heading element (`<h1>`-`<h6>`) inside a `<summary>` element (which has `role="button"`); the ARIA spec forbids heading semantics in a button role. Use a screen-reader-only heading before `<details>` for document outline, and a `<span>` inside `<summary>` for the visible label.
+- One `<h1>` per page with no skipped heading levels (see heading rules above).
 - Meaningful `alt` text on informational images, empty `alt=""` paired with `aria-hidden="true"` on decorative ones.
 - Screen reader announcement of links that open in a new tab.
 - Color contrast verified at 7:1 for body text and 4.5:1 for large text (both WCAG AAA), and 3:1 for UI controls, in both modes.
@@ -63,8 +64,8 @@ If you find a barrier that is not listed here, please report it using the link b
 
 ### Automated
 
-- **axe-core via Playwright** on every pull request, configured in [`e2e/smoke.spec.ts`](e2e/smoke.spec.ts). Runs in both dark and light mode against the production build with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, and `best-practice`. The PR preview workflow blocks on these scans. Never reduce this tag set.
-- **Vitest** assertions on landmark roles, labels, and focus behavior for components and hooks ([`src/test/`](src/test/)).
+- **axe-core via Playwright** on every pull request, configured in [`e2e/a11y.spec.ts`](e2e/a11y.spec.ts). Runs in both dark and light mode against the production build with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, and `best-practice`. The PR preview workflow blocks on these scans. Never reduce this tag set.
+- Automated tests are Playwright-only (`e2e/`). Unit tests for library logic are a known gap.
 
 Automated axe passes are necessary but not sufficient. Automated tools catch roughly 30–40% of real-world accessibility issues. Manual testing is required for every interactive component.
 
@@ -270,7 +271,7 @@ Use the correct keys for each control type:
 - Never apply overline/label typography (`text-sm uppercase tracking-widest`) to a heading tag. If the text is a genuine section heading, give it heading-appropriate typography. If it is purely decorative, use `<span>` or `<p>`.
 - Never use a non-heading tag for text visually styled as a heading. Promote it to the correct heading level.
 - Every page's primary content must live inside a single `<main id="main-content">`. Do not split content across multiple `<main>` elements.
-- `<html lang="en">` is set in `src/root.tsx`. Never remove or change it. If a page includes content in another language, add `lang` to that element.
+- `<html lang="en">` is set in `src/layouts/Layout.astro`. Never remove or change it. If a page includes content in another language, add `lang` to that element.
 - Tables must include `<caption>` or `aria-label`, and header cells must use `scope="col"` or `scope="row"`.
 
 ### Images and media
@@ -283,7 +284,7 @@ Use the correct keys for each control type:
 
 ### External links
 
-- Every `<a target="_blank">` must reference the shared new-tab hint with `aria-describedby="new-tab-hint"`. A single hidden `<span id="new-tab-hint" hidden>opens in a new tab</span>` is rendered once in `Layout.tsx`. Do not fold "opens in a new tab" into the link text or `aria-label`, and do not add a per-link `sr-only` span — the hint is an accessible description, not part of the name (padding the name breaks voice control, WCAG 2.5.3 Label in Name).
+- Every `<a target="_blank">` must reference the shared new-tab hint with `aria-describedby="new-tab-hint"`. A single hidden `<span id="new-tab-hint" hidden>opens in a new tab</span>` is rendered once in `Layout.astro`. Do not fold "opens in a new tab" into the link text or `aria-label`, and do not add a per-link `sr-only` span — the hint is an accessible description, not part of the name (padding the name breaks voice control, WCAG 2.5.3 Label in Name).
 - Never render a non-navigable URL as a link. Loopback / localhost / single-label hosts (e.g. `http://localhost:8080/`) must be plain text — on the deployed site a link there points at the visitor's own machine. The adventure generator (`annotateExternalLinks`) unwraps these automatically; in JSX, write them as text, not `<a>`.
 
 ### Links
@@ -314,8 +315,8 @@ Use the correct keys for each control type:
   ```
 
 - Never use `aria-label` directly on `<svg>`. Support across assistive technologies is inconsistent. Use the `<title>` + `aria-labelledby` pattern instead.
-- For lucide-react icons: always pass `aria-hidden={true}` when the icon is decorative (next to visible text). For icon-only buttons, put `aria-label` on the parent `<button>` or `<a>`, not on the `<svg>`.
-- Brand SVGs (e.g. LinkedIn in `Footer.tsx`): set `aria-hidden="true"` on the `<svg>` and `aria-label` on the parent interactive element. Use `fill="currentColor"` so hover and theme color changes apply. See the Icons section of `styleguide.md`.
+- For icons from `unplugin-icons` (lucide set): always pass `aria-hidden={true}` when the icon is decorative (next to visible text). For icon-only buttons, put `aria-label` on the parent `<button>` or `<a>`, not on the `<svg>`.
+- Brand SVGs (e.g. LinkedIn in `Footer.astro`): set `aria-hidden="true"` on the `<svg>` and `aria-label` on the parent interactive element. Use `fill="currentColor"` so hover and theme color changes apply. See the Icons section of `styleguide.md`.
 
 ### ARIA
 
@@ -331,33 +332,15 @@ Use the correct keys for each control type:
 
 ### Tooltips
 
-This site uses Radix UI's `<Tooltip>` primitive (via `src/components/ui/tooltip.tsx`). Radix manages `role="tooltip"` and `aria-describedby` automatically when the component is wired up correctly. The rules below cover the cases Radix does not handle for you.
+The tooltip uses a custom `abbr[data-title]` implementation — at build time, `src/lib/markdown-pipeline.mjs` rewrites `<abbr title="...">` elements to use `data-title` attributes, and `src/layouts/Layout.astro` includes a `position:fixed` JS portal that displays the tooltip text on hover/focus, clamped to the viewport.
 
-- Always wrap the usage site in `<TooltipProvider>`. Do not mount `<TooltipProvider>` globally in `Layout.tsx`; wrap only the subtree that uses `<Tooltip>`.
-- `<TooltipTrigger>` must wrap a real interactive element (`<button>`, `<a>`, or a component that renders one). Never put a non-interactive element like `<span>` or `<div>` as the direct trigger child; screen readers will not announce the tooltip.
-- Never put interactive content (buttons, links) inside `<TooltipContent>`. Tooltips are not reachable by touch or keyboard-only users and cannot contain their own focusable children.
-- Tooltips must not be the only means of conveying critical information. If the tooltip text is essential to understanding or operating the trigger, surface it as visible text, a label, or an accessible description instead.
-- Test that the tooltip appears on both `:hover` and `:focus-visible`. Radix handles this by default; do not override the `defaultOpen`/`open` props in a way that breaks focus triggering.
-- Mobile: there is no hover on touch screens. If the tooltip content is not exposed any other way, add visible text or an `aria-label` on the trigger as a fallback.
-
-#### WCAG 1.4.13 requirements for all tooltips (Radix and CSS)
+#### WCAG 1.4.13 requirements for all tooltips (JS portal and CSS)
 
 All tooltip implementations on this site must satisfy three conditions:
 
-1. **Dismissible:** pressing `Escape` must close the tooltip without moving keyboard focus. The `<Abbr>` component handles this via `onKeyDown`. CSS-only tooltips (`.md-inline abbr`) cannot dismiss on `Escape`; this is a known limitation of the CSS path.
-2. **Hoverable:** the cursor must be able to move from the trigger onto the tooltip without the tooltip closing. Both `<Abbr>` (via transparent padding bridge) and `.md-inline abbr` (via transparent `border-bottom` bridge) satisfy this. Never add `pointer-events: none` to a tooltip element that users are expected to read.
+1. **Dismissible:** pressing `Escape` must close the tooltip without moving keyboard focus. The `position:fixed` JS portal handles this via a keydown listener. CSS-only tooltips (`.md-inline abbr`) cannot dismiss on `Escape`; this is a known limitation of the CSS path.
+2. **Hoverable:** the cursor must be able to move from the trigger onto the tooltip without the tooltip closing. The JS portal satisfies this. Never add `pointer-events: none` to a tooltip element that users are expected to read.
 3. **Persistent:** the tooltip must remain open as long as pointer or focus is within its bounds.
-
-#### Abbreviation tooltips (`<Abbr>` component)
-
-Use `<Abbr title="Full expansion">ABBR</Abbr>` (from `src/components/Abbr.tsx`) for abbreviations in JSX pages and components.
-
-Both the `<Abbr>` component and prose `<abbr>` render identical markup and share **one** tooltip implementation, the `useAbbrTooltips` hook (`src/hooks/useAbbrTooltips.ts`).
-
-- **Accessible name and expansion.** The `<abbr>` carries `data-title` (the visual tooltip text) and `aria-describedby` pointing to an adjacent sr-only `<span>` holding the expansion. The visible token (e.g. "PR") stays the accessible name; the expansion is a description (WCAG 2.5.3). Neither `title` (would trigger the browser's native tooltip) nor `aria-label` (would replace the visible token) is used.
-- **Focusable trigger.** `tabIndex={0}` makes the abbreviation reachable by keyboard and touch. The hook reveals the tooltip on hover and focus, forces focus on click (iOS taps), and hides it on Escape **without moving focus** (WCAG 1.4.13 dismissible). The eslint rule `no-noninteractive-tabindex` is suppressed intentionally.
-- **Component vs prose.** Use `<Abbr title="…">ABBR</Abbr>` in JSX; use native `<abbr title="…">` in YAML/markdown prose. The generator (`scripts/generate-adventures.mjs`) rewrites the latter to `data-title` + `tabindex` + the `aria-describedby` sr-only span at build time; `MarkdownContent` and `<Abbr>` both call `useAbbrTooltips` to wire the tooltip. The global `abbr[data-title]::after` CSS rule is the no-JS fallback.
-- **Never nest an `<abbr>` tooltip inside an `<a>` or `<button>`.** A focusable `<abbr>` inside an interactive element is invalid (interactive-in-interactive). For pre-rendered prose that lands in an interactive container (card links, walkthrough step buttons), `stripLinks` removes `tabindex` and `aria-describedby` so the embedded `<abbr>` degrades to a non-focusable hover-only `data-title` tooltip.
 
 ### Forms
 
@@ -367,7 +350,7 @@ Both the `<Abbr>` component and prose `<abbr>` render identical markup and share
 ### Skip navigation
 
 - Every page must have a skip link as the first focusable element targeting `#main-content`.
-- The skip link uses the `.skip-nav` class in `src/index.css`. Never remove this class or its focus rules.
+- The skip link uses the `.skip-nav` class in `src/styles/index.css`. Never remove this class or its focus rules.
 - When adding a new page, always add `id="main-content" tabIndex={-1}` to its `<main>` element. Without `tabIndex={-1}`, activating the skip link scrolls the page but does not move keyboard focus -- the link is broken for keyboard users in Chromium and Safari.
 
 ### Keyboard-scrollable overflow blocks

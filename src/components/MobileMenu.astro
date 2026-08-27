@@ -1,0 +1,84 @@
+---
+import IconMenu from "~icons/lucide/menu";
+import IconX from "~icons/lucide/x";
+import IconExternalLink from "~icons/lucide/external-link";
+
+// Mobile nav drawer. Static markup plus one script; no island.
+//
+// The drawer is always in the DOM so `aria-controls` always resolves, and it
+// carries `hidden` while closed. `aria-current` is resolved at build time from
+// Astro.url.pathname by the caller, rather than re-derived in the browser: the
+// server already knows the current route, so the SSR markup is correct for
+// assistive tech before any script runs.
+
+export interface NavLink {
+  href: string;
+  label: string;
+  external?: boolean;
+  active?: boolean;
+}
+
+interface Props {
+  links: NavLink[];
+}
+const { links } = Astro.props;
+
+// Matches the desktop nav link styling minus the animated underline, which the
+// drawer does not use.
+const linkCls =
+  "inline-flex items-center gap-1 min-h-[44px] text-sm font-medium text-dim hover:text-foreground dark:hover:text-primary transition-colors rounded px-1.5 -mx-1.5 focus-ring";
+---
+
+{/* `group` + the aria-expanded variant keeps the icon in step with the state
+    the assistive tech sees, so there is only one thing for the script to set. */}
+<button
+  type="button"
+  data-mobile-menu-trigger
+  class="group flex h-11 w-11 items-center justify-center rounded-md border border-border bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-ring"
+  aria-label="Menu"
+  aria-expanded="false"
+  aria-controls="mobile-menu"
+>
+  <IconMenu width={18} height={18} aria-hidden="true" class="group-aria-expanded:hidden" />
+  <IconX width={18} height={18} aria-hidden="true" class="hidden group-aria-expanded:block" />
+</button>
+
+{/* Positioned absolute against the fixed <nav>, which is its containing block,
+    so it sits directly below the bar at full width. A plain <div>, not <nav>:
+    it lives inside <nav aria-label="Main"> and nesting a second navigation
+    landmark would create two overlapping regions. */}
+<div
+  id="mobile-menu"
+  hidden
+  data-mobile-menu
+  class="absolute inset-x-0 top-full z-40 border-b border-border bg-background px-6 py-2 md:hidden"
+>
+  <ul role="list" class="contents">
+    {
+      links.map((link) => (
+        <li class="contents">
+          {link.external ? (
+            <a
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-describedby="new-tab-hint"
+              class={linkCls}
+            >
+              {link.label} <IconExternalLink width={12} height={12} aria-hidden="true" />
+            </a>
+          ) : (
+            <a
+              href={link.href}
+              class:list={[linkCls, link.active && "font-semibold text-foreground"]}
+              aria-current={link.active ? "page" : undefined}
+            >
+              {link.label}
+            </a>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</div>
+

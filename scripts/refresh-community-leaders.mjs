@@ -28,9 +28,10 @@
  * NOTE: community.offon.dev is the actual Discourse server URL.
  */
 
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { atomicWrite, fetchWithRetry } from "./discourse-utils.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -79,12 +80,12 @@ function loadDotEnv() {
 
 // Build avatar URL from the uploaded_avatar_id returned by queries 7 and 8.
 // If no ID is present, falls back to the Discourse CDN letter avatar.
-function buildAvatarUrl(username, uploadedAvatarId, size = AVATAR_SIZE) {
-  if (!uploadedAvatarId) {
-    const letter = username.charAt(0).toLowerCase();
-    return `https://avatars.discourse-cdn.com/v4/letter/${letter}/b5a626/${size}.png`;
-  }
-  return `${COMMUNITY_BASE}/user_avatar/community.offon.dev/${encodeURIComponent(username)}/${size}/${uploadedAvatarId}_2.png`;
+// Always returns an https:// URL or undefined if construction fails.
+export function buildAvatarUrl(username, uploadedAvatarId, size = AVATAR_SIZE) {
+  const url = !uploadedAvatarId
+    ? `https://avatars.discourse-cdn.com/v4/letter/${username.charAt(0).toLowerCase()}/b5a626/${size}.png`
+    : `${COMMUNITY_BASE}/user_avatar/community.offon.dev/${encodeURIComponent(username)}/${size}/${uploadedAvatarId}_2.png`;
+  return url.startsWith("https://") ? url : undefined;
 }
 
 async function runQuery(queryId, params, apiKey, apiUsername) {
@@ -94,7 +95,7 @@ async function runQuery(queryId, params, apiKey, apiUsername) {
     body.append(`params[${k}]`, String(v));
   }
 
-  const res = await fetch(url, {
+  const res = await fetchWithRetry(url, {
     method: "POST",
     headers: {
       "Api-Key": apiKey,
@@ -246,14 +247,16 @@ async function main() {
   const existing = existsSync(OUT_PATH) ? readFileSync(OUT_PATH, "utf-8") : "";
   const existingParsed = existing ? JSON.parse(existing) : {};
   if (JSON.stringify(existingParsed.sections) !== JSON.stringify(sections)) {
-    writeFileSync(OUT_PATH, payload);
+    atomicWrite(OUT_PATH, payload);
     console.log("  Updated community-leaders.json");
   } else {
     console.log("  No change to community-leaders.json");
   }
 }
 
-main().catch((err) => {
-  console.error(`  Error: ${err.message}`);
-  process.exit(1);
-});
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main().catch((err) => {
+    console.error(`  Error: ${err.message}`);
+    process.exit(1);
+  });
+}

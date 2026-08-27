@@ -1,0 +1,56 @@
+---
+// Full-width primary hero used on the Adventures and Challenges landing pages
+// (the static content pages inline the same markup). pt-32 clears the fixed nav.
+interface Cta {
+  label: string;
+  href: string;
+  external?: boolean;
+}
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description: string;
+  primaryCta?: Cta;
+  secondaryCta?: Cta;
+}
+const { eyebrow, title, description, primaryCta, secondaryCta } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+const resolveHref = (cta: Cta): string =>
+  cta.external || /^(mailto:|#|https?:)/.test(cta.href) ? cta.href : base + cta.href.replace(/^\//, "");
+
+const ctas = [
+  primaryCta ? { cta: primaryCta, cls: "btn-inverse" } : null,
+  secondaryCta ? { cta: secondaryCta, cls: "btn-ghost-inverse" } : null,
+].filter((x): x is { cta: Cta; cls: string } => x !== null);
+---
+
+<section
+  aria-labelledby="page-hero-heading"
+  class="bg-primary pt-32 pb-20 px-6 md:px-16 overflow-hidden min-h-[560px] flex flex-col justify-center"
+>
+  <div class="mx-auto max-w-6xl relative w-full">
+    <div class="max-w-2xl">
+      {eyebrow && (
+        <span class="font-sans text-sm font-medium uppercase tracking-widest text-background/90 block mb-4">{eyebrow}</span>
+      )}
+      <h1 id="page-hero-heading" class="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-primary-foreground mb-5">
+        {title}
+      </h1>
+      <p class="font-sans text-base leading-relaxed text-background/90 max-w-2xl mb-8">{description}</p>
+      {ctas.length > 0 && (
+        <div class="flex gap-3 flex-wrap">
+          {ctas.map(({ cta, cls }) =>
+            cta.external ? (
+              <a href={resolveHref(cta)} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class={cls}>
+                {cta.label}
+              </a>
+            ) : (
+              <a href={resolveHref(cta)} class={cls}>{cta.label}</a>
+            ),
+          )}
+        </div>
+      )}
+    </div>
+  </div>
+</section>

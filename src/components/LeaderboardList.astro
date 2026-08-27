@@ -1,0 +1,34 @@
+---
+// Ranked player list with avatar, username, and optional points. Ported from
+// src/components/LeaderboardList.tsx. Ranks are plain numbers, no medal icons.
+import AvatarLink from "@/components/AvatarLink.astro";
+
+interface Row {
+  rank: number;
+  username: string;
+  avatarUrl?: string;
+  points?: number;
+}
+interface Props {
+  rows: Row[];
+  label?: string;
+}
+const { rows, label = "Ranked players" } = Astro.props;
+---
+
+<ol class="space-y-2.5" aria-label={label}>
+  {rows.map((row) => (
+    <li class="flex items-center gap-3 text-sm">
+      <span class="font-mono text-xs text-faint w-4 shrink-0 text-right" aria-hidden="true">{row.rank}</span>
+      <AvatarLink
+        username={row.username}
+        avatarUrl={row.avatarUrl}
+        size={24}
+        class="inline-flex items-center gap-1 font-medium text-foreground min-w-0 flex-1"
+      />
+      {row.points != null && (
+        <span class="shrink-0 font-mono text-xs font-semibold text-primary tabular-nums">{row.points} pts</span>
+      )}
+    </li>
+  ))}
+</ol>

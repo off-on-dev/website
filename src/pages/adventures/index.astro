@@ -1,0 +1,102 @@
+---
+import { getCollection } from "astro:content";
+import { LUCIDE_ICONS } from "@/lib/lucide-icons";
+import Layout from "@/layouts/Layout.astro";
+import AdventureCard from "@/components/AdventureCard.astro";
+import PageHero from "@/components/PageHero.astro";
+import ChallengeBuildersSection from "@/components/ChallengeBuildersSection.astro";
+import CommunityLeaders from "@/components/CommunityLeaders.astro";
+import BottomCTA from "@/components/BottomCTA.astro";
+import { isAdventureLive, sortAdventuresByMonthDesc } from "@/lib/challenges";
+import { BRAND_NAME } from "@/lib/site";
+
+const adventures = sortAdventuresByMonthDesc((await getCollection("adventures")).map((a) => a.data));
+const adventureCount = adventures.length;
+
+const ArrowRightIcon = LUCIDE_ICONS["arrow-right"];
+
+const rawHowItWorks = [
+  {
+    icon: "book-open",
+    title: "Pick a Scenario",
+    desc: "Each adventure is a self-contained story focused on one open source technology. Pick the difficulty that fits where you are and start from there.",
+  },
+  {
+    icon: "laptop",
+    title: "Launch in Codespaces",
+    desc: "A pre-configured GitHub Codespace spins up with everything installed. No local setup, no Docker, no dependency conflicts. Ready in a few clicks.",
+  },
+  {
+    icon: "git-fork",
+    title: "Apply, Fork, and Build",
+    desc: "Complete real-world scenarios, bring the knowledge into your own projects, fork the challenge repo, and share your solutions with the community.",
+  },
+];
+
+const HOW_IT_WORKS = rawHowItWorks.map((item) => ({ ...item, IconComponent: LUCIDE_ICONS[item.icon] }));
+---
+
+<Layout
+  title={`Adventures - Open Source Learning Paths | ${BRAND_NAME}`}
+  description="Real-world scenarios, hands-on challenges, and practical knowledge you can apply, fork, and build on. Runs in GitHub Codespaces in a few clicks."
+  path="/adventures/"
+>
+  <main id="main-content" tabindex="-1">
+    <PageHero
+      eyebrow="Adventures"
+      title="Real-World Scenarios. Practical Skills."
+      description="Hands-on challenges and practical knowledge you can apply, fork, and build on. Each adventure runs entirely in GitHub Codespaces, a working environment in a few clicks, no local setup needed."
+      primaryCta={{ label: "Browse All Challenges", href: "/challenges/" }}
+    />
+
+    {/* How Adventures Work */}
+    <section aria-labelledby="how-it-works-heading" class="bg-card py-16 px-6 md:px-16 border-y border-border">
+      <div class="mx-auto max-w-6xl">
+        <h2 id="how-it-works-heading" class="text-xl font-bold text-foreground mb-8">How Adventures Work</h2>
+        <div class="grid gap-8 sm:grid-cols-3">
+          {HOW_IT_WORKS.map(({ IconComponent, title, desc }) => (
+            <div class="flex gap-4">
+              <span class="mt-0.5 shrink-0 text-primary">
+                {IconComponent && <IconComponent width={22} height={22} aria-hidden="true" />}
+              </span>
+              <div>
+                <p class="font-semibold text-foreground">{title}</p>
+                <p class="mt-1 text-sm leading-relaxed text-muted-foreground">{desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* All Adventures */}
+    <section aria-labelledby="adventures-heading" class="py-24 px-6 md:px-16">
+      <div class="mx-auto max-w-6xl">
+        <div class="flex flex-wrap items-baseline justify-between gap-4 mb-8">
+          <h2 id="adventures-heading" class="text-2xl font-bold text-foreground">
+            All Adventures
+            <span class="ml-2 font-normal text-sm text-muted-foreground">
+              · {adventureCount} {adventureCount === 1 ? "adventure" : "adventures"}
+            </span>
+          </h2>
+          <a href={`${import.meta.env.BASE_URL}challenges/`} class="btn-ghost inline-flex items-center gap-2 text-sm">
+            Filter challenges by technology
+            {ArrowRightIcon && <ArrowRightIcon width={16} height={16} aria-hidden="true" />}
+          </a>
+        </div>
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {adventures.map((a) => <AdventureCard adventure={{ ...a, isLive: isAdventureLive(a) }} />)}
+        </div>
+      </div>
+    </section>
+
+    <ChallengeBuildersSection>
+      <CommunityLeaders
+        slot="aside"
+        sections={["challenge-grand-builders", "challenge-builders", "challenge-rockstars", "top-challenge-solvers"]}
+      />
+    </ChallengeBuildersSection>
+
+    <BottomCTA />
+  </main>
+</Layout>

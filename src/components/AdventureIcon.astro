@@ -1,0 +1,15 @@
+---
+import { LUCIDE_ICONS } from "@/lib/lucide-icons";
+import { ICON_TO_KEBAB } from "@/lib/adventure-icons";
+
+interface Props {
+  icon?: string;
+  size?: number;
+  class?: string;
+}
+const { icon, size = 16, class: className } = Astro.props;
+const kebab = icon ? ICON_TO_KEBAB[icon as keyof typeof ICON_TO_KEBAB] : undefined;
+const IconComponent = kebab ? LUCIDE_ICONS[kebab] : undefined;
+---
+
+{IconComponent && <IconComponent width={size} height={size} aria-hidden="true" class={className} />}

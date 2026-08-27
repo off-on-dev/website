@@ -1,5 +1,5 @@
-import dtLogoDark from "@/assets/Dynatrace_Logo_color_negative_horizontal.svg";
-import dtLogoLight from "@/assets/Dynatrace_Logo_color_positive_horizontal.svg";
+// Sponsor data. Logo paths are relative to BASE_URL (served from public/);
+// prepend `import.meta.env.BASE_URL` before use.
 
 export type Sponsor = {
   name: string;
@@ -17,8 +17,8 @@ export const SPONSORS: Sponsor[] = [
   {
     name: "Dynatrace",
     url: "https://dynatrace.com",
-    logoDark: dtLogoDark,
-    logoLight: dtLogoLight,
+    logoDark: "brand/Dynatrace_Logo_color_negative_horizontal.svg",
+    logoLight: "brand/Dynatrace_Logo_color_positive_horizontal.svg",
   },
 ];
 

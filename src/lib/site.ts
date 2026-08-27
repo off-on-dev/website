@@ -1,0 +1,32 @@
+// Site-level constants. Single source of truth for brand, URLs, and config.
+export const SITE_URL = "https://offon.dev";
+export const SITE_NAME = "offon.dev";
+export const BRAND_NAME = "OffOn";
+export const OG_IMAGE_ALT =
+  "OffOn logo and tagline: always On. always Open. with Nyx, the firefly mascot";
+
+export const COMMUNITY_URL = "https://community.offon.dev";
+export const COMMUNITY_DISPLAY_NAME = "community.offon.dev";
+export const CODE_OF_CONDUCT_URL = `${COMMUNITY_URL}/t/code-of-conduct/31`;
+export const CONTACT_EMAIL = "offondev@gmail.com";
+export const LINKEDIN_URL = "https://www.linkedin.com/company/offondev";
+export const BLUESKY_URL = "https://bsky.app/profile/off-on-dev.bsky.social";
+export const X_URL = "https://x.com/OffonDev";
+export const CURRENT_YEAR = new Date().getFullYear();
+export const GA_MEASUREMENT_ID = "G-YEYE9DFHWE";
+export const CONSENT_STORAGE_KEY = "analytics_consent";
+export const CONSENT_EXPIRY_MS = 1000 * 60 * 60 * 24 * 180;
+export const CHALLENGES_REPO_URL = "https://github.com/off-on-dev/open-source-challenges";
+export const PROPOSE_ADVENTURE_URL = `${CHALLENGES_REPO_URL}/blob/main/CONTRIBUTING.md#propose-an-adventure-idea`;
+export const BRAND_SHORT_DESCRIPTION =
+  "A welcoming open source community to learn through hands-on challenges, share knowledge, and build together.";
+export const BRAND_SLOGAN_PARTS = ["Vendor-Neutral", "Open Source", "Community-Driven"] as const;
+export const BRAND_SLOGAN = BRAND_SLOGAN_PARTS.join(". ");
+export const BRAND_SECONDARY_LINE_PARTS = ["always On.", "always Open.", "always Learning."] as const;
+
+/** Canonical URL for a path: SITE_URL + path, normalized to a trailing slash
+ *  (GitHub Pages 301-redirects directory routes to the trailing-slash form). */
+export function canonicalUrl(path: string): string {
+  const withSlash = path.endsWith("/") ? path : `${path}/`;
+  return `${SITE_URL}${withSlash}`;
+}

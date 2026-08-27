@@ -1,5 +1,6 @@
 slug: building-cloudhaven
 title: Building CloudHaven
+meta_description: "Provision dynamic OpenTofu infrastructure against a GCS backend, fix a failing test suite, then wire GitHub Actions for drift detection and Trivy scanning."
 icon: Building2
 month: JAN 2026
 community_category_id: 36

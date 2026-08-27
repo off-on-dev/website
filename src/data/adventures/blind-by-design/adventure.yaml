@@ -1,5 +1,6 @@
 slug: blind-by-design
 title: "Blind by Design"
+meta_description: "Wire OpenFeature and flagd into a Java service: add evaluation context targeting, instrument with OpenTelemetry, and roll back a fractional rollout."
 icon: FlaskConical
 month: "MAY 2026"
 community_category_id: 41

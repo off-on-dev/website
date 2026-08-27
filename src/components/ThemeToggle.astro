@@ -1,0 +1,35 @@
+---
+import IconSun from "~icons/lucide/sun";
+import IconMoon from "~icons/lucide/moon";
+
+// Light/dark switch. Static markup plus one delegated listener, no framework.
+//
+// Both the icon and the accessible name are chosen by CSS from the `.dark` class
+// on <html>, which the inline script in Layout.astro sets before first paint.
+// That means the control is already correct for a returning light-mode visitor
+// in the very first frame, with no JS involved, and it is why no state is
+// exchanged between the two instances: they both read the same class.
+//
+// The name comes from the sr-only spans rather than aria-label, because an
+// attribute cannot be swapped by CSS.
+
+interface Props {
+  variant?: "desktop" | "mobile";
+}
+const { variant = "mobile" } = Astro.props;
+---
+
+<button
+  type="button"
+  data-theme-toggle
+  class:list={[
+    "flex h-11 w-11 items-center justify-center rounded-md border border-border bg-[hsl(var(--surface))] text-foreground/70 hover:text-foreground transition-all focus-ring",
+    variant === "desktop" && "hover:border-primary/30",
+  ]}
+>
+  <IconSun width={18} height={18} aria-hidden="true" class="hidden dark:block" />
+  <IconMoon width={18} height={18} aria-hidden="true" class="block dark:hidden" />
+  <span class="sr-only hidden dark:inline">Switch to light mode</span>
+  <span class="sr-only inline dark:hidden">Switch to dark mode</span>
+</button>
+

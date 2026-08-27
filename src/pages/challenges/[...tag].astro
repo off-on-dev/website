@@ -1,0 +1,92 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import AdventureCard from "@/components/AdventureCard.astro";
+import PageHero from "@/components/PageHero.astro";
+import ChallengeBuildersSection from "@/components/ChallengeBuildersSection.astro";
+import CommunityLeaders from "@/components/CommunityLeaders.astro";
+import BottomCTA from "@/components/BottomCTA.astro";
+import StarterNudge from "@/components/StarterNudge.astro";
+import ChallengesFilter from "@/components/ChallengesFilter.astro";
+import { BRAND_NAME } from "@/lib/site";
+import { getChallengeData, getStarterTarget, isAdventureLive, sortAdventuresByMonthDesc, tagToSlug } from "@/lib/challenges";
+
+export async function getStaticPaths() {
+  const adventures = sortAdventuresByMonthDesc((await getCollection("adventures")).map((a) => a.data));
+  const { entries, tags } = getChallengeData(adventures);
+  return [
+    { params: { tag: undefined }, props: { initialTag: null, adventures, entries, tags } },
+    ...tags.map((tag) => ({ params: { tag: tagToSlug(tag) }, props: { initialTag: tag, adventures, entries, tags } })),
+  ];
+}
+
+const { initialTag, adventures, entries, tags } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+const adventureCount = adventures.length;
+
+// Starter nudge target: easiest level of the most recent adventure.
+const starter = getStarterTarget(adventures);
+
+// These exact strings are what Google has indexed for these two routes.
+// Do not "tidy" them; rewording costs ranking signal.
+const title = initialTag
+  ? `${initialTag} Challenges - ${BRAND_NAME}`
+  : `Open Source Challenges | ${BRAND_NAME}`;
+const description = initialTag
+  ? `Hands-on open source challenges using ${initialTag}. Practice in real-world scenarios in GitHub Codespaces.`
+  : "Hands-on challenges built around open source tools. Filter by technology and learn by solving real-world scenarios in GitHub Codespaces.";
+const path = initialTag ? `/challenges/${tagToSlug(initialTag)}/` : "/challenges/";
+---
+
+<Layout title={title} description={description} path={path}>
+  <main id="main-content" tabindex="-1">
+    {/* The h1 names the page, not the filter. A tag route is the same page with
+        one filter pre-applied, and that state is already conveyed by the active
+        pill and the "N challenges · Tag" count line. Making the h1 tag-specific
+        meant the identical filtered view had two different headings depending on
+        whether you arrived via /challenges/<tag>/ or by clicking a pill on
+        /challenges/. The <title> stays tag-specific, which is what
+        distinguishes these routes in search results and browser tabs. */}
+    <PageHero
+      eyebrow="Challenges"
+      title="Open Source Challenges"
+      description="Each adventure focuses on one open source technology, with challenges at different difficulty levels. Pick your adventure, work through real-world scenarios hands-on, and share what you learn with the community."
+    />
+
+    <section class="py-24 px-6 md:px-16">
+      <div class="mx-auto max-w-6xl">
+        {starter && (
+          <StarterNudge
+            adventureId={starter.adventure.slug}
+            adventureTitle={starter.adventure.title}
+            tag={starter.adventure.tags[0] ?? ""}
+            levelId={starter.levelId}
+            base={base}
+          />
+        )}
+
+        <ChallengesFilter
+          entries={entries}
+          tags={tags}
+          base={base}
+          initialTag={initialTag}
+          adventureCount={adventureCount}
+        >
+          {adventures.map((a) => (
+            <AdventureCard slot="adventures" adventure={{ ...a, isLive: isAdventureLive(a) }} />
+          ))}
+        </ChallengesFilter>
+      </div>
+    </section>
+
+    <ChallengeBuildersSection>
+      <CommunityLeaders
+        slot="aside"
+        sections={["top-challenge-solvers", "challenge-rockstars", "challenge-grand-builders", "challenge-builders"]}
+      />
+    </ChallengeBuildersSection>
+
+    <BottomCTA />
+  </main>
+</Layout>

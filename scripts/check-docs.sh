@@ -17,21 +17,18 @@ REASONS_README=()
 while IFS=$'\t' read -r status file; do
   if [[ "$status" == "A" ]]; then
     case "$file" in
-      src/components/*.tsx|src/hooks/*.ts|src/hooks/*.tsx|src/lib/*.ts)
-        # Exclude shadcn primitives — they are managed by npx shadcn@latest, not documented manually.
-        if [[ "$file" != src/components/ui/* ]]; then
-          NEEDS_STYLEGUIDE=1
-          REASONS_STYLE+=("New file: $file")
-        fi
+      src/components/*.astro|src/components/*.vue|src/lib/*.ts)
+        NEEDS_STYLEGUIDE=1
+        REASONS_STYLE+=("New file: $file")
         ;;
     esac
   fi
 done < <(git diff --name-status "$BASE"...HEAD)
 
-# New exported constants in constants.ts require a README.md entry.
-if git diff "$BASE"...HEAD -- src/data/constants.ts | grep -qE '^\+export const [A-Z_]+'; then
+# New exported constants in site.ts require a README.md entry.
+if git diff "$BASE"...HEAD -- src/lib/site.ts | grep -qE '^\+export const [A-Z_]+'; then
   NEEDS_README=1
-  REASONS_README+=("New export(s) in src/data/constants.ts")
+  REASONS_README+=("New export(s) in src/lib/site.ts")
 fi
 
 # New npm scripts require a README.md entry.

@@ -1,8 +1,7 @@
 // Prose fields (learnings, audience, objective, step titles and content,
 // tool descriptions, contributor bios, rewards text, story, intro, backstory,
-// scenario) contain pre-rendered HTML generated at build time by the
-// adventure generator. Always render them with dangerouslySetInnerHTML,
-// never as {value} directly.
+// scenario) contain pre-rendered HTML generated at build time by the content
+// loader. Render via set:html (Astro) or v-html (Vue); never as {value} directly.
 
 /** A tool that ships pre-configured inside the level's Codespace. */
 export type ToolboxItem = {
@@ -11,7 +10,7 @@ export type ToolboxItem = {
   url?: string;
 }
 
-/** One step in the Walkthrough section. content is pre-rendered HTML generated at build time and rendered via dangerouslySetInnerHTML in MarkdownContent. */
+/** One step in the Walkthrough section. content is pre-rendered HTML generated at build time and rendered via set:html in Astro. */
 export type WalkthroughStep = {
   title: string;
   content: string;
@@ -30,12 +29,6 @@ export type HelpfulLink = {
   description?: string;
 }
 
-/** A player entry for the top-players leaderboard. Currently defined on AdventureLevel but not consumed by any component. */
-export type TopPlayer = {
-  username: string;
-  count: number;
-}
-
 /** Placeholder for a level that hasn't shipped yet. Rendered in the "More levels" sidebar card. */
 export type UpcomingLevel = {
   name: string;
@@ -52,12 +45,13 @@ export type AdventureLevel = {
   learnings: string[];
   codespacesUrl: string;
   discussionUrl: string;
-  // Submission deadline for this level (e.g. "10 December 2025 at 09:00 CET"). Only shown when rewards are active.
-  deadline?: string;
+  // Submission deadline for this level (ISO 8601 string after parsing). Only shown when rewards are active.
+  // null is possible when parseDeadline receives a truthy input and returns null (unresolvable timezone sentinel path).
+  deadline?: string | null;
   // Short narrative hook shown directly under the page title.
   hook?: string;
   // Brief intro paragraph(s) shown under the page title before the main content.
-  intro: string[];
+  intro?: string[];
   // Narrative backstory paragraphs shown as a collapsible scenario section.
   backstory?: string[];
   // Concrete acceptance criteria shown as the "Objective" card.
@@ -84,12 +78,8 @@ export type AdventureLevel = {
   helpfulLinks?: HelpfulLink[];
   // Verification card rendered as the final section.
   verification: VerificationInfo;
-  // Optional SEO meta description (max 160 chars). When absent, ChallengeDetail.tsx generates one from level name, intro, and topics.
-  metaDescription?: string;
-  // Unused fields — real solver and leaderboard data is fetched at runtime by
-  // useDiscussionPosts and useAdventureLeaderboard. No component reads these.
-  solvedCount?: number;
-  topPlayers?: TopPlayer[];
+  // SEO meta description (max 160 chars). Always set by the content loader.
+  metaDescription: string;
 }
 
 export type AdventureRewardTier = {
@@ -111,8 +101,8 @@ export type Adventure = {
   title: string;
   month: string;
   story: string;
-  // SEO meta description (max 160 chars). Always set by the generator; can be overridden with meta_description in YAML.
-  metaDescription?: string;
+  // SEO meta description (max 160 chars). Always set by the content loader.
+  metaDescription: string;
   tags: string[];
   levels: AdventureLevel[];
   contributor?: { name: string; url?: string; aboutHtml?: string };
@@ -120,7 +110,7 @@ export type Adventure = {
   backstory?: string[];
   // Context paragraphs explaining what technologies or concepts the adventure covers.
   overview?: string[];
-  // Lucide React icon name representing this adventure (e.g. 'FlaskConical').
+  // Lucide icon name representing this adventure (e.g. 'FlaskConical').
   icon?: string;
   rewards?: AdventureRewards;
   // Mock placeholders for levels that haven't shipped yet. Rendered in the
@@ -131,51 +121,8 @@ export type Adventure = {
 export type AdventureContributor = {
   name: string;
   url?: string;
-  /** Pre-rendered HTML from markdown — always render via InlineProse or dangerouslySetInnerHTML. */
+  /** Pre-rendered HTML from markdown. Always render via InlineProse or set:html. */
   aboutHtml?: string;
   adventures: { id: string; title: string }[];
 };
 
-/** A level with its parent adventure context, returned when filtering by tag. */
-export type RelatedLevel = {
-  level: AdventureLevel;
-  adventureId: string;
-  adventureTitle: string;
-};
-
-/**
- * Lightweight level shape used for card and filter views on the home/challenges pages.
- * Contains only the fields needed to render AdventureCard and FilteredLevelCard.
- * Generated into summaries.ts. Do not import the full AdventureLevel where this suffices.
- */
-export type AdventureLevelSummary = {
-  id: string;
-  name: string;
-  difficulty: "Beginner" | "Intermediate" | "Expert";
-  topics: string[];
-  learnings: string[];
-  estimatedTime?: string;
-};
-
-/** Lightweight adventure shape for card grid views. Generated into summaries.ts. */
-export type AdventureCardSummary = {
-  id: string;
-  title: string;
-  month: string;
-  story: string;
-  tags: string[];
-  levels: AdventureLevelSummary[];
-  contributor?: { name: string; url?: string; aboutHtml?: string };
-  /** True when the adventure has an active rewards window or any level deadline in the future. */
-  isLive?: boolean;
-  icon?: string;
-};
-
-/** A level summary with its parent adventure context, for filtered card views. */
-export type RelatedLevelSummary = {
-  level: AdventureLevelSummary;
-  adventureId: string;
-  adventureTitle: string;
-  isLive?: boolean;
-  adventureIcon?: string;
-};

@@ -1,16 +1,25 @@
 import { defineConfig } from "vitest/config";
-import react from "@vitejs/plugin-react";
-import path from "path";
+import vue from "@vitejs/plugin-vue";
+import Icons from "unplugin-icons/vite";
+import { resolve } from "path";
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [vue(), Icons({ compiler: "vue3" })],
   test: {
-    environment: "jsdom",
     globals: true,
+    environment: "happy-dom",
     setupFiles: ["./src/test/setup.ts"],
-    include: ["src/**/*.{test,spec}.{ts,tsx}"],
+    include: ["src/test/**/*.test.{ts,mts,js,mjs}"],
+    coverage: {
+      provider: "v8",
+      include: ["src/lib/**", "src/stores/**", "src/components/**"],
+      exclude: ["src/lib/community-data.ts", "src/lib/solutions.ts"],
+      thresholds: { lines: 80, functions: 80, branches: 70 },
+    },
   },
   resolve: {
-    alias: { "@": path.resolve(__dirname, "./src") },
+    alias: {
+      "@": resolve(import.meta.dirname, "src"),
+    },
   },
 });

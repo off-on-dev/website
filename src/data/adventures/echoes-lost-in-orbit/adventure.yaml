@@ -1,5 +1,6 @@
 slug: echoes-lost-in-orbit
 title: Echoes Lost in Orbit
+meta_description: "Fix a broken Argo CD ApplicationSet, a stalled Argo Rollouts canary with PromQL health gates, and an OpenTelemetry Collector exporting to Jaeger and Prometheus."
 icon: Satellite
 month: DEC 2025
 community_category_id: 35

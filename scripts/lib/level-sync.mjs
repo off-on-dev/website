@@ -1,7 +1,7 @@
 // Pure helpers for sync-adventure.mjs. Extracted so level selection and the
 // "Coming Soon" computation can be unit-tested without mocking GitHub fetches.
 
-import { LEVEL_DIFFICULTY_BY_ID, LEVEL_DIFFICULTY_BY_EMOJI, LEVEL_ORDER } from "./level-constants.mjs";
+import { LEVEL_DIFFICULTY_BY_ID, LEVEL_DIFFICULTY_BY_EMOJI, LEVEL_ORDER } from "../../src/lib/level-constants.mjs";
 
 function asSet(value) {
   return value instanceof Set ? value : new Set(value);

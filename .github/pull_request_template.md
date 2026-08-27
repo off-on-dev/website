@@ -10,7 +10,7 @@
 ## Manual checks
 
 - [ ] Screen reader tested _(UI changes only)_
-- [ ] New routes added to sitemap.xml, prerender array, README _(routes only)_
+- [ ] New routes added to e2e/a11y.spec.ts, e2e/smoke.spec.ts, sitemap.xml.ts, and README _(routes only; sitemap is auto-generated from getStaticPaths, so only static pages need manual entries)_
 - [ ] UI verified at 375px, 768px, and 1280px against the production build (`npm run build && npm run preview`) _(UI changes only)_
 - [ ] Re-read every changed file; checked all call sites of any modified exports _(all changes)_
 - [ ] Per-level discussion JSON exists with correct `discussionUrl` _(adventure/level changes only)_

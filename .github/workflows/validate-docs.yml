@@ -4,9 +4,9 @@ on:
   pull_request:
     paths:
       - 'src/components/**'
-      - 'src/hooks/**'
       - 'src/lib/**'
-      - 'src/data/constants.ts'
+      - 'src/stores/**'
+      - 'src/pages/**'
       - 'package.json'
       - '.github/workflows/*.yml'
 

@@ -138,13 +138,13 @@ one during Phase 2; each cites the normative criterion it enforces.
 ## Contrast and Transparency
 
 - **Text contrast (WCAG 1.4.3) is covered by axe** (`color-contrast`), run on every
-  prerendered route in dark and light mode by `e2e/smoke.spec.ts`. Do not add a
+  prerendered route in dark and light mode by `e2e/a11y.spec.ts`. Do not add a
   parallel contrast checker — it would duplicate axe. When axe reports `incomplete` on
   a translucent or overlapping pair, composite the alpha over its opaque background by
   hand and give a definitive ruling (Phase 4).
 - **Non-text / UI contrast (WCAG 1.4.11) is a known axe gap** already guarded by
   targeted Playwright tests (tag-chip and contributor-pill borders, hover states in
-  `e2e/smoke.spec.ts`). Add a similar targeted test when introducing a new bordered
+  `e2e/btn-primary-contrast.spec.ts`). Add a similar targeted test when introducing a new bordered
   control or hover colour rather than relying on axe for it.
 - **Translucent surfaces** (frosted/glassy backgrounds via `backdrop-filter`, or
   semi-opaque panels layered over content) must be gated behind
@@ -162,7 +162,7 @@ Run the existing test suite to collect axe output:
 npm run build && npm run test:e2e 2>&1
 ```
 
-The Playwright smoke tests in `e2e/smoke.spec.ts` run axe-core with tags
+The Playwright a11y tests in `e2e/a11y.spec.ts` run axe-core with tags
 `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, and `best-practice`
 in both dark and light mode against every prerendered route.
 

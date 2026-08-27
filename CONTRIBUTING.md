@@ -18,7 +18,7 @@ git clone https://github.com/<your-username>/website.git
 cd website
 nvm use
 npm install
-npm run dev        # http://localhost:8080
+npm run dev        # http://localhost:4321
 ```
 
 1. Add the upstream remote so you can pull in future changes:
@@ -34,11 +34,36 @@ Open PRs from your fork against `main` on the upstream repo.
 ```sh
 npm run lint             # ESLint
 npm run lint:reuse       # REUSE licence compliance (requires: pip install reuse)
-npm test                 # Vitest unit tests
+npm run test:unit        # Vitest unit tests
 npm run build && npm run test:e2e  # Playwright smoke, SSG, a11y, and hydration tests
 ```
 
 All four must pass with zero failures before opening a PR.
+
+## Visual regression
+
+`e2e/visual.spec.ts` compares 48 full-page screenshots (12 routes × 2 viewports × 2 themes) against committed baselines in `e2e/snapshots/`. **This is not a CI gate** — it is a local tool you run before and after a visual change to catch regressions or confirm an intentional change looks correct.
+
+### Two commands
+
+```sh
+npm run test:visual      # compare current build against committed baselines
+npm run baselines:update # regenerate baselines (after an intentional visual change)
+```
+
+Both commands run natively using your local Playwright installation. No Docker required.
+
+### Platform note
+
+The committed baselines in `e2e/snapshots/` are generated on macOS using CoreText font rendering. **This is a deliberate tradeoff, not an oversight** — VRT is a local-only check and CI never runs it, so there is no shared environment to target. The consequence: if you are on Linux or Windows, Chromium's font stack differs (FreeType vs. DirectWrite vs. CoreText) and the comparison will fail on text-heavy regions even when the layout is identical. Before `test:visual` is meaningful on a non-macOS machine, regenerate baselines for your platform with `npm run baselines:update`, but do not commit them — the macOS baselines are the shared reference.
+
+### When to regenerate baselines
+
+- After an intentional visual change (layout, colour, component).
+- After adding a new route to `e2e/visual.spec.ts` (the comparison fails with "missing snapshot" until a baseline exists for that route).
+- After bumping `@playwright/test`: run `npm run baselines:update` to regenerate with the new Playwright version.
+
+After regenerating, commit the updated files in `e2e/snapshots/` alongside the visual change. Run `npm run test:visual` once more after committing to confirm zero diff.
 
 ## Conventions
 
@@ -57,9 +82,25 @@ git commit -s -m "feat: add contributor badge"
 ## Code style
 
 - TypeScript with explicit return types on all functions and components.
-- Functional components with hooks only. No class components.
-- Tailwind utility classes directly on JSX. No inline styles.
+- Tailwind utility classes directly on elements. No inline styles.
 - Both light and dark mode must work for every UI change.
+- Inline links in prose need `{" "}` around them. Astro strips the whitespace
+  between text and an adjacent element when the source has a newline there, so
+  `See our\n<a>Privacy Policy</a>\nfor details.` renders with no spaces. See
+  [styleguide.md](styleguide.md) for the detail.
+
+### Interactive components
+
+- Default to a `.astro` component with a plain `<script>`. Reach for a framework
+  only when the component has genuinely reactive state that a class toggle and a
+  small script cannot express.
+- **When one is warranted, use Vue. Never React.** The `@astrojs/vue`
+  integration stays installed even though nothing currently uses it, so adding
+  an island is a one-file change. Do not remove the Vue packages as "unused".
+- The site currently ships zero islands. The theme toggle, mobile drawer,
+  consent banner, starter nudge and challenge filter were all islands once and
+  are now markup plus a script; they are the bar for what does *not* justify a
+  framework.
 
 Full rules are in [AGENTS.md](AGENTS.md) (or [CLAUDE.md](CLAUDE.md) for Claude Code users) and [styleguide.md](styleguide.md).
 
@@ -87,7 +128,7 @@ Every component must meet WCAG 2.2 AA. Read [ACCESSIBILITY.md](ACCESSIBILITY.md)
 
 ## Adventure content
 
-Adventures are authored as YAML and compiled to TypeScript. Do not edit `*.generated.ts` files by hand. See [ADVENTURES.md](ADVENTURES.md) for the full content pipeline.
+Adventures are authored as YAML. The YAML is the source of truth; there are no generated files to commit or maintain. See [ADVENTURES.md](ADVENTURES.md) for the full content pipeline.
 
 ## Need help?
 

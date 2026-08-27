@@ -39,7 +39,7 @@ See <https://overlayfactsheet.com/>.
 ## Serious: CSS Media Queries Must Come First
 
 Respect OS-level preferences before adding any custom controls. This site handles these
-in `src/index.css`. Check every new animation or color change against these queries.
+in `src/styles/index.css`. Check every new animation or color change against these queries.
 
 ```css
 @media (prefers-reduced-motion: reduce) {
@@ -49,7 +49,7 @@ in `src/index.css`. Check every new animation or color change against these quer
   }
 }
 
-@media (prefers-color-scheme: dark) { /* handled by useTheme hook */ }
+@media (prefers-color-scheme: dark) { /* handled by the inline pre-paint script in Layout.astro */ }
 
 @media (prefers-contrast: more) {
   :root {
@@ -70,14 +70,14 @@ in `src/index.css`. Check every new animation or color change against these quer
 
 This site manages two user preferences:
 
-**Theme (light/dark):** Handled by `useTheme` hook in `src/hooks/useTheme.tsx`.
-- Stored in `localStorage` under the `theme` key (see `THEME_STORAGE_KEY` in `src/data/constants.ts`)
-- Initialized to `dark` on first render, updated in `useEffect` from stored value
-- Never read `localStorage` during render — hydration safety rule applies
+**Theme (light/dark):** Handled by `ThemeToggle.astro` and an inline pre-paint script in `Layout.astro`.
+- Stored in `localStorage` under the `theme` key
+- The pre-paint script reads it before first paint to avoid FOUC; `ThemeToggle.astro` toggles it via a delegated `click` listener on `document`
+- Never read `localStorage` during server-side render — only in the inline pre-paint script or in a `DOMContentLoaded` handler
 
-**Analytics consent:** Handled by `useConsent` hook in `src/hooks/useConsent.tsx`.
+**Analytics consent:** State lives in the `$consent` nanostore (`src/stores/consent.ts`).
 - Stored in `localStorage` under `analytics_consent` key
-- The consent banner is the personalization UI for this preference
+- `ConsentBanner.astro` is the personalization UI; its `DOMContentLoaded` handler runs `initConsent()` once per full page load to restore stored consent state
 - All `localStorage` access must be in `try/catch` blocks
 
 ## Moderate: Safe localStorage Pattern

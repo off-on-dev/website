@@ -1,0 +1,76 @@
+---
+import IconExternalLink from "~icons/lucide/external-link";
+import { SITE_NAME, COMMUNITY_URL } from "@/lib/site";
+import ThemeToggle from "@/components/ThemeToggle.astro";
+import MobileMenu from "@/components/MobileMenu.astro";
+
+const base = import.meta.env.BASE_URL;
+const path = Astro.url.pathname;
+const logoDark = `${base}brand/offon-logo-dark-color.svg`;
+const logoLight = `${base}brand/offon-logo-light-mono.svg`;
+
+// Community sits between About and Contribute and is an external link. The same
+// list feeds the desktop cluster and the mobile drawer, so it is defined once.
+const navItems = [
+  { href: `${base}challenges/`, label: "Challenges" },
+  { href: `${base}about/`, label: "About" },
+  { href: COMMUNITY_URL, label: "Community", external: true },
+  { href: `${base}contribute/`, label: "Contribute" },
+  { href: `${base}handbook/`, label: "Handbook" },
+  { href: `${base}sponsors/`, label: "Sponsors" },
+];
+
+const isActive = (item: (typeof navItems)[number]): boolean =>
+  !item.external && path.startsWith(item.href);
+
+// min-h-[44px] keeps links at the WCAG 2.5.8 touch-target size. The underline is
+// transparent until hover/active, giving the animated underline affordance.
+const linkCls =
+  "inline-flex items-center gap-1 min-h-[44px] text-sm font-medium text-dim hover:text-foreground dark:hover:text-primary transition-colors underline underline-offset-4 decoration-[3px] decoration-transparent rounded px-1.5 -mx-1.5 focus-ring";
+const activeCls =
+  "text-foreground dark:text-primary underline decoration-foreground dark:decoration-primary underline-offset-4";
+---
+
+<header>
+<nav aria-label="Main" class="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-1.5">
+    <a href={base} aria-label={`${SITE_NAME} home`} class="logo-link flex items-center focus-ring rounded-sm">
+      {/* Dark logo is high-priority: visible in the default (dark) theme. Light logo is hidden until the user switches. */}
+      <img src={logoDark} alt="" width={130} height={33} loading="eager" fetchpriority="high" class="h-8 hidden dark:block" />
+      <img src={logoLight} alt="" width={130} height={33} loading="eager" class="h-8 block dark:hidden" />
+    </a>
+
+    {/* Desktop nav */}
+    <div class="hidden md:flex items-center gap-8">
+      <ul role="list" class="contents">
+        {navItems.map((item) =>
+          item.external ? (
+            <li class="contents">
+              <a href={item.href} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint" class={linkCls}>
+                {item.label} <IconExternalLink width={12} height={12} aria-hidden="true" />
+              </a>
+            </li>
+          ) : (
+            <li class="contents">
+              <a
+                href={item.href}
+                class={`${linkCls} ${isActive(item) ? activeCls : ""}`}
+                aria-current={isActive(item) ? "page" : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ),
+        )}
+      </ul>
+      <ThemeToggle variant="desktop" />
+    </div>
+
+    {/* Mobile: theme toggle + hamburger drawer */}
+    <div class="flex md:hidden items-center gap-3">
+      <ThemeToggle variant="mobile" />
+      <MobileMenu links={navItems.map((item) => ({ ...item, active: isActive(item) }))} />
+    </div>
+  </div>
+</nav>
+</header>

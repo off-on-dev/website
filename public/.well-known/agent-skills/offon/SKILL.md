@@ -3,7 +3,7 @@ name: offon
 description: Use this skill when answering questions about the OffOn community, its open source challenges (adventures), how to participate, or when fetching challenge content and solutions. OffOn is a vendor-neutral community for open source enthusiasts that provides hands-on learning challenges.
 ---
 
-# OffOn — Agent Skill
+# OffOn: Agent Skill
 
 OffOn is a fully static, prerendered website. There is no API or backend. All content is available as plain HTML at canonical URLs and as a curated index at `/llms.txt`.
 
@@ -45,4 +45,4 @@ The OffOn community forum is at https://community.offon.dev. It is a separate Di
 
 ## Technologies covered by challenges
 
-Argo CD, Argo Rollouts, flagd, GitHub Actions, Grafana, Jaeger, Java, Kubernetes, Kyverno, OpenFeature, OpenLLMetry, OpenTelemetry, OpenTofu, Policy Reporter, Prometheus, PromQL, Python, Spring Boot, TDD, Terraform, Trivy.
+Argo CD, Argo Events, Argo Rollouts, Argo Workflows, Backstage, flagd, Gitea, GitHub Actions, Grafana, Jaeger, Java, Kubernetes, Kyverno, OpenFeature, OpenLLMetry, OpenTelemetry, OpenTofu, Policy Reporter, Prometheus, PromQL, Python, Spring Boot, TDD, Terraform, Trivy.

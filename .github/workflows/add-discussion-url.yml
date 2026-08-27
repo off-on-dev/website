@@ -35,7 +35,7 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/create-github-app-token@v3
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         id: app-token
         with:
           client-id: ${{ vars.APP_ID }}
@@ -102,8 +102,8 @@ jobs:
           DISCUSSION_URL: ${{ inputs.discussion_url }}
         run: node scripts/set-discussion-url.mjs
 
-      - name: Regenerate TypeScript
-        run: node scripts/generate-adventures.mjs
+      - name: Validate adventure YAML (Zod content schema)
+        run: npm run sync
 
       - name: Create pull request
         env:
@@ -125,9 +125,6 @@ jobs:
           git add \
             "src/data/adventures/${ADVENTURE_ID}/adventure.yaml" \
             "src/data/adventures/${ADVENTURE_ID}/${LEVEL_ID}-posts.json" \
-            "src/data/adventures/${ADVENTURE_ID}.generated.ts" \
-            "src/data/adventures/index.ts" \
-            "src/data/adventures/summaries.ts" \
             "scripts/refresh-leaderboard.mjs"
 
           HAS_CHANGES=false
@@ -154,14 +151,14 @@ jobs:
 
           - \`adventure.yaml\` — \`community_url\` set on the \`${LEVEL_ID}\` level; \`community_category_id\` set at adventure root if it was missing
           - \`${LEVEL_ID}-posts.json\` — \`discussionUrl\` set and initial posts fetched from Discourse
-          - Generated TypeScript updated (\`${ADVENTURE_ID}.generated.ts\`, \`index.ts\`, \`summaries.ts\`)
           - \`scripts/refresh-leaderboard.mjs\` — \`ADVENTURE_CATEGORIES\` patched with the resolved category ID
+          - (Astro reads the YAML directly — no generated TypeScript to update)
 
           ### Before merging
 
           - [ ] Verify the discussion URL is correct and the thread is publicly visible
           - [ ] Check that the posts JSON contains the expected content (or is an empty array if the thread is new)
-          - [ ] Run \`npm run lint && npm test && npm run build && npm run test:e2e\` locally
+          - [ ] Run \`npm run lint && npm run test:unit && npm run build && npm run test:e2e\` locally
 
           ### After merging
 

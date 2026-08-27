@@ -4,9 +4,14 @@
  *
  * Run: node .ai/templates/generate-reveal-zip.mjs
  *
+ * Requires jszip (devDependency). The reveal assets are read from the committed
+ * public/reveal/, not from node_modules, so reveal.js itself is not needed to run this.
+ *
  * Re-vendor note: public/reveal/ is a hand-vendored four-file subset of reveal.js@6.0.1.
+ * reveal.js is deliberately NOT a dependency; install it ad hoc when updating
+ * (npm install reveal.js@6, same pattern as pptxgenjs for the PPTX generator).
  * The full dist/ tree is NOT copied. When updating Reveal, copy only these four files from
- * node_modules/reveal.js/dist/ to public/reveal/ — do not copy the whole directory, as
+ * node_modules/reveal.js/dist/ to public/reveal/ - do not copy the whole directory, as
  * that would restore deleted themes and plugins along with their OFL and BSD attribution
  * obligations. The four required files are: reset.css, reveal.css, reveal.js,
  * plugin/notes.js.

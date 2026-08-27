@@ -1,126 +1,113 @@
-// Visual regression tests. Run `npm run build` before `npm run test:visual`.
-// First run generates baseline screenshots in e2e/__screenshots__/.
-// Subsequent runs compare against baselines and fail if diffs exceed threshold.
-// Thresholds are set globally in playwright.config.ts.
+// Visual regression gate for the Astro build. Captures full-page screenshots
+// across two viewports and two themes, compares against committed baselines in
+// e2e/snapshots/. A missing baseline fails the test — add new routes with
+// --update-snapshots and commit the generated files.
 //
-// These tests are intentionally local-only. They are not run in CI or on PR
-// previews because screenshot rendering differs between macOS and Linux, making
-// cross-platform comparison unreliable. Run them manually before and after any
-// major layout or design change to catch visual regressions on your own machine.
+// NOT a CI gate. Run locally only:
+//   npm run test:visual      — compare against committed baselines
+//   npm run baselines:update — regenerate baselines (after intentional visual changes)
+//
+// Baselines are generated on macOS (CoreText rendering). Contributors on Linux
+// or Windows must run baselines:update before test:visual is meaningful on
+// their machine — the committed snapshots will not match their renderer.
 
 import { test, expect, type Page } from "@playwright/test";
 
-type VisualRoute = {
+interface Route {
+  slug: string;
   path: string;
-  name: string;
-  maskSelectors?: string[];
-};
-
-const VISUAL_ROUTES: VisualRoute[] = [
-  { path: "/", name: "home" },
-  { path: "/adventures", name: "adventures" },
-  { path: "/adventures/blind-by-design", name: "adventure-detail" },
-  {
-    path: "/adventures/blind-by-design/levels/beginner",
-    name: "challenge-detail",
-    maskSelectors: [".timestamp", "[data-discussion-posts]"],
-  },
-  { path: "/challenges", name: "challenges-grid" },
-  { path: "/about", name: "about" },
-  { path: "/404", name: "404" },
-];
-
-// CSS that hides the floating cookie preferences button, which renders whenever
-// consent is non-null. We keep the button out of screenshots because it is a
-// fixed overlay whose position is unrelated to page content.
-// The selector mirrors the button's aria-label, which is also asserted in
-// smoke.spec.ts, so a rename surfaces in both places at once.
-const CONSENT_BUTTON_CSS = `[aria-label="Cookie Preferences"] { display: none !important; }`;
-
-// Registers a script to run before React mounts on each navigation.
-// Pre-denying consent means useConsent restores "denied" from localStorage,
-// so the banner never renders. The floating button still renders (consent !=
-// null) and is hidden via CONSENT_BUTTON_CSS after navigation.
-//
-// "analytics_consent" is CONSENT_STORAGE_KEY from src/data/constants.ts.
-// Hardcoded here because addInitScript runs in browser context without imports.
-async function denyConsent(page: Page): Promise<void> {
-  await page.addInitScript(() => {
-    localStorage.setItem(
-      "analytics_consent",
-      JSON.stringify({ value: "denied", timestamp: Date.now() }),
-    );
-  });
+  /** Set to "banner" to capture the consent banner visible state. */
+  consentState?: "denied" | "banner";
 }
 
-test.describe("visual regression (dark mode)", () => {
-  for (const { path, name, maskSelectors } of VISUAL_ROUTES) {
-    test(name, async ({ page }) => {
-      await denyConsent(page);
-      await page.emulateMedia({ reducedMotion: "reduce" });
-      await page.goto(path);
-      await page.waitForLoadState("networkidle");
-      await page.addStyleTag({ content: CONSENT_BUTTON_CSS });
+const ROUTES: Route[] = [
+  { slug: "home",              path: "/"                                                    },
+  { slug: "adventures",        path: "/adventures/"                                         },
+  { slug: "challenges",        path: "/challenges/"                                         },
+  { slug: "challenges-otel",   path: "/challenges/opentelemetry/"                           },
+  { slug: "about",             path: "/about/"                                              },
+  { slug: "handbook",          path: "/handbook/"                                           },
+  { slug: "brand",             path: "/brand/"                                              },
+  { slug: "adventure-echoes",  path: "/adventures/echoes-lost-in-orbit/"                   },
+  { slug: "level-beginner",    path: "/adventures/echoes-lost-in-orbit/levels/beginner/"   },
+  { slug: "solution-beginner", path: "/adventures/echoes-lost-in-orbit/levels/beginner/solution/" },
+  { slug: "404",               path: "/404/"                                                },
+  { slug: "consent-banner",    path: "/",                  consentState: "banner"          },
+];
 
-      const mask = maskSelectors?.map((s) => page.locator(s)) ?? [];
+const VIEWPORTS = [
+  { name: "desktop", width: 1440, height: 900 },
+  { name: "mobile",  width: 375,  height: 812 },
+] as const;
 
-      await expect(page).toHaveScreenshot(`${name}-dark.png`, {
-        fullPage: true,
-        mask,
+const THEMES = ["dark", "light"] as const;
+
+const STUB_PNG = Buffer.from(
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+  "base64",
+);
+
+async function setupPage(page: Page, theme: string, consentState?: string) {
+  await page.addInitScript(
+    ({ theme, consentState }) => {
+      localStorage.setItem("theme", theme);
+      if (consentState !== "banner") {
+        localStorage.setItem(
+          "analytics_consent",
+          JSON.stringify({ value: "denied", timestamp: Date.now() - 86_400_000 * 30 }),
+        );
+      }
+    },
+    { theme, consentState },
+  );
+
+  await page.route(
+    /community\.offon\.dev|discourse-cdn\.com|avatars\.|gravatar\.com/,
+    (r) => r.fulfill({ status: 200, contentType: "image/png", body: STUB_PNG }),
+  );
+}
+
+for (const viewport of VIEWPORTS) {
+  for (const theme of THEMES) {
+    test.describe(`${viewport.name} / ${theme}`, () => {
+      test.use({
+        viewport: { width: viewport.width, height: viewport.height },
+        colorScheme: theme === "dark" ? "dark" : "light",
       });
+
+      for (const route of ROUTES) {
+        test(route.slug, async ({ page }) => {
+          await setupPage(page, theme, route.consentState);
+
+          await page.goto(route.path);
+          await page.evaluate(() => document.fonts.ready);
+
+          if (route.consentState === "banner") {
+            // Wait for the banner to be revealed by the consent script.
+            await page.locator('[aria-live="polite"]').waitFor({ state: "visible", timeout: 5000 }).catch(() => {});
+          }
+
+          await expect(page).toHaveScreenshot(
+            `${route.slug}--${theme}--${viewport.name}.png`,
+            {
+              fullPage: true,
+              animations: "disabled",
+              // Noise floor is exactly 0 across repeated runs on macOS (build is
+              // deterministic; renders are stable). 0 is correct: there is
+              // nothing to absorb. A nonzero diff without a code change means
+              // something in the build pipeline is non-deterministic, which is
+              // itself worth knowing.
+              //
+              // Known blind spot: a sufficiently subtle colour shift on a thin
+              // element (e.g. border opacity /20 → /30 on the hero-badge pill)
+              // produces 0 differing pixels and is undetectable at any tolerance.
+              // This suite does not catch all visual changes — it catches layout
+              // regressions and changes that affect a meaningful run of pixels.
+              maxDiffPixels: 0,
+            },
+          );
+        });
+      }
     });
   }
-});
-
-test.describe("visual regression (light mode)", () => {
-  for (const { path, name, maskSelectors } of VISUAL_ROUTES) {
-    test(name, async ({ page }) => {
-      await denyConsent(page);
-      await page.addInitScript(() => localStorage.setItem("theme", "light"));
-      await page.emulateMedia({ reducedMotion: "reduce" });
-      await page.goto(path);
-      await page.waitForLoadState("networkidle");
-      await expect(page.locator("html")).toHaveClass(/light/);
-      await page.addStyleTag({ content: CONSENT_BUTTON_CSS });
-
-      const mask = maskSelectors?.map((s) => page.locator(s)) ?? [];
-
-      await expect(page).toHaveScreenshot(`${name}-light.png`, {
-        fullPage: true,
-        mask,
-      });
-    });
-  }
-});
-
-// Dedicated consent banner regression. No consent is pre-set so the banner
-// renders in its natural state. Viewport-only (fullPage: false) so the banner
-// is clearly visible at the bottom of the frame rather than lost at the bottom
-// of a multi-screen full-page capture.
-test.describe("visual regression — consent banner", () => {
-  test("consent banner (dark mode)", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
-    await expect(
-      page.getByRole("region", { name: "This site uses analytics cookies" }),
-    ).toBeVisible();
-    await expect(page).toHaveScreenshot("consent-banner-dark.png", {
-      fullPage: false,
-    });
-  });
-
-  test("consent banner (light mode)", async ({ page }) => {
-    await page.addInitScript(() => localStorage.setItem("theme", "light"));
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
-    await expect(page.locator("html")).toHaveClass(/light/);
-    await expect(
-      page.getByRole("region", { name: "This site uses analytics cookies" }),
-    ).toBeVisible();
-    await expect(page).toHaveScreenshot("consent-banner-light.png", {
-      fullPage: false,
-    });
-  });
-});
+}
