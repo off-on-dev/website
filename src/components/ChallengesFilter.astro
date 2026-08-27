@@ -387,6 +387,53 @@ const dropdownItem =
       window.history.replaceState(null, "", path + (qs ? `?${qs}` : ""));
     };
 
+    // Compute the URL that would result from applying projTags + projDiff,
+    // mirroring syncUrl's path-reset rule without mutating state.
+    const computeUrl = (projTags: string[], projDiff: string | null): string => {
+      const params = new URLSearchParams();
+      if (projTags.length) params.set("topics", projTags.map(tagToSlug).join(","));
+      if (projDiff) params.set("difficulty", projDiff);
+      const qs = params.toString();
+      const shouldResetPath = initialTag !== null && projTags.length === 0;
+      const path = shouldResetPath ? `${base}challenges/` : window.location.pathname;
+      return path + (qs ? `?${qs}` : "");
+    };
+
+    // Stamp data-url on every filter button so the click tracker can report
+    // the resulting URL rather than "no-url". Called after every state change
+    // (post-syncUrl) and once at init so the first click is already labelled.
+    const updateDataUrls = (): void => {
+      for (const pill of tagPills) {
+        const tag = pill.dataset.tagPill!;
+        const nextTags = tag
+          ? state.tags.includes(tag)
+            ? state.tags.filter((t) => t !== tag)
+            : [...state.tags, tag]
+          : [];
+        pill.dataset.url = computeUrl(nextTags, state.difficulty);
+      }
+      for (const opt of tagOptions) {
+        const tag = opt.dataset.tagOption!;
+        const nextTags = tag
+          ? state.tags.includes(tag)
+            ? state.tags.filter((t) => t !== tag)
+            : [...state.tags, tag]
+          : [];
+        opt.dataset.url = computeUrl(nextTags, state.difficulty);
+      }
+      for (const radio of diffRadios) {
+        const d = radio.dataset.difficultyRadio || null;
+        // Radios toggle when d is non-null; "All Levels" (d=null) always clears.
+        const nextDiff = d !== null ? (state.difficulty === d ? null : d) : null;
+        radio.dataset.url = computeUrl(state.tags, nextDiff);
+      }
+      for (const opt of diffOptions) {
+        // Dropdown options always set (no toggle), so project directly to d.
+        const d = opt.dataset.difficultyOption || null;
+        opt.dataset.url = computeUrl(state.tags, d);
+      }
+    };
+
     // ── Render ─────────────────────────────────────────────────────────────
     const plural = (n: number, word: string): string => `${n} ${n === 1 ? word : `${word}s`}`;
 
@@ -495,18 +542,21 @@ const dropdownItem =
       state.difficulty = toggle && state.difficulty === d ? null : d;
       apply();
       syncUrl();
+      updateDataUrls();
     }
     function toggleTag(tag: string): void {
       state.touched = true;
       state.tags = state.tags.includes(tag) ? state.tags.filter((t) => t !== tag) : [...state.tags, tag];
       apply();
       syncUrl();
+      updateDataUrls();
     }
     function clearTags(): void {
       state.touched = true;
       state.tags = [];
       apply();
       syncUrl();
+      updateDataUrls();
     }
 
     // ── Dropdowns ──────────────────────────────────────────────────────────
@@ -612,6 +662,7 @@ const dropdownItem =
 
     readUrl();
     apply();
+    updateDataUrls();
   }
 
   document.addEventListener("DOMContentLoaded", initChallengesFilter);

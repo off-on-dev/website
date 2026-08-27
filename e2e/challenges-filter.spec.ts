@@ -189,3 +189,108 @@ test.describe("heading is stable across how the filter was reached", () => {
   });
 });
 
+// Filter buttons are tracked by the click tracker. They are not links, so
+// click_url falls back to data-url. Verify data-url is populated with a real
+// path (not "no-url") so GA4 click_event reports something useful.
+test.describe("filter button click_url tracking", () => {
+  test.use({ viewport: { width: 1400, height: 900 } });
+
+  test("tag pill buttons carry a real data-url after init", async ({ page }) => {
+    await gotoChallenges(page, "[data-tag-pill]");
+    // initChallengesFilter runs on DOMContentLoaded; wait until data-url is set.
+    await page.waitForFunction(
+      () => !!document.querySelector("[data-tag-pill]:not([data-tag-pill=''])")?.getAttribute("data-url"),
+    );
+    const pill = page.locator("[data-tag-pill]:not([data-tag-pill=''])").first();
+    const dataUrl = await pill.getAttribute("data-url");
+    expect(dataUrl).not.toBe("no-url");
+    expect(dataUrl).toMatch(/^\/challenges\//);
+  });
+
+  test("difficulty radio buttons carry a real data-url after init", async ({ page }) => {
+    await gotoChallenges(page, "[data-difficulty-radio]");
+    await page.waitForFunction(
+      () =>
+        !!document
+          .querySelector("[data-difficulty-radio]:not([data-difficulty-radio=''])")
+          ?.getAttribute("data-url"),
+    );
+    const radio = page.locator("[data-difficulty-radio]:not([data-difficulty-radio=''])").first();
+    const dataUrl = await radio.getAttribute("data-url");
+    expect(dataUrl).not.toBe("no-url");
+    expect(dataUrl).toContain("difficulty=");
+  });
+
+  test("tag pill data-url updates after a click", async ({ page }) => {
+    await gotoChallenges(page, "[data-tag-pill]");
+    await page.waitForFunction(
+      () => !!document.querySelector("[data-tag-pill]:not([data-tag-pill=''])")?.getAttribute("data-url"),
+    );
+    const pill = page.locator("[data-tag-pill]:not([data-tag-pill=''])").first();
+    await pill.click();
+    // After toggle-on, data-url should reflect the toggled-off projection.
+    const dataUrl = await pill.getAttribute("data-url");
+    expect(dataUrl).not.toBe("no-url");
+    expect(dataUrl).toMatch(/^\/challenges\//);
+  });
+
+  // Empirical ordering check: the click tracker fires in document capture phase,
+  // before the button's bubble handler runs updateDataUrls(). Verify that for two
+  // consecutive clicks, click_url in GA4 equals the URL the click actually produced
+  // — not the stale value from the previous state.
+  test("click tracker records the URL each click produces, not a stale value", async ({ page }) => {
+    // Spy on dataLayer.push before Layout.astro's inline script defines gtag.
+    // gtag("event", name, params) calls dataLayer.push(arguments), so the entry
+    // that lands in dataLayer is an Arguments-like object with numeric indices.
+    await page.addInitScript(() => {
+      (window as any).__clickUrls = [];
+      (window as any).dataLayer = (window as any).dataLayer || [];
+      const orig = Array.prototype.push;
+      (window as any).dataLayer.push = function (...args: any[]) {
+        const entry = args[0];
+        if (entry && entry[0] === "event" && entry[1] === "click_event") {
+          (window as any).__clickUrls.push(
+            entry[2] != null ? (entry[2] as Record<string, unknown>).click_url : "missing",
+          );
+        }
+        return orig.apply(this, args as any);
+      };
+      localStorage.setItem(
+        "analytics_consent",
+        JSON.stringify({ value: "granted", timestamp: Date.now() }),
+      );
+    });
+    // Stub googletagmanager.com so no real network requests leave the test.
+    await page.route("**googletagmanager.com/**", (route) =>
+      route.fulfill({ status: 200, contentType: "application/javascript", body: "" }),
+    );
+
+    await page.goto("/challenges/");
+    await page.waitForFunction(
+      () => !!document.querySelector("[data-tag-pill]:not([data-tag-pill=''])")?.getAttribute("data-url"),
+    );
+
+    const pill = page.locator("[data-tag-pill]:not([data-tag-pill=''])").first();
+
+    // Click 1 — toggle on. Tracker fires in capture (reads current data-url),
+    // then the handler runs syncUrl + updateDataUrls.
+    const projectedBefore1 = await pill.getAttribute("data-url");
+    await pill.click();
+    const urlAfter1 = await page.evaluate(() => window.location.pathname + window.location.search);
+    const recorded1 = await page.evaluate(() => (window as any).__clickUrls[0]);
+
+    expect(recorded1, "click 1: tracker must record the projected URL").toBe(projectedBefore1);
+    expect(recorded1, "click 1: tracker URL must match the URL produced by the click").toBe(urlAfter1);
+
+    // Click 2 — toggle off. This is where a stale value would appear if ordering
+    // were wrong: data-url would show click 1's URL instead of click 2's result.
+    const projectedBefore2 = await pill.getAttribute("data-url");
+    await pill.click();
+    const urlAfter2 = await page.evaluate(() => window.location.pathname + window.location.search);
+    const recorded2 = await page.evaluate(() => (window as any).__clickUrls[1]);
+
+    expect(recorded2, "click 2: tracker must record the projected URL").toBe(projectedBefore2);
+    expect(recorded2, "click 2: tracker URL must match the URL produced by the click").toBe(urlAfter2);
+  });
+});
+
