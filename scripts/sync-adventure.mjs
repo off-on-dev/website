@@ -202,7 +202,7 @@ function ensureIconRegistered(iconName, emoji) {
 }
 
 function addToTypeUnion(content, iconName) {
-  const re = /(export type AdventureIconName =\n)((?:  \| "[^"]+"\n)*  \| "[^"]+";)/;
+  const re = /(export type AdventureIconName =\n)((?: {2}\| "[^"]+"\n)* {2}\| "[^"]+";)/;
   const m = content.match(re);
   if (!m) throw new Error("Cannot locate AdventureIconName union in adventure-icons.ts");
   const existing = [...m[2].matchAll(/\| "([^"]+)"/g)].map((x) => x[1]);
@@ -255,7 +255,7 @@ function addToLucideIconsMap(content, iconName, kebab) {
   const needsQuotes = /[^a-z0-9]/.test(kebab);
   const key = needsQuotes ? `"${kebab}"` : kebab;
   if (m[2].includes(key + ":")) return content;
-  const entryRe = /  (?:"([^"]+)"|([a-z][a-z0-9]*)):\s*Icon\w+,/g;
+  const entryRe = / {2}(?:"([^"]+)"|([a-z][a-z0-9]*)):\s*Icon\w+,/g;
   const entries = [...m[2].matchAll(entryRe)].map((x) => ({ key: x[1] || x[2], raw: x[0].trim() }));
   entries.push({ key: kebab, raw: `${key}: Icon${iconName},` });
   entries.sort((a, b) => a.key.localeCompare(b.key));
