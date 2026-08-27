@@ -2,6 +2,7 @@
   "name": "offon-decks",
   "private": true,
   "type": "module",
+  "workspaces": ["theme-offon"],
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev:offon-x-dynatrace": "cd offon-x-dynatrace && ../node_modules/.bin/slidev"

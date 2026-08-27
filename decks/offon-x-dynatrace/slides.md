@@ -1,5 +1,5 @@
 ---
-theme: ../../theme-offon
+theme: offon
 title: Open Source Talks by OffOn x Dynatrace
 layout: cover
 ---
