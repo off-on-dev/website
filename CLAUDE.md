@@ -28,7 +28,7 @@ The `spec-first-coding` command is installed globally (`~/.claude/skills/`). Use
 
 **offon.dev** is the main website for OffOn, a platform for open source enthusiasts. It is fully static with no backend and no database. Pages are prerendered at build time by **Astro** (`output: 'static'`); interactivity is layered on as `.astro` components with vanilla `<script>` blocks.
 
-> This project was migrated from React Router v8 to Astro + Vue. If you find a reference to `root.tsx`, `entry.server`, `routes.ts`, `*.generated.ts`, `useConsent`, `useTheme`, or `scripts/generate-adventures.mjs`, it is stale — those no longer exist.
+> This project was migrated from React Router v8 to Astro + Vue. If you find a reference to `root.tsx`, `entry.server`, `src/routes.ts`, `*.generated.ts`, `useConsent`, `useTheme`, or `scripts/generate-adventures.mjs`, it is stale — those no longer exist. (`e2e/routes.ts` is live — it is the SMOKE_ROUTES / A11Y_PAGES source of truth.)
 
 Community activity happens on a separate Discourse instance (display name **community.offon.dev**). Use the `COMMUNITY_URL` constant from `src/lib/site.ts`; never hardcode it. Do not replicate or integrate Discourse functionality here.
 
