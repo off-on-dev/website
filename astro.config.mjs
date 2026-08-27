@@ -22,9 +22,9 @@ export default defineConfig({
   // Retired URLs → their successor. Astro emits static meta-refresh redirect
   // pages (GitHub Pages-compatible). Mirrors src/pages/redirects/*.
   redirects: {
-    "/docs": "/handbook/",
-    "/docs/community-guide": "/handbook/",
-    "/community-guide": "/handbook/",
+    "/docs/": "/handbook/",
+    "/docs/community-guide/": "/handbook/",
+    "/community-guide/": "/handbook/",
   },
   integrations: [vue({ appEntrypoint: "/src/pages/_app" })],
   markdown: {
