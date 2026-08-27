@@ -147,8 +147,8 @@ const link = "docs-ext-link";
           </li>
         </ul>
         <p class={paragraph}>
-          If you find a barrier that is not listed here, please report it using the link below.
-          We treat this list as evidence-based, not aspirational.
+          If you find a barrier that is not listed here, please report it. We treat this list
+          as evidence-based, not aspirational.
         </p>
 
         <h2 class={heading2}>How We Test</h2>
@@ -185,22 +185,22 @@ const link = "docs-ext-link";
 
         <h2 class={heading2}>Reporting an Accessibility Barrier</h2>
         <p class={paragraph}>
-          If something on {SITE_NAME} blocks you or is hard to use,{" "}
-          <a
-            href="https://github.com/off-on-dev/website/issues/new?template=accessibility.yml"
-            target="_blank"
-            rel="noopener noreferrer" aria-describedby="new-tab-hint"
-            class={link}
-          >
-            open an accessibility issue <IconExternalLink width={12} height={12} aria-hidden="true" />
-          </a>
-          . The form prompts for the page, your assistive technology, and severity, which helps
-          us reproduce and prioritize.
+          If something on {SITE_NAME} blocks you or is hard to use, please tell us. The form
+          prompts for the page, your assistive technology, and severity, which helps us
+          reproduce and prioritize.
         </p>
         <ul role="list" class={list}>
           <li>
-            <strong>Preferred:</strong> GitHub issue (link above). The fastest way to get a
-            response with a fix timeline.
+            <strong>Preferred:</strong>{" "}
+            <a
+              href="https://github.com/off-on-dev/website/issues/new?template=accessibility.yml"
+              target="_blank"
+              rel="noopener noreferrer" aria-describedby="new-tab-hint"
+              class={link}
+            >
+              Open an accessibility issue on GitHub <IconExternalLink width={12} height={12} aria-hidden="true" />
+            </a>
+            . The fastest way to get a response with a fix timeline.
           </li>
           <li>
             <strong>Email:</strong>{" "}
