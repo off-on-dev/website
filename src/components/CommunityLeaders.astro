@@ -1,10 +1,12 @@
 ---
-import { LUCIDE_ICONS } from "@/lib/lucide-icons";
-import communityLeadersData from "@/data/community-leaders.json";
+import { LUCIDE_ICONS, type LucideIconKey } from "@/lib/lucide-icons";
+import communityLeadersRaw from "@/data/community-leaders.json";
 import AvatarLink from "@/components/AvatarLink.astro";
-
-type LeaderUser = { username: string; avatarUrl: string; count: number };
-type LeaderSection = { id: string; title: string; users: LeaderUser[] };
+import {
+  parseCommunityLeadersData,
+  type LeaderSection,
+  type SectionId,
+} from "@/lib/community-leaders";
 
 interface Props {
   /** Which section IDs to show. Omit to show all. */
@@ -15,7 +17,9 @@ interface Props {
 
 const { sections: sectionFilter, limit } = Astro.props;
 
-const SECTION_ICON_NAMES: Record<string, string> = {
+// Keys: closed union of known section IDs — a typo or missing entry is a compile error.
+// Values: valid lucide icon keys — a typo is a compile error.
+const SECTION_ICON_NAMES = {
   "top-contributors": "trophy",
   "top-challenge-solvers": "target",
   "challenge-rockstars": "star",
@@ -24,9 +28,9 @@ const SECTION_ICON_NAMES: Record<string, string> = {
   "most-liked": "heart",
   "most-replies": "message-circle",
   "most-supportive": "hand-heart",
-};
+} satisfies Record<SectionId, LucideIconKey>;
 
-const ALL_SECTIONS = communityLeadersData.sections as LeaderSection[];
+const { sections: ALL_SECTIONS } = parseCommunityLeadersData(communityLeadersRaw);
 
 const visibleSections = (
   sectionFilter

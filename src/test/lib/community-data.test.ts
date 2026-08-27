@@ -34,33 +34,59 @@ const postsPath = join(tempRoot, "src/data/adventures", adventureId, "beginner-p
 const leaderboardPath = join(tempRoot, "src/data/adventures", adventureId, "leaderboard.json");
 mkdirSync(join(tempRoot, "src/data/adventures", adventureId), { recursive: true });
 
+const VALID_DISCUSSION = {
+  discussionUrl: "https://community.offon.dev/t/1",
+  discussionPosts: [],
+  totalReplies: 0,
+};
+
+const VALID_LEADERBOARD = {
+  updatedAt: "2025-01-01T00:00:00Z",
+  rows: [],
+};
+
 describe("getDiscussion", () => {
   it("returns null when the posts file does not exist", () => {
     expect(getDiscussion(adventureId, "beginner")).toBeNull();
   });
 
-  it("parses and returns the discussion when the file is valid JSON", () => {
-    const fixture = {
-      discussionUrl: "https://community.offon.dev/t/1",
-      discussionPosts: [],
-      totalReplies: 0,
-    };
-    writeFileSync(postsPath, JSON.stringify(fixture), "utf8");
-    expect(getDiscussion(adventureId, "beginner")).toEqual(fixture);
+  it("parses and returns the discussion when the file is valid", () => {
+    writeFileSync(postsPath, JSON.stringify(VALID_DISCUSSION), "utf8");
+    expect(getDiscussion(adventureId, "beginner")).toEqual(VALID_DISCUSSION);
     rmSync(postsPath);
   });
 
-  it("returns null and logs an error when the file contains invalid JSON", () => {
-    writeFileSync(postsPath, "not-json{{{", "utf8");
-    const errors: unknown[][] = [];
-    const orig = console.error;
-    console.error = (...args: unknown[]) => { errors.push(args); };
-    const result = getDiscussion(adventureId, "beginner");
-    console.error = orig;
+  it("parses solvers when present", () => {
+    const withSolvers = {
+      ...VALID_DISCUSSION,
+      solvers: [{ username: "alice", solvedAt: "2025-01-02T00:00:00Z" }],
+    };
+    writeFileSync(postsPath, JSON.stringify(withSolvers), "utf8");
+    expect(getDiscussion(adventureId, "beginner")).toEqual(withSolvers);
     rmSync(postsPath);
-    expect(result).toBeNull();
-    expect(errors.length).toBeGreaterThan(0);
-    expect(String(errors[0]?.[0])).toContain("[community-data]");
+  });
+
+  it("throws on invalid JSON syntax — fails the build rather than serving wrong content", () => {
+    writeFileSync(postsPath, "not-json{{{", "utf8");
+    expect(() => getDiscussion(adventureId, "beginner")).toThrow();
+    rmSync(postsPath);
+  });
+
+  it("throws when the file has valid JSON but is missing required fields", () => {
+    writeFileSync(postsPath, JSON.stringify({ discussionUrl: "https://x.com" }), "utf8");
+    expect(() => getDiscussion(adventureId, "beginner")).toThrow("[community-data]");
+    rmSync(postsPath);
+  });
+
+  it("throws when discussionPosts contains an entry with a wrong type", () => {
+    const bad = {
+      discussionUrl: "https://community.offon.dev/t/1",
+      discussionPosts: [{ username: 42, cooked: "<p>hi</p>", created_at: "2025-01-01" }],
+      totalReplies: 0,
+    };
+    writeFileSync(postsPath, JSON.stringify(bad), "utf8");
+    expect(() => getDiscussion(adventureId, "beginner")).toThrow("[community-data]");
+    rmSync(postsPath);
   });
 });
 
@@ -69,16 +95,31 @@ describe("getLeaderboard", () => {
     expect(getLeaderboard(adventureId)).toBeNull();
   });
 
-  it("returns null and logs an error on invalid JSON", () => {
-    writeFileSync(leaderboardPath, "{invalid", "utf8");
-    const errors: unknown[][] = [];
-    const orig = console.error;
-    console.error = (...args: unknown[]) => { errors.push(args); };
-    const result = getLeaderboard(adventureId);
-    console.error = orig;
+  it("parses and returns the leaderboard when the file is valid", () => {
+    writeFileSync(leaderboardPath, JSON.stringify(VALID_LEADERBOARD), "utf8");
+    expect(getLeaderboard(adventureId)).toEqual(VALID_LEADERBOARD);
     rmSync(leaderboardPath);
-    expect(result).toBeNull();
-    expect(errors.length).toBeGreaterThan(0);
-    expect(String(errors[0]?.[0])).toContain("[community-data]");
+  });
+
+  it("throws on invalid JSON syntax", () => {
+    writeFileSync(leaderboardPath, "{invalid", "utf8");
+    expect(() => getLeaderboard(adventureId)).toThrow();
+    rmSync(leaderboardPath);
+  });
+
+  it("throws when the file is missing the rows array", () => {
+    writeFileSync(leaderboardPath, JSON.stringify({ updatedAt: "2025-01-01T00:00:00Z" }), "utf8");
+    expect(() => getLeaderboard(adventureId)).toThrow("[community-data]");
+    rmSync(leaderboardPath);
+  });
+
+  it("throws when a leaderboard row has a wrong type for a required field", () => {
+    const bad = {
+      updatedAt: "2025-01-01T00:00:00Z",
+      rows: [{ rank: "first", username: "alice", points: 100, challengesSolved: 1 }],
+    };
+    writeFileSync(leaderboardPath, JSON.stringify(bad), "utf8");
+    expect(() => getLeaderboard(adventureId)).toThrow("[community-data]");
+    rmSync(leaderboardPath);
   });
 });

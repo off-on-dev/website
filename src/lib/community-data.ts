@@ -1,5 +1,6 @@
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
+import { z } from "zod";
 
 // Build-time reads of the CI-refreshed per-level discussion and per-adventure
 // leaderboard JSON. Read with node fs (not import.meta.glob) because the files
@@ -11,56 +12,82 @@ import { resolve } from "node:path";
 // rewrites import.meta.url and would break a file-relative path.
 const ADVENTURES_DIR = resolve(process.cwd(), "src/data/adventures");
 
-export type DiscussionPost = {
-  username: string;
-  avatarUrl?: string;
-  cooked: string;
-  created_at: string;
-  challengeSolved?: boolean;
-  topicUrl?: string;
-};
+// --- Zod schemas (source of truth for these types) ---
+//
+// Build failure on schema mismatch is intentional: these files are written by
+// the CI refresh scripts, which error on Discourse failures rather than writing
+// corrupt content. A parse error here means the script's output shape changed,
+// which is a code error. Silent wrong content is worse than a broken build.
+// The one safe absence is a missing file (adventure with no posts yet), which
+// returns null and omits the section rather than failing.
 
-export type Solver = {
-  username: string;
-  avatarUrl?: string;
-  solvedAt: string;
-};
+const discussionPostSchema = z.object({
+  username: z.string(),
+  avatarUrl: z.string().optional(),
+  cooked: z.string(),
+  created_at: z.string(),
+  challengeSolved: z.boolean().optional(),
+  topicUrl: z.string().optional(),
+});
 
-export type Discussion = {
-  discussionUrl: string;
-  discussionPosts: DiscussionPost[];
-  totalReplies: number;
-  solvers?: Solver[];
-};
+const solverSchema = z.object({
+  username: z.string(),
+  avatarUrl: z.string().optional(),
+  solvedAt: z.string(),
+});
 
-export type LeaderboardRow = {
-  rank: number;
-  username: string;
-  avatarUrl?: string;
-  points: number;
-  challengesSolved: number;
-  beginnerPoints?: number;
-  intermediatePoints?: number;
-  expertPoints?: number;
-  singlePoints?: number;
-};
+const discussionSchema = z.object({
+  discussionUrl: z.string(),
+  discussionPosts: z.array(discussionPostSchema),
+  totalReplies: z.number(),
+  solvers: z.array(solverSchema).optional(),
+});
 
-export type Leaderboard = { updatedAt: string; rows: LeaderboardRow[] };
+const leaderboardRowSchema = z.object({
+  rank: z.number(),
+  username: z.string(),
+  avatarUrl: z.string().optional(),
+  points: z.number(),
+  challengesSolved: z.number(),
+  beginnerPoints: z.number().optional(),
+  intermediatePoints: z.number().optional(),
+  expertPoints: z.number().optional(),
+  singlePoints: z.number().optional(),
+});
 
-function readJson<T>(path: string): T | null {
+const leaderboardSchema = z.object({
+  updatedAt: z.string(),
+  rows: z.array(leaderboardRowSchema),
+});
+
+export type DiscussionPost = z.infer<typeof discussionPostSchema>;
+export type Solver = z.infer<typeof solverSchema>;
+export type Discussion = z.infer<typeof discussionSchema>;
+export type LeaderboardRow = z.infer<typeof leaderboardRowSchema>;
+export type Leaderboard = z.infer<typeof leaderboardSchema>;
+
+function readJson<T>(path: string, schema: z.ZodType<T>): T | null {
   if (!existsSync(path)) return null;
-  try {
-    return JSON.parse(readFileSync(path, "utf8")) as T;
-  } catch (err) {
-    console.error(`[community-data] Failed to parse ${path}:`, err);
-    return null;
+  // Let readFileSync and JSON.parse propagate — both signal a code error in the
+  // refresh script, not a transient absence, so failing the build is correct.
+  const raw = readFileSync(path, "utf8");
+  const parsed: unknown = JSON.parse(raw);
+  const result = schema.safeParse(parsed);
+  if (!result.success) {
+    throw new Error(
+      `[community-data] ${path} failed schema validation:\n${result.error.message}`,
+    );
   }
+  return result.data;
 }
 
 export function getDiscussion(adventureId: string, levelId: string): Discussion | null {
-  return readJson<Discussion>(resolve(ADVENTURES_DIR, adventureId, `${levelId}-posts.json`));
+  return readJson(
+    resolve(ADVENTURES_DIR, adventureId, `${levelId}-posts.json`),
+    discussionSchema,
+  );
 }
 
 export function getLeaderboard(adventureId: string): Leaderboard | null {
-  return readJson<Leaderboard>(resolve(ADVENTURES_DIR, adventureId, "leaderboard.json"));
+  return readJson(resolve(ADVENTURES_DIR, adventureId, "leaderboard.json"), leaderboardSchema);
 }
