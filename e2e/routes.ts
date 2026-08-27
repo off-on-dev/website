@@ -43,6 +43,10 @@ export const SMOKE_ROUTES: Record<string, string> = {
   "/privacy/": "Privacy Policy - OffOn",
   "/accessibility/": "Accessibility Statement - OffOn",
   "/404/": "Page Not Found - OffOn",
+  // GENERATED:adventure-accessibility-nightmare-smoke
+  "/adventures/adventure-accessibility-nightmare/": "The Accessibility Nightmare - OffOn Adventures",
+  "/adventures/adventure-accessibility-nightmare/levels/beginner/": "The Initial Audit - The Accessibility Nightmare - OffOn",
+  // /GENERATED:adventure-accessibility-nightmare-smoke
 };
 
 export const A11Y_PAGES: string[] = [
@@ -86,6 +90,10 @@ export const A11Y_PAGES: string[] = [
   "/adventures/the-ai-observatory/levels/expert/",
   "/adventures/the-ai-observatory/levels/intermediate/",
   "/404/",
+  // GENERATED:adventure-accessibility-nightmare-a11y
+  "/adventures/adventure-accessibility-nightmare/",
+  "/adventures/adventure-accessibility-nightmare/levels/beginner/",
+  // /GENERATED:adventure-accessibility-nightmare-a11y
 ];
 
 /**
