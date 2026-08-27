@@ -122,4 +122,7 @@ export const ROUTES_WITHOUT_FULL_COVERAGE: string[] = [
   "/challenges/tdd/",
   "/challenges/terraform/",
   "/challenges/trivy/",
+  // Slidev presentation deck — self-contained SPA with its own routing, not a
+  // regular Astro page. Covered by manual review; axe/smoke don't apply.
+  "/slides/offon-x-dynatrace/",
 ];
