@@ -1,0 +1,452 @@
+/* OffOn Slidev theme
+ * Color tokens are duplicated from src/styles/index.css @theme block.
+ * Update both files together when the palette changes.
+ */
+
+@font-face {
+  font-family: 'Syne';
+  src: url('../../../public/fonts/syne-latin-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../../../public/fonts/inter-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../../../public/fonts/inter-latin-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../../../public/fonts/inter-latin-600-normal.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+
+:root {
+  --bg:         #0a0a0a;
+  --card:       #141419;
+  --border:     #1e2535;
+  --fg:         #faf9f2;
+  --muted:      #f0ede5;
+  --amber:      #ffc034;
+  --amber-glow: rgba(255, 192, 52, 0.14);
+}
+
+/* ── Base ── */
+html, body { background: var(--bg) !important; }
+
+.slidev-layout {
+  font-family: 'Inter', sans-serif;
+  font-size: 26px;
+  color: var(--fg);
+  background: var(--bg);
+  padding: 1.8em 2.5em 2.8em;
+  box-sizing: border-box;
+  height: 100%;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Headings ── */
+.slidev-layout h1,
+.slidev-layout h2,
+.slidev-layout h3,
+.slidev-layout h4 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  color: var(--fg);
+  text-transform: none;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0 0 0.3em;
+}
+
+.slidev-layout h1 { font-size: 2.2em; }
+.slidev-layout h2 { font-size: 1.45em; }
+
+.slidev-layout p {
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 0.78em;
+  margin: 0;
+}
+
+.slidev-layout a { color: var(--amber); text-decoration: none; }
+.slidev-layout a:hover { text-decoration: underline; }
+.slidev-layout a:focus-visible,
+.pill:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; border-radius: 3px; }
+
+/* ── Slidev nav/progress tinting ── */
+.slidev-nav { color: var(--amber); }
+.slidev-progress-bar { background: var(--amber) !important; }
+
+/* ── Slide header ── */
+.sh { margin-bottom: 1em; }
+.sh .label {
+  display: block;
+  font-size: 0.46em;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.55em;
+}
+.sh h2 { font-size: 1.45em; margin: 0; }
+
+/* ── Grids ── */
+.g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75em; margin-top: 0.6em; }
+.g2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75em; margin-top: 0.6em; }
+.g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75em; margin-top: 0.6em; }
+.split { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 1.3em; align-items: start; }
+.split-even { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2em; align-items: start; }
+
+/* ── Card ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.7em 0.9em;
+}
+.card h4 {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.68em;
+  font-weight: 700;
+  color: var(--fg);
+  margin: 0 0 0.25em;
+}
+.card p { font-size: 0.63em; margin: 0; line-height: 1.5; }
+.card p + p { margin-top: 0.35em; }
+
+/* ── Agenda table ── */
+.agenda {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin-top: 0.5em;
+  font-size: 0.58em;
+}
+.agenda tr { border-bottom: 1px solid var(--border); }
+.agenda tr:last-child { border-bottom: none; }
+.agenda td {
+  padding: 0.32em 0.5em;
+  color: var(--muted);
+  vertical-align: middle;
+}
+.agenda td:first-child {
+  color: var(--amber);
+  font-weight: 600;
+  white-space: nowrap;
+  padding-right: 0.9em;
+  font-variant-numeric: tabular-nums;
+  width: 3.8em;
+}
+.agenda td:last-child {
+  opacity: 0.65;
+  font-size: 0.9em;
+  text-align: right;
+  white-space: nowrap;
+  width: 7em;
+}
+.agenda .hi td { color: var(--fg); }
+.agenda .hi td:first-child { color: var(--amber); }
+.agenda .hi td:last-child { color: var(--muted); opacity: 0.75; }
+
+/* ── Bullet rows ── */
+.brow {
+  display: flex;
+  gap: 0.55em;
+  align-items: flex-start;
+  margin-bottom: 0.5em;
+}
+.brow .dot {
+  flex-shrink: 0;
+  color: var(--amber);
+  font-size: 0.64em;
+  margin-top: 0.24em;
+  line-height: 1;
+  width: 0.8em;
+}
+.brow .bt { font-size: 0.64em; color: var(--muted); line-height: 1.5; }
+.brow .bt strong { color: var(--amber); font-weight: 700; }
+
+/* ── Speaker cards ── */
+.speaker-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.8em 1em;
+  display: flex;
+  gap: 0.8em;
+  align-items: flex-start;
+}
+.speaker-card .sp-av {
+  flex-shrink: 0;
+  width: 2.4em;
+  height: 2.4em;
+  border-radius: 50%;
+  background: var(--amber-glow);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.58em;
+  color: var(--amber);
+  overflow: hidden;
+}
+.speaker-card .sp-av img {
+  width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+}
+.speaker-card .sp-info { flex: 1; }
+.speaker-card .sp-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.65em;
+  font-weight: 700;
+  color: var(--fg);
+  margin: 0 0 0.1em;
+}
+.speaker-card .sp-talk {
+  font-size: 0.58em;
+  color: var(--amber);
+  font-weight: 600;
+  margin: 0 0 0.25em;
+  line-height: 1.3;
+}
+.speaker-card .sp-bio { font-size: 0.58em; color: var(--muted); margin: 0; line-height: 1.45; }
+
+/* ── Board / person cards ── */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65em;
+  margin-top: 0.6em;
+}
+.person {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.8em 1em;
+  display: flex;
+  gap: 0.55em;
+  align-items: flex-start;
+}
+.person .av {
+  flex-shrink: 0;
+  width: 1.8em;
+  height: 1.8em;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--amber-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.58em;
+  color: var(--amber);
+  overflow: hidden;
+}
+.person .av img { width: 100%; height: 100%; object-fit: cover; }
+.person .pi { flex: 1; min-width: 0; }
+.person .pn {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.65em;
+  font-weight: 700;
+  color: var(--fg);
+  margin: 0 0 0.12em;
+  line-height: 1.2;
+}
+.person .pr { font-size: 0.52em; color: var(--muted); line-height: 1.4; margin: 0; }
+.person.tba { opacity: 0.55; border-style: dashed; }
+.board-sm { gap: 0.35em; margin-top: 0.3em; }
+.board-sm .person { padding: 0.4em 0.6em; gap: 0.4em; }
+.board-sm .person .av { width: 1.4em; height: 1.4em; }
+.board-sm .person .pn { font-size: 0.55em; margin-bottom: 0.08em; }
+.board-sm .person .pr { font-size: 0.44em; }
+
+/* ── Value rows ── */
+.vrow {
+  border-left: 2px solid var(--border);
+  padding: 0.2em 0 0.2em 0.7em;
+  margin-bottom: 0.6em;
+}
+.vrow.hi { border-left-color: var(--amber); }
+.vrow h4 {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.65em;
+  font-weight: 700;
+  color: var(--fg);
+  margin: 0 0 0.1em;
+}
+.vrow p { font-size: 0.58em; margin: 0; }
+
+/* ── Contribute cards ── */
+.contrib {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.8em 1em;
+}
+.contrib .ci { font-size: 0.9em; margin-bottom: 0.22em; display: block; }
+.contrib h4 {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.65em;
+  font-weight: 700;
+  color: var(--amber);
+  margin: 0 0 0.28em;
+}
+.contrib .citem {
+  display: flex;
+  gap: 0.45em;
+  align-items: flex-start;
+  margin-bottom: 0.22em;
+}
+.contrib .citem .cdot {
+  flex-shrink: 0;
+  color: var(--muted);
+  opacity: 0.5;
+  font-size: 0.52em;
+  margin-top: 0.3em;
+  line-height: 1;
+  width: 0.8em;
+}
+.contrib .citem .ctext { font-size: 0.52em; color: var(--muted); line-height: 1.4; }
+
+/* ── Tech tags ── */
+.tags { display: flex; flex-wrap: wrap; gap: 0.3em; margin-top: 0.5em; }
+.tag {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.16em 0.48em;
+  font-size: 0.42em;
+  color: var(--muted);
+}
+
+/* ── Column label ── */
+.col-label {
+  display: block;
+  font-size: 0.46em;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.9em;
+}
+
+/* ── Cobrand (shared by cover and final slides) ── */
+.cobrand {
+  display: flex;
+  align-items: center;
+  gap: 0.65em;
+  margin-bottom: 0.85em;
+}
+.cobrand img { height: 54px; width: auto; }
+.cobrand .xsep {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1.1em;
+  color: var(--amber);
+  line-height: 1;
+}
+.cobrand .partner {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.8em;
+  color: var(--fg);
+  letter-spacing: -0.02em;
+}
+
+/* ── Pills / link row ── */
+.link-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45em;
+  margin-top: 0.6em;
+}
+.pill {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.24em 0.62em;
+  font-size: 0.38em;
+  color: var(--muted) !important;
+  font-family: 'Inter', sans-serif;
+  text-decoration: none !important;
+}
+.pill:hover { border-color: var(--amber); color: var(--amber) !important; }
+.pill.hi { background: var(--amber-glow); border-color: rgba(255,192,52,0.38); color: var(--amber) !important; }
+
+/* ── Quiz rows ── */
+.qrow {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.65em;
+  align-items: start;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.8em 1em;
+  margin-bottom: 0.4em;
+}
+.qrow .rnum {
+  grid-row: span 2;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.58em;
+  font-weight: 700;
+  color: var(--amber);
+  background: var(--amber-glow);
+  border: 1px solid rgba(255,192,52,0.22);
+  border-radius: 4px;
+  padding: 0.3em 0.55em;
+  white-space: nowrap;
+  align-self: center;
+}
+.qrow h4 {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.65em;
+  font-weight: 700;
+  color: var(--fg);
+  margin: 0 0 0.12em;
+}
+.qrow p { font-size: 0.58em; margin: 0; }
+
+/* ── Firefly dots ── */
+.fw    { position: absolute; border-radius: 50%; background: #ffc034; }
+.fw-hi { width: 3.75px; height: 3.75px; box-shadow: 0 0 2.7px 0px rgba(255,192,52,.95), 0 0 6px 0px rgba(255,192,52,.28); }
+.fw-md { width: 3px;    height: 3px;    box-shadow: 0 0 1.8px 0px rgba(255,192,52,.80), 0 0 4.8px 0px rgba(255,192,52,.20); }
+.fw-lo { width: 2.25px; height: 2.25px; box-shadow: 0 0 1.2px 0px rgba(255,192,52,.65), 0 0 3.75px 0px rgba(255,192,52,.14); }
+
+/* ── Deck logo (rendered by GlobalTop, outside slide transform) ── */
+#deck-logo {
+  position: fixed;
+  top: 30px;
+  right: 42px;
+  height: 66px;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── Firefly containers (rendered by GlobalTop) ── */
+#ff-wave, #ff-mist {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+#ff-wave {
+  background:
+    radial-gradient(ellipse 200% 28% at 50% 100%, rgba(255,192,52,.042) 0%, transparent 65%),
+    radial-gradient(ellipse 48% 52% at 14% 100%, rgba(255,192,52,.042) 0%, transparent 72%),
+    radial-gradient(ellipse 42% 42% at 48% 100%, rgba(255,192,52,.029) 0%, transparent 68%),
+    radial-gradient(ellipse 46% 50% at 80% 100%, rgba(255,192,52,.037) 0%, transparent 70%);
+}

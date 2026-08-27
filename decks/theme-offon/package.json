@@ -1,0 +1,9 @@
+{
+  "name": "@offon/slidev-theme",
+  "version": "0.1.0",
+  "private": true,
+  "keywords": ["slidev-theme"],
+  "slidev": {
+    "colorSchema": "dark"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "offon-decks",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev:offon-x-dynatrace": "cd offon-x-dynatrace && ../node_modules/.bin/slidev"
+  },
+  "devDependencies": {
+    "@slidev/cli": "^52.0.0",
+    "@slidev/types": "^52.0.0",
+    "vue": "^3.5.0"
+  }
+}
