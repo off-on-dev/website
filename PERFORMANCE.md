@@ -84,14 +84,25 @@ The global stylesheet is ~86 KB uncompressed (~14 KB gzip). Composition (approxi
 
 All rules are in use somewhere across the 64 built pages; Tailwind 4 purges at build time. The bundle is inlined into every HTML page via `build.inlineStylesheets: "always"` in `astro.config.mjs` (see below).
 
-The component layer (26.7 KB) is the largest single contributor. It is authored CSS for WCAG-compliant interactive elements — each button and pill variant has explicit `hover`, `focus-visible`, `active`, and forced-colour states. Consolidating repeated patterns (e.g. extracting a shared focus-ring mixin) is the highest-value CSS size reduction available, but requires careful a11y verification after every change.
+The component layer (26.7 KB) is the largest single contributor. It is authored CSS for WCAG-compliant interactive elements — each button and pill variant has explicit `hover`, `focus-visible`, `active`, and forced-colour states. Consolidating repeated patterns (e.g. extracting a shared focus-ring mixin) is the highest-value CSS size reduction available (estimated 4-8 KB savings), but was deliberately declined: the potential saving is not worth re-running accessibility verification across every button, pill, and focus-ring variant, given the WCAG 1.4.11 contrast tests recently added to `e2e/btn-primary-contrast.spec.ts`. Do not revisit this as a quick win without accounting for that verification cost.
 
 ---
 
 ## Critical CSS and render-blocking resources
 
 - Never add a synchronous `<script>` in `<head>` without `defer` or `async`. Parser-blocking scripts halt HTML parsing and delay first paint.
-- The CSS stylesheet is inlined into each HTML page (`build.inlineStylesheets: "always"` in `astro.config.mjs`). This eliminates the render-blocking CSS network request, improving FCP by ~150 ms on Slow 4G at the cost of a heavier HTML document (~32 KB gzip, up from ~19 KB). GitHub Pages caps `Cache-Control` at 10 minutes, so the repeat-visit caching loss from inlining is minor.
+- The CSS stylesheet is inlined into each HTML page (`build.inlineStylesheets: "always"` in `astro.config.mjs`). This eliminates the render-blocking CSS network request, improving FCP by ~150 ms on Slow 4G. The HTML document is larger than HTML-only (85.5 KB of CSS added per page raw), but combined gzip is marginally *smaller* than separate HTML + CSS gzip, because the compressor can cross-reference Tailwind class names in the CSS declarations against the same class names in element attributes:
+
+  | Page type | Before: HTML gz + CSS gz | After: inlined HTML gz | Delta |
+  | --- | --- | --- | --- |
+  | home | 18.5 + 14.1 = 32.6 KB | 31.9 KB | −0.6 KB |
+  | adventures | 11.0 + 14.1 = 25.1 KB | 24.5 KB | −0.6 KB |
+  | adv-detail | 8.7 + 14.1 = 22.8 KB | 22.2 KB | −0.6 KB |
+  | level | 11.3 + 14.1 = 25.4 KB | 24.9 KB | −0.5 KB |
+  | challenges | 16.7 + 14.1 = 30.8 KB | 30.2 KB | −0.6 KB |
+  | 404 | 5.2 + 14.1 = 19.3 KB | 18.7 KB | −0.6 KB |
+
+  On repeat visits within the GitHub Pages 10-minute `Cache-Control` window the savings are larger (no separate CSS re-fetch). Beyond that window both strategies re-fetch at equal cost. The net outcome is: inlining is free in transfer terms and provides a real FCP improvement.
   - Do not revert `inlineStylesheets` to `"never"` without re-measuring FCP and LCP. The render-blocking request it removes is real.
   - The `style-src 'self' 'unsafe-inline'` directive in the CSP meta-tag already covers inline `<style>` blocks. No CSP change is needed to support inlining.
 - Tailwind 4 purges unused classes at build time. Do not add CSS `@import` statements that Tailwind cannot tree-shake.
