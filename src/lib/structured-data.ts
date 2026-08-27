@@ -1,4 +1,4 @@
-import { SITE_URL, BRAND_NAME, canonicalUrl } from "@/lib/site";
+import { SITE_URL, canonicalUrl } from "@/lib/site";
 import { stripHtml } from "@/lib/markdown";
 
 // schema.org objects for adventure, level and solution pages. These field names
