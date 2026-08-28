@@ -1,1 +1,0 @@
-var e=``+new URL(`offon-logo-dark-color-DJ_i2Uwy.svg`,import.meta.url).href;export{e as t};
