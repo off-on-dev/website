@@ -76,4 +76,10 @@ export default tseslint.config(
       "vuejs-accessibility/no-redundant-roles": ["error", { ul: ["list"], ol: ["list"] }],
     },
   },
+  {
+    // Slidev layout components must use single-word names (cover, default, center…)
+    // because Slidev resolves them by filename. The multi-word rule cannot apply here.
+    files: ["decks/theme-offon/layouts/*.vue"],
+    rules: { "vue/multi-word-component-names": "off" },
+  },
 );
