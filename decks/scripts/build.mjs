@@ -7,7 +7,7 @@
  * Output: public/slides/<deck-name>/
  */
 import { execSync } from 'child_process'
-import { readFileSync, writeFileSync, existsSync, copyFileSync } from 'fs'
+import { readFileSync, writeFileSync, existsSync, copyFileSync, mkdirSync } from 'fs'
 import { resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -43,6 +43,13 @@ execSync(`${slidevBin} build --base ./ --out ${relOut}`, {
 const faviconSrc = resolve(ROOT, 'public/brand/offon-favicon.svg')
 const faviconDst = resolve(outDir, 'favicon.svg')
 copyFileSync(faviconSrc, faviconDst)
+
+// Copy brand/offon-favicon.svg so the theme's #deck-logo img resolves correctly.
+// GlobalTop.vue references `${base}brand/offon-favicon.svg`; with --base ./
+// that becomes ./brand/offon-favicon.svg relative to the served index.html.
+const brandOutDir = resolve(outDir, 'brand')
+mkdirSync(brandOutDir, { recursive: true })
+copyFileSync(faviconSrc, resolve(brandOutDir, 'offon-favicon.svg'))
 
 // Post-process the built index.html
 const indexPath = resolve(outDir, 'index.html')

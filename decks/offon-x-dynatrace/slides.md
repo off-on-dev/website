@@ -3,6 +3,7 @@ theme: offon
 title: Open Source Talks by OffOn x Dynatrace
 layout: cover
 transition: fade
+routerMode: hash
 ---
 
 <div class="cobrand">
