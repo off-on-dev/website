@@ -22,7 +22,8 @@ SPDX-License-Identifier = "MIT"
 path = [
   "**/*.json", "**/*.yml", "**/*.yaml", "**/*.toml",
   "**/*.config.js", "**/*.config.ts", "components.json",
-  ".gitignore", ".npmrc", ".nvmrc", ".markdownlintignore",
+  "**/.gitignore", ".npmrc", ".nvmrc", ".markdownlintignore",
+  "public/slides/**/_redirects",
   "**/*.xml", "**/*.ico", "**/*.webmanifest", "public/robots.txt",
   "public/CNAME",
   "public/.well-known/api-catalog",
