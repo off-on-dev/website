@@ -13,7 +13,7 @@ transition: fade
 <h1 style="color: #ffc034;">Open Source Talks</h1>
 <p style="font-size: 0.7em; margin-top: 2.8em;">Open Source. Vendor Agnostic. Community Driven.</p>
 <p style="font-size: 0.52em; margin-top: 0.35em; opacity: 0.5;">Vienna, Austria · also in Linz</p>
-<p style="position: absolute; bottom: 1.8em; right: 2.2em; font-size: 0.38em; opacity: 0.5; letter-spacing: 0.04em;">Press P for presenter notes</p>
+<p style="position: absolute; bottom: 1.8em; right: 2.2em; font-size: 0.38em; opacity: 0.5; letter-spacing: 0.04em;">Hover bottom bar → 👤 for presenter notes</p>
 
 <!--
 Welcome to the first Open Source Talks by OffOn and Dynatrace.
