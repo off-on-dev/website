@@ -7,7 +7,7 @@
  * Output: public/slides/<deck-name>/
  */
 import { execSync } from 'child_process'
-import { readFileSync, writeFileSync, existsSync, copyFileSync, mkdirSync } from 'fs'
+import { readFileSync, writeFileSync, existsSync, copyFileSync, mkdirSync, rmSync } from 'fs'
 import { resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -32,6 +32,11 @@ const relOut    = `../../public/slides/${deck}`
 const slidevBin = resolve(DECKS, 'node_modules/.bin/slidev')
 
 const sha = execSync('git rev-parse HEAD', { cwd: ROOT }).toString().trim()
+
+// Clean stale output before building (Slidev won't empty outDir outside project root)
+if (existsSync(outDir)) {
+  rmSync(outDir, { recursive: true, force: true })
+}
 
 console.log(`Building ${deck} @ ${sha.slice(0, 8)}...`)
 execSync(`${slidevBin} build --base ./ --out ${relOut}`, {

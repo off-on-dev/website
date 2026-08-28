@@ -422,9 +422,9 @@ html, body { background: var(--bg) !important; }
 
 /* ── Firefly dots ── */
 .fw    { position: absolute; border-radius: 50%; background: #ffc034; }
-.fw-hi { width: 3.75px; height: 3.75px; box-shadow: 0 0 2.7px 0px rgba(255,192,52,.95), 0 0 6px 0px rgba(255,192,52,.28); }
-.fw-md { width: 3px;    height: 3px;    box-shadow: 0 0 1.8px 0px rgba(255,192,52,.80), 0 0 4.8px 0px rgba(255,192,52,.20); }
-.fw-lo { width: 2.25px; height: 2.25px; box-shadow: 0 0 1.2px 0px rgba(255,192,52,.65), 0 0 3.75px 0px rgba(255,192,52,.14); }
+.fw-hi { width: 2.8px; height: 2.8px; box-shadow: 0 0 2px 0px rgba(255,192,52,.45), 0 0 4.5px 0px rgba(255,192,52,.14); }
+.fw-md { width: 2.2px; height: 2.2px; box-shadow: 0 0 1.4px 0px rgba(255,192,52,.36), 0 0 3.5px 0px rgba(255,192,52,.10); }
+.fw-lo { width: 1.8px; height: 1.8px; box-shadow: 0 0 1px   0px rgba(255,192,52,.28), 0 0 2.8px 0px rgba(255,192,52,.07); }
 
 /* ── Deck logo (rendered by GlobalTop, outside slide transform) ── */
 #deck-logo {
@@ -444,9 +444,15 @@ html, body { background: var(--bg) !important; }
   z-index: 0;
 }
 #ff-wave {
+  /* Gradient focused tightly at the bottom ~15% of the viewport, very subtle */
   background:
-    radial-gradient(ellipse 200% 28% at 50% 100%, rgba(255,192,52,.042) 0%, transparent 65%),
-    radial-gradient(ellipse 48% 52% at 14% 100%, rgba(255,192,52,.042) 0%, transparent 72%),
-    radial-gradient(ellipse 42% 42% at 48% 100%, rgba(255,192,52,.029) 0%, transparent 68%),
-    radial-gradient(ellipse 46% 50% at 80% 100%, rgba(255,192,52,.037) 0%, transparent 70%);
+    radial-gradient(ellipse 180% 14% at 50% 100%, rgba(255,192,52,.026) 0%, transparent 80%),
+    radial-gradient(ellipse 38%  18% at 14% 100%, rgba(255,192,52,.020) 0%, transparent 90%),
+    radial-gradient(ellipse 32%  14% at 52% 100%, rgba(255,192,52,.016) 0%, transparent 85%),
+    radial-gradient(ellipse 36%  16% at 82% 100%, rgba(255,192,52,.018) 0%, transparent 88%);
+}
+
+/* ── Slide width: make the container use full 100vh so the JS scale fills the width ── */
+.slidev-slide-container {
+  height: 100vh !important;
 }
