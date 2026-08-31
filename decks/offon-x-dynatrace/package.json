@@ -1,0 +1,13 @@
+{
+  "name": "offon-slidev-offon-x-dynatrace",
+  "private": true,
+  "packageManager": "pnpm@11.8.0",
+  "scripts": {
+    "dev": "VSCODE_CWD= slidev deck.md --open",
+    "build": "VSCODE_CWD= slidev build deck.md --base ./ --out ../../public/decks/offon-x-dynatrace && node ../../scripts/inject-noindex.mjs ../../public/decks/offon-x-dynatrace/index.html"
+  },
+  "dependencies": {
+    "@slidev/cli": "^52.0.0",
+    "markdown-it-github-alerts": "^1.0.0"
+  }
+}

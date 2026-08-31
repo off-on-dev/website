@@ -36,7 +36,7 @@ Node.js **26** is required (pinned in `.nvmrc`; `nvm use`).
 | `npm run test:unit:watch` | Vitest in watch mode during development |
 | `npm run test:e2e` | Playwright (a11y + SEO/smoke). Requires `npm run build` first; `astro preview` serves the built `dist/` |
 | `npm run lint:reuse` | REUSE licence compliance check (requires `pip install reuse` once) |
-| `node .ai/templates/generate-reveal-zip.mjs` | Regenerate `public/downloads/offon-reveal-template.zip` |
+| `node .ai/templates/generate-slidev-zip.mjs` | Regenerate `public/downloads/offon-slidev-template.zip` (requires `pnpm build` in `decks/template/` first) |
 | `node .ai/templates/generate-pptx.mjs` | Regenerate `public/downloads/offon-deck-template.pptx` |
 
 There is no content generator — routes and rendered prose come from the content collection at build time.

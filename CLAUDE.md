@@ -18,7 +18,7 @@ Project-level Claude Code commands live in `.claude/commands/`. Invoke them with
 | &nbsp;&nbsp;`/progressive-enhancement` | Sub-command: building any new feature or reviewing architecture. Ensures core content works without JS. |
 | &nbsp;&nbsp;`/user-personalization` | Sub-command: working on theme toggle, consent state, or any user preference persistence. |
 | `/add-solution` | Generate a structured TypeScript solution file (`src/data/solutions/<id>/<level>.ts`) from any input format. Downloads and converts images to WebP. Solutions are pre-built TS objects loaded by the app; there is no generator step. |
-| `/create-presentation` | Create a presentation deck for an OffOn event or challenge. Supports two formats: Reveal.js HTML (`public/deck-template/index.html`) and editable PowerPoint PPTX (edit and run `.ai/templates/generate-pptx.mjs`). Reveal.js output goes to `public/<event-slug>/index.html`; PPTX outputs to `public/downloads/offon-deck-template.pptx`. |
+| `/create-presentation` | Create a presentation deck for an OffOn event or challenge. Supports two formats: Slidev (Markdown, builds to static HTML under `public/decks/<slug>/`) and editable PowerPoint PPTX (edit and run `.ai/templates/generate-pptx.mjs`). |
 
 The `spec-first-coding` command is installed globally (`~/.claude/skills/`). Use `/a11y-audit` for all accessibility audits.
 
@@ -146,13 +146,37 @@ npm run test:e2e     # Playwright (a11y + smoke). Requires `npm run build` first
 npm run lint:reuse   # REUSE licence compliance (requires: pip install reuse)  [if present]
 rm -rf .astro        # Bust the content collection pipeline cache (after editing markdown-pipeline.mjs or adventure-derive.mjs)
 
-# Regenerate downloadable presentation ZIPs and PPTX (run from repo root)
-# jszip is a devDependency, so this runs after a plain `npm ci`. reveal.js itself
-# is not needed: the deck assets come from the committed public/reveal/.
-node .ai/templates/generate-reveal-zip.mjs   # → public/downloads/offon-reveal-template.zip
+# Regenerate downloadable ZIP and PPTX (run from repo root)
+# jszip is a devDependency, so this runs after a plain `npm ci`.
+# Requires the Slidev template to be built first (pnpm build in decks/template/).
+node .ai/templates/generate-slidev-zip.mjs   # → public/downloads/offon-slidev-template.zip
 # pptxgenjs is not in devDependencies (not needed in CI). Install it locally first:
 #   npm install pptxgenjs
 node .ai/templates/generate-pptx.mjs         # → public/downloads/offon-deck-template.pptx
+
+# Slidev template (source: decks/template/, output: public/decks/template/)
+# Decks are built locally; CI does NOT build them. The built output is committed.
+# pnpm is required (the deck uses a pnpm lockfile for version pinning).
+cd decks/template && pnpm install            # one-time setup; use pnpm, not npm
+cd decks/template && pnpm approve-builds    # one-time: approve esbuild's postinstall script (pnpm 11+ security policy)
+cd decks/template && pnpm dev               # dev server at http://localhost:3030
+cd decks/template && pnpm build             # build → public/decks/template/ + inject noindex
+node .ai/templates/generate-slidev-zip.mjs  # → public/downloads/offon-slidev-template.zip (requires pnpm build first)
+
+# OffOn x Dynatrace event deck (source: decks/offon-x-dynatrace/, output: public/decks/offon-x-dynatrace/)
+# Shares the same pnpm lockfile as decks/template/; dependencies are identical.
+cd decks/offon-x-dynatrace && pnpm install  # one-time setup
+cd decks/offon-x-dynatrace && pnpm dev      # dev server at http://localhost:3030
+cd decks/offon-x-dynatrace && pnpm build    # build → public/decks/offon-x-dynatrace/ + inject noindex
+#
+# IMPORTANT — VSCODE_CWD prefix in dev and build scripts:
+# VS Code (and Claude Code) sets process.env.VSCODE_CWD = "/". UnoCSS presetIcons
+# checks this flag to decide whether it is running inside VS Code. When the flag is
+# set, presetIcons skips its filesystem icon loader (loadNodeIcon) entirely — so no
+# icon CSS is generated and all nav/control icons render as invisible elements.
+# Both scripts unset the variable with "VSCODE_CWD= slidev ..." so the loader always
+# runs. The prefix is harmless in a normal terminal where VSCODE_CWD is not set.
+# Do not remove it.
 ```
 
 There is **no** content generator, `npm run generate`, or `*.generated.ts` — routes and rendered prose come from the content collection at build time.
