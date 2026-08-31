@@ -94,7 +94,7 @@ fonts:
 </style>
 
 <div class="cobrand" style="gap: 0.8em; margin-bottom: 1em;">
-  <div class="offon-logo" role="img" aria-label="OffOn" style="height: 6.3em;"></div>
+  <div class="offon-logo" role="img" aria-label="OffOn" style="height: 3.2em;"></div>
   <span class="xsep" style="font-size: 2em;">×</span>
   <span class="partner" style="font-size: 1.5em;">Dynatrace</span>
 </div>
@@ -309,7 +309,7 @@ Both talks are 25 minutes with 5 minutes for questions.
     <p style="margin-top: 1.4em; font-size: 0.38em; color: #ffc034;">always on. always open. always learning.</p>
   </div>
   <div style="display: flex; align-items: flex-end; justify-content: flex-end;">
-    <img src="./public/brand/offon-nyx-peek.png" alt="" aria-hidden="true" style="height: 8.4em; object-fit: contain; opacity: 0.6;">
+    <img src="./public/brand/offon-nyx-peek.png" alt="" aria-hidden="true" style="height: 10.2em; object-fit: contain; opacity: 0.6;">
   </div>
 </div>
 
@@ -825,7 +825,7 @@ layout: center
 <!-- 19: Join Us -->
 
 <div class="cobrand" style="justify-content: center; margin-bottom: 0.6em;">
-  <div class="offon-logo" role="img" aria-label="OffOn" style="height: 4.7em;"></div>
+  <div class="offon-logo" role="img" aria-label="OffOn" style="height: 1.6em;"></div>
   <span class="xsep" style="font-size: 0.85em;">×</span>
   <span class="partner" style="font-size: 0.72em;">Dynatrace</span>
 </div>

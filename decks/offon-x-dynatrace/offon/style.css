@@ -104,9 +104,26 @@ body,
 }
 
 
+/* Cover slide: Reveal .title-slide uses padding: 3em 3.2em (visual ≈92px top).
+ * Slidev default 2.2em×20px×1.304 ≈57px. Target: 3.5em×20px×1.304 ≈91px. */
+.slidev-layout.cover {
+  padding-top: 3.5em !important;
+}
+
 /* Center layout slides stack content vertically; reduce base to fit on 552px canvas. */
 .slidev-layout.center {
   font-size: 17px !important;
+}
+
+/* Center slide overlines: in Reveal these render as white body-text-sized labels,
+ * not amber uppercase. Override .label inside center layout to match. */
+.slidev-layout.center .label {
+  font-size: 1em !important;
+  text-transform: none !important;
+  letter-spacing: 0.02em !important;
+  color: #f0ede5 !important;
+  font-weight: 500 !important;
+  margin-bottom: 0.4em !important;
 }
 
 /* Favicon logo — top-right corner of every slide (mirrors #deck-logo in deck.html) */
@@ -169,7 +186,7 @@ body,
 }
 
 .slidev-layout h1 { font-size: 2.2em !important; }
-.slidev-layout h2 { font-size: 1.4em !important; margin-bottom: 1.2em !important; }
+.slidev-layout h2 { font-size: 1.75em !important; margin-bottom: 1.2em !important; }
 
 /* Cover/title slide: h1 is amber */
 .slidev-layout.cover h1 {
@@ -336,7 +353,7 @@ body,
 
 /* ── Slide header (.sh) ── */
 .sh { margin-bottom: 1.2em; }
-.sh h2 { font-size: 1.4em !important; margin: 0 !important; }
+.sh h2 { font-size: 1.75em !important; margin: 0 !important; }
 .sh .label { margin-bottom: 0.6em; }
 
 /* ── Grids ── */
@@ -408,7 +425,8 @@ body,
   line-height: 1;
   width: 0.8em;
 }
-.brow .bt { font-size: 0.58em; color: var(--muted); line-height: 1.45; }
+/* Reveal .brow .bt is 0.78em×50px×0.613=23.9px visual. Target: 0.82em×20px×1.304=21.4px. */
+.brow .bt { font-size: 0.82em; color: var(--muted); line-height: 1.45; }
 .brow .bt strong { color: var(--fg) !important; font-weight: 600; }
 
 /* ── Column label ── */
@@ -559,6 +577,14 @@ body,
   width: 0.8em;
 }
 .contrib .citem .ctext { font-size: 0.52em; color: var(--muted); line-height: 1.4; }
+
+/* Cobrand row — defined here (theme CSS) so it applies globally to all slides.
+ * The deck.md <style> block is Vue-scoped to slide 1 only; slide 19 needs this. */
+.cobrand {
+  display: flex !important;
+  align-items: center;
+  gap: 0.65em;
+}
 
 /* OffOn logo — embedded as base64, no external path needed */
 .offon-logo {
