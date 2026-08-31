@@ -91,10 +91,11 @@ body,
   min-height: 100% !important;
   box-sizing: border-box !important;
   position: relative;
-  /* Reveal uses font-size: 36px on a 1280×720 canvas.
-   * Slidev renders in a 980×552 coordinate space, so the proportional equivalent
-   * is 36 × (552/720) ≈ 28px. All em-relative component values stay unchanged. */
-  font-size: 28px !important;
+  /* Reveal uses font-size: 50px on a 1920×1080 canvas with margin: 0.04.
+   * Usable Reveal height: 1080 × 0.92 = 993.6px.
+   * Slidev canvas: 980×552, padding 2.2em each side.
+   * Equivalent base: 50 × 552 / (1080 × 0.92) ≈ 20px. */
+  font-size: 20px !important;
   padding: 2.2em 2.8em !important;
   color: #f0ede5;
   background:
@@ -103,10 +104,9 @@ body,
 }
 
 
-/* Center layout (join/final slide) has more content stacked vertically;
- * reduce base so the QR codes, heading, and pills all fit on the 552px canvas. */
+/* Center layout slides stack content vertically; reduce base to fit on 552px canvas. */
 .slidev-layout.center {
-  font-size: 24px !important;
+  font-size: 17px !important;
 }
 
 /* Favicon logo — top-right corner of every slide (mirrors #deck-logo in deck.html) */

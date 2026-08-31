@@ -94,7 +94,7 @@ fonts:
 </style>
 
 <div class="cobrand" style="gap: 0.8em; margin-bottom: 1em;">
-  <div class="offon-logo" role="img" aria-label="OffOn" style="height: 4.5em;"></div>
+  <div class="offon-logo" role="img" aria-label="OffOn" style="height: 6.3em;"></div>
   <span class="xsep" style="font-size: 2em;">×</span>
   <span class="partner" style="font-size: 1.5em;">Dynatrace</span>
 </div>
@@ -309,7 +309,7 @@ Both talks are 25 minutes with 5 minutes for questions.
     <p style="margin-top: 1.4em; font-size: 0.38em; color: #ffc034;">always on. always open. always learning.</p>
   </div>
   <div style="display: flex; align-items: flex-end; justify-content: flex-end;">
-    <img src="./public/brand/offon-nyx-peek.png" alt="" aria-hidden="true" style="height: 6em; object-fit: contain; opacity: 0.6;">
+    <img src="./public/brand/offon-nyx-peek.png" alt="" aria-hidden="true" style="height: 8.4em; object-fit: contain; opacity: 0.6;">
   </div>
 </div>
 
@@ -349,17 +349,17 @@ We want to create a space to preserve community knowledge, give a safe space for
       <span class="bt"><strong>Earn Credly badges</strong> and leaderboard points along the way</span>
     </div>
     <div style="display: flex; align-items: center; gap: 0.6em; margin-top: 1em;">
-      <div style="width: 3.5em; height: 3.5em; background: #141419; border: 1px solid #1e2535; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+      <div style="width: 4.9em; height: 4.9em; background: #141419; border: 1px solid #1e2535; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
         <img src="./public/qr/challenges.png" alt="QR code for offon.dev/challenges" style="width: 100%; height: 100%; object-fit: contain;" onerror="this.style.display='none'">
       </div>
       <p style="font-size: 0.38em; color: #ffc034; margin: 0;">offon.dev/challenges</p>
     </div>
   </div>
   <div style="flex: 1; display: flex; flex-direction: column; gap: 0.5em; min-width: 0; overflow: hidden; margin-top: 1.8em;">
-    <img src="./public/screenshots/challenges-grid.webp" alt="Adventure challenges grid" style="width: 100%; height: 5.4em; object-fit: cover; object-position: top; border-radius: 6px; flex-shrink: 0;">
+    <img src="./public/screenshots/challenges-grid.webp" alt="Adventure challenges grid" style="width: 100%; height: 7.6em; object-fit: cover; object-position: top; border-radius: 6px; flex-shrink: 0;">
     <div style="display: flex; gap: 0.5em; overflow: hidden;">
-      <img src="./public/screenshots/challenge-detail.webp" alt="Challenge detail view" style="flex: 1; height: 3.8em; object-fit: cover; object-position: top left; border-radius: 6px; min-width: 0;">
-      <img src="./public/screenshots/challenge-rewards.webp" alt="Challenge rewards and leaderboard" style="height: 3.8em; width: auto; border-radius: 6px; flex-shrink: 0;">
+      <img src="./public/screenshots/challenge-detail.webp" alt="Challenge detail view" style="flex: 1; height: 5.3em; object-fit: cover; object-position: top left; border-radius: 6px; min-width: 0;">
+      <img src="./public/screenshots/challenge-rewards.webp" alt="Challenge rewards and leaderboard" style="height: 5.3em; width: auto; border-radius: 6px; flex-shrink: 0;">
     </div>
   </div>
 </div>
@@ -405,7 +405,7 @@ Check out the challenges at offon.dev/challenges.
     </div>
   </div>
   <div style="flex: 1; display: flex; flex-direction: column; gap: 0.5em; min-width: 0; overflow: hidden; margin-top: 1.8em;">
-    <img src="./public/screenshots/community-threads.webp" alt="Community Voices thread list" style="width: 100%; height: 5.9em; object-fit: cover; object-position: top; border-radius: 6px; flex-shrink: 0;">
+    <img src="./public/screenshots/community-threads.webp" alt="Community Voices thread list" style="width: 100%; height: 8.3em; object-fit: cover; object-position: top; border-radius: 6px; flex-shrink: 0;">
     <img src="./public/screenshots/community-post.webp" alt="Example community post" style="width: 100%; border-radius: 6px; flex-shrink: 0;">
   </div>
 </div>
@@ -677,7 +677,7 @@ What they want in return is a stronger ecosystem: more supported contributors, r
     </div>
   </div>
   <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5em;">
-    <div style="width: 7em; height: 7em; background: #141419; border: 1px solid #1e2535; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+    <div style="width: 9.8em; height: 9.8em; background: #141419; border: 1px solid #1e2535; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
       <img src="./public/qr/dynatrace-careers.png" alt="QR code for careers.dynatrace.com" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'">
     </div>
     <span style="font-size: 0.38em; color: #ffc034;">careers.dynatrace.com</span>
@@ -747,7 +747,7 @@ layout: center
   <span class="label" style="display: block; text-align: center;">The Quiz</span>
   <h2>Scan to Play</h2>
 </div>
-<div style="width: 9em; height: 9em; background: #141419; border: 1px solid #1e2535; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: 0 auto;">
+<div style="width: 12.7em; height: 12.7em; background: #141419; border: 1px solid #1e2535; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: 0 auto;">
   <img src="./public/qr/ahaslides-qrcode.png" alt="QR code for the pub quiz on AhaSlides" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;" onerror="this.style.display='none'">
 </div>
 
@@ -781,7 +781,7 @@ Everyone plays individually. Questions start in a moment.
     </div>
   </div>
   <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5em;">
-    <div style="width: 7em; height: 7em; background: #141419; border: 1px solid #1e2535; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+    <div style="width: 9.8em; height: 9.8em; background: #141419; border: 1px solid #1e2535; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
       <img src="./public/qr/meetup-community.png" alt="QR code for Open Source Talks community category" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'">
     </div>
     <p style="font-size: 0.38em; text-align: center; max-width: 8em; color: #ffc034;">Follow this category for the next event</p>
@@ -806,7 +806,7 @@ layout: center
 <h2>Share Your Feedback</h2>
 <p style="font-size: 0.6em; max-width: 24em; margin: 0.35em auto 0.9em;">Takes two minutes. Helps us improve every event.</p>
 <div style="display: flex; flex-direction: column; align-items: center; gap: 0.4em; margin-bottom: 0.8em;">
-  <div style="width: 9em; height: 9em; background: #141419; border: 1px solid #1e2535; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+  <div style="width: 12.7em; height: 12.7em; background: #141419; border: 1px solid #1e2535; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
     <img src="./public/qr/feedback-form.png" alt="QR code for event feedback form" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;" onerror="this.style.display='none'">
   </div>
   <span style="font-size: 0.38em; color: #ffc034;">Scan to leave feedback</span>
@@ -825,14 +825,14 @@ layout: center
 <!-- 19: Join Us -->
 
 <div class="cobrand" style="justify-content: center; margin-bottom: 0.6em;">
-  <div class="offon-logo" role="img" aria-label="OffOn" style="height: 3.3em;"></div>
+  <div class="offon-logo" role="img" aria-label="OffOn" style="height: 4.7em;"></div>
   <span class="xsep" style="font-size: 0.85em;">×</span>
   <span class="partner" style="font-size: 0.72em;">Dynatrace</span>
 </div>
 <h2>Join Us</h2>
 <p style="font-size: 0.65em; max-width: 26em; margin: 0.35em auto 0.8em;">Attend an event, propose a talk, start a challenge, or just say hello in the community.</p>
 <div style="display: flex; flex-direction: column; align-items: center; gap: 0.4em; margin-bottom: 0.8em;">
-  <div style="width: 7em; height: 7em; background: #141419; border: 1px solid #1e2535; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+  <div style="width: 9.9em; height: 9.9em; background: #141419; border: 1px solid #1e2535; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
     <img src="./public/qr/community-offon-dev-signup.png" alt="QR code to sign up at community.offon.dev" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'">
   </div>
   <span style="font-size: 0.38em; color: #ffc034;">Signup on community.offon.dev</span>
