@@ -104,13 +104,13 @@ body,
 }
 
 
-/* Cover slide: Reveal .title-slide uses padding: 3em 3.2em (visual ≈92px top, 98px sides).
- * Top: 3.5em×20px×1.304≈91px matches Reveal. Sides: 4.1em×20×1.304≈107px ≈ 8.3% of 980px canvas
- * (Reveal uses 160/1920=8.3%), which gives the same content-width:canvas ratio. */
+/* Cover slide: Reveal .title-slide measured cobrand at y=22.2% and h1 at y=38.5% of canvas.
+ * padding-top: 6.4em×20px=128px → h1 lands at ≈38.5% of 552px canvas.
+ * Sides: 7.25em×20px=145px ≈ 14.8% of 980px canvas, matching Reveal's measured x-position. */
 .slidev-layout.cover {
-  padding-top: 3.5em !important;
-  padding-left: 4.1em !important;
-  padding-right: 4.1em !important;
+  padding-top: 6.4em !important;
+  padding-left: 7.25em !important;
+  padding-right: 7.25em !important;
 }
 
 /* Center layout slides stack content vertically; reduce base to fit on 552px canvas. */
@@ -432,8 +432,8 @@ body,
 }
 .brow .dot {
   flex-shrink: 0;
-  color: var(--muted);
-  opacity: 0.5;
+  color: #ffc034;
+  opacity: 1;
   font-size: 0.785em;
   margin-top: 0.28em;
   line-height: 1;
@@ -557,9 +557,15 @@ body,
   margin: 0 0 0.12em !important;
   line-height: 1.2;
 }
-.person .pr { font-size: 0.65em !important; color: var(--muted) !important; line-height: 1.4; margin: 0 !important; }
+.person .pr { font-size: 0.65em !important; color: var(--muted) !important; line-height: 1.4; margin: 0 !important; padding: 0 !important; }
 /* board-sm: Reveal uses 0.55em pn / 0.44em pr on a 50px base.
- * 0.55×50×0.64/(20×1.304)=0.68em; 0.44×50×0.64/(20×1.304)=0.54em. */
+ * 0.55×50×0.64/(20×1.304)=0.68em; 0.44×50×0.64/(20×1.304)=0.54em.
+ * Person padding and gap must also be overridden here; the deck.md <style>
+ * block is scoped to slide 1 only so slide 11 (the board slide) would
+ * otherwise inherit the larger global .person values. */
+.board-sm { gap: 0.35em !important; margin-top: 0.3em !important; }
+.board-sm .person { padding: 0.4em 0.6em !important; gap: 0.4em !important; }
+.board-sm .person .av { width: 1.4em !important; height: 1.4em !important; }
 .board-sm .person .pn { font-size: 0.68em !important; }
 .board-sm .person .pr { font-size: 0.54em !important; }
 .person.tba { opacity: 0.55; border-style: dashed; }

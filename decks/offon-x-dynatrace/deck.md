@@ -101,7 +101,7 @@ fonts:
 
 # Open Source Talks
 
-<p style="font-size: 0.86em; margin-top: 3.3em;">Open Source. Vendor Agnostic. Community Driven.</p>
+<p style="font-size: 0.86em; margin-top: 4.0em;">Open Source. Vendor Agnostic. Community Driven.</p>
 <p style="font-size: 0.64em; margin-top: 0.35em; opacity: 0.5;">Vienna, Austria · also in Linz</p>
 
 <!--
