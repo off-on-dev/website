@@ -563,11 +563,11 @@ body,
  * Person padding and gap must also be overridden here; the deck.md <style>
  * block is scoped to slide 1 only so slide 11 (the board slide) would
  * otherwise inherit the larger global .person values. */
-.board-sm { gap: 0.35em !important; margin-top: 0.3em !important; padding: 0 1.2em !important; }
-.board-sm .person { padding: 0.35em 0.5em !important; gap: 0.4em !important; }
-.board-sm .person .av { width: 1.4em !important; height: 1.4em !important; }
-.board-sm .person .pn { font-size: 0.68em !important; }
-.board-sm .person .pr { font-size: 0.54em !important; }
+.board-sm { gap: 0.4em !important; margin-top: 0.3em !important; padding: 0 1.2em !important; }
+.board-sm .person { padding: 0.45em 0.65em !important; gap: 0.5em !important; }
+.board-sm .person .av { width: 1.6em !important; height: 1.6em !important; }
+.board-sm .person .pn { font-size: 0.72em !important; }
+.board-sm .person .pr { font-size: 0.57em !important; }
 .person.tba { opacity: 0.55; border-style: dashed; }
 
 /* ── Contribute cards ── */

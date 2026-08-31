@@ -542,6 +542,7 @@ If you are interested, send your name, talk title, and a short 2 to 3 sentence d
   <span class="label">The Team</span>
   <h2>Who Is Behind OffOn</h2>
 </div>
+<div style="font-size: 0.76em;">
 <div class="brow" style="margin-top: 0.5em;">
   <span class="dot">→</span>
   <span class="bt">OffOn is a new community, founded and currently run by a team at Dynatrace, who also fund the platform, provide the engineering time, and make these events free to attend.</span>
@@ -553,6 +554,7 @@ If you are interested, send your name, talk title, and a short 2 to 3 sentence d
 <div class="brow">
   <span class="dot">→</span>
   <span class="bt">We are planning to grow the board with voices from the wider open source community. If you want to help shape what this becomes, reach out.</span>
+</div>
 </div>
 <p style="font-family: 'Syne', system-ui, sans-serif; font-size: 0.61em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #f0ede5; margin: 0.5em 0 0.3em;">Board</p>
 <div class="board board-sm">
