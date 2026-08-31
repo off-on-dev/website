@@ -153,6 +153,24 @@ node .ai/templates/generate-reveal-zip.mjs   # → public/downloads/offon-reveal
 # pptxgenjs is not in devDependencies (not needed in CI). Install it locally first:
 #   npm install pptxgenjs
 node .ai/templates/generate-pptx.mjs         # → public/downloads/offon-deck-template.pptx
+
+# Slidev template (source: decks/template/, output: public/decks/template/)
+# Decks are built locally; CI does NOT build them. The built output is committed.
+# pnpm is required (the deck uses a pnpm lockfile for version pinning).
+cd decks/template && pnpm install            # one-time setup; use pnpm, not npm
+cd decks/template && pnpm approve-builds    # one-time: approve esbuild's postinstall script (pnpm 11+ security policy)
+cd decks/template && pnpm dev               # dev server at http://localhost:3030
+cd decks/template && pnpm build             # build → public/decks/template/ + inject noindex
+node .ai/templates/generate-slidev-zip.mjs  # → public/downloads/offon-slidev-template.zip (requires pnpm build first)
+#
+# IMPORTANT — VSCODE_CWD prefix in dev and build scripts:
+# VS Code (and Claude Code) sets process.env.VSCODE_CWD = "/". UnoCSS presetIcons
+# checks this flag to decide whether it is running inside VS Code. When the flag is
+# set, presetIcons skips its filesystem icon loader (loadNodeIcon) entirely — so no
+# icon CSS is generated and all nav/control icons render as invisible elements.
+# Both scripts unset the variable with "VSCODE_CWD= slidev ..." so the loader always
+# runs. The prefix is harmless in a normal terminal where VSCODE_CWD is not set.
+# Do not remove it.
 ```
 
 There is **no** content generator, `npm run generate`, or `*.generated.ts` — routes and rendered prose come from the content collection at build time.
