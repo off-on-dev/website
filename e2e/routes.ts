@@ -122,4 +122,8 @@ export const ROUTES_WITHOUT_FULL_COVERAGE: string[] = [
   "/challenges/tdd/",
   "/challenges/terraform/",
   "/challenges/trivy/",
+  // Slidev presentation decks vendored into public/decks/. They are self-contained
+  // Slidev apps, not Astro site pages, so full a11y/smoke coverage is not appropriate.
+  "/decks/template/",
+  "/decks/offon-x-dynatrace/",
 ];
