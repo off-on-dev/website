@@ -85,12 +85,12 @@ fonts:
 }
 .qrow h4 {
   font-family: 'Syne', system-ui, sans-serif !important;
-  font-size: 0.65em !important;
+  font-size: 0.80em !important;
   font-weight: 700 !important;
   color: #faf9f2 !important;
   margin: 0 0 0.12em !important;
 }
-.qrow p { font-size: 0.58em !important; margin: 0 !important; }
+.qrow p { font-size: 0.74em !important; margin: 0 !important; }
 </style>
 
 <div class="cobrand" style="gap: 0.8em; margin-bottom: 1em;">
@@ -101,7 +101,7 @@ fonts:
 
 # Open Source Talks
 
-<p style="font-size: 0.7em; margin-top: 2.8em;">Open Source. Vendor Agnostic. Community Driven.</p>
+<p style="font-size: 0.92em; margin-top: 3.3em;">Open Source. Vendor Agnostic. Community Driven.</p>
 <p style="font-size: 0.52em; margin-top: 0.35em; opacity: 0.5;">Vienna, Austria · also in Linz</p>
 
 <!--
@@ -680,7 +680,7 @@ What they want in return is a stronger ecosystem: more supported contributors, r
     <div style="width: 9.8em; height: 9.8em; background: #141419; border: 1px solid #1e2535; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
       <img src="./public/qr/dynatrace-careers.png" alt="QR code for careers.dynatrace.com" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'">
     </div>
-    <span style="font-size: 0.38em; color: #ffc034;">careers.dynatrace.com</span>
+    <span style="font-size: 0.55em; color: #ffc034;">careers.dynatrace.com</span>
   </div>
 </div>
 
@@ -784,7 +784,7 @@ Everyone plays individually. Questions start in a moment.
     <div style="width: 9.8em; height: 9.8em; background: #141419; border: 1px solid #1e2535; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
       <img src="./public/qr/meetup-community.png" alt="QR code for Open Source Talks community category" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'">
     </div>
-    <p style="font-size: 0.38em; text-align: center; max-width: 8em; color: #ffc034;">Follow this category for the next event</p>
+    <p style="font-size: 0.55em; text-align: center; max-width: 8em; color: #ffc034;">Follow this category for the next event</p>
   </div>
 </div>
 
@@ -809,7 +809,7 @@ layout: center
   <div style="width: 12.7em; height: 12.7em; background: #141419; border: 1px solid #1e2535; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
     <img src="./public/qr/feedback-form.png" alt="QR code for event feedback form" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;" onerror="this.style.display='none'">
   </div>
-  <span style="font-size: 0.38em; color: #ffc034;">Scan to leave feedback</span>
+  <span style="font-size: 0.55em; color: #ffc034;">Scan to leave feedback</span>
 </div>
 
 <!--
@@ -835,7 +835,7 @@ layout: center
   <div style="width: 9.9em; height: 9.9em; background: #141419; border: 1px solid #1e2535; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
     <img src="./public/qr/community-offon-dev-signup.png" alt="QR code to sign up at community.offon.dev" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'">
   </div>
-  <span style="font-size: 0.38em; color: #ffc034;">Signup on community.offon.dev</span>
+  <span style="font-size: 0.55em; color: #ffc034;">Signup on community.offon.dev</span>
 </div>
 <div class="link-row" style="justify-content: center;">
   <a href="mailto:offondev@gmail.com" class="pill">offondev@gmail.com</a>
