@@ -162,6 +162,12 @@ cd decks/template && pnpm approve-builds    # one-time: approve esbuild's postin
 cd decks/template && pnpm dev               # dev server at http://localhost:3030
 cd decks/template && pnpm build             # build → public/decks/template/ + inject noindex
 node .ai/templates/generate-slidev-zip.mjs  # → public/downloads/offon-slidev-template.zip (requires pnpm build first)
+
+# OffOn x Dynatrace event deck (source: decks/offon-x-dynatrace/, output: public/decks/offon-x-dynatrace/)
+# Shares the same pnpm lockfile as decks/template/; dependencies are identical.
+cd decks/offon-x-dynatrace && pnpm install  # one-time setup
+cd decks/offon-x-dynatrace && pnpm dev      # dev server at http://localhost:3030
+cd decks/offon-x-dynatrace && pnpm build    # build → public/decks/offon-x-dynatrace/ + inject noindex
 #
 # IMPORTANT — VSCODE_CWD prefix in dev and build scripts:
 # VS Code (and Claude Code) sets process.env.VSCODE_CWD = "/". UnoCSS presetIcons
