@@ -95,14 +95,14 @@ fonts:
 
 <div class="cobrand" style="gap: 0.8em; margin-bottom: 1em;">
   <div class="offon-logo" role="img" aria-label="OffOn" style="height: 3.2em;"></div>
-  <span class="xsep" style="font-size: 2em;">×</span>
-  <span class="partner" style="font-size: 1.5em;">Dynatrace</span>
+  <span class="xsep" style="font-size: 2.45em;">×</span>
+  <span class="partner" style="font-size: 1.84em;">Dynatrace</span>
 </div>
 
 # Open Source Talks
 
-<p style="font-size: 0.92em; margin-top: 3.3em;">Open Source. Vendor Agnostic. Community Driven.</p>
-<p style="font-size: 0.52em; margin-top: 0.35em; opacity: 0.5;">Vienna, Austria · also in Linz</p>
+<p style="font-size: 0.86em; margin-top: 3.3em;">Open Source. Vendor Agnostic. Community Driven.</p>
+<p style="font-size: 0.64em; margin-top: 0.35em; opacity: 0.5;">Vienna, Austria · also in Linz</p>
 
 <!--
 Welcome to the first Open Source Talks by OffOn and Dynatrace.
@@ -306,7 +306,7 @@ Both talks are 25 minutes with 5 minutes for questions.
       <span class="dot">→</span>
       <span class="bt">Community knowledge that is preserved, passed on, and built to grow</span>
     </div>
-    <p style="margin-top: 1.4em; font-size: 0.38em; color: #ffc034;">always on. always open. always learning.</p>
+    <p style="margin-top: 1.4em; font-size: 0.47em; color: #ffc034;">always on. always open. always learning.</p>
   </div>
   <div style="display: flex; align-items: flex-end; justify-content: flex-end;">
     <img src="./public/brand/offon-nyx-peek.png" alt="" aria-hidden="true" style="height: 10.2em; object-fit: contain; opacity: 0.6;">
@@ -335,7 +335,7 @@ We want to create a space to preserve community knowledge, give a safe space for
       <span class="label">What We've Built</span>
       <h2>Adventures</h2>
     </div>
-    <p style="font-size: 0.54em; margin: 0 0 0.6em; opacity: 0.75;">Hands-on scenario-driven challenges built around real open source tools. Runs entirely in GitHub Codespaces.</p>
+    <p style="font-size: 0.66em; margin: 0 0 0.6em; opacity: 0.75;">Hands-on scenario-driven challenges built around real open source tools. Runs entirely in GitHub Codespaces.</p>
     <div class="brow">
       <span class="dot">→</span>
       <span class="bt"><strong>Pick a scenario</strong> at the difficulty that fits where you are</span>
@@ -352,7 +352,7 @@ We want to create a space to preserve community knowledge, give a safe space for
       <div style="width: 4.9em; height: 4.9em; background: #141419; border: 1px solid #1e2535; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
         <img src="./public/qr/challenges.png" alt="QR code for offon.dev/challenges" style="width: 100%; height: 100%; object-fit: contain;" onerror="this.style.display='none'">
       </div>
-      <p style="font-size: 0.38em; color: #ffc034; margin: 0;">offon.dev/challenges</p>
+      <p style="font-size: 0.47em; color: #ffc034; margin: 0;">offon.dev/challenges</p>
     </div>
   </div>
   <div style="flex: 1; display: flex; flex-direction: column; gap: 0.5em; min-width: 0; overflow: hidden; margin-top: 1.8em;">
@@ -386,7 +386,7 @@ Check out the challenges at offon.dev/challenges.
       <span class="label">What We've Built</span>
       <h2>Community</h2>
     </div>
-    <p style="font-size: 0.54em; margin: 0 0 0.6em; opacity: 0.75;">A discussion hub at community.offon.dev, open to everyone who cares about open source.</p>
+    <p style="font-size: 0.66em; margin: 0 0 0.6em; opacity: 0.75;">A discussion hub at community.offon.dev, open to everyone who cares about open source.</p>
     <div class="brow">
       <span class="dot">→</span>
       <span class="bt"><strong>Community Voices:</strong> tutorials, project showcases, open source news</span>
@@ -428,7 +428,7 @@ There is also an introductions category where you can tell us who you are and wh
   <span class="label">Get Involved</span>
   <h2>Every Contribution Counts</h2>
 </div>
-<p style="font-size: 0.54em; margin-bottom: 0.6em;">OffOn is built by the community. You do not need to write code to contribute.</p>
+<p style="font-size: 0.66em; margin-bottom: 0.6em;">OffOn is built by the community. You do not need to write code to contribute.</p>
 <div class="g4">
   <div class="contrib">
     <span class="ci">💬</span>
@@ -463,7 +463,7 @@ There is also an introductions category where you can tell us who you are and wh
     <div class="citem"><span class="cdot">→</span><span class="ctext">Share on social media</span></div>
   </div>
 </div>
-<p style="margin-top: 0.5em; font-size: 0.38em;"><a href="https://offon.dev/contribute" style="color: #ffc034;">offon.dev/contribute</a></p>
+<p style="margin-top: 0.5em; font-size: 0.47em;"><a href="https://offon.dev/contribute" style="color: #ffc034;">offon.dev/contribute</a></p>
 
 <!--
 How can you get involved and contribute?
@@ -516,7 +516,7 @@ You can also help us with community building. Share on social media, speak at ou
         <span class="tag">English</span>
         <span class="tag">Any open source project</span>
       </div>
-      <p style="font-size: 0.54em; opacity: 0.7; margin-bottom: 0.45em;">Name, talk title, and a 2 to 3 sentence description.</p>
+      <p style="font-size: 0.66em !important; opacity: 0.7; margin-bottom: 0.45em;">Name, talk title, and a 2 to 3 sentence description.</p>
       <p style="font-size: 0.6em;"><a href="mailto:offondev@gmail.com" style="color: #ffc034;">offondev@gmail.com</a></p>
     </div>
   </div>
@@ -554,7 +554,7 @@ If you are interested, send your name, talk title, and a short 2 to 3 sentence d
   <span class="dot">→</span>
   <span class="bt">We are planning to grow the board with voices from the wider open source community. If you want to help shape what this becomes, reach out.</span>
 </div>
-<p style="font-family: 'Syne', system-ui, sans-serif; font-size: 0.5em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #f0ede5; margin: 0.5em 0 0.3em;">Board</p>
+<p style="font-family: 'Syne', system-ui, sans-serif; font-size: 0.61em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #f0ede5; margin: 0.5em 0 0.3em;">Board</p>
 <div class="board board-sm">
   <div class="person">
     <div class="av"><img src="./public/team/david.webp" alt="David Hirsch"></div>
@@ -680,7 +680,7 @@ What they want in return is a stronger ecosystem: more supported contributors, r
     <div style="width: 9.8em; height: 9.8em; background: #141419; border: 1px solid #1e2535; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
       <img src="./public/qr/dynatrace-careers.png" alt="QR code for careers.dynatrace.com" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'">
     </div>
-    <span style="font-size: 0.55em; color: #ffc034;">careers.dynatrace.com</span>
+    <span style="font-size: 0.47em; color: #ffc034;">careers.dynatrace.com</span>
   </div>
 </div>
 
@@ -700,7 +700,7 @@ Scan the QR code or visit careers.dynatrace.com to see current openings.
   <span class="label">The Quiz</span>
   <h2>Open Source Pub Quiz</h2>
 </div>
-<p style="font-size: 0.6em; margin-bottom: 0.55em;">Play on your phone, individually. We'll show you the QR code when we start.</p>
+<p style="font-size: 0.74em; margin-bottom: 0.55em;">Play on your phone, individually. We'll show you the QR code when we start.</p>
 <div class="g2" style="margin-top: 0.5em;">
   <div class="card">
     <h4>OSS History and Culture</h4>
@@ -784,7 +784,7 @@ Everyone plays individually. Questions start in a moment.
     <div style="width: 9.8em; height: 9.8em; background: #141419; border: 1px solid #1e2535; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
       <img src="./public/qr/meetup-community.png" alt="QR code for Open Source Talks community category" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'">
     </div>
-    <p style="font-size: 0.55em; text-align: center; max-width: 8em; color: #ffc034;">Follow this category for the next event</p>
+    <p style="font-size: 0.47em; text-align: center; max-width: 8em; color: #ffc034;">Follow this category for the next event</p>
   </div>
 </div>
 
@@ -804,7 +804,7 @@ layout: center
 
 <span class="label" style="display: block; text-align: center; margin-bottom: 0.5em;">Before You Go</span>
 <h2>Share Your Feedback</h2>
-<p style="font-size: 0.6em; max-width: 24em; margin: 0.35em auto 0.9em;">Takes two minutes. Helps us improve every event.</p>
+<p style="font-size: 0.87em; max-width: 24em; margin: 0.35em auto 0.9em;">Takes two minutes. Helps us improve every event.</p>
 <div style="display: flex; flex-direction: column; align-items: center; gap: 0.4em; margin-bottom: 0.8em;">
   <div style="width: 12.7em; height: 12.7em; background: #141419; border: 1px solid #1e2535; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
     <img src="./public/qr/feedback-form.png" alt="QR code for event feedback form" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;" onerror="this.style.display='none'">
@@ -826,11 +826,11 @@ layout: center
 
 <div class="cobrand" style="justify-content: center; margin-bottom: 0.6em;">
   <div class="offon-logo" role="img" aria-label="OffOn" style="height: 1.6em;"></div>
-  <span class="xsep" style="font-size: 0.85em;">×</span>
-  <span class="partner" style="font-size: 0.72em;">Dynatrace</span>
+  <span class="xsep" style="font-size: 1.23em;">×</span>
+  <span class="partner" style="font-size: 1.04em;">Dynatrace</span>
 </div>
 <h2>Join Us</h2>
-<p style="font-size: 0.65em; max-width: 26em; margin: 0.35em auto 0.8em;">Attend an event, propose a talk, start a challenge, or just say hello in the community.</p>
+<p style="font-size: 0.94em; max-width: 26em; margin: 0.35em auto 0.8em;">Attend an event, propose a talk, start a challenge, or just say hello in the community.</p>
 <div style="display: flex; flex-direction: column; align-items: center; gap: 0.4em; margin-bottom: 0.8em;">
   <div style="width: 9.9em; height: 9.9em; background: #141419; border: 1px solid #1e2535; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
     <img src="./public/qr/community-offon-dev-signup.png" alt="QR code to sign up at community.offon.dev" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" onerror="this.style.display='none'">

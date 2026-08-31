@@ -119,14 +119,21 @@ body,
 }
 
 /* Center slide overlines: in Reveal these render as white body-text-sized labels,
- * not amber uppercase. Override .label inside center layout to match. */
+ * not amber uppercase. Override .label inside center layout to match.
+ * 1.45em × 17px × 1.304 = 32px ≈ Reveal 1em × 50px × 0.64 = 32px. */
 .slidev-layout.center .label {
-  font-size: 1em !important;
+  font-size: 1.45em !important;
   text-transform: none !important;
   letter-spacing: 0.02em !important;
   color: #f0ede5 !important;
   font-weight: 500 !important;
   margin-bottom: 0.4em !important;
+}
+
+/* Center layout h2: 1.75em was calibrated for 20px default base.
+ * With 17px center base: 2.1em × 17 × 1.304 = 46.6px ≈ Reveal 1.45em × 50 × 0.64 = 46.4px. */
+.slidev-layout.center h2 {
+  font-size: 2.1em !important;
 }
 
 /* Favicon logo — top-right corner of every slide (mirrors #deck-logo in deck.html) */
@@ -192,10 +199,10 @@ body,
 .slidev-layout h2 { font-size: 1.75em !important; margin-bottom: 1.2em !important; }
 
 /* Cover/title slide: h1 is amber and larger.
- * Reveal h1: 2.2em×50×0.613=67.4px visual. Target: 2.6em×20×1.304=67.8px. */
+ * Reveal h1: 2.2em×50×0.64=70.4px. Target: 2.7em×20×1.304=70.4px. */
 .slidev-layout.cover h1 {
   color: #ffc034 !important;
-  font-size: 2.6em !important;
+  font-size: 2.7em !important;
 }
 
 /* Join Us: center layout heading is amber, content is centered */
@@ -340,7 +347,7 @@ body,
   border: 1px solid #1e2535;
   border-radius: 6px;
   padding: 0.15em 0.6em;
-  font-size: 0.72em;
+  font-size: 0.52em;
   color: #f0ede5;
   margin: 0.2em 0.1em;
 }
@@ -427,7 +434,7 @@ body,
   flex-shrink: 0;
   color: var(--muted);
   opacity: 0.5;
-  font-size: 0.58em;
+  font-size: 0.785em;
   margin-top: 0.28em;
   line-height: 1;
   width: 0.8em;
@@ -439,7 +446,7 @@ body,
 /* ── Column label ── */
 .col-label {
   display: block;
-  font-size: 0.42em;
+  font-size: 0.56em;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -551,6 +558,10 @@ body,
   line-height: 1.2;
 }
 .person .pr { font-size: 0.65em !important; color: var(--muted) !important; line-height: 1.4; margin: 0 !important; }
+/* board-sm: Reveal uses 0.55em pn / 0.44em pr on a 50px base.
+ * 0.55×50×0.64/(20×1.304)=0.68em; 0.44×50×0.64/(20×1.304)=0.54em. */
+.board-sm .person .pn { font-size: 0.68em !important; }
+.board-sm .person .pr { font-size: 0.54em !important; }
 .person.tba { opacity: 0.55; border-style: dashed; }
 
 /* ── Contribute cards ── */
@@ -560,10 +571,10 @@ body,
   border-radius: 8px;
   padding: 0.8em 1em;
 }
-.contrib .ci { font-size: 0.9em; margin-bottom: 0.22em; display: block; }
+.contrib .ci { font-size: 1.10em; margin-bottom: 0.22em; display: block; }
 .contrib h4 {
   font-family: 'Syne', system-ui, sans-serif !important;
-  font-size: 0.65em !important;
+  font-size: 0.80em !important;
   font-weight: 700 !important;
   color: var(--amber) !important;
   margin: 0 0 0.28em !important;
@@ -578,12 +589,12 @@ body,
   flex-shrink: 0;
   color: var(--muted);
   opacity: 0.5;
-  font-size: 0.52em;
+  font-size: 0.64em;
   margin-top: 0.3em;
   line-height: 1;
   width: 0.8em;
 }
-.contrib .citem .ctext { font-size: 0.52em; color: var(--muted); line-height: 1.4; }
+.contrib .citem .ctext { font-size: 0.64em; color: var(--muted); line-height: 1.4; }
 
 /* Cobrand row — defined here (theme CSS) so it applies globally to all slides.
  * The deck.md <style> block is Vue-scoped to slide 1 only; slide 19 needs this. */
