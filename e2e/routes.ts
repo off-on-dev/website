@@ -126,4 +126,6 @@ export const ROUTES_WITHOUT_FULL_COVERAGE: string[] = [
   // Slidev apps, not Astro site pages, so full a11y/smoke coverage is not appropriate.
   "/decks/template/",
   "/decks/offon-x-dynatrace/",
+  // Static redirect stub emitted for the retired Reveal.js template URL.
+  "/deck-template/",
 ];

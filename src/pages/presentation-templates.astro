@@ -8,7 +8,7 @@ import { BRAND_NAME } from "@/lib/site";
 
 const base = import.meta.env.BASE_URL;
 
-const REVEAL_SLIDES: readonly string[] = [
+const SLIDEV_LAYOUTS: readonly string[] = [
   "Title slide with co-brand area",
   "Agenda table",
   "Bullet rows",
@@ -23,12 +23,12 @@ const REVEAL_SLIDES: readonly string[] = [
   "Final / join slide",
 ];
 
-const REVEAL_STEPS: readonly { readonly step: number; readonly text: string }[] = [
-  { step: 1, text: "Download and unzip the template. Rename the deck-template folder to your talk name (e.g. my-talk), then edit index.html inside it." },
-  { step: 2, text: 'Replace TITLE_PLACEHOLDER in the <title> tag with your event or talk name.' },
-  { step: 3, text: "Edit the slide sections directly in index.html. Each <section> is one slide. Delete layouts you don't need." },
-  { step: 4, text: "Open index.html in any browser for local use. All assets are bundled in the ZIP, so no server is needed." },
-  { step: 5, text: "To publish: upload your renamed folder along with the sibling asset folders to any web host. For offon.dev, drop the folder into public/ and push to main, since the asset folders already live there." },
+const SLIDEV_STEPS: readonly { readonly step: number; readonly text: string }[] = [
+  { step: 1, text: "Download and unzip the template. Rename the folder to your talk name (e.g. my-talk)." },
+  { step: 2, text: "Install Node 26 and pnpm if not already installed. Run pnpm install inside the folder, then pnpm approve-builds (one-time)." },
+  { step: 3, text: "Edit deck-template.md — each slide is a Markdown section separated by ---. Replace placeholder text, delete layouts you don't need." },
+  { step: 4, text: "Run pnpm dev to preview in your browser at http://localhost:3030. Changes hot-reload." },
+  { step: 5, text: "Run VSCODE_CWD= pnpm build to generate static HTML output. Commit the built output to public/decks/your-talk/ and push." },
 ];
 
 const PPTX_INCLUDES: readonly string[] = [
@@ -41,7 +41,7 @@ const PPTX_INCLUDES: readonly string[] = [
 
 <Layout
   title={`Presentation Templates - ${BRAND_NAME}`}
-  description={`Download slide templates for ${BRAND_NAME} events. Available as Reveal.js HTML or an editable PowerPoint file.`}
+  description={`Download slide templates for ${BRAND_NAME} events. Available as a Slidev (Markdown) template or an editable PowerPoint file.`}
   path="/presentation-templates/"
   noindex
 >
@@ -54,28 +54,28 @@ const PPTX_INCLUDES: readonly string[] = [
         Slide templates for {BRAND_NAME} events and talks. Choose the format that fits your workflow.
       </p>
 
-      <section aria-labelledby="reveal-heading">
+      <section aria-labelledby="slidev-heading">
         <div class="rounded-xl border border-surface-border bg-card p-6 flex flex-col gap-5">
           <div class="flex items-start gap-3">
             <span class="text-primary mt-0.5"><IconGlobe width={24} height={24} aria-hidden="true" /></span>
             <div>
-              <h2 id="reveal-heading" class="font-heading text-lg font-bold text-foreground">
-                Reveal.js HTML Template
+              <h2 id="slidev-heading" class="font-heading text-lg font-bold text-foreground">
+                Slidev Template
               </h2>
-              <span class="text-xs text-muted-foreground">ZIP archive</span>
+              <span class="text-xs text-muted-foreground">ZIP archive · Node 26 + pnpm required</span>
             </div>
           </div>
 
           <p class="text-sm text-muted-foreground leading-relaxed">
-            One HTML file plus bundled assets, no build step. The ZIP works locally, on offon.dev,
-            or on any other web host. Preview the live version on offon.dev before downloading.
+            Author slides in Markdown, preview with hot-reload, and build to self-contained static HTML.
+            Fonts and assets are bundled at build time. Preview the live template on offon.dev before downloading.
           </p>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <h3 class="text-sm font-semibold text-foreground mb-3">Included Slide Layouts</h3>
               <ul class="space-y-1.5" role="list">
-                {REVEAL_SLIDES.map((slide) => (
+                {SLIDEV_LAYOUTS.map((slide) => (
                   <li class="text-xs text-muted-foreground flex gap-2">
                     <span class="text-primary shrink-0 mt-px" aria-hidden="true">–</span>
                     <span>{slide}</span>
@@ -87,7 +87,7 @@ const PPTX_INCLUDES: readonly string[] = [
             <div>
               <h3 class="text-sm font-semibold text-foreground mb-3">How to Create a New Deck</h3>
               <ul class="space-y-3" role="list">
-                {REVEAL_STEPS.map(({ step, text }) => (
+                {SLIDEV_STEPS.map(({ step, text }) => (
                   <li class="flex gap-3 text-xs text-muted-foreground">
                     <span class="text-primary font-semibold shrink-0 w-4" aria-hidden="true">{step}.</span>
                     <span>{text}</span>
@@ -99,7 +99,7 @@ const PPTX_INCLUDES: readonly string[] = [
 
           <div class="flex flex-wrap gap-3 mt-auto justify-end">
             <a
-              href={`${base}deck-template/`}
+              href={`${base}decks/template/`}
               target="_blank"
               rel="noopener noreferrer"
               aria-describedby="new-tab-hint"
@@ -109,12 +109,12 @@ const PPTX_INCLUDES: readonly string[] = [
               <IconExternalLink width={14} height={14} aria-hidden="true" />
             </a>
             <a
-              href={`${base}downloads/offon-reveal-template.zip`}
-              download="offon-reveal-template.zip"
+              href={`${base}downloads/offon-slidev-template.zip`}
+              download="offon-slidev-template.zip"
               class="btn-primary inline-flex items-center gap-2"
             >
               <IconDownload width={16} height={16} aria-hidden="true" />
-              Download Reveal.js ZIP
+              Download Slidev ZIP
             </a>
           </div>
         </div>
