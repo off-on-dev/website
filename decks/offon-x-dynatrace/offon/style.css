@@ -96,7 +96,7 @@ body,
    * Slidev canvas: 980×552, padding 2.2em each side.
    * Equivalent base: 50 × 552 / (1080 × 0.92) ≈ 20px. */
   font-size: 20px !important;
-  padding: 2.2em 2.8em !important;
+  padding: 2.5em 3.2em !important;
   color: #f0ede5;
   background:
     radial-gradient(ellipse 140% 22% at 50% 100%, rgba(255,192,52,.08) 0%, transparent 72%),
@@ -372,8 +372,8 @@ body,
 .g2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75em; margin-top: 0.6em; }
 .g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75em; margin-top: 0.6em; }
 .g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75em; margin-top: 0.6em; }
-.split      { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 1.3em; align-items: start; }
-.split-even { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2em; align-items: start; }
+.split      { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 1.3em; align-items: start; font-size: 0.93em; }
+.split-even { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2em; align-items: start; font-size: 0.93em; }
 
 /* ── Card children ──
  * Reveal .card h4: 0.68em×50×0.613=20.8px → 0.80em×20×1.304=20.9px.
@@ -526,7 +526,7 @@ body,
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 0.8em 1em;
+  padding: 0.65em 0.8em;
   display: flex;
   gap: 0.55em;
   align-items: flex-start;
@@ -563,8 +563,8 @@ body,
  * Person padding and gap must also be overridden here; the deck.md <style>
  * block is scoped to slide 1 only so slide 11 (the board slide) would
  * otherwise inherit the larger global .person values. */
-.board-sm { gap: 0.35em !important; margin-top: 0.3em !important; }
-.board-sm .person { padding: 0.4em 0.6em !important; gap: 0.4em !important; }
+.board-sm { gap: 0.35em !important; margin-top: 0.3em !important; padding: 0 1.2em !important; }
+.board-sm .person { padding: 0.35em 0.5em !important; gap: 0.4em !important; }
 .board-sm .person .av { width: 1.4em !important; height: 1.4em !important; }
 .board-sm .person .pn { font-size: 0.68em !important; }
 .board-sm .person .pr { font-size: 0.54em !important; }
