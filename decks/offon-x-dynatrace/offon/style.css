@@ -96,10 +96,10 @@ body,
    * Slidev canvas: 980×552, padding 2.2em each side.
    * Equivalent base: 50 × 552 / (1080 × 0.92) ≈ 20px. */
   font-size: 20px !important;
-  padding: 2.5em 3.2em !important;
+  padding: 3em 4em !important;
   color: #f0ede5;
   background:
-    radial-gradient(ellipse 140% 22% at 50% 100%, rgba(255,192,52,.08) 0%, transparent 72%),
+    radial-gradient(ellipse 140% 32% at 50% 100%, rgba(255,192,52,.16) 0%, transparent 68%),
     #0a0a0a !important;
 }
 
@@ -380,12 +380,12 @@ body,
  * Reveal .card p:  0.63em×50×0.613=19.3px → 0.74em×20×1.304=19.3px. */
 .card h4 {
   font-family: 'Syne', system-ui, sans-serif !important;
-  font-size: 0.80em !important;
+  font-size: 0.72em !important;
   font-weight: 700 !important;
   color: var(--fg) !important;
   margin: 0 0 0.3em !important;
 }
-.card p { font-size: 0.74em !important; margin: 0 !important; line-height: 1.5 !important; }
+.card p { font-size: 0.66em !important; margin: 0 !important; line-height: 1.5 !important; }
 .card p + p { margin-top: 0.4em !important; }
 
 /* ── Agenda table ── */
@@ -500,20 +500,20 @@ body,
 .speaker-card .sp-info { flex: 1; }
 .speaker-card .sp-name {
   font-family: 'Syne', system-ui, sans-serif !important;
-  font-size: 0.80em !important;
+  font-size: 0.72em !important;
   font-weight: 700 !important;
   color: var(--fg) !important;
   margin: 0 0 0.1em !important;
   line-height: 1.2;
 }
 .speaker-card .sp-talk {
-  font-size: 0.74em !important;
+  font-size: 0.66em !important;
   color: var(--amber) !important;
   font-weight: 600;
   margin: 0 0 0.25em !important;
   line-height: 1.3;
 }
-.speaker-card .sp-bio { font-size: 0.74em !important; color: var(--muted) !important; margin: 0 !important; line-height: 1.45; }
+.speaker-card .sp-bio { font-size: 0.63em !important; color: var(--muted) !important; margin: 0 !important; line-height: 1.45; }
 
 /* ── Board ── */
 .board {
