@@ -1,11 +1,17 @@
 // Visual regression gate for the Astro build. Captures full-page screenshots
-// across two viewports and two themes, compares against committed baselines in
-// e2e/snapshots/. A missing baseline fails the test — add new routes with
-// --update-snapshots and commit the generated files.
+// at desktop width (1440 px) across two themes, compares against committed
+// baselines in e2e/snapshots/. A missing baseline fails the test — add new
+// routes with --update-snapshots and commit the generated files.
 //
 // NOT a CI gate. Run locally only:
 //   npm run test:visual      — compare against committed baselines
 //   npm run baselines:update — regenerate baselines (after intentional visual changes)
+//
+// Desktop only. Mobile was removed because headless Chromium's text
+// rasterisation is non-deterministic on long mobile captures (375 px viewport,
+// pages up to 12 000 px tall): different pixels fail on every run at any
+// tolerance, making the suite unreliable. Mobile layout changes must be checked
+// by eye against the production build (npm run preview).
 //
 // Baselines are generated on macOS (CoreText rendering). Contributors on Linux
 // or Windows must run baselines:update before test:visual is meaningful on
@@ -35,11 +41,6 @@ const ROUTES: Route[] = [
   { slug: "consent-banner",    path: "/",                  consentState: "banner"          },
 ];
 
-const VIEWPORTS = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "mobile",  width: 375,  height: 812 },
-] as const;
-
 const THEMES = ["dark", "light"] as const;
 
 const STUB_PNG = Buffer.from(
@@ -67,47 +68,45 @@ async function setupPage(page: Page, theme: string, consentState?: string) {
   );
 }
 
-for (const viewport of VIEWPORTS) {
-  for (const theme of THEMES) {
-    test.describe(`${viewport.name} / ${theme}`, () => {
-      test.use({
-        viewport: { width: viewport.width, height: viewport.height },
-        colorScheme: theme === "dark" ? "dark" : "light",
-      });
-
-      for (const route of ROUTES) {
-        test(route.slug, async ({ page }) => {
-          await setupPage(page, theme, route.consentState);
-
-          await page.goto(route.path);
-          await page.evaluate(() => document.fonts.ready);
-
-          if (route.consentState === "banner") {
-            // Wait for the banner to be revealed by the consent script.
-            await page.locator('[aria-live="polite"]').waitFor({ state: "visible", timeout: 5000 }).catch(() => {});
-          }
-
-          await expect(page).toHaveScreenshot(
-            `${route.slug}--${theme}--${viewport.name}.png`,
-            {
-              fullPage: true,
-              animations: "disabled",
-              // Noise floor is exactly 0 across repeated runs on macOS (build is
-              // deterministic; renders are stable). 0 is correct: there is
-              // nothing to absorb. A nonzero diff without a code change means
-              // something in the build pipeline is non-deterministic, which is
-              // itself worth knowing.
-              //
-              // Known blind spot: a sufficiently subtle colour shift on a thin
-              // element (e.g. border opacity /20 → /30 on the hero-badge pill)
-              // produces 0 differing pixels and is undetectable at any tolerance.
-              // This suite does not catch all visual changes — it catches layout
-              // regressions and changes that affect a meaningful run of pixels.
-              maxDiffPixels: 0,
-            },
-          );
-        });
-      }
+for (const theme of THEMES) {
+  test.describe(`desktop / ${theme}`, () => {
+    test.use({
+      viewport: { width: 1440, height: 900 },
+      colorScheme: theme === "dark" ? "dark" : "light",
     });
-  }
+
+    for (const route of ROUTES) {
+      test(route.slug, async ({ page }) => {
+        await setupPage(page, theme, route.consentState);
+
+        await page.goto(route.path);
+        await page.evaluate(() => document.fonts.ready);
+
+        if (route.consentState === "banner") {
+          // Wait for the banner to be revealed by the consent script.
+          await page.locator('[aria-live="polite"]').waitFor({ state: "visible", timeout: 5000 }).catch(() => {});
+        }
+
+        await expect(page).toHaveScreenshot(
+          `${route.slug}--${theme}--desktop.png`,
+          {
+            fullPage: true,
+            animations: "disabled",
+            // Noise floor is exactly 0 across repeated runs on macOS (build is
+            // deterministic; renders are stable). 0 is correct: there is
+            // nothing to absorb. A nonzero diff without a code change means
+            // something in the build pipeline is non-deterministic, which is
+            // itself worth knowing.
+            //
+            // Known blind spot: a sufficiently subtle colour shift on a thin
+            // element (e.g. border opacity /20 → /30 on the hero-badge pill)
+            // produces 0 differing pixels and is undetectable at any tolerance.
+            // This suite does not catch all visual changes — it catches layout
+            // regressions and changes that affect a meaningful run of pixels.
+            maxDiffPixels: 0,
+          },
+        );
+      });
+    }
+  });
 }

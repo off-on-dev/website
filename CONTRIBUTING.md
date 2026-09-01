@@ -42,7 +42,9 @@ All four must pass with zero failures before opening a PR.
 
 ## Visual regression
 
-`e2e/visual.spec.ts` compares 48 full-page screenshots (12 routes × 2 viewports × 2 themes) against committed baselines in `e2e/snapshots/`. **This is not a CI gate** — it is a local tool you run before and after a visual change to catch regressions or confirm an intentional change looks correct.
+`e2e/visual.spec.ts` compares 24 full-page screenshots (12 routes × 2 themes, desktop only) against committed baselines in `e2e/snapshots/`. **This is not a CI gate** — it is a local tool you run before and after a visual change to catch regressions or confirm an intentional change looks correct.
+
+**Desktop only.** Mobile was removed because headless Chromium's text rasterisation is non-deterministic on long mobile captures (375 px viewport, pages up to 12 000 px tall): different pixels fail on every run regardless of tolerance, making the suite unreliable as a signal. Mobile layout changes must be checked by eye against the production build (`npm run preview`) at 375 px, 768 px, and 1280 px.
 
 ### Two commands
 
