@@ -70,23 +70,17 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  let result = null;
-
-  if (urlPath.endsWith("/")) {
-    // Trailing-slash path → index.html, then the bare .html file.
-    // GitHub Pages (and astro preview) serve dist/foo.html at /foo/ with 200
-    // when no dist/foo/index.html exists (e.g. the /404/ page).
-    const stem = urlPath.slice(0, -1); // "/404/" → "/404"
-    result =
-      (await tryFile(join(DIST, urlPath, "index.html"))) ??
-      (stem ? await tryFile(join(DIST, stem + ".html")) : null);
-  } else {
-    // Try exact path, then .html extension, then directory index
-    result =
+  // Trailing-slash path → index.html, then the bare .html file.
+  // GitHub Pages (and astro preview) serve dist/foo.html at /foo/ with 200
+  // when no dist/foo/index.html exists (e.g. the /404/ page).
+  const stem = urlPath.endsWith("/") ? urlPath.slice(0, -1) : null;
+  const result = urlPath.endsWith("/")
+    ? (await tryFile(join(DIST, urlPath, "index.html"))) ??
+      (stem ? await tryFile(join(DIST, stem + ".html")) : null)
+    : // Try exact path, then .html extension, then directory index
       (await tryFile(join(DIST, urlPath))) ??
       (await tryFile(join(DIST, urlPath + ".html"))) ??
       (await tryFile(join(DIST, urlPath, "index.html")));
-  }
 
   if (result) {
     res.writeHead(200, { "Content-Type": result.type });
