@@ -18,12 +18,10 @@ export default defineConfig({
   snapshotDir: "e2e/snapshots",
   snapshotPathTemplate: "{snapshotDir}/{arg}{ext}",
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
-  globalTeardown: "./e2e/teardown",
   webServer: {
-    command:
-      "astro preview stop 2>/dev/null; astro preview --background && astro preview logs --follow",
+    command: "node e2e/static-server.mjs",
     url: "http://localhost:4321/",
     reuseExistingServer: false,
-    timeout: 120_000,
+    timeout: 30_000,
   },
 });

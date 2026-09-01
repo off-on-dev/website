@@ -34,22 +34,27 @@ const QUERY_ID = 5;
 /**
  * Derives the adventure registry from the YAML source of truth.
  * community_category_id must be set in adventure.yaml (added by the
- * sync-adventure workflow). Adventures without it are skipped with a warning.
+ * sync-adventure workflow). Adventures without it are skipped with a warning,
+ * UNLESS a leaderboard.json already exists for that adventure — which means
+ * the field was previously set and has since disappeared from the YAML.
+ * That case is an error, not a warning, to prevent silent data staleness.
+ *
+ * Exported for unit testing. Pass adventuresDir to override the default.
  */
-function buildAdventureCategories() {
+export function buildAdventureCategories(adventuresDir = ADVENTURES_DIR) {
   const categories = {};
   let dirs;
   try {
-    dirs = readdirSync(ADVENTURES_DIR, { withFileTypes: true });
+    dirs = readdirSync(adventuresDir, { withFileTypes: true });
   } catch (err) {
     throw new Error(
-      `[refresh-leaderboard] Cannot read adventures directory "${ADVENTURES_DIR}": ${err.message}`,
+      `[refresh-leaderboard] Cannot read adventures directory "${adventuresDir}": ${err.message}`,
       { cause: err },
     );
   }
   for (const entry of dirs) {
     if (!entry.isDirectory()) continue;
-    const yamlPath = resolve(ADVENTURES_DIR, entry.name, "adventure.yaml");
+    const yamlPath = resolve(adventuresDir, entry.name, "adventure.yaml");
     if (!existsSync(yamlPath)) continue;
     let yaml;
     try {
@@ -59,8 +64,15 @@ function buildAdventureCategories() {
     }
     const categoryId = yaml.community_category_id ?? 0;
     if (categoryId === 0) {
+      const existingLeaderboard = resolve(adventuresDir, entry.name, "leaderboard.json");
+      if (existsSync(existingLeaderboard)) {
+        throw new Error(
+          `[refresh-leaderboard] Adventure "${entry.name}" has leaderboard.json but no community_category_id — ` +
+            `was it accidentally removed from adventure.yaml?`,
+        );
+      }
       console.warn(
-        `  Warning: adventure "${entry.name}" has no community_category_id in adventure.yaml — skipping leaderboard refresh.`,
+        `  Warning: adventure "${entry.name}" has no community_category_id — skipping (no prior leaderboard).`,
       );
       continue;
     }
