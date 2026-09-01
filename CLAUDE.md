@@ -144,7 +144,10 @@ npm run sync         # astro sync — runs the Zod content schema; fails on inva
 npm run test:unit    # Vitest unit tests (lib, stores, Vue components) — fast, no server needed
 npm run test:e2e     # Playwright (a11y + smoke). Requires `npm run build` first; runs `astro preview` internally
 npm run lint:reuse   # REUSE licence compliance (requires: pip install reuse)  [if present]
-rm -rf .astro        # Bust the content collection pipeline cache (after editing markdown-pipeline.mjs or adventure-derive.mjs)
+rm -rf .astro        # Bust the content collection pipeline cache. The loader's digest is keyed
+                     # on YAML content, so editing markdown-pipeline.mjs or adventure-derive.mjs
+                     # does NOT invalidate cached entries — unchanged adventures are served from
+                     # the store without re-rendering. Always run this after editing the pipeline.
 
 # Regenerate downloadable presentation ZIPs and PPTX (run from repo root)
 # jszip is a devDependency, so this runs after a plain `npm ci`. reveal.js itself

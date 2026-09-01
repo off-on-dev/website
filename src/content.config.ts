@@ -163,6 +163,19 @@ function resolveCommunityPath(url: string): string {
   return `${COMMUNITY_URL}${path}`;
 }
 
+function assertDifficulty(
+  d: string | undefined,
+  levelId: string,
+): asserts d is AdventureLevel["difficulty"] {
+  if (!d || !["Beginner", "Intermediate", "Expert"].includes(d)) {
+    throw new Error(
+      `[content] level "${levelId}" has invalid difficulty "${d ?? "(missing)"}" — ` +
+        `expected Beginner, Intermediate, or Expert. ` +
+        `YAML must supply a difficulty field or a recognised emoji.`,
+    );
+  }
+}
+
 // AdventureLevel (from data/adventures/types.ts) is the single source of truth
 // for the rendered level shape. renderLevel's return type is checked against it,
 // so the two cannot drift silently.
@@ -205,12 +218,11 @@ async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Adventur
     ),
   ]);
 
+  assertDifficulty(difficulty, level.level);
   return {
     id: level.level,
     name: requireEither(level.name, level.title, "level name/title"),
-    // The schema's refine() guarantees difficulty resolves from either the
-    // explicit field or the emoji, so it cannot be undefined here.
-    difficulty: difficulty as AdventureLevel["difficulty"],
+    difficulty,
     topics: level.topics,
     learnings: learningsHtml,
     codespacesUrl: resolveCodespacesUrl(level.devcontainer, level.codespaces_machine),

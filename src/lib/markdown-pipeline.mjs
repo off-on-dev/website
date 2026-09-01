@@ -133,7 +133,11 @@ let abbrIdCounts = new Map();
 let abbrScopeStarted = false;
 
 /** Starts a new abbreviation ID scope. Call once per content entry before
- *  rendering its markdown fields. Omit `scope` to keep ids unprefixed. */
+ *  rendering its markdown fields. Omit `scope` to keep ids unprefixed.
+ *
+ *  Any new render path (a new call to mdToInline/mdToBlock outside the
+ *  existing adventures loader) MUST call this first; omitting it throws at
+ *  build time with a message pointing here. */
 export function beginAbbrScope(scope) {
   abbrScopePrefix = scope ? `${scope}-` : "";
   abbrIdCounts = new Map();

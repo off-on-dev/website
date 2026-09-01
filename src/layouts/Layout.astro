@@ -93,7 +93,10 @@ const fontPreloads = [
       <link rel="preload" href={`${base}${f}`} as="font" type="font/woff2" crossorigin="anonymous" />
     ))}
 
-    {/* Theme set before paint to prevent flash of wrong theme */}
+    {/* Theme set before paint to prevent flash of wrong theme.
+        is:inline + set:html injects raw strings verbatim — ESLint and TypeScript
+        do not check the injected source. Keep themeScript/gtagBootstrap in sync
+        with the .ts equivalents (ThemeToggle.astro, consent.ts) manually. */}
     <script is:inline set:html={themeScript} />
     {/* Consent Mode v2 default-denied bootstrap. gtag.js loads later, only on Accept. */}
     <script is:inline set:html={gtagBootstrap} />

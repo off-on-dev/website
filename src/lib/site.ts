@@ -12,6 +12,8 @@ export const CONTACT_EMAIL = "offondev@gmail.com";
 export const LINKEDIN_URL = "https://www.linkedin.com/company/offondev";
 export const BLUESKY_URL = "https://bsky.app/profile/off-on-dev.bsky.social";
 export const X_URL = "https://x.com/OffonDev";
+// Captured at module init (build time). Static builds rebuild daily in CI,
+// so the value stays current without any runtime clock read.
 export const CURRENT_YEAR = new Date().getFullYear();
 export const GA_MEASUREMENT_ID = "G-YEYE9DFHWE";
 export const CONSENT_STORAGE_KEY = "analytics_consent";
