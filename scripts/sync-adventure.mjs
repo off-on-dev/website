@@ -24,6 +24,7 @@ import { promisify } from "node:util";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
 import { LEVEL_ORDER } from "../src/lib/level-constants.mjs";
 import { parseDeadline } from "../src/lib/deadline.mjs";
+import { atomicWrite } from "./discourse-utils.mjs";
 
 // This script writes its output back into adventure.yaml, so an unparseable
 // timezone must leave the author's original text alone rather than replace it
@@ -584,10 +585,10 @@ async function main() {
     .map((l) => l.level)
     .join(",") || activeLevels.map((l) => l.level).join(",");
 
-  writeFileSync("/tmp/adventure-slug", slug);
-  writeFileSync("/tmp/adventure-name", adventureName);
-  writeFileSync("/tmp/adventure-levels", newLevelIds);
-  writeFileSync("/tmp/adventure-mode", mode);
+  atomicWrite("/tmp/adventure-slug", slug);
+  atomicWrite("/tmp/adventure-name", adventureName);
+  atomicWrite("/tmp/adventure-levels", newLevelIds);
+  atomicWrite("/tmp/adventure-mode", mode);
 
   console.log(`\nDone: ${adventureName} (live: ${activeLevels.map((l) => l.level).join(", ")}${upcomingLevels.length > 0 ? ` | upcoming: ${upcomingLevels.map((u) => u.difficulty).join(", ")}` : ""})`);
 }
