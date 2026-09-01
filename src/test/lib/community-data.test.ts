@@ -66,7 +66,7 @@ describe("getDiscussion", () => {
     rmSync(postsPath);
   });
 
-  it("throws on invalid JSON syntax — fails the build rather than serving wrong content", () => {
+  it("throws on invalid JSON syntax: fails the build rather than serving wrong content", () => {
     writeFileSync(postsPath, "not-json{{{", "utf8");
     expect(() => getDiscussion(adventureId, "beginner")).toThrow();
     rmSync(postsPath);

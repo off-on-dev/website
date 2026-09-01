@@ -20,7 +20,7 @@ export default defineConfig({
     defaultStrategy: "hover",
   },
   // Retired URLs → their successor. Astro emits static meta-refresh redirect
-  // pages (GitHub Pages-compatible). Mirrors src/pages/redirects/*.
+  // pages (GitHub Pages-compatible).
   redirects: {
     "/docs/": "/handbook/",
     "/docs/community-guide/": "/handbook/",

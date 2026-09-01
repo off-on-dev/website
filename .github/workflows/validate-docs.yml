@@ -24,5 +24,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
       - name: Check docs are up to date
         run: bash scripts/check-docs.sh "origin/${{ github.base_ref }}"

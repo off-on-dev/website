@@ -165,7 +165,7 @@ describe("fetchWithRetry", () => {
 });
 
 // ---------------------------------------------------------------------------
-// resolveAvatarUrl — refresh-discussions variant
+// resolveAvatarUrl: refresh-discussions variant
 // ---------------------------------------------------------------------------
 describe("discussions resolveAvatarUrl", () => {
   it("returns https:// URLs unchanged", () => {
@@ -198,7 +198,7 @@ describe("discussions resolveAvatarUrl", () => {
 });
 
 // ---------------------------------------------------------------------------
-// resolveAvatarUrl — refresh-leaderboard variant
+// resolveAvatarUrl: refresh-leaderboard variant
 // ---------------------------------------------------------------------------
 describe("leaderboard resolveAvatarUrl", () => {
   it("returns https:// URLs unchanged", () => {
@@ -228,7 +228,7 @@ describe("leaderboard resolveAvatarUrl", () => {
 });
 
 // ---------------------------------------------------------------------------
-// buildAvatarUrl — refresh-community-leaders variant
+// buildAvatarUrl: refresh-community-leaders variant
 // ---------------------------------------------------------------------------
 describe("buildAvatarUrl", () => {
   it("builds a CDN letter avatar when no uploadedAvatarId", () => {

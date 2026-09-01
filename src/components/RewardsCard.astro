@@ -51,9 +51,7 @@ const deadlineShown = compact ? levelDeadline : rewards.deadline;
           </p>
         </div>
       ) : (
-        <p class="text-xs text-dim leading-relaxed mb-4">
-          <span class="md-inline" set:html={rewards.eligibility} />
-        </p>
+        <InlineProse html={rewards.eligibility} class="text-xs text-dim leading-relaxed mb-4" />
       ))
   }
 

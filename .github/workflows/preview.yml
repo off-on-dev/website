@@ -5,8 +5,7 @@ on:
     types: [opened, synchronize, reopened, closed]
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -117,6 +116,9 @@ jobs:
     needs: [check, e2e]
     if: always() && ((needs.check.result == 'success' && needs.e2e.result == 'success') || needs.check.result == 'skipped')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v7
 

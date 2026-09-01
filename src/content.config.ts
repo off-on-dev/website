@@ -269,7 +269,7 @@ function adventuresLoader(): Loader {
         entries = readdirSync(ADVENTURES_DIR, { withFileTypes: true });
       } catch (err) {
         throw new Error(
-          `[adventures-loader] Cannot read adventures directory "${ADVENTURES_DIR}" — build aborted to prevent deploying a site with no adventure pages.`,
+          `[adventures-loader] Cannot read adventures directory "${ADVENTURES_DIR}": build aborted to prevent deploying a site with no adventure pages.`,
           { cause: err },
         );
       }
