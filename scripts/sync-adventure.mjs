@@ -2,8 +2,9 @@
 
 /**
  * Fetches adventure YAML files from the challenges repo and produces a
- * website-compatible adventure.yaml, discussion JSON stubs, ADVENTURE_CATEGORIES
- * in scripts/refresh-leaderboard.mjs, and routes in e2e/routes.ts.
+ * website-compatible adventure.yaml, discussion JSON stubs, and routes in e2e/routes.ts.
+ * The leaderboard registry (refresh-leaderboard.mjs) derives from adventure.yaml at
+ * runtime via buildAdventureCategories() and requires no manual update.
  *
  * Environment variables:
  *   ADVENTURE_URL  - GitHub URL of the adventure folder in the challenges repo
@@ -466,7 +467,7 @@ async function main() {
   }
 
   // All levels that will be live after this sync (existing + newly synced).
-  // Used for ADVENTURE_CATEGORIES flags and e2e/routes.ts generation below.
+  // Used for level flags and e2e/routes.ts generation below.
   const allLiveLevels = mergeLevels(existing?.levels, activeLevels, rawFetchedLevels);
 
   // Build the combined adventure object using challenges repo field names.

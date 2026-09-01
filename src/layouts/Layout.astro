@@ -94,7 +94,7 @@ const fontPreloads = [
     ))}
 
     {/* Theme set before paint to prevent flash of wrong theme.
-        is:inline + set:html injects raw strings verbatim — ESLint and TypeScript
+        is:inline + set:html injects raw strings verbatim; ESLint and TypeScript
         do not check the injected source. Keep themeScript/gtagBootstrap in sync
         with the .ts equivalents (ThemeToggle.astro, consent.ts) manually. */}
     <script is:inline set:html={themeScript} />

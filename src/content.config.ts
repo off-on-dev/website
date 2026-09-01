@@ -169,7 +169,7 @@ function assertDifficulty(
 ): asserts d is AdventureLevel["difficulty"] {
   if (!d || !["Beginner", "Intermediate", "Expert"].includes(d)) {
     throw new Error(
-      `[content] level "${levelId}" has invalid difficulty "${d ?? "(missing)"}" — ` +
+      `[content] level "${levelId}" has invalid difficulty "${d ?? "(missing!)"}": ` +
         `expected Beginner, Intermediate, or Expert. ` +
         `YAML must supply a difficulty field or a recognised emoji.`,
     );

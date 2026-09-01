@@ -121,7 +121,6 @@ jobs:
             src/assets/diagrams/ \
             src/lib/adventure-icons.ts \
             src/lib/lucide-icons.ts \
-            scripts/refresh-leaderboard.mjs \
             e2e/routes.ts
           git commit -m "feat: sync adventure ${SLUG} from challenges repo (${MODE})"
 
@@ -161,7 +160,7 @@ jobs:
 
           Routes are generated from \`adventure.yaml\` by the Astro content collection
           at build time (\`getStaticPaths\`) — there is nothing to regenerate or commit.
-          Only \`scripts/refresh-leaderboard.mjs\` ADVENTURE_CATEGORIES is hand-maintained.
+          The leaderboard registry derives from adventure.yaml at runtime via \`buildAdventureCategories()\` in refresh-leaderboard.mjs -- nothing to hand-maintain.
 
           ### Checks
 
@@ -206,7 +205,7 @@ jobs:
 
           Routes are generated from \`adventure.yaml\` by the Astro content collection
           at build time (\`getStaticPaths\`) — there is nothing to regenerate or commit.
-          Only \`scripts/refresh-leaderboard.mjs\` ADVENTURE_CATEGORIES is hand-maintained.
+          The leaderboard registry derives from adventure.yaml at runtime via \`buildAdventureCategories()\` in refresh-leaderboard.mjs -- nothing to hand-maintain.
 
           ### Checks
 

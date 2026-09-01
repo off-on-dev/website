@@ -124,8 +124,7 @@ jobs:
 
           git add \
             "src/data/adventures/${ADVENTURE_ID}/adventure.yaml" \
-            "src/data/adventures/${ADVENTURE_ID}/${LEVEL_ID}-posts.json" \
-            "scripts/refresh-leaderboard.mjs"
+            "src/data/adventures/${ADVENTURE_ID}/${LEVEL_ID}-posts.json"
 
           HAS_CHANGES=false
           if ! git diff --cached --quiet; then
@@ -149,10 +148,9 @@ jobs:
 
           ### What changed
 
-          - \`adventure.yaml\` — \`community_url\` set on the \`${LEVEL_ID}\` level; \`community_category_id\` set at adventure root if it was missing
-          - \`${LEVEL_ID}-posts.json\` — \`discussionUrl\` set and initial posts fetched from Discourse
-          - \`scripts/refresh-leaderboard.mjs\` — \`ADVENTURE_CATEGORIES\` patched with the resolved category ID
-          - (Astro reads the YAML directly — no generated TypeScript to update)
+          - \`adventure.yaml\` -- \`community_url\` set on the \`${LEVEL_ID}\` level; \`community_category_id\` set at adventure root if it was missing
+          - \`${LEVEL_ID}-posts.json\` -- \`discussionUrl\` set and initial posts fetched from Discourse
+          - (Astro reads the YAML directly; \`buildAdventureCategories()\` in refresh-leaderboard.mjs derives the registry from adventure.yaml at runtime)
 
           ### Before merging
 

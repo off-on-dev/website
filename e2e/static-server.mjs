@@ -88,7 +88,7 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  // 404 fallback — mirrors GitHub Pages: serve dist/404.html with a 404 status
+  // 404 fallback: mirrors GitHub Pages -- serve dist/404.html with a 404 status
   const notFound = await tryFile(join(DIST, "404.html"));
   if (notFound) {
     res.writeHead(404, { "Content-Type": notFound.type });

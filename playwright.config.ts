@@ -24,7 +24,7 @@ export default defineConfig({
   snapshotPathTemplate: "{snapshotDir}/{arg}{ext}",
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
-    // Plain foreground static server — Playwright owns the process and kills
+    // Plain foreground static server; Playwright owns the process and kills
     // it cleanly at end-of-suite. Replaces `astro preview` which always
     // daemonises (parent exits 0), making the keep-alive process the real
     // webServer signal; when that exited mid-suite, Playwright abandoned all

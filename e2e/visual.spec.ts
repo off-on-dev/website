@@ -1,11 +1,11 @@
 // Visual regression gate for the Astro build. Captures full-page screenshots
 // at desktop width (1440 px) across two themes, compares against committed
-// baselines in e2e/snapshots/. A missing baseline fails the test — add new
+// baselines in e2e/snapshots/. A missing baseline fails the test; add new
 // routes with --update-snapshots and commit the generated files.
 //
 // NOT a CI gate. Run locally only:
-//   npm run test:visual      — compare against committed baselines
-//   npm run baselines:update — regenerate baselines (after intentional visual changes)
+//   npm run test:visual      -- compare against committed baselines
+//   npm run baselines:update -- regenerate baselines (after intentional visual changes)
 //
 // Desktop only. Mobile was removed because headless Chromium's text
 // rasterisation is non-deterministic on long mobile captures (375 px viewport,
@@ -15,7 +15,7 @@
 //
 // Baselines are generated on macOS (CoreText rendering). Contributors on Linux
 // or Windows must run baselines:update before test:visual is meaningful on
-// their machine — the committed snapshots will not match their renderer.
+// their machine; the committed snapshots will not match their renderer.
 
 import { test, expect, type Page } from "@playwright/test";
 
@@ -101,7 +101,7 @@ for (const theme of THEMES) {
             // Known blind spot: a sufficiently subtle colour shift on a thin
             // element (e.g. border opacity /20 → /30 on the hero-badge pill)
             // produces 0 differing pixels and is undetectable at any tolerance.
-            // This suite does not catch all visual changes — it catches layout
+            // This suite does not catch all visual changes; it catches layout
             // regressions and changes that affect a meaningful run of pixels.
             maxDiffPixels: 0,
           },

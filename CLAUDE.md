@@ -142,11 +142,11 @@ npm run build        # Static build -> dist/
 npm run preview      # Serve the built dist/ (astro preview)
 npm run sync         # astro sync — runs the Zod content schema; fails on invalid adventure YAML
 npm run test:unit    # Vitest unit tests (lib, stores, Vue components) — fast, no server needed
-npm run test:e2e     # Playwright (a11y + smoke). Requires `npm run build` first; runs `astro preview` internally
+npm run test:e2e     # Playwright (a11y + smoke). Requires `npm run build` first; runs e2e/static-server.mjs internally
 npm run lint:reuse   # REUSE licence compliance (requires: pip install reuse)  [if present]
 rm -rf .astro        # Bust the content collection pipeline cache. The loader's digest is keyed
                      # on YAML content, so editing markdown-pipeline.mjs or adventure-derive.mjs
-                     # does NOT invalidate cached entries — unchanged adventures are served from
+                     # does NOT invalidate cached entries; unchanged adventures are served from
                      # the store without re-rendering. Always run this after editing the pipeline.
 
 # Regenerate downloadable presentation ZIPs and PPTX (run from repo root)
@@ -198,7 +198,7 @@ There is **no** content generator, `npm run generate`, or `*.generated.ts` — r
 
 ### Server / cache rules
 
-- Playwright's webServer uses `reuseExistingServer: false`; kill any stray `astro dev`/`astro preview` on port 4321 before running tests (a lingering **dev** server has the dev toolbar, which fails focus-ring tests). Astro 7 runs `astro preview` as a background daemon — if a prior run left one alive, stop it with `astro preview stop` before re-running tests.
+- Playwright's webServer uses `reuseExistingServer: false`; kill any stray `astro dev` on port 4321 before running tests (a lingering dev server has the dev toolbar, which fails focus-ring tests). The e2e suite uses a plain foreground Node.js static server (`node e2e/static-server.mjs`), not `astro preview`, so there is no daemon to stop between runs.
 - If a build looks stale, `rm -rf dist .astro` and rebuild.
 
 ---

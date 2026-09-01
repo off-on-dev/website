@@ -35,7 +35,7 @@ const QUERY_ID = 5;
  * Derives the adventure registry from the YAML source of truth.
  * community_category_id must be set in adventure.yaml (added by the
  * sync-adventure workflow). Adventures without it are skipped with a warning,
- * UNLESS a leaderboard.json already exists for that adventure — which means
+ * UNLESS a leaderboard.json already exists for that adventure, which means
  * the field was previously set and has since disappeared from the YAML.
  * That case is an error, not a warning, to prevent silent data staleness.
  *
@@ -67,12 +67,12 @@ export function buildAdventureCategories(adventuresDir = ADVENTURES_DIR) {
       const existingLeaderboard = resolve(adventuresDir, entry.name, "leaderboard.json");
       if (existsSync(existingLeaderboard)) {
         throw new Error(
-          `[refresh-leaderboard] Adventure "${entry.name}" has leaderboard.json but no community_category_id — ` +
+          `[refresh-leaderboard] Adventure "${entry.name}" has leaderboard.json but no community_category_id; ` +
             `was it accidentally removed from adventure.yaml?`,
         );
       }
       console.warn(
-        `  Warning: adventure "${entry.name}" has no community_category_id — skipping (no prior leaderboard).`,
+        `  Warning: adventure "${entry.name}" has no community_category_id; skipping (no prior leaderboard).`,
       );
       continue;
     }
@@ -213,7 +213,7 @@ async function main() {
   if (Object.keys(categories).length === 0) {
     // Guard against a silent no-op: if derivation produces an empty map every
     // adventure's leaderboard would go stale with no failure signal.
-    console.error("  No adventures with community_category_id found — aborting to prevent silent data loss.");
+    console.error("  No adventures with community_category_id found; aborting to prevent silent data loss.");
     process.exit(1);
   }
   const entries = Object.entries(categories);

@@ -818,9 +818,9 @@ html {
 
 /* ─── Shared external-link prose styles ─────────────────── */
 /* Covers three link surfaces that share identical visual treatment:
-   .docs-ext-link  — hand-authored links in the handbook/CommunityGuide
-   .md-inline a    — links inside pipeline-rendered inline HTML
-   .md-content a   — links inside pipeline-rendered block HTML          */
+   .docs-ext-link  -- hand-authored links in the handbook/CommunityGuide
+   .md-inline a    -- links inside pipeline-rendered inline HTML
+   .md-content a   -- links inside pipeline-rendered block HTML          */
 .docs-ext-link,
 .md-inline a,
 .md-content a {
@@ -853,7 +853,7 @@ html {
 .light .docs-ext-link:hover,
 .light .md-inline a:hover,
 .light .md-content a:hover { color: hsl(var(--link-hover-light)); text-decoration-color: currentColor; }
-/* External link icon (pipeline-rendered links only — they always set target="_blank") */
+/* External link icon (pipeline-rendered links only; they always set target="_blank") */
 .md-inline a[target="_blank"]::after,
 .md-content a[target="_blank"]::after {
   content: "";

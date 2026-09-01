@@ -2,8 +2,10 @@
  * Set the discussion URL for a specific adventure level.
  *
  * Updates adventure.yaml (community_url field on the level; community_category_id at
- * adventure root if missing), the per-level *-posts.json file, and ADVENTURE_CATEGORIES
- * in scripts/refresh-leaderboard.mjs (categoryId updated when community_category_id is set).
+ * adventure root if missing) and the per-level *-posts.json file.
+ *
+ * community_category_id, once written to adventure.yaml, is picked up automatically
+ * by buildAdventureCategories() in refresh-leaderboard.mjs on the next run.
  *
  * Uses targeted text replacement to avoid reformatting the YAML file. The yaml
  * library is used for read-only validation only.
@@ -255,35 +257,8 @@ async function main() {
   if (Number.isInteger(categoryId) && categoryId > 0 && doc.get("community_category_id") == null) {
     updatedYaml = insertRootFieldAfterSlug(updatedYaml, "community_category_id", categoryId);
     console.log(`[yaml] Set community_category_id to ${categoryId} in adventure.yaml`);
-
-    // Patch ADVENTURE_CATEGORIES in refresh-leaderboard.mjs with the real categoryId
-    // so that the leaderboard refresh workflow can fetch from Discourse immediately.
-    const leaderboardPath = resolve(__dirname, "../scripts/refresh-leaderboard.mjs");
-    const leaderboardSrc = readFileSync(leaderboardPath, "utf-8");
-    const GEN_START = "// GENERATED:adventures";
-    const GEN_END = "// /GENERATED:adventures";
-    const si = leaderboardSrc.indexOf(GEN_START);
-    const ei = leaderboardSrc.indexOf(GEN_END);
-    if (si !== -1 && ei !== -1) {
-      const before = leaderboardSrc.slice(0, si + GEN_START.length);
-      const block = leaderboardSrc.slice(si + GEN_START.length, ei);
-      const after = leaderboardSrc.slice(ei);
-      const entryRe = new RegExp(`^([^\\n]*"${adventureId}":[^\\n]*categoryId:\\s*)\\d+`, "m");
-      if (entryRe.test(block)) {
-        const updatedBlock = block.replace(entryRe, `$1${categoryId}`);
-        // Strip the TODO comment now that the real ID is known
-        const cleanedBlock = updatedBlock.replace(
-          new RegExp(`("${adventureId}":[^\\n]*)\\s*//\\s*TODO:[^\\n]*`, "m"),
-          "$1"
-        );
-        writeFileSync(leaderboardPath, before + cleanedBlock + after);
-        console.log(`[leaderboard] Updated ADVENTURE_CATEGORIES categoryId to ${categoryId} for ${adventureId}`);
-      } else {
-        console.warn(`[leaderboard] Entry for "${adventureId}" not found in ADVENTURE_CATEGORIES — update categoryId manually`);
-      }
-    } else {
-      console.warn("[leaderboard] GENERATED:adventures block not found in refresh-leaderboard.mjs — update categoryId manually");
-    }
+    // buildAdventureCategories() in refresh-leaderboard.mjs derives the registry
+    // from adventure.yaml at runtime, so no further patching is needed.
   }
 
   writeFileSync(postsPath, JSON.stringify(content, null, 2) + "\n");

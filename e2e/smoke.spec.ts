@@ -14,7 +14,7 @@ test.describe("SEO + smoke: every route", () => {
     // Community avatar images come from external servers (community.offon.dev,
     // *.discourse-cdn.com). Under parallel test runs the OS or server refuses
     // the burst of concurrent connections, and Chrome emits each as
-    // "Failed to load resource: net::ERR_CONNECTION_REFUSED" — a real network
+    // "Failed to load resource: net::ERR_CONNECTION_REFUSED" -- a real network
     // error, not a site bug. Abort them so the test is not sensitive to
     // external availability; the inline onerror fallback (initials chip)
     // handles a failed image silently. ERR_ABORTED is not console.error.
