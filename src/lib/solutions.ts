@@ -6,11 +6,7 @@ import type { Solution } from "@/data/solutions/types";
 
 export type { Solution, SolutionBlock } from "@/data/solutions/types";
 
-type SolutionModule = { solution: Solution };
-
-const modules = import.meta.glob<SolutionModule>("../data/solutions/*/*.ts", {
-  eager: true,
-});
+export type SolutionModule = { solution: Solution };
 
 export type SolutionEntry = {
   adventureId: string;
@@ -20,7 +16,12 @@ export type SolutionEntry = {
 
 const PATH_RE = /solutions\/([^/]+)\/([^/]+)\.ts$/;
 
-export function getSolutions(): SolutionEntry[] {
+export function getSolutions(
+  modules: Record<string, SolutionModule> = import.meta.glob<SolutionModule>(
+    "../data/solutions/*/*.ts",
+    { eager: true },
+  ),
+): SolutionEntry[] {
   return Object.entries(modules).map(([path, mod]) => {
     const match = path.match(PATH_RE);
     if (!match) {
