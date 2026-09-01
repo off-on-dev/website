@@ -3,6 +3,8 @@
 // scenario) contain pre-rendered HTML generated at build time by the content
 // loader. Render via set:html (Astro) or v-html (Vue); never as {value} directly.
 
+import type { Difficulty } from "@/lib/difficulty";
+
 /** A tool that ships pre-configured inside the level's Codespace. */
 export type ToolboxItem = {
   name: string;
@@ -32,14 +34,14 @@ export type HelpfulLink = {
 /** Placeholder for a level that hasn't shipped yet. Rendered in the "More levels" sidebar card. */
 export type UpcomingLevel = {
   name: string;
-  difficulty: "Beginner" | "Intermediate" | "Expert";
+  difficulty: Difficulty;
 }
 
 /** A single challenge level within an adventure. Difficulty affects visual presentation and prerequisite expectations. */
 export type AdventureLevel = {
   id: string;
   name: string;
-  difficulty: "Beginner" | "Intermediate" | "Expert";
+  difficulty: Difficulty;
   // Short topic tags shown on the adventure overview card (e.g. ["Argo CD", "GitOps"]).
   topics: string[];
   learnings: string[];

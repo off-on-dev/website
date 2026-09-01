@@ -19,6 +19,7 @@ import {
   buildServicesStepBody,
 } from "./lib/adventure-derive.mjs";
 import { COMMUNITY_URL } from "./lib/site";
+import { MONTHS } from "./lib/challenges";
 import { EMOJI_TO_ICON } from "./lib/adventure-icons";
 import type { AdventureLevel, AdventureRewards } from "./data/adventures/types";
 
@@ -314,8 +315,8 @@ const adventures = defineCollection({
       emoji: z.string().optional(),
       icon: z.string().optional(),
       month: z.string().regex(/^[A-Z]{3} \d{4}$/).refine(
-        (m) => ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"].includes(m.slice(0, 3)),
-        { message: "month abbreviation must be one of JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC" },
+        (m) => MONTHS.includes(m.slice(0, 3)),
+        { message: "month abbreviation must be one of " + MONTHS.join(", ") },
       ),
       story: z.string().optional(),
       tags: z.array(z.string()).min(1),

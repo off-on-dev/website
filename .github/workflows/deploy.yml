@@ -19,10 +19,8 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  deploy:
+  lint-and-check:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write  # Required by JamesIves/github-pages-deploy-action to push gh-pages
     steps:
       - uses: actions/checkout@v7
 
@@ -57,9 +55,90 @@ jobs:
       - run: npm run check
       - run: npm run test:unit:coverage
 
-      # Astro static build → dist/ (not dist/client/). Astro emits dist/404.html
-      # natively, so the old `cp .../404/index.html 404.html` step is gone.
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - uses: actions/cache@v6
+        id: npm-cache
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - run: npm run sync
       - run: npm run build
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/
+          retention-days: 1
+
+  e2e:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - uses: actions/cache@v6
+        id: npm-cache
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - uses: actions/download-artifact@v7
+        with:
+          name: dist
+          path: dist/
+
+      - uses: actions/cache@v6
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      # playwright.config webServer runs a plain Node.js static server (serves dist/).
+      - run: npm run test:e2e -- --shard=${{ matrix.shard }}/3
+
+  deploy:
+    needs: [lint-and-check, e2e]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required by JamesIves/github-pages-deploy-action to push gh-pages
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v7
+        with:
+          name: dist
+          path: dist/
 
       - name: Deploy to gh-pages
         uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 # v4

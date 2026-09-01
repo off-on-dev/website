@@ -513,38 +513,6 @@ async function main() {
     }
   }
 
-  // Register (or update) the adventure in ADVENTURE_CATEGORIES so the validate
-  // job and refresh-leaderboard.mjs can find it. categoryId stays 0 until
-  // community_category_id is set in the YAML and ADVENTURE_CATEGORIES is updated.
-  const leaderboardPath = resolve(ROOT, "scripts/refresh-leaderboard.mjs");
-  const leaderboardSrc = readFileSync(leaderboardPath, "utf-8");
-  const categoryId = existing?.community_category_id ?? 0;
-  const hasLevels = {
-    beginner: allLiveLevels.some((l) => l.level === "beginner"),
-    intermediate: allLiveLevels.some((l) => l.level === "intermediate"),
-    expert: allLiveLevels.some((l) => l.level === "expert"),
-    single: allLiveLevels.some((l) => l.level === "single"),
-  };
-  const todoComment = categoryId === 0 ? " // TODO: set categoryId — look up at https://community.offon.dev/categories.json" : "";
-  const newEntry = `  "${escapeTsString(slug)}": { categoryId: ${categoryId}, has_beginner: ${hasLevels.beginner}, has_intermediate: ${hasLevels.intermediate}, has_expert: ${hasLevels.expert}, has_single: ${hasLevels.single} },${todoComment}`;
-  const GEN_START = "// GENERATED:adventures";
-  const GEN_END = "// /GENERATED:adventures";
-  const si = leaderboardSrc.indexOf(GEN_START);
-  const ei = leaderboardSrc.indexOf(GEN_END);
-  if (si === -1 || ei === -1) {
-    console.warn("Warning: GENERATED:adventures block not found in refresh-leaderboard.mjs — ADVENTURE_CATEGORIES not updated");
-  } else {
-    const before = leaderboardSrc.slice(0, si + GEN_START.length);
-    const block = leaderboardSrc.slice(si + GEN_START.length, ei);
-    const after = leaderboardSrc.slice(ei);
-    const existingLine = new RegExp(`^[^\n]*"${escapeRegExp(slug)}":[^\n]*\n`, "m");
-    const updatedBlock = existingLine.test(block)
-      ? block.replace(existingLine, `${newEntry}\n`)
-      : `\n${newEntry}${block}`;
-    writeFileSync(leaderboardPath, before + updatedBlock + after);
-    console.log(`Updated ADVENTURE_CATEGORIES in scripts/refresh-leaderboard.mjs`);
-  }
-
   const adventureName = indexData.title || indexData.name || slug;
 
   // Update e2e/routes.ts so the route-coverage drift gate passes without a manual edit.
