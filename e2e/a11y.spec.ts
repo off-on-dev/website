@@ -1,5 +1,5 @@
 // Accessibility audit. Requires a production build in
-// dist/ (the webServer runs `astro preview`).
+// dist/ (the webServer runs e2e/static-server.mjs).
 //
 // Uses waitForLoadState("load") rather than "networkidle": prefetchAll keeps the
 // network busy after load, so networkidle can hang.

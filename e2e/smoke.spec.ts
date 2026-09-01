@@ -1,7 +1,7 @@
 // Smoke + SEO checks for the Astro build. Verifies every prerendered route has
 // a unique, correct <title>, a canonical URL matching the path, a meta
 // description, exactly one <h1>, and that the theme-toggle island hydrates.
-// Requires a production build in dist/ (webServer runs `astro preview`).
+// Requires a production build in dist/ (webServer runs e2e/static-server.mjs).
 
 import { test, expect } from "@playwright/test";
 import { SMOKE_ROUTES as ROUTES } from "./routes";
@@ -18,8 +18,8 @@ test.describe("SEO + smoke: every route", () => {
     // error, not a site bug. Abort them so the test is not sensitive to
     // external availability; the inline onerror fallback (initials chip)
     // handles a failed image silently. ERR_ABORTED is not console.error.
-    await page.route("**/community.offon.dev/**", (r) => r.abort());
-    await page.route("**/*discourse-cdn.com/**", (r) => r.abort());
+    await page.route("**/community.offon.dev/**", (r) => r.abort("aborted"));
+    await page.route("**/*discourse-cdn.com/**", (r) => r.abort("aborted"));
   });
 
   for (const [path, title] of Object.entries(ROUTES)) {
