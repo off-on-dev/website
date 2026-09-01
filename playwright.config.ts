@@ -1,7 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 
-// Requires a production build in dist/. Run `npm run build` first (or the
-// webServer's `astro preview` serves whatever is in dist/).
+// Requires a production build in dist/. Run `npm run build` first.
 export default defineConfig({
   testDir: "e2e",
   // visual.spec.ts is local-only — run it explicitly with `npm run test:visual`.
@@ -24,16 +23,15 @@ export default defineConfig({
   // macOS-generated; contributors on other platforms must regenerate locally.
   snapshotPathTemplate: "{snapshotDir}/{arg}{ext}",
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
-  // Astro 7 preview daemonizes by default (parent exits 0 immediately).
-  // Stop any leftover daemon first, start a fresh one with --background, then
-  // follow its logs so the webServer process stays alive for Playwright.
-  // globalTeardown stops the daemon after the suite finishes.
-  globalTeardown: "./e2e/teardown",
   webServer: {
-    command:
-      "astro preview stop 2>/dev/null; astro preview --background && astro preview logs --follow",
+    // Plain foreground static server; Playwright owns the process and kills
+    // it cleanly at end-of-suite. Replaces `astro preview` which always
+    // daemonises (parent exits 0), making the keep-alive process the real
+    // webServer signal; when that exited mid-suite, Playwright abandoned all
+    // queued tests without recording failures.
+    command: "node e2e/static-server.mjs",
     url: "http://localhost:4321/",
     reuseExistingServer: false,
-    timeout: 120_000,
+    timeout: 30_000,
   },
 });

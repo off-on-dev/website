@@ -1,7 +1,7 @@
 // Smoke + SEO checks for the Astro build. Verifies every prerendered route has
 // a unique, correct <title>, a canonical URL matching the path, a meta
 // description, exactly one <h1>, and that the theme-toggle island hydrates.
-// Requires a production build in dist/ (webServer runs `astro preview`).
+// Requires a production build in dist/ (webServer runs e2e/static-server.mjs).
 
 import { test, expect } from "@playwright/test";
 import { SMOKE_ROUTES as ROUTES } from "./routes";
@@ -10,6 +10,18 @@ import { setupCollectInterception, STORAGE_KEY } from "./gtag-helpers";
 const SITE_URL = "https://offon.dev";
 
 test.describe("SEO + smoke: every route", () => {
+  test.beforeEach(async ({ page }) => {
+    // Community avatar images come from external servers (community.offon.dev,
+    // *.discourse-cdn.com). Under parallel test runs the OS or server refuses
+    // the burst of concurrent connections, and Chrome emits each as
+    // "Failed to load resource: net::ERR_CONNECTION_REFUSED" -- a real network
+    // error, not a site bug. Abort them so the test is not sensitive to
+    // external availability; the inline onerror fallback (initials chip)
+    // handles a failed image silently. ERR_ABORTED is not console.error.
+    await page.route("**/community.offon.dev/**", (r) => r.abort("aborted"));
+    await page.route("**/*discourse-cdn.com/**", (r) => r.abort("aborted"));
+  });
+
   for (const [path, title] of Object.entries(ROUTES)) {
     test(path, async ({ page }) => {
       const errors: string[] = [];

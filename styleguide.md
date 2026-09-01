@@ -181,7 +181,7 @@ All animations respect `prefers-reduced-motion: reduce` (duration collapsed to 0
 Light mode is applied as `.light` on `<html>`. The inline script in `Layout.astro` sets this before first paint; `ThemeToggle.astro`'s delegated click handler updates it at runtime.
 
 Rules:
-- Light overrides live in the "Light mode overrides" section at the bottom of `index.css`, outside any `@layer`, scoped to `.light`.
+- Light overrides live in the "Light mode overrides" section at the bottom of `index.css`, **outside any `@layer`**, scoped to `.light`. Placing them outside `@layer` gives them higher specificity than `@layer utilities` (where Tailwind utilities live), so the override wins without needing `!important`.
 - Never add a `dark:` Tailwind override without a corresponding base (light) style.
 - `group-hover:*` / `group-focus:*` are not matched by `.light .classname` — add explicit `.light .group:hover` rules.
 - Dark mode uses `:root` / `.dark`. Never touch these when fixing light mode.

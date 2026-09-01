@@ -19,6 +19,7 @@ import {
   buildServicesStepBody,
 } from "./lib/adventure-derive.mjs";
 import { COMMUNITY_URL } from "./lib/site";
+import { MONTHS } from "./lib/challenges";
 import { EMOJI_TO_ICON } from "./lib/adventure-icons";
 import type { AdventureLevel, AdventureRewards } from "./data/adventures/types";
 
@@ -162,6 +163,19 @@ function resolveCommunityPath(url: string): string {
   return `${COMMUNITY_URL}${path}`;
 }
 
+function assertDifficulty(
+  d: string | undefined,
+  levelId: string,
+): asserts d is AdventureLevel["difficulty"] {
+  if (!d || !["Beginner", "Intermediate", "Expert"].includes(d)) {
+    throw new Error(
+      `[content] level "${levelId}" has invalid difficulty "${d ?? "(missing!)"}": ` +
+        `expected Beginner, Intermediate, or Expert. ` +
+        `YAML must supply a difficulty field or a recognised emoji.`,
+    );
+  }
+}
+
 // AdventureLevel (from data/adventures/types.ts) is the single source of truth
 // for the rendered level shape. renderLevel's return type is checked against it,
 // so the two cannot drift silently.
@@ -204,12 +218,11 @@ async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Adventur
     ),
   ]);
 
+  assertDifficulty(difficulty, level.level);
   return {
     id: level.level,
     name: requireEither(level.name, level.title, "level name/title"),
-    // The schema's refine() guarantees difficulty resolves from either the
-    // explicit field or the emoji, so it cannot be undefined here.
-    difficulty: difficulty as AdventureLevel["difficulty"],
+    difficulty,
     topics: level.topics,
     learnings: learningsHtml,
     codespacesUrl: resolveCodespacesUrl(level.devcontainer, level.codespaces_machine),
@@ -269,7 +282,7 @@ function adventuresLoader(): Loader {
         entries = readdirSync(ADVENTURES_DIR, { withFileTypes: true });
       } catch (err) {
         throw new Error(
-          `[adventures-loader] Cannot read adventures directory "${ADVENTURES_DIR}" — build aborted to prevent deploying a site with no adventure pages.`,
+          `[adventures-loader] Cannot read adventures directory "${ADVENTURES_DIR}": build aborted to prevent deploying a site with no adventure pages.`,
           { cause: err },
         );
       }
@@ -314,8 +327,8 @@ const adventures = defineCollection({
       emoji: z.string().optional(),
       icon: z.string().optional(),
       month: z.string().regex(/^[A-Z]{3} \d{4}$/).refine(
-        (m) => ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"].includes(m.slice(0, 3)),
-        { message: "month abbreviation must be one of JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC" },
+        (m) => MONTHS.includes(m.slice(0, 3)),
+        { message: "month abbreviation must be one of " + MONTHS.join(", ") },
       ),
       story: z.string().optional(),
       tags: z.array(z.string()).min(1),

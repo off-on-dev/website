@@ -19,9 +19,10 @@
  * NOTE: community.offon.dev is the actual Discourse server URL used for API calls.
  */
 
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { parse as parseYaml } from "yaml";
 import { atomicWrite, fetchWithRetry } from "./discourse-utils.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -30,19 +31,62 @@ const ADVENTURES_DIR = resolve(ROOT, "src/data/adventures");
 const COMMUNITY_BASE = "https://community.offon.dev";
 const QUERY_ID = 5;
 
-// Maps adventure ID -> Discourse category ID and which difficulty levels are active.
-// Updated by the sync-adventure workflow. Do not edit the GENERATED block by hand — change adventure.yaml instead.
-// Category IDs are from: GET https://community.offon.dev/categories.json
-const ADVENTURE_CATEGORIES = {
-  // GENERATED:adventures
-  "dead-reckoning":       { categoryId: 45, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
-  "lex-imperfecta":       { categoryId: 43, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
-  "blind-by-design":      { categoryId: 41, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
-  "the-ai-observatory":   { categoryId: 37, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
-  "building-cloudhaven":  { categoryId: 36, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
-  "echoes-lost-in-orbit": { categoryId: 35, has_beginner: true, has_intermediate: true, has_expert: true, has_single: false },
-  // /GENERATED:adventures
-};
+/**
+ * Derives the adventure registry from the YAML source of truth.
+ * community_category_id must be set in adventure.yaml (added by the
+ * sync-adventure workflow). Adventures without it are skipped with a warning,
+ * UNLESS a leaderboard.json already exists for that adventure, which means
+ * the field was previously set and has since disappeared from the YAML.
+ * That case is an error, not a warning, to prevent silent data staleness.
+ *
+ * Exported for unit testing. Pass adventuresDir to override the default.
+ */
+export function buildAdventureCategories(adventuresDir = ADVENTURES_DIR) {
+  const categories = {};
+  let dirs;
+  try {
+    dirs = readdirSync(adventuresDir, { withFileTypes: true });
+  } catch (err) {
+    throw new Error(
+      `[refresh-leaderboard] Cannot read adventures directory "${adventuresDir}": ${err.message}`,
+      { cause: err },
+    );
+  }
+  for (const entry of dirs) {
+    if (!entry.isDirectory()) continue;
+    const yamlPath = resolve(adventuresDir, entry.name, "adventure.yaml");
+    if (!existsSync(yamlPath)) continue;
+    let yaml;
+    try {
+      yaml = parseYaml(readFileSync(yamlPath, "utf8"));
+    } catch (err) {
+      throw new Error(`[refresh-leaderboard] Cannot parse ${yamlPath}: ${err.message}`, { cause: err });
+    }
+    const categoryId = yaml.community_category_id ?? 0;
+    if (categoryId === 0) {
+      const existingLeaderboard = resolve(adventuresDir, entry.name, "leaderboard.json");
+      if (existsSync(existingLeaderboard)) {
+        throw new Error(
+          `[refresh-leaderboard] Adventure "${entry.name}" has leaderboard.json but no community_category_id; ` +
+            `was it accidentally removed from adventure.yaml?`,
+        );
+      }
+      console.warn(
+        `  Warning: adventure "${entry.name}" has no community_category_id; skipping (no prior leaderboard).`,
+      );
+      continue;
+    }
+    const levelIds = new Set((yaml.levels ?? []).map((l) => l.level));
+    categories[entry.name] = {
+      categoryId,
+      has_beginner: levelIds.has("beginner"),
+      has_intermediate: levelIds.has("intermediate"),
+      has_expert: levelIds.has("expert"),
+      has_single: levelIds.has("single"),
+    };
+  }
+  return categories;
+}
 
 // Load .env file for local development. Never used in CI (secrets are env vars).
 function loadDotEnv() {
@@ -165,7 +209,14 @@ async function main() {
   let changed = 0;
   let errors = 0;
 
-  const entries = Object.entries(ADVENTURE_CATEGORIES);
+  const categories = buildAdventureCategories();
+  if (Object.keys(categories).length === 0) {
+    // Guard against a silent no-op: if derivation produces an empty map every
+    // adventure's leaderboard would go stale with no failure signal.
+    console.error("  No adventures with community_category_id found; aborting to prevent silent data loss.");
+    process.exit(1);
+  }
+  const entries = Object.entries(categories);
   for (let i = 0; i < entries.length; i++) {
     const [adventureId, config] = entries[i];
     // 2 s delay between adventures to stay within Discourse's admin rate limit

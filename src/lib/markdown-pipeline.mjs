@@ -1,6 +1,6 @@
 // Build-time markdown-to-HTML pipeline for adventure prose fields. Renders
 // sanitised HTML with abbreviation-tooltip triggers, external-link annotation,
-// and code-block header markup — all at build time so pages ship finished HTML
+// and code-block header markup, all at build time so pages ship finished HTML
 // (no client DOM restructuring / layout shift).
 
 import { unified } from "unified";
@@ -98,7 +98,7 @@ const sanitizeSchema = {
   attributes: {
     ...defaultSchema.attributes,
     // Preserve all default <a> attrs (including ARIA) and add target/rel for external links.
-    // Restrict target to "_blank" only — prevents authored HTML from setting
+    // Restrict target to "_blank" only: prevents authored HTML from setting
     // target="_top"/_parent which would escape the browsing context.
     a: [...(defaultSchema.attributes?.a ?? []), ["target", "_blank"], "rel"],
     code: ["className"],
@@ -133,7 +133,11 @@ let abbrIdCounts = new Map();
 let abbrScopeStarted = false;
 
 /** Starts a new abbreviation ID scope. Call once per content entry before
- *  rendering its markdown fields. Omit `scope` to keep ids unprefixed. */
+ *  rendering its markdown fields. Omit `scope` to keep ids unprefixed.
+ *
+ *  Any new render path (a new call to mdToInline/mdToBlock outside the
+ *  existing adventures loader) MUST call this first; omitting it throws at
+ *  build time with a message pointing here. */
 export function beginAbbrScope(scope) {
   abbrScopePrefix = scope ? `${scope}-` : "";
   abbrIdCounts = new Map();

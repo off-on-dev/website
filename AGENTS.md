@@ -138,7 +138,7 @@ npm run build        # Static build -> dist/
 npm run preview      # Serve the built dist/ (astro preview)
 npm run sync         # astro sync — runs the Zod content schema; fails on invalid adventure YAML
 npm run test:unit    # Vitest unit tests (lib, stores) — fast, no server needed
-npm run test:e2e     # Playwright (a11y + smoke). Requires `npm run build` first; `astro preview` serves the built dist/
+npm run test:e2e     # Playwright (a11y + smoke). Requires `npm run build` first; e2e/static-server.mjs serves the built dist/
 npm run lint         # ESLint (astro/vue/ts)
 npm run lint:reuse   # REUSE licence compliance (requires: pip install reuse)
 rm -rf .astro        # Bust the content collection pipeline cache (after editing markdown-pipeline.mjs or adventure-derive.mjs)
@@ -188,7 +188,7 @@ There is **no** content generator, `npm run generate`, or `*.generated.ts`. Rout
 
 ### Server / cache rules
 
-- Kill any stray `astro dev`/`astro preview` on port 4321 before running tests.
+- Kill any stray `astro dev` on port 4321 before running tests (the dev server has the dev toolbar, which fails focus-ring tests). The e2e suite uses a foreground static server, not `astro preview`, so there is no daemon to stop.
 - If a build looks stale, `rm -rf dist .astro` and rebuild.
 
 ---

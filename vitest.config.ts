@@ -13,7 +13,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       include: ["src/lib/**", "src/stores/**", "src/components/**"],
-      exclude: ["src/lib/community-data.ts", "src/lib/solutions.ts"],
+      exclude: ["src/lib/community-data.ts"],
       thresholds: { lines: 80, functions: 80, branches: 70 },
     },
   },

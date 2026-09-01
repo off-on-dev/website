@@ -70,25 +70,6 @@ jobs:
           fi
           echo "✓ All adventures are consistent."
 
-      - name: Verify all adventures are registered in ADVENTURE_CATEGORIES
-        run: |
-          set -euo pipefail
-          ERRORS=0
-          for adventure_dir in src/data/adventures/*/; do
-            adventure_id=$(basename "$adventure_dir")
-            [[ -f "$adventure_dir/adventure.yaml" ]] || continue
-            if ! grep -q "\"$adventure_id\"" scripts/refresh-leaderboard.mjs; then
-              echo "❌ '$adventure_id' is missing from ADVENTURE_CATEGORIES in scripts/refresh-leaderboard.mjs"
-              ERRORS=$((ERRORS + 1))
-            fi
-          done
-          if [[ $ERRORS -gt 0 ]]; then
-            echo ""
-            echo "❌ Add missing adventure IDs to ADVENTURE_CATEGORIES in scripts/refresh-leaderboard.mjs before merging."
-            exit 1
-          fi
-          echo "✓ All adventure IDs are registered in ADVENTURE_CATEGORIES."
-
       - name: Verify SKILL.md digest
         run: |
           actual=$(sha256sum public/.well-known/agent-skills/offon/SKILL.md | cut -d' ' -f1)

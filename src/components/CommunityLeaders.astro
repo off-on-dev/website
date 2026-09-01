@@ -17,8 +17,8 @@ interface Props {
 
 const { sections: sectionFilter, limit } = Astro.props;
 
-// Keys: closed union of known section IDs — a typo or missing entry is a compile error.
-// Values: valid lucide icon keys — a typo is a compile error.
+// Keys: closed union of known section IDs; a typo or missing entry is a compile error.
+// Values: valid lucide icon keys; a typo is a compile error.
 const SECTION_ICON_NAMES = {
   "top-contributors": "trophy",
   "top-challenge-solvers": "target",

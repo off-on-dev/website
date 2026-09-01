@@ -68,7 +68,7 @@ export type Leaderboard = z.infer<typeof leaderboardSchema>;
 
 function readJson<T>(path: string, schema: z.ZodType<T>): T | null {
   if (!existsSync(path)) return null;
-  // Let readFileSync and JSON.parse propagate — both signal a code error in the
+  // Let readFileSync and JSON.parse propagate: both signal a code error in the
   // refresh script, not a transient absence, so failing the build is correct.
   const raw = readFileSync(path, "utf8");
   const parsed: unknown = JSON.parse(raw);

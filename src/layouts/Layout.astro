@@ -3,7 +3,7 @@ import SEO from "@/components/SEO.astro";
 import Navbar from "@/components/Navbar.astro";
 import Footer from "@/components/Footer.astro";
 import ConsentBanner from "@/components/ConsentBanner.astro";
-import { BRAND_NAME, SITE_NAME, SITE_URL, COMMUNITY_URL, LINKEDIN_URL, X_URL, BLUESKY_URL, BRAND_SHORT_DESCRIPTION } from "@/lib/site";
+import { BRAND_NAME, SITE_NAME, SITE_URL, COMMUNITY_URL, LINKEDIN_URL, X_URL, BLUESKY_URL, BRAND_SHORT_DESCRIPTION, CHALLENGES_REPO_URL } from "@/lib/site";
 import "@/styles/index.css";
 
 // App shell. Per-page SEO is delegated to <SEO>.
@@ -24,7 +24,7 @@ const base = import.meta.env.BASE_URL;
 // Narrow check so it never fires in production (BASE_URL="/").
 const isPreview = base.startsWith("/pr-preview/");
 
-// Inline scripts that must execute before any CSS/JS loads — do not paraphrase.
+// Inline scripts that must execute before any CSS/JS loads; do not paraphrase.
 const themeScript = `(function(){try{var t=localStorage.getItem("theme");if(t==="light"){document.documentElement.classList.remove("dark");document.documentElement.classList.add("light");}}catch(e){}})();`;
 
 const gtagBootstrap = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});`;
@@ -50,7 +50,7 @@ const orgJsonLd = JSON.stringify({
     width: 2763,
     height: 698,
   },
-  sameAs: [LINKEDIN_URL, COMMUNITY_URL, "https://github.com/off-on-dev/open-source-challenges", X_URL, BLUESKY_URL],
+  sameAs: [LINKEDIN_URL, COMMUNITY_URL, CHALLENGES_REPO_URL, X_URL, BLUESKY_URL],
 });
 
 const fontPreloads = [
@@ -80,7 +80,7 @@ const fontPreloads = [
 
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://community.offon.dev https://*.discourse-cdn.com; font-src 'self'; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; base-uri 'self'; form-action 'self'; object-src 'none';"
+      content={`default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: ${COMMUNITY_URL} https://*.discourse-cdn.com; font-src 'self'; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; base-uri 'self'; form-action 'self'; object-src 'none';`}
     />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
 
@@ -93,7 +93,10 @@ const fontPreloads = [
       <link rel="preload" href={`${base}${f}`} as="font" type="font/woff2" crossorigin="anonymous" />
     ))}
 
-    {/* Theme set before paint to prevent flash of wrong theme */}
+    {/* Theme set before paint to prevent flash of wrong theme.
+        is:inline + set:html injects raw strings verbatim; ESLint and TypeScript
+        do not check the injected source. Keep themeScript/gtagBootstrap in sync
+        with the .ts equivalents (ThemeToggle.astro, consent.ts) manually. */}
     <script is:inline set:html={themeScript} />
     {/* Consent Mode v2 default-denied bootstrap. gtag.js loads later, only on Accept. */}
     <script is:inline set:html={gtagBootstrap} />

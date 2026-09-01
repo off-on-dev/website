@@ -5,7 +5,7 @@ import { z } from "zod";
 // the types: add new section IDs here and in SECTION_ICON_NAMES (CommunityLeaders.astro)
 // when the refresh script starts producing them.
 //
-// Build failure on validation is intentional — same rationale as community-data.ts.
+// Build failure on validation is intentional: same rationale as community-data.ts.
 
 export const SECTION_IDS = [
   "top-contributors",

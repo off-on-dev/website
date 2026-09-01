@@ -1,5 +1,5 @@
 // Accessibility audit. Requires a production build in
-// dist/ (the webServer runs `astro preview`).
+// dist/ (the webServer runs e2e/static-server.mjs).
 //
 // Uses waitForLoadState("load") rather than "networkidle": prefetchAll keeps the
 // network busy after load, so networkidle can hang.
@@ -110,12 +110,21 @@ async function collectFocusViolations(page: Page): Promise<string[]> {
       const cs = window.getComputedStyle(el);
       const hasBoxShadow = cs.boxShadow !== "none" && cs.boxShadow !== "";
       const hasOutline = parseFloat(cs.outlineWidth) > 0 && cs.outlineStyle !== "none";
+      // Include the element's position in the tab order so elements that
+      // share a tag, href, aria-label, and text (e.g. two nav links with the
+      // same label at different viewport breakpoints) never collide and cause
+      // an early exit from the cycle-detection loop.
+      const allFocusable = Array.from(
+        document.querySelectorAll<HTMLElement>("a, button, [tabindex], [role='button'], [role='link']"),
+      );
+      const domIdx = allFocusable.indexOf(el);
       const key = [
         el.tagName,
         el.id ?? "",
         el.getAttribute("href") ?? "",
         el.getAttribute("aria-label") ?? "",
         (el.textContent ?? "").trim().slice(0, 40),
+        domIdx,
       ].join("|");
       return { key, hasFocusRing: hasBoxShadow || hasOutline, html: el.outerHTML.slice(0, 120) };
     });

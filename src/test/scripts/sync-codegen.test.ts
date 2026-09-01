@@ -4,7 +4,7 @@
 /**
  * Unit tests for scripts/lib/sync-codegen.mjs.
  *
- * Non-vacuous checks — each test documents the pre-fix behaviour so that
+ * Non-vacuous checks: each test documents the pre-fix behaviour so that
  * reverting the fix causes the test to fail:
  *
  * - escapeTsString: before fix, adventure names containing `"` were written
@@ -112,7 +112,7 @@ const makeBlock = (slug: string, title: string) =>
     `  // /GENERATED:${slug}-smoke`,
   ].join("\n");
 
-describe("upsertRoutesBlock — insertion (neither marker present)", () => {
+describe("upsertRoutesBlock:insertion (neither marker present)", () => {
   it("inserts the block before the closing brace", () => {
     const result = upsertRoutesBlock(
       SMOKE_SRC,
@@ -129,7 +129,7 @@ describe("upsertRoutesBlock — insertion (neither marker present)", () => {
   });
 });
 
-describe("upsertRoutesBlock — replacement (both markers present)", () => {
+describe("upsertRoutesBlock:replacement (both markers present)", () => {
   it("replaces the existing block in-place", () => {
     const srcWithBlock = [
       "export const SMOKE_ROUTES = {",
@@ -157,7 +157,7 @@ describe("upsertRoutesBlock — replacement (both markers present)", () => {
   });
 });
 
-describe("upsertRoutesBlock — XOR marker cases (the silent-corruption bug)", () => {
+describe("upsertRoutesBlock:XOR marker cases (the silent-corruption bug)", () => {
   it("throws when only the opening marker is present, naming the missing marker and file", () => {
     const srcOnlyOpen = [
       "export const SMOKE_ROUTES = {",

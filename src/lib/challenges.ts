@@ -10,7 +10,7 @@ export const DIFFICULTIES = ["Beginner", "Intermediate", "Expert"] as const;
 export const tagToSlug = (tag: string): string =>
   tag.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
-const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+export const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 const monthKey = (m: string): number => {
   const [mon, year] = m.split(" ");
   const idx = MONTHS.indexOf(mon ?? "");

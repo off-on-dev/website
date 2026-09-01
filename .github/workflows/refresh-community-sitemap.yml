@@ -78,11 +78,19 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh issue create \
-            --title "Refresh community sitemap: generation failed" \
-            --label "bug" \
-            --body "The scheduled \`refresh-community-sitemap\` workflow failed and did not update \`public/community-sitemap.xml\`.
+          TITLE="Refresh community sitemap: generation failed"
+          OPEN=$(gh issue list \
+            --state open \
+            --search "\"${TITLE}\" in:title" \
+            --json number \
+            --jq 'length' 2>/dev/null || echo "0")
+          if [ "$OPEN" -eq 0 ]; then
+            gh issue create \
+              --title "${TITLE}" \
+              --label "bug" \
+              --body "The scheduled \`refresh-community-sitemap\` workflow failed and did not update \`public/community-sitemap.xml\`.
 
           **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
           Check the run log for the error. Common causes: Discourse API is unreachable, a category ID no longer exists, or the script collected fewer URLs than the minimum threshold."
+          fi

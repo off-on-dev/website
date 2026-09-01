@@ -53,6 +53,12 @@ test.describe("correct before any script runs", () => {
       const context = await browser.newContext({ javaScriptEnabled: false });
       const page = await context.newPage();
       await page.route("**/*", async (route) => {
+        const url = new URL(route.request().url());
+        // Only rewrite responses from the local preview server. External
+        // resources (community avatars, etc.) cannot be route.fetch()-ed
+        // reliably under parallel test load; abort them instead. The avatar
+        // onerror fallback handles it silently.
+        if (url.hostname !== "localhost") return route.abort();
         const res = await route.fetch();
         if (!res.headers()["content-type"]?.includes("text/html")) return route.fulfill({ response: res });
         let body = await res.text();

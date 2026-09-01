@@ -7,7 +7,7 @@
 // the visitor has consented.
 //
 // Requires a production build in dist/ (the Playwright webServer runs
-// `astro preview`).
+// e2e/static-server.mjs).
 
 import { test, expect } from "@playwright/test";
 

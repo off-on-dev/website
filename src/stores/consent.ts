@@ -1,7 +1,7 @@
 import { atom } from "nanostores";
 import { GA_MEASUREMENT_ID, CONSENT_STORAGE_KEY, CONSENT_EXPIRY_MS } from "@/lib/site";
 
-// Consent state machine. See the CLAUDE.md "Consent state machine" table —
+// Consent state machine. See the CLAUDE.md "Consent state machine" table;
 // every transition here mirrors a row.
 //
 // Uses a plain atom (default null) rather than @nanostores/persistent so the

@@ -15,8 +15,8 @@ const PAGES = [
 
 for (const { path, what } of PAGES) {
   test(`${what}: avatars fall back to initials when the image fails`, async ({ page }) => {
-    await page.route("**/community.offon.dev/**", (r) => r.abort());
-    await page.route("**/*discourse-cdn.com/**", (r) => r.abort());
+    await page.route("**/community.offon.dev/**", (r) => r.abort("aborted"));
+    await page.route("**/*discourse-cdn.com/**", (r) => r.abort("aborted"));
     await page.goto(path);
     await page.waitForLoadState("load");
 
@@ -58,7 +58,7 @@ for (const { path, what } of PAGES) {
 }
 
 test("chips are never below the very-small-text threshold", async ({ page }) => {
-  await page.route("**/community.offon.dev/**", (r) => r.abort());
+  await page.route("**/community.offon.dev/**", (r) => r.abort("aborted"));
   await page.goto("/adventures/dead-reckoning/");
   await page.waitForLoadState("load");
   const sizes = await page.evaluate(() =>
