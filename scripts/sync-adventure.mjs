@@ -60,9 +60,10 @@ function fail(msg) {
   process.exit(1);
 }
 
-function currentMonth() {
+export function currentMonth() {
+  const ABBR = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
   const d = new Date();
-  return d.toLocaleString("en-GB", { month: "short" }).toUpperCase() + " " + d.getFullYear();
+  return ABBR[d.getUTCMonth()] + " " + d.getUTCFullYear();
 }
 
 function parseAdventureUrl(url) {
@@ -594,7 +595,9 @@ async function main() {
   console.log(`\nDone: ${adventureName} (live: ${activeLevels.map((l) => l.level).join(", ")}${upcomingLevels.length > 0 ? ` | upcoming: ${upcomingLevels.map((u) => u.difficulty).join(", ")}` : ""})`);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}
