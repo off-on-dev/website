@@ -408,6 +408,22 @@ See [`ADVENTURES.md`](ADVENTURES.md). In brief: add/extend the YAML at `src/data
 
 The `off-on-dev` org restricts third-party actions. Permitted: `actions/checkout`, `actions/cache`, `actions/setup-node`, `actions/create-github-app-token`, `JamesIves/github-pages-deploy-action`, `marocchino/sticky-pull-request-comment`, `rossjrw/pr-preview-action`, `fsfe/reuse-action`, actions owned by `off-on-dev`, actions created by GitHub, and Marketplace-verified actions. **The official `withastro/action` and `actions/deploy-pages` are NOT allowlisted** — keep the JamesIves deploy flow. Before adding a `uses:`, verify it is permitted or use `gh`/shell.
 
+### Workflow convention: scripts/ require npm ci
+
+Any workflow job that invokes a script under `scripts/` via `node scripts/*.mjs` must run `npm ci` immediately after `setup-node`, before the first script step:
+
+```yaml
+- uses: actions/setup-node@v7
+  with:
+    node-version-file: ".nvmrc"
+    cache: "npm"
+
+- name: Install dependencies
+  run: npm ci
+```
+
+This is unconditional, even when the script currently uses only Node built-ins. Scripts acquire package imports over time; a workflow that skips `npm ci` breaks silently on the next scheduled run. With `cache: "npm"` a clean install takes a few seconds.
+
 ---
 
 ## Before Submitting Code
