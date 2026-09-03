@@ -194,9 +194,9 @@ Rules:
 
 #### `AdventureCard`
 
-Props: `adventure: { slug, title, story, tags, icon?, isLive?, levels: {id, difficulty}[], contributor? }`
+Props: `adventure: { slug, title, story, tags, icon?, isLive?, levels: {id, difficulty, contributor?}[], contributor? }`
 
-Root element is `<a>` with a composite `aria-label` (title + difficulties + live status + tags). Calls `stripHtml` on `adventure.story` for the excerpt. `ContributorBadge` pinned to the bottom via `mt-auto pt-4`; intentionally omits `url` (the card is already a link — a nested `<a>` would be invalid HTML). Applies `.card-glow` and `.focus-ring`.
+Root element is `<a>` with a composite `aria-label` (title + difficulties + live status + tags). Calls `stripHtml` on `adventure.story` for the excerpt. `ContributorBadge` pinned to the bottom via `mt-auto pt-4`; intentionally omits links (`noLinks`) because the card is already a link. Applies `.card-glow` and `.focus-ring`. The contributor pill renders when `adventure.contributor` is set, or when exactly one distinct level contributor exists without an adventure contributor. Multiple distinct level builders without an adventure contributor produce no visible pill (no single person to credit). When all level builders are the same person as the adventure contributor, the pill shows them as proposer only; when a single builder differs, they appear as the level builder.
 
 ---
 
@@ -232,7 +232,7 @@ Props: `items: { label: string; href?: string }[]`, `class?: string (default 'mb
 
 #### `ChallengeBuildersSection`
 
-No props. Slots: `aside` (optional sticky sidebar on `lg+`). Data from `ADVENTURE_CONTRIBUTORS`. Renders only when contributors exist. Has `aria-labelledby`.
+No props. Slots: `aside` (optional sticky sidebar on `lg+`). Data derived at build time from the `adventures` content collection -- no separate constant or data file. Renders only when contributors exist. Each contribution row shows the adventure title linked to its page and a `roleLabel` string (e.g. `"Proposed & Built"`, `"Built · Beginner · Expert"`). Has `aria-labelledby`.
 
 ---
 
@@ -272,7 +272,7 @@ Uses native `<details>` / `<summary>` — works without JS. `scroll-mt-28` preve
 
 Props: `sections?: string[]`, `limit?: number`
 
-Data from `src/data/community-leaders.json`. Each section is an `<ol aria-label="...">`. Rank numbers are `aria-hidden`.
+Discourse-sourced sections (top-contributors, rockstars, most-liked, etc.) come from `src/data/community-leaders.json`. The `challenge-builders`, `challenge-grand-builders`, and `adventure-designers` sections are derived from the adventures content collection at build time. Each section is an `<ol aria-label="...">`. Rank numbers are `aria-hidden`.
 
 ---
 
@@ -284,17 +284,17 @@ No props. Slots: `aside` (optional). `<section aria-labelledby>` with four Disco
 
 #### `CommunitySidebar`
 
-Props: `levelId`, `discussionUrl`, `contributor?`, `discussion: Discussion | null`, `leaderboardRows: LeaderboardRow[]`
+Props: `levelId`, `discussionUrl`, `contributor?`, `levelContributor?`, `discussion: Discussion | null`, `leaderboardRows: LeaderboardRow[]`
 
-Fully static — all data resolved at build time by `community-data.ts`. Three sections: contributor credit, leaderboard top-3, latest activity posts. Non-cert posts preferred in the activity list.
+Fully static -- all data resolved at build time by `community-data.ts`. Three sections: contributor credit, leaderboard top-3, latest activity posts. Non-cert posts preferred in the activity list. `levelContributor` (the level-specific builder) takes precedence over `contributor` (the adventure proposer) for the credit pill; when only `contributor` is set, they are shown as the adventure builder (label "Adventure Builder"), not just "Challenge Builder".
 
 ---
 
 #### `ContributorBadge`
 
-Props: `name: string`, `url?: string`, `glow?: boolean (default false)`, `label?: string (default 'Challenge Builder')`
+Props: `proposer?: { name: string; url?: string }`, `builder?: { name: string; url?: string }`, `glow?: boolean (default false)`, `noLinks?: boolean (default false)`, `hasBuilders?: boolean (default false)`
 
-Renders as `<a class="contributor-pill">` when `url` is present, `<span>` otherwise. Hammer icon `aria-hidden`. `contributor-pill-glow` applied when `glow={true}`. External links carry `aria-describedby="new-tab-hint"`.
+Label is derived from props: no `proposer` → `"Challenge Builder"`; `proposer` with a different `builder` (or `hasBuilders`) → `"Adventure Designer"`; otherwise → `"Adventure Builder"`. When both are the same person, only `proposer` is shown. When `noLinks` is true, all `<a>` tags are replaced with `<span>` -- required inside card links to avoid nested anchors. `contributor-pill-glow` applied when `glow={true}`. External links carry `aria-describedby="new-tab-hint"`.
 
 ---
 

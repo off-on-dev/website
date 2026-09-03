@@ -44,7 +44,7 @@ The authoritative schema is in [`src/content.config.ts`](src/content.config.ts) 
 | `story` | Optional | markdown string | Short description shown on adventure cards and at the top of the adventure page. Card views strip HTML; set:html prose uses the rendered version. |
 | `backstory` | Optional | `string[]` (markdown) | Thematic narrative paragraphs rendered on the adventure page. |
 | `overview` | Optional | `string[]` (markdown) | Technical/content summary rendered on the adventure page. |
-| `contributor` | Optional | object | `name` (required), `url` (optional URL), `about` (optional markdown). Survives every re-sync once set. |
+| `contributor` | Optional | object | `name` (required), `url` (optional URL), `about` (optional markdown), `discourse_username` (optional string -- Discourse username used for avatar resolution in community leaderboards). Survives every re-sync once set. |
 | `community_category_id` | Optional | integer | Discourse category ID. Survives every re-sync once set; position is kept directly after `slug`. |
 | `rewards` | Optional | object | `deadline` (required inside; see format below), `eligibility` (markdown), `tiers` (array of `{label, description}`), `ranking_note` (markdown), `ranking_rules_url` (URL). |
 | `upcoming_levels` | Optional | object[] | Coming-soon placeholders: `{level?, name, difficulty}`. Survives re-syncs for levels not yet in the challenges repo. |
@@ -87,6 +87,7 @@ Each entry in the `levels` array accepts the following fields.
 | `verification` | **Required** | object | `{command, description}` — the verification gate command and its description. |
 | `codespaces_machine` | Optional | `"4core"` | Machine size override for Codespaces. Only `"4core"` is accepted; other values fail the Zod schema. |
 | `hook` | Optional | string | Verification hook command. |
+| `contributor` | Optional | object | Person who built this specific level (may differ from the adventure proposer). Same subfields as the adventure `contributor` (`name`, `url`, `about`, `discourse_username`). When set, takes precedence over the adventure contributor for credit display on the level page and in community leaderboard sections. |
 | `solved_count` | Optional | integer | Override for the displayed solved count. |
 | `top_players` | Optional | object[] | System-populated leaderboard data: `{username, count}`. Set by the leaderboard refresh script; do not edit by hand. |
 
@@ -125,9 +126,10 @@ contributor:
   name: "Full Name"
   url: "https://example.com"
   about: "One sentence bio."
+  discourse_username: "their_forum_username"
 ```
 
-Add this to `src/data/adventures/<slug>/adventure.yaml`. The `url` and `about` fields are optional but recommended. Once set, this block survives future re-syncs automatically.
+Add this to `src/data/adventures/<slug>/adventure.yaml`. The `url`, `about`, and `discourse_username` fields are optional but recommended -- `discourse_username` enables avatar resolution in community leaderboards. Once set, this block survives future re-syncs automatically.
 
 ### Confirm month
 

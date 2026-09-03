@@ -21,6 +21,7 @@ import { stripLinks } from "@/lib/markdown";
 import { isDeadlinePast } from "@/lib/utils";
 import { getLeaderboard } from "@/lib/community-data";
 import { isAdventureLive } from "@/lib/challenges";
+import type { Difficulty } from "@/lib/difficulty";
 
 export async function getStaticPaths() {
   const adventures = await getCollection("adventures");
@@ -46,7 +47,7 @@ const path = `/adventures/${adventure.slug}/`;
 const crumbs = [{ label: "Adventures", href: "/adventures/" }, { label: adventure.title }];
 
 // Build a map of level builders grouped by name, preserving insertion order (first level seen).
-const levelBuilderMap = new Map<string, { name: string; url?: string; aboutHtml?: string; levels: string[] }>();
+const levelBuilderMap = new Map<string, { name: string; url?: string; aboutHtml?: string; levels: Difficulty[] }>();
 for (const level of adventure.levels) {
   if (!level.contributor) continue;
   const { name, url, aboutHtml } = level.contributor;
@@ -223,7 +224,7 @@ const titleHasBuilders = levelBuilders.length > 1 && !singleBuilderSameAsPropose
                             <PersonNameLink name={builder.name} url={builder.url} />
                             <div class="mt-1 flex flex-wrap gap-1">
                               {builder.levels.map((diff) => (
-                                <DifficultyBadge difficulty={diff as import("@/lib/difficulty").Difficulty} />
+                                <DifficultyBadge difficulty={diff} />
                               ))}
                             </div>
                             {builder.aboutHtml && (

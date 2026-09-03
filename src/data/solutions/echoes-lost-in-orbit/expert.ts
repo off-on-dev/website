@@ -1,10 +1,11 @@
 import type { Solution } from "@/data/solutions/types";
+import { KATHARINA_SICK } from "@/data/adventures/contributors";
 
 export const solution: Solution = {
   adventureId: "echoes-lost-in-orbit",
   levelId: "expert",
   title: "Expert Solution: Hyperspace Operations & Transport",
-  contributor: { name: "Maya Patel", url: "https://example.com/mayapatel" },
+  contributor: { name: KATHARINA_SICK.name, url: KATHARINA_SICK.url },
   spoilerWarning:
     "This walkthrough contains the full solution. Try solving the challenge yourself first, then come back if you get stuck or want to compare approaches.",
   intro:

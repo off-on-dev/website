@@ -65,8 +65,6 @@ type DesignerEntry = { discourseUsername?: string; count: number };
 const designerCountMap = new Map<string, DesignerEntry>();
 
 for (const { data } of adventures) {
-  const hasLevelContributors = data.levels.some((l) => l.contributor);
-
   if (data.contributor) {
     const { name, discourseUsername } = data.contributor;
     const existing = designerCountMap.get(name) ?? { discourseUsername, count: 0 };
@@ -76,7 +74,7 @@ for (const { data } of adventures) {
   }
 
   for (const level of data.levels) {
-    const c = level.contributor ?? (!hasLevelContributors ? data.contributor : undefined);
+    const c = level.contributor ?? data.contributor;
     if (!c) continue;
     const existing = challengeCountMap.get(c.name) ?? { discourseUsername: c.discourseUsername, count: 0 };
     existing.discourseUsername ??= c.discourseUsername;
@@ -85,6 +83,8 @@ for (const { data } of adventures) {
   }
 }
 
+// username here is the contributor's display name (from YAML), not a Discourse handle.
+// AvatarLink uses it as visible text only; resolveAvatar provides the actual avatar via discourseUsername.
 const allBuilders = [...challengeCountMap.entries()]
   .filter(([, e]) => e.count > 0)
   .sort((a, b) => b[1].count - a[1].count)

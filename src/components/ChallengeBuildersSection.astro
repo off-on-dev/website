@@ -104,10 +104,10 @@ const contributors = [...map.values()]
                 )}
                 <p class="mt-6 mb-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Adventures contributed to</p>
                 <ul role="list" class="space-y-2.5">
-                  {contributor.contributions.map(({ id, title }) => (
-                    <li class="flex items-center gap-2 text-sm">
-                      <span class="h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                  {contributor.contributions.map(({ id, title, roleLabel }) => (
+                    <li class="flex flex-col gap-0.5 text-sm">
                       <a href={`${base}adventures/${id}/`} class="docs-ext-link">{title}</a>
+                      <span class="text-xs text-muted-foreground">{roleLabel}</span>
                     </li>
                   ))}
                 </ul>

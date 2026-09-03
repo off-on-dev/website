@@ -13,7 +13,7 @@ const POSTS_VISIBLE = 3;
 
 // Inline avatar palette: bg color at 0.25 opacity, foreground text (Astro style= takes a string).
 const AVATAR_COLORS = ["--primary", "--difficulty-architect", "--teal", "--difficulty-builder", "--destructive"];
-const avatarPalette = AVATAR_COLORS.map(
+const AVATAR_PALETTE = AVATAR_COLORS.map(
   (c) => `background-color:hsl(var(${c}) / 0.25);color:hsl(var(--foreground))`,
 );
 
@@ -73,7 +73,7 @@ const hasActivity = visible.length > 0;
   {
     levelBuilder && (
       <div class="mb-5 pb-5 border-b border-border">
-        <ContributorBadge builder={levelBuilder} />
+        <ContributorBadge proposer={levelContributor ? undefined : contributor} builder={levelBuilder} />
       </div>
     )
   }
@@ -111,7 +111,7 @@ const hasActivity = visible.length > 0;
                 )}
                 <span
                   class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-foreground"
-                  style={`${avatarPalette[i % avatarPalette.length]}${solver.avatarUrl ? ";display:none" : ""}`}
+                  style={`${AVATAR_PALETTE[i % AVATAR_PALETTE.length]}${solver.avatarUrl ? ";display:none" : ""}`}
                   aria-hidden="true"
                 >
                   {solver.username.slice(0, 2).toUpperCase()}
