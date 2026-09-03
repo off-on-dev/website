@@ -205,6 +205,102 @@ test.describe("skip link (WCAG 2.4.1)", () => {
   }
 });
 
+// WCAG 2.1.2 + 3.2.1 — one keyboard traversal checks both:
+//   • keyboard trap: a repeating focus pattern that excludes the page's
+//     first focusable element signals focus is stuck inside a subset.
+//   • context change on focus: Tab pressing must not trigger navigation.
+//
+// Both checks share a single traversal to avoid doubling test time.
+// Pattern detection covers cycles of length 1–5.
+
+function isRepeatingTrap(recentKeys: string[], firstKey: string): boolean {
+  for (let len = 1; len <= 5; len++) {
+    if (recentKeys.length < len * 2) continue;
+    const tail = recentKeys.slice(-len * 2);
+    const half = tail.slice(0, len);
+    if (half.join("|||") === tail.slice(len).join("|||") && !half.includes(firstKey)) return true;
+  }
+  return false;
+}
+
+async function runKeyboardSafetyChecks(
+  page: Page,
+): Promise<{ trap: string | null; contextChange: string | null }> {
+  const MAX_STEPS = 150;
+  let firstKey: string | null = null;
+  let firstKeyCount = 0;
+  const recentKeys: string[] = [];
+
+  for (let i = 0; i < MAX_STEPS; i++) {
+    const { urlBefore, prevFocusHtml } = await page.evaluate(() => ({
+      urlBefore: location.href,
+      prevFocusHtml: (document.activeElement as HTMLElement)?.outerHTML?.slice(0, 120) ?? null,
+    }));
+
+    await page.keyboard.press("Tab");
+
+    const urlAfter = page.url();
+    if (urlAfter !== urlBefore) {
+      return {
+        trap: null,
+        contextChange: `focusing ${prevFocusHtml ?? "unknown"} navigated to ${urlAfter}`,
+      };
+    }
+
+    const result = await page.evaluate(() => {
+      const el = document.activeElement as HTMLElement;
+      if (!el || el.tagName === "BODY" || el === document.documentElement) return null;
+      const allFocusable = Array.from(
+        document.querySelectorAll<HTMLElement>(
+          "a, button, [tabindex], [role='button'], [role='link']",
+        ),
+      );
+      const domIdx = allFocusable.indexOf(el);
+      const key = [
+        el.tagName,
+        el.id ?? "",
+        el.getAttribute("href") ?? "",
+        el.getAttribute("aria-label") ?? "",
+        (el.textContent ?? "").trim().slice(0, 40),
+        domIdx,
+      ].join("\0");
+      return { key, html: el.outerHTML.slice(0, 120) };
+    });
+
+    if (!result) break;
+
+    if (firstKey === null) {
+      firstKey = result.key;
+      firstKeyCount = 1;
+    } else if (result.key === firstKey) {
+      firstKeyCount++;
+      if (firstKeyCount >= 3) break;
+    }
+
+    recentKeys.push(result.key);
+    if (recentKeys.length > 12) recentKeys.shift();
+
+    if (firstKey !== null && recentKeys.length >= 4 && isRepeatingTrap(recentKeys, firstKey)) {
+      return { trap: result.html, contextChange: null };
+    }
+  }
+
+  return { trap: null, contextChange: null };
+}
+
+test.describe("keyboard trap + context change (WCAG 2.1.2, 3.2.1)", () => {
+  for (const path of PAGES) {
+    test(path, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.goto(path);
+      await page.waitForLoadState("load");
+      const { trap, contextChange } = await runKeyboardSafetyChecks(page);
+      expect(trap, `Keyboard trap on ${path} (WCAG 2.1.2)`).toBeNull();
+      expect(contextChange, `Context change on focus on ${path} (WCAG 3.2.1)`).toBeNull();
+    });
+  }
+});
+
 // WAVE flags text under 10px as "very small text". The gate is set at that line
 // rather than at the type scale minimum (text-xs, 12px), because inline <code>
 // renders at 11.9px by design and would otherwise fail every prose page.
