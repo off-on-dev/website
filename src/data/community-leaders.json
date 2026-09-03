@@ -51,11 +51,16 @@
     {
       "id": "challenge-grand-builders",
       "title": "Challenge Grand Builders",
+      "users": []
+    },
+    {
+      "id": "challenge-builders",
+      "title": "Challenge Builders",
       "users": [
         {
-          "username": "KatharinaSick",
-          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/KatharinaSick/40/9_2.png",
-          "count": 15
+          "username": "simon.schrottner",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/simon.schrottner/40/311_2.png",
+          "count": 3
         }
       ]
     },
@@ -91,17 +96,6 @@
         {
           "username": "rohit_bc",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/rohit_bc/40/164_2.png",
-          "count": 3
-        }
-      ]
-    },
-    {
-      "id": "challenge-builders",
-      "title": "Challenge Builders",
-      "users": [
-        {
-          "username": "simon.schrottner",
-          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/simon.schrottner/40/311_2.png",
           "count": 3
         }
       ]

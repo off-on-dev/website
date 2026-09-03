@@ -1,11 +1,10 @@
 import type { Solution } from "@/data/solutions/types";
-import { KATHARINA_SICK } from "@/data/adventures/contributors";
 
 export const solution: Solution = {
   adventureId: "echoes-lost-in-orbit",
   levelId: "intermediate",
   title: "Intermediate Solution: The Silent Canary",
-  contributor: { name: KATHARINA_SICK.name, url: KATHARINA_SICK.url },
+  contributor: { name: "Simon Schrottner", url: "https://schrottner.at/" },
   spoilerWarning:
     "This walkthrough contains the full solution. Try solving the challenge yourself first, then come back if you get stuck or want to compare approaches.",
   intro:

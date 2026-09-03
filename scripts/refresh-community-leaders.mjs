@@ -175,14 +175,14 @@ async function main() {
   const cAvatarId       = col(cCols, "uploaded_avatar_id");
 
   // Challenge query column indices
-  const chCols = challenge.columns;
-  const chUsername           = col(chCols, "username");
-  const chSolveCount         = col(chCols, "solve_count");
-  const chIsGrandBuilder     = col(chCols, "is_grand_builder");
-  const chChallengesCreated  = col(chCols, "challenges_created");
+  const chCols             = challenge.columns;
+  const chUsername         = col(chCols, "username");
+  const chSolveCount       = col(chCols, "solve_count");
+  const chIsRockstar       = col(chCols, "is_rockstar");
+  const chIsGrandBuilder   = col(chCols, "is_grand_builder");
+  const chChallengesCreated = col(chCols, "challenges_created");
   const chIsChallengeBuilder = col(chCols, "is_challenge_builder");
-  const chIsRockstar         = col(chCols, "is_rockstar");
-  const chAvatarId           = col(chCols, "uploaded_avatar_id");
+  const chAvatarId         = col(chCols, "uploaded_avatar_id");
 
   const cRows  = community.rows;
   const chRows = challenge.rows;
@@ -215,27 +215,29 @@ async function main() {
       username: String(r[chUsername]),
       avatarUrl: buildAvatarUrl(String(r[chUsername]), r[chAvatarId] ?? null),
       count: Number(r[chChallengesCreated]),
-    }));
+    }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, POOL_SIZE);
 
   const builders = chRows
-    .filter((r) => r[chIsChallengeBuilder] && !r[chIsGrandBuilder] && !r[chIsRockstar])
-    .sort((a, b) => Number(b[chChallengesCreated]) - Number(a[chChallengesCreated]))
-    .slice(0, POOL_SIZE)
+    .filter((r) => r[chIsChallengeBuilder] && !r[chIsGrandBuilder])
     .map((r) => ({
       username: String(r[chUsername]),
       avatarUrl: buildAvatarUrl(String(r[chUsername]), r[chAvatarId] ?? null),
       count: Number(r[chChallengesCreated]),
-    }));
+    }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, POOL_SIZE);
 
   const sections = [
-    { id: "top-contributors",         title: "Top Contributors",         users: topByCol(cRows,  cUsername, cTopics,        cAvatarId,  TOP_N) },
-    { id: "challenge-rockstars",      title: "Challenge Rockstars",      users: rockstars },
+    { id: "top-contributors",        title: "Top Contributors",        users: topByCol(cRows, cUsername, cTopics,        cAvatarId, TOP_N) },
+    { id: "challenge-rockstars",     title: "Challenge Rockstars",     users: rockstars },
     { id: "challenge-grand-builders", title: "Challenge Grand Builders", users: grandBuilders },
-    { id: "top-challenge-solvers",    title: "Top Challenge Solvers",    users: solvers },
-    { id: "challenge-builders",       title: "Challenge Builders",       users: builders },
-    { id: "most-liked",               title: "Most Liked",               users: topByCol(cRows,  cUsername, cLikesReceived, cAvatarId,  TOP_N) },
-    { id: "most-replies",             title: "Most Replies",             users: topByCol(cRows,  cUsername, cReplies,       cAvatarId,  TOP_N) },
-    { id: "most-supportive",          title: "Most Supportive",          users: topByCol(cRows,  cUsername, cLikesGiven,    cAvatarId,  TOP_N) },
+    { id: "challenge-builders",      title: "Challenge Builders",      users: builders },
+    { id: "top-challenge-solvers",   title: "Top Challenge Solvers",   users: solvers },
+    { id: "most-liked",              title: "Most Liked",              users: topByCol(cRows, cUsername, cLikesReceived, cAvatarId, TOP_N) },
+    { id: "most-replies",            title: "Most Replies",            users: topByCol(cRows, cUsername, cReplies,       cAvatarId, TOP_N) },
+    { id: "most-supportive",         title: "Most Supportive",         users: topByCol(cRows, cUsername, cLikesGiven,    cAvatarId, TOP_N) },
   ].filter((s) => s.users.length > 0);
 
   for (const s of sections) {

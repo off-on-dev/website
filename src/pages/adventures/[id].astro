@@ -44,6 +44,25 @@ const path = `/adventures/${adventure.slug}/`;
 // One trail, rendered visually by <Breadcrumb> and as BreadcrumbList JSON-LD by
 // <StructuredData>, so the two can never disagree.
 const crumbs = [{ label: "Adventures", href: "/adventures/" }, { label: adventure.title }];
+
+// Build a map of level builders grouped by name, preserving insertion order (first level seen).
+const levelBuilderMap = new Map<string, { name: string; url?: string; aboutHtml?: string; levels: string[] }>();
+for (const level of adventure.levels) {
+  if (!level.contributor) continue;
+  const { name, url, aboutHtml } = level.contributor;
+  if (!levelBuilderMap.has(name)) levelBuilderMap.set(name, { name, url, aboutHtml, levels: [] });
+  levelBuilderMap.get(name)!.levels.push(level.difficulty);
+}
+const levelBuilders = [...levelBuilderMap.values()];
+const proposerName = adventure.contributor?.name;
+const hasSingleBuilder = levelBuilders.length === 1;
+const singleBuilderSameAsProposer = hasSingleBuilder && levelBuilders[0].name === proposerName;
+const proposedAndBuilt = levelBuilders.length === 0 || singleBuilderSameAsProposer;
+
+// Card pill: show builder only when exactly one level builder differs from proposer.
+const titlePillBuilder = hasSingleBuilder && !singleBuilderSameAsProposer ? levelBuilders[0] : undefined;
+// True when multiple distinct builders exist — pill shows "Proposed by" without listing them.
+const titleHasBuilders = levelBuilders.length > 1 && !singleBuilderSameAsProposer;
 ---
 
 <Layout
@@ -77,9 +96,9 @@ const crumbs = [{ label: "Adventures", href: "/adventures/" }, { label: adventur
         <div class="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1.5">
           {adventure.contributor && (
             <ContributorBadge
-              name={adventure.contributor.name}
-              url={adventure.contributor.url}
-              label="Adventure Builder"
+              proposer={adventure.contributor}
+              builder={titlePillBuilder}
+              hasBuilders={titleHasBuilders}
             />
           )}
           <span class="font-mono text-xs uppercase tracking-widest text-faint">{adventure.month}</span>
@@ -178,10 +197,44 @@ const crumbs = [{ label: "Adventures", href: "/adventures/" }, { label: adventur
           )}
           {adventure.contributor && (
             <div class="rounded-xl border border-border bg-[hsl(var(--surface))] px-5 py-4">
-              <p class="mb-2 font-mono text-xs uppercase tracking-widest text-faint">Adventure by</p>
-              <PersonNameLink name={adventure.contributor.name} url={adventure.contributor.url} />
-              {adventure.contributor.aboutHtml && (
-                <InlineProse html={adventure.contributor.aboutHtml} class="mt-2 text-sm leading-relaxed text-dim" />
+              <p class="mb-3 font-mono text-xs uppercase tracking-widest text-faint">Contributors</p>
+              {proposedAndBuilt ? (
+                <div>
+                  <PersonNameLink name={adventure.contributor.name} url={adventure.contributor.url} />
+                  {adventure.contributor.aboutHtml && (
+                    <InlineProse html={adventure.contributor.aboutHtml} class="mt-2 text-sm leading-relaxed text-dim" />
+                  )}
+                </div>
+              ) : (
+                <div class="space-y-4">
+                  <div>
+                    <p class="mb-1.5 font-mono text-xs uppercase tracking-widest text-faint">Adventure Designer</p>
+                    <PersonNameLink name={adventure.contributor.name} url={adventure.contributor.url} />
+                    {adventure.contributor.aboutHtml && (
+                      <InlineProse html={adventure.contributor.aboutHtml} class="mt-2 text-sm leading-relaxed text-dim" />
+                    )}
+                  </div>
+                  {levelBuilders.length > 0 && (
+                    <div class="border-t border-border pt-4">
+                      <p class="mb-3 font-mono text-xs uppercase tracking-widest text-faint">Challenge Builders</p>
+                      <div class="space-y-4">
+                        {levelBuilders.map((builder) => (
+                          <div>
+                            <PersonNameLink name={builder.name} url={builder.url} />
+                            <div class="mt-1 flex flex-wrap gap-1">
+                              {builder.levels.map((diff) => (
+                                <DifficultyBadge difficulty={diff as import("@/lib/difficulty").Difficulty} />
+                              ))}
+                            </div>
+                            {builder.aboutHtml && (
+                              <InlineProse html={builder.aboutHtml} class="mt-2 text-sm leading-relaxed text-dim" />
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           )}

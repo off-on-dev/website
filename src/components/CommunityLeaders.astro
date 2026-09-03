@@ -1,4 +1,5 @@
 ---
+import { getCollection } from "astro:content";
 import { LUCIDE_ICONS, type LucideIconKey } from "@/lib/lucide-icons";
 import communityLeadersRaw from "@/data/community-leaders.json";
 import AvatarLink from "@/components/AvatarLink.astro";
@@ -25,12 +26,100 @@ const SECTION_ICON_NAMES = {
   "challenge-rockstars": "star",
   "challenge-grand-builders": "building-2",
   "challenge-builders": "wrench",
+  "adventure-designers": "lightbulb",
   "most-liked": "heart",
   "most-replies": "message-circle",
   "most-supportive": "hand-heart",
 } satisfies Record<SectionId, LucideIconKey>;
 
-const { sections: ALL_SECTIONS } = parseCommunityLeadersData(communityLeadersRaw);
+// Derive builder and designer sections from the adventure collection.
+// Count = total challenges (levels) built per person. Grand Builder threshold: > 12 challenges.
+// When no level has an explicit contributor, the adventure contributor built all levels.
+const GRAND_BUILDER_THRESHOLD = 12;
+const adventures = await getCollection("adventures");
+
+// Build a lookup of Discourse username → avatarUrl from all Discourse-fetched sections.
+const { sections: discourseSections } = parseCommunityLeadersData(communityLeadersRaw);
+const discourseAvatarMap = new Map<string, string>();
+for (const section of discourseSections) {
+  for (const user of section.users) {
+    if (user.avatarUrl && !discourseAvatarMap.has(user.username)) {
+      discourseAvatarMap.set(user.username, user.avatarUrl);
+    }
+  }
+}
+
+// Resolve avatar for a contributor: real Discourse photo if cached, else letter avatar, else undefined.
+function resolveAvatar(discourseUsername?: string): string | undefined {
+  if (!discourseUsername) return undefined;
+  if (discourseAvatarMap.has(discourseUsername)) return discourseAvatarMap.get(discourseUsername);
+  return `https://avatars.discourse-cdn.com/v4/letter/${discourseUsername.charAt(0).toLowerCase()}/b5a626/40.png`;
+}
+
+// name → { discourseUsername, challengeCount }
+type BuilderEntry = { discourseUsername?: string; count: number };
+const challengeCountMap = new Map<string, BuilderEntry>();
+
+// name → { discourseUsername, adventureCount }
+type DesignerEntry = { discourseUsername?: string; count: number };
+const designerCountMap = new Map<string, DesignerEntry>();
+
+for (const { data } of adventures) {
+  const hasLevelContributors = data.levels.some((l) => l.contributor);
+
+  if (data.contributor) {
+    const { name, discourseUsername } = data.contributor;
+    const existing = designerCountMap.get(name) ?? { discourseUsername, count: 0 };
+    existing.discourseUsername ??= discourseUsername;
+    existing.count++;
+    designerCountMap.set(name, existing);
+  }
+
+  for (const level of data.levels) {
+    const c = level.contributor ?? (!hasLevelContributors ? data.contributor : undefined);
+    if (!c) continue;
+    const existing = challengeCountMap.get(c.name) ?? { discourseUsername: c.discourseUsername, count: 0 };
+    existing.discourseUsername ??= c.discourseUsername;
+    existing.count++;
+    challengeCountMap.set(c.name, existing);
+  }
+}
+
+const allBuilders = [...challengeCountMap.entries()]
+  .filter(([, e]) => e.count > 0)
+  .sort((a, b) => b[1].count - a[1].count)
+  .map(([username, e]) => ({ username, avatarUrl: resolveAvatar(e.discourseUsername), count: e.count }));
+
+const adventureSections: LeaderSection[] = (
+  [
+    {
+      id: "challenge-grand-builders" as const,
+      title: "Challenge Grand Builders",
+      users: allBuilders.filter((u) => u.count > GRAND_BUILDER_THRESHOLD),
+    },
+    {
+      id: "challenge-builders" as const,
+      title: "Challenge Builders",
+      users: allBuilders.filter((u) => u.count <= GRAND_BUILDER_THRESHOLD),
+    },
+    {
+      id: "adventure-designers" as const,
+      title: "Adventure Designers",
+      users: [...designerCountMap.entries()]
+        .sort((a, b) => b[1].count - a[1].count)
+        .map(([username, e]) => ({ username, avatarUrl: resolveAvatar(e.discourseUsername), count: e.count })),
+    },
+  ] satisfies LeaderSection[]
+).filter((s) => s.users.length > 0);
+
+const ADVENTURE_SECTION_IDS = new Set(["challenge-grand-builders", "challenge-builders", "adventure-designers"]);
+const ALL_SECTIONS: LeaderSection[] = [
+  ...discourseSections.filter((s) => !ADVENTURE_SECTION_IDS.has(s.id)),
+  ...adventureSections,
+].sort((a, b) =>
+  (Object.keys(SECTION_ICON_NAMES) as SectionId[]).indexOf(a.id as SectionId) -
+  (Object.keys(SECTION_ICON_NAMES) as SectionId[]).indexOf(b.id as SectionId),
+);
 
 const visibleSections = (
   sectionFilter

@@ -30,10 +30,14 @@ interface Props {
   levelId: string;
   discussionUrl: string;
   contributor?: { name: string; url?: string };
+  levelContributor?: { name: string; url?: string };
   discussion: Discussion | null;
   leaderboardRows: LeaderboardRow[];
 }
-const { levelId, discussionUrl, contributor, discussion, leaderboardRows } = Astro.props;
+const { levelId, discussionUrl, contributor, levelContributor, discussion, leaderboardRows } = Astro.props;
+// On a level page, credit whoever built this specific level.
+// Fall back to the adventure contributor if no level-specific builder is set.
+const levelBuilder = levelContributor ?? contributor;
 
 const hasThread = !!discussionUrl && discussionUrl !== COMMUNITY_URL;
 const solvers: NonNullable<Discussion["solvers"]> = discussion?.solvers ?? [];
@@ -65,11 +69,11 @@ const hasActivity = visible.length > 0;
 <div class="rounded-xl border border-border bg-[hsl(var(--surface))] p-5">
   <h2 class="font-sans text-base font-semibold text-foreground mb-5">Community</h2>
 
-  {/* Challenge builder */}
+  {/* Level builder */}
   {
-    contributor && (
+    levelBuilder && (
       <div class="mb-5 pb-5 border-b border-border">
-        <ContributorBadge name={contributor.name} url={contributor.url} />
+        <ContributorBadge builder={levelBuilder} />
       </div>
     )
   }

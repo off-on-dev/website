@@ -15,11 +15,22 @@ interface Props {
     tags: string[];
     icon?: string;
     isLive?: boolean;
-    levels: { id: string; difficulty: Difficulty }[];
+    levels: { id: string; difficulty: Difficulty; contributor?: { name: string; url?: string } }[];
     contributor?: { name: string; url?: string };
   };
 }
 const { adventure } = Astro.props;
+
+let cardPillBuilder: { name: string; url?: string } | undefined;
+let cardHasBuilders = false;
+if (adventure.contributor) {
+  const levelBuilders = adventure.levels.filter((l) => l.contributor).map((l) => l.contributor!);
+  const uniqueNames = [...new Set(levelBuilders.map((b) => b.name))];
+  if (uniqueNames.length === 1 && uniqueNames[0] !== adventure.contributor.name) {
+    cardPillBuilder = levelBuilders.find((b) => b.name === uniqueNames[0]);
+  }
+  cardHasBuilders = uniqueNames.length > 1;
+}
 const base = import.meta.env.BASE_URL;
 const difficulties = adventure.levels.map((l) => l.difficulty).join(", ");
 const tagList = adventure.tags.slice(0, 4).join(", ");
@@ -70,7 +81,7 @@ const label = tagList
 
   {adventure.contributor && (
     <div class="mt-auto pt-4">
-      <ContributorBadge name={adventure.contributor.name} />
+      <ContributorBadge proposer={adventure.contributor} builder={cardPillBuilder} hasBuilders={cardHasBuilders} noLinks />
     </div>
   )}
 </a>

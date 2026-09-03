@@ -3,39 +3,72 @@ import IconHammer from "~icons/lucide/hammer";
 import IconExternalLink from "~icons/lucide/external-link";
 
 interface Props {
-  name: string;
-  url?: string;
+  proposer?: { name: string; url?: string };
+  builder?: { name: string; url?: string };
   glow?: boolean;
-  label?: string;
+  // Suppress <a> tags — required when ContributorBadge is inside an <a> card element.
+  noLinks?: boolean;
+  // True when level builders exist but aren't shown in this pill (e.g. multiple builders on a card).
+  // Forces "Adventure Designer" label instead of "Adventure Builder".
+  hasBuilders?: boolean;
 }
-const { name, url, glow = false, label = "Challenge Builder" } = Astro.props;
+
+const { proposer, builder, glow = false, noLinks = false, hasBuilders = false } = Astro.props;
+
+const isCompound = proposer && builder && builder.name !== proposer.name;
+const label = !proposer
+  ? "Challenge Builder"
+  : isCompound || (!builder && hasBuilders)
+    ? "Adventure Designer"
+    : "Adventure Builder";
+const primary = proposer ?? builder;
+
 const pill = [
   "contributor-pill inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-xs text-primary",
   glow && "contributor-pill-glow",
 ];
+const sep = "inline-block h-3 w-px bg-current opacity-40";
 ---
 
-{
-  url ? (
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-describedby="new-tab-hint"
-      class:list={[...pill, "hover:border-primary/40 hover:bg-primary/10 transition-colors focus-ring-tight"]}
-    >
-      <IconHammer width={11} height={11} aria-hidden="true" />
-      <span>{label}</span>
-      <span aria-hidden="true" class="inline-block h-3 w-px bg-current opacity-40" />
-      <span>{name}</span>
-      <IconExternalLink width={11} height={11} aria-hidden="true" />
-    </a>
-  ) : (
-    <span class:list={pill}>
-      <IconHammer width={11} height={11} aria-hidden="true" />
-      <span>{label}</span>
-      <span aria-hidden="true" class="inline-block h-3 w-px bg-current opacity-40" />
-      <span>{name}</span>
-    </span>
-  )
-}
+{primary && (
+  <span class:list={pill}>
+    <IconHammer width={11} height={11} aria-hidden="true" />
+    <span>{label}</span>
+    <span aria-hidden="true" class={sep} />
+    {primary.url && !noLinks ? (
+      <a
+        href={primary.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-describedby="new-tab-hint"
+        class="inline-flex items-center gap-1 focus-ring-tight rounded"
+      >
+        {primary.name}
+        <IconExternalLink width={11} height={11} aria-hidden="true" />
+      </a>
+    ) : (
+      <span>{primary.name}</span>
+    )}
+    {isCompound && builder && (
+      <Fragment>
+        <span aria-hidden="true">·</span>
+        <span>Challenge Builder</span>
+        <span aria-hidden="true" class={sep} />
+        {builder.url && !noLinks ? (
+          <a
+            href={builder.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-describedby="new-tab-hint"
+            class="inline-flex items-center gap-1 focus-ring-tight rounded"
+          >
+            {builder.name}
+            <IconExternalLink width={11} height={11} aria-hidden="true" />
+          </a>
+        ) : (
+          <span>{builder.name}</span>
+        )}
+      </Fragment>
+    )}
+  </span>
+)}

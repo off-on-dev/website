@@ -13,6 +13,7 @@ export const SECTION_IDS = [
   "challenge-rockstars",
   "challenge-grand-builders",
   "challenge-builders",
+  "adventure-designers",
   "most-liked",
   "most-replies",
   "most-supportive",
@@ -22,7 +23,7 @@ export type SectionId = (typeof SECTION_IDS)[number];
 
 const leaderUserSchema = z.object({
   username: z.string(),
-  avatarUrl: z.string(),
+  avatarUrl: z.string().optional(),
   count: z.number(),
 });
 

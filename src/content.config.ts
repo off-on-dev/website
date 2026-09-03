@@ -45,8 +45,14 @@ const DIFFICULTY = z.enum(["Beginner", "Intermediate", "Expert"]);
 // gate: unknown fields fail the build (via `astro sync` / `astro build`).
 
 const contributorSchema = z
-  .object({ name: z.string(), url: z.url().optional(), about: z.string().optional() })
+  .object({
+    name: z.string(),
+    url: z.url().optional(),
+    about: z.string().optional(),
+    discourse_username: z.string().optional(),
+  })
   .strict();
+
 
 const rewardsSchema = z
   .object({
@@ -124,6 +130,7 @@ const levelSchema = z
     top_players: z
       .array(z.object({ username: z.string(), count: z.number().int() }).strict())
       .optional(),
+    contributor: contributorSchema.optional(),
   })
   .strict()
   .refine((l) => l.name || l.title, { message: "level needs name or title" })
@@ -197,6 +204,7 @@ async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Adventur
     backstoryHtml,
     scenarioHtml,
     architectureHtml,
+    contributorAboutHtml,
     toolbox,
     howToPlay,
   ] = await Promise.all([
@@ -207,6 +215,7 @@ async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Adventur
     level.backstory ? mdToInlineArray(level.backstory) : Promise.resolve(null),
     level.scenario ? mdToBlock(level.scenario) : Promise.resolve(null),
     level.architecture ? mdToBlockArray(level.architecture) : Promise.resolve(null),
+    level.contributor?.about ? mdToInline(level.contributor.about) : Promise.resolve(null),
     Promise.all(
       level.toolbox.map(async (t) => ({ ...t, description: await mdToInline(t.description) })),
     ),
@@ -246,6 +255,7 @@ async function renderLevel(level: z.infer<typeof levelSchema>): Promise<Adventur
     ...(level.helpful_links ? { helpfulLinks: level.helpful_links } : {}),
     verification: level.verification,
     metaDescription: level.meta_description || buildLevelMetaDescription(level),
+    ...(level.contributor ? { contributor: { name: level.contributor.name, url: level.contributor.url, ...(level.contributor.discourse_username ? { discourseUsername: level.contributor.discourse_username } : {}), ...(contributorAboutHtml ? { aboutHtml: contributorAboutHtml } : {}) } } : {}),
   };
 }
 
@@ -371,6 +381,7 @@ const adventures = defineCollection({
                 name: data.contributor.name,
                 url: data.contributor.url,
                 aboutHtml: aboutHtml ?? undefined,
+                ...(data.contributor.discourse_username ? { discourseUsername: data.contributor.discourse_username } : {}),
               },
             }
           : {}),

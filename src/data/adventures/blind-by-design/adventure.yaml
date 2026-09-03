@@ -20,6 +20,7 @@ tags:
 contributor:
   name: "Simon Schrottner"
   url: "https://schrottner.at/"
+  discourse_username: simon.schrottner
   about: >-
     <abbr title="Cloud Native Computing Foundation">CNCF</abbr> Ambassador and maintainer of OpenFeature and JUnit Pioneer. Helps teams release faster
     and with more confidence through open standards, feature flagging, and the communities that
