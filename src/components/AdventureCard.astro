@@ -6,6 +6,7 @@ import LivePill from "@/components/LivePill.astro";
 import AdventureIcon from "@/components/AdventureIcon.astro";
 import { stripHtml } from "@/lib/markdown";
 import type { Difficulty } from "@/lib/difficulty";
+import { pillCreditOf, type CreditPerson } from "@/lib/adventure-credit";
 
 interface Props {
   adventure: {
@@ -15,26 +16,13 @@ interface Props {
     tags: string[];
     icon?: string;
     isLive?: boolean;
-    levels: { id: string; difficulty: Difficulty; contributor?: { name: string; url?: string } }[];
-    contributor?: { name: string; url?: string };
+    levels: { id: string; difficulty: Difficulty; contributor?: CreditPerson }[];
+    contributor?: CreditPerson;
   };
 }
 const { adventure } = Astro.props;
 
-let cardPillBuilder: { name: string; url?: string } | undefined;
-let cardHasBuilders = false;
-const levelBuilders = adventure.levels.filter((l) => l.contributor).map((l) => l.contributor!);
-const uniqueNames = [...new Set(levelBuilders.map((b) => b.name))];
-if (adventure.contributor) {
-  if (uniqueNames.length === 1 && uniqueNames[0] !== adventure.contributor.name) {
-    cardPillBuilder = levelBuilders.find((b) => b.name === uniqueNames[0]);
-  }
-  cardHasBuilders = uniqueNames.length > 1;
-} else if (uniqueNames.length === 1) {
-  cardPillBuilder = levelBuilders[0];
-} else if (uniqueNames.length > 1) {
-  cardHasBuilders = true;
-}
+const credit = pillCreditOf(adventure);
 const base = import.meta.env.BASE_URL;
 const difficulties = adventure.levels.map((l) => l.difficulty).join(", ");
 const tagList = adventure.tags.slice(0, 4).join(", ");
@@ -60,7 +48,7 @@ const label = tagList
         class="badge-levels inline-flex items-center gap-1.5 rounded-sm border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-xs uppercase tracking-wider text-primary"
       >
         <IconLayers width={12} height={12} aria-hidden="true" />
-        {adventure.levels.length} Level{adventure.levels.length !== 1 ? "s" : ""}
+        {adventure.levels.length} level{adventure.levels.length !== 1 ? "s" : ""}
       </span>
     </div>
   </div>
@@ -83,9 +71,9 @@ const label = tagList
     ))}
   </div>
 
-  {(adventure.contributor || cardPillBuilder) && (
+  {credit.proposer && (
     <div class="mt-auto pt-4">
-      <ContributorBadge proposer={adventure.contributor} builder={cardPillBuilder} hasBuilders={cardHasBuilders} noLinks />
+      <ContributorBadge proposer={credit.proposer} builder={credit.builder} hasBuilders={credit.hasBuilders} noLinks />
     </div>
   )}
 </a>

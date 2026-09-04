@@ -21,7 +21,7 @@ import { stripLinks } from "@/lib/markdown";
 import { isDeadlinePast } from "@/lib/utils";
 import { getLeaderboard } from "@/lib/community-data";
 import { isAdventureLive } from "@/lib/challenges";
-import type { Difficulty } from "@/lib/difficulty";
+import { levelBuildersOf, pillCreditOf } from "@/lib/adventure-credit";
 
 export async function getStaticPaths() {
   const adventures = await getCollection("adventures");
@@ -46,24 +46,15 @@ const path = `/adventures/${adventure.slug}/`;
 // <StructuredData>, so the two can never disagree.
 const crumbs = [{ label: "Adventures", href: "/adventures/" }, { label: adventure.title }];
 
-// Build a map of level builders grouped by name, preserving insertion order (first level seen).
-const levelBuilderMap = new Map<string, { name: string; url?: string; aboutHtml?: string; levels: Difficulty[] }>();
-for (const level of adventure.levels) {
-  if (!level.contributor) continue;
-  const { name, url, aboutHtml } = level.contributor;
-  if (!levelBuilderMap.has(name)) levelBuilderMap.set(name, { name, url, aboutHtml, levels: [] });
-  levelBuilderMap.get(name)!.levels.push(level.difficulty);
-}
-const levelBuilders = [...levelBuilderMap.values()];
+// Everyone credited with a level, designer included when the per-level fallback
+// credits them. Shared with the card pill, the leaderboard sections and the
+// builders section via @/lib/adventure-credit.
+const levelBuilders = levelBuildersOf(adventure);
 const proposerName = adventure.contributor?.name;
-const hasSingleBuilder = levelBuilders.length === 1;
-const singleBuilderSameAsProposer = hasSingleBuilder && levelBuilders[0].name === proposerName;
-const proposedAndBuilt = levelBuilders.length === 0 || singleBuilderSameAsProposer;
-
-// Card pill: show builder only when exactly one level builder differs from proposer.
-const titlePillBuilder = hasSingleBuilder && !singleBuilderSameAsProposer ? levelBuilders[0] : undefined;
-// True when multiple distinct builders exist — pill shows "Proposed by" without listing them.
-const titleHasBuilders = levelBuilders.length > 1 && !singleBuilderSameAsProposer;
+// The designer built the whole thing on their own: one undivided credit block.
+const proposedAndBuilt =
+  levelBuilders.length <= 1 && (levelBuilders.length === 0 || levelBuilders[0].name === proposerName);
+const credit = pillCreditOf(adventure);
 ---
 
 <Layout
@@ -97,9 +88,9 @@ const titleHasBuilders = levelBuilders.length > 1 && !singleBuilderSameAsPropose
         <div class="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1.5">
           {adventure.contributor && (
             <ContributorBadge
-              proposer={adventure.contributor}
-              builder={titlePillBuilder}
-              hasBuilders={titleHasBuilders}
+              proposer={credit.proposer}
+              builder={credit.builder}
+              hasBuilders={credit.hasBuilders}
             />
           )}
           <span class="font-mono text-xs uppercase tracking-widest text-faint">{adventure.month}</span>
@@ -167,7 +158,7 @@ const titleHasBuilders = levelBuilders.length > 1 && !singleBuilderSameAsPropose
                   <div class="mb-3"><DifficultyBadge difficulty={u.difficulty} showDot /></div>
                   <h3 class="mb-3 text-lg font-semibold text-foreground">{u.name}</h3>
                   <span class="mt-auto inline-flex items-center gap-1 font-mono text-xs uppercase tracking-widest text-dim">
-                    Coming Soon
+                    coming soon
                   </span>
                 </div>
               ))}
@@ -198,7 +189,7 @@ const titleHasBuilders = levelBuilders.length > 1 && !singleBuilderSameAsPropose
           )}
           {adventure.contributor && (
             <div class="rounded-xl border border-border bg-[hsl(var(--surface))] px-5 py-4">
-              <p class="mb-3 font-mono text-xs uppercase tracking-widest text-faint">Contributors</p>
+              <p class="mb-3 font-mono text-xs uppercase tracking-widest text-faint">contributors</p>
               {proposedAndBuilt ? (
                 <div>
                   <PersonNameLink name={adventure.contributor.name} url={adventure.contributor.url} />
@@ -209,32 +200,31 @@ const titleHasBuilders = levelBuilders.length > 1 && !singleBuilderSameAsPropose
               ) : (
                 <div class="space-y-4">
                   <div>
-                    <p class="mb-1.5 font-mono text-xs uppercase tracking-widest text-faint">Adventure Designer</p>
+                    <p class="mb-1.5 font-mono text-xs uppercase tracking-widest text-faint">adventure designer</p>
                     <PersonNameLink name={adventure.contributor.name} url={adventure.contributor.url} />
                     {adventure.contributor.aboutHtml && (
                       <InlineProse html={adventure.contributor.aboutHtml} class="mt-2 text-sm leading-relaxed text-dim" />
                     )}
                   </div>
-                  {levelBuilders.length > 0 && (
-                    <div class="border-t border-border pt-4">
-                      <p class="mb-3 font-mono text-xs uppercase tracking-widest text-faint">Challenge Builders</p>
-                      <div class="space-y-4">
-                        {levelBuilders.map((builder) => (
-                          <div>
-                            <PersonNameLink name={builder.name} url={builder.url} />
-                            <div class="mt-1 flex flex-wrap gap-1">
-                              {builder.levels.map((diff) => (
-                                <DifficultyBadge difficulty={diff} />
-                              ))}
-                            </div>
-                            {builder.aboutHtml && (
-                              <InlineProse html={builder.aboutHtml} class="mt-2 text-sm leading-relaxed text-dim" />
-                            )}
+                  <div class="border-t border-border pt-4">
+                    <p class="mb-3 font-mono text-xs uppercase tracking-widest text-faint">{levelBuilders.length === 1 ? "challenge builder" : "challenge builders"}</p>
+                    <div class="space-y-4">
+                      {levelBuilders.map((builder) => (
+                        <div>
+                          <PersonNameLink name={builder.name} url={builder.url} />
+                          <div class="mt-1 flex flex-wrap gap-1">
+                            {builder.difficulties.map((diff) => (
+                              <DifficultyBadge difficulty={diff} />
+                            ))}
                           </div>
-                        ))}
-                      </div>
+                          {/* The designer's bio is already shown above; don't repeat it here. */}
+                          {builder.aboutHtml && builder.name !== proposerName && (
+                            <InlineProse html={builder.aboutHtml} class="mt-2 text-sm leading-relaxed text-dim" />
+                          )}
+                        </div>
+                      ))}
                     </div>
-                  )}
+                  </div>
                 </div>
               )}
             </div>

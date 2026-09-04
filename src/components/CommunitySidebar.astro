@@ -4,6 +4,7 @@
 import IconMessageCircle from "~icons/lucide/message-circle";
 import IconExternalLink from "~icons/lucide/external-link";
 import ContributorBadge from "@/components/ContributorBadge.astro";
+import { levelBuilderCredit } from "@/lib/adventure-credit";
 import { COMMUNITY_URL } from "@/lib/site";
 import { stripHtml } from "@/lib/markdown";
 import type { Discussion, DiscussionPost, LeaderboardRow } from "@/lib/community-data";
@@ -35,9 +36,9 @@ interface Props {
   leaderboardRows: LeaderboardRow[];
 }
 const { levelId, discussionUrl, contributor, levelContributor, discussion, leaderboardRows } = Astro.props;
-// On a level page, credit whoever built this specific level.
-// Fall back to the adventure contributor if no level-specific builder is set.
-const levelBuilder = levelContributor ?? contributor;
+// Derive pill props via the shared rule: identity check by name so a designer
+// explicitly named on a level keeps "Adventure Builder", not "Challenge Builder".
+const { proposer: levelProposer, builder: levelBuilder } = levelBuilderCredit(contributor, levelContributor);
 
 const hasThread = !!discussionUrl && discussionUrl !== COMMUNITY_URL;
 const solvers: NonNullable<Discussion["solvers"]> = discussion?.solvers ?? [];
@@ -73,7 +74,7 @@ const hasActivity = visible.length > 0;
   {
     levelBuilder && (
       <div class="mb-5 pb-5 border-b border-border">
-        <ContributorBadge proposer={levelContributor ? undefined : contributor} builder={levelBuilder} />
+        <ContributorBadge proposer={levelProposer} builder={levelBuilder} />
       </div>
     )
   }
@@ -82,7 +83,7 @@ const hasActivity = visible.length > 0;
   {
     hasLeaderboard && (
       <div class="mb-5 pb-5 border-b border-border">
-        <h3 class="font-mono text-xs uppercase tracking-widest text-faint mb-3">Leaderboard</h3>
+        <h3 class="font-mono text-xs uppercase tracking-widest text-faint mb-3">leaderboard</h3>
         <ol class="space-y-2.5" aria-label="Players who completed this challenge">
           {topSolvers.map((solver, i) => {
             const points = pointsByUsername[solver.username];
@@ -137,7 +138,7 @@ const hasActivity = visible.length > 0;
   {
     hasActivity ? (
       <div class="mb-5">
-        <h3 class="font-mono text-xs uppercase tracking-widest text-faint mb-3">Latest activity</h3>
+        <h3 class="font-mono text-xs uppercase tracking-widest text-faint mb-3">latest activity</h3>
         <div class="space-y-3">
           {visible.map((post) => (
             <div class="text-xs">

@@ -57,6 +57,8 @@ describe("parseCommunityLeadersData", () => {
     expect(() => parseCommunityLeadersData(bad)).toThrow("failed schema validation");
   });
 
+  // Optional rather than required because buildAvatarUrl can return undefined.
+  // The value is still format-checked when present — see the next test.
   it("accepts a user with no avatarUrl (field is optional)", () => {
     const data = {
       lastUpdated: "2025-01-01T00:00:00Z",
@@ -69,6 +71,20 @@ describe("parseCommunityLeadersData", () => {
       ],
     };
     expect(() => parseCommunityLeadersData(data)).not.toThrow();
+  });
+
+  it("throws when avatarUrl is present but not a URL", () => {
+    const bad = {
+      lastUpdated: "2025-01-01T00:00:00Z",
+      sections: [
+        {
+          id: "top-contributors",
+          title: "Top Contributors",
+          users: [{ username: "alice", avatarUrl: "not-a-url", count: 5 }],
+        },
+      ],
+    };
+    expect(() => parseCommunityLeadersData(bad)).toThrow("failed schema validation");
   });
 
   it("throws when a user is missing username", () => {

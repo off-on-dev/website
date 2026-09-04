@@ -21,6 +21,7 @@ import {
 import { COMMUNITY_URL } from "./lib/site";
 import { MONTHS } from "./lib/challenges";
 import { EMOJI_TO_ICON } from "./lib/adventure-icons";
+import { creditIntegrityError } from "./lib/adventure-credit";
 import type { AdventureLevel, AdventureRewards } from "./data/adventures/types";
 
 // Adventure YAML lives in this app's own data dir (src/data/adventures),
@@ -353,6 +354,12 @@ const adventures = defineCollection({
     })
     .strict()
     .refine((d) => d.title || d.name, { message: "adventure needs title or name" })
+    // Levels may only name their own builder on an adventure that names a designer.
+    // Shared with the render path so the rule has one definition.
+    .superRefine((d, ctx) => {
+      const message = creditIntegrityError(d);
+      if (message) ctx.addIssue({ code: "custom", message, path: ["contributor"] });
+    })
     .transform(async (data) => {
       const title = requireEither(data.title, data.name, "adventure title/name");
       const story =

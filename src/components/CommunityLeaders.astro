@@ -5,14 +5,20 @@ import communityLeadersRaw from "@/data/community-leaders.json";
 import AvatarLink from "@/components/AvatarLink.astro";
 import {
   parseCommunityLeadersData,
-  type LeaderSection,
+  rowFromDiscourse,
+  type LeaderRow,
+  type LeaderRowSection,
   type SectionId,
 } from "@/lib/community-leaders";
+import { challengeCounts, designerCounts, type CreditAdventure, type CreditCount } from "@/lib/adventure-credit";
 
 interface Props {
-  /** Which section IDs to show. Omit to show all. */
-  sections?: string[];
-  /** Max users to show per section. Omit to show all. */
+  /**
+   * Which sections to show. A set, not an order: the card always renders them in
+   * SECTION_ICON_NAMES order so it reads the same on every page. Omit to show all.
+   */
+  sections?: SectionId[];
+  /** Max rows to show per section. Omit to show all. */
   limit?: number;
 }
 
@@ -33,12 +39,16 @@ const SECTION_ICON_NAMES = {
 } satisfies Record<SectionId, LucideIconKey>;
 
 // Derive builder and designer sections from the adventure collection.
-// Count = total challenges (levels) built per person. Grand Builder threshold: > 12 challenges.
-// When no level has an explicit contributor, the adventure contributor built all levels.
+// Count = total challenges (levels) built per person, using the shared credit rule
+// in @/lib/adventure-credit so this and ChallengeBuildersSection cannot disagree.
+// Grand Builder threshold: > 12 challenges.
 const GRAND_BUILDER_THRESHOLD = 12;
 const adventures = await getCollection("adventures");
+const adventureData = adventures.map((a) => a.data as CreditAdventure);
 
-// Build a lookup of Discourse username → avatarUrl from all Discourse-fetched sections.
+// Build a lookup of Discourse handle → avatarUrl from every Discourse-fetched
+// section, including the two whose rows are discarded below: they are kept in
+// community-leaders.json purely as this avatar cache.
 const { sections: discourseSections } = parseCommunityLeadersData(communityLeadersRaw);
 const discourseAvatarMap = new Map<string, string>();
 for (const section of discourseSections) {
@@ -56,79 +66,55 @@ function resolveAvatar(discourseUsername?: string): string | undefined {
   return `https://avatars.discourse-cdn.com/v4/letter/${discourseUsername.charAt(0).toLowerCase()}/b5a626/40.png`;
 }
 
-// name → { discourseUsername, challengeCount }
-type BuilderEntry = { discourseUsername?: string; count: number };
-const challengeCountMap = new Map<string, BuilderEntry>();
+// A derived row: the display text is a real name from YAML, and the Discourse
+// handle (when set) is kept apart, used only to resolve the avatar.
+const toRows = (counts: CreditCount[]): LeaderRow[] =>
+  counts.map((c) => ({
+    displayName: c.name,
+    ...(c.discourseUsername ? { discourseUsername: c.discourseUsername } : {}),
+    ...(resolveAvatar(c.discourseUsername) ? { avatarUrl: resolveAvatar(c.discourseUsername) } : {}),
+    count: c.count,
+  }));
 
-// name → { discourseUsername, adventureCount }
-type DesignerEntry = { discourseUsername?: string; count: number };
-const designerCountMap = new Map<string, DesignerEntry>();
+const allBuilders = challengeCounts(adventureData);
 
-for (const { data } of adventures) {
-  if (data.contributor) {
-    const { name, discourseUsername } = data.contributor;
-    const existing = designerCountMap.get(name) ?? { discourseUsername, count: 0 };
-    existing.discourseUsername ??= discourseUsername;
-    existing.count++;
-    designerCountMap.set(name, existing);
-  }
+const adventureSections: LeaderRowSection[] = [
+  {
+    id: "challenge-grand-builders",
+    title: "Challenge Grand Builders",
+    rows: toRows(allBuilders.filter((c) => c.count > GRAND_BUILDER_THRESHOLD)),
+  },
+  {
+    id: "challenge-builders",
+    title: "Challenge Builders",
+    rows: toRows(allBuilders.filter((c) => c.count <= GRAND_BUILDER_THRESHOLD)),
+  },
+  {
+    id: "adventure-designers",
+    title: "Adventure Designers",
+    rows: toRows(designerCounts(adventureData)),
+  },
+];
 
-  for (const level of data.levels) {
-    const c = level.contributor ?? data.contributor;
-    if (!c) continue;
-    const existing = challengeCountMap.get(c.name) ?? { discourseUsername: c.discourseUsername, count: 0 };
-    existing.discourseUsername ??= c.discourseUsername;
-    existing.count++;
-    challengeCountMap.set(c.name, existing);
-  }
-}
+// The derived sections replace their JSON namesakes entirely.
+const DERIVED_IDS = new Set<SectionId>(adventureSections.map((s) => s.id));
+const SECTION_ORDER = Object.keys(SECTION_ICON_NAMES) as SectionId[];
 
-// username here is the contributor's display name (from YAML), not a Discourse handle.
-// AvatarLink uses it as visible text only; resolveAvatar provides the actual avatar via discourseUsername.
-const allBuilders = [...challengeCountMap.entries()]
-  .filter(([, e]) => e.count > 0)
-  .sort((a, b) => b[1].count - a[1].count)
-  .map(([username, e]) => ({ username, avatarUrl: resolveAvatar(e.discourseUsername), count: e.count }));
-
-const adventureSections: LeaderSection[] = (
-  [
-    {
-      id: "challenge-grand-builders" as const,
-      title: "Challenge Grand Builders",
-      users: allBuilders.filter((u) => u.count > GRAND_BUILDER_THRESHOLD),
-    },
-    {
-      id: "challenge-builders" as const,
-      title: "Challenge Builders",
-      users: allBuilders.filter((u) => u.count <= GRAND_BUILDER_THRESHOLD),
-    },
-    {
-      id: "adventure-designers" as const,
-      title: "Adventure Designers",
-      users: [...designerCountMap.entries()]
-        .sort((a, b) => b[1].count - a[1].count)
-        .map(([username, e]) => ({ username, avatarUrl: resolveAvatar(e.discourseUsername), count: e.count })),
-    },
-  ] satisfies LeaderSection[]
-).filter((s) => s.users.length > 0);
-
-const ADVENTURE_SECTION_IDS = new Set(["challenge-grand-builders", "challenge-builders", "adventure-designers"]);
-const ALL_SECTIONS: LeaderSection[] = [
-  ...discourseSections.filter((s) => !ADVENTURE_SECTION_IDS.has(s.id)),
+const ALL_SECTIONS: LeaderRowSection[] = [
+  ...discourseSections
+    .filter((s) => !DERIVED_IDS.has(s.id))
+    .map((s) => ({ id: s.id, title: s.title, rows: s.users.map(rowFromDiscourse) })),
   ...adventureSections,
-].sort((a, b) =>
-  (Object.keys(SECTION_ICON_NAMES) as SectionId[]).indexOf(a.id as SectionId) -
-  (Object.keys(SECTION_ICON_NAMES) as SectionId[]).indexOf(b.id as SectionId),
-);
+]
+  .filter((s) => s.rows.length > 0)
+  .sort((a, b) => SECTION_ORDER.indexOf(a.id) - SECTION_ORDER.indexOf(b.id));
 
-const visibleSections = (
-  sectionFilter
-    ? sectionFilter
-        .map((id) => ALL_SECTIONS.find((s) => s.id === id))
-        .filter((s): s is LeaderSection => s !== undefined)
-    : ALL_SECTIONS
+// `sections` selects; it never orders. ALL_SECTIONS is already canonical, so
+// filtering preserves that and every page renders the same sequence.
+const visibleSections = ALL_SECTIONS.filter(
+  (s) => sectionFilter === undefined || sectionFilter.includes(s.id),
 )
-  .map((s) => (limit !== undefined ? { ...s, users: s.users.slice(0, limit) } : s))
+  .map((s) => (limit !== undefined ? { ...s, rows: s.rows.slice(0, limit) } : s))
   .map((s) => ({ ...s, IconComponent: LUCIDE_ICONS[SECTION_ICON_NAMES[s.id]] }));
 ---
 
@@ -147,17 +133,17 @@ const visibleSections = (
             {section.title}
           </h4>
           <ol class="space-y-2.5" aria-label={section.title}>
-            {section.users.map((user, i) => (
+            {section.rows.map((row, i) => (
               <li class="flex items-center gap-3">
                 <span class="font-mono text-xs text-faint w-4 shrink-0 text-right" aria-hidden="true">{i + 1}</span>
                 <AvatarLink
-                  username={user.username}
-                  avatarUrl={user.avatarUrl}
+                  displayName={row.displayName}
+                  avatarUrl={row.avatarUrl}
                   size={28}
                   class="text-sm font-medium text-foreground min-w-0 flex-1"
                 />
-                <span class="text-xs font-mono text-dim tabular-nums shrink-0" aria-label={`${user.count} contributions`}>
-                  {user.count}
+                <span class="text-xs font-mono text-dim tabular-nums shrink-0" aria-label={`${row.count} contributions`}>
+                  {row.count}
                 </span>
               </li>
             ))}

@@ -87,9 +87,13 @@ Each entry in the `levels` array accepts the following fields.
 | `verification` | **Required** | object | `{command, description}` — the verification gate command and its description. |
 | `codespaces_machine` | Optional | `"4core"` | Machine size override for Codespaces. Only `"4core"` is accepted; other values fail the Zod schema. |
 | `hook` | Optional | string | Verification hook command. |
-| `contributor` | Optional | object | Person who built this specific level (may differ from the adventure proposer). Same subfields as the adventure `contributor` (`name`, `url`, `about`, `discourse_username`). When set, takes precedence over the adventure contributor for credit display on the level page and in community leaderboard sections. |
+| `contributor` | Optional | object | Person who built this specific level. Same subfields as the adventure `contributor` (`name`, `url`, `about`, `discourse_username`). **When omitted, the adventure designer is credited as the builder for this level.** When set, takes precedence over the adventure designer for credit display on the level page and in community leaderboard sections. See note below. |
 | `solved_count` | Optional | integer | Override for the displayed solved count. |
 | `top_players` | Optional | object[] | System-populated leaderboard data: `{username, count}`. Set by the leaderboard refresh script; do not edit by hand. |
+
+**Level `contributor:` and the designer-as-builder rule.** The credit rule is `level.contributor ?? adventure.contributor`, applied per level: a designer who builds two of three levels keeps credit for those two while a guest builder takes the third. Omitting `contributor:` from a level does not mean "no builder known" — it means the adventure designer built that level.
+
+This makes absent `contributor:` ambiguous once real per-level builders exist alongside designer-built levels: the omission could mean "the designer built it" or "we have not yet recorded who built it." The PR checklist's "add contributor" step closes this gap in practice. If a level ever ships with a genuinely unknown builder, the fix is to allow `contributor: null` explicitly: update `src/content.config.ts` to accept `z.nullable()` on the level contributor field, treat explicit `null` as "no credit" in `builderOfLevel` in `src/lib/adventure-credit.ts`, and render nothing on the level page sidebar pill when the builder resolves to `null`. No data migration is needed — absent and `null` are both currently unset.
 
 ---
 

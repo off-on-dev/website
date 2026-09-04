@@ -2,88 +2,13 @@
 import { getCollection } from "astro:content";
 import PersonNameLink from "@/components/PersonNameLink.astro";
 import InlineProse from "@/components/InlineProse.astro";
+import { buildContributorIndex, type CreditAdventure } from "@/lib/adventure-credit";
 
 const base = import.meta.env.BASE_URL;
 const hasAside = Astro.slots.has("aside");
 
-const ROLE_ORDER: Record<string, number> = { Proposed: 0, Beginner: 1, Intermediate: 2, Expert: 3 };
-
-type Contribution = { id: string; title: string; roles: string[]; totalLevels: number };
-type ContributorEntry = {
-  name: string;
-  url?: string;
-  aboutHtml?: string;
-  contributions: Contribution[];
-};
-
 const adventures = await getCollection("adventures");
-const map = new Map<string, ContributorEntry>();
-
-function getOrCreate(name: string): ContributorEntry {
-  if (!map.has(name)) map.set(name, { name, contributions: [] });
-  return map.get(name)!;
-}
-
-for (const { id, data } of adventures) {
-  const { title } = data;
-  const totalLevels = data.levels.length;
-
-  if (data.contributor) {
-    const entry = getOrCreate(data.contributor.name);
-    entry.url ??= data.contributor.url;
-    entry.aboutHtml ??= data.contributor.aboutHtml;
-    const existing = entry.contributions.find((c) => c.id === id);
-    if (existing) {
-      if (!existing.roles.includes("Proposed")) existing.roles.unshift("Proposed");
-    } else {
-      entry.contributions.push({ id, title, roles: ["Proposed"], totalLevels });
-    }
-  }
-
-  const hasLevelContributors = data.levels.some((l) => l.contributor);
-
-  for (const level of data.levels) {
-    // When no level has an explicit contributor, the adventure contributor built everything.
-    const levelContributor = level.contributor ?? (!hasLevelContributors ? data.contributor : undefined);
-    if (!levelContributor) continue;
-    const entry = getOrCreate(levelContributor.name);
-    entry.url ??= levelContributor.url;
-    entry.aboutHtml ??= levelContributor.aboutHtml;
-    const existing = entry.contributions.find((c) => c.id === id);
-    if (existing) {
-      if (!existing.roles.includes(level.difficulty)) existing.roles.push(level.difficulty);
-    } else {
-      entry.contributions.push({ id, title, roles: [level.difficulty], totalLevels });
-    }
-  }
-}
-
-function formatRoles(roles: string[], totalLevels: number): string {
-  const levelRoles = roles.filter((r) => r !== "Proposed");
-  const hasProposed = roles.includes("Proposed");
-  if (hasProposed && levelRoles.length > 0) {
-    return levelRoles.length === totalLevels
-      ? "Proposed & Built"
-      : `Proposed & Built · ${levelRoles.join(" · ")}`;
-  }
-  if (hasProposed) return "Proposed";
-  return `Built · ${levelRoles.join(" · ")}`;
-}
-
-const contributors = [...map.values()]
-  .map((c) => ({
-    ...c,
-    contributions: c.contributions
-      .sort((a, b) => a.title.localeCompare(b.title))
-      .map((contrib) => ({
-        ...contrib,
-        roles: [...contrib.roles].sort(
-          (a, b) => (ROLE_ORDER[a] ?? 99) - (ROLE_ORDER[b] ?? 99),
-        ),
-        roleLabel: formatRoles(contrib.roles, contrib.totalLevels),
-      })),
-  }))
-  .sort((a, b) => b.contributions.length - a.contributions.length || a.name.localeCompare(b.name));
+const contributors = buildContributorIndex(adventures.map((a) => a.data as CreditAdventure));
 ---
 
 {contributors.length > 0 && (
@@ -102,11 +27,11 @@ const contributors = [...map.values()]
                 {contributor.aboutHtml && (
                   <InlineProse html={contributor.aboutHtml} class="mt-1.5 text-sm text-muted-foreground leading-relaxed" />
                 )}
-                <p class="mt-6 mb-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Adventures contributed to</p>
+                <p class="mt-6 mb-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">adventures contributed to</p>
                 <ul role="list" class="space-y-2.5">
-                  {contributor.contributions.map(({ id, title, roleLabel }) => (
+                  {contributor.contributions.map(({ slug, title, roleLabel }) => (
                     <li class="flex flex-col gap-0.5 text-sm">
-                      <a href={`${base}adventures/${id}/`} class="docs-ext-link">{title}</a>
+                      <a href={`${base}adventures/${slug}/`} class="docs-ext-link">{title}</a>
                       <span class="text-xs text-muted-foreground">{roleLabel}</span>
                     </li>
                   ))}
