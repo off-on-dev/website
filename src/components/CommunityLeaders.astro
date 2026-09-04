@@ -10,7 +10,13 @@ import {
   type LeaderRowSection,
   type SectionId,
 } from "@/lib/community-leaders";
-import { challengeCounts, designerCounts, type CreditAdventure, type CreditCount } from "@/lib/adventure-credit";
+import {
+  challengeCounts,
+  designerCounts,
+  displayNameByHandle,
+  type CreditAdventure,
+  type CreditCount,
+} from "@/lib/adventure-credit";
 
 interface Props {
   /**
@@ -38,17 +44,17 @@ const SECTION_ICON_NAMES = {
   "most-supportive": "hand-heart",
 } satisfies Record<SectionId, LucideIconKey>;
 
-// Derive builder and designer sections from the adventure collection.
-// Count = total challenges (levels) built per person, using the shared credit rule
-// in @/lib/adventure-credit so this and ChallengeBuildersSection cannot disagree.
-// Grand Builder threshold: > 12 challenges.
-const GRAND_BUILDER_THRESHOLD = 12;
+// Builder standing comes from Discourse, which owns the Challenge Builder and
+// Challenge Grand Builder badges. This component used to re-derive both from the
+// adventure collection and discard the fetched rows, which meant a local
+// threshold could silently move someone between sections, or empty one.
+//
+// Only Adventure Designers is derived here, because Discourse cannot know it.
 const adventures = await getCollection("adventures");
 const adventureData = adventures.map((a) => a.data as CreditAdventure);
 
 // Build a lookup of Discourse handle → avatarUrl from every Discourse-fetched
-// section, including the two whose rows are discarded below: they are kept in
-// community-leaders.json purely as this avatar cache.
+// section.
 const { sections: discourseSections } = parseCommunityLeadersData(communityLeadersRaw);
 const discourseAvatarMap = new Map<string, string>();
 for (const section of discourseSections) {
@@ -76,35 +82,51 @@ const toRows = (counts: CreditCount[]): LeaderRow[] =>
     count: c.count,
   }));
 
-const allBuilders = challengeCounts(adventureData);
+// Every handle Discourse already credits as a builder, across both badge tiers.
+const badgedBuilders = new Set(
+  discourseSections
+    .filter((s) => s.id === "challenge-builders" || s.id === "challenge-grand-builders")
+    .flatMap((s) => s.users.map((u) => u.username.toLowerCase())),
+);
 
-const adventureSections: LeaderRowSection[] = [
-  {
-    id: "challenge-grand-builders",
-    title: "Challenge Grand Builders",
-    rows: toRows(allBuilders.filter((c) => c.count > GRAND_BUILDER_THRESHOLD)),
-  },
-  {
-    id: "challenge-builders",
-    title: "Challenge Builders",
-    rows: toRows(allBuilders.filter((c) => c.count <= GRAND_BUILDER_THRESHOLD)),
-  },
-  {
-    id: "adventure-designers",
-    title: "Adventure Designers",
-    rows: toRows(designerCounts(adventureData)),
-  },
-];
+// Builders the forum does not know about: no account, or no badge granted yet.
+// Their credit is recorded in the adventure YAML, so surface them rather than
+// dropping them. Matched on the Discourse handle, never the display name, so a
+// person listed under their handle upstream is not added again under their name.
+const unbadgedBuilders = challengeCounts(adventureData).filter(
+  (b) => !b.discourseUsername || !badgedBuilders.has(b.discourseUsername.toLowerCase()),
+);
 
-// The derived sections replace their JSON namesakes entirely.
-const DERIVED_IDS = new Set<SectionId>(adventureSections.map((s) => s.id));
+const designerSection: LeaderRowSection = {
+  id: "adventure-designers",
+  title: "Adventure Designers",
+  rows: toRows(designerCounts(adventureData)),
+};
+
+// Discourse rows arrive keyed by handle. Swap in the real name wherever the
+// adventure YAML records who the handle belongs to, so one card does not show
+// "KatharinaSick" in one section and "Katharina Sick" in the next. Handles we
+// have no record for keep their handle rather than being guessed at.
+const realNames = displayNameByHandle(adventureData);
+const withRealName = (row: LeaderRow): LeaderRow => {
+  const name = row.discourseUsername && realNames.get(row.discourseUsername.toLowerCase());
+  return name ? { ...row, displayName: name } : row;
+};
+
 const SECTION_ORDER = Object.keys(SECTION_ICON_NAMES) as SectionId[];
 
 const ALL_SECTIONS: LeaderRowSection[] = [
   ...discourseSections
-    .filter((s) => !DERIVED_IDS.has(s.id))
-    .map((s) => ({ id: s.id, title: s.title, rows: s.users.map(rowFromDiscourse) })),
-  ...adventureSections,
+    .filter((s) => s.id !== "adventure-designers")
+    .map((s) => ({
+      id: s.id,
+      title: s.title,
+      rows:
+        s.id === "challenge-builders"
+          ? [...s.users.map(rowFromDiscourse).map(withRealName), ...toRows(unbadgedBuilders)]
+          : s.users.map(rowFromDiscourse).map(withRealName),
+    })),
+  designerSection,
 ]
   .filter((s) => s.rows.length > 0)
   .sort((a, b) => SECTION_ORDER.indexOf(a.id) - SECTION_ORDER.indexOf(b.id));

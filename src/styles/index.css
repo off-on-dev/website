@@ -1181,7 +1181,7 @@ abbr[data-title]:focus-visible {
   --firefly-color: 41 100% 45%;
 }
 
-/* ─── ContributorBadge pill (light mode) ────────────────── */
+/* ─── ContributorPill (light mode) ──────────────────────── */
 /* bg-primary/5 is nearly invisible on light backgrounds; use transparent
    background with a visible slate border instead.
    Border darkened to hsl(220 12% 55%), 3.25:1 on near-white (WCAG 1.4.11). */
@@ -1194,7 +1194,7 @@ abbr[data-title]:focus-visible {
   border-color: hsl(220 12% 45%);
 }
 
-/* ─── ContributorBadge glow variant (ChallengeDetail only) ─ */
+/* ─── ContributorPill glow variant (ChallengeDetail only) ─ */
 /* Static glow, no hover. Sized for a small pill, not a card. */
 .contributor-pill-glow {
   box-shadow:

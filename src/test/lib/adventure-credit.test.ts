@@ -5,14 +5,14 @@ import { describe, it, expect } from "vitest";
 import {
   builderOfLevel,
   levelBuildersOf,
-  guestBuildersOf,
-  pillCreditOf,
-  levelBuilderCredit,
-  formatRoles,
+  adventurePillCredit,
+  sortDifficulties,
+  levelPillCredit,
   buildContributorIndex,
   creditIntegrityError,
   challengeCounts,
   designerCounts,
+  displayNameByHandle,
   type CreditAdventure,
   type CreditPerson,
 } from "@/lib/adventure-credit";
@@ -91,74 +91,172 @@ describe("levelBuildersOf", () => {
   });
 });
 
-describe("guestBuildersOf", () => {
-  it("excludes the designer", () => {
-    expect(guestBuildersOf(adventure("a", KAT, [undefined, SIMON, undefined])).map((b) => b.name)).toEqual(["Simon"]);
+describe("adventurePillCredit", () => {
+  // The pill carries exactly one person, the designer. Builder credit is
+  // per level, so it lives on the level pages and the adventure aside.
+  it("designer who built every challenge: Adventure Builder", () => {
+    expect(adventurePillCredit(adventure("a", KAT))).toEqual({
+      label: "Adventure Builder",
+      person: KAT,
+    });
   });
 
-  it("is empty when the designer built everything", () => {
-    expect(guestBuildersOf(adventure("a", KAT))).toEqual([]);
-  });
-});
-
-describe("pillCreditOf", () => {
-  it("designer only: proposer, no builder, no hasBuilders", () => {
-    expect(pillCreditOf(adventure("a", KAT))).toEqual({ proposer: KAT, builder: undefined, hasBuilders: false });
+  it("one guest builder: designer only", () => {
+    expect(adventurePillCredit(adventure("a", KAT, [undefined, SIMON, undefined]))).toEqual({
+      label: "Adventure Designer",
+      person: KAT,
+    });
   });
 
-  it("one guest builder: names both", () => {
-    const credit = pillCreditOf(adventure("a", KAT, [undefined, SIMON, undefined]));
-    expect(credit.proposer).toBe(KAT);
-    expect(credit.builder?.name).toBe("Simon");
-    expect(credit.hasBuilders).toBe(false);
+  it("guest built every level: still designer only, and never the guest", () => {
+    const credit = adventurePillCredit(adventure("a", KAT, [SIMON, SIMON, SIMON]));
+    expect(credit).toEqual({ label: "Adventure Designer", person: KAT });
   });
 
-  it("two guest builders: names none, sets hasBuilders", () => {
+  it("two guest builders: designer only", () => {
     const third: CreditPerson = { name: "Ada" };
-    const credit = pillCreditOf(adventure("a", KAT, [SIMON, third, undefined]));
-    expect(credit.proposer).toBe(KAT);
-    expect(credit.builder).toBeUndefined();
-    expect(credit.hasBuilders).toBe(true);
+    expect(adventurePillCredit(adventure("a", KAT, [SIMON, third, undefined]))).toEqual({
+      label: "Adventure Designer",
+      person: KAT,
+    });
   });
 
-  // An adventure with no designer has no level builders either — the schema
-  // rejects that (see creditIntegrityError) — so the pill stays empty rather
-  // than promoting a builder. This is the freshly-synced, pre-review state.
-  it("no designer: empty credit, so no pill renders", () => {
-    expect(pillCreditOf(adventure("a", undefined))).toEqual({
-      proposer: undefined,
-      builder: undefined,
-      hasBuilders: false,
+  // The label tracks the designer's own scope only. One guest anywhere means
+  // the designer did not build the whole thing, so it drops to Designer.
+  it("one guest anywhere drops the label to Adventure Designer", () => {
+    for (const builders of [
+      [SIMON, undefined, undefined],
+      [undefined, SIMON, undefined],
+      [undefined, undefined, SIMON],
+    ]) {
+      expect(adventurePillCredit(adventure("a", KAT, builders))!.label).toBe("Adventure Designer");
+    }
+  });
+
+  it("never names the guest, whoever built what", () => {
+    const third: CreditPerson = { name: "Ada" };
+    for (const builders of [[SIMON, SIMON, SIMON], [SIMON, third, undefined]]) {
+      expect(adventurePillCredit(adventure("a", KAT, builders))!.person).toBe(KAT);
+    }
+  });
+
+  it("a level naming the designer still counts as designer-built", () => {
+    const katCopy: CreditPerson = { name: "Katharina", url: "https://other.example" };
+    expect(adventurePillCredit(adventure("a", KAT, [katCopy, undefined, undefined]))!.label).toBe(
+      "Adventure Builder",
+    );
+  });
+
+  // An adventure with no designer has no level builders either, because the
+  // schema rejects that (see creditIntegrityError), so no pill renders. This is
+  // the freshly-synced, pre-review state.
+  it("no designer: null, so no pill renders", () => {
+    expect(adventurePillCredit(adventure("a", undefined))).toBeNull();
+  });
+
+  // No levels means they have not built every challenge, so Designer, not
+  // Builder. Guards a vacuous-truth bug in the `every` call.
+  it("no levels at all: Adventure Designer, not Builder", () => {
+    expect(adventurePillCredit({ contributor: KAT, levels: [] })).toEqual({
+      label: "Adventure Designer",
+      person: KAT,
     });
   });
 });
 
-describe("levelBuilderCredit", () => {
-  it("no level contributor: designer is proposer and builder — 'Adventure Builder' label", () => {
-    const { proposer, builder } = levelBuilderCredit(KAT, undefined);
-    expect(proposer).toBe(KAT);
-    expect(builder).toBe(KAT);
+describe("levelPillCredit", () => {
+  // The page is about one challenge, so the label answers "who built this" the
+  // same way regardless of whether that person also designed the adventure.
+  it("no level contributor: the designer falls through, still Challenge Builder", () => {
+    expect(levelPillCredit(KAT, undefined)).toEqual({ label: "Challenge Builder", person: KAT });
   });
 
-  it("guest level contributor: proposer is undefined, builder is guest — 'Challenge Builder' label", () => {
-    const { proposer, builder } = levelBuilderCredit(KAT, SIMON);
-    expect(proposer).toBeUndefined();
-    expect(builder).toBe(SIMON);
+  it("guest level contributor: Challenge Builder", () => {
+    expect(levelPillCredit(KAT, SIMON)).toEqual({ label: "Challenge Builder", person: SIMON });
   });
 
-  it("level contributor is the designer (same name): proposer is designer, 'Adventure Builder' label", () => {
-    // Authoring a level contributor who is the same person as the designer must not
-    // flip the label to "Challenge Builder" — identity is checked by name, not presence.
+  it("names the level contributor over the designer", () => {
     const katCopy: CreditPerson = { name: "Katharina", url: "https://other.example" };
-    const { proposer, builder } = levelBuilderCredit(KAT, katCopy);
-    expect(proposer).toBe(KAT);
-    expect(builder).toBe(katCopy);
+    expect(levelPillCredit(KAT, katCopy)).toEqual({ label: "Challenge Builder", person: katCopy });
   });
 
-  it("no designer and no level contributor: both are undefined", () => {
-    const { proposer, builder } = levelBuilderCredit(undefined, undefined);
-    expect(proposer).toBeUndefined();
-    expect(builder).toBeUndefined();
+  it("no designer and no level contributor: null", () => {
+    expect(levelPillCredit(undefined, undefined)).toBeNull();
+  });
+
+  it("guest builder with no designer: still credited", () => {
+    expect(levelPillCredit(undefined, SIMON)).toEqual({ label: "Challenge Builder", person: SIMON });
+  });
+});
+
+describe("sortDifficulties", () => {
+  it("is empty for an empty input", () => {
+    expect(sortDifficulties([])).toEqual([]);
+  });
+
+  it("orders easiest first, whatever order the levels were authored in", () => {
+    expect(sortDifficulties(["Expert", "Beginner"])).toEqual(["Beginner", "Expert"]);
+    expect(sortDifficulties(["Expert", "Intermediate", "Beginner"])).toEqual([
+      "Beginner",
+      "Intermediate",
+      "Expert",
+    ]);
+  });
+
+  it("leaves an already-sorted list alone", () => {
+    expect(sortDifficulties(["Beginner", "Intermediate", "Expert"])).toEqual([
+      "Beginner",
+      "Intermediate",
+      "Expert",
+    ]);
+  });
+
+  // Two people on the same adventure must not show their levels in
+  // different orders, so this may not sort in place.
+  it("does not mutate the array it is given", () => {
+    const input: Difficulty[] = ["Expert", "Beginner"];
+    sortDifficulties(input);
+    expect(input).toEqual(["Expert", "Beginner"]);
+  });
+});
+
+describe("displayNameByHandle", () => {
+  it("is empty when nobody has a Discourse handle", () => {
+    const noHandle: CreditPerson = { name: "Ada" };
+    expect(displayNameByHandle([adventure("a", noHandle)]).size).toBe(0);
+  });
+
+  it("maps a designer's handle to their real name", () => {
+    const map = displayNameByHandle([adventure("a", KAT)]);
+    expect(map.get("kat")).toBe("Katharina");
+  });
+
+  it("maps level contributors too, not just designers", () => {
+    const map = displayNameByHandle([adventure("a", KAT, [SIMON, undefined, undefined])]);
+    expect(map.get("simon")).toBe("Simon");
+    expect(map.get("kat")).toBe("Katharina");
+  });
+
+  // Discourse rows arrive with whatever casing the forum uses, so the lookup
+  // key has to be case-insensitive or the mapping silently misses.
+  it("keys on the lowercased handle", () => {
+    const mixed: CreditPerson = { name: "Mixed Case", discourseUsername: "MiXeDCaSe" };
+    const map = displayNameByHandle([adventure("a", mixed)]);
+    expect(map.get("mixedcase")).toBe("Mixed Case");
+    expect(map.get("MiXeDCaSe")).toBeUndefined();
+  });
+
+  it("keeps the first name seen when one handle appears twice", () => {
+    const map = displayNameByHandle([adventure("a", KAT), adventure("b", KAT)]);
+    expect(map.get("kat")).toBe("Katharina");
+    expect(map.size).toBe(1);
+  });
+
+  it("skips people with no handle rather than keying on their name", () => {
+    const noHandle: CreditPerson = { name: "Ada" };
+    const map = displayNameByHandle([adventure("a", KAT, [noHandle, undefined, undefined])]);
+    expect(map.size).toBe(1);
+    expect([...map.values()]).toEqual(["Katharina"]);
   });
 });
 
@@ -186,58 +284,27 @@ describe("creditIntegrityError", () => {
   });
 });
 
-describe("formatRoles", () => {
-  const base = { slug: "a", title: "A", totalLevels: 3 };
-
-  it("proposed only", () => {
-    expect(formatRoles({ ...base, proposed: true, builtDifficulties: [], builtCount: 0 })).toBe("Proposed");
-  });
-
-  it("proposed and built everything", () => {
-    expect(
-      formatRoles({ ...base, proposed: true, builtDifficulties: ["Beginner", "Intermediate", "Expert"], builtCount: 3 }),
-    ).toBe("Proposed & Built");
-  });
-
-  it("proposed and built some", () => {
-    expect(formatRoles({ ...base, proposed: true, builtDifficulties: ["Beginner", "Expert"], builtCount: 2 })).toBe(
-      "Proposed & Built · Beginner · Expert",
-    );
-  });
-
-  it("built some without proposing", () => {
-    expect(formatRoles({ ...base, proposed: false, builtDifficulties: ["Intermediate"], builtCount: 1 })).toBe(
-      "Built · Intermediate",
-    );
-  });
-
-  it("built everything without proposing collapses like the proposed case", () => {
-    expect(
-      formatRoles({ ...base, proposed: false, builtDifficulties: ["Beginner", "Intermediate", "Expert"], builtCount: 3 }),
-    ).toBe("Built");
-  });
-
-  it("orders difficulties Beginner, Intermediate, Expert regardless of input order", () => {
-    expect(formatRoles({ ...base, proposed: false, builtDifficulties: ["Expert", "Beginner"], builtCount: 2 })).toBe(
-      "Built · Beginner · Expert",
-    );
-  });
-});
-
 describe("buildContributorIndex", () => {
   it("partial coverage credits both people on the same adventure", () => {
     const index = buildContributorIndex([adventure("orbit", KAT, [undefined, SIMON, undefined])]);
     expect(index.map((e) => e.name).sort()).toEqual(["Katharina", "Simon"]);
-    const kat = index.find((e) => e.name === "Katharina")!;
-    const simon = index.find((e) => e.name === "Simon")!;
-    expect(kat.contributions[0].roleLabel).toBe("Proposed & Built · Beginner · Expert");
-    expect(simon.contributions[0].roleLabel).toBe("Built · Intermediate");
   });
 
-  it("a designer who built nothing is credited as Proposed only", () => {
+  it("a designer who built nothing is still credited for the adventure", () => {
     const index = buildContributorIndex([adventure("orbit", KAT, [SIMON, SIMON, SIMON])]);
-    expect(index.find((e) => e.name === "Katharina")!.contributions[0].roleLabel).toBe("Proposed");
-    expect(index.find((e) => e.name === "Simon")!.contributions[0].roleLabel).toBe("Built");
+    expect(index.map((e) => e.name).sort()).toEqual(["Katharina", "Simon"]);
+  });
+
+  it("lists each adventure once for someone who both designed and built it", () => {
+    // The person is reached twice, as designer and as level builder, and must
+    // not produce two rows for the same adventure.
+    const entry = buildContributorIndex([adventure("orbit", KAT)])[0];
+    expect(entry.contributions).toEqual([{ slug: "orbit", title: "orbit" }]);
+  });
+
+  it("carries only slug and title: roles are deliberately not shown", () => {
+    const entry = buildContributorIndex([adventure("orbit", KAT, [SIMON, undefined, undefined])])[0];
+    expect(Object.keys(entry.contributions[0]).sort()).toEqual(["slug", "title"]);
   });
 
   it("carries url and aboutHtml through, and links to the adventure by slug", () => {
@@ -280,26 +347,24 @@ describe("challengeCounts and designerCounts", () => {
   });
 });
 
-// The A3 regression: ChallengeBuildersSection and CommunityLeaders used to derive
-// this independently and disagreed under partial coverage. One rule, one answer.
+// ChallengeBuildersSection and CommunityLeaders used to derive credit
+// independently and disagreed under partial coverage. One rule, one answer.
 describe("section body and leaderboard agree", () => {
   const data = [
     adventure("orbit", KAT, [undefined, SIMON, undefined]),
     adventure("cloudhaven", KAT),
   ];
 
-  it("levels credited in the index match the leaderboard counts", () => {
-    const index = buildContributorIndex(data);
-    const counts = new Map(challengeCounts(data).map((c) => [c.name, c.count]));
-    for (const entry of index) {
-      const fromIndex = entry.contributions.reduce((n, c) => n + c.builtCount, 0);
-      expect(fromIndex, `${entry.name} built-level count`).toBe(counts.get(entry.name) ?? 0);
+  it("everyone with a leaderboard count appears in the contributor index", () => {
+    const index = new Set(buildContributorIndex(data).map((e) => e.name));
+    for (const { name } of challengeCounts(data)) {
+      expect(index.has(name), `${name} is counted but not listed`).toBe(true);
     }
   });
 
   it("specifically: the designer keeps credit for two of three levels", () => {
     expect(challengeCounts(data).find((c) => c.name === "Katharina")!.count).toBe(5);
     const kat = buildContributorIndex(data).find((e) => e.name === "Katharina")!;
-    expect(kat.contributions.find((c) => c.slug === "orbit")!.builtCount).toBe(2);
+    expect(kat.contributions.map((c) => c.slug).sort()).toEqual(["cloudhaven", "orbit"]);
   });
 });

@@ -1,12 +1,12 @@
 ---
 import IconLayers from "~icons/lucide/layers";
 import DifficultyBadge from "@/components/DifficultyBadge.astro";
-import ContributorBadge from "@/components/ContributorBadge.astro";
+import ContributorPill from "@/components/ContributorPill.astro";
 import LivePill from "@/components/LivePill.astro";
 import AdventureIcon from "@/components/AdventureIcon.astro";
 import { stripHtml } from "@/lib/markdown";
 import type { Difficulty } from "@/lib/difficulty";
-import { pillCreditOf, type CreditPerson } from "@/lib/adventure-credit";
+import { adventurePillCredit, type CreditPerson } from "@/lib/adventure-credit";
 
 interface Props {
   adventure: {
@@ -22,7 +22,7 @@ interface Props {
 }
 const { adventure } = Astro.props;
 
-const credit = pillCreditOf(adventure);
+const credit = adventurePillCredit(adventure);
 const base = import.meta.env.BASE_URL;
 const difficulties = adventure.levels.map((l) => l.difficulty).join(", ");
 const tagList = adventure.tags.slice(0, 4).join(", ");
@@ -71,9 +71,9 @@ const label = tagList
     ))}
   </div>
 
-  {credit.proposer && (
+  {credit && (
     <div class="mt-auto pt-4">
-      <ContributorBadge proposer={credit.proposer} builder={credit.builder} hasBuilders={credit.hasBuilders} noLinks />
+      <ContributorPill credits={[credit]} noLinks />
     </div>
   )}
 </a>

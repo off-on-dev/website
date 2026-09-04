@@ -363,7 +363,7 @@ const adventures = defineCollection({
     .transform(async (data) => {
       const title = requireEither(data.title, data.name, "adventure title/name");
       const story =
-        data.story ?? (data.backstory && data.backstory.length > 0 ? data.backstory[0] : "");
+        data.story ?? data.meta_description ?? (data.backstory && data.backstory.length > 0 ? data.backstory[0] : "");
       const icon = data.icon ?? (data.emoji ? EMOJI_TO_ICON[data.emoji as keyof typeof EMOJI_TO_ICON] : undefined);
 
       const [storyHtml, aboutHtml, backstoryHtml, levels, rewards] = await Promise.all([

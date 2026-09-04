@@ -196,7 +196,16 @@ Rules:
 
 Props: `adventure: { slug, title, story, tags, icon?, isLive?, levels: {id, difficulty, contributor?}[], contributor? }`
 
-Root element is `<a>` with a composite `aria-label` (title + difficulties + live status + tags). Calls `stripHtml` on `adventure.story` for the excerpt. `ContributorBadge` pinned to the bottom via `mt-auto pt-4`; intentionally omits links (`noLinks`) because the card is already a link. Applies `.card-glow` and `.focus-ring`. The contributor pill renders when `adventure.contributor` is set, or when exactly one distinct level contributor exists without an adventure contributor. Multiple distinct level builders without an adventure contributor produce no visible pill (no single person to credit). When all level builders are the same person as the adventure contributor, the pill shows them as proposer only; when a single builder differs, they appear as the level builder.
+Root element is `<a>` with a composite `aria-label` (title + difficulties + live status + tags). Calls `stripHtml` on `adventure.story` for the excerpt. `ContributorPill` pinned to the bottom via `mt-auto pt-4`; intentionally omits links (`noLinks`) because the card is already a link. Applies `.card-glow` and `.focus-ring`.
+
+The pill carries exactly one credit, from `adventurePillCredit`: the adventure designer. It renders only when `adventure.contributor` is set, and **never names anyone but the designer**. The label describes the designer's own scope:
+
+| Label | When |
+| --- | --- |
+| `Adventure Builder` | the designer built every challenge in the adventure |
+| `Adventure Designer` | someone else built at least one challenge |
+
+Which guest built what is deliberately not in the pill; that belongs on the level page and in the adventure page builders aside.
 
 ---
 
@@ -232,7 +241,9 @@ Props: `items: { label: string; href?: string }[]`, `class?: string (default 'mb
 
 #### `ChallengeBuildersSection`
 
-No props. Slots: `aside` (optional sticky sidebar on `lg+`). Data comes from `buildContributorIndex` in [`src/lib/adventure-credit.ts`](src/lib/adventure-credit.ts) over the `adventures` content collection — no separate constant or data file. Renders only when contributors exist. Each contribution row shows the adventure title linked to its page and a `roleLabel` string (e.g. `"Proposed & Built"`, `"Built · Intermediate"`). Has `aria-labelledby`.
+No props. Slots: `aside` (optional sticky sidebar on `lg+`). Data comes from `buildContributorIndex` in [`src/lib/adventure-credit.ts`](src/lib/adventure-credit.ts) over the `adventures` content collection — no separate constant or data file. Renders only when contributors exist. Has `aria-labelledby`.
+
+Renders as `<section id="challenge-contributors">` headed **"Challenge Contributors"** (the filename still says Builders). Each row is the adventure title linked to its page, and nothing else: roles and per-level detail were removed deliberately, because the section thanks people and the per-level breakdown lives on the adventure pages. Designers and level builders both appear, and someone who is both appears once.
 
 ---
 
@@ -272,9 +283,13 @@ Uses native `<details>` / `<summary>` — works without JS. `scroll-mt-28` preve
 
 Props: `sections?: string[]`, `limit?: number`
 
-Discourse-sourced sections (top-contributors, rockstars, most-liked, etc.) come from `src/data/community-leaders.json`. The `challenge-builders`, `challenge-grand-builders`, and `adventure-designers` sections are derived from the adventures content collection at build time via `challengeCounts` / `designerCounts` in [`src/lib/adventure-credit.ts`](src/lib/adventure-credit.ts). Each section is an `<ol aria-label="...">`. Rank numbers are `aria-hidden`.
+Sections come from `src/data/community-leaders.json`. Each section is an `<ol aria-label="...">`. Rank numbers are `aria-hidden`.
 
-`challenge-builders` and `challenge-grand-builders` still exist in `community-leaders.json`, but only as a Discourse **avatar cache**: their user lists are discarded here and replaced by the derived ones, while every section in the file is scanned to map a contributor's `discourse_username` to their real avatar. Do not remove them from `scripts/refresh-community-leaders.mjs` — builder avatars would silently fall back to letter avatars.
+**Only `adventure-designers` is derived** from the adventures content collection, via `designerCounts` in [`src/lib/adventure-credit.ts`](src/lib/adventure-credit.ts), because Discourse cannot know who designed an adventure. Builder standing comes from Discourse, which owns the Challenge Builder and Challenge Grand Builder badges. An earlier version re-derived both builder tiers here and discarded the fetched rows, which meant a local `GRAND_BUILDER_THRESHOLD` could silently move someone between tiers or empty a section; that threshold is gone.
+
+`challenge-builders` is Discourse's rows **plus** any YAML level builder Discourse does not know (`challengeCounts` filtered by handle), so a builder with no forum account or no badge yet still appears. Matching is on `discourse_username`, never display name, so a person listed upstream under their handle is not added again under their name. Note the two counts measure different things: Discourse counts badged challenge creations, the YAML supplement counts levels credited on this site.
+
+`displayNameByHandle` rewrites Discourse handles to real names wherever the YAML records who a handle belongs to, so one card does not show "KatharinaSick" in one section and "Katharina Sick" in the next. Handles with no record keep their handle. Every section in the file is still scanned to map `discourse_username` to a real avatar, so do not remove sections from `scripts/refresh-community-leaders.mjs` — builder avatars would silently fall back to letter avatars.
 
 ---
 
@@ -288,7 +303,7 @@ No props. Slots: `aside` (optional). `<section aria-labelledby>` with four Disco
 
 Props: `levelId`, `discussionUrl`, `contributor?`, `levelContributor?`, `discussion: Discussion | null`, `leaderboardRows: LeaderboardRow[]`
 
-Fully static -- all data resolved at build time by `community-data.ts`. Three sections: contributor credit, leaderboard top-3, latest activity posts. Non-cert posts preferred in the activity list. `levelContributor` (the level-specific builder) takes precedence over `contributor` (the adventure proposer) for the credit pill; when only `contributor` is set, they are shown as the adventure builder (label "Adventure Builder"), not just "Challenge Builder".
+Fully static -- all data resolved at build time by `community-data.ts`. Three sections: contributor credit, leaderboard top-3, latest activity posts. Non-cert posts preferred in the activity list. The credit pill comes from `levelPillCredit(contributor, levelContributor)`: `levelContributor` takes precedence over `contributor`, and the label is **always "Challenge Builder"**, whether that is a guest or the designer falling through. The page is about one challenge, so splitting the label by whether the builder also designed the adventure made the same fact read two different ways.
 
 ---
 
@@ -296,7 +311,7 @@ Fully static -- all data resolved at build time by `community-data.ts`. Three se
 
 Props: `credits: { label: string; person: { name: string; url?: string } }[]`, `glow?: boolean (default false)`, `noLinks?: boolean (default false)`
 
-Presentational primitive for every "role · person" credit pill on the site. Callers supply the labels; the shape rules live here, so there is one pill rather than one per page. `ContributorBadge` derives adventure roles and delegates here; the solution page passes its own `"Solution Contributor"` label.
+Presentational primitive for every "role · person" credit pill on the site. Callers supply the labels; the shape rules live here, so there is one pill rather than one per page. Adventure and level role labels come from `adventurePillCredit` / `levelPillCredit` in [`src/lib/adventure-credit.ts`](src/lib/adventure-credit.ts); the solution page passes its own `"Solution Contributor"` label.
 
 | Credits | Root | Pointer target (WCAG 2.5.8) | Hover |
 | --- | --- | --- | --- |
@@ -308,15 +323,6 @@ A multi-credit pill cannot be an anchor (two destinations), so each link carries
 
 ---
 
-#### `ContributorBadge`
-
-Props: `proposer?: { name: string; url?: string }`, `builder?: { name: string; url?: string }`, `glow?: boolean (default false)`, `noLinks?: boolean (default false)`, `hasBuilders?: boolean (default false)`
-
-Label is derived from props: no `proposer` → `"Challenge Builder"`; `proposer` with a different `builder` (or `hasBuilders`) → `"Adventure Designer"`; otherwise → `"Adventure Builder"`. When both are the same person, only `proposer` is shown. When `noLinks` is true, all `<a>` tags are replaced with `<span>` — required inside card links to avoid nested anchors. `contributor-pill-glow` applied when `glow={true}`. External links carry `aria-describedby="new-tab-hint"`.
-
-Rendering is delegated to `ContributorPill`; this component only decides the labels and how many credits to show.
-
----
 
 #### `DifficultyBadge`
 
@@ -458,6 +464,7 @@ No props passed from outside; all state is derived from the URL and the DOM on `
 - URL synced via `replaceState` (no navigation); state seeded from `?topics` / `?difficulty` on `DOMContentLoaded`.
 - `embedded` attribute on the root element suppresses sr-only section headings to avoid duplicate document outline on the home page.
 - Document-level `mousedown`/`keydown` listeners for dropdown close are registered on `DOMContentLoaded`.
+- Cards carry **no contributor credit**. See "Adventure credit" below for why.
 
 ---
 
@@ -513,20 +520,36 @@ Static markup, no island. Both icons and both accessible names are rendered, and
 
 ## Adventure credit (`src/lib/adventure-credit.ts`)
 
-Single source of truth for "who gets credit for what". Four surfaces consume it, so none of them re-derives the rule inline:
+Single source of truth for "who gets credit for what", including every role label. The labels live here rather than in the components so they are unit-testable:
 
-| Consumer | Function |
-| --- | --- |
-| `AdventureCard` pill | `pillCreditOf` |
-| `adventures/[id].astro` pill + Contributors aside | `pillCreditOf`, `levelBuildersOf` |
-| `ChallengeBuildersSection` | `buildContributorIndex` (+ `formatRoles`) |
-| `CommunityLeaders` derived sections | `challengeCounts`, `designerCounts` |
+| Consumer | Function | Renders |
+| --- | --- | --- |
+| `AdventureCard` pill | `adventurePillCredit` | `Adventure Builder \| <name>` or `Adventure Designer \| <name>` |
+| `adventures/[id].astro` title pill | `adventurePillCredit` | same as the card |
+| `adventures/[id].astro` builders aside | `levelBuildersOf`, `sortDifficulties` | name + difficulty badges + bio |
+| `CommunitySidebar` (level page) | `levelPillCredit` | `Challenge Builder \| <name>` |
+| `ChallengeBuildersSection` | `buildContributorIndex` | adventure titles only |
+| `CommunityLeaders` | `designerCounts` (derived), `challengeCounts` (supplement), `displayNameByHandle` | leaderboard rows |
+
+**Challenge cards carry no credit at all**, on either the `/challenges/` filter cards or the adventure page challenge grid. The card already holds a difficulty badge, a title, body copy and a link target, and attribution competed with one of them at every size and position tried. The two per-challenge surfaces that do credit a builder, the level page and the adventure page aside, both have room for it.
 
 **The rule:** a level is built by its own `contributor` when it has one, and by the adventure `contributor` (the designer) otherwise. The fallback is **per level, not all-or-nothing** — a designer who builds two of three levels keeps credit for those two while a guest builder takes the third. An earlier all-or-nothing gate meant one guest builder erased the designer's credit for the levels they did build, so the same person showed two different level counts on one page.
 
 Pure functions over plain data, no `astro:content` import, so the rules are unit-tested directly in `src/test/lib/adventure-credit.test.ts` — including the partial-coverage case and a test asserting the section body and the leaderboard agree.
 
-`CommunitySidebar` derives its pill props via `levelBuilderCredit(contributor, levelContributor)` rather than inline ternary logic. The function compares by name, so a designer who is explicitly set as the level contributor on a level keeps the "Adventure Builder" label instead of flipping to "Challenge Builder". The data semantics of absent `level.contributor` (designer-as-builder) are documented in [ADVENTURES.md](ADVENTURES.md).
+### The adventure page builders aside
+
+Headed `challenge builder` or `challenge builders` depending on count, and it lists **only people who built at least one level**. A designer who built nothing is not a builder and is not listed there; they are already credited in the title pill. Each entry is the person's name (via `PersonNameLink`, which ends with an external-link icon, so nothing is placed beside the name), their difficulty badges ordered by `sortDifficulties`, and their bio.
+
+### Helpers
+
+- `adventurePillCredit(adventure)` → `PillCredit | null`. `"Adventure Builder"` when the designer built every challenge, `"Adventure Designer"` otherwise, `null` when the adventure has no designer. An adventure with zero levels is Designer, not Builder.
+- `levelPillCredit(designer, levelContributor)` → `PillCredit | null`. Always `"Challenge Builder"`.
+- `sortDifficulties(difficulties)` → curriculum order, easiest first, non-mutating, so two people on one adventure never show their levels in different orders.
+- `displayNameByHandle(adventures)` → lowercased Discourse handle to real name, for rewriting Discourse-sourced leaderboard rows.
+- `PillCredit` is `{ label: string; person: CreditPerson }`, which is also `ContributorPill`'s `Credit` shape.
+
+The data semantics of absent `level.contributor` (designer-as-builder) are documented in [ADVENTURES.md](ADVENTURES.md).
 
 ---
 

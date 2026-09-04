@@ -4,8 +4,9 @@ import IconExternalLink from "~icons/lucide/external-link";
 
 // Presentational primitive for every "role · person" credit pill on the site.
 // Callers supply the labels; the shape rules live here so there is one pill,
-// not one per page. `ContributorBadge` derives adventure roles and delegates
-// here; the solution page passes its own "Solution Contributor" label.
+// not one per page. Adventure and level role labels come from
+// adventurePillCredit / levelPillCredit in @/lib/adventure-credit; the solution
+// page passes its own "Solution Contributor" label.
 //
 // Shape rules (WCAG 2.5.8):
 //   one linked credit  → the pill itself is the <a>, so the pill (26px) is the

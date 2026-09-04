@@ -3,8 +3,8 @@
 // client fetch). Post ages are omitted; displaying them requires a client mount.
 import IconMessageCircle from "~icons/lucide/message-circle";
 import IconExternalLink from "~icons/lucide/external-link";
-import ContributorBadge from "@/components/ContributorBadge.astro";
-import { levelBuilderCredit } from "@/lib/adventure-credit";
+import ContributorPill from "@/components/ContributorPill.astro";
+import { levelPillCredit } from "@/lib/adventure-credit";
 import { COMMUNITY_URL } from "@/lib/site";
 import { stripHtml } from "@/lib/markdown";
 import type { Discussion, DiscussionPost, LeaderboardRow } from "@/lib/community-data";
@@ -36,9 +36,8 @@ interface Props {
   leaderboardRows: LeaderboardRow[];
 }
 const { levelId, discussionUrl, contributor, levelContributor, discussion, leaderboardRows } = Astro.props;
-// Derive pill props via the shared rule: identity check by name so a designer
-// explicitly named on a level keeps "Adventure Builder", not "Challenge Builder".
-const { proposer: levelProposer, builder: levelBuilder } = levelBuilderCredit(contributor, levelContributor);
+// The level page always credits whoever built this challenge.
+const levelCredit = levelPillCredit(contributor, levelContributor);
 
 const hasThread = !!discussionUrl && discussionUrl !== COMMUNITY_URL;
 const solvers: NonNullable<Discussion["solvers"]> = discussion?.solvers ?? [];
@@ -72,9 +71,9 @@ const hasActivity = visible.length > 0;
 
   {/* Level builder */}
   {
-    levelBuilder && (
+    levelCredit && (
       <div class="mb-5 pb-5 border-b border-border">
-        <ContributorBadge proposer={levelProposer} builder={levelBuilder} />
+        <ContributorPill credits={[levelCredit]} />
       </div>
     )
   }

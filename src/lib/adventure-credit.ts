@@ -72,40 +72,55 @@ export function levelBuildersOf(adventure: CreditSource): LevelBuilder[] {
   return [...byName.values()];
 }
 
-/** Level builders who are not the adventure designer. Drives pill shaping. */
-export function guestBuildersOf(adventure: CreditSource): LevelBuilder[] {
-  const designer = adventure.contributor?.name;
-  return levelBuildersOf(adventure).filter((b) => b.name !== designer);
-}
-
+/** One rendered credit: a role label and the person it applies to. */
 export type PillCredit = {
-  proposer?: CreditPerson;
-  builder?: CreditPerson;
-  hasBuilders: boolean;
+  label: string;
+  person: CreditPerson;
 };
 
 /**
- * What the contributor pill should show for an adventure.
+ * The single credit shown on an adventure card and the adventure page title.
  *
- * One guest builder is named alongside the designer; several are collapsed to
- * `hasBuilders`, which switches the label to "Adventure Designer" without
- * listing anyone.
+ * Always exactly one person, the designer. The label says whether they also
+ * built the whole thing:
  *
- * An adventure with no designer has no level builders either — the content
- * schema rejects that combination (see `creditIntegrityError`) — so this
- * returns an empty credit rather than promoting a builder to the pill. The
- * no-designer case is real: `sync-adventure.mjs` deliberately omits
- * `contributor`, and a reviewer adds it as a PR checklist item.
+ *   "Adventure Builder"   they designed it and built every challenge
+ *   "Adventure Designer"  someone else built at least one challenge
+ *
+ * The label is about the designer's own scope, never about who the other
+ * builders are, so the pill stays a compact identity marker rather than a
+ * credits ledger. Challenge cards carry no credit at all, and per-challenge
+ * attribution lives on the level pages and in the adventure page aside.
+ *
+ * An adventure with no designer has no level builders either, because the
+ * content schema rejects that combination (see `creditIntegrityError`), so this
+ * returns null rather than promoting a builder into the pill. The no-designer
+ * case is real: `sync-adventure.mjs` deliberately omits `contributor`, and a
+ * reviewer adds it as a PR checklist item.
  */
-export function pillCreditOf(adventure: CreditSource): PillCredit {
-  const proposer = adventure.contributor;
-  if (!proposer) return { proposer: undefined, builder: undefined, hasBuilders: false };
-  const guests = guestBuildersOf(adventure);
+export function adventurePillCredit(adventure: CreditSource): PillCredit | null {
+  const designer = adventure.contributor;
+  if (!designer) return null;
+  const builtEveryChallenge =
+    adventure.levels.length > 0 &&
+    adventure.levels.every((l) => builderOfLevel(l, adventure)?.name === designer.name);
   return {
-    proposer,
-    builder: guests.length === 1 ? guests[0] : undefined,
-    hasBuilders: guests.length > 1,
+    label: builtEveryChallenge ? "Adventure Builder" : "Adventure Designer",
+    person: designer,
   };
+}
+
+const DIFFICULTY_ORDER: Record<Difficulty, number> = { Beginner: 0, Intermediate: 1, Expert: 2 };
+
+/**
+ * Difficulties in curriculum order, easiest first, whatever order the levels
+ * were authored in. Returns a new array; the input is not mutated.
+ *
+ * Used wherever a person's built levels are rendered as badges, so two people
+ * on the same adventure never show their levels in different orders.
+ */
+export function sortDifficulties(difficulties: Difficulty[]): Difficulty[] {
+  return [...difficulties].sort((a, b) => DIFFICULTY_ORDER[a] - DIFFICULTY_ORDER[b]);
 }
 
 /**
@@ -133,37 +148,30 @@ export function creditIntegrityError(adventure: {
 }
 
 /**
- * The `proposer` and `builder` props for ContributorBadge on a level page.
+ * The single credit shown on a level page: whoever built this challenge.
  *
- * Compares by name so a designer who is also named explicitly as the level
- * contributor keeps the "Adventure Builder" label rather than flipping to
- * "Challenge Builder" (which happens when presence alone gates the proposer).
+ * Always "Challenge Builder", whether that is a guest or the designer falling
+ * through. The page is about one challenge, so the question it answers is "who
+ * built this", and splitting the label by whether the builder also designed the
+ * adventure made the same fact read two different ways.
  */
-export function levelBuilderCredit(
-  contributor: CreditPerson | undefined,
+export function levelPillCredit(
+  designer: CreditPerson | undefined,
   levelContributor: CreditPerson | undefined,
-): { proposer: CreditPerson | undefined; builder: CreditPerson | undefined } {
-  const builder = levelContributor ?? contributor;
-  const isDesignerBuilt = !levelContributor || levelContributor.name === contributor?.name;
-  return { proposer: isDesignerBuilt ? contributor : undefined, builder };
+): PillCredit | null {
+  const person = levelContributor ?? designer;
+  return person ? { label: "Challenge Builder", person } : null;
 }
 
 // ---------------------------------------------------------------------------
-// ChallengeBuildersSection: one card per person, listing every adventure they
-// touched and in what capacity.
+// Challenge Contributors: one card per person, listing every adventure they
+// touched. Which levels, and in what capacity, is deliberately not shown: the
+// section thanks people, and per-level detail lives on the adventure pages.
 // ---------------------------------------------------------------------------
-
-const ROLE_ORDER: Record<Difficulty, number> = { Beginner: 0, Intermediate: 1, Expert: 2 };
 
 export type Contribution = {
   slug: string;
   title: string;
-  proposed: boolean;
-  builtDifficulties: Difficulty[];
-  /** Levels built, counted per level so two levels of one difficulty both count. */
-  builtCount: number;
-  totalLevels: number;
-  roleLabel: string;
 };
 
 export type ContributorEntry = {
@@ -174,29 +182,16 @@ export type ContributorEntry = {
 };
 
 /**
- * Human-readable role for one person on one adventure.
- *
- * "Built" collapses to a bare word when they built every level, whether or not
- * they also proposed it, so the two cases read the same way.
- */
-export function formatRoles(c: Omit<Contribution, "roleLabel">): string {
-  const built = [...c.builtDifficulties].sort((a, b) => ROLE_ORDER[a] - ROLE_ORDER[b]).join(" · ");
-  const builtAll = c.builtCount > 0 && c.builtCount === c.totalLevels;
-  if (c.proposed && c.builtCount > 0) return builtAll ? "Proposed & Built" : `Proposed & Built · ${built}`;
-  if (c.proposed) return "Proposed";
-  return builtAll ? "Built" : `Built · ${built}`;
-}
-
-/**
  * Every contributor across the collection, sorted by breadth of contribution
- * then name, each with their adventures sorted by title.
+ * then name, each with their adventures sorted by title. Designers and level
+ * builders are both included, and someone who is both appears once.
  *
  * Keyed by display name: `discourse_username` is optional and absent for most
  * contributors, so name is the only key present on every record.
  */
 export function buildContributorIndex(adventures: CreditAdventure[]): ContributorEntry[] {
   type Draft = Omit<ContributorEntry, "contributions"> & {
-    contributions: Map<string, Omit<Contribution, "roleLabel">>;
+    contributions: Map<string, Contribution>;
   };
   const byName = new Map<string, Draft>();
 
@@ -211,36 +206,14 @@ export function buildContributorIndex(adventures: CreditAdventure[]): Contributo
     return entry;
   };
 
-  const contributionFor = (
-    entry: Draft,
-    adventure: CreditAdventure,
-  ): Omit<Contribution, "roleLabel"> => {
-    let c = entry.contributions.get(adventure.slug);
-    if (!c) {
-      c = {
-        slug: adventure.slug,
-        title: adventure.title,
-        proposed: false,
-        builtDifficulties: [],
-        builtCount: 0,
-        totalLevels: adventure.levels.length,
-      };
-      entry.contributions.set(adventure.slug, c);
-    }
-    return c;
+  const noteContribution = (entry: Draft, adventure: CreditAdventure): void => {
+    if (entry.contributions.has(adventure.slug)) return;
+    entry.contributions.set(adventure.slug, { slug: adventure.slug, title: adventure.title });
   };
 
   for (const adventure of adventures) {
-    if (adventure.contributor) {
-      contributionFor(entryFor(adventure.contributor), adventure).proposed = true;
-    }
-    for (const builder of levelBuildersOf(adventure)) {
-      const c = contributionFor(entryFor(builder), adventure);
-      for (const d of builder.difficulties) {
-        if (!c.builtDifficulties.includes(d)) c.builtDifficulties.push(d);
-      }
-      c.builtCount += builder.levelCount;
-    }
+    if (adventure.contributor) noteContribution(entryFor(adventure.contributor), adventure);
+    for (const builder of levelBuildersOf(adventure)) noteContribution(entryFor(builder), adventure);
   }
 
   return [...byName.values()]
@@ -248,9 +221,7 @@ export function buildContributorIndex(adventures: CreditAdventure[]): Contributo
       name: entry.name,
       ...(entry.url ? { url: entry.url } : {}),
       ...(entry.aboutHtml ? { aboutHtml: entry.aboutHtml } : {}),
-      contributions: [...entry.contributions.values()]
-        .sort((a, b) => a.title.localeCompare(b.title))
-        .map((c) => ({ ...c, roleLabel: formatRoles(c) })),
+      contributions: [...entry.contributions.values()].sort((a, b) => a.title.localeCompare(b.title)),
     }))
     .sort((a, b) => b.contributions.length - a.contributions.length || a.name.localeCompare(b.name));
 }
@@ -280,6 +251,29 @@ export function challengeCounts(adventures: CreditAdventure[]): CreditCount[] {
     }
   }
   return [...byName.values()].sort(rankByCount);
+}
+
+/**
+ * Discourse handle (lowercased) to the person's real name, from every
+ * contributor in the collection.
+ *
+ * Discourse-sourced leaderboard rows arrive keyed by handle, so this lets a
+ * section show "Katharina Sick" instead of "KatharinaSick" wherever the YAML
+ * already tells us who the handle belongs to. Handles we have no record for are
+ * left alone rather than guessed at.
+ */
+export function displayNameByHandle(adventures: CreditAdventure[]): Map<string, string> {
+  const byHandle = new Map<string, string>();
+  const add = (person?: CreditPerson): void => {
+    if (!person?.discourseUsername) return;
+    const key = person.discourseUsername.toLowerCase();
+    if (!byHandle.has(key)) byHandle.set(key, person.name);
+  };
+  for (const adventure of adventures) {
+    add(adventure.contributor);
+    for (const level of adventure.levels) add(level.contributor);
+  }
+  return byHandle;
 }
 
 /** Adventures designed per person, highest first. */
