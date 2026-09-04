@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import { describe, it, expect } from "vitest";
+import type { Difficulty } from "@/lib/difficulty";
 import {
   builderOfLevel,
   levelBuildersOf,
