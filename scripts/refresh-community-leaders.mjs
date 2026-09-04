@@ -31,7 +31,7 @@
 import { readFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { atomicWrite, fetchWithRetry } from "./discourse-utils.mjs";
+import { atomicWrite, fetchWithRetry, isCI } from "./discourse-utils.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -144,6 +144,16 @@ async function main() {
   const apiUsername = process.env.DISCOURSE_API_USERNAME ?? "system";
 
   if (!apiKey) {
+    // In CI a missing key means the secret was rotated or removed. Skipping there
+    // would give a green run with community-leaders.json frozen forever, so it is
+    // a hard failure. Locally it stays a friendly skip.
+    if (isCI()) {
+      console.error("  DISCOURSE_API_KEY is not set, but this is CI.");
+      console.error("  Refusing to exit successfully: a rotated or removed secret would");
+      console.error("  otherwise produce a green run and permanently frozen community data.");
+      console.error("  Set DISCOURSE_API_KEY as a GitHub secret.");
+      process.exit(1);
+    }
     console.warn("  DISCOURSE_API_KEY not set, skipping community leaders refresh.");
     console.warn("  Set it in .env (local) or as a GitHub secret (CI).");
     process.exit(0);
@@ -175,14 +185,14 @@ async function main() {
   const cAvatarId       = col(cCols, "uploaded_avatar_id");
 
   // Challenge query column indices
-  const chCols = challenge.columns;
-  const chUsername           = col(chCols, "username");
-  const chSolveCount         = col(chCols, "solve_count");
-  const chIsGrandBuilder     = col(chCols, "is_grand_builder");
-  const chChallengesCreated  = col(chCols, "challenges_created");
+  const chCols             = challenge.columns;
+  const chUsername         = col(chCols, "username");
+  const chSolveCount       = col(chCols, "solve_count");
+  const chIsRockstar       = col(chCols, "is_rockstar");
+  const chIsGrandBuilder   = col(chCols, "is_grand_builder");
+  const chChallengesCreated = col(chCols, "challenges_created");
   const chIsChallengeBuilder = col(chCols, "is_challenge_builder");
-  const chIsRockstar         = col(chCols, "is_rockstar");
-  const chAvatarId           = col(chCols, "uploaded_avatar_id");
+  const chAvatarId         = col(chCols, "uploaded_avatar_id");
 
   const cRows  = community.rows;
   const chRows = challenge.rows;
@@ -215,27 +225,38 @@ async function main() {
       username: String(r[chUsername]),
       avatarUrl: buildAvatarUrl(String(r[chUsername]), r[chAvatarId] ?? null),
       count: Number(r[chChallengesCreated]),
-    }));
+    }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, POOL_SIZE);
 
+  // Rockstars are deliberately not excluded here: challenge-builders is an avatar
+  // cache (see the sections array below), and a wider filter caches more avatars.
   const builders = chRows
-    .filter((r) => r[chIsChallengeBuilder] && !r[chIsGrandBuilder] && !r[chIsRockstar])
-    .sort((a, b) => Number(b[chChallengesCreated]) - Number(a[chChallengesCreated]))
-    .slice(0, POOL_SIZE)
+    .filter((r) => r[chIsChallengeBuilder] && !r[chIsGrandBuilder])
     .map((r) => ({
       username: String(r[chUsername]),
       avatarUrl: buildAvatarUrl(String(r[chUsername]), r[chAvatarId] ?? null),
       count: Number(r[chChallengesCreated]),
-    }));
+    }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, POOL_SIZE);
 
+  // challenge-builders and challenge-grand-builders are NOT rendered from this file.
+  // CommunityLeaders.astro derives both sections (and adventure-designers) from the
+  // adventures content collection, and discards the user lists written here. They stay
+  // in the payload purely as a Discourse avatar cache: CommunityLeaders looks up a
+  // contributor's `discourse_username` across every section to find their real avatar,
+  // falling back to a letter avatar when no section carries them. Removing them would
+  // silently downgrade builder avatars, not just drop a section.
   const sections = [
-    { id: "top-contributors",         title: "Top Contributors",         users: topByCol(cRows,  cUsername, cTopics,        cAvatarId,  TOP_N) },
-    { id: "challenge-rockstars",      title: "Challenge Rockstars",      users: rockstars },
+    { id: "top-contributors",        title: "Top Contributors",        users: topByCol(cRows, cUsername, cTopics,        cAvatarId, TOP_N) },
+    { id: "challenge-rockstars",     title: "Challenge Rockstars",     users: rockstars },
     { id: "challenge-grand-builders", title: "Challenge Grand Builders", users: grandBuilders },
-    { id: "top-challenge-solvers",    title: "Top Challenge Solvers",    users: solvers },
-    { id: "challenge-builders",       title: "Challenge Builders",       users: builders },
-    { id: "most-liked",               title: "Most Liked",               users: topByCol(cRows,  cUsername, cLikesReceived, cAvatarId,  TOP_N) },
-    { id: "most-replies",             title: "Most Replies",             users: topByCol(cRows,  cUsername, cReplies,       cAvatarId,  TOP_N) },
-    { id: "most-supportive",          title: "Most Supportive",          users: topByCol(cRows,  cUsername, cLikesGiven,    cAvatarId,  TOP_N) },
+    { id: "challenge-builders",      title: "Challenge Builders",      users: builders },
+    { id: "top-challenge-solvers",   title: "Top Challenge Solvers",   users: solvers },
+    { id: "most-liked",              title: "Most Liked",              users: topByCol(cRows, cUsername, cLikesReceived, cAvatarId, TOP_N) },
+    { id: "most-replies",            title: "Most Replies",            users: topByCol(cRows, cUsername, cReplies,       cAvatarId, TOP_N) },
+    { id: "most-supportive",         title: "Most Supportive",         users: topByCol(cRows, cUsername, cLikesGiven,    cAvatarId, TOP_N) },
   ].filter((s) => s.users.length > 0);
 
   for (const s of sections) {

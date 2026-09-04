@@ -2,7 +2,7 @@
 
 This file applies to all work on offon.dev. Read it before adding fonts, images, dependencies, or new routes.
 
-> **Post-migration note:** the site is now Astro + Vue islands, not React Router. The performance *principles* below (image rules, font subsetting/preloading, self-hosting, "ship less JS") still hold, but some mechanics are superseded: global font preloads live in `src/layouts/Layout.astro` (not `root.tsx`); code-splitting and "zero JS by default" come from Astro islands (not React Router / `React.lazy`); markdown is pre-rendered by the content collection (`src/content.config.ts` + `src/lib/markdown-pipeline.mjs`), not a generator; prefetching uses Astro's native `prefetch` config (not a `SPECULATION_RULES` script); the build outputs `dist/` (not `dist/client/`); routes come from `getStaticPaths()` (no `react-router.config.ts` prerender array). Where this doc and `CLAUDE.md` disagree, `CLAUDE.md` wins.
+> **Post-migration note:** the site is now Astro + Vue islands, not React Router. The performance *principles* below (image rules, font subsetting/preloading, self-hosting, "ship less JS") still hold, but some mechanics are superseded: global font preloads live in `src/layouts/Layout.astro` (not `root.tsx`); code-splitting and "zero JS by default" come from Astro islands (not React Router / `React.lazy`); markdown is pre-rendered by the content collection (`src/content.config.ts` + `src/lib/markdown-pipeline.mjs`), not a generator; prefetching uses Astro's native `prefetch` config (not a `SPECULATION_RULES` script); the build outputs `dist/` (not `dist/client/`); routes come from `getStaticPaths()` (no `react-router.config.ts` prerender array). Where this doc and `AGENTS.md` disagree, `AGENTS.md` wins.
 
 ---
 
@@ -115,7 +115,7 @@ The component layer (26.7 KB) is the largest single contributor. It is authored 
 - Use `async` for independent third-party scripts (analytics loaders, chat widgets) that have no execution-order dependencies.
 - Never place a bare `<script src="...">` in `<head>` without `defer` or `async`.
 - Astro generates `type="module"` scripts for islands automatically. Inline `.astro` scripts are hoisted and bundled. Do not override this.
-- See the Analytics and Consent section in `CLAUDE.md` for the pattern used by the `gtag.js` injector. It is appended to `<body>` after consent, never blocking.
+- See the Analytics and Consent section in `AGENTS.md` for the pattern used by the `gtag.js` injector. It is appended to `<body>` after consent, never blocking.
 
 ---
 
@@ -220,4 +220,4 @@ The site is currently hosted on GitHub Pages. GitHub Pages cannot set arbitrary 
 ## New routes
 
 - Routes come from file-based pages and `getStaticPaths()`. No prerender array exists.
-- See the "Routes" section in `CLAUDE.md` for the full checklist: add new static pages to `PAGES` in `e2e/a11y.spec.ts`, `ROUTES` in `e2e/smoke.spec.ts`, `staticPaths` in `src/pages/sitemap.xml.ts`, and the routes table in `README.md`.
+- See the "Routes" section in `AGENTS.md` for the full checklist: add new static pages to `PAGES` in `e2e/a11y.spec.ts`, `ROUTES` in `e2e/smoke.spec.ts`, `staticPaths` in `src/pages/sitemap.xml.ts`, and the routes table in `README.md`.

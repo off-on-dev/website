@@ -171,6 +171,32 @@ test.describe("focus ring visibility: light mode", () => {
   }
 });
 
+// KNOWN FRAGILITY — check free memory before checking your diff.
+//
+// This block is load-sensitive. On a busy machine it can fail on /, /adventures/
+// and /challenges/ with a 2px overflow, then pass cleanly minutes later on the
+// same build with nothing rebuilt. Measured on both a feature branch and main
+// under comparable load, both sit at exactly scrollWidth === innerWidth === 384,
+// so a failure here is more often the runner than the diff.
+//
+// Two causes, in order of how often they bite:
+//
+// 1. Memory exhaustion (the common one). The full suite runs 8 workers, each
+//    with its own browser. On a developer machine already running an editor,
+//    Chrome and a few Electron apps, the OS starts killing processes — usually
+//    the static server. Playwright then reports whatever the test was doing at
+//    the time, which here is a bogus scrollWidth reading, and elsewhere shows up
+//    as `net::ERR_CONNECTION_REFUSED`, an empty `<title>`, or a timeout. The
+//    failing set differs run to run, which is the tell. Check `PhysMem` in
+//    `top -l 1 -n 0` first; under ~2G free, close things or use `--workers=2`.
+//
+// 2. Font swap (the theoretical one). Unlike visual.spec.ts this waits only for
+//    "load", not `document.fonts.ready`, so self-hosted WOFF2 may still be
+//    swapping when the measurement runs. Hardening:
+//    `await page.evaluate(() => document.fonts.ready)` after waitForLoadState.
+//
+// If you see this fail: re-run it in isolation on a quiet machine, and compare
+// against a build of main under the same conditions, before changing any CSS.
 test.describe("200% zoom: no horizontal overflow", () => {
   for (const path of PAGES) {
     test(path, async ({ page }) => {
@@ -201,6 +227,102 @@ test.describe("skip link (WCAG 2.4.1)", () => {
 
       await page.keyboard.press("Enter");
       await expect(page.locator(":focus")).toHaveAttribute("id", "main-content");
+    });
+  }
+});
+
+// WCAG 2.1.2 + 3.2.1 — one keyboard traversal checks both:
+//   • keyboard trap: a repeating focus pattern that excludes the page's
+//     first focusable element signals focus is stuck inside a subset.
+//   • context change on focus: Tab pressing must not trigger navigation.
+//
+// Both checks share a single traversal to avoid doubling test time.
+// Pattern detection covers cycles of length 1–5.
+
+function isRepeatingTrap(recentKeys: string[], firstKey: string): boolean {
+  for (let len = 1; len <= 5; len++) {
+    if (recentKeys.length < len * 2) continue;
+    const tail = recentKeys.slice(-len * 2);
+    const half = tail.slice(0, len);
+    if (half.join("|||") === tail.slice(len).join("|||") && !half.includes(firstKey)) return true;
+  }
+  return false;
+}
+
+async function runKeyboardSafetyChecks(
+  page: Page,
+): Promise<{ trap: string | null; contextChange: string | null }> {
+  const MAX_STEPS = 150;
+  let firstKey: string | null = null;
+  let firstKeyCount = 0;
+  const recentKeys: string[] = [];
+
+  for (let i = 0; i < MAX_STEPS; i++) {
+    const { urlBefore, prevFocusHtml } = await page.evaluate(() => ({
+      urlBefore: location.href,
+      prevFocusHtml: (document.activeElement as HTMLElement)?.outerHTML?.slice(0, 120) ?? null,
+    }));
+
+    await page.keyboard.press("Tab");
+
+    const urlAfter = page.url();
+    if (urlAfter !== urlBefore) {
+      return {
+        trap: null,
+        contextChange: `focusing ${prevFocusHtml ?? "unknown"} navigated to ${urlAfter}`,
+      };
+    }
+
+    const result = await page.evaluate(() => {
+      const el = document.activeElement as HTMLElement;
+      if (!el || el.tagName === "BODY" || el === document.documentElement) return null;
+      const allFocusable = Array.from(
+        document.querySelectorAll<HTMLElement>(
+          "a, button, [tabindex], [role='button'], [role='link']",
+        ),
+      );
+      const domIdx = allFocusable.indexOf(el);
+      const key = [
+        el.tagName,
+        el.id ?? "",
+        el.getAttribute("href") ?? "",
+        el.getAttribute("aria-label") ?? "",
+        (el.textContent ?? "").trim().slice(0, 40),
+        domIdx,
+      ].join("\0");
+      return { key, html: el.outerHTML.slice(0, 120) };
+    });
+
+    if (!result) break;
+
+    if (firstKey === null) {
+      firstKey = result.key;
+      firstKeyCount = 1;
+    } else if (result.key === firstKey) {
+      firstKeyCount++;
+      if (firstKeyCount >= 3) break;
+    }
+
+    recentKeys.push(result.key);
+    if (recentKeys.length > 12) recentKeys.shift();
+
+    if (firstKey !== null && recentKeys.length >= 4 && isRepeatingTrap(recentKeys, firstKey)) {
+      return { trap: result.html, contextChange: null };
+    }
+  }
+
+  return { trap: null, contextChange: null };
+}
+
+test.describe("keyboard trap + context change (WCAG 2.1.2, 3.2.1)", () => {
+  for (const path of PAGES) {
+    test(path, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.goto(path);
+      await page.waitForLoadState("load");
+      const { trap, contextChange } = await runKeyboardSafetyChecks(page);
+      expect(trap, `Keyboard trap on ${path} (WCAG 2.1.2)`).toBeNull();
+      expect(contextChange, `Context change on focus on ${path} (WCAG 3.2.1)`).toBeNull();
     });
   }
 });

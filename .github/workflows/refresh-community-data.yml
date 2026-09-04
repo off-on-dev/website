@@ -54,53 +54,25 @@ jobs:
           DISCOURSE_API_USERNAME: ${{ secrets.DISCOURSE_API_USERNAME }}
         run: node scripts/refresh-community-leaders.mjs
 
-      - name: Validate refreshed JSON structure
-        run: |
-          set -euo pipefail
-          ERRORS=0
+      # Validates with the build's own parsers (parseCommunityLeadersData,
+      # getDiscussion, getLeaderboard) rather than a weaker Array.isArray check.
+      # The old gate passed data the deploy build would later reject, for example
+      # a section id Discourse newly starts producing that is not in SECTION_IDS,
+      # which then reached main before failing. Whatever the build rejects, this
+      # rejects first, before the commit step runs.
+      - name: Validate refreshed data against the build schemas
+        run: node scripts/validate-refreshed-data.mjs
 
-          # Each *-posts.json must have a "discussionPosts" array
-          for f in src/data/adventures/*/*-posts.json; do
-            if ! FILE="$f" node -e "
-              const d = JSON.parse(require('fs').readFileSync(process.env.FILE, 'utf-8'));
-              if (!Array.isArray(d.discussionPosts)) { console.error('❌ ' + process.env.FILE + ': missing discussionPosts array'); process.exit(1); }
-            " 2>&1; then
-              ERRORS=$((ERRORS + 1))
-            fi
-          done
-
-          # Each leaderboard.json must have a "rows" array
-          for f in src/data/adventures/*/leaderboard.json; do
-            if ! FILE="$f" node -e "
-              const d = JSON.parse(require('fs').readFileSync(process.env.FILE, 'utf-8'));
-              if (!Array.isArray(d.rows)) { console.error('❌ ' + process.env.FILE + ': missing rows array'); process.exit(1); }
-            " 2>&1; then
-              ERRORS=$((ERRORS + 1))
-            fi
-          done
-
-          # community-leaders.json must have a "sections" array
-          if ! node -e "
-            const d = JSON.parse(require('fs').readFileSync('src/data/community-leaders.json', 'utf-8'));
-            if (!Array.isArray(d.sections)) { console.error('❌ community-leaders.json: missing sections array'); process.exit(1); }
-          " 2>&1; then
-            ERRORS=$((ERRORS + 1))
-          fi
-
-          if [[ $ERRORS -gt 0 ]]; then
-            echo "VALIDATION_FAILED=true" >> "$GITHUB_ENV"
-            echo "❌ JSON validation failed. Aborting commit to protect main."
-            exit 1
-          else
-            echo "✓ All refreshed JSON files are structurally valid."
-          fi
-
-      - name: Open issue on validation failure
+      # Fires on any earlier step failing, which since the refresh scripts gained
+      # their own failure thresholds now covers fetch failures as well as schema
+      # validation. The title stays cause-neutral so it does not mislabel a
+      # Discourse outage as a validation problem.
+      - name: Open issue on refresh failure
         if: failure()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TITLE="Refresh community data: JSON validation failed"
+          TITLE="Refresh community data: run failed, data not updated"
           OPEN=$(gh issue list \
             --state open \
             --search "\"${TITLE}\" in:title" \
@@ -110,11 +82,17 @@ jobs:
             gh issue create \
               --title "${TITLE}" \
               --label "bug" \
-              --body "The scheduled \`refresh-community-data\` workflow failed JSON structure validation and did not commit new data to \`main\`.
+              --body "The scheduled \`refresh-community-data\` workflow failed and did not commit new data to \`main\`. Community data on the site is now stale and will stay stale until this is fixed.
 
           **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-          Check the run log for which file failed and which field was missing or malformed. Fix the upstream script that writes that file, then re-run the workflow manually via workflow_dispatch."
+          The run log names the cause. The three classes are:
+
+          - **Discourse fetch failures.** \`refresh-discussions.mjs\` fails when more than one topic errors, or when every attempted topic errors. It lists each failing topic URL with its reason, which distinguishes one bad or deleted discussion URL (a single \`HTTP 404\`) from Discourse being down or rate-limiting (\`fetch failed\` / \`HTTP 429\` across the board).
+          - **Missing credentials.** \`refresh-leaderboard.mjs\` and \`refresh-community-leaders.mjs\` exit 1 in CI when \`DISCOURSE_API_KEY\` is unset, which usually means the secret was rotated or removed.
+          - **Schema validation.** \`validate-refreshed-data.mjs\` failed, meaning refreshed data no longer matches the schemas the build uses. It names the file and the offending field. A new Discourse section id needs adding to \`SECTION_IDS\` in \`src/lib/community-leaders.ts\` (and to \`SECTION_ICON_NAMES\` in \`CommunityLeaders.astro\`).
+
+          Fix the cause, then re-run the workflow manually via workflow_dispatch."
           fi
 
       - name: Commit if changed

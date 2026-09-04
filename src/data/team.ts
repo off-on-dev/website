@@ -1,5 +1,3 @@
-import type { AdventureContributor } from "./adventures/types";
-
 // Board member data.
 
 export type BoardMember = {
@@ -51,26 +49,3 @@ export const BOARD_MEMBERS: BoardMember[] = [
   },
 ];
 
-// Update manually when adventure contributor fields change.
-export const ADVENTURE_CONTRIBUTORS: AdventureContributor[] = [
-  {
-    name: "Katharina Sick",
-    url: "https://ksick.dev/",
-    aboutHtml:
-      "DevRel at Dynatrace and co-organizer of Cloud Native Linz. Passionate about building user-friendly Cloud Native and Kubernetes solutions, with a background in mobile and backend development. Found in tech and sports communities, inline skating rinks, and quiz nights across Europe.",
-    adventures: [
-      { id: "dead-reckoning", title: "Dead Reckoning" },
-      { id: "lex-imperfecta", title: "Lex Imperfecta" },
-      { id: "the-ai-observatory", title: "The AI Observatory" },
-      { id: "building-cloudhaven", title: "Building CloudHaven" },
-      { id: "echoes-lost-in-orbit", title: "Echoes Lost in Orbit" },
-    ],
-  },
-  {
-    name: "Simon Schrottner",
-    url: "https://schrottner.at/",
-    aboutHtml:
-      "CNCF Ambassador and maintainer of OpenFeature and JUnit Pioneer. Helps teams release faster and with more confidence through open standards, feature flagging, and the communities that make both possible. A familiar face at KubeCon EU, Devoxx, ContainerDays, and meetups across Europe.",
-    adventures: [{ id: "blind-by-design", title: "Blind by Design" }],
-  },
-];

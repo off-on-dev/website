@@ -60,6 +60,17 @@
       ]
     },
     {
+      "id": "challenge-builders",
+      "title": "Challenge Builders",
+      "users": [
+        {
+          "username": "simon.schrottner",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/simon.schrottner/40/311_2.png",
+          "count": 3
+        }
+      ]
+    },
+    {
       "id": "top-challenge-solvers",
       "title": "Top Challenge Solvers",
       "users": [
@@ -91,17 +102,6 @@
         {
           "username": "rohit_bc",
           "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/rohit_bc/40/164_2.png",
-          "count": 3
-        }
-      ]
-    },
-    {
-      "id": "challenge-builders",
-      "title": "Challenge Builders",
-      "users": [
-        {
-          "username": "simon.schrottner",
-          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/simon.schrottner/40/311_2.png",
           "count": 3
         }
       ]

@@ -20,6 +20,7 @@ The following WCAG 2.2 Level AAA criteria are actively targeted on this site:
 | 1.4.6 Contrast (Enhanced) | Body text targets 7:1; large text targets 4.5:1 in both modes. |
 | 2.4.9 Link Purpose (Link Only) | Every link must make sense without surrounding context. Card links use `aria-label` with the specific item name. Ambiguous text like "via email" is rewritten or wrapped in a descriptive label. |
 | 2.4.10 Section Headings | Headings are used to organize all content sections, including sidebar sub-sections which use `<h3>`. |
+| 2.4.13 Focus Appearance (Enhanced) | Focus indicators target a minimum 2px perimeter, ≥3:1 contrast against the unfocused state, and a minimum enclosed area. Verified by full keyboard traversal in `e2e/a11y.spec.ts` (dark and light modes). |
 | 3.1.3 Unusual Words | Technical terms (e.g. devcontainer) are defined on first use via `<abbr title="…">` or inline expansion. |
 | 3.1.4 Abbreviations | Abbreviations are expanded on first use per page: `<abbr title="…">` for inline HTML; written out in full for plain-text contexts (e.g. "Site Reliability Engineers (SREs)"). |
 | 3.1.5 Reading Level | General copy targets plain language. Technical content is inherent to the subject; abbreviations and unusual words are expanded on first use. Challenge-specific content is authored by contributors and may be technical by nature. |
@@ -64,8 +65,20 @@ If you find a barrier that is not listed here, please report it using the link b
 
 ### Automated
 
-- **axe-core via Playwright** on every pull request, configured in [`e2e/a11y.spec.ts`](e2e/a11y.spec.ts). Runs in both dark and light mode against the production build with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, and `best-practice`. The PR preview workflow blocks on these scans. Never reduce this tag set.
-- Automated tests are Playwright-only (`e2e/`). Unit tests for library logic are a known gap.
+All automated checks run in [`e2e/a11y.spec.ts`](e2e/a11y.spec.ts) against the production build via Playwright on every pull request. The PR preview workflow blocks on these scans.
+
+| Check | WCAG | Notes |
+| --- | --- | --- |
+| axe-core (dark mode) | Full tag set: `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, `best-practice` | Never reduce this tag set. |
+| axe-core (light mode) | same | `.light` class set via localStorage before navigation. |
+| axe-core (forced colors) | same minus `color-contrast` | Emulates Windows High Contrast Mode. `color-contrast` excluded: emulation fires the media query but does not remap computed colors, producing false positives. |
+| Touch target minimum size | 2.5.8 | Every non-inline interactive element in the viewport is ≥24×24px. |
+| Focus ring traversal (dark + light) | 2.4.7, 2.4.13 | Tabs through every focusable element on every page; fails any element with no `outline` or `box-shadow` on `:focus-visible`. |
+| Skip link | 2.4.1 | First Tab stop is the skip link; activating it moves focus to `#main-content`. Tested on a representative route sample. |
+| Keyboard trap detection | 2.1.2 | Tabs through every page; detects repeating focus patterns (cycle length 1–5) that exclude the page's first focusable element, indicating focus is stuck. |
+| Context change on focus | 3.2.1 | Tabs through every page; fails if the URL changes after a Tab press (navigation triggered by focus). |
+| Zoom/reflow | 1.4.10 | Viewport set to 384px (equivalent to 200% zoom on 768px); asserts no horizontal `scrollWidth` overflow. |
+| Very small text | — | No visible text node below 10px (WAVE "very small text" threshold). |
 
 Automated axe passes are necessary but not sufficient. Automated tools catch roughly 30–40% of real-world accessibility issues. Manual testing is required for every interactive component.
 
@@ -197,7 +210,7 @@ We aim to acknowledge accessibility reports within five working days and to prov
 
 ## For Contributors
 
-Every UI change must pass the checklist below before the PR is submitted. See [`CLAUDE.md`](CLAUDE.md) for project conventions.
+Every UI change must pass the checklist below before the PR is submitted. See [`AGENTS.md`](AGENTS.md) for project conventions.
 
 ---
 
@@ -429,6 +442,7 @@ Use this to identify which criterion applies before writing or reviewing code.
 | | 3.1.3 Unusual Words | **AAA** | Technical terms defined on first use via `<abbr title="…">` or inline expansion. |
 | | 3.1.4 Abbreviations | **AAA** | Abbreviations expanded on first use per page. |
 | | 3.1.5 Reading Level | **AAA** | General copy targets plain language; technical terms expanded on first use. |
+| | 3.2.1 On Focus | A | Focusing an element must not trigger a context change (navigation, form submission, or any other automatic change). |
 | | 3.3.1 Error Identification | A | Error messages identify the field and describe the error. |
 | | 3.3.2 Labels or Instructions | A | Form fields have labels; placeholders are not substitutes. |
 | **Robust (4.x)** | 4.1.2 Name, Role, Value | A | ARIA roles and attributes are valid. Dynamic state (`aria-expanded`, `aria-current`) is kept in sync. |

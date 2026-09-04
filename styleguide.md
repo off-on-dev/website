@@ -1,6 +1,6 @@
 # OffOn Style Guide
 
-Design system, component API reference, and CSS utility catalogue for the Astro + Vue codebase. The source of truth for all tokens is `src/styles/index.css`; the source of truth for all component APIs is the component files themselves. Where this document and the code disagree, the code wins.
+Design system, component API reference, and CSS utility catalogue for the OffOn website. The source of truth for all tokens is `src/styles/index.css`; the source of truth for all component APIs is the component files themselves. Where this document and the code disagree, the code wins.
 
 ---
 
@@ -65,7 +65,7 @@ Raw `<button>` or `<a>` with a class from the table below. No `<Button>` wrapper
 | `.btn-inverse` | `bg-background`, primary border | CTA on `bg-primary` sections |
 | `.btn-ghost-inverse` | Transparent + background-coloured border | Secondary CTA on `bg-primary` sections |
 
-All classes include `focus-ring`, `cursor-pointer`, and overrides for `forced-colors` and `prefers-reduced-motion`.
+All classes include `focus-ring` and `cursor-pointer`. `.btn-primary`, `.btn-ghost`, `.btn-soft`, `.btn-inverse`, `.btn-ghost-inverse` have explicit `forced-colors` and `prefers-reduced-motion` overrides in `index.css`; `.btn-secondary` does not (its inverted-neutral fill maps naturally to system color keywords).
 
 `.btn-primary`, `.btn-secondary` and `.btn-ghost` all reserve a 1px border so they share a height; only `.btn-ghost` and light-mode `.btn-primary` colour it. The amber fill is ~1.6:1 against the near-white surfaces in light mode, so `--primary-border` (a darkened amber, ~5.1:1 against every surface in use) gives the control the visible boundary WCAG 1.4.11 wants. Dark mode needs none: the fill is ~11.9:1 there. Guarded by `e2e/btn-primary-contrast.spec.ts`, which checks every route in both themes.
 
@@ -79,7 +79,7 @@ Used in `ChallengesFilter.astro`. Three classes compose the pill system:
 
 | Class | Purpose |
 | --- | --- |
-| `.filter-pill` | Base — `[aria-pressed]` selectors for forced-colours mode |
+| `.filter-pill` | Selector anchor only — no base CSS; used as a prefix in the `forced-colors` block for `[aria-pressed="true"/"false"]` overrides |
 | `.pill-active` | Selected state — primary-tinted, amber border, `min-h-[44px]` |
 | `.pill-inactive` | Unselected state — transparent, border-border, hover electric glow shadow |
 
@@ -101,8 +101,8 @@ Four utilities, applied via `@utility`. Always use these — never write `outlin
 
 | Class | Usage |
 | --- | --- |
-| `.docs-ext-link` | Inline prose links site-wide. `inline-flex`, underline, amber underline-offset on dark; near-black on light. External icon via `::after` mask on `[target="_blank"]`. Use for `PersonNameLink` and external references in narrative copy. |
-| `.social-icon-link` | Icon-only social buttons (Footer, ChallengeShareLinks). `text-secondary`, `hover:text-primary`. |
+| `.docs-ext-link` | Inline prose links site-wide. `inline-flex`, underline, amber underline color on dark; near-black on light. Elements using this class inline their own icon (e.g. `<IconExternalLink>` in `PersonNameLink`). The `::after` CSS external icon applies only to `.md-inline a` and `.md-content a` (pipeline-rendered links). |
+| `.social-icon-link` | Icon-only social buttons (`ChallengeShareLinks`, `contribute.astro`). `text-secondary`, `hover:text-primary`. |
 | `.tag-chip-link` | Tag anchor chips (TagChips). Uses `outline` for focus-visible so it escapes `overflow:hidden` parents. Light-mode border contrast override for WCAG 1.4.11. |
 
 External links must always have `target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint"`. The `#new-tab-hint` span is in `Layout.astro`.
@@ -194,9 +194,18 @@ Rules:
 
 #### `AdventureCard`
 
-Props: `adventure: { slug, title, story, tags, icon?, isLive?, levels: {id, difficulty}[], contributor? }`
+Props: `adventure: { slug, title, story, tags, icon?, isLive?, levels: {id, difficulty, contributor?}[], contributor? }`
 
-Root element is `<a>` with a composite `aria-label` (title + difficulties + live status + tags). Calls `stripHtml` on `adventure.story` for the excerpt. `ContributorBadge` pinned to the bottom via `mt-auto pt-4`; intentionally omits `url` (the card is already a link — a nested `<a>` would be invalid HTML). Applies `.card-glow` and `.focus-ring`.
+Root element is `<a>` with a composite `aria-label` (title + difficulties + live status + tags). Calls `stripHtml` on `adventure.story` for the excerpt. `ContributorPill` pinned to the bottom via `mt-auto pt-4`; intentionally omits links (`noLinks`) because the card is already a link. Applies `.card-glow` and `.focus-ring`.
+
+The pill carries exactly one credit, from `adventurePillCredit`: the adventure designer. It renders only when `adventure.contributor` is set, and **never names anyone but the designer**. The label describes the designer's own scope:
+
+| Label | When |
+| --- | --- |
+| `Adventure Builder` | the designer built every challenge in the adventure |
+| `Adventure Designer` | someone else built at least one challenge |
+
+Which guest built what is deliberately not in the pill; that belongs on the level page and in the adventure page builders aside.
 
 ---
 
@@ -210,9 +219,9 @@ Maps Lucide PascalCase icon names to kebab via `PASCAL_TO_KEBAB`. Renders nothin
 
 #### `AvatarLink`
 
-Props: `username: string`, `avatarUrl?: string`, `size?: 24 | 28 (default 24)`, `class?: string`
+Props: `displayName: string`, `avatarUrl?: string`, `size?: 24 | 28 (default 24)`, `class?: string`
 
-Not a link — renders an img (or initials fallback) plus a visible username span. All visual elements are `aria-hidden`. `onerror` swaps a failed img for the initials chip.
+Not a link — renders an img (or initials fallback) plus a visible display name span. All visual elements are `aria-hidden`. `onerror` swaps a failed img for the initials chip.
 
 ---
 
@@ -232,7 +241,9 @@ Props: `items: { label: string; href?: string }[]`, `class?: string (default 'mb
 
 #### `ChallengeBuildersSection`
 
-No props. Slots: `aside` (optional sticky sidebar on `lg+`). Data from `ADVENTURE_CONTRIBUTORS`. Renders only when contributors exist. Has `aria-labelledby`.
+No props. Slots: `aside` (optional sticky sidebar on `lg+`). Data comes from `buildContributorIndex` in [`src/lib/adventure-credit.ts`](src/lib/adventure-credit.ts) over the `adventures` content collection — no separate constant or data file. Renders only when contributors exist. Has `aria-labelledby`.
+
+Renders as `<section id="challenge-contributors">` headed **"Challenge Contributors"** (the filename still says Builders). Each row is the adventure title linked to its page, and nothing else: roles and per-level detail were removed deliberately, because the section thanks people and the per-level breakdown lives on the adventure pages. Designers and level builders both appear, and someone who is both appears once.
 
 ---
 
@@ -272,7 +283,13 @@ Uses native `<details>` / `<summary>` — works without JS. `scroll-mt-28` preve
 
 Props: `sections?: string[]`, `limit?: number`
 
-Data from `src/data/community-leaders.json`. Each section is an `<ol aria-label="...">`. Rank numbers are `aria-hidden`.
+Sections come from `src/data/community-leaders.json`. Each section is an `<ol aria-label="...">`. Rank numbers are `aria-hidden`.
+
+**Only `adventure-designers` is derived** from the adventures content collection, via `designerCounts` in [`src/lib/adventure-credit.ts`](src/lib/adventure-credit.ts), because Discourse cannot know who designed an adventure. Builder standing comes from Discourse, which owns the Challenge Builder and Challenge Grand Builder badges. An earlier version re-derived both builder tiers here and discarded the fetched rows, which meant a local `GRAND_BUILDER_THRESHOLD` could silently move someone between tiers or empty a section; that threshold is gone.
+
+`challenge-builders` is Discourse's rows **plus** any YAML level builder Discourse does not know (`challengeCounts` filtered by handle), so a builder with no forum account or no badge yet still appears. Matching is on `discourse_username`, never display name, so a person listed upstream under their handle is not added again under their name. Note the two counts measure different things: Discourse counts badged challenge creations, the YAML supplement counts levels credited on this site.
+
+`displayNameByHandle` rewrites Discourse handles to real names wherever the YAML records who a handle belongs to, so one card does not show "KatharinaSick" in one section and "Katharina Sick" in the next. Handles with no record keep their handle. Every section in the file is still scanned to map `discourse_username` to a real avatar, so do not remove sections from `scripts/refresh-community-leaders.mjs` — builder avatars would silently fall back to letter avatars.
 
 ---
 
@@ -284,19 +301,28 @@ No props. Slots: `aside` (optional). `<section aria-labelledby>` with four Disco
 
 #### `CommunitySidebar`
 
-Props: `levelId`, `discussionUrl`, `contributor?`, `discussion: Discussion | null`, `leaderboardRows: LeaderboardRow[]`
+Props: `levelId`, `discussionUrl`, `contributor?`, `levelContributor?`, `discussion: Discussion | null`, `leaderboardRows: LeaderboardRow[]`
 
-Fully static — all data resolved at build time by `community-data.ts`. Three sections: contributor credit, leaderboard top-3, latest activity posts. Non-cert posts preferred in the activity list.
+Fully static -- all data resolved at build time by `community-data.ts`. Three sections: contributor credit, leaderboard top-3, latest activity posts. Non-cert posts preferred in the activity list. The credit pill comes from `levelPillCredit(contributor, levelContributor)`: `levelContributor` takes precedence over `contributor`, and the label is **always "Challenge Builder"**, whether that is a guest or the designer falling through. The page is about one challenge, so splitting the label by whether the builder also designed the adventure made the same fact read two different ways.
+
+---
+
+#### `ContributorPill`
+
+Props: `credits: { label: string; person: { name: string; url?: string } }[]`, `glow?: boolean (default false)`, `noLinks?: boolean (default false)`
+
+Presentational primitive for every "role · person" credit pill on the site. Callers supply the labels; the shape rules live here, so there is one pill rather than one per page. Adventure and level role labels come from `adventurePillCredit` / `levelPillCredit` in [`src/lib/adventure-credit.ts`](src/lib/adventure-credit.ts); the solution page passes its own `"Solution Contributor"` label.
+
+| Credits | Root | Pointer target (WCAG 2.5.8) | Hover |
+| --- | --- | --- | --- |
+| One, linked | `<a class="contributor-pill">` | the pill itself (26px, so no `min-h` needed) | `hover:border-primary/40 hover:bg-primary/10` on the pill |
+| One, unlinked (`noLinks` or no `url`) | `<span class="contributor-pill">` | none — not interactive | none |
+| Two or more | `<span class="contributor-pill">` | each inner `<a>`, sized by `min-h-6 -my-1` | `hover:bg-primary/10` on each inner `<a>` |
+
+A multi-credit pill cannot be an anchor (two destinations), so each link carries its own target size and hover state instead. `min-h-6` gives the link a 24px border box — what the touch-target sweep in `e2e/a11y.spec.ts` measures — and `-my-1` pulls it back inside the pill's `py-1` so the pill stays 26px rather than growing to 34px. Never add `min-h` to the single-credit link: that shape works because the pill *is* the anchor, and adding it only makes the pill taller. Guarded by `e2e/contributor-credit.spec.ts`.
 
 ---
 
-#### `ContributorBadge`
-
-Props: `name: string`, `url?: string`, `glow?: boolean (default false)`, `label?: string (default 'Challenge Builder')`
-
-Renders as `<a class="contributor-pill">` when `url` is present, `<span>` otherwise. Hammer icon `aria-hidden`. `contributor-pill-glow` applied when `glow={true}`. External links carry `aria-describedby="new-tab-hint"`.
-
----
 
 #### `DifficultyBadge`
 
@@ -438,14 +464,11 @@ No props passed from outside; all state is derived from the URL and the DOM on `
 - URL synced via `replaceState` (no navigation); state seeded from `?topics` / `?difficulty` on `DOMContentLoaded`.
 - `embedded` attribute on the root element suppresses sr-only section headings to avoid duplicate document outline on the home page.
 - Document-level `mousedown`/`keydown` listeners for dropdown close are registered on `DOMContentLoaded`.
+- Cards carry **no contributor credit**. See "Adventure credit" below for why.
 
 ---
 
 #### `ConsentBanner` (`.astro`)
-
-### Interactive islands (`.vue`)
-
-No islands exist yet. When the first one is added:
 
 No props. Static markup plus one script, no island. Both states are rendered and both start `hidden`; the script subscribes to `$consent` and reveals whichever matches. The state machine stays in `src/stores/consent.ts`.
 
@@ -492,6 +515,41 @@ Static markup, no island. Both icons and both accessible names are rendered, and
 - The accessible name comes from two `sr-only` spans rather than `aria-label`, because an attribute cannot be swapped by CSS.
 - One delegated `click` listener on `document`, matched via `[data-theme-toggle]`. Registered once at module scope; covers every instance so the two breakpoint copies share no state — both read the same `<html>` class.
 - Announces via the `#theme-status` sr-only polite live region in `Layout.astro`.
+
+---
+
+## Adventure credit (`src/lib/adventure-credit.ts`)
+
+Single source of truth for "who gets credit for what", including every role label. The labels live here rather than in the components so they are unit-testable:
+
+| Consumer | Function | Renders |
+| --- | --- | --- |
+| `AdventureCard` pill | `adventurePillCredit` | `Adventure Builder \| <name>` or `Adventure Designer \| <name>` |
+| `adventures/[id].astro` title pill | `adventurePillCredit` | same as the card |
+| `adventures/[id].astro` builders aside | `levelBuildersOf`, `sortDifficulties` | name + difficulty badges + bio |
+| `CommunitySidebar` (level page) | `levelPillCredit` | `Challenge Builder \| <name>` |
+| `ChallengeBuildersSection` | `buildContributorIndex` | adventure titles only |
+| `CommunityLeaders` | `designerCounts` (derived), `challengeCounts` (supplement), `displayNameByHandle` | leaderboard rows |
+
+**Challenge cards carry no credit at all**, on either the `/challenges/` filter cards or the adventure page challenge grid. The card already holds a difficulty badge, a title, body copy and a link target, and attribution competed with one of them at every size and position tried. The two per-challenge surfaces that do credit a builder, the level page and the adventure page aside, both have room for it.
+
+**The rule:** a level is built by its own `contributor` when it has one, and by the adventure `contributor` (the designer) otherwise. The fallback is **per level, not all-or-nothing** — a designer who builds two of three levels keeps credit for those two while a guest builder takes the third. An earlier all-or-nothing gate meant one guest builder erased the designer's credit for the levels they did build, so the same person showed two different level counts on one page.
+
+Pure functions over plain data, no `astro:content` import, so the rules are unit-tested directly in `src/test/lib/adventure-credit.test.ts` — including the partial-coverage case and a test asserting the section body and the leaderboard agree.
+
+### The adventure page builders aside
+
+Headed `challenge builder` or `challenge builders` depending on count, and it lists **only people who built at least one level**. A designer who built nothing is not a builder and is not listed there; they are already credited in the title pill. Each entry is the person's name (via `PersonNameLink`, which ends with an external-link icon, so nothing is placed beside the name), their difficulty badges ordered by `sortDifficulties`, and their bio.
+
+### Helpers
+
+- `adventurePillCredit(adventure)` → `PillCredit | null`. `"Adventure Builder"` when the designer built every challenge, `"Adventure Designer"` otherwise, `null` when the adventure has no designer. An adventure with zero levels is Designer, not Builder.
+- `levelPillCredit(designer, levelContributor)` → `PillCredit | null`. Always `"Challenge Builder"`.
+- `sortDifficulties(difficulties)` → curriculum order, easiest first, non-mutating, so two people on one adventure never show their levels in different orders.
+- `displayNameByHandle(adventures)` → lowercased Discourse handle to real name, for rewriting Discourse-sourced leaderboard rows.
+- `PillCredit` is `{ label: string; person: CreditPerson }`, which is also `ContributorPill`'s `Credit` shape.
+
+The data semantics of absent `level.contributor` (designer-as-builder) are documented in [ADVENTURES.md](ADVENTURES.md).
 
 ---
 
@@ -571,7 +629,7 @@ JSX behaves the same way; Vue's compiler did not, which is why the requirement i
 
 ## Adding a new component
 
-1. Static UI → `.astro`. Interactive (needs client state) → `.vue` island.
+1. Static UI → `.astro`. Interactive → `.astro` with a vanilla `<script>` first; only reach for `.vue` when genuine reactive state cannot be expressed with a class toggle and a small script. See the Interactivity section for the decision boundary and examples.
 2. Add an entry to this guide before opening a PR (`validate-docs.yml` enforces it).
 3. Touch targets ≥ 24 × 24 px (WCAG 2.5.8). Use `min-h-[44px]` on nav-adjacent links.
 4. All decorative SVGs and icons: `aria-hidden="true" focusable="false"`.

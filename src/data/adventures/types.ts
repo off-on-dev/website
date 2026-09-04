@@ -82,6 +82,8 @@ export type AdventureLevel = {
   verification: VerificationInfo;
   // SEO meta description (max 160 chars). Always set by the content loader.
   metaDescription: string;
+  // Person who built this specific level (may differ from the adventure-level proposer).
+  contributor?: { name: string; url?: string; discourseUsername?: string; aboutHtml?: string };
 }
 
 export type AdventureRewardTier = {
@@ -107,7 +109,7 @@ export type Adventure = {
   metaDescription: string;
   tags: string[];
   levels: AdventureLevel[];
-  contributor?: { name: string; url?: string; aboutHtml?: string };
+  contributor?: { name: string; url?: string; discourseUsername?: string; aboutHtml?: string };
   // Narrative backstory paragraphs shown on the adventure overview page.
   backstory?: string[];
   // Context paragraphs explaining what technologies or concepts the adventure covers.
@@ -120,11 +122,4 @@ export type Adventure = {
   upcomingLevels?: UpcomingLevel[];
 }
 
-export type AdventureContributor = {
-  name: string;
-  url?: string;
-  /** Pre-rendered HTML from markdown. Always render via InlineProse or set:html. */
-  aboutHtml?: string;
-  adventures: { id: string; title: string }[];
-};
 

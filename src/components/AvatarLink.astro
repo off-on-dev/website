@@ -4,14 +4,15 @@
 // render the image, otherwise an initials chip. An inline onerror swaps a failed
 // image for the initials chip (CSP allows 'unsafe-inline').
 interface Props {
-  username: string;
+  /** Text shown beside the avatar. A Discourse handle or a contributor's real name. */
+  displayName: string;
   avatarUrl?: string;
   size?: 24 | 28;
   class?: string;
 }
-const { username, avatarUrl, size = 24, class: className = "" } = Astro.props;
+const { displayName, avatarUrl, size = 24, class: className = "" } = Astro.props;
 const sizeClass = size === 28 ? "h-7 w-7" : "h-6 w-6";
-const initials = username.slice(0, 2).toUpperCase();
+const initials = displayName.slice(0, 2).toUpperCase();
 const chipClass = `flex ${sizeClass} shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-foreground`;
 ---
 
@@ -32,5 +33,5 @@ const chipClass = `flex ${sizeClass} shrink-0 items-center justify-center rounde
   <span class={chipClass} aria-hidden="true">{initials}</span>
 )}
 <span class={className}>
-  <span class="truncate">{username}</span>
+  <span class="truncate">{displayName}</span>
 </span>

@@ -1,17 +1,30 @@
 ---
+import { getCollection } from "astro:content";
 import { LUCIDE_ICONS, type LucideIconKey } from "@/lib/lucide-icons";
 import communityLeadersRaw from "@/data/community-leaders.json";
 import AvatarLink from "@/components/AvatarLink.astro";
 import {
   parseCommunityLeadersData,
-  type LeaderSection,
+  rowFromDiscourse,
+  type LeaderRow,
+  type LeaderRowSection,
   type SectionId,
 } from "@/lib/community-leaders";
+import {
+  challengeCounts,
+  designerCounts,
+  displayNameByHandle,
+  type CreditAdventure,
+  type CreditCount,
+} from "@/lib/adventure-credit";
 
 interface Props {
-  /** Which section IDs to show. Omit to show all. */
-  sections?: string[];
-  /** Max users to show per section. Omit to show all. */
+  /**
+   * Which sections to show. A set, not an order: the card always renders them in
+   * SECTION_ICON_NAMES order so it reads the same on every page. Omit to show all.
+   */
+  sections?: SectionId[];
+  /** Max rows to show per section. Omit to show all. */
   limit?: number;
 }
 
@@ -25,21 +38,105 @@ const SECTION_ICON_NAMES = {
   "challenge-rockstars": "star",
   "challenge-grand-builders": "building-2",
   "challenge-builders": "wrench",
+  "adventure-designers": "lightbulb",
   "most-liked": "heart",
   "most-replies": "message-circle",
   "most-supportive": "hand-heart",
 } satisfies Record<SectionId, LucideIconKey>;
 
-const { sections: ALL_SECTIONS } = parseCommunityLeadersData(communityLeadersRaw);
+// Builder standing comes from Discourse, which owns the Challenge Builder and
+// Challenge Grand Builder badges. This component used to re-derive both from the
+// adventure collection and discard the fetched rows, which meant a local
+// threshold could silently move someone between sections, or empty one.
+//
+// Only Adventure Designers is derived here, because Discourse cannot know it.
+const adventures = await getCollection("adventures");
+const adventureData = adventures.map((a) => a.data as CreditAdventure);
 
-const visibleSections = (
-  sectionFilter
-    ? sectionFilter
-        .map((id) => ALL_SECTIONS.find((s) => s.id === id))
-        .filter((s): s is LeaderSection => s !== undefined)
-    : ALL_SECTIONS
+// Build a lookup of Discourse handle → avatarUrl from every Discourse-fetched
+// section.
+const { sections: discourseSections } = parseCommunityLeadersData(communityLeadersRaw);
+const discourseAvatarMap = new Map<string, string>();
+for (const section of discourseSections) {
+  for (const user of section.users) {
+    if (user.avatarUrl && !discourseAvatarMap.has(user.username)) {
+      discourseAvatarMap.set(user.username, user.avatarUrl);
+    }
+  }
+}
+
+// Resolve avatar for a contributor: real Discourse photo if cached, else letter avatar, else undefined.
+function resolveAvatar(discourseUsername?: string): string | undefined {
+  if (!discourseUsername) return undefined;
+  if (discourseAvatarMap.has(discourseUsername)) return discourseAvatarMap.get(discourseUsername);
+  return `https://avatars.discourse-cdn.com/v4/letter/${discourseUsername.charAt(0).toLowerCase()}/b5a626/40.png`;
+}
+
+// A derived row: the display text is a real name from YAML, and the Discourse
+// handle (when set) is kept apart, used only to resolve the avatar.
+const toRows = (counts: CreditCount[]): LeaderRow[] =>
+  counts.map((c) => ({
+    displayName: c.name,
+    ...(c.discourseUsername ? { discourseUsername: c.discourseUsername } : {}),
+    ...(resolveAvatar(c.discourseUsername) ? { avatarUrl: resolveAvatar(c.discourseUsername) } : {}),
+    count: c.count,
+  }));
+
+// Every handle Discourse already credits as a builder, across both badge tiers.
+const badgedBuilders = new Set(
+  discourseSections
+    .filter((s) => s.id === "challenge-builders" || s.id === "challenge-grand-builders")
+    .flatMap((s) => s.users.map((u) => u.username.toLowerCase())),
+);
+
+// Builders the forum does not know about: no account, or no badge granted yet.
+// Their credit is recorded in the adventure YAML, so surface them rather than
+// dropping them. Matched on the Discourse handle, never the display name, so a
+// person listed under their handle upstream is not added again under their name.
+const unbadgedBuilders = challengeCounts(adventureData).filter(
+  (b) => !b.discourseUsername || !badgedBuilders.has(b.discourseUsername.toLowerCase()),
+);
+
+const designerSection: LeaderRowSection = {
+  id: "adventure-designers",
+  title: "Adventure Designers",
+  rows: toRows(designerCounts(adventureData)),
+};
+
+// Discourse rows arrive keyed by handle. Swap in the real name wherever the
+// adventure YAML records who the handle belongs to, so one card does not show
+// "KatharinaSick" in one section and "Katharina Sick" in the next. Handles we
+// have no record for keep their handle rather than being guessed at.
+const realNames = displayNameByHandle(adventureData);
+const withRealName = (row: LeaderRow): LeaderRow => {
+  const name = row.discourseUsername && realNames.get(row.discourseUsername.toLowerCase());
+  return name ? { ...row, displayName: name } : row;
+};
+
+const SECTION_ORDER = Object.keys(SECTION_ICON_NAMES) as SectionId[];
+
+const ALL_SECTIONS: LeaderRowSection[] = [
+  ...discourseSections
+    .filter((s) => s.id !== "adventure-designers")
+    .map((s) => ({
+      id: s.id,
+      title: s.title,
+      rows:
+        s.id === "challenge-builders"
+          ? [...s.users.map(rowFromDiscourse).map(withRealName), ...toRows(unbadgedBuilders)]
+          : s.users.map(rowFromDiscourse).map(withRealName),
+    })),
+  designerSection,
+]
+  .filter((s) => s.rows.length > 0)
+  .sort((a, b) => SECTION_ORDER.indexOf(a.id) - SECTION_ORDER.indexOf(b.id));
+
+// `sections` selects; it never orders. ALL_SECTIONS is already canonical, so
+// filtering preserves that and every page renders the same sequence.
+const visibleSections = ALL_SECTIONS.filter(
+  (s) => sectionFilter === undefined || sectionFilter.includes(s.id),
 )
-  .map((s) => (limit !== undefined ? { ...s, users: s.users.slice(0, limit) } : s))
+  .map((s) => (limit !== undefined ? { ...s, rows: s.rows.slice(0, limit) } : s))
   .map((s) => ({ ...s, IconComponent: LUCIDE_ICONS[SECTION_ICON_NAMES[s.id]] }));
 ---
 
@@ -58,17 +155,17 @@ const visibleSections = (
             {section.title}
           </h4>
           <ol class="space-y-2.5" aria-label={section.title}>
-            {section.users.map((user, i) => (
+            {section.rows.map((row, i) => (
               <li class="flex items-center gap-3">
                 <span class="font-mono text-xs text-faint w-4 shrink-0 text-right" aria-hidden="true">{i + 1}</span>
                 <AvatarLink
-                  username={user.username}
-                  avatarUrl={user.avatarUrl}
+                  displayName={row.displayName}
+                  avatarUrl={row.avatarUrl}
                   size={28}
                   class="text-sm font-medium text-foreground min-w-0 flex-1"
                 />
-                <span class="text-xs font-mono text-dim tabular-nums shrink-0" aria-label={`${user.count} contributions`}>
-                  {user.count}
+                <span class="text-xs font-mono text-dim tabular-nums shrink-0" aria-label={`${row.count} contributions`}>
+                  {row.count}
                 </span>
               </li>
             ))}
