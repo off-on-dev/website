@@ -1,6 +1,9 @@
 ---
-import IconHammer from "~icons/lucide/hammer";
-import IconExternalLink from "~icons/lucide/external-link";
+import ContributorPill, { type Credit } from "@/components/ContributorPill.astro";
+
+// Adventure credit pill. Derives the role labels from who proposed and who
+// built, then delegates rendering to ContributorPill, which owns the pill's
+// markup and touch-target rules for every pill on the site.
 
 interface Props {
   proposer?: { name: string; url?: string };
@@ -15,7 +18,7 @@ interface Props {
 
 const { proposer, builder, glow = false, noLinks = false, hasBuilders = false } = Astro.props;
 
-const isCompound = proposer && builder && builder.name !== proposer.name;
+const isCompound = !!(proposer && builder && builder.name !== proposer.name);
 const label = !proposer
   ? "Challenge Builder"
   : isCompound || (!builder && hasBuilders)
@@ -23,52 +26,9 @@ const label = !proposer
     : "Adventure Builder";
 const primary = proposer ?? builder;
 
-const pill = [
-  "contributor-pill inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-xs text-primary",
-  glow && "contributor-pill-glow",
-];
-const sep = "inline-block h-3 w-px bg-current opacity-40";
+const credits: Credit[] = [];
+if (primary) credits.push({ label, person: primary });
+if (isCompound && builder) credits.push({ label: "Challenge Builder", person: builder });
 ---
 
-{primary && (
-  <span class:list={pill}>
-    <IconHammer width={11} height={11} aria-hidden="true" />
-    <span>{label}</span>
-    <span aria-hidden="true" class={sep} />
-    {primary.url && !noLinks ? (
-      <a
-        href={primary.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-describedby="new-tab-hint"
-        class="inline-flex min-h-[24px] items-center gap-1 focus-ring-tight rounded"
-      >
-        {primary.name}
-        <IconExternalLink width={11} height={11} aria-hidden="true" />
-      </a>
-    ) : (
-      <span>{primary.name}</span>
-    )}
-    {isCompound && builder && (
-      <Fragment>
-        <span aria-hidden="true">·</span>
-        <span>Challenge Builder</span>
-        <span aria-hidden="true" class={sep} />
-        {builder.url && !noLinks ? (
-          <a
-            href={builder.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-describedby="new-tab-hint"
-            class="inline-flex min-h-[24px] items-center gap-1 focus-ring-tight rounded"
-          >
-            {builder.name}
-            <IconExternalLink width={11} height={11} aria-hidden="true" />
-          </a>
-        ) : (
-          <span>{builder.name}</span>
-        )}
-      </Fragment>
-    )}
-  </span>
-)}
+<ContributorPill credits={credits} glow={glow} noLinks={noLinks} />

@@ -6,10 +6,10 @@ import IconTriangleAlert from '~icons/lucide/triangle-alert';
 import IconChevronDown from '~icons/lucide/chevron-down';
 import IconSparkles from '~icons/lucide/sparkles';
 import IconExternalLink from '~icons/lucide/external-link';
-import IconHammer from '~icons/lucide/hammer';
 import Layout from "@/layouts/Layout.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import StructuredData from "@/components/StructuredData.astro";
+import ContributorPill from "@/components/ContributorPill.astro";
 import DifficultyBadge from "@/components/DifficultyBadge.astro";
 import SolutionBlocks from "@/components/SolutionBlocks.astro";
 import SolutionStepNav from "@/components/SolutionStepNav.astro";
@@ -122,7 +122,7 @@ const crumbs = [
               <div class="bg-background/40 px-6 py-6 md:px-8">
                 <div class="mb-3 flex flex-wrap items-center gap-2">
                   <DifficultyBadge difficulty={level.difficulty} showDot />
-                  <span class="text-xs uppercase tracking-wider text-faint">Solution</span>
+                  <span class="text-xs uppercase tracking-wider text-faint">solution</span>
                 </div>
                 <h1 class="mb-3 text-3xl font-bold text-foreground md:text-4xl">
                   {solution.title}
@@ -132,28 +132,9 @@ const crumbs = [
                 )}
                 {solution.contributor && (
                   <div class="mt-3">
-                    {solution.contributor.url ? (
-                      <a
-                        href={solution.contributor.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-describedby="new-tab-hint"
-                        class="contributor-pill inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-xs text-primary hover:border-primary/40 hover:bg-primary/10 transition-colors focus-ring-tight"
-                      >
-                        <IconHammer width={11} height={11} aria-hidden="true" />
-                        <span>Solution Contributor</span>
-                        <span aria-hidden="true" class="inline-block h-3 w-px bg-current opacity-40" />
-                        <span>{solution.contributor.name}</span>
-                        <IconExternalLink width={11} height={11} aria-hidden="true" />
-                      </a>
-                    ) : (
-                      <span class="contributor-pill inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-xs text-primary">
-                        <IconHammer width={11} height={11} aria-hidden="true" />
-                        <span>Solution Contributor</span>
-                        <span aria-hidden="true" class="inline-block h-3 w-px bg-current opacity-40" />
-                        <span>{solution.contributor.name}</span>
-                      </span>
-                    )}
+                    <ContributorPill
+                      credits={[{ label: "Solution Contributor", person: solution.contributor }]}
+                    />
                   </div>
                 )}
                 {level.topics.length > 0 && (
@@ -245,7 +226,7 @@ const crumbs = [
                           {step.takeaways && step.takeaways.length > 0 && (
                             <div class="rounded-lg border border-primary/20 bg-primary/5 p-4">
                               <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-primary">
-                                Key Takeaways
+                                key takeaways
                               </p>
                               <ul class="space-y-2" role="list">
                                 {step.takeaways.map((item) => (
@@ -271,7 +252,7 @@ const crumbs = [
                     <summary class="focus-ring flex cursor-pointer list-none items-center gap-3 rounded-xl border border-primary/30 bg-primary/5 px-5 py-4 group-open:rounded-b-none group-open:border-b-0 [&::-webkit-details-marker]:hidden">
                       <div class="min-w-0 flex-1">
                         <p class="mb-0.5 text-xs font-semibold uppercase tracking-wider text-primary">
-                          Final Result
+                          final result
                         </p>
                         <span class="text-base font-semibold leading-snug text-foreground">
                           {solution.completeSolution.title ?? "Complete Solution"}

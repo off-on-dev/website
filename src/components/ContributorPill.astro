@@ -1,0 +1,83 @@
+---
+import IconHammer from "~icons/lucide/hammer";
+import IconExternalLink from "~icons/lucide/external-link";
+
+// Presentational primitive for every "role · person" credit pill on the site.
+// Callers supply the labels; the shape rules live here so there is one pill,
+// not one per page. `ContributorBadge` derives adventure roles and delegates
+// here; the solution page passes its own "Solution Contributor" label.
+//
+// Shape rules (WCAG 2.5.8):
+//   one linked credit  → the pill itself is the <a>, so the pill (26px) is the
+//                        pointer target and carries the hover affordance
+//   anything else      → <span> wrapper; each inner <a> is its own target,
+//                        sized by min-h-6 and pulled back inside the pill's
+//                        padding by -my-1 so the pill keeps its height
+
+export type Credit = { label: string; person: { name: string; url?: string } };
+
+interface Props {
+  credits: Credit[];
+  glow?: boolean;
+  /** Suppress <a> tags — required when the pill sits inside an <a> card. */
+  noLinks?: boolean;
+}
+
+const { credits, glow = false, noLinks = false } = Astro.props;
+
+const single = credits.length === 1 ? credits[0] : undefined;
+const asAnchor = !!(single?.person.url && !noLinks);
+
+const pill = [
+  "contributor-pill inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-xs text-primary",
+  glow && "contributor-pill-glow",
+  asAnchor && "hover:border-primary/40 hover:bg-primary/10 transition-colors focus-ring-tight",
+];
+const sep = "inline-block h-3 w-px bg-current opacity-40";
+const innerLink =
+  "inline-flex min-h-6 -my-1 items-center gap-1 rounded-full px-1.5 -mx-1.5 hover:bg-primary/10 transition-colors focus-ring-tight";
+---
+
+{
+  credits.length > 0 &&
+    (asAnchor && single ? (
+      <a
+        href={single.person.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-describedby="new-tab-hint"
+        class:list={pill}
+      >
+        <IconHammer width={11} height={11} aria-hidden="true" />
+        <span>{single.label}</span>
+        <span aria-hidden="true" class={sep} />
+        <span>{single.person.name}</span>
+        <IconExternalLink width={11} height={11} aria-hidden="true" />
+      </a>
+    ) : (
+      <span class:list={pill}>
+        <IconHammer width={11} height={11} aria-hidden="true" />
+        {credits.map((credit, i) => (
+          <Fragment>
+            {i > 0 && <span aria-hidden="true">·</span>}
+            <span>{credit.label}</span>
+            <span aria-hidden="true" class={sep} />
+            {credit.person.url && !noLinks ? (
+              <a
+                href={credit.person.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-describedby="new-tab-hint"
+                class={innerLink}
+              >
+                {credit.person.name}
+                <IconExternalLink width={11} height={11} aria-hidden="true" />
+              </a>
+            ) : (
+              <span>{credit.person.name}</span>
+            )}
+          </Fragment>
+        ))}
+      </span>
+    ))
+}
