@@ -219,6 +219,8 @@ async function main() {
     .sort((a, b) => b.count - a.count)
     .slice(0, POOL_SIZE);
 
+  // Rockstars are deliberately not excluded here: challenge-builders is an avatar
+  // cache (see the sections array below), and a wider filter caches more avatars.
   const builders = chRows
     .filter((r) => r[chIsChallengeBuilder] && !r[chIsGrandBuilder])
     .map((r) => ({
@@ -229,6 +231,13 @@ async function main() {
     .sort((a, b) => b.count - a.count)
     .slice(0, POOL_SIZE);
 
+  // challenge-builders and challenge-grand-builders are NOT rendered from this file.
+  // CommunityLeaders.astro derives both sections (and adventure-designers) from the
+  // adventures content collection, and discards the user lists written here. They stay
+  // in the payload purely as a Discourse avatar cache: CommunityLeaders looks up a
+  // contributor's `discourse_username` across every section to find their real avatar,
+  // falling back to a letter avatar when no section carries them. Removing them would
+  // silently downgrade builder avatars, not just drop a section.
   const sections = [
     { id: "top-contributors",        title: "Top Contributors",        users: topByCol(cRows, cUsername, cTopics,        cAvatarId, TOP_N) },
     { id: "challenge-rockstars",     title: "Challenge Rockstars",     users: rockstars },

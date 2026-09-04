@@ -51,7 +51,13 @@
     {
       "id": "challenge-grand-builders",
       "title": "Challenge Grand Builders",
-      "users": []
+      "users": [
+        {
+          "username": "KatharinaSick",
+          "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/KatharinaSick/40/9_2.png",
+          "count": 15
+        }
+      ]
     },
     {
       "id": "challenge-builders",
