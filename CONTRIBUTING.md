@@ -126,7 +126,7 @@ git commit -s -m "feat: add contributor badge"
   are now markup plus a script; they are the bar for what does *not* justify a
   framework.
 
-Full rules are in [AGENTS.md](AGENTS.md) (or [CLAUDE.md](CLAUDE.md) for Claude Code users) and [styleguide.md](styleguide.md).
+Full rules are in [AGENTS.md](AGENTS.md) and [styleguide.md](styleguide.md). Claude Code users get `AGENTS.md` automatically: `CLAUDE.md` imports it.
 
 ## AI assistance
 

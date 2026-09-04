@@ -210,7 +210,7 @@ We aim to acknowledge accessibility reports within five working days and to prov
 
 ## For Contributors
 
-Every UI change must pass the checklist below before the PR is submitted. See [`CLAUDE.md`](CLAUDE.md) for project conventions.
+Every UI change must pass the checklist below before the PR is submitted. See [`AGENTS.md`](AGENTS.md) for project conventions.
 
 ---
 
