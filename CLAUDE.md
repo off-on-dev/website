@@ -148,6 +148,13 @@ rm -rf .astro        # Bust the content collection pipeline cache. The loader's 
                      # on YAML content, so editing markdown-pipeline.mjs or adventure-derive.mjs
                      # does NOT invalidate cached entries; unchanged adventures are served from
                      # the store without re-rendering. Always run this after editing the pipeline.
+                     #
+                     # Always follow it with `npm run sync` before `npm run check`. A bare
+                     # `astro check` against a stale or missing .astro/types.d.ts reports the
+                     # collection as `never` and floods the output with phantom errors
+                     # ("Property 'contributor' does not exist on type 'never'", 150+ of them).
+                     # Nothing is wrong with the code; re-run `npm run sync` and re-check.
+                     # Local-only: CI always sequences sync before check.
 
 # Regenerate downloadable presentation ZIPs and PPTX (run from repo root)
 # jszip is a devDependency, so this runs after a plain `npm ci`. reveal.js itself

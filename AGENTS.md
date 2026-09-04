@@ -142,6 +142,9 @@ npm run test:e2e     # Playwright (a11y + smoke). Requires `npm run build` first
 npm run lint         # ESLint (astro/vue/ts)
 npm run lint:reuse   # REUSE licence compliance (requires: pip install reuse)
 rm -rf .astro        # Bust the content collection pipeline cache (after editing markdown-pipeline.mjs or adventure-derive.mjs)
+                     # Always follow with `npm run sync` before `npm run check`: a bare `astro check`
+                     # against a stale/missing .astro/types.d.ts types the collection as `never` and
+                     # emits 150+ phantom errors. Re-sync and re-check. Local-only; CI sequences them.
 
 # Regenerate downloadable presentation ZIPs and PPTX (run from repo root)
 node .ai/templates/generate-reveal-zip.mjs   # -> public/downloads/offon-reveal-template.zip

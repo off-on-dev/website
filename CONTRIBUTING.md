@@ -40,6 +40,28 @@ npm run build && npm run test:e2e  # Playwright smoke, SSG, a11y, and hydration 
 
 All four must pass with zero failures before opening a PR.
 
+### If the e2e suite fails in a way that makes no sense
+
+**Check free memory before checking your diff.** `npm run test:e2e` runs 8 parallel
+workers, each with its own browser, and the whole thing is memory-hungry. On a
+machine already running an editor, Chrome and a few Electron apps it can exhaust
+memory, at which point the OS starts killing processes — usually the static server
+that serves `dist/`. Playwright then reports whatever each test happened to be
+doing, so you get a failure set that looks alarming and unrelated to your change.
+
+Symptoms that mean "out of memory", not "regression":
+
+- a **different set of tests** fails on each run
+- `net::ERR_CONNECTION_REFUSED`
+- an assertion on page content where the received value is empty (`Received: ""`)
+- `Killed: 9` from the runner itself
+- unexplained timeouts in `mobile-menu.spec.ts` or the 200% zoom block
+
+What to do: check `PhysMem` in `top -l 1 -n 0`. Under roughly 2G free, close
+applications or re-run with `--workers=2`. Confirm against a build of `main`
+under the same conditions before concluding anything about your branch. CI is
+unaffected — it shards across three dedicated runners.
+
 ## Visual regression
 
 `e2e/visual.spec.ts` compares 24 full-page screenshots (12 routes × 2 themes, desktop only) against committed baselines in `e2e/snapshots/`. **This is not a CI gate.** Run it locally before and after a visual change to catch regressions or confirm an intentional change looks correct.

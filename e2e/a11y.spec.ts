@@ -171,6 +171,32 @@ test.describe("focus ring visibility: light mode", () => {
   }
 });
 
+// KNOWN FRAGILITY — check free memory before checking your diff.
+//
+// This block is load-sensitive. On a busy machine it can fail on /, /adventures/
+// and /challenges/ with a 2px overflow, then pass cleanly minutes later on the
+// same build with nothing rebuilt. Measured on both a feature branch and main
+// under comparable load, both sit at exactly scrollWidth === innerWidth === 384,
+// so a failure here is more often the runner than the diff.
+//
+// Two causes, in order of how often they bite:
+//
+// 1. Memory exhaustion (the common one). The full suite runs 8 workers, each
+//    with its own browser. On a developer machine already running an editor,
+//    Chrome and a few Electron apps, the OS starts killing processes — usually
+//    the static server. Playwright then reports whatever the test was doing at
+//    the time, which here is a bogus scrollWidth reading, and elsewhere shows up
+//    as `net::ERR_CONNECTION_REFUSED`, an empty `<title>`, or a timeout. The
+//    failing set differs run to run, which is the tell. Check `PhysMem` in
+//    `top -l 1 -n 0` first; under ~2G free, close things or use `--workers=2`.
+//
+// 2. Font swap (the theoretical one). Unlike visual.spec.ts this waits only for
+//    "load", not `document.fonts.ready`, so self-hosted WOFF2 may still be
+//    swapping when the measurement runs. Hardening:
+//    `await page.evaluate(() => document.fonts.ready)` after waitForLoadState.
+//
+// If you see this fail: re-run it in isolation on a quiet machine, and compare
+// against a build of main under the same conditions, before changing any CSS.
 test.describe("200% zoom: no horizontal overflow", () => {
   for (const path of PAGES) {
     test(path, async ({ page }) => {

@@ -1,6 +1,6 @@
 # OffOn Style Guide
 
-Design system, component API reference, and CSS utility catalogue for the Astro + Vue codebase. The source of truth for all tokens is `src/styles/index.css`; the source of truth for all component APIs is the component files themselves. Where this document and the code disagree, the code wins.
+Design system, component API reference, and CSS utility catalogue for the OffOn website. The source of truth for all tokens is `src/styles/index.css`; the source of truth for all component APIs is the component files themselves. Where this document and the code disagree, the code wins.
 
 ---
 
@@ -65,7 +65,7 @@ Raw `<button>` or `<a>` with a class from the table below. No `<Button>` wrapper
 | `.btn-inverse` | `bg-background`, primary border | CTA on `bg-primary` sections |
 | `.btn-ghost-inverse` | Transparent + background-coloured border | Secondary CTA on `bg-primary` sections |
 
-All classes include `focus-ring`, `cursor-pointer`, and overrides for `forced-colors` and `prefers-reduced-motion`.
+All classes include `focus-ring` and `cursor-pointer`. `.btn-primary`, `.btn-ghost`, `.btn-soft`, `.btn-inverse`, `.btn-ghost-inverse` have explicit `forced-colors` and `prefers-reduced-motion` overrides in `index.css`; `.btn-secondary` does not (its inverted-neutral fill maps naturally to system color keywords).
 
 `.btn-primary`, `.btn-secondary` and `.btn-ghost` all reserve a 1px border so they share a height; only `.btn-ghost` and light-mode `.btn-primary` colour it. The amber fill is ~1.6:1 against the near-white surfaces in light mode, so `--primary-border` (a darkened amber, ~5.1:1 against every surface in use) gives the control the visible boundary WCAG 1.4.11 wants. Dark mode needs none: the fill is ~11.9:1 there. Guarded by `e2e/btn-primary-contrast.spec.ts`, which checks every route in both themes.
 
@@ -79,7 +79,7 @@ Used in `ChallengesFilter.astro`. Three classes compose the pill system:
 
 | Class | Purpose |
 | --- | --- |
-| `.filter-pill` | Base — `[aria-pressed]` selectors for forced-colours mode |
+| `.filter-pill` | Selector anchor only — no base CSS; used as a prefix in the `forced-colors` block for `[aria-pressed="true"/"false"]` overrides |
 | `.pill-active` | Selected state — primary-tinted, amber border, `min-h-[44px]` |
 | `.pill-inactive` | Unselected state — transparent, border-border, hover electric glow shadow |
 
@@ -101,8 +101,8 @@ Four utilities, applied via `@utility`. Always use these — never write `outlin
 
 | Class | Usage |
 | --- | --- |
-| `.docs-ext-link` | Inline prose links site-wide. `inline-flex`, underline, amber underline-offset on dark; near-black on light. External icon via `::after` mask on `[target="_blank"]`. Use for `PersonNameLink` and external references in narrative copy. |
-| `.social-icon-link` | Icon-only social buttons (Footer, ChallengeShareLinks). `text-secondary`, `hover:text-primary`. |
+| `.docs-ext-link` | Inline prose links site-wide. `inline-flex`, underline, amber underline color on dark; near-black on light. Elements using this class inline their own icon (e.g. `<IconExternalLink>` in `PersonNameLink`). The `::after` CSS external icon applies only to `.md-inline a` and `.md-content a` (pipeline-rendered links). |
+| `.social-icon-link` | Icon-only social buttons (`ChallengeShareLinks`, `contribute.astro`). `text-secondary`, `hover:text-primary`. |
 | `.tag-chip-link` | Tag anchor chips (TagChips). Uses `outline` for focus-visible so it escapes `overflow:hidden` parents. Light-mode border contrast override for WCAG 1.4.11. |
 
 External links must always have `target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-hint"`. The `#new-tab-hint` span is in `Layout.astro`.
@@ -210,9 +210,9 @@ Maps Lucide PascalCase icon names to kebab via `PASCAL_TO_KEBAB`. Renders nothin
 
 #### `AvatarLink`
 
-Props: `username: string`, `avatarUrl?: string`, `size?: 24 | 28 (default 24)`, `class?: string`
+Props: `displayName: string`, `avatarUrl?: string`, `size?: 24 | 28 (default 24)`, `class?: string`
 
-Not a link — renders an img (or initials fallback) plus a visible username span. All visual elements are `aria-hidden`. `onerror` swaps a failed img for the initials chip.
+Not a link — renders an img (or initials fallback) plus a visible display name span. All visual elements are `aria-hidden`. `onerror` swaps a failed img for the initials chip.
 
 ---
 
@@ -232,7 +232,7 @@ Props: `items: { label: string; href?: string }[]`, `class?: string (default 'mb
 
 #### `ChallengeBuildersSection`
 
-No props. Slots: `aside` (optional sticky sidebar on `lg+`). Data derived at build time from the `adventures` content collection -- no separate constant or data file. Renders only when contributors exist. Each contribution row shows the adventure title linked to its page and a `roleLabel` string (e.g. `"Proposed & Built"`, `"Built · Beginner · Expert"`). Has `aria-labelledby`.
+No props. Slots: `aside` (optional sticky sidebar on `lg+`). Data comes from `buildContributorIndex` in [`src/lib/adventure-credit.ts`](src/lib/adventure-credit.ts) over the `adventures` content collection — no separate constant or data file. Renders only when contributors exist. Each contribution row shows the adventure title linked to its page and a `roleLabel` string (e.g. `"Proposed & Built"`, `"Built · Intermediate"`). Has `aria-labelledby`.
 
 ---
 
@@ -272,7 +272,9 @@ Uses native `<details>` / `<summary>` — works without JS. `scroll-mt-28` preve
 
 Props: `sections?: string[]`, `limit?: number`
 
-Discourse-sourced sections (top-contributors, rockstars, most-liked, etc.) come from `src/data/community-leaders.json`. The `challenge-builders`, `challenge-grand-builders`, and `adventure-designers` sections are derived from the adventures content collection at build time. Each section is an `<ol aria-label="...">`. Rank numbers are `aria-hidden`.
+Discourse-sourced sections (top-contributors, rockstars, most-liked, etc.) come from `src/data/community-leaders.json`. The `challenge-builders`, `challenge-grand-builders`, and `adventure-designers` sections are derived from the adventures content collection at build time via `challengeCounts` / `designerCounts` in [`src/lib/adventure-credit.ts`](src/lib/adventure-credit.ts). Each section is an `<ol aria-label="...">`. Rank numbers are `aria-hidden`.
+
+`challenge-builders` and `challenge-grand-builders` still exist in `community-leaders.json`, but only as a Discourse **avatar cache**: their user lists are discarded here and replaced by the derived ones, while every section in the file is scanned to map a contributor's `discourse_username` to their real avatar. Do not remove them from `scripts/refresh-community-leaders.mjs` — builder avatars would silently fall back to letter avatars.
 
 ---
 
@@ -290,11 +292,29 @@ Fully static -- all data resolved at build time by `community-data.ts`. Three se
 
 ---
 
+#### `ContributorPill`
+
+Props: `credits: { label: string; person: { name: string; url?: string } }[]`, `glow?: boolean (default false)`, `noLinks?: boolean (default false)`
+
+Presentational primitive for every "role · person" credit pill on the site. Callers supply the labels; the shape rules live here, so there is one pill rather than one per page. `ContributorBadge` derives adventure roles and delegates here; the solution page passes its own `"Solution Contributor"` label.
+
+| Credits | Root | Pointer target (WCAG 2.5.8) | Hover |
+| --- | --- | --- | --- |
+| One, linked | `<a class="contributor-pill">` | the pill itself (26px, so no `min-h` needed) | `hover:border-primary/40 hover:bg-primary/10` on the pill |
+| One, unlinked (`noLinks` or no `url`) | `<span class="contributor-pill">` | none — not interactive | none |
+| Two or more | `<span class="contributor-pill">` | each inner `<a>`, sized by `min-h-6 -my-1` | `hover:bg-primary/10` on each inner `<a>` |
+
+A multi-credit pill cannot be an anchor (two destinations), so each link carries its own target size and hover state instead. `min-h-6` gives the link a 24px border box — what the touch-target sweep in `e2e/a11y.spec.ts` measures — and `-my-1` pulls it back inside the pill's `py-1` so the pill stays 26px rather than growing to 34px. Never add `min-h` to the single-credit link: that shape works because the pill *is* the anchor, and adding it only makes the pill taller. Guarded by `e2e/contributor-credit.spec.ts`.
+
+---
+
 #### `ContributorBadge`
 
 Props: `proposer?: { name: string; url?: string }`, `builder?: { name: string; url?: string }`, `glow?: boolean (default false)`, `noLinks?: boolean (default false)`, `hasBuilders?: boolean (default false)`
 
-Label is derived from props: no `proposer` → `"Challenge Builder"`; `proposer` with a different `builder` (or `hasBuilders`) → `"Adventure Designer"`; otherwise → `"Adventure Builder"`. When both are the same person, only `proposer` is shown. When `noLinks` is true, all `<a>` tags are replaced with `<span>` -- required inside card links to avoid nested anchors. `contributor-pill-glow` applied when `glow={true}`. External links carry `aria-describedby="new-tab-hint"`.
+Label is derived from props: no `proposer` → `"Challenge Builder"`; `proposer` with a different `builder` (or `hasBuilders`) → `"Adventure Designer"`; otherwise → `"Adventure Builder"`. When both are the same person, only `proposer` is shown. When `noLinks` is true, all `<a>` tags are replaced with `<span>` — required inside card links to avoid nested anchors. `contributor-pill-glow` applied when `glow={true}`. External links carry `aria-describedby="new-tab-hint"`.
+
+Rendering is delegated to `ContributorPill`; this component only decides the labels and how many credits to show.
 
 ---
 
@@ -443,10 +463,6 @@ No props passed from outside; all state is derived from the URL and the DOM on `
 
 #### `ConsentBanner` (`.astro`)
 
-### Interactive islands (`.vue`)
-
-No islands exist yet. When the first one is added:
-
 No props. Static markup plus one script, no island. Both states are rendered and both start `hidden`; the script subscribes to `$consent` and reveals whichever matches. The state machine stays in `src/stores/consent.ts`.
 
 - `aria-live="polite" aria-atomic="true"` wrapper around both states, always present so assistive tech has it registered before either appears.
@@ -492,6 +508,25 @@ Static markup, no island. Both icons and both accessible names are rendered, and
 - The accessible name comes from two `sr-only` spans rather than `aria-label`, because an attribute cannot be swapped by CSS.
 - One delegated `click` listener on `document`, matched via `[data-theme-toggle]`. Registered once at module scope; covers every instance so the two breakpoint copies share no state — both read the same `<html>` class.
 - Announces via the `#theme-status` sr-only polite live region in `Layout.astro`.
+
+---
+
+## Adventure credit (`src/lib/adventure-credit.ts`)
+
+Single source of truth for "who gets credit for what". Four surfaces consume it, so none of them re-derives the rule inline:
+
+| Consumer | Function |
+| --- | --- |
+| `AdventureCard` pill | `pillCreditOf` |
+| `adventures/[id].astro` pill + Contributors aside | `pillCreditOf`, `levelBuildersOf` |
+| `ChallengeBuildersSection` | `buildContributorIndex` (+ `formatRoles`) |
+| `CommunityLeaders` derived sections | `challengeCounts`, `designerCounts` |
+
+**The rule:** a level is built by its own `contributor` when it has one, and by the adventure `contributor` (the designer) otherwise. The fallback is **per level, not all-or-nothing** — a designer who builds two of three levels keeps credit for those two while a guest builder takes the third. An earlier all-or-nothing gate meant one guest builder erased the designer's credit for the levels they did build, so the same person showed two different level counts on one page.
+
+Pure functions over plain data, no `astro:content` import, so the rules are unit-tested directly in `src/test/lib/adventure-credit.test.ts` — including the partial-coverage case and a test asserting the section body and the leaderboard agree.
+
+`CommunitySidebar` derives its pill props via `levelBuilderCredit(contributor, levelContributor)` rather than inline ternary logic. The function compares by name, so a designer who is explicitly set as the level contributor on a level keeps the "Adventure Builder" label instead of flipping to "Challenge Builder". The data semantics of absent `level.contributor` (designer-as-builder) are documented in [ADVENTURES.md](ADVENTURES.md).
 
 ---
 
@@ -571,7 +606,7 @@ JSX behaves the same way; Vue's compiler did not, which is why the requirement i
 
 ## Adding a new component
 
-1. Static UI → `.astro`. Interactive (needs client state) → `.vue` island.
+1. Static UI → `.astro`. Interactive → `.astro` with a vanilla `<script>` first; only reach for `.vue` when genuine reactive state cannot be expressed with a class toggle and a small script. See the Interactivity section for the decision boundary and examples.
 2. Add an entry to this guide before opening a PR (`validate-docs.yml` enforces it).
 3. Touch targets ≥ 24 × 24 px (WCAG 2.5.8). Use `min-h-[44px]` on nav-adjacent links.
 4. All decorative SVGs and icons: `aria-hidden="true" focusable="false"`.
