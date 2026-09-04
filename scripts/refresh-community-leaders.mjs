@@ -31,7 +31,7 @@
 import { readFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { atomicWrite, fetchWithRetry } from "./discourse-utils.mjs";
+import { atomicWrite, fetchWithRetry, isCI } from "./discourse-utils.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -144,6 +144,16 @@ async function main() {
   const apiUsername = process.env.DISCOURSE_API_USERNAME ?? "system";
 
   if (!apiKey) {
+    // In CI a missing key means the secret was rotated or removed. Skipping there
+    // would give a green run with community-leaders.json frozen forever, so it is
+    // a hard failure. Locally it stays a friendly skip.
+    if (isCI()) {
+      console.error("  DISCOURSE_API_KEY is not set, but this is CI.");
+      console.error("  Refusing to exit successfully: a rotated or removed secret would");
+      console.error("  otherwise produce a green run and permanently frozen community data.");
+      console.error("  Set DISCOURSE_API_KEY as a GitHub secret.");
+      process.exit(1);
+    }
     console.warn("  DISCOURSE_API_KEY not set, skipping community leaders refresh.");
     console.warn("  Set it in .env (local) or as a GitHub secret (CI).");
     process.exit(0);

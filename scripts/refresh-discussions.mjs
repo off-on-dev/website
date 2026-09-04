@@ -105,20 +105,81 @@ function findLevelFiles(dir) {
   return results;
 }
 
+/** Failures tolerated in a single run before the whole run is failed. */
+export const MAX_TOLERATED_FAILURES = 1;
+
+/**
+ * Decide whether a refresh run counts as a failure.
+ *
+ * Two rules, both aimed at the same thing: never let a run that fetched nothing
+ * useful look like a run where nothing had changed.
+ *
+ *   1. Every attempted topic failed. Discourse is down, or every discussion URL
+ *      is wrong. Without this the job exits 0, the untouched files still pass
+ *      structural validation, and the site serves stale data indefinitely.
+ *   2. More than MAX_TOLERATED_FAILURES failed. Partial degradation. Exactly one
+ *      failure is tolerated so a single deleted or archived thread cannot block
+ *      every other topic's update from being committed.
+ *
+ * A run that updates zero files is deliberately NOT a failure. These threads are
+ * static for hours at a time and the job runs hourly, so "nothing changed" is the
+ * normal healthy outcome; failing on it would fire most hours and train everyone
+ * to ignore the alarm. The case that rule would have caught, everything failed,
+ * is already rule 1.
+ *
+ * Exported for unit testing.
+ */
+export function evaluateRefreshOutcome({ attempted, failures }) {
+  const succeeded = attempted - failures.length;
+  const detail = failures.map((f) => `    ${f.topicUrl}: ${f.reason}`).join("\n");
+
+  if (attempted === 0) return { ok: true, warning: null, error: null };
+
+  if (succeeded === 0) {
+    return {
+      ok: false,
+      warning: null,
+      error:
+        `All ${attempted} attempted topic(s) failed to refresh. ` +
+        `Discourse may be unreachable, rate-limiting, or every discussion URL is wrong.\n${detail}`,
+    };
+  }
+
+  if (failures.length > MAX_TOLERATED_FAILURES) {
+    return {
+      ok: false,
+      warning: null,
+      error:
+        `${failures.length} of ${attempted} topics failed to refresh ` +
+        `(at most ${MAX_TOLERATED_FAILURES} is tolerated).\n${detail}`,
+    };
+  }
+
+  if (failures.length > 0) {
+    return {
+      ok: true,
+      warning:
+        `${failures.length} of ${attempted} topics failed to refresh. This is within tolerance so the ` +
+        `run still succeeded, but a failure that repeats every hour is a real problem, not noise.\n${detail}`,
+      error: null,
+    };
+  }
+
+  return { ok: true, warning: null, error: null };
+}
+
 async function fetchTopicPosts(topicId, topicUrl) {
   try {
     const res = await fetchWithRetry(`${COMMUNITY_BASE}/t/${topicId}.json`);
     if (!res.ok) {
-      console.warn(`  Skipping ${topicUrl}: HTTP ${res.status}`);
-      return null;
+      return { ok: false, reason: `HTTP ${res.status}` };
     }
 
     let data;
     try {
       data = await res.json();
     } catch {
-      console.warn(`  Skipping ${topicUrl}: malformed JSON in topic response`);
-      return null;
+      return { ok: false, reason: "malformed JSON in topic response" };
     }
 
     const firstPagePosts = data.post_stream?.posts ?? [];
@@ -188,35 +249,55 @@ async function fetchTopicPosts(topicId, topicUrl) {
       }));
 
     const totalReplies = Math.max(0, (data.posts_count ?? 0) - 1);
-    return { posts: storedPosts, totalReplies, solvers };
+    return { ok: true, posts: storedPosts, totalReplies, solvers };
   } catch (err) {
-    console.warn(`  Skipping ${topicUrl}: ${err.message}`);
-    return null;
+    return { ok: false, reason: err.message };
   }
 }
 
 async function main() {
   const levelFiles = findLevelFiles(ADVENTURES_DIR);
   let updated = 0;
+  let attempted = 0;
+  let skipped = 0;
+  const failures = [];
 
   for (const filePath of levelFiles) {
     let content;
     try {
       content = JSON.parse(readFileSync(filePath, "utf-8"));
     } catch (err) {
-      console.warn(`  Skipping ${filePath}: malformed JSON (${err.message})`);
+      // A local file we cannot read is a genuine failure, not an absence: this
+      // level's data cannot be refreshed and will silently go stale.
+      attempted++;
+      failures.push({ topicUrl: filePath, reason: `malformed local JSON (${err.message})` });
       continue;
     }
+
     const discussionUrl = content.discussionUrl;
-    if (!discussionUrl) continue;
+    // No thread created for this level yet. A legitimate absence, not a failure.
+    if (!discussionUrl) {
+      skipped++;
+      continue;
+    }
 
     const topicId = extractTopicId(discussionUrl);
-    if (!topicId) continue;
+    if (!topicId) {
+      attempted++;
+      failures.push({ topicUrl: discussionUrl, reason: "could not extract a topic ID from the URL" });
+      continue;
+    }
 
+    attempted++;
     const result = await fetchTopicPosts(topicId, discussionUrl);
     // 500ms delay between requests to stay within Discourse's anonymous rate limit
     await new Promise((res) => setTimeout(res, 500));
-    if (result === null) continue;
+
+    if (!result.ok) {
+      failures.push({ topicUrl: discussionUrl, reason: result.reason });
+      console.warn(`  Failed ${discussionUrl}: ${result.reason}`);
+      continue;
+    }
 
     const { posts, totalReplies, solvers } = result;
     const newContent = { discussionUrl, discussionPosts: posts, totalReplies, solvers };
@@ -230,7 +311,15 @@ async function main() {
     }
   }
 
-  console.log(`Done. ${updated} file(s) updated out of ${levelFiles.length} levels.`);
+  console.log(
+    `\nDone. ${updated} file(s) updated. ` +
+      `${attempted - failures.length}/${attempted} topics refreshed successfully, ` +
+      `${failures.length} failed, ${skipped} skipped (no discussion URL yet).`,
+  );
+
+  const outcome = evaluateRefreshOutcome({ attempted, failures });
+  if (outcome.warning) console.warn(`\n[refresh-discussions] WARNING: ${outcome.warning}`);
+  if (!outcome.ok) throw new Error(`[refresh-discussions] ${outcome.error}`);
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
