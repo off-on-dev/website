@@ -114,7 +114,7 @@ Go to **Actions → Sync Adventure from Challenges Repo → Run workflow**.
 2. If a PR branch (`feat/adventure-<slug>`) already exists, restores `adventure.yaml` from that branch so any manual edits already made survive the re-sync.
 3. Fetches `docs/index.yaml` and all level YAMLs from the challenges repo.
 4. Writes `src/data/adventures/<slug>/adventure.yaml` and creates `<level>-posts.json` stubs for each new live level.
-5. Validates the YAML with `astro sync` (Zod content schema) and registers the adventure in `ADVENTURE_CATEGORIES` (`scripts/refresh-leaderboard.mjs`). Routes and sitemap entries are automatic via `getStaticPaths()` and `src/pages/sitemap.xml.ts`. `public/llms.txt` is updated by hand as part of the PR checklist.
+5. Validates the YAML with `astro sync` (Zod content schema). There is no leaderboard registry to update: `buildAdventureCategories()` in `scripts/refresh-leaderboard.mjs` reads `community_category_id` out of every `adventure.yaml` at runtime, so setting that field (a PR checklist item below) is the whole registration step. Routes and sitemap entries are automatic via `getStaticPaths()` and `src/pages/sitemap.xml.ts`. `public/llms.txt` is updated by hand as part of the PR checklist.
 6. Opens (or updates) a PR on `feat/adventure-<slug>` with a checklist of steps to complete before merging.
 
 ---
@@ -311,10 +311,10 @@ public/solutions/<adventure-id>/<level-id>-*.webp ← converted images (commit t
 | --- | --- | --- |
 | `sync-adventure.yml` | Manual (`workflow_dispatch`) | Sync adventure content from the challenges repo and open or update a PR |
 | `add-discussion-url.yml` | Manual (`workflow_dispatch`) | Set a Discourse thread URL for a level after it has been merged, and open a PR with updated YAML and initial posts |
-| `validate-adventures.yml` | PR (when adventure files change) | Validate adventure YAML against the Zod content schema (`astro sync`), check per-level discussion JSON exists, verify `ADVENTURE_CATEGORIES` registration |
+| `validate-adventures.yml` | PR (when adventure files change) | Validate adventure YAML against the Zod content schema (`astro sync`), check every live level has its `*-posts.json`, verify the `SKILL.md` digest matches `index.json` |
 | `deploy.yml` | Push to `main` | Build and deploy to GitHub Pages at [offon.dev](https://offon.dev) |
 | `preview.yml` | Open PR | Deploy a PR preview at `/pr-preview/pr-<n>/` |
-| `refresh-community-data.yml` | Hourly + manual | Refresh discussion posts, leaderboard data, and community leaders from Discourse |
+| `refresh-community-data.yml` | Hourly + manual | Refresh discussion posts, leaderboard data, and community leaders from Discourse, validate the result against the build's schemas, and commit only if it passes |
 | `refresh-community-sitemap.yml` | Daily (05:00 UTC) + manual | Regenerate and commit the community Discourse sitemap |
 
 ---
@@ -329,7 +329,27 @@ node scripts/refresh-discussions.mjs   # Fetch discussion posts for each level (
 # The following two scripts require DISCOURSE_API_KEY and DISCOURSE_API_USERNAME in .env
 node scripts/refresh-leaderboard.mjs          # Fetch leaderboard data per adventure/level
 node scripts/refresh-community-leaders.mjs    # Fetch community leader data
+
+# Validates everything the three scripts above wrote, using the schemas the build
+# itself uses. The refresh workflow runs this before committing. Run from the repo root.
+node scripts/validate-refreshed-data.mjs
 ```
+
+### How the refresh scripts fail
+
+These scripts are the only thing standing between a Discourse outage and the site
+serving stale community data forever, so they fail loudly rather than skipping.
+
+| Script | Fails when |
+| --- | --- |
+| `refresh-discussions.mjs` | More than one topic errors in a run, or every attempted topic errors. Exactly one failure is tolerated so a single deleted thread cannot block every other topic's update, but it is logged as a warning naming the topic, so a failure that repeats every hour stays visible. The error lists each failing topic URL and its reason, which is what distinguishes one bad URL from Discourse being down. |
+| `refresh-leaderboard.mjs` | `DISCOURSE_API_KEY` is unset **and** `CI` is set; any Data Explorer query errors; or no adventure has a `community_category_id`. Without a key locally it still skips with exit 0. |
+| `refresh-community-leaders.mjs` | `DISCOURSE_API_KEY` is unset **and** `CI` is set, or either Data Explorer query errors. Skips with exit 0 locally. |
+| `validate-refreshed-data.mjs` | Any refreshed file fails the schema the build uses. Most often a Discourse section id that is not yet in `SECTION_IDS` (`src/lib/community-leaders.ts`); add it there and to `SECTION_ICON_NAMES` in `CommunityLeaders.astro`. |
+
+The CI-only rule on the API key is deliberate: locally a missing key is a
+convenience, but in CI it means the secret was rotated or removed, and exiting 0
+there would give a green run with data frozen indefinitely.
 
 Create a `.env` file at the repo root for local use:
 
