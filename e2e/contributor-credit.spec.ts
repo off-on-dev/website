@@ -175,7 +175,7 @@ test.describe("contributor pill", () => {
     await page.waitForLoadState("load");
     expect(await page.locator("a .contributor-pill a").count()).toBe(0);
     await expect(page.locator(".contributor-pill").first()).toContainText(
-      /Adventure (Builder|Designer)/,
+      /Designer( & Builder)?/,
     );
   });
 });
