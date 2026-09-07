@@ -87,8 +87,16 @@ test.describe("uniqueness", () => {
   });
 });
 
+// This site does full page loads, so focus placement after a navigation is the
+// browser's job. An earlier version of Layout.astro moved focus to
+// #main-content whenever document.referrer was same-origin, a habit carried
+// over from <ClientRouter />, where a DOM swap left focus stranded and the
+// router had to restore it itself. Re-doing it in an MPA is a regression, not a
+// no-op: it takes the skip link and the whole <header> nav out of the forward
+// tab order on every in-site navigation, and moves a screen reader's virtual
+// cursor past both landmarks. These tests fail if that workaround comes back.
 test.describe("focus management", () => {
-  test("focus moves to #main-content after an in-site navigation", async ({ page }) => {
+  test("focus is not moved off the document start after an in-site navigation", async ({ page }) => {
     // Seed denied consent so the banner is not an extra focus stop.
     await page.addInitScript(() =>
       localStorage.setItem("analytics_consent", JSON.stringify({ value: "denied", timestamp: Date.now() })),
@@ -96,14 +104,56 @@ test.describe("focus management", () => {
     await page.goto("/");
     await page.waitForLoadState("load");
 
-    // Navigate to a different page via a real link click.
+    // Navigate to a different page via a real link click, which is the only
+    // case the old block acted on: it sets a same-origin document.referrer.
     await page.click('a[href="/about/"]');
     await page.waitForURL("/about/");
     await page.waitForLoadState("load");
 
-    // DOMContentLoaded focus restoration logic should have moved focus to main.
+    const referrer = await page.evaluate(() => document.referrer);
+    expect(referrer, "the referrer the old block gated on must actually be set").toContain("localhost");
+
     const activeId = await page.evaluate(() => document.activeElement?.id ?? "");
-    expect(activeId, "focus should be on #main-content after in-site navigation").toBe("main-content");
+    expect(activeId, "nothing may move focus to #main-content on load").not.toBe("main-content");
+  });
+
+  test("the skip link is still the first Tab stop after an in-site navigation", async ({ page }) => {
+    // The consequence the assertion above exists to protect. Checked separately
+    // because a future block could move focus somewhere other than #main-content
+    // and still break this.
+    await page.addInitScript(() =>
+      localStorage.setItem("analytics_consent", JSON.stringify({ value: "denied", timestamp: Date.now() })),
+    );
+    await page.goto("/");
+    await page.waitForLoadState("load");
+    await page.click('a[href="/about/"]');
+    await page.waitForURL("/about/");
+    await page.waitForLoadState("load");
+
+    await page.keyboard.press("Tab");
+    await expect(page.locator(":focus")).toContainText("Skip to main content");
+  });
+
+  test("a reload after an in-site navigation also leaves focus alone", async ({ page }) => {
+    // document.referrer survives a reload, so the old block fired here too:
+    // a plain refresh silently skipped the nav. Back/forward, by contrast, has
+    // no referrer and never fired, which is what made the behaviour arbitrary.
+    await page.addInitScript(() =>
+      localStorage.setItem("analytics_consent", JSON.stringify({ value: "denied", timestamp: Date.now() })),
+    );
+    await page.goto("/");
+    await page.click('a[href="/about/"]');
+    await page.waitForURL("/about/");
+    await page.waitForLoadState("load");
+    await page.reload();
+    await page.waitForLoadState("load");
+
+    const state = await page.evaluate(() => ({
+      referrer: document.referrer,
+      activeId: document.activeElement?.id ?? "",
+    }));
+    expect(state.referrer, "a reload keeps the referrer that gated the old block").toContain("localhost");
+    expect(state.activeId, "a reload must not move focus either").not.toBe("main-content");
   });
 });
 

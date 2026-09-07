@@ -136,18 +136,16 @@ const fontPreloads = [
 
       trackClicks();
 
-      // Restore focus to main content on in-site navigations. All pages already
-      // carry tabindex="-1" on <main id="main-content">, so focus() lands there.
-      // Direct visits and external referrers keep the browser's default behaviour.
-      document.addEventListener("DOMContentLoaded", () => {
-        if (!document.referrer) return;
-        try {
-          if (new URL(document.referrer).origin !== location.origin) return;
-        } catch {
-          return;
-        }
-        document.getElementById("main-content")?.focus({ preventScroll: true });
-      });
+      // Deliberately no focus management on load. A referrer-gated
+      // focus-to-#main-content block lived here, carried over from when
+      // <ClientRouter /> swapped the DOM without a page load and the SPA router
+      // had to restore focus itself. This site does real page loads, so the
+      // browser already resets focus to the document start and announces the
+      // new title. Re-doing it moved focus past the skip link and the <header>
+      // nav, which took both out of the forward tab order on every in-site
+      // navigation and skipped those landmarks for screen reader users. It also
+      // fired inconsistently, since document.referrer survives a reload but is
+      // empty on back/forward. e2e/smoke.spec.ts guards its absence.
     </script>
   </body>
 </html>

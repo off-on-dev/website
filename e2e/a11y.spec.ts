@@ -229,6 +229,44 @@ test.describe("skip link (WCAG 2.4.1)", () => {
       await expect(page.locator(":focus")).toHaveAttribute("id", "main-content");
     });
   }
+
+  // page.goto() sends no referrer, so the loop above only ever tested a cold,
+  // direct load. That gap is why a focus-on-load block in Layout.astro could
+  // take the skip link out of the forward tab order on every in-site
+  // navigation without a single test noticing. These cases arrive by clicking
+  // a real link, which is the state the block keyed off, and cover each layout
+  // type: home, a content page, the filter page, and an adventure page.
+  const IN_SITE_NAVIGATIONS = [
+    { from: "/about/", to: "/", link: 'a[href="/"]:visible' },
+    { from: "/", to: "/challenges/", link: 'nav[aria-label="Main"] a[href="/challenges/"]:visible' },
+    { from: "/", to: "/handbook/", link: 'nav[aria-label="Main"] a[href="/handbook/"]:visible' },
+    {
+      from: "/challenges/",
+      to: "/adventures/blind-by-design/",
+      link: 'a[href="/adventures/blind-by-design/"]:visible',
+    },
+  ];
+
+  for (const { from, to, link } of IN_SITE_NAVIGATIONS) {
+    test(`${from} -> ${to}: skip link survives a real in-site navigation`, async ({ page }) => {
+      await page.goto(from);
+      await page.waitForLoadState("load");
+      await page.locator(link).first().click();
+      await page.waitForURL(`**${to}`);
+      await page.waitForLoadState("load");
+
+      // Guards the test itself: without a same-origin referrer this is just a
+      // slower version of the page.goto cases above and proves nothing new.
+      const referrer = await page.evaluate(() => document.referrer);
+      expect(referrer, "arriving by link click must set a same-origin referrer").toContain("localhost");
+
+      await page.keyboard.press("Tab");
+      await expect(page.locator(":focus")).toContainText("Skip to main content");
+
+      await page.keyboard.press("Enter");
+      await expect(page.locator(":focus")).toHaveAttribute("id", "main-content");
+    });
+  }
 });
 
 // WCAG 2.1.2 + 3.2.1 — one keyboard traversal checks both:

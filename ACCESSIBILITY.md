@@ -74,7 +74,7 @@ All automated checks run in [`e2e/a11y.spec.ts`](e2e/a11y.spec.ts) against the p
 | axe-core (forced colors) | same minus `color-contrast` | Emulates Windows High Contrast Mode. `color-contrast` excluded: emulation fires the media query but does not remap computed colors, producing false positives. |
 | Touch target minimum size | 2.5.8 | Every non-inline interactive element in the viewport is ≥24×24px. |
 | Focus ring traversal (dark + light) | 2.4.7, 2.4.13 | Tabs through every focusable element on every page; fails any element with no `outline` or `box-shadow` on `:focus-visible`. |
-| Skip link | 2.4.1 | First Tab stop is the skip link; activating it moves focus to `#main-content`. Tested on a representative route sample. |
+| Skip link | 2.4.1 | First Tab stop is the skip link; activating it moves focus to `#main-content`. Tested on a representative route sample, both on a direct load and after arriving by a real link click. The link-click cases matter: nothing may move focus on load, or the skip link stops being the first Tab stop on every in-site navigation while the direct-load tests still pass. |
 | Keyboard trap detection | 2.1.2 | Tabs through every page; detects repeating focus patterns (cycle length 1–5) that exclude the page's first focusable element, indicating focus is stuck. |
 | Context change on focus | 3.2.1 | Tabs through every page; fails if the URL changes after a Tab press (navigation triggered by focus). |
 | Zoom/reflow | 1.4.10 | Viewport set to 384px (equivalent to 200% zoom on 768px); asserts no horizontal `scrollWidth` overflow. |
