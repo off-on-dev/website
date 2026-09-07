@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@astrojs/vue": "^7.0.1",
-    "@iconify-json/lucide": "^1.2.128",
+    "@iconify-json/lucide": "^1.2.129",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.2.10",
     "nanostores": "^1.5.2",
