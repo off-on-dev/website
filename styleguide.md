@@ -126,7 +126,6 @@ External links must always have `target="_blank" rel="noopener noreferrer" aria-
 | --- | --- |
 | `.card-glow` | Hover: amber outer box-shadow + teal secondary glow; border-colour override. Applied to cards and CollapsibleSection. |
 | `.contributor-pill` | Base pill: `bg-primary/5`, `border-primary/20`, `text-primary`. |
-| `.contributor-pill-glow` | Static glow variant for contributor pills in the challenge sidebar. |
 | `.firefly` | 2 px amber dot, animated with `fireflyFloat` keyframes. Used in `Hero.astro`; hidden on mobile (nth-child 7+) and `prefers-reduced-motion`. |
 | `.badge-levels` | Level count badge on AdventureCard. Light-mode override retains amber. |
 
@@ -289,7 +288,11 @@ Sections come from `src/data/community-leaders.json`. Each section is an `<ol ar
 
 `challenge-builders` is Discourse's rows **plus** any YAML level builder Discourse does not know (`challengeCounts` filtered by handle), so a builder with no forum account or no badge yet still appears. Matching is on `discourse_username`, never display name, so a person listed upstream under their handle is not added again under their name. Note the two counts measure different things: Discourse counts badged challenge creations, the YAML supplement counts levels credited on this site.
 
-`displayNameByHandle` rewrites Discourse handles to real names wherever the YAML records who a handle belongs to, so one card does not show "KatharinaSick" in one section and "Katharina Sick" in the next. Handles with no record keep their handle. Every section in the file is still scanned to map `discourse_username` to a real avatar, so do not remove sections from `scripts/refresh-community-leaders.mjs` — builder avatars would silently fall back to letter avatars.
+That section is assembled **unconditionally**, not by appending to whichever section the JSON happens to contain. `scripts/refresh-community-leaders.mjs` drops any section with no users from the file, so when nobody currently holds the Discourse badge there is no section to append to, and every YAML-credited builder would vanish from the card with no error.
+
+Discourse-sourced rows display the **handle**, not a real name. An earlier version rewrote handles to real names wherever the YAML recorded whose handle it was, but that only ever covered contributors, so a section rendered one spaced-out real name among four camelCase handles. Uniform handles read better than a partial mapping, and the alternative, a handle-to-name table covering people who are not contributors, would be hand-maintained with no source of truth. Derived sections (`adventure-designers`, and the YAML supplement to `challenge-builders`) show the real name because that is what the YAML holds.
+
+Every section in the file is scanned to map `discourse_username` to a real avatar, keyed lowercase so YAML casing need not match Discourse's, so do not remove sections from `scripts/refresh-community-leaders.mjs` — builder avatars would silently fall back to letter avatars.
 
 ---
 
@@ -309,7 +312,7 @@ Fully static -- all data resolved at build time by `community-data.ts`. Three se
 
 #### `ContributorPill`
 
-Props: `credits: { label: string; person: { name: string; url?: string } }[]`, `glow?: boolean (default false)`, `noLinks?: boolean (default false)`
+Props: `credits: { label: string; person: { name: string; url?: string } }[]`, `noLinks?: boolean (default false)`
 
 Presentational primitive for every "role · person" credit pill on the site. Callers supply the labels; the shape rules live here, so there is one pill rather than one per page. Adventure and level role labels come from `adventurePillCredit` / `levelPillCredit` in [`src/lib/adventure-credit.ts`](src/lib/adventure-credit.ts); the solution page passes its own `"Solution Contributor"` label.
 
@@ -322,7 +325,6 @@ Presentational primitive for every "role · person" credit pill on the site. Cal
 A multi-credit pill cannot be an anchor (two destinations), so each link carries its own target size and hover state instead. `min-h-6` gives the link a 24px border box — what the touch-target sweep in `e2e/a11y.spec.ts` measures — and `-my-1` pulls it back inside the pill's `py-1` so the pill stays 26px rather than growing to 34px. Never add `min-h` to the single-credit link: that shape works because the pill *is* the anchor, and adding it only makes the pill taller. Guarded by `e2e/contributor-credit.spec.ts`.
 
 ---
-
 
 #### `DifficultyBadge`
 
@@ -529,7 +531,7 @@ Single source of truth for "who gets credit for what", including every role labe
 | `adventures/[id].astro` builders aside | `levelBuildersOf`, `sortDifficulties` | name + difficulty badges + bio |
 | `CommunitySidebar` (level page) | `levelPillCredit` | `Challenge Builder \| <name>` |
 | `ChallengeBuildersSection` | `buildContributorIndex` | adventure titles only |
-| `CommunityLeaders` | `designerCounts` (derived), `challengeCounts` (supplement), `displayNameByHandle` | leaderboard rows |
+| `CommunityLeaders` | `designerCounts` (derived), `challengeCounts` (supplement) | leaderboard rows |
 
 **Challenge cards carry no credit at all**, on either the `/challenges/` filter cards or the adventure page challenge grid. The card already holds a difficulty badge, a title, body copy and a link target, and attribution competed with one of them at every size and position tried. The two per-challenge surfaces that do credit a builder, the level page and the adventure page aside, both have room for it.
 
@@ -546,8 +548,8 @@ Headed `challenge builder` or `challenge builders` depending on count, and it li
 - `adventurePillCredit(adventure)` → `PillCredit | null`. `"Adventure Builder"` when the designer built every challenge, `"Adventure Designer"` otherwise, `null` when the adventure has no designer. An adventure with zero levels is Designer, not Builder.
 - `levelPillCredit(designer, levelContributor)` → `PillCredit | null`. Always `"Challenge Builder"`.
 - `sortDifficulties(difficulties)` → curriculum order, easiest first, non-mutating, so two people on one adventure never show their levels in different orders.
-- `displayNameByHandle(adventures)` → lowercased Discourse handle to real name, for rewriting Discourse-sourced leaderboard rows.
 - `PillCredit` is `{ label: string; person: CreditPerson }`, which is also `ContributorPill`'s `Credit` shape.
+- Name and title ordering goes through a module-level `Intl.Collator("en")`. A bare `localeCompare()` collates in the build machine's locale, and this order is rendered output: it feeds the Challenge Contributors cards, the leaderboard rows, the VRT baselines and the e2e order assertions.
 
 The data semantics of absent `level.contributor` (designer-as-builder) are documented in [ADVENTURES.md](ADVENTURES.md).
 

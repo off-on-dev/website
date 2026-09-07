@@ -243,7 +243,10 @@ async function fetchTopicPosts(topicId, topicUrl) {
         avatarUrl: resolveAvatarUrl(p.avatar_template),
         cooked: getCookedText(p.cooked, p),
         created_at: p.created_at,
-        like_count: p.like_count,
+        // No like_count: nothing renders it, and discussionPostSchema in
+        // src/lib/community-data.ts does not declare it, so Zod stripped it at
+        // build time. Writing a field the schema silently discards reads like a
+        // feature that exists. Add it back to both places together, or neither.
         challengeSolved: hasChallengeSolvedBadge(p) || undefined,
         topicUrl,
       }));

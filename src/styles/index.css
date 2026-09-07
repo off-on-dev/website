@@ -1194,21 +1194,6 @@ abbr[data-title]:focus-visible {
   border-color: hsl(220 12% 45%);
 }
 
-/* ─── ContributorPill glow variant (ChallengeDetail only) ─ */
-/* Static glow, no hover. Sized for a small pill, not a card. */
-.contributor-pill-glow {
-  box-shadow:
-    0 0 0 1px hsl(var(--primary) / 0.25),
-    0 0 10px 2px hsl(var(--primary) / 0.2),
-    0 0 22px 4px hsl(var(--primary) / 0.08);
-}
-.light .contributor-pill-glow {
-  box-shadow:
-    0 0 0 1px hsl(var(--primary) / 0.35),
-    0 0 8px 2px hsl(var(--primary) / 0.18),
-    0 0 18px 4px hsl(var(--primary) / 0.07);
-}
-
 /* ─── Tag chip links ─────────────────────────────────────── */
 /* outline escapes overflow:hidden parents; box-shadow does not. */
 .tag-chip-link:focus-visible {

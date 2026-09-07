@@ -241,13 +241,16 @@ async function main() {
     .sort((a, b) => b.count - a.count)
     .slice(0, POOL_SIZE);
 
-  // challenge-builders and challenge-grand-builders are NOT rendered from this file.
-  // CommunityLeaders.astro derives both sections (and adventure-designers) from the
-  // adventures content collection, and discards the user lists written here. They stay
-  // in the payload purely as a Discourse avatar cache: CommunityLeaders looks up a
-  // contributor's `discourse_username` across every section to find their real avatar,
-  // falling back to a letter avatar when no section carries them. Removing them would
-  // silently downgrade builder avatars, not just drop a section.
+  // challenge-builders and challenge-grand-builders ARE rendered from this file.
+  // Discourse owns both badges, so it owns builder standing; CommunityLeaders.astro
+  // derives only adventure-designers, which Discourse cannot know. It supplements
+  // challenge-builders with any YAML level builder that holds neither badge, but the
+  // fetched rows are what the section is built from.
+  //
+  // Every section here doubles as a Discourse avatar cache: CommunityLeaders looks up
+  // a contributor's `discourse_username` across all of them (lowercased) to find their
+  // real avatar, falling back to a letter avatar when no section carries them. So
+  // removing a section silently downgrades avatars as well as dropping its rows.
   const sections = [
     { id: "top-contributors",        title: "Top Contributors",        users: topByCol(cRows, cUsername, cTopics,        cAvatarId, TOP_N) },
     { id: "challenge-rockstars",     title: "Challenge Rockstars",     users: rockstars },

@@ -36,6 +36,14 @@ export type CreditAdventure = {
 /** The part of an adventure the credit rules actually read. */
 export type CreditSource = Pick<CreditAdventure, "contributor" | "levels">;
 
+// Name and title ordering is rendered output: it feeds the Challenge
+// Contributors cards, the leaderboard rows, the VRT baselines and the e2e
+// order assertions. A bare `localeCompare()` collates in whatever locale the
+// machine running the build happens to have, so the locale is pinned here and
+// the same YAML always produces the same order on every runner.
+const collator = new Intl.Collator("en");
+const compareText = (a: string, b: string): number => collator.compare(a, b);
+
 /** Who built this level: its own contributor, else the adventure designer. */
 export function builderOfLevel(
   level: CreditLevel,
@@ -221,9 +229,9 @@ export function buildContributorIndex(adventures: CreditAdventure[]): Contributo
       name: entry.name,
       ...(entry.url ? { url: entry.url } : {}),
       ...(entry.aboutHtml ? { aboutHtml: entry.aboutHtml } : {}),
-      contributions: [...entry.contributions.values()].sort((a, b) => a.title.localeCompare(b.title)),
+      contributions: [...entry.contributions.values()].sort((a, b) => compareText(a.title, b.title)),
     }))
-    .sort((a, b) => b.contributions.length - a.contributions.length || a.name.localeCompare(b.name));
+    .sort((a, b) => b.contributions.length - a.contributions.length || compareText(a.name, b.name));
 }
 
 // ---------------------------------------------------------------------------
@@ -237,7 +245,7 @@ export type CreditCount = {
 };
 
 const rankByCount = (a: CreditCount, b: CreditCount): number =>
-  b.count - a.count || a.name.localeCompare(b.name);
+  b.count - a.count || compareText(a.name, b.name);
 
 /** Levels built per person, highest first. Same rule as `builderOfLevel`. */
 export function challengeCounts(adventures: CreditAdventure[]): CreditCount[] {
@@ -251,29 +259,6 @@ export function challengeCounts(adventures: CreditAdventure[]): CreditCount[] {
     }
   }
   return [...byName.values()].sort(rankByCount);
-}
-
-/**
- * Discourse handle (lowercased) to the person's real name, from every
- * contributor in the collection.
- *
- * Discourse-sourced leaderboard rows arrive keyed by handle, so this lets a
- * section show "Katharina Sick" instead of "KatharinaSick" wherever the YAML
- * already tells us who the handle belongs to. Handles we have no record for are
- * left alone rather than guessed at.
- */
-export function displayNameByHandle(adventures: CreditAdventure[]): Map<string, string> {
-  const byHandle = new Map<string, string>();
-  const add = (person?: CreditPerson): void => {
-    if (!person?.discourseUsername) return;
-    const key = person.discourseUsername.toLowerCase();
-    if (!byHandle.has(key)) byHandle.set(key, person.name);
-  };
-  for (const adventure of adventures) {
-    add(adventure.contributor);
-    for (const level of adventure.levels) add(level.contributor);
-  }
-  return byHandle;
 }
 
 /** Adventures designed per person, highest first. */

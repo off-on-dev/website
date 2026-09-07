@@ -254,16 +254,20 @@ test.describe("Community Leaders", () => {
 
   // Builder standing comes from Discourse, which owns the badges. This asserts
   // the fetched rows are rendered rather than replaced by a locally derived
-  // list, which is what a re-introduced threshold would do. Handles are mapped
-  // back to real names wherever the adventure YAML records who they belong to.
-  test("builder sections come from Discourse, shown under real names", async ({ page }) => {
+  // list, which is what a re-introduced threshold would do.
+  //
+  // Discourse-sourced rows keep their handle. An earlier version rewrote handles
+  // to real names wherever the adventure YAML recorded whose they were, but that
+  // only ever covered contributors, so a section showed one spaced-out real name
+  // among several camelCase handles. "KatharinaSick" is not a substring of
+  // "Katharina Sick", so these assertions fail if the rewriting comes back.
+  test("builder sections come from Discourse, shown under their handles", async ({ page }) => {
     await page.goto("/adventures/");
     await page.waitForLoadState("load");
     const grand = page.getByRole("list", { name: "Challenge Grand Builders" });
-    await expect(grand).toContainText("Katharina Sick");
-    await expect(grand, "handle should be mapped to a real name").not.toContainText("KatharinaSick");
+    await expect(grand).toContainText("KatharinaSick");
     const builders = page.getByRole("list", { name: "Challenge Builders" }).last();
-    await expect(builders).toContainText("Simon Schrottner");
+    await expect(builders).toContainText("simon.schrottner");
     const total = await page.locator("#challenge-contributors li").count();
     expect(total, "every contributor lists at least one adventure").toBeGreaterThan(0);
   });

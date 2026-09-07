@@ -138,10 +138,12 @@ e2e/
   hero-cta.spec.ts          # hero CTA target and text
   budget.spec.ts            # /adventures/ page budget display
   avatar-fallback.spec.ts   # community avatar error handling
-  route-coverage.spec.ts    # every route returns 200 and has a canonical
+  contributor-credit.spec.ts # rendered credit surfaces (pill, aside, leaderboard)
+  route-coverage.spec.ts    # drift gate: built routes vs the lists in routes.ts
   visual.spec.ts            # VRT baselines (local-only; excluded from CI)
-  routes.ts                 # shared SMOKE_ROUTES map
-  teardown.ts               # global teardown (server stop)
+  routes.ts                 # shared SMOKE_ROUTES / A11Y_PAGES source of truth
+  gtag-helpers.ts           # gtag.js stub + GA4 collect interception
+  static-server.mjs         # plain Node static server for dist/ (Playwright webServer)
 public/           # copied verbatim to dist/ (fonts, favicons, brand, well-known, decks, etc.)
 astro.config.mjs, tsconfig.json, playwright.config.ts, package.json
 .github/workflows/  # deploy, preview, validate-adventures, sync-adventure,

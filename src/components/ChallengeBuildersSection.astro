@@ -2,13 +2,13 @@
 import { getCollection } from "astro:content";
 import PersonNameLink from "@/components/PersonNameLink.astro";
 import InlineProse from "@/components/InlineProse.astro";
-import { buildContributorIndex, type CreditAdventure } from "@/lib/adventure-credit";
+import { buildContributorIndex } from "@/lib/adventure-credit";
 
 const base = import.meta.env.BASE_URL;
 const hasAside = Astro.slots.has("aside");
 
 const adventures = await getCollection("adventures");
-const contributors = buildContributorIndex(adventures.map((a) => a.data as CreditAdventure));
+const contributors = buildContributorIndex(adventures.map((a) => a.data));
 ---
 
 {contributors.length > 0 && (

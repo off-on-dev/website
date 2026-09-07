@@ -13,7 +13,6 @@ import {
   creditIntegrityError,
   challengeCounts,
   designerCounts,
-  displayNameByHandle,
   type CreditAdventure,
   type CreditPerson,
 } from "@/lib/adventure-credit";
@@ -218,46 +217,6 @@ describe("sortDifficulties", () => {
     const input: Difficulty[] = ["Expert", "Beginner"];
     sortDifficulties(input);
     expect(input).toEqual(["Expert", "Beginner"]);
-  });
-});
-
-describe("displayNameByHandle", () => {
-  it("is empty when nobody has a Discourse handle", () => {
-    const noHandle: CreditPerson = { name: "Ada" };
-    expect(displayNameByHandle([adventure("a", noHandle)]).size).toBe(0);
-  });
-
-  it("maps a designer's handle to their real name", () => {
-    const map = displayNameByHandle([adventure("a", KAT)]);
-    expect(map.get("kat")).toBe("Katharina");
-  });
-
-  it("maps level contributors too, not just designers", () => {
-    const map = displayNameByHandle([adventure("a", KAT, [SIMON, undefined, undefined])]);
-    expect(map.get("simon")).toBe("Simon");
-    expect(map.get("kat")).toBe("Katharina");
-  });
-
-  // Discourse rows arrive with whatever casing the forum uses, so the lookup
-  // key has to be case-insensitive or the mapping silently misses.
-  it("keys on the lowercased handle", () => {
-    const mixed: CreditPerson = { name: "Mixed Case", discourseUsername: "MiXeDCaSe" };
-    const map = displayNameByHandle([adventure("a", mixed)]);
-    expect(map.get("mixedcase")).toBe("Mixed Case");
-    expect(map.get("MiXeDCaSe")).toBeUndefined();
-  });
-
-  it("keeps the first name seen when one handle appears twice", () => {
-    const map = displayNameByHandle([adventure("a", KAT), adventure("b", KAT)]);
-    expect(map.get("kat")).toBe("Katharina");
-    expect(map.size).toBe(1);
-  });
-
-  it("skips people with no handle rather than keying on their name", () => {
-    const noHandle: CreditPerson = { name: "Ada" };
-    const map = displayNameByHandle([adventure("a", KAT, [noHandle, undefined, undefined])]);
-    expect(map.size).toBe(1);
-    expect([...map.values()]).toEqual(["Katharina"]);
   });
 });
 

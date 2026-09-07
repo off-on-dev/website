@@ -19,19 +19,17 @@ export type Credit = { label: string; person: { name: string; url?: string } };
 
 interface Props {
   credits: Credit[];
-  glow?: boolean;
   /** Suppress <a> tags — required when the pill sits inside an <a> card. */
   noLinks?: boolean;
 }
 
-const { credits, glow = false, noLinks = false } = Astro.props;
+const { credits, noLinks = false } = Astro.props;
 
 const single = credits.length === 1 ? credits[0] : undefined;
 const asAnchor = !!(single?.person.url && !noLinks);
 
 const pill = [
   "contributor-pill inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-xs text-primary",
-  glow && "contributor-pill-glow",
   asAnchor && "hover:border-primary/40 hover:bg-primary/10 transition-colors focus-ring-tight",
 ];
 const sep = "inline-block h-3 w-px bg-current opacity-40";

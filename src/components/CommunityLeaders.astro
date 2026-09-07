@@ -10,13 +10,7 @@ import {
   type LeaderRowSection,
   type SectionId,
 } from "@/lib/community-leaders";
-import {
-  challengeCounts,
-  designerCounts,
-  displayNameByHandle,
-  type CreditAdventure,
-  type CreditCount,
-} from "@/lib/adventure-credit";
+import { challengeCounts, designerCounts, type CreditCount } from "@/lib/adventure-credit";
 
 interface Props {
   /**
@@ -51,16 +45,19 @@ const SECTION_ICON_NAMES = {
 //
 // Only Adventure Designers is derived here, because Discourse cannot know it.
 const adventures = await getCollection("adventures");
-const adventureData = adventures.map((a) => a.data as CreditAdventure);
+const adventureData = adventures.map((a) => a.data);
 
 // Build a lookup of Discourse handle → avatarUrl from every Discourse-fetched
-// section.
+// section. Keyed lowercase: adventure YAML records a handle as the author typed
+// it, which need not match Discourse's own casing, and a case-only mismatch
+// would silently downgrade a real photo to a letter avatar.
 const { sections: discourseSections } = parseCommunityLeadersData(communityLeadersRaw);
 const discourseAvatarMap = new Map<string, string>();
 for (const section of discourseSections) {
   for (const user of section.users) {
-    if (user.avatarUrl && !discourseAvatarMap.has(user.username)) {
-      discourseAvatarMap.set(user.username, user.avatarUrl);
+    const key = user.username.toLowerCase();
+    if (user.avatarUrl && !discourseAvatarMap.has(key)) {
+      discourseAvatarMap.set(key, user.avatarUrl);
     }
   }
 }
@@ -68,19 +65,24 @@ for (const section of discourseSections) {
 // Resolve avatar for a contributor: real Discourse photo if cached, else letter avatar, else undefined.
 function resolveAvatar(discourseUsername?: string): string | undefined {
   if (!discourseUsername) return undefined;
-  if (discourseAvatarMap.has(discourseUsername)) return discourseAvatarMap.get(discourseUsername);
-  return `https://avatars.discourse-cdn.com/v4/letter/${discourseUsername.charAt(0).toLowerCase()}/b5a626/40.png`;
+  return (
+    discourseAvatarMap.get(discourseUsername.toLowerCase()) ??
+    `https://avatars.discourse-cdn.com/v4/letter/${discourseUsername.charAt(0).toLowerCase()}/b5a626/40.png`
+  );
 }
 
 // A derived row: the display text is a real name from YAML, and the Discourse
 // handle (when set) is kept apart, used only to resolve the avatar.
 const toRows = (counts: CreditCount[]): LeaderRow[] =>
-  counts.map((c) => ({
-    displayName: c.name,
-    ...(c.discourseUsername ? { discourseUsername: c.discourseUsername } : {}),
-    ...(resolveAvatar(c.discourseUsername) ? { avatarUrl: resolveAvatar(c.discourseUsername) } : {}),
-    count: c.count,
-  }));
+  counts.map((c) => {
+    const avatarUrl = resolveAvatar(c.discourseUsername);
+    return {
+      displayName: c.name,
+      ...(c.discourseUsername ? { discourseUsername: c.discourseUsername } : {}),
+      ...(avatarUrl ? { avatarUrl } : {}),
+      count: c.count,
+    };
+  });
 
 // Every handle Discourse already credits as a builder, across both badge tiers.
 const badgedBuilders = new Set(
@@ -97,35 +99,40 @@ const unbadgedBuilders = challengeCounts(adventureData).filter(
   (b) => !b.discourseUsername || !badgedBuilders.has(b.discourseUsername.toLowerCase()),
 );
 
+// Challenge Builders is assembled here rather than inside the map over
+// discourseSections below. refresh-community-leaders.mjs drops any section with
+// no users from the JSON entirely, so when nobody currently holds the Discourse
+// badge there is no section to append to, and every YAML-credited builder would
+// vanish from the card with no error. Building it unconditionally means the
+// derived rows survive whether or not Discourse sends any of its own.
+const BUILDERS_ID = "challenge-builders";
+const discourseBuilders = discourseSections.find((s) => s.id === BUILDERS_ID);
+const buildersSection: LeaderRowSection = {
+  id: BUILDERS_ID,
+  title: discourseBuilders?.title ?? "Challenge Builders",
+  rows: [...(discourseBuilders?.users ?? []).map(rowFromDiscourse), ...toRows(unbadgedBuilders)],
+};
+
 const designerSection: LeaderRowSection = {
   id: "adventure-designers",
   title: "Adventure Designers",
   rows: toRows(designerCounts(adventureData)),
 };
 
-// Discourse rows arrive keyed by handle. Swap in the real name wherever the
-// adventure YAML records who the handle belongs to, so one card does not show
-// "KatharinaSick" in one section and "Katharina Sick" in the next. Handles we
-// have no record for keep their handle rather than being guessed at.
-const realNames = displayNameByHandle(adventureData);
-const withRealName = (row: LeaderRow): LeaderRow => {
-  const name = row.discourseUsername && realNames.get(row.discourseUsername.toLowerCase());
-  return name ? { ...row, displayName: name } : row;
-};
-
 const SECTION_ORDER = Object.keys(SECTION_ICON_NAMES) as SectionId[];
 
+// Discourse-sourced rows keep the handle as their display text. An earlier
+// version swapped in the contributor's real name wherever the adventure YAML
+// recorded whose handle it was, but that only ever covered contributors, so a
+// section rendered one spaced-out real name among four camelCase handles.
+// Uniform handles read better than a partial mapping, and the alternative,
+// a handle-to-name table covering people who are not contributors, would be a
+// hand-maintained list with no source of truth behind it.
 const ALL_SECTIONS: LeaderRowSection[] = [
   ...discourseSections
-    .filter((s) => s.id !== "adventure-designers")
-    .map((s) => ({
-      id: s.id,
-      title: s.title,
-      rows:
-        s.id === "challenge-builders"
-          ? [...s.users.map(rowFromDiscourse).map(withRealName), ...toRows(unbadgedBuilders)]
-          : s.users.map(rowFromDiscourse).map(withRealName),
-    })),
+    .filter((s) => s.id !== "adventure-designers" && s.id !== BUILDERS_ID)
+    .map((s) => ({ id: s.id, title: s.title, rows: s.users.map(rowFromDiscourse) })),
+  buildersSection,
   designerSection,
 ]
   .filter((s) => s.rows.length > 0)

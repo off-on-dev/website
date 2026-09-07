@@ -70,7 +70,7 @@ const link = "docs-ext-link";
           </li>
           <li>Screen reader announcement of links that open in a new tab.</li>
           <li>
-            Color contrast verified at 7:1 for body text and 4.5:1 for large text (<span><abbr data-title="Web Content Accessibility Guidelines" aria-describedby="abbr-wcag-1" tabindex="0">WCAG</abbr><span id="abbr-wcag-1" class="sr-only">Web Content Accessibility Guidelines</span></span> <span><abbr data-title="triple-A conformance level" aria-describedby="abbr-aaa-2" tabindex="0">AAA</abbr><span id="abbr-aaa-2" class="sr-only">triple-A conformance level</span></span> Enhanced Contrast), and 3:1 for <span><abbr data-title="user interface" aria-describedby="abbr-ui-1" tabindex="0">UI</abbr><span id="abbr-ui-1" class="sr-only">user interface</span></span> controls, in both modes.
+            Color contrast meets <span><abbr data-title="Web Content Accessibility Guidelines" aria-describedby="abbr-wcag-1" tabindex="0">WCAG</abbr><span id="abbr-wcag-1" class="sr-only">Web Content Accessibility Guidelines</span></span> 2.2 Level <span><abbr data-title="double-A conformance level" aria-describedby="abbr-aa-1" tabindex="0">AA</abbr><span id="abbr-aa-1" class="sr-only">double-A conformance level</span></span> in both modes: 4.5:1 for body text, 3:1 for large text and <span><abbr data-title="user interface" aria-describedby="abbr-ui-1" tabindex="0">UI</abbr><span id="abbr-ui-1" class="sr-only">user interface</span></span> controls. This is checked automatically on every pull request. Body text comfortably exceeds the requirement, typically above 11:1. Some secondary text, small overline labels and syntax-highlighted code comments sit between 5:1 and 7:1, so they clear <span><abbr data-title="double-A conformance level" aria-describedby="abbr-aa-2" tabindex="0">AA</abbr><span id="abbr-aa-2" class="sr-only">double-A conformance level</span></span> but not the stricter <span><abbr data-title="triple-A conformance level" aria-describedby="abbr-aaa-2" tabindex="0">AAA</abbr><span id="abbr-aaa-2" class="sr-only">triple-A conformance level</span></span> Enhanced Contrast threshold.
           </li>
           <li>
             Every link is unambiguous without surrounding context. Card links and call-to-action
@@ -171,6 +171,7 @@ const link = "docs-ext-link";
           <li>
             <strong>axe-core via Playwright</strong> on every pull request and on a weekly
             scheduled scan (Mondays). Runs in dark mode, light mode, and with{" "}
+            <code>forced-colors: active</code> for Windows High Contrast Mode, all with{" "}
             <code>prefers-reduced-motion: reduce</code> against the production build. The <span><abbr data-title="pull request" aria-describedby="abbr-pr-1" tabindex="0">PR</abbr><span id="abbr-pr-1" class="sr-only">pull request</span></span>{" "}
             preview workflow blocks on these scans.
           </li>
