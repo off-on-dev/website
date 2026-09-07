@@ -344,19 +344,29 @@ const dropdownItem =
     const totalChallenges = Number(root.dataset.totalChallenges ?? "0");
 
     const cards = Array.from(root.querySelectorAll<HTMLElement>("[data-level-card]"));
-    const levelGrid = root.querySelector<HTMLElement>('[data-results="levels"]')!;
-    const advGrid = root.querySelector<HTMLElement>('[data-results="adventures"]')!;
+    const levelGrid = root.querySelector<HTMLElement>('[data-results="levels"]');
+    const advGrid = root.querySelector<HTMLElement>('[data-results="adventures"]');
     const seeAll = root.querySelector<HTMLElement>("[data-see-all]");
-    const countEl = root.querySelector<HTMLElement>("[data-count]")!;
+    const countEl = root.querySelector<HTMLElement>("[data-count]");
     const headingEl = root.querySelector<HTMLElement>("[data-results-heading]");
-    const emptyEl = root.querySelector<HTMLElement>("[data-empty]")!;
-    const liveEl = root.querySelector<HTMLElement>("[data-live-count]")!;
+    const emptyEl = root.querySelector<HTMLElement>("[data-empty]");
+    const liveEl = root.querySelector<HTMLElement>("[data-live-count]");
+
+    // apply() writes to all five on every render, so any one of them missing
+    // means the filter cannot do its job. Bail out the same way the missing
+    // root does, leaving the server-rendered list intact and unfiltered rather
+    // than wiring up controls whose first click throws. seeAll and headingEl
+    // are genuinely optional and stay guarded at their use sites.
+    if (!levelGrid || !advGrid || !countEl || !emptyEl || !liveEl) return;
 
     const tagPills = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-tag-pill]"));
     const tagOptions = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-tag-option]"));
     const diffRadios = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-difficulty-radio]"));
     const diffOptions = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-difficulty-option]"));
-    const allTagNames = tagPills.map((b) => b.dataset.tagPill!).filter(Boolean);
+    // An absent data-tag-pill is the "All Tools" pill, which every read below
+    // already treats as the falsy branch. `?? ""` keeps that behaviour and
+    // makes the type match it, matching the `?? ""` used for the difficulty reads.
+    const allTagNames = tagPills.map((b) => b.dataset.tagPill ?? "").filter(Boolean);
 
     const state: State = { tags: initialTag ? [initialTag] : [], difficulty: null, touched: false };
 
@@ -407,7 +417,7 @@ const dropdownItem =
     // (post-syncUrl) and once at init so the first click is already labelled.
     const updateDataUrls = (): void => {
       for (const pill of tagPills) {
-        const tag = pill.dataset.tagPill!;
+        const tag = pill.dataset.tagPill ?? "";
         const nextTags = tag
           ? state.tags.includes(tag)
             ? state.tags.filter((t) => t !== tag)
@@ -416,7 +426,7 @@ const dropdownItem =
         pill.dataset.url = computeUrl(nextTags, state.difficulty);
       }
       for (const opt of tagOptions) {
-        const tag = opt.dataset.tagOption!;
+        const tag = opt.dataset.tagOption ?? "";
         const nextTags = tag
           ? state.tags.includes(tag)
             ? state.tags.filter((t) => t !== tag)
@@ -485,7 +495,7 @@ const dropdownItem =
 
     const syncControls = (): void => {
       for (const pill of tagPills) {
-        const tag = pill.dataset.tagPill!;
+        const tag = pill.dataset.tagPill ?? "";
         const on = tag ? state.tags.includes(tag) : state.tags.length === 0;
         pill.setAttribute("aria-pressed", String(on));
         pill.querySelector<HTMLElement>("[data-clear]")?.toggleAttribute("hidden", !on);
@@ -493,7 +503,7 @@ const dropdownItem =
         else pill.setAttribute("style", allToolsPill(on));
       }
       for (const opt of tagOptions) {
-        const tag = opt.dataset.tagOption!;
+        const tag = opt.dataset.tagOption ?? "";
         const on = tag ? state.tags.includes(tag) : state.tags.length === 0;
         opt.setAttribute("aria-pressed", String(on));
         opt.querySelector<HTMLElement>("[data-check]")?.toggleAttribute("hidden", !on);
@@ -567,23 +577,35 @@ const dropdownItem =
     }
 
     // ── Dropdowns ──────────────────────────────────────────────────────────
-    const dropdowns = Array.from(root.querySelectorAll<HTMLElement>("[data-dropdown]"));
-    const panelOf = (d: HTMLElement) => d.querySelector<HTMLElement>('[role="group"]')!;
-    const triggerOf = (d: HTMLElement) => d.querySelector<HTMLButtonElement>("[data-dropdown-trigger]")!;
+    // A dropdown is only usable if it has both a panel and a trigger, so the
+    // pair is resolved once here and a wrapper missing either is dropped from
+    // the list. That keeps every later use non-null by construction instead of
+    // re-querying with `!` on each call, and it degrades one broken dropdown
+    // rather than throwing on the first click of any of them.
+    type Dropdown = { wrapper: HTMLElement; panel: HTMLElement; trigger: HTMLButtonElement };
 
-    function setOpen(d: HTMLElement, open: boolean): void {
-      panelOf(d).hidden = !open;
-      triggerOf(d).setAttribute("aria-expanded", String(open));
-      triggerOf(d)
-        .querySelector("svg")
-        ?.classList.toggle("rotate-180", open);
+    const dropdowns = Array.from(root.querySelectorAll<HTMLElement>("[data-dropdown]"))
+      .map((wrapper): Dropdown | null => {
+        const panel = wrapper.querySelector<HTMLElement>('[role="group"]');
+        const trigger = wrapper.querySelector<HTMLButtonElement>("[data-dropdown-trigger]");
+        return panel && trigger ? { wrapper, panel, trigger } : null;
+      })
+      .filter((d): d is Dropdown => d !== null);
+
+    const dropdownOf = (el: Element): Dropdown | undefined =>
+      dropdowns.find((d) => d.wrapper.contains(el));
+
+    function setOpen(d: Dropdown, open: boolean): void {
+      d.panel.hidden = !open;
+      d.trigger.setAttribute("aria-expanded", String(open));
+      d.trigger.querySelector("svg")?.classList.toggle("rotate-180", open);
     }
-    const isOpen = (d: HTMLElement): boolean => triggerOf(d).getAttribute("aria-expanded") === "true";
-    const closeAll = (except?: HTMLElement): void =>
+    const isOpen = (d: Dropdown): boolean => d.trigger.getAttribute("aria-expanded") === "true";
+    const closeAll = (except?: Dropdown): void =>
       dropdowns.forEach((d) => d !== except && setOpen(d, false));
 
     for (const d of dropdowns) {
-      triggerOf(d).addEventListener("click", () => {
+      d.trigger.addEventListener("click", () => {
         const next = !isOpen(d);
         closeAll(d);
         setOpen(d, next);
@@ -591,19 +613,19 @@ const dropdownItem =
       // Close when focus leaves the wrapper entirely. A null relatedTarget
       // (focus went nowhere) is left to the outside-mousedown handler, and this
       // must not move focus: the user has already sent it elsewhere.
-      d.addEventListener("focusout", (event) => {
+      d.wrapper.addEventListener("focusout", (event) => {
         const next = (event as FocusEvent).relatedTarget as Node | null;
-        if (next && !d.contains(next)) setOpen(d, false);
+        if (next && !d.wrapper.contains(next)) setOpen(d, false);
       });
-      d.querySelector<HTMLButtonElement>("[data-dropdown-done]")?.addEventListener("click", () => {
+      d.wrapper.querySelector<HTMLButtonElement>("[data-dropdown-done]")?.addEventListener("click", () => {
         setOpen(d, false);
-        triggerOf(d).focus();
+        d.trigger.focus();
       });
     }
 
     const onMousedown = (event: MouseEvent) => {
       const t = event.target as Node;
-      dropdowns.forEach((d) => !d.contains(t) && setOpen(d, false));
+      dropdowns.forEach((d) => !d.wrapper.contains(t) && setOpen(d, false));
     };
 
     const onKeydown = (event: KeyboardEvent) => {
@@ -611,7 +633,7 @@ const dropdownItem =
       const open = dropdowns.find(isOpen);
       if (!open) return;
       setOpen(open, false);
-      triggerOf(open).focus();
+      open.trigger.focus();
     };
 
     document.addEventListener("mousedown", onMousedown);
@@ -619,18 +641,22 @@ const dropdownItem =
 
     // ── Wiring ─────────────────────────────────────────────────────────────
     for (const pill of tagPills) {
-      const tag = pill.dataset.tagPill!;
+      const tag = pill.dataset.tagPill ?? "";
       pill.addEventListener("click", () => (tag ? toggleTag(tag) : clearTags()));
     }
     for (const opt of tagOptions) {
-      const tag = opt.dataset.tagOption!;
+      const tag = opt.dataset.tagOption ?? "";
       opt.addEventListener("click", () => {
         if (tag) toggleTag(tag);
         else {
           clearTags();
-          const d = opt.closest<HTMLElement>("[data-dropdown]")!;
-          setOpen(d, false);
-          triggerOf(d).focus();
+          // Closing the panel is a courtesy on top of the filter change that
+          // already happened, so an unresolvable dropdown just leaves it open.
+          const d = dropdownOf(opt);
+          if (d) {
+            setOpen(d, false);
+            d.trigger.focus();
+          }
         }
       });
     }
@@ -654,15 +680,20 @@ const dropdownItem =
       const d: Difficulty | null = isDifficulty(rawD) ? rawD : null;
       opt.addEventListener("click", () => {
         setDifficulty(d, false);
-        const dd = opt.closest<HTMLElement>("[data-dropdown]")!;
-        setOpen(dd, false);
-        triggerOf(dd).focus();
+        const dd = dropdownOf(opt);
+        if (dd) {
+          setOpen(dd, false);
+          dd.trigger.focus();
+        }
       });
       opt.addEventListener("keydown", (event) => {
         const key = (event as KeyboardEvent).key;
         if (key !== "ArrowDown" && key !== "ArrowUp") return;
+        // Without a panel there is no list to move within, so leave the key to
+        // the browser rather than preventing a default that has no replacement.
+        const panel = opt.closest<HTMLElement>('[role="group"]');
+        if (!panel) return;
         event.preventDefault();
-        const panel = opt.closest<HTMLElement>('[role="group"]')!;
         const btns = Array.from(panel.querySelectorAll<HTMLButtonElement>("button"));
         const i = btns.indexOf(opt);
         btns[(i + (key === "ArrowDown" ? 1 : -1) + btns.length) % btns.length].focus();
