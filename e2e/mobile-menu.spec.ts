@@ -213,6 +213,11 @@ test("crossing to the desktop breakpoint while open releases the trap", async ({
   await openDrawer(page);
   await page.setViewportSize({ width: 1400, height: 900 });
 
+  // Wait for the matchMedia change event to fire and clear inert siblings.
+  // setViewportSize returns before the event dispatches in Playwright >=1.63.
+  await page.waitForFunction(
+    () => Array.from(document.body.children).every((el) => !el.hasAttribute("inert")),
+  );
   const stuck = await page.evaluate(
     () => Array.from(document.body.children).filter((el) => el.hasAttribute("inert")).length,
   );
