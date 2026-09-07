@@ -21,9 +21,10 @@
  *   whoever opens the workflow failure.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import {
   evaluateRefreshOutcome,
+  fetchTopicPosts,
   MAX_TOLERATED_FAILURES,
 } from "../../../scripts/refresh-discussions.mjs";
 
@@ -228,6 +229,20 @@ describe("evaluateRefreshOutcome", () => {
       expect(discourseDown.error).toContain("All 5 attempted");
     });
 
+    it("reports a partial fetch as a named topic failure", () => {
+      // A truncated topic must be indistinguishable, to the outcome gate, from
+      // any other fetch failure: same accounting, same diagnostics.
+      const result = evaluateRefreshOutcome({
+        attempted: 4,
+        failures: [
+          fail("https://community.offon.dev/t/a/1", "incomplete post list: chunk (posts 40…59) returned HTTP 500"),
+          fail("https://community.offon.dev/t/b/2", "incomplete post list: malformed JSON in chunk (posts 40…59)"),
+        ],
+      });
+      expect(result.ok).toBe(false);
+      expect(result.error).toContain("incomplete post list");
+    });
+
     it("reports a malformed local file with its path and reason", () => {
       const result = evaluateRefreshOutcome({
         attempted: 2,
@@ -240,5 +255,132 @@ describe("evaluateRefreshOutcome", () => {
       expect(result.error).toContain("src/data/adventures/x/beginner-posts.json");
       expect(result.error).toContain("malformed local JSON");
     });
+  });
+});
+
+/**
+ * fetchTopicPosts pagination.
+ *
+ * Discourse returns the first ~20 posts inline and the rest through
+ * /t/<id>/posts.json chunks. Before this gate a failed chunk was console.warn +
+ * continue, so a topic whose later pages all failed still returned ok, and the
+ * caller wrote a file from it. That file was structurally valid, passed the
+ * workflow's validation, and was missing replies. Because storedPosts is the
+ * last 8 replies and solvers are derived from the same array, the visible
+ * result was vanished activity and lost solver credit, with no failure anywhere.
+ *
+ * Non-vacuous: every test in this block passes on the warn-and-continue
+ * version except by asserting ok === false, which is exactly the behaviour
+ * being added. "still succeeds when every chunk succeeds" is the counterweight:
+ * it fails if the fix over-corrects into failing healthy topics.
+ */
+describe("fetchTopicPosts pagination", () => {
+  const FIRST_PAGE_SIZE = 20;
+
+  const post = (id: number) => ({
+    id,
+    username: `user${id}`,
+    avatar_template: "/user_avatar/x/{size}/1.png",
+    cooked: `<p>reply ${id}</p>`,
+    created_at: `2026-01-01T00:${String(id % 60).padStart(2, "0")}:00.000Z`,
+  });
+
+  const json = (body: unknown) => ({ ok: true, status: 200, json: async () => body });
+
+  /**
+   * Serves a topic of `total` posts: the first 20 inline, the rest in chunks of
+   * 20. `chunkOutcome(chunkIndex)` decides what each chunk request returns.
+   */
+  function stubDiscourse(total: number, chunkOutcome: (chunkIndex: number) => unknown): void {
+    const all = Array.from({ length: total }, (_, i) => post(i + 1));
+    let chunkIndex = 0;
+    vi.stubGlobal("fetch", async (url: string) => {
+      if (!url.includes("/posts.json")) {
+        return json({
+          post_stream: { posts: all.slice(0, FIRST_PAGE_SIZE), stream: all.map((p) => p.id) },
+          posts_count: total,
+        });
+      }
+      return chunkOutcome(chunkIndex++);
+    });
+  }
+
+  // Restore `fetch` by name rather than with vi.unstubAllGlobals(), which would
+  // also tear down the localStorage stub that src/test/setup.ts installs for the
+  // whole suite via vi.stubGlobal, breaking its own beforeEach.
+  const realFetch = globalThis.fetch;
+  afterEach(() => {
+    vi.stubGlobal("fetch", realFetch);
+  });
+
+  it("still succeeds when every chunk succeeds", async () => {
+    // 45 posts: 20 inline + 2 chunks. Guards against failing healthy topics.
+    const all = Array.from({ length: 45 }, (_, i) => post(i + 1));
+    stubDiscourse(45, (i) =>
+      json({ post_stream: { posts: all.slice(20 + i * 20, 40 + i * 20) } }),
+    );
+
+    const result = await fetchTopicPosts("1", "https://community.offon.dev/t/a/1");
+    expect(result.ok).toBe(true);
+    expect(result.posts).toHaveLength(8);
+    expect(result.totalReplies).toBe(44);
+  });
+
+  it("fails the topic when a chunk returns a non-ok status", async () => {
+    stubDiscourse(45, () => ({ ok: false, status: 500, json: async () => ({}) }));
+
+    const result = await fetchTopicPosts("1", "https://community.offon.dev/t/a/1");
+    expect(result.ok).toBe(false);
+    expect(result.reason).toContain("incomplete post list");
+    expect(result.reason).toContain("HTTP 500");
+  });
+
+  it("fails the topic when a chunk body is malformed JSON", async () => {
+    stubDiscourse(45, () => ({
+      ok: true,
+      status: 200,
+      json: async () => {
+        throw new SyntaxError("Unexpected token < in JSON");
+      },
+    }));
+
+    const result = await fetchTopicPosts("1", "https://community.offon.dev/t/a/1");
+    expect(result.ok).toBe(false);
+    expect(result.reason).toContain("incomplete post list");
+    expect(result.reason).toContain("malformed JSON");
+  });
+
+  it("fails the topic when only a later chunk fails", async () => {
+    // The exact silent-truncation case: page 1 of 2 succeeds, page 2 does not.
+    // Warn-and-continue returned ok here with the tail of the thread missing.
+    const all = Array.from({ length: 45 }, (_, i) => post(i + 1));
+    stubDiscourse(45, (i) =>
+      i === 0
+        ? json({ post_stream: { posts: all.slice(20, 40) } })
+        : { ok: false, status: 502, json: async () => ({}) },
+    );
+
+    const result = await fetchTopicPosts("1", "https://community.offon.dev/t/a/1");
+    expect(result.ok).toBe(false);
+    expect(result.posts).toBeUndefined();
+  });
+
+  it("names the missing post range so the gap is identifiable", async () => {
+    stubDiscourse(45, () => ({ ok: false, status: 500, json: async () => ({}) }));
+
+    const result = await fetchTopicPosts("1", "https://community.offon.dev/t/a/1");
+    expect(result.reason).toMatch(/posts 21…40/);
+  });
+
+  it("does not fetch chunks at all for a topic that fits in one page", async () => {
+    let chunkRequests = 0;
+    stubDiscourse(12, () => {
+      chunkRequests++;
+      return { ok: false, status: 500, json: async () => ({}) };
+    });
+
+    const result = await fetchTopicPosts("1", "https://community.offon.dev/t/a/1");
+    expect(chunkRequests).toBe(0);
+    expect(result.ok).toBe(true);
   });
 });

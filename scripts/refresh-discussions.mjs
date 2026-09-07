@@ -168,7 +168,16 @@ export function evaluateRefreshOutcome({ attempted, failures }) {
   return { ok: true, warning: null, error: null };
 }
 
-async function fetchTopicPosts(topicId, topicUrl) {
+/**
+ * Fetches every reply on a Discourse topic and reduces it to the stored shape.
+ *
+ * Returns `{ ok: false, reason }` for any outcome that would produce an
+ * incomplete post list, including a single failed pagination chunk. Callers
+ * must not write a file from a non-ok result.
+ *
+ * Exported for unit-testing.
+ */
+export async function fetchTopicPosts(topicId, topicUrl) {
   try {
     const res = await fetchWithRetry(`${COMMUNITY_BASE}/t/${topicId}.json`);
     if (!res.ok) {
@@ -197,20 +206,25 @@ async function fetchTopicPosts(topicId, topicUrl) {
       const chunkRes = await fetchWithRetry(
         `${COMMUNITY_BASE}/t/${topicId}/posts.json?${params}`
       );
-      if (chunkRes.ok) {
-        let chunkData;
-        try {
-          chunkData = await chunkRes.json();
-        } catch {
-          console.warn(`  Failed to parse chunk JSON (posts ${chunk[0]}…${chunk[chunk.length - 1]})`);
-          continue;
-        }
-        allPosts = allPosts.concat(chunkData.post_stream?.posts ?? []);
-      } else {
-        console.warn(
-          `  Failed to fetch chunk (posts ${chunk[0]}…${chunk[chunk.length - 1]}): HTTP ${chunkRes.status}`
-        );
+      // A dropped chunk is not a tolerable gap. The stored post list is a
+      // "last 8 replies" slice off the end, and solvers are derived from the
+      // same array, so losing a middle or trailing page yields a file that is
+      // structurally valid and quietly wrong: replies vanish and a solver can
+      // lose their credit. Warn-and-continue made that outcome indistinguishable
+      // from a healthy run. Failing the topic instead leaves the previous file
+      // untouched (stale, but correct) and reports through the same failure
+      // accounting as any other fetch error.
+      const range = `posts ${chunk[0]}…${chunk[chunk.length - 1]}`;
+      if (!chunkRes.ok) {
+        return { ok: false, reason: `incomplete post list: chunk (${range}) returned HTTP ${chunkRes.status}` };
       }
+      let chunkData;
+      try {
+        chunkData = await chunkRes.json();
+      } catch {
+        return { ok: false, reason: `incomplete post list: malformed JSON in chunk (${range})` };
+      }
+      allPosts = allPosts.concat(chunkData.post_stream?.posts ?? []);
     }
 
     // Skip the OP (first post)
