@@ -50,7 +50,7 @@
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.62.0",
     "@vitejs/plugin-vue": "^6.0.8",
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/coverage-v8": "^5.0.0",
     "@vue/test-utils": "^2.5.0",
     "eslint": "^10.9.1",
     "eslint-plugin-astro": "^3.1.0",
@@ -62,7 +62,7 @@
     "jszip": "^3.10.1",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.68.0",
-    "vitest": "^4.1.11",
+    "vitest": "^5.0.0",
     "vue-eslint-parser": "^10.4.1"
   }
 }
