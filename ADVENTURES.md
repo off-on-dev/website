@@ -40,11 +40,11 @@ The authoritative schema is in [`src/content.config.ts`](src/content.config.ts) 
 | `emoji` | Optional | emoji character | Shown on the adventure card. The sync workflow maps it to a Lucide icon via the `EMOJI_TO_ICON` table; add the mapping there first if the emoji is new. |
 | `month` | **Required** | `MMM YYYY` | Three-letter uppercase abbreviation + four-digit year. Allowed: `JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC`. Validated by Zod regex; wrong format fails sync. |
 | `tags` | **Required** | `string[]` (min 1) | Technology/topic labels shown as filter chips. Used when the auto-generated `meta_description` falls back to name + backstory. |
-| `meta_description` | **Required** | string, max 160 chars | Validated by the Zod schema; missing field fails `npm run sync`. Max 160 chars. No em dashes; no ` - ` used as a dash. |
+| `meta_description` | **Required** | string, 160 chars recommended | Validated by the Zod schema; missing field fails `npm run sync`. Over 160 chars logs a warning and still builds, since search engines truncate rather than reject. Trim it before release. No em dashes; no ` - ` used as a dash. |
 | `story` | Optional | markdown string | Short description shown on adventure cards and at the top of the adventure page. Card views strip HTML; set:html prose uses the rendered version. |
 | `backstory` | Optional | `string[]` (markdown) | Thematic narrative paragraphs rendered on the adventure page. |
 | `overview` | Optional | `string[]` (markdown) | Technical/content summary rendered on the adventure page. |
-| `contributor` | Optional | object | `name` (required), `url` (optional URL), `about` (optional markdown), `discourse_username` (optional string -- Discourse username used for avatar resolution in community leaderboards). Survives every re-sync once set. |
+| `contributor` | Optional | object | `name` (required), `url` (optional URL), `about` (optional markdown), `discourse_username` (optional string -- Discourse username used for avatar resolution in community leaderboards). Copied from the challenges repo's `docs/index.yaml` when absent here; survives every re-sync once set. |
 | `community_category_id` | Optional | integer | Discourse category ID. Survives every re-sync once set; position is kept directly after `slug`. |
 | `rewards` | Optional | object | `deadline` (required inside; see format below), `eligibility` (markdown), `tiers` (array of `{label, description}`), `ranking_note` (markdown), `ranking_rules_url` (URL). |
 | `upcoming_levels` | Optional | object[] | Coming-soon placeholders: `{level?, name, difficulty}`. Survives re-syncs for levels not yet in the challenges repo. |
@@ -82,12 +82,12 @@ Each entry in the `levels` array accepts the following fields.
 | `scenario` | Optional | string (markdown) | Scenario prose shown before the how-to-play steps. |
 | `services` | Optional | object[] | Services exposed by the devcontainer: `{name, port?, url?, credentials?, description, internal?}`. Use `port` for a bare port number or `url` for a full URL (e.g. `http://localhost:5173`). An injected "Explore the UIs" step is generated automatically when at least one non-internal service has a `port` or `url`. |
 | `helpful_links` | Optional | object[] | Reference links shown at the bottom of the level: `{title, url, description?}`. |
-| `meta_description` | Optional | string, max 160 chars | Level-specific meta description. When absent, the generator builds one from `name`/`title` + `intro[0]` + difficulty + topics. |
+| `meta_description` | Optional | string, 160 chars recommended | Level-specific meta description. When absent, the generator builds one from `name`/`title` + `intro[0]` + difficulty + topics. Over 160 chars logs a warning and still builds. |
 | `what_you_learn` or `learnings` | **One required** | `string[]` (min 1 when present) | Learning objectives list. A Zod `.refine()` requires at least one of the two to be set; if both are absent the build fails. |
 | `verification` | **Required** | object | `{command, description}` — the verification gate command and its description. |
 | `codespaces_machine` | Optional | `"4core"` | Machine size override for Codespaces. Only `"4core"` is accepted; other values fail the Zod schema. |
 | `hook` | Optional | string | Verification hook command. |
-| `contributor` | Optional | object | Person who built this specific level. Same subfields as the adventure `contributor` (`name`, `url`, `about`, `discourse_username`). **When omitted, the adventure designer is credited as the builder for this level.** When set, takes precedence over the adventure designer for credit display on the level page and in community leaderboard sections. See note below. |
+| `contributor` | Optional | object | Person who built this specific level. Same subfields as the adventure `contributor` (`name`, `url`, `about`, `discourse_username`). Synced from that level's YAML in the challenges repo (e.g. `docs/beginner.yaml`), which sets it only when someone other than the designer built the level. A value already in the website YAML always wins, so re-crediting a level upstream needs the same hand-edit as re-crediting the designer. **When omitted, the adventure designer is credited as the builder for this level.** When set, takes precedence over the adventure designer for credit display on the level page and in community leaderboard sections. See note below. |
 | `solved_count` | Optional | integer | Override for the displayed solved count. |
 | `top_players` | Optional | object[] | System-populated leaderboard data: `{username, count}`. Set by the leaderboard refresh script; do not edit by hand. |
 
@@ -123,7 +123,7 @@ Go to **Actions → Sync Adventure from Challenges Repo → Run workflow**.
 
 The PR body lists everything that needs to happen before merging. Here is each item explained.
 
-### Add contributor block
+### Check the contributor block
 
 ```yaml
 contributor:
@@ -133,7 +133,11 @@ contributor:
   discourse_username: "their_forum_username"
 ```
 
-Add this to `src/data/adventures/<slug>/adventure.yaml`. The `url`, `about`, and `discourse_username` fields are optional but recommended -- `discourse_username` enables avatar resolution in community leaderboards. Once set, this block survives future re-syncs automatically.
+This lives in `src/data/adventures/<slug>/adventure.yaml`. The sync copies it from `contributor:` in the challenges repo's `docs/index.yaml` when the website YAML does not already have one, keeping only the four fields above -- the challenges repo owns its own schema, and passing an unknown field through would fail `npm run sync` against the strict content schema. Write it by hand only when the sync log warns that no contributor was found upstream.
+
+The `url`, `about`, and `discourse_username` fields are optional but recommended -- `discourse_username` enables avatar resolution in community leaderboards. A hand-edited block always wins over the upstream one and survives future re-syncs.
+
+An adventure with no designer cannot have levels that name their own builder: `creditIntegrityError` in `src/lib/adventure-credit.ts` fails `npm run sync` on that combination.
 
 ### Confirm month
 
@@ -242,7 +246,8 @@ If the challenges repo is updated while your PR is still open, or you want to pr
 
 | Field | Preserved | Notes |
 | --- | --- | --- |
-| `contributor:` (adventure) | Always | Survives every re-sync once set |
+| `contributor:` (adventure) | Always | Survives every re-sync once set. When unset, the sync copies it from `docs/index.yaml` in the challenges repo |
+| `contributor:` (level) | Always | Survives every re-sync once set, even if the level's YAML upstream names someone else. When unset, the sync copies it from that level's YAML in the challenges repo. Re-crediting a level is a deliberate hand-edit |
 | `community_category_id:` (adventure) | Always | Survives every re-sync once set; position is kept directly after `slug` |
 | `month:` (adventure) | Always | Survives every re-sync once set |
 | `discussion_url:` / `community_url:` (level) | Always | Website-only fields; never in the challenges repo. Both field aliases are preserved independently |

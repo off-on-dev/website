@@ -182,7 +182,8 @@ jobs:
 
           ### Before merging
 
-          - [ ] Add \`contributor:\` block to \`src/data/adventures/${SLUG}/adventure.yaml\`
+          - [ ] Check the \`contributor:\` block in \`src/data/adventures/${SLUG}/adventure.yaml\`. It is synced from
+            \`docs/index.yaml\` in the challenges repo; add it by hand only if the sync log says none was found.
             \`\`\`yaml
             contributor:
               name: "Full Name"

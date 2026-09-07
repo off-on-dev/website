@@ -126,7 +126,8 @@ const levelSchema = z
     how_to_play: z.array(howToPlayStepSchema),
     verification: verificationSchema,
     helpful_links: z.array(helpfulLinkSchema).optional(),
-    meta_description: z.string().max(160).optional(),
+    // Length is warned about in renderLevel, not enforced: see warnIfMetaDescriptionLong.
+    meta_description: z.string().optional(),
     solved_count: z.number().int().optional(),
     top_players: z
       .array(z.object({ username: z.string(), count: z.number().int() }).strict())
@@ -143,6 +144,20 @@ const levelSchema = z
   });
 
 // --- Resolvers ---
+
+const META_DESCRIPTION_MAX = 160;
+
+// Over-length meta descriptions are an SEO smell, not a content error: search
+// engines truncate the tail and the page still renders correctly. Warn so the
+// sync PR gets refined before release, but never fail `astro sync` (and with it
+// the whole sync-adventure workflow) over a description a reviewer can trim.
+function warnIfMetaDescriptionLong(value: string | undefined, where: string): void {
+  if (value && value.length > META_DESCRIPTION_MAX) {
+    console.warn(
+      `[content] ${where}: meta_description is ${value.length} chars, over the ${META_DESCRIPTION_MAX}-char SEO limit. Search engines will truncate it.`,
+    );
+  }
+}
 
 function requireEither(a: string | undefined | null, b: string | undefined | null, field: string): string {
   const value = a ?? b;
@@ -187,7 +202,8 @@ function assertDifficulty(
 // AdventureLevel (from data/adventures/types.ts) is the single source of truth
 // for the rendered level shape. renderLevel's return type is checked against it,
 // so the two cannot drift silently.
-async function renderLevel(level: z.infer<typeof levelSchema>): Promise<AdventureLevel> {
+async function renderLevel(level: z.infer<typeof levelSchema>, slug: string): Promise<AdventureLevel> {
+  warnIfMetaDescriptionLong(level.meta_description, `${slug} → level "${level.level}"`);
   const difficulty = level.difficulty ?? (level.emoji ? LEVEL_DIFFICULTY_BY_EMOJI[level.emoji as keyof typeof LEVEL_DIFFICULTY_BY_EMOJI] : undefined);
   const learnings = level.learnings ?? level.what_you_learn ?? [];
   const intro = level.intro ?? (level.summary ? [level.summary] : undefined);
@@ -345,7 +361,8 @@ const adventures = defineCollection({
       tags: z.array(z.string()).min(1),
       contributor: contributorSchema.optional(),
       community_category_id: z.number().int().optional(),
-      meta_description: z.string().max(160),
+      // Length is warned about in the transform, not enforced: see warnIfMetaDescriptionLong.
+      meta_description: z.string(),
       backstory: z.array(z.string()).optional(),
       overview: z.array(z.string()).optional(),
       rewards: rewardsSchema.optional(),
@@ -361,6 +378,7 @@ const adventures = defineCollection({
       if (message) ctx.addIssue({ code: "custom", message, path: ["contributor"] });
     })
     .transform(async (data) => {
+      warnIfMetaDescriptionLong(data.meta_description, `adventure "${data.slug}"`);
       const title = requireEither(data.title, data.name, "adventure title/name");
       const story =
         data.story ?? data.meta_description ?? (data.backstory && data.backstory.length > 0 ? data.backstory[0] : "");
@@ -370,7 +388,7 @@ const adventures = defineCollection({
         mdToInline(story),
         data.contributor?.about ? mdToInline(data.contributor.about) : Promise.resolve(null),
         data.backstory ? mdToInlineArray(data.backstory) : Promise.resolve(null),
-        Promise.all(data.levels.map(renderLevel)),
+        Promise.all(data.levels.map((level) => renderLevel(level, data.slug))),
         data.rewards ? renderRewards(data.rewards) : Promise.resolve(null),
       ]);
 

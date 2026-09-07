@@ -103,8 +103,9 @@ export type PillCredit = {
  * An adventure with no designer has no level builders either, because the
  * content schema rejects that combination (see `creditIntegrityError`), so this
  * returns null rather than promoting a builder into the pill. The no-designer
- * case is real: `sync-adventure.mjs` deliberately omits `contributor`, and a
- * reviewer adds it as a PR checklist item.
+ * case is still real: `sync-adventure.mjs` copies `contributor` from the
+ * challenges repo's `docs/index.yaml`, so an adventure whose upstream names no
+ * designer yet arrives without one until a reviewer adds it.
  */
 export function adventurePillCredit(adventure: CreditSource): PillCredit | null {
   const designer = adventure.contributor;

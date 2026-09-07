@@ -152,6 +152,19 @@ function buildAdventureMetaDescription(indexData, activeLevels) {
   return truncateAtWord(full, 160);
 }
 
+// The website's contributor schema is strict, so only the four fields it knows
+// survive the trip from the challenges repo. Anything else in the upstream block
+// would fail `astro sync` on a field the reviewer never wrote.
+export function pickContributor(raw) {
+  if (!raw || typeof raw !== "object" || !raw.name) return null;
+  return {
+    name: raw.name,
+    ...(raw.url && { url: raw.url }),
+    ...(raw.about && { about: raw.about }),
+    ...(raw.discourse_username && { discourse_username: raw.discourse_username }),
+  };
+}
+
 function transformStrings(value, fn) {
   if (typeof value === "string") return fn(value);
   if (Array.isArray(value)) return value.map((v) => transformStrings(v, fn));
@@ -268,14 +281,20 @@ function addToLucideIconsMap(content, iconName, kebab) {
   return content.replace(re, m[1] + block + m[3]);
 }
 
-function buildLevel(raw, adventureTags, rewardsDeadline) {
+export function buildLevel(raw, adventureTags, rewardsDeadline) {
   // architecture_diagram is stripped here. After all levels are fetched, the sync attempts
   // to pull the SVG from docs/diagrams/ in the challenges repo and re-adds the field if
   // successful. If not found there, it must be added manually to src/assets/diagrams/.
   const { architecture_diagram: _ignored, ...rest } = raw;
-  const cleaned = transformStrings(rest, stripCodeInLinks);
+  const { contributor: rawContributor, ...cleaned } = transformStrings(rest, stripCodeInLinks);
+  // A level `contributor` is the challenge builder, set upstream only when someone
+  // other than the adventure designer built this level. Filtered through the same
+  // picker as the designer: the website's contributor schema is strict, so a field
+  // the challenges repo carries but this site has no column for would fail sync.
+  const contributor = pickContributor(rawContributor);
   return {
     ...cleaned,
+    ...(contributor && { contributor }),
     ...(cleaned.deadline && { deadline: parseDeadline(cleaned.deadline, PRESERVE_TZ) }),
     topics: cleaned.topics || deriveTopics(adventureTags),
     verification: cleaned.verification || VERIFICATION_STUB,
@@ -295,13 +314,25 @@ function buildLevel(raw, adventureTags, rewardsDeadline) {
  *                                injected by buildLevel, so manual edits are only preserved when
  *                                the upstream did not intentionally change the field.
  */
-function mergeLevels(existing, incoming, rawFetched) {
+export function mergeLevels(existing, incoming, rawFetched) {
   const levelMap = Object.fromEntries((existing || []).map((l) => [l.level, l]));
   const rawMap = Object.fromEntries((rawFetched || []).map((l) => [l.level, l]));
 
   for (const l of incoming) {
     const prev = levelMap[l.level];
     const raw = rawMap[l.level];
+
+    // The challenge builder, already credited in the website YAML. Held aside
+    // because it wins over the upstream value rather than only filling a gap.
+    const preservedContributor = pickContributor(prev?.contributor);
+    const upstreamContributor = pickContributor(raw?.contributor);
+    if (preservedContributor && upstreamContributor && upstreamContributor.name !== preservedContributor.name) {
+      console.warn(
+        `  Level "${l.level}": keeping the builder already credited on the website ` +
+        `(${preservedContributor.name}) over the one named upstream (${upstreamContributor.name}). ` +
+        "Edit adventure.yaml by hand to re-credit this level."
+      );
+    }
 
     levelMap[l.level] = {
       ...l,
@@ -320,6 +351,12 @@ function mergeLevels(existing, incoming, rawFetched) {
       // intentional upstream changes come through. When the upstream did not set them (buildLevel
       // derived them from adventure tags), preserve any manual refinements from the website.
       ...(!raw?.topics && prev?.topics && { topics: prev.topics }),
+      // contributor: the challenge builder. A builder already credited on the website
+      // always wins, matching the adventure designer: the sync fills this field in from
+      // the level YAML, it never overwrites it. Re-crediting a level to someone else is
+      // a hand-edit either way, and losing an existing credit silently misattributes a
+      // person's work, which is worse than a stale credit a reviewer can see and fix.
+      ...(preservedContributor && { contributor: preservedContributor }),
     };
   }
 
@@ -471,6 +508,13 @@ async function main() {
   // Used for level flags and e2e/routes.ts generation below.
   const allLiveLevels = mergeLevels(existing?.levels, activeLevels, rawFetchedLevels);
 
+  const resolvedContributor = pickContributor(existing?.contributor) ?? pickContributor(indexData.contributor);
+  if (!existing?.contributor && resolvedContributor) {
+    console.log(`  Contributor from docs/index.yaml: ${resolvedContributor.name}`);
+  } else if (!resolvedContributor) {
+    console.warn("  No contributor found in docs/index.yaml. Add a `contributor:` block to adventure.yaml before merging.");
+  }
+
   // Build the combined adventure object using challenges repo field names.
   // The generator accepts all aliases (name/title, emoji → icon, etc.).
   const adventure = {
@@ -494,8 +538,11 @@ async function main() {
         ...(indexData.rewards.deadline && { deadline: parseDeadline(indexData.rewards.deadline, PRESERVE_TZ) }),
       },
     }),
-    // Preserve contributor set by a reviewer; omit otherwise (PR checklist item)
-    ...(existing?.contributor && { contributor: existing.contributor }),
+    // A reviewer's hand-edited contributor wins; otherwise take the designer the
+    // challenges repo already names in docs/index.yaml. Levels may credit their own
+    // builder, and the content schema rejects that on an adventure with no designer,
+    // so an unsynced upstream contributor fails the build rather than just losing a pill.
+    ...(resolvedContributor && { contributor: resolvedContributor }),
     ...(upcomingLevels.length > 0 && { upcoming_levels: upcomingLevels }),
     levels: allLiveLevels,
   };
