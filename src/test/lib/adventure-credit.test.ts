@@ -94,42 +94,42 @@ describe("levelBuildersOf", () => {
 describe("adventurePillCredit", () => {
   // The pill carries exactly one person, the designer. Builder credit is
   // per level, so it lives on the level pages and the adventure aside.
-  it("designer who built every challenge: Adventure Builder", () => {
+  it("designer who built every challenge: Designer & Builder", () => {
     expect(adventurePillCredit(adventure("a", KAT))).toEqual({
-      label: "Adventure Builder",
+      label: "Designer & Builder",
       person: KAT,
     });
   });
 
   it("one guest builder: designer only", () => {
     expect(adventurePillCredit(adventure("a", KAT, [undefined, SIMON, undefined]))).toEqual({
-      label: "Adventure Designer",
+      label: "Designer",
       person: KAT,
     });
   });
 
   it("guest built every level: still designer only, and never the guest", () => {
     const credit = adventurePillCredit(adventure("a", KAT, [SIMON, SIMON, SIMON]));
-    expect(credit).toEqual({ label: "Adventure Designer", person: KAT });
+    expect(credit).toEqual({ label: "Designer", person: KAT });
   });
 
   it("two guest builders: designer only", () => {
     const third: CreditPerson = { name: "Ada" };
     expect(adventurePillCredit(adventure("a", KAT, [SIMON, third, undefined]))).toEqual({
-      label: "Adventure Designer",
+      label: "Designer",
       person: KAT,
     });
   });
 
   // The label tracks the designer's own scope only. One guest anywhere means
   // the designer did not build the whole thing, so it drops to Designer.
-  it("one guest anywhere drops the label to Adventure Designer", () => {
+  it("one guest anywhere drops the label to Designer", () => {
     for (const builders of [
       [SIMON, undefined, undefined],
       [undefined, SIMON, undefined],
       [undefined, undefined, SIMON],
     ]) {
-      expect(adventurePillCredit(adventure("a", KAT, builders))!.label).toBe("Adventure Designer");
+      expect(adventurePillCredit(adventure("a", KAT, builders))!.label).toBe("Designer");
     }
   });
 
@@ -143,7 +143,7 @@ describe("adventurePillCredit", () => {
   it("a level naming the designer still counts as designer-built", () => {
     const katCopy: CreditPerson = { name: "Katharina", url: "https://other.example" };
     expect(adventurePillCredit(adventure("a", KAT, [katCopy, undefined, undefined]))!.label).toBe(
-      "Adventure Builder",
+      "Designer & Builder",
     );
   });
 
@@ -156,9 +156,9 @@ describe("adventurePillCredit", () => {
 
   // No levels means they have not built every challenge, so Designer, not
   // Builder. Guards a vacuous-truth bug in the `every` call.
-  it("no levels at all: Adventure Designer, not Builder", () => {
+  it("no levels at all: Designer, not Builder", () => {
     expect(adventurePillCredit({ contributor: KAT, levels: [] })).toEqual({
-      label: "Adventure Designer",
+      label: "Designer",
       person: KAT,
     });
   });

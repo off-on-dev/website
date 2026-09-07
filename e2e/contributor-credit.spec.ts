@@ -43,9 +43,9 @@ test.describe("contributor pill", () => {
     await page.waitForLoadState("load");
     const pill = page.locator("main .contributor-pill").first();
     // Simon designed Blind by Design and built every challenge in it, so the
-    // label is "Adventure Builder". It drops to "Adventure Designer" the moment
+    // label is "Designer & Builder". It drops to "Designer" the moment
     // anyone else builds a challenge there.
-    await expect(pill).toContainText("Adventure Builder");
+    await expect(pill).toContainText("Designer & Builder");
     await expect(pill).toContainText("Simon Schrottner");
     expect(await pill.evaluate((el) => el.tagName)).toBe("A");
     expect(await pill.locator("a").count()).toBe(0);
@@ -59,7 +59,7 @@ test.describe("contributor pill", () => {
     await page.goto(ADVENTURE);
     await page.waitForLoadState("load");
     const titlePill = page.locator("main .contributor-pill").first();
-    await expect(titlePill).toContainText(/Adventure (Builder|Designer)/);
+    await expect(titlePill).toContainText(/Designer( & Builder)?/);
     await expect(titlePill).not.toContainText("Challenge Builder");
 
     await page.goto("/adventures/");
@@ -116,7 +116,7 @@ test.describe("contributor pill", () => {
       const texts = await page.locator(".contributor-pill").allTextContents();
       expect(texts.length, `no pill on ${path}`).toBeGreaterThan(0);
       for (const text of texts) {
-        expect(text, `${path}: unexpected pill label`).toMatch(/Adventure (Builder|Designer)/);
+        expect(text, `${path}: unexpected pill label`).toMatch(/Designer( & Builder)?/);
       }
     }
   });

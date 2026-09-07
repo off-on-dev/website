@@ -92,8 +92,8 @@ export type PillCredit = {
  * Always exactly one person, the designer. The label says whether they also
  * built the whole thing:
  *
- *   "Adventure Builder"   they designed it and built every challenge
- *   "Adventure Designer"  someone else built at least one challenge
+ *   "Designer & Builder"  they designed it and built every challenge
+ *   "Designer"            someone else built at least one challenge
  *
  * The label is about the designer's own scope, never about who the other
  * builders are, so the pill stays a compact identity marker rather than a
@@ -113,7 +113,7 @@ export function adventurePillCredit(adventure: CreditSource): PillCredit | null 
     adventure.levels.length > 0 &&
     adventure.levels.every((l) => builderOfLevel(l, adventure)?.name === designer.name);
   return {
-    label: builtEveryChallenge ? "Adventure Builder" : "Adventure Designer",
+    label: builtEveryChallenge ? "Designer & Builder" : "Designer",
     person: designer,
   };
 }
