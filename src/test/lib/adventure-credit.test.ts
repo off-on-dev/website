@@ -229,7 +229,8 @@ describe("creditIntegrityError", () => {
     expect(creditIntegrityError(adventure("a", KAT, [undefined, SIMON, undefined]))).toBeNull();
   });
 
-  // The freshly-synced state: sync-adventure.mjs omits `contributor` and a
+  // The freshly-synced state when the challenges repo names no designer in
+  // docs/index.yaml yet: sync-adventure.mjs emits no `contributor` and a
   // reviewer adds it later, so no-designer-and-no-builders must stay valid.
   it("passes an adventure with neither, which is what sync-adventure emits", () => {
     expect(creditIntegrityError(adventure("a", undefined))).toBeNull();

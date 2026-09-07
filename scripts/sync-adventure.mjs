@@ -152,6 +152,104 @@ function buildAdventureMetaDescription(indexData, activeLevels) {
   return truncateAtWord(full, 160);
 }
 
+// `contributor.url` is `z.url()` in the content schema, which rejects a bare
+// domain like "ksick.dev". The challenges repo has its own schema and no reason
+// to match ours, so an unvalidated copy fails `npm run sync` in the very next
+// workflow step, before the PR branch exists for anyone to hand-fix.
+// `new URL()` is the same gate `z.url()` applies.
+function usableUrl(value, where) {
+  if (!value) return null;
+  try {
+    new URL(value);
+    return value;
+  } catch {
+    console.warn(
+      `  ${where}: contributor url "${value}" is not an absolute URL, which the website schema requires. ` +
+      "Dropped the link and kept the name. Add a scheme (https://) upstream to restore it."
+    );
+    return null;
+  }
+}
+
+/**
+ * Narrows an upstream contributor block to the four fields the website's strict
+ * contributor schema accepts. The challenges repo owns its own schema, so a
+ * field this site has no column for would otherwise fail `astro sync`.
+ *
+ * Absent returns null quietly. Present-but-unusable warns first: dropping it in
+ * silence re-credits the work to the adventure designer via the level fallback,
+ * which renders as a confident statement about who built something.
+ */
+export function pickContributor(raw, where = "contributor") {
+  if (raw == null) return null;
+  if (typeof raw !== "object" || Array.isArray(raw)) {
+    console.warn(`  ${where}: contributor is ${Array.isArray(raw) ? "a list" : typeof raw}, expected a block with a \`name\`. Ignored.`);
+    return null;
+  }
+  if (!raw.name) {
+    console.warn(`  ${where}: contributor block has no \`name\`, which the website schema requires. Ignored.`);
+    return null;
+  }
+  const url = usableUrl(raw.url, where);
+  return {
+    name: raw.name,
+    ...(url && { url }),
+    ...(raw.about && { about: raw.about }),
+    ...(raw.discourse_username && { discourse_username: raw.discourse_username }),
+  };
+}
+
+// Mirrors `tagToSlug` in src/lib/challenges.ts, which builds the real route
+// params. Held in step by a parity test; the script cannot import the TS module.
+export const tagToSlug = (tag) =>
+  tag.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+/**
+ * Every tag that generates a /challenges/<slug>/ route for this adventure.
+ *
+ * Mirrors `getChallengeData` in src/lib/challenges.ts, which derives the tag set
+ * from each live level's `topics`. Adventure `tags` are deliberately NOT included:
+ * a tag no level teaches builds no route there, so registering it here would list
+ * a route that never reaches `dist/` and trip the drift gate from the other side.
+ *
+ * The `adventureTags` fallback matches the same fallback in `getChallengeData`,
+ * which applies only to a level carrying no topics of its own.
+ */
+export function challengeTagsOf(adventureTags, levels) {
+  const perLevel = (levels || []).map((l) => {
+    const topics = (l.topics ?? [])
+      .map((t) => (typeof t === "string" ? t : (t?.name ?? "")))
+      .filter(Boolean);
+    return topics.length > 0 ? topics : (adventureTags || []);
+  });
+  return [...new Set(perLevel.flat().filter(Boolean))];
+}
+
+/**
+ * Levels may only name their own builder on an adventure that names a designer.
+ *
+ * This is the same rule as `creditIntegrityError` in src/lib/adventure-credit.ts,
+ * which the content schema enforces. Checking it here too is not redundant: left
+ * to the schema it fails in the next workflow step ("Validate adventure YAML"),
+ * which runs before the PR is created, so the run goes red with no branch for
+ * anyone to hand-fix and an Astro error naming a file the reviewer cannot reach.
+ * Failing here names the upstream file that actually needs the edit. The two are
+ * held in step by a parity test, since this script is plain ESM and cannot import
+ * the TypeScript module.
+ *
+ * Returns the error message, or null when the adventure is valid.
+ */
+export function missingDesignerError(contributor, levels, indexPath) {
+  if (contributor) return null;
+  const named = (levels || []).filter((l) => l.contributor).map((l) => l.level);
+  if (named.length === 0) return null;
+  return (
+    `Level(s) ${named.join(", ")} name their own \`contributor\` but the adventure has no designer.\n` +
+    "Every adventure needs a designer before its levels can credit separate builders.\n" +
+    `Add a \`contributor:\` block to ${indexPath}, then re-run this sync.`
+  );
+}
+
 function transformStrings(value, fn) {
   if (typeof value === "string") return fn(value);
   if (Array.isArray(value)) return value.map((v) => transformStrings(v, fn));
@@ -268,14 +366,20 @@ function addToLucideIconsMap(content, iconName, kebab) {
   return content.replace(re, m[1] + block + m[3]);
 }
 
-function buildLevel(raw, adventureTags, rewardsDeadline) {
+export function buildLevel(raw, adventureTags, rewardsDeadline) {
   // architecture_diagram is stripped here. After all levels are fetched, the sync attempts
   // to pull the SVG from docs/diagrams/ in the challenges repo and re-adds the field if
   // successful. If not found there, it must be added manually to src/assets/diagrams/.
   const { architecture_diagram: _ignored, ...rest } = raw;
-  const cleaned = transformStrings(rest, stripCodeInLinks);
+  const { contributor: rawContributor, ...cleaned } = transformStrings(rest, stripCodeInLinks);
+  // A level `contributor` is the challenge builder, set upstream only when someone
+  // other than the adventure designer built this level. Filtered through the same
+  // picker as the designer: the website's contributor schema is strict, so a field
+  // the challenges repo carries but this site has no column for would fail sync.
+  const contributor = pickContributor(rawContributor, `level "${raw.level}" upstream`);
   return {
     ...cleaned,
+    ...(contributor && { contributor }),
     ...(cleaned.deadline && { deadline: parseDeadline(cleaned.deadline, PRESERVE_TZ) }),
     topics: cleaned.topics || deriveTopics(adventureTags),
     verification: cleaned.verification || VERIFICATION_STUB,
@@ -295,13 +399,25 @@ function buildLevel(raw, adventureTags, rewardsDeadline) {
  *                                injected by buildLevel, so manual edits are only preserved when
  *                                the upstream did not intentionally change the field.
  */
-function mergeLevels(existing, incoming, rawFetched) {
+export function mergeLevels(existing, incoming, rawFetched) {
   const levelMap = Object.fromEntries((existing || []).map((l) => [l.level, l]));
   const rawMap = Object.fromEntries((rawFetched || []).map((l) => [l.level, l]));
 
   for (const l of incoming) {
     const prev = levelMap[l.level];
     const raw = rawMap[l.level];
+
+    // The challenge builder, already credited in the website YAML. Held aside
+    // because it wins over the upstream value rather than only filling a gap.
+    const preservedContributor = pickContributor(prev?.contributor, `level "${l.level}" in adventure.yaml`);
+    const upstreamContributor = pickContributor(raw?.contributor, `level "${l.level}" upstream`);
+    if (preservedContributor && upstreamContributor && upstreamContributor.name !== preservedContributor.name) {
+      console.warn(
+        `  Level "${l.level}": keeping the builder already credited on the website ` +
+        `(${preservedContributor.name}) over the one named upstream (${upstreamContributor.name}). ` +
+        "Edit adventure.yaml by hand to re-credit this level."
+      );
+    }
 
     levelMap[l.level] = {
       ...l,
@@ -320,6 +436,12 @@ function mergeLevels(existing, incoming, rawFetched) {
       // intentional upstream changes come through. When the upstream did not set them (buildLevel
       // derived them from adventure tags), preserve any manual refinements from the website.
       ...(!raw?.topics && prev?.topics && { topics: prev.topics }),
+      // contributor: the challenge builder. A builder already credited on the website
+      // always wins, matching the adventure designer: the sync fills this field in from
+      // the level YAML, it never overwrites it. Re-crediting a level to someone else is
+      // a hand-edit either way, and losing an existing credit silently misattributes a
+      // person's work, which is worse than a stale credit a reviewer can see and fix.
+      ...(preservedContributor && { contributor: preservedContributor }),
     };
   }
 
@@ -471,6 +593,30 @@ async function main() {
   // Used for level flags and e2e/routes.ts generation below.
   const allLiveLevels = mergeLevels(existing?.levels, activeLevels, rawFetchedLevels);
 
+  // The adventure designer. Same rule as the level builder: a designer already
+  // credited on the website wins, and the sync only fills the field in.
+  const websiteDesigner = pickContributor(existing?.contributor, "adventure.yaml");
+  const upstreamDesigner = pickContributor(indexData.contributor, "docs/index.yaml");
+  const resolvedContributor = websiteDesigner ?? upstreamDesigner;
+
+  if (websiteDesigner && upstreamDesigner && websiteDesigner.name !== upstreamDesigner.name) {
+    console.warn(
+      `  Keeping the designer already credited in adventure.yaml (${websiteDesigner.name}) over the one named ` +
+      `in docs/index.yaml (${upstreamDesigner.name}). Edit adventure.yaml by hand to re-credit the adventure.`
+    );
+  } else if (!websiteDesigner && upstreamDesigner) {
+    console.log(`  Designer from docs/index.yaml: ${upstreamDesigner.name}`);
+  } else if (!resolvedContributor) {
+    console.warn("  No designer found in docs/index.yaml. Add a `contributor:` block there, or to adventure.yaml in the PR.");
+  }
+
+  const designerError = missingDesignerError(
+    resolvedContributor,
+    allLiveLevels,
+    `${adventurePath}/docs/index.yaml in ${repo}`,
+  );
+  if (designerError) fail(designerError);
+
   // Build the combined adventure object using challenges repo field names.
   // The generator accepts all aliases (name/title, emoji → icon, etc.).
   const adventure = {
@@ -494,8 +640,11 @@ async function main() {
         ...(indexData.rewards.deadline && { deadline: parseDeadline(indexData.rewards.deadline, PRESERVE_TZ) }),
       },
     }),
-    // Preserve contributor set by a reviewer; omit otherwise (PR checklist item)
-    ...(existing?.contributor && { contributor: existing.contributor }),
+    // A reviewer's hand-edited contributor wins; otherwise take the designer the
+    // challenges repo already names in docs/index.yaml. Levels may credit their own
+    // builder, and the content schema rejects that on an adventure with no designer,
+    // so an unsynced upstream contributor fails the build rather than just losing a pill.
+    ...(resolvedContributor && { contributor: resolvedContributor }),
     ...(upcomingLevels.length > 0 && { upcoming_levels: upcomingLevels }),
     levels: allLiveLevels,
   };
@@ -558,15 +707,7 @@ async function main() {
   // ROUTES_WITHOUT_FULL_COVERAGE (or fully covered). We upsert a GENERATED block
   // so new tags are automatically registered; duplicates with the manual list or
   // other adventure blocks are harmless (Set-deduplicated at test time).
-  const tagToSlug = (tag) =>
-    tag.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-  const allAdventureTags = [
-    ...new Set(
-      allLiveLevels
-        .flatMap((l) => (l.topics ?? []).map((t) => (typeof t === "string" ? t : (t.name ?? ""))))
-        .filter(Boolean),
-    ),
-  ];
+  const allAdventureTags = challengeTagsOf(adventureTags, allLiveLevels);
   if (allAdventureTags.length > 0) {
     const challengeBlockStart = `  // GENERATED:${slug}-challenges`;
     const challengeBlockEnd = `  // /GENERATED:${slug}-challenges`;
