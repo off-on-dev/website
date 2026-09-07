@@ -39,13 +39,11 @@ function builtRoutes(): string[] {
 
 /**
  * Routes that exist in dist/ but are not site pages, so they need no coverage:
- * redirect stubs, and anything under the vendored deck/reveal trees.
+ * redirect stubs, and anything under the Slidev deck trees.
  */
 function isNonPageRoute(route: string): boolean {
   return (
-    route.startsWith("/deck/") ||
-    route.startsWith("/deck-template/") ||
-    route.startsWith("/reveal/") ||
+    route.startsWith("/decks/") ||
     route.startsWith("/pr-preview/") ||
     // Static redirect stubs emitted by astro.config.mjs `redirects`.
     route === "/docs/" ||

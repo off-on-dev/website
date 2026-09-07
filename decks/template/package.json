@@ -1,0 +1,13 @@
+{
+  "name": "offon-slidev-template",
+  "private": true,
+  "packageManager": "pnpm@11.8.0",
+  "scripts": {
+    "dev": "VSCODE_CWD= slidev deck-template.md --open",
+    "build": "VSCODE_CWD= slidev build deck-template.md --base ./ --out ../../public/decks/template && node ../../scripts/inject-noindex.mjs ../../public/decks/template/index.html"
+  },
+  "dependencies": {
+    "@slidev/cli": "^52.0.0",
+    "markdown-it-github-alerts": "^1.0.0"
+  }
+}

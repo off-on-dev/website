@@ -25,6 +25,8 @@ export default defineConfig({
     "/docs/": "/handbook/",
     "/docs/community-guide/": "/handbook/",
     "/community-guide/": "/handbook/",
+    // Reveal.js template retired; Slidev template is the successor.
+    "/deck-template/": "/decks/template/",
   },
   integrations: [vue({ appEntrypoint: "/src/pages/_app" })],
   markdown: {

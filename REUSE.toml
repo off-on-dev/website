@@ -22,7 +22,8 @@ SPDX-License-Identifier = "MIT"
 path = [
   "**/*.json", "**/*.yml", "**/*.yaml", "**/*.toml",
   "**/*.config.js", "**/*.config.ts", "components.json",
-  ".gitignore", ".npmrc", ".nvmrc", ".markdownlintignore",
+  "**/.gitignore", "**/.npmrc", ".nvmrc", ".markdownlintignore",
+  "**/_redirects",
   "**/*.xml", "**/*.ico", "**/*.webmanifest", "public/robots.txt",
   "public/CNAME",
   "public/.well-known/api-catalog",
@@ -72,7 +73,7 @@ SPDX-License-Identifier = "MIT"
 
 # --- Bundled fonts: upstream OFL-1.1 (replace copyright with each OFL.txt's lines) ---
 [[annotations]]
-path = ["public/fonts/**", "**/*.woff", "**/*.woff2", "**/*.ttf", "**/*.otf"]
+path = ["public/fonts/**", "**/*.woff", "**/*.woff2", "**/*.ttf", "**/*.otf", "**/fonts/*.txt"]
 SPDX-FileCopyrightText = [
   "Copyright (c) 2016 The Inter Project Authors (https://github.com/rsms/inter)",
   "Copyright 2020 The JetBrains Mono Project Authors (https://github.com/JetBrains/JetBrainsMono)",

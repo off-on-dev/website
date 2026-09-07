@@ -20,7 +20,7 @@ Workflow-specific AI prompts live in [`.claude/commands/`](.claude/commands/). A
 | &nbsp;&nbsp;progressive-enhancement | [`.claude/commands/progressive-enhancement.md`](.claude/commands/progressive-enhancement.md) | Sub-prompt: building any new feature or reviewing architecture. Ensures core content works without JS. |
 | &nbsp;&nbsp;user-personalization | [`.claude/commands/user-personalization.md`](.claude/commands/user-personalization.md) | Sub-prompt: working on theme toggle, consent state, or any user preference persistence. |
 | add-solution | [`.claude/commands/add-solution.md`](.claude/commands/add-solution.md) | Generate a structured TypeScript solution file from any input format (md, YAML, HTML, plain text). Downloads and converts images to WebP. |
-| create-presentation | [`.claude/commands/create-presentation.md`](.claude/commands/create-presentation.md) | Create a presentation deck for an OffOn event or challenge. Supports two formats: Reveal.js HTML and editable PowerPoint PPTX (edit and run `node .ai/templates/generate-pptx.mjs`). |
+| create-presentation | [`.claude/commands/create-presentation.md`](.claude/commands/create-presentation.md) | Create a presentation deck for an OffOn event or challenge. Supports two formats: Slidev (Markdown, builds to static HTML under `public/decks/<slug>/`) and editable PowerPoint PPTX (edit and run `node .ai/templates/generate-pptx.mjs`). |
 
 A `spec-first-coding` prompt is available for Claude Code users (installed globally at `~/.claude/skills/`). It enforces W3C spec citations before generating any accessibility-related code. For other AI tools, cite the relevant W3C spec manually before implementing any accessibility feature.
 
@@ -143,8 +143,9 @@ npm run lint         # ESLint (astro/vue/ts)
 npm run lint:reuse   # REUSE licence compliance (requires: pip install reuse)
 rm -rf .astro        # Bust the content collection pipeline cache (after editing markdown-pipeline.mjs or adventure-derive.mjs)
 
-# Regenerate downloadable presentation ZIPs and PPTX (run from repo root)
-node .ai/templates/generate-reveal-zip.mjs   # -> public/downloads/offon-reveal-template.zip
+# Regenerate downloadable ZIP and PPTX (run from repo root)
+# Requires the Slidev template to be built first (pnpm build in decks/template/).
+node .ai/templates/generate-slidev-zip.mjs   # -> public/downloads/offon-slidev-template.zip
 # pptxgenjs is not in devDependencies. Install it locally first: npm install pptxgenjs
 node .ai/templates/generate-pptx.mjs         # -> public/downloads/offon-deck-template.pptx
 ```

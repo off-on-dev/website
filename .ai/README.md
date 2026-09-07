@@ -14,7 +14,7 @@ Workflow-specific AI prompts live in [`.claude/commands/`](../.claude/commands/)
 | --- | --- |
 | `add-solution.md` | Generate a TypeScript solution walkthrough for a challenge from any input format |
 | `a11y-audit.md` | Accessibility audit using persona simulation, semantic code review, and axe output |
-| `create-presentation.md` | Create a Reveal.js or PowerPoint presentation deck |
+| `create-presentation.md` | Create a Slidev or PowerPoint presentation deck |
 | `keyboard.md` | Keyboard accessibility rules for interactive UI elements |
 | `navigation.md` | Navigation landmark structure and accessibility rules |
 | `progressive-enhancement.md` | Progressive enhancement rules for web features |
@@ -30,5 +30,5 @@ Reusable files for contributors.
 | --- | --- |
 | `solution/beginner.ts` | Annotated TypeScript template for writing a solution walkthrough |
 | `generate-pptx.mjs` | Script that generates `public/downloads/offon-deck-template.pptx` |
-| `generate-reveal-zip.mjs` | Script that generates `public/downloads/offon-reveal-template.zip` |
+| `generate-slidev-zip.mjs` | Script that generates `public/downloads/offon-slidev-template.zip` |
 | `bg.png` | Pre-rendered firefly gradient background for presentation slides |
