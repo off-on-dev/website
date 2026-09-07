@@ -66,7 +66,8 @@ e2e/
   a11y.spec.ts    # axe (dark/light/forced-colors) + touch targets + focus rings + 200% zoom
   smoke.spec.ts   # per-route title/canonical/OG/h1 + island hydration
 scripts/          # refresh-*.mjs (community data), sync-adventure.mjs, set-discussion-url.mjs,
-                  # generate-community-sitemap.mjs, check-docs.sh, lib/
+                  # generate-community-sitemap.mjs, validate-refreshed-data.mjs,
+                  # check-docs.sh, lib/
 public/           # copied verbatim to dist/ (fonts, favicons, brand, well-known, decks, og.png)
 astro.config.mjs, tsconfig.json, playwright.config.ts, package.json
 ```
@@ -108,7 +109,7 @@ Adventures are authored as YAML at `src/data/adventures/<id>/adventure.yaml` and
 
 ## Analytics and Privacy
 
-Google Analytics 4 with Consent Mode v2 in **gated-load mode**: no data is sent to Google until the user clicks Accept; `gtag.js` is not loaded until then. Cross-domain measurement is configured in the GA4 admin UI. See the Analytics and Consent section of `CLAUDE.md` for the full design.
+Google Analytics 4 with Consent Mode v2 in **gated-load mode**: no data is sent to Google until the user clicks Accept; `gtag.js` is not loaded until then. Cross-domain measurement is configured in the GA4 admin UI. See the Analytics and Consent section of `AGENTS.md` for the full design.
 
 | Constant (`src/lib/site.ts`) | Purpose |
 | --- | --- |
@@ -123,7 +124,7 @@ Google Analytics 4 with Consent Mode v2 in **gated-load mode**: no data is sent 
 
 - **Push to `main`** → [`deploy.yml`](.github/workflows/deploy.yml) builds `dist/` and deploys to GitHub Pages (<https://offon.dev>) via `JamesIves/github-pages-deploy-action`.
 - **Open a PR** → [`preview.yml`](.github/workflows/preview.yml) runs the content gate (`astro sync`), build, and the full Playwright suite, then deploys a preview at `/pr-preview/pr-<n>/`.
-- **PRs touching adventure data** → [`validate-adventures.yml`](.github/workflows/validate-adventures.yml) validates the YAML (Zod via `astro sync`), per-level discussion JSON, and `ADVENTURE_CATEGORIES` registration.
+- **PRs touching adventure data** → [`validate-adventures.yml`](.github/workflows/validate-adventures.yml) validates the YAML (Zod via `astro sync`), checks every live level has its `*-posts.json`, and verifies the `SKILL.md` digest.
 - **PRs adding components/utilities/constants/scripts/workflows** → [`validate-docs.yml`](.github/workflows/validate-docs.yml) requires `styleguide.md`/`README.md` updates.
 
 Astro emits `dist/404.html` natively. PR preview builds set `VITE_BASE_PATH=/pr-preview/pr-<n>/` (→ Astro `base`) so assets resolve under the sub-path; `Layout.astro` marks such builds `noindex`.
@@ -134,7 +135,7 @@ Adventures are authored in [off-on-dev/open-source-challenges](https://github.co
 
 ## Accessibility
 
-OffOn targets WCAG 2.2 Level AA across every page, in both light and dark mode. Automated axe scans run on every PR preview via [`e2e/a11y.spec.ts`](e2e/a11y.spec.ts). The full statement is in [`ACCESSIBILITY.md`](ACCESSIBILITY.md); contributor rules are in the Accessibility section of [`CLAUDE.md`](CLAUDE.md#accessibility).
+OffOn targets WCAG 2.2 Level AA across every page, in both light and dark mode. Automated axe scans run on every PR preview via [`e2e/a11y.spec.ts`](e2e/a11y.spec.ts). The full statement is in [`ACCESSIBILITY.md`](ACCESSIBILITY.md); contributor rules are in the Accessibility section of [`AGENTS.md`](AGENTS.md#accessibility).
 
 ## Further Reading
 
@@ -142,7 +143,7 @@ OffOn targets WCAG 2.2 Level AA across every page, in both light and dark mode. 
 - [`ACCESSIBILITY.md`](ACCESSIBILITY.md): public accessibility statement and how to report a barrier.
 - [`PERFORMANCE.md`](PERFORMANCE.md): performance targets, image rules, font preloading, bundle size.
 - [`styleguide.md`](styleguide.md): design system, color tokens, typography, component patterns.
-- [`CLAUDE.md`](CLAUDE.md): contributor conventions, code quality, commit format, testing, accessibility.
+- [`AGENTS.md`](AGENTS.md): contributor conventions, code quality, commit format, testing, accessibility. Canonical for both humans and AI assistants; `CLAUDE.md` imports it and adds only the Claude Code slash-command table.
 
 ## License
 

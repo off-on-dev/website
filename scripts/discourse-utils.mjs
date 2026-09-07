@@ -19,6 +19,27 @@
 import { writeFileSync, renameSync } from "node:fs";
 
 /**
+ * True when running in a CI environment.
+ *
+ * Treats the conventional falsy spellings as "not CI" so a deliberately
+ * disabled CI flag is not read as enabled. GitHub Actions sets CI="true".
+ *
+ * Used to decide how hard to fail on a missing DISCOURSE_API_KEY: locally an
+ * absent key is a friendly skip, but in CI it means the secret was rotated or
+ * removed, and a silent skip there produces a green run with data frozen
+ * forever. Exported for unit testing.
+ *
+ * @param {Record<string, unknown>} [env] Defaults to process.env.
+ * @returns {boolean}
+ */
+export function isCI(env = process.env) {
+  const value = env.CI;
+  if (value === undefined || value === null) return false;
+  const normalized = String(value).trim().toLowerCase();
+  return normalized !== "" && normalized !== "false" && normalized !== "0";
+}
+
+/**
  * Write content to `path` atomically by writing to `<path>.tmp` then renaming.
  * If the process dies between the write and the rename, `path` is unaffected
  * and the orphaned `.tmp` can be safely deleted on the next run.

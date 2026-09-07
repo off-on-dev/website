@@ -6,7 +6,7 @@ import Layout from "@/layouts/Layout.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import StructuredData from "@/components/StructuredData.astro";
 import AdventureIcon from "@/components/AdventureIcon.astro";
-import ContributorBadge from "@/components/ContributorBadge.astro";
+import ContributorPill from "@/components/ContributorPill.astro";
 import DifficultyBadge from "@/components/DifficultyBadge.astro";
 import LivePill from "@/components/LivePill.astro";
 import TagChips from "@/components/TagChips.astro";
@@ -21,6 +21,7 @@ import { stripLinks } from "@/lib/markdown";
 import { isDeadlinePast } from "@/lib/utils";
 import { getLeaderboard } from "@/lib/community-data";
 import { isAdventureLive } from "@/lib/challenges";
+import { adventurePillCredit, levelBuildersOf, sortDifficulties } from "@/lib/adventure-credit";
 
 export async function getStaticPaths() {
   const adventures = await getCollection("adventures");
@@ -44,6 +45,12 @@ const path = `/adventures/${adventure.slug}/`;
 // One trail, rendered visually by <Breadcrumb> and as BreadcrumbList JSON-LD by
 // <StructuredData>, so the two can never disagree.
 const crumbs = [{ label: "Adventures", href: "/adventures/" }, { label: adventure.title }];
+
+// Whoever built a challenge here, the designer included when the per-level
+// fallback credits them. A designer who built nothing is not a builder and is
+// not listed: they are already credited in the title pill.
+const builders = levelBuildersOf(adventure);
+const credit = adventurePillCredit(adventure);
 ---
 
 <Layout
@@ -75,13 +82,7 @@ const crumbs = [{ label: "Adventures", href: "/adventures/" }, { label: adventur
           <AdventureIcon icon={adventure.icon} size={28} class="shrink-0 text-primary" />
         </div>
         <div class="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1.5">
-          {adventure.contributor && (
-            <ContributorBadge
-              name={adventure.contributor.name}
-              url={adventure.contributor.url}
-              label="Adventure Builder"
-            />
-          )}
+          {credit && <ContributorPill credits={[credit]} />}
           <span class="font-mono text-xs uppercase tracking-widest text-faint">{adventure.month}</span>
         </div>
         <div class="mb-5 flex flex-wrap items-center gap-1.5">
@@ -129,16 +130,22 @@ const crumbs = [{ label: "Adventures", href: "/adventures/" }, { label: adventur
                     <h3 class="mb-3 text-lg font-semibold text-foreground transition-colors group-hover:text-primary">
                       {level.name}
                     </h3>
+
                     {descHtml && (
                       <p class="mb-4 line-clamp-4 flex-1 text-xs leading-relaxed text-dim md-inline" set:html={stripLinks(descHtml)} />
                     )}
-                    <span
-                      class="mt-auto inline-flex items-center gap-1 text-xs font-medium text-primary underline decoration-2 underline-offset-2"
-                      aria-hidden="true"
-                    >
-                      Start Challenge
-                      <IconArrowRight width={12} height={12} aria-hidden="true" />
-                    </span>
+                    {/* No builder credit here: the aside on this page already
+                        lists every challenge builder, so per-card attribution
+                        would say the same thing three times over. */}
+                    <div class="mt-auto">
+                      <span
+                        class="inline-flex items-center gap-1 text-xs font-medium text-primary underline decoration-2 underline-offset-2"
+                        aria-hidden="true"
+                      >
+                        Start Challenge
+                        <IconArrowRight width={12} height={12} aria-hidden="true" />
+                      </span>
+                    </div>
                   </a>
                 );
               })}
@@ -147,7 +154,7 @@ const crumbs = [{ label: "Adventures", href: "/adventures/" }, { label: adventur
                   <div class="mb-3"><DifficultyBadge difficulty={u.difficulty} showDot /></div>
                   <h3 class="mb-3 text-lg font-semibold text-foreground">{u.name}</h3>
                   <span class="mt-auto inline-flex items-center gap-1 font-mono text-xs uppercase tracking-widest text-dim">
-                    Coming Soon
+                    coming soon
                   </span>
                 </div>
               ))}
@@ -176,13 +183,28 @@ const crumbs = [{ label: "Adventures", href: "/adventures/" }, { label: adventur
               <LeaderboardList rows={leaderboardRows} label="Adventure leaderboard" />
             </div>
           )}
-          {adventure.contributor && (
+          {builders.length > 0 && (
             <div class="rounded-xl border border-border bg-[hsl(var(--surface))] px-5 py-4">
-              <p class="mb-2 font-mono text-xs uppercase tracking-widest text-faint">Adventure by</p>
-              <PersonNameLink name={adventure.contributor.name} url={adventure.contributor.url} />
-              {adventure.contributor.aboutHtml && (
-                <InlineProse html={adventure.contributor.aboutHtml} class="mt-2 text-sm leading-relaxed text-dim" />
-              )}
+              <p class="mb-3 font-mono text-xs uppercase tracking-widest text-faint">
+                {builders.length === 1 ? "challenge builder" : "challenge builders"}
+              </p>
+              <div class="space-y-5">
+                {builders.map((person) => (
+                  <div>
+                    <PersonNameLink name={person.name} url={person.url} />
+                    {person.difficulties.length > 0 && (
+                      <div class="mt-1.5 flex flex-wrap gap-1">
+                        {sortDifficulties(person.difficulties).map((diff) => (
+                          <DifficultyBadge difficulty={diff} />
+                        ))}
+                      </div>
+                    )}
+                    {person.aboutHtml && (
+                      <InlineProse html={person.aboutHtml} class="mt-2 text-sm leading-relaxed text-dim" />
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </aside>

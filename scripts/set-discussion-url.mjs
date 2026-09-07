@@ -214,7 +214,8 @@ async function fetchTopicPosts(topicId, topicUrl) {
       avatarUrl: resolveAvatarUrl(p.avatar_template),
       cooked: getCookedText(p.cooked, p),
       created_at: p.created_at,
-      like_count: p.like_count,
+      // Kept in step with refresh-discussions.mjs: no like_count, because
+      // discussionPostSchema does not declare it and nothing renders it.
       challengeSolved: hasChallengeSolvedBadge(p) || undefined,
       topicUrl,
     }));

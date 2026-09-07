@@ -1,7 +1,12 @@
 {
   "extends": "astro/tsconfigs/strict",
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"],
+  // public/ is copied verbatim to dist/ and holds vendored, minified JS (reveal.js
+  // and its plugins). Type-checking it produced every hint `astro check` reported
+  // and dumped multi-kilobyte minified lines into the output. Nothing imports it.
+  // coverage/ and test-results/ are gitignored local run output, so they are
+  // absent in CI but pollute a local `astro check`.
+  "exclude": ["dist", "public", "coverage", "test-results"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

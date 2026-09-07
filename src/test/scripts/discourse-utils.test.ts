@@ -29,6 +29,7 @@ import { tmpdir } from "node:os";
 import {
   atomicWrite,
   fetchWithRetry,
+  isCI,
 } from "../../../scripts/discourse-utils.mjs";
 
 import {
@@ -245,6 +246,46 @@ describe("buildAvatarUrl", () => {
     const url = buildAvatarUrl("alice", null);
     expect(url).toBeDefined();
     expect(url!.startsWith("https://")).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// isCI
+// ---------------------------------------------------------------------------
+// Gates the hard failure on a missing DISCOURSE_API_KEY. Getting this wrong in
+// either direction is costly: false negative restores the silent green run with
+// permanently frozen data, false positive breaks every local run without a .env.
+describe("isCI", () => {
+  it("is false when CI is unset", () => {
+    expect(isCI({})).toBe(false);
+  });
+
+  it("is true for the value GitHub Actions sets", () => {
+    expect(isCI({ CI: "true" })).toBe(true);
+  });
+
+  it("is true for any other non-empty truthy spelling", () => {
+    expect(isCI({ CI: "1" })).toBe(true);
+    expect(isCI({ CI: "yes" })).toBe(true);
+    expect(isCI({ CI: true })).toBe(true);
+  });
+
+  it("treats the conventional falsy spellings as not CI", () => {
+    // A deliberately disabled CI flag must not be read as enabled, or a local
+    // run with CI=false would start exiting 1 on a missing key.
+    expect(isCI({ CI: "false" })).toBe(false);
+    expect(isCI({ CI: "0" })).toBe(false);
+    expect(isCI({ CI: "" })).toBe(false);
+  });
+
+  it("is case and whitespace insensitive for falsy spellings", () => {
+    expect(isCI({ CI: "FALSE" })).toBe(false);
+    expect(isCI({ CI: "  false  " })).toBe(false);
+  });
+
+  it("is false for undefined and null", () => {
+    expect(isCI({ CI: undefined })).toBe(false);
+    expect(isCI({ CI: null })).toBe(false);
   });
 });
 

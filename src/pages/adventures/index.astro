@@ -13,9 +13,9 @@ import { BRAND_NAME } from "@/lib/site";
 const adventures = sortAdventuresByMonthDesc((await getCollection("adventures")).map((a) => a.data));
 const adventureCount = adventures.length;
 
-const ArrowRightIcon = LUCIDE_ICONS["arrow-right"];
+const ARROW_RIGHT_ICON = LUCIDE_ICONS["arrow-right"];
 
-const rawHowItWorks = [
+const HOW_IT_WORKS = [
   {
     icon: "book-open",
     title: "Pick a Scenario",
@@ -31,9 +31,7 @@ const rawHowItWorks = [
     title: "Apply, Fork, and Build",
     desc: "Complete real-world scenarios, bring the knowledge into your own projects, fork the challenge repo, and share your solutions with the community.",
   },
-];
-
-const HOW_IT_WORKS = rawHowItWorks.map((item) => ({ ...item, IconComponent: LUCIDE_ICONS[item.icon] }));
+].map((item) => ({ ...item, IconComponent: LUCIDE_ICONS[item.icon] }));
 ---
 
 <Layout
@@ -81,7 +79,7 @@ const HOW_IT_WORKS = rawHowItWorks.map((item) => ({ ...item, IconComponent: LUCI
           </h2>
           <a href={`${import.meta.env.BASE_URL}challenges/`} class="btn-ghost inline-flex items-center gap-2 text-sm">
             Filter challenges by technology
-            {ArrowRightIcon && <ArrowRightIcon width={16} height={16} aria-hidden="true" />}
+            {ARROW_RIGHT_ICON && <ARROW_RIGHT_ICON width={16} height={16} aria-hidden="true" />}
           </a>
         </div>
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -93,7 +91,7 @@ const HOW_IT_WORKS = rawHowItWorks.map((item) => ({ ...item, IconComponent: LUCI
     <ChallengeBuildersSection>
       <CommunityLeaders
         slot="aside"
-        sections={["challenge-grand-builders", "challenge-builders", "challenge-rockstars", "top-challenge-solvers"]}
+        sections={["top-challenge-solvers", "challenge-rockstars", "challenge-grand-builders", "challenge-builders", "adventure-designers"]}
       />
     </ChallengeBuildersSection>
 

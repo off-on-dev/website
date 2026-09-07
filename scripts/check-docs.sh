@@ -41,7 +41,7 @@ if comm -13 <(echo "$BASE_SCRIPTS") <(echo "$HEAD_SCRIPTS") | grep -q .; then
   REASONS_README+=("New script(s) in package.json")
 fi
 
-# New workflow files require a README.md or CLAUDE.md entry.
+# New workflow files require a README.md or AGENTS.md entry.
 while IFS=$'\t' read -r status file; do
   if [[ "$status" == "A" ]]; then
     case "$file" in
@@ -55,21 +55,24 @@ done < <(git diff --name-status "$BASE"...HEAD)
 
 STYLEGUIDE_CHANGED=$(git diff --name-only "$BASE"...HEAD | grep -c "^styleguide\.md$" || true)
 README_CHANGED=$(git diff --name-only "$BASE"...HEAD | grep -c "^README\.md$" || true)
-CLAUDE_CHANGED=$(git diff --name-only "$BASE"...HEAD | grep -c "^CLAUDE\.md$" || true)
+# AGENTS.md, not CLAUDE.md: guidance lives in AGENTS.md and CLAUDE.md is a short
+# `@AGENTS.md` import plus the slash-command table. Accepting CLAUDE.md here would let
+# a two-line stub satisfy a documentation requirement without documenting anything.
+AGENTS_CHANGED=$(git diff --name-only "$BASE"...HEAD | grep -c "^AGENTS\.md$" || true)
 
 ERRORS=0
 
 if [[ $NEEDS_STYLEGUIDE -eq 1 ]] && [[ "$STYLEGUIDE_CHANGED" -eq 0 ]]; then
   echo "❌ styleguide.md was not updated. Reason(s):"
   for r in "${REASONS_STYLE[@]}"; do echo "   - $r"; done
-  echo "   Update styleguide.md per the 'After Making Changes' section of CLAUDE.md."
+  echo "   Update styleguide.md per the 'After Making Changes' section of AGENTS.md."
   ERRORS=$((ERRORS + 1))
 fi
 
-if [[ $NEEDS_README -eq 1 ]] && [[ "$README_CHANGED" -eq 0 ]] && [[ "$CLAUDE_CHANGED" -eq 0 ]]; then
-  echo "❌ README.md was not updated. Reason(s):"
+if [[ $NEEDS_README -eq 1 ]] && [[ "$README_CHANGED" -eq 0 ]] && [[ "$AGENTS_CHANGED" -eq 0 ]]; then
+  echo "❌ Neither README.md nor AGENTS.md was updated. Reason(s):"
   for r in "${REASONS_README[@]}"; do echo "   - $r"; done
-  echo "   Update README.md per the 'After Making Changes' section of CLAUDE.md."
+  echo "   Update README.md or AGENTS.md per the 'After Making Changes' section of AGENTS.md."
   ERRORS=$((ERRORS + 1))
 fi
 

@@ -27,6 +27,7 @@ import IconHandHeart from "~icons/lucide/hand-heart";
 import IconHeart from "~icons/lucide/heart";
 import IconLaptop from "~icons/lucide/laptop";
 import IconLayers from "~icons/lucide/layers";
+import IconLightbulb from "~icons/lucide/lightbulb";
 import IconMail from "~icons/lucide/mail";
 import IconMegaphone from "~icons/lucide/megaphone";
 import IconMessageCircle from "~icons/lucide/message-circle";
@@ -80,6 +81,7 @@ const _LUCIDE_ICONS_MAP = {
   heart: IconHeart,
   laptop: IconLaptop,
   layers: IconLayers,
+  lightbulb: IconLightbulb,
   mail: IconMail,
   megaphone: IconMegaphone,
   "message-circle": IconMessageCircle,

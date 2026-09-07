@@ -1181,7 +1181,7 @@ abbr[data-title]:focus-visible {
   --firefly-color: 41 100% 45%;
 }
 
-/* ─── ContributorBadge pill (light mode) ────────────────── */
+/* ─── ContributorPill (light mode) ──────────────────────── */
 /* bg-primary/5 is nearly invisible on light backgrounds; use transparent
    background with a visible slate border instead.
    Border darkened to hsl(220 12% 55%), 3.25:1 on near-white (WCAG 1.4.11). */
@@ -1192,21 +1192,6 @@ abbr[data-title]:focus-visible {
 .light .contributor-pill:hover {
   background-color: transparent;
   border-color: hsl(220 12% 45%);
-}
-
-/* ─── ContributorBadge glow variant (ChallengeDetail only) ─ */
-/* Static glow, no hover. Sized for a small pill, not a card. */
-.contributor-pill-glow {
-  box-shadow:
-    0 0 0 1px hsl(var(--primary) / 0.25),
-    0 0 10px 2px hsl(var(--primary) / 0.2),
-    0 0 22px 4px hsl(var(--primary) / 0.08);
-}
-.light .contributor-pill-glow {
-  box-shadow:
-    0 0 0 1px hsl(var(--primary) / 0.35),
-    0 0 8px 2px hsl(var(--primary) / 0.18),
-    0 0 18px 4px hsl(var(--primary) / 0.07);
 }
 
 /* ─── Tag chip links ─────────────────────────────────────── */
