@@ -9,7 +9,6 @@ story: Join the Infrastructure Guild and modernize CloudHaven's infrastructure f
   OpenTofu and GitHub Actions.
 tags:
   - OpenTofu
-  - Terraform
   - GitHub Actions
   - Trivy
   - TDD

@@ -185,25 +185,25 @@ describe("buildLevel contributor (the challenge builder)", () => {
 });
 
 describe("challengeTagsOf", () => {
-  it("includes an adventure tag that no level carries as a topic", () => {
-    // PR #243 failed exactly here. "Accessibility" and "Guidepup Virtual Screen
-    // Reader" were adventure tags refined out of every level's topics, so the old
-    // level-topics-only derivation missed them, their /challenges/<tag>/ routes
-    // reached dist/ unregistered, and route-coverage.spec.ts failed.
+  it("omits an adventure tag that no level teaches", () => {
+    // The #243 case. "Guidepup Virtual Screen Reader" belongs to an intermediate
+    // level that is not live yet, so it must build no route: registering one for
+    // a route the build never emits trips the drift gate from the other side.
     const tags = challengeTagsOf(
       ["Accessibility", "Guidepup Virtual Screen Reader", "Playwright"],
       [{ level: "beginner", topics: ["Playwright"] }],
     );
-    expect(tags).toContain("Accessibility");
-    expect(tags).toContain("Guidepup Virtual Screen Reader");
+    expect(tags).toEqual(["Playwright"]);
   });
 
-  it("unions level topics that are not adventure tags", () => {
-    expect(challengeTagsOf(["A"], [{ level: "l", topics: ["B"] }])).toEqual(["A", "B"]);
+  it("reports the union of the topics levels do teach", () => {
+    expect(
+      challengeTagsOf(["A"], [{ level: "l1", topics: ["B"] }, { level: "l2", topics: ["C"] }]),
+    ).toEqual(["B", "C"]);
   });
 
-  it("deduplicates a tag present on both the adventure and a level", () => {
-    expect(challengeTagsOf(["A"], [{ level: "l", topics: ["A"] }])).toEqual(["A"]);
+  it("deduplicates a topic two levels share", () => {
+    expect(challengeTagsOf([], [{ level: "l1", topics: ["A"] }, { level: "l2", topics: ["A"] }])).toEqual(["A"]);
   });
 
   it("accepts object-shaped topics and drops empty entries", () => {
@@ -211,10 +211,16 @@ describe("challengeTagsOf", () => {
   });
 
   it.each([
-    ["no levels", ["A"], []],
-    ["levels with no topics", ["A"], [{ level: "l" }]],
-  ])("still reports adventure tags with %s", (_label, adventureTags, levels) => {
+    ["a level carries no topics", ["A"], [{ level: "l" }]],
+    ["a level has an empty topics list", ["A"], [{ level: "l", topics: [] }]],
+  ])("falls back to adventure tags when %s", (_label, adventureTags, levels) => {
+    // Same fallback as getChallengeData, so a topic-less level degrades to the
+    // old broader behaviour instead of dropping out of every tag page.
     expect(challengeTagsOf(adventureTags, levels)).toEqual(["A"]);
+  });
+
+  it("reports nothing when there are no levels", () => {
+    expect(challengeTagsOf(["A"], [])).toEqual([]);
   });
 
   it("slugs tags the same way the route params are built", () => {

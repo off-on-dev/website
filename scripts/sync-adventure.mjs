@@ -207,22 +207,22 @@ export const tagToSlug = (tag) =>
 /**
  * Every tag that generates a /challenges/<slug>/ route for this adventure.
  *
- * The routes come from the ADVENTURE `tags` (see `getChallengeData` in
- * src/lib/challenges.ts, which flat-maps `a.tags`), not from level `topics`.
- * Deriving them from level topics alone under-reports: the sync seeds each
- * level's topics from the adventure tags, but the PR checklist invites reviewers
- * to narrow them to a level-specific subset, and any adventure tag that then
- * appears on no level still builds a route. That route reaches `dist/`
- * unregistered and fails the route-coverage drift gate in CI.
+ * Mirrors `getChallengeData` in src/lib/challenges.ts, which derives the tag set
+ * from each live level's `topics`. Adventure `tags` are deliberately NOT included:
+ * a tag no level teaches builds no route there, so registering it here would list
+ * a route that never reaches `dist/` and trip the drift gate from the other side.
  *
- * Level topics are still unioned in: a level may carry a topic of its own, and a
- * surplus entry here is harmless because the gate Set-deduplicates.
+ * The `adventureTags` fallback matches the same fallback in `getChallengeData`,
+ * which applies only to a level carrying no topics of its own.
  */
 export function challengeTagsOf(adventureTags, levels) {
-  const fromLevels = (levels || []).flatMap((l) =>
-    (l.topics ?? []).map((t) => (typeof t === "string" ? t : (t?.name ?? ""))),
-  );
-  return [...new Set([...(adventureTags || []), ...fromLevels].filter(Boolean))];
+  const perLevel = (levels || []).map((l) => {
+    const topics = (l.topics ?? [])
+      .map((t) => (typeof t === "string" ? t : (t?.name ?? "")))
+      .filter(Boolean);
+    return topics.length > 0 ? topics : (adventureTags || []);
+  });
+  return [...new Set(perLevel.flat().filter(Boolean))];
 }
 
 /**

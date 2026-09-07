@@ -34,6 +34,7 @@ levels:
       - OpenTelemetry
       - OpenLLMetry
       - Jaeger
+      - Python
     learnings:
       - Instrument Python AI apps with OpenLLMetry
       - Analyze traces in Jaeger
@@ -116,6 +117,7 @@ levels:
       - OpenLLMetry
       - Jaeger
       - Prometheus
+      - Python
     learnings:
       - Instrument <abbr title="Retrieval-Augmented Generation">RAG</abbr> pipelines with OpenLLMetry
       - Create custom OpenTelemetry metrics in Python
@@ -221,6 +223,7 @@ levels:
       - OpenTelemetry
       - OpenLLMetry
       - Jaeger
+      - Python
     learnings:
       - OpenTelemetry GenAI semantic conventions
       - Tail sampling in the <abbr title="OpenTelemetry">OTel</abbr> Collector

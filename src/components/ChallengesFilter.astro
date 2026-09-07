@@ -35,7 +35,7 @@ const { entries, tags, base, initialTag, adventureCount, embedded, seeAllHref } 
 const activeTags = initialTag ? [initialTag] : [];
 const hasFilters = activeTags.length > 0;
 const matches = (e: ChallengeEntry): boolean =>
-  activeTags.length === 0 || activeTags.some((t) => e.adventureTags.includes(t));
+  activeTags.length === 0 || activeTags.some((t) => e.topics.includes(t));
 const matchedCount = entries.filter(matches).length;
 
 const countText = hasFilters
@@ -253,7 +253,7 @@ const dropdownItem =
           class="contents"
           data-level-card
           data-difficulty={e.difficulty}
-          data-tags={e.adventureTags.map(tagToSlug).join(" ")}
+          data-tags={e.topics.map(tagToSlug).join(" ")}
           hidden={!matches(e)}
         >
           <a

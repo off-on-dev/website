@@ -271,11 +271,26 @@ describe("getChallengeData", () => {
       expect(entries[0].url).toBe("/adventures/my-slug/levels/level-1/");
     });
 
-    it("includes the adventureTags array on the entry", () => {
+    it("takes the entry topics from the level, not the adventure", () => {
+      // A tag page matches on this, so an adventure tag the level does not teach
+      // must not appear here: that listed challenges that never touch the tech.
       const { entries } = getChallengeData([
-        makeAdventure({ tags: ["rust", "cloud"] }),
+        makeAdventure({
+          tags: ["rust", "cloud"],
+          levels: [{ id: "l1", name: "L1", difficulty: "Beginner", topics: ["rust"] }],
+        }),
       ]);
-      expect(entries[0].adventureTags).toEqual(["rust", "cloud"]);
+      expect(entries[0].topics).toEqual(["rust"]);
+    });
+
+    it("falls back to the adventure tags when a level carries no topics", () => {
+      const { entries } = getChallengeData([
+        makeAdventure({
+          tags: ["rust", "cloud"],
+          levels: [{ id: "l1", name: "L1", difficulty: "Beginner", topics: [] }],
+        }),
+      ]);
+      expect(entries[0].topics).toEqual(["rust", "cloud"]);
     });
 
     it("copies the icon from the adventure", () => {
@@ -414,7 +429,7 @@ describe("getChallengeData", () => {
       expect(entry).toHaveProperty("learnings");
       expect(entry).toHaveProperty("adventureId");
       expect(entry).toHaveProperty("adventureTitle");
-      expect(entry).toHaveProperty("adventureTags");
+      expect(entry).toHaveProperty("topics");
       expect(entry).toHaveProperty("isLive");
       expect(entry).toHaveProperty("url");
     });

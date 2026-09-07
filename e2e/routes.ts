@@ -94,7 +94,7 @@ export const A11Y_PAGES: string[] = [
  * gate in route-coverage.spec.ts.
  */
 export const ROUTES_WITHOUT_FULL_COVERAGE: string[] = [
-  // 24 remaining /challenges/<tag>/ routes. They are the same page component with
+  // 23 remaining /challenges/<tag>/ routes. They are the same page component with
   // a different filter seed, so /challenges/opentelemetry/ is the representative.
   // Listed explicitly rather than pattern-matched so a new tag still has to be
   // acknowledged here.
@@ -120,6 +120,5 @@ export const ROUTES_WITHOUT_FULL_COVERAGE: string[] = [
   "/challenges/python/",
   "/challenges/spring-boot/",
   "/challenges/tdd/",
-  "/challenges/terraform/",
   "/challenges/trivy/",
 ];

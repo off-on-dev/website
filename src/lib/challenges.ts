@@ -1,6 +1,6 @@
 // Derives the flat, filterable level list and the tag set for /challenges,
 // from the adventures collection.
-// tags are ADVENTURE tags (OR match); levels are then filtered by difficulty.
+// Tags are per-LEVEL topics (OR match); levels are then filtered by difficulty.
 
 import { type Difficulty } from "@/lib/difficulty";
 
@@ -89,7 +89,14 @@ export type ChallengeEntry = {
   estimatedTime?: string;
   adventureId: string;
   adventureTitle: string;
-  adventureTags: string[];
+  /**
+   * What this specific challenge teaches, and what a /challenges/<tag>/ page
+   * matches on. Named for the level, not the adventure, because they differ: an
+   * adventure tag can belong to one level (or to a level that is not live yet),
+   * and matching on the adventure's tags listed every challenge in it, including
+   * ones that never touch the tech.
+   */
+  topics: string[];
   adventureIcon?: string;
   isLive: boolean;
   url: string;
@@ -126,12 +133,19 @@ export function getChallengeData(adventures: AdventureData[]): {
       estimatedTime: level.estimatedTime,
       adventureId: a.slug,
       adventureTitle: a.title,
-      adventureTags: a.tags,
+      // Fall back to the adventure tags only when a level carries no topics of
+      // its own, which the sync never produces (it seeds them from the adventure
+      // tags). Without the guard a topic-less level would drop out of every tag
+      // page instead of degrading to the old, broader behaviour.
+      topics: level.topics.length > 0 ? level.topics : a.tags,
       adventureIcon: a.icon,
       isLive: live,
       url: `/adventures/${a.slug}/levels/${level.id}/`,
     }));
   });
-  const tags = Array.from(new Set(adventures.flatMap((a) => a.tags))).sort();
+  // Derived from the entries, so a tag exists exactly when some challenge
+  // teaches it. An adventure tag that no live level carries builds no route
+  // rather than an empty or misleading one; it appears when that level ships.
+  const tags = Array.from(new Set(entries.flatMap((e) => e.topics))).sort();
   return { entries, tags };
 }
