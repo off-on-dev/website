@@ -114,8 +114,9 @@ Go to **Actions → Sync Adventure from Challenges Repo → Run workflow**.
 2. If a PR branch (`feat/adventure-<slug>`) already exists, restores `adventure.yaml` from that branch so any manual edits already made survive the re-sync.
 3. Fetches `docs/index.yaml` and all level YAMLs from the challenges repo.
 4. Writes `src/data/adventures/<slug>/adventure.yaml` and creates `<level>-posts.json` stubs for each new live level.
-5. Validates the YAML with `astro sync` (Zod content schema). There is no leaderboard registry to update: `buildAdventureCategories()` in `scripts/refresh-leaderboard.mjs` reads `community_category_id` out of every `adventure.yaml` at runtime, so setting that field (a PR checklist item below) is the whole registration step. Routes and sitemap entries are automatic via `getStaticPaths()` and `src/pages/sitemap.xml.ts`. `public/llms.txt` is updated by hand as part of the PR checklist.
-6. Opens (or updates) a PR on `feat/adventure-<slug>` with a checklist of steps to complete before merging.
+5. Registers the adventure's routes in `e2e/routes.ts` so the `route-coverage.spec.ts` drift gate passes without a manual edit. The `/challenges/<tag>/` entries come from the adventure `tags`, which is what `getChallengeData()` in `src/lib/challenges.ts` builds the routes from, unioned with each level's `topics`. Deriving them from level topics alone under-reports: the sync seeds level topics from the adventure tags, but narrowing them to a level-specific subset (a PR checklist item) leaves any tag that appears on no level still building a route, and that route then fails the drift gate in CI.
+6. Validates the YAML with `astro sync` (Zod content schema). There is no leaderboard registry to update: `buildAdventureCategories()` in `scripts/refresh-leaderboard.mjs` reads `community_category_id` out of every `adventure.yaml` at runtime, so setting that field (a PR checklist item below) is the whole registration step. Routes and sitemap entries are automatic via `getStaticPaths()` and `src/pages/sitemap.xml.ts`. `public/llms.txt` is updated by hand as part of the PR checklist.
+7. Opens (or updates) a PR on `feat/adventure-<slug>` with a checklist of steps to complete before merging.
 
 ---
 
@@ -134,6 +135,10 @@ contributor:
 ```
 
 This lives in `src/data/adventures/<slug>/adventure.yaml`. The sync copies it from `contributor:` in the challenges repo's `docs/index.yaml` when the website YAML does not already have one, keeping only the four fields above -- the challenges repo owns its own schema, and passing an unknown field through would fail `npm run sync` against the strict content schema. Write it by hand only when the sync log warns that no contributor was found upstream.
+
+`url` must be an absolute URL. A bare domain (`ksick.dev`) is rejected by the content schema, so the sync drops it, keeps the name, and warns. Add the `https://` scheme upstream to restore the link.
+
+If the challenges repo names no designer but a level YAML names a builder, the sync fails early with a message pointing at `docs/index.yaml`. Left to the content schema that failure lands in the next workflow step, before the PR branch exists, so there is nothing to hand-fix.
 
 The `url`, `about`, and `discourse_username` fields are optional but recommended -- `discourse_username` enables avatar resolution in community leaderboards. A hand-edited block always wins over the upstream one and survives future re-syncs.
 

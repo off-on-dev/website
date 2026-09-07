@@ -15,8 +15,19 @@
  * schema, providing a second revert-catch that does not depend on the clock.
  */
 
-import { describe, it, expect, vi, afterEach } from "vitest";
-import { buildLevel, currentMonth, mergeLevels, pickContributor } from "../../../scripts/sync-adventure.mjs";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { z } from "zod";
+import {
+  buildLevel,
+  challengeTagsOf,
+  currentMonth,
+  mergeLevels,
+  missingDesignerError,
+  pickContributor,
+  tagToSlug,
+} from "../../../scripts/sync-adventure.mjs";
+import { creditIntegrityError } from "@/lib/adventure-credit";
+import { tagToSlug as canonicalTagToSlug } from "@/lib/challenges";
 
 const MONTH_SCHEMA = /^[A-Z]{3} \d{4}$/;
 
@@ -56,6 +67,15 @@ describe("currentMonth", () => {
 });
 
 describe("pickContributor", () => {
+  let warn: ReturnType<typeof vi.spyOn>;
+
+  beforeEach(() => {
+    warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+  });
+  afterEach(() => {
+    warn.mockRestore();
+  });
+
   it("keeps the four fields the content schema accepts", () => {
     expect(
       pickContributor({
@@ -70,6 +90,7 @@ describe("pickContributor", () => {
       about: "Writes notes.",
       discourse_username: "ada",
     });
+    expect(warn).not.toHaveBeenCalled();
   });
 
   it("drops fields the strict content schema would reject", () => {
@@ -88,10 +109,55 @@ describe("pickContributor", () => {
   it.each([
     ["null", null],
     ["undefined", undefined],
+  ])("returns null for %s without warning", (_label, input) => {
+    expect(pickContributor(input)).toBeNull();
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it.each([
     ["a block with no name", { url: "https://example.com" }],
     ["a non-object", "Ada Lovelace"],
-  ])("returns null for %s", (_label, input) => {
-    expect(pickContributor(input)).toBeNull();
+    ["a list", [{ name: "Ada Lovelace" }]],
+  ])("returns null for %s and says so", (_label, input) => {
+    // Silence here would re-credit the level to the designer via the fallback,
+    // and print "no contributor found", both stated as fact.
+    expect(pickContributor(input, "docs/index.yaml")).toBeNull();
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn.mock.calls[0][0]).toContain("docs/index.yaml");
+  });
+
+  describe("url validation", () => {
+    // `contributor.url` is `z.url()` in the content schema. An unusable value
+    // would fail `npm run sync` in the next workflow step, before a PR branch
+    // exists to hand-fix, so it is dropped here with the name kept.
+    it.each([
+      ["a bare domain", "ksick.dev"],
+      ["a www host with no scheme", "www.example.com"],
+      ["a relative path", "/about"],
+    ])("drops %s and keeps the name", (_label, url) => {
+      expect(pickContributor({ name: "Ada Lovelace", url })).toEqual({ name: "Ada Lovelace" });
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(warn.mock.calls[0][0]).toContain(url);
+    });
+
+    it.each([
+      ["https", "https://example.com"],
+      ["http", "http://example.com"],
+      ["a path and query", "https://example.com/a?b=1#c"],
+    ])("keeps a valid %s url", (_label, url) => {
+      expect(pickContributor({ name: "Ada Lovelace", url })).toEqual({ name: "Ada Lovelace", url });
+      expect(warn).not.toHaveBeenCalled();
+    });
+
+    it("agrees with the z.url() gate the content schema applies", () => {
+      // Parity check: if Zod's rule and this one drift, the sync starts emitting
+      // YAML that fails validation again, which is the bug this guards.
+      const schema = z.url();
+      for (const url of ["https://a.dev", "ksick.dev", "http://a.b", "www.x.com", "mailto:a@b.c", "/rel"]) {
+        const kept = pickContributor({ name: "N", url })?.url !== undefined;
+        expect(kept).toBe(schema.safeParse(url).success);
+      }
+    });
   });
 });
 
@@ -118,6 +184,94 @@ describe("buildLevel contributor (the challenge builder)", () => {
   });
 });
 
+describe("challengeTagsOf", () => {
+  it("includes an adventure tag that no level carries as a topic", () => {
+    // PR #243 failed exactly here. "Accessibility" and "Guidepup Virtual Screen
+    // Reader" were adventure tags refined out of every level's topics, so the old
+    // level-topics-only derivation missed them, their /challenges/<tag>/ routes
+    // reached dist/ unregistered, and route-coverage.spec.ts failed.
+    const tags = challengeTagsOf(
+      ["Accessibility", "Guidepup Virtual Screen Reader", "Playwright"],
+      [{ level: "beginner", topics: ["Playwright"] }],
+    );
+    expect(tags).toContain("Accessibility");
+    expect(tags).toContain("Guidepup Virtual Screen Reader");
+  });
+
+  it("unions level topics that are not adventure tags", () => {
+    expect(challengeTagsOf(["A"], [{ level: "l", topics: ["B"] }])).toEqual(["A", "B"]);
+  });
+
+  it("deduplicates a tag present on both the adventure and a level", () => {
+    expect(challengeTagsOf(["A"], [{ level: "l", topics: ["A"] }])).toEqual(["A"]);
+  });
+
+  it("accepts object-shaped topics and drops empty entries", () => {
+    expect(challengeTagsOf([], [{ level: "l", topics: [{ name: "A" }, { name: "" }, ""] }])).toEqual(["A"]);
+  });
+
+  it.each([
+    ["no levels", ["A"], []],
+    ["levels with no topics", ["A"], [{ level: "l" }]],
+  ])("still reports adventure tags with %s", (_label, adventureTags, levels) => {
+    expect(challengeTagsOf(adventureTags, levels)).toEqual(["A"]);
+  });
+
+  it("slugs tags the same way the route params are built", () => {
+    // Drift against src/lib/challenges.ts would register a route under a slug the
+    // build never emits, leaving the real one unregistered and CI red.
+    for (const tag of ["Accessibility", "Guidepup Virtual Screen Reader", "ArgoCD", "C++", " Trim Me "]) {
+      expect(tagToSlug(tag)).toBe(canonicalTagToSlug(tag));
+    }
+  });
+});
+
+describe("missingDesignerError", () => {
+  const lvls = (...contributors: (object | undefined)[]) =>
+    contributors.map((c, i) => ({ level: `l${i}`, ...(c && { contributor: c }) }));
+
+  it("fires when a level names a builder but the adventure has no designer", () => {
+    const msg = missingDesignerError(undefined, lvls({ name: "Ada" }, undefined), "docs/index.yaml in some/repo");
+    expect(msg).toContain("l0");
+    expect(msg).toContain("docs/index.yaml in some/repo");
+  });
+
+  it("names every offending level, not just the first", () => {
+    const msg = missingDesignerError(undefined, lvls({ name: "Ada" }, undefined, { name: "Grace" }), "p");
+    expect(msg).toContain("l0, l2");
+  });
+
+  it.each([
+    ["a designer is set", { name: "Ada" }, lvls({ name: "Grace" })],
+    ["no level names a builder", undefined, lvls(undefined, undefined)],
+    ["there are no levels", undefined, []],
+  ])("passes when %s", (_label, contributor, levels) => {
+    expect(missingDesignerError(contributor, levels, "p")).toBeNull();
+  });
+
+  it("agrees with creditIntegrityError, the rule the content schema enforces", () => {
+    // The script cannot import the TypeScript module, so the rule is stated twice.
+    // Drift means the sync writes YAML that then fails validation, which is exactly
+    // the failure this gate exists to pre-empt.
+    const cases: { contributor?: { name: string }; levels: { contributor?: unknown }[] }[] = [
+      { contributor: undefined, levels: lvls({ name: "Ada" }) },
+      { contributor: undefined, levels: lvls(undefined) },
+      { contributor: { name: "Ada" }, levels: lvls({ name: "Grace" }) },
+      { contributor: { name: "Ada" }, levels: lvls(undefined) },
+      { contributor: undefined, levels: [] },
+    ];
+    let fired = 0;
+    for (const { contributor, levels } of cases) {
+      const scriptFires = missingDesignerError(contributor, levels, "p") !== null;
+      const schemaFires = creditIntegrityError({ slug: "s", contributor, levels }) !== null;
+      expect(scriptFires).toBe(schemaFires);
+      if (scriptFires) fired++;
+    }
+    // Both agreeing on "never fires" would satisfy the loop without testing anything.
+    expect(fired).toBeGreaterThan(0);
+  });
+});
+
 describe("mergeLevels contributor preservation", () => {
   const GRACE = { name: "Grace Hopper", url: "https://example.com" };
   const ADA = { name: "Ada Lovelace" };
@@ -128,11 +282,16 @@ describe("mergeLevels contributor preservation", () => {
     expect(merged[0].contributor).toEqual(GRACE);
   });
 
-  it("keeps the website builder even when upstream names a different one", () => {
+  it("keeps the website builder even when upstream names a different one, and says so", () => {
     // Losing an existing credit silently misattributes someone's work. Re-crediting
     // a level is a deliberate hand-edit, the same rule as the adventure designer.
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     const merged = mergeLevels([lvl({ contributor: GRACE })], [lvl({ contributor: ADA })], [lvl({ contributor: ADA })]);
     expect(merged[0].contributor).toEqual(GRACE);
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn.mock.calls[0][0]).toContain("Grace Hopper");
+    expect(warn.mock.calls[0][0]).toContain("Ada Lovelace");
+    warn.mockRestore();
   });
 
   it("takes the upstream builder when the website has none", () => {
