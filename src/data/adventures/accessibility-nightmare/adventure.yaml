@@ -1,4 +1,5 @@
 slug: accessibility-nightmare
+community_category_id: 46
 meta_description: Audit the ShopSmart homepage and fix critical WCAG 2.2 accessibility violations before the initial compliance review.
 name: The Accessibility Nightmare
 icon: Accessibility
@@ -64,7 +65,7 @@ levels:
     emoji: 🟢
     title: The Initial Audit
     devcontainer: accessibility-nightmare_beginner
-    community_url: ""
+    community_url: https://community.offon.dev/t/the-initial-audit-september-2026-adventure-beginner/1779
     topics:
       - axe-core
       - Playwright
