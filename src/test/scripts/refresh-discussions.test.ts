@@ -309,7 +309,11 @@ describe("fetchTopicPosts pagination", () => {
   // also tear down the localStorage stub that src/test/setup.ts installs for the
   // whole suite via vi.stubGlobal, breaking its own beforeEach.
   const realFetch = globalThis.fetch;
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
   afterEach(() => {
+    vi.useRealTimers();
     vi.stubGlobal("fetch", realFetch);
   });
 
@@ -329,7 +333,9 @@ describe("fetchTopicPosts pagination", () => {
   it("fails the topic when a chunk returns a non-ok status", async () => {
     stubDiscourse(45, () => ({ ok: false, status: 500, json: async () => ({}) }));
 
-    const result = await fetchTopicPosts("1", "https://community.offon.dev/t/a/1");
+    const promise = fetchTopicPosts("1", "https://community.offon.dev/t/a/1");
+    await vi.runAllTimersAsync();
+    const result = await promise;
     expect(result.ok).toBe(false);
     expect(result.reason).toContain("incomplete post list");
     expect(result.reason).toContain("HTTP 500");
@@ -360,7 +366,9 @@ describe("fetchTopicPosts pagination", () => {
         : { ok: false, status: 502, json: async () => ({}) },
     );
 
-    const result = await fetchTopicPosts("1", "https://community.offon.dev/t/a/1");
+    const promise = fetchTopicPosts("1", "https://community.offon.dev/t/a/1");
+    await vi.runAllTimersAsync();
+    const result = await promise;
     expect(result.ok).toBe(false);
     expect(result.posts).toBeUndefined();
   });
@@ -368,7 +376,9 @@ describe("fetchTopicPosts pagination", () => {
   it("names the missing post range so the gap is identifiable", async () => {
     stubDiscourse(45, () => ({ ok: false, status: 500, json: async () => ({}) }));
 
-    const result = await fetchTopicPosts("1", "https://community.offon.dev/t/a/1");
+    const promise = fetchTopicPosts("1", "https://community.offon.dev/t/a/1");
+    await vi.runAllTimersAsync();
+    const result = await promise;
     expect(result.reason).toMatch(/posts 21…40/);
   });
 

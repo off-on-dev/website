@@ -102,12 +102,73 @@ describe("fetchWithRetry", () => {
     expect(fetch).toHaveBeenCalledTimes(1);
   });
 
-  it("returns non-200 non-429 responses without retrying", async () => {
+  it("returns 4xx responses without retrying", async () => {
     const res = new Response("not found", { status: 404 });
     vi.mocked(fetch).mockResolvedValue(res);
     const result = await fetchWithRetry("https://example.com");
     expect(result.status).toBe(404);
     expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it("retries on 500 and returns success when retry succeeds", async () => {
+    vi.useFakeTimers();
+    const err500 = new Response("server error", { status: 500 });
+    const ok200 = new Response("ok", { status: 200 });
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(err500)
+      .mockResolvedValueOnce(ok200);
+
+    const promise = fetchWithRetry("https://example.com", {}, 3);
+    await vi.runAllTimersAsync();
+    const result = await promise;
+    expect(result.status).toBe(200);
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it("retries on 502 and returns success when retry succeeds", async () => {
+    vi.useFakeTimers();
+    const err502 = new Response("bad gateway", { status: 502 });
+    const ok200 = new Response("ok", { status: 200 });
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(err502)
+      .mockResolvedValueOnce(ok200);
+
+    const promise = fetchWithRetry("https://example.com", {}, 3);
+    await vi.runAllTimersAsync();
+    const result = await promise;
+    expect(result.status).toBe(200);
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it("returns the final 5xx after exhausting retries", async () => {
+    vi.useFakeTimers();
+    const err502 = new Response("bad gateway", { status: 502 });
+    vi.mocked(fetch).mockResolvedValue(err502);
+
+    const promise = fetchWithRetry("https://example.com", {}, 2);
+    await vi.runAllTimersAsync();
+    const result = await promise;
+    expect(result.status).toBe(502);
+    // maxRetries=2 means 3 total calls: attempt 0, 1, 2
+    expect(fetch).toHaveBeenCalledTimes(3);
+  });
+
+  it("uses exponential backoff for 5xx retries", async () => {
+    vi.useFakeTimers();
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const err500 = new Response("server error", { status: 500 });
+    const ok200 = new Response("ok", { status: 200 });
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(err500)
+      .mockResolvedValueOnce(ok200);
+
+    const promise = fetchWithRetry("https://example.com", {}, 3);
+    await vi.runAllTimersAsync();
+    await promise;
+    // First 5xx retry: attempt=0, backoff = 2^0 = 1s
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("Server error (500)"));
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("1s"));
+    warnSpy.mockRestore();
   });
 
   it("retries on 429 and returns success when retry succeeds", async () => {
