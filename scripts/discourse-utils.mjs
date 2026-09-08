@@ -50,19 +50,34 @@ export function atomicWrite(path, content) {
   renameSync(tmp, path);
 }
 
+// Transient server errors worth retrying. 500/502/503/504 are gateway or
+// momentary upstream failures; 429 is handled separately via Retry-After.
+const RETRYABLE_5XX = new Set([500, 502, 503, 504]);
+
 /**
- * Fetch wrapper that retries on HTTP 429 (rate-limited) responses.
- * Reads the `Retry-After` response header; falls back to 60 s when absent.
- * Caps the wait at 120 s to avoid stalling CI runs indefinitely.
+ * Fetch wrapper that retries on HTTP 429 (rate-limited) and transient 5xx
+ * responses (500, 502, 503, 504).
+ *
+ * - 429: reads the `Retry-After` header; falls back to 60 s, capped at 120 s.
+ * - 5xx: exponential backoff (2^attempt seconds), capped at 30 s.
+ *
  * Returns the final Response — caller inspects `res.ok` / `res.status`.
  */
 export async function fetchWithRetry(url, options = {}, maxRetries = 3) {
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     const res = await fetch(url, options);
-    if (res.status !== 429 || attempt === maxRetries) return res;
-    const header = res.headers.get("Retry-After");
-    const seconds = Math.min(parseInt(header ?? "60", 10) || 60, 120);
-    console.warn(`  Rate-limited (429). Waiting ${seconds}s before retry ${attempt + 1}/${maxRetries}…`);
+    const is429 = res.status === 429;
+    const is5xx = RETRYABLE_5XX.has(res.status);
+    if ((!is429 && !is5xx) || attempt === maxRetries) return res;
+    let seconds;
+    if (is429) {
+      const header = res.headers.get("Retry-After");
+      seconds = Math.min(parseInt(header ?? "60", 10) || 60, 120);
+      console.warn(`  Rate-limited (429). Waiting ${seconds}s before retry ${attempt + 1}/${maxRetries}…`);
+    } else {
+      seconds = Math.min(2 ** attempt, 30);
+      console.warn(`  Server error (${res.status}). Waiting ${seconds}s before retry ${attempt + 1}/${maxRetries}…`);
+    }
     await new Promise((r) => setTimeout(r, seconds * 1000));
   }
   return fetch(url, options); // unreachable; satisfies static analysis
