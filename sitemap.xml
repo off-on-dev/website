@@ -9,6 +9,8 @@
   <url><loc>https://offon.dev/contribute/</loc></url>
   <url><loc>https://offon.dev/handbook/</loc></url>
   <url><loc>https://offon.dev/sponsors/</loc></url>
+  <url><loc>https://offon.dev/adventures/accessibility-nightmare/</loc></url>
+  <url><loc>https://offon.dev/adventures/accessibility-nightmare/levels/beginner/</loc></url>
   <url><loc>https://offon.dev/adventures/blind-by-design/</loc></url>
   <url><loc>https://offon.dev/adventures/blind-by-design/levels/beginner/</loc></url>
   <url><loc>https://offon.dev/adventures/blind-by-design/levels/intermediate/</loc></url>
@@ -48,16 +50,21 @@
   <url><loc>https://offon.dev/challenges/java/</loc></url>
   <url><loc>https://offon.dev/challenges/kubernetes/</loc></url>
   <url><loc>https://offon.dev/challenges/kyverno/</loc></url>
+  <url><loc>https://offon.dev/challenges/lighthouse/</loc></url>
   <url><loc>https://offon.dev/challenges/openfeature/</loc></url>
   <url><loc>https://offon.dev/challenges/openllmetry/</loc></url>
   <url><loc>https://offon.dev/challenges/opentelemetry/</loc></url>
   <url><loc>https://offon.dev/challenges/opentofu/</loc></url>
+  <url><loc>https://offon.dev/challenges/playwright/</loc></url>
   <url><loc>https://offon.dev/challenges/policy-reporter/</loc></url>
   <url><loc>https://offon.dev/challenges/promql/</loc></url>
   <url><loc>https://offon.dev/challenges/prometheus/</loc></url>
   <url><loc>https://offon.dev/challenges/python/</loc></url>
+  <url><loc>https://offon.dev/challenges/react/</loc></url>
   <url><loc>https://offon.dev/challenges/spring-boot/</loc></url>
   <url><loc>https://offon.dev/challenges/tdd/</loc></url>
   <url><loc>https://offon.dev/challenges/trivy/</loc></url>
+  <url><loc>https://offon.dev/challenges/wcag-2-2/</loc></url>
+  <url><loc>https://offon.dev/challenges/axe-core/</loc></url>
   <url><loc>https://offon.dev/challenges/flagd/</loc></url>
 </urlset>
