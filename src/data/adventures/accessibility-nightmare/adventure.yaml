@@ -53,13 +53,6 @@ overview:
     Watching real sessions catches what changed after you shipped, which is the only layer that reaches code you do not
     control.
   - The storefront is pre-provisioned in a Dev Container, so the work is the audit, the repairs and the test coverage.
-rewards:
-  deadline: ""
-  tiers:
-    - label: 1st place
-      description: Complete every published level and submit a verified solution.
-    - label: Top 3
-      description: Finish the adventure with all verification checks passing.
 contributor:
   name: Homayoun Mohammadi
   url: https://homayounmmdy.vercel.app
