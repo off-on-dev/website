@@ -43,6 +43,10 @@ export const SMOKE_ROUTES: Record<string, string> = {
   "/privacy/": "Privacy Policy - OffOn",
   "/accessibility/": "Accessibility Statement - OffOn",
   "/404/": "Page Not Found - OffOn",
+  // GENERATED:accessibility-nightmare-smoke
+  "/adventures/accessibility-nightmare/": "The Accessibility Nightmare - OffOn Adventures",
+  "/adventures/accessibility-nightmare/levels/beginner/": "The Initial Audit - The Accessibility Nightmare - OffOn",
+  // /GENERATED:accessibility-nightmare-smoke
 };
 
 export const A11Y_PAGES: string[] = [
@@ -86,6 +90,10 @@ export const A11Y_PAGES: string[] = [
   "/adventures/the-ai-observatory/levels/expert/",
   "/adventures/the-ai-observatory/levels/intermediate/",
   "/404/",
+  // GENERATED:accessibility-nightmare-a11y
+  "/adventures/accessibility-nightmare/",
+  "/adventures/accessibility-nightmare/levels/beginner/",
+  // /GENERATED:accessibility-nightmare-a11y
 ];
 
 /**
@@ -121,4 +129,11 @@ export const ROUTES_WITHOUT_FULL_COVERAGE: string[] = [
   "/challenges/spring-boot/",
   "/challenges/tdd/",
   "/challenges/trivy/",
+  // GENERATED:accessibility-nightmare-challenges
+  "/challenges/axe-core/",
+  "/challenges/playwright/",
+  "/challenges/lighthouse/",
+  "/challenges/wcag-2-2/",
+  "/challenges/react/",
+  // /GENERATED:accessibility-nightmare-challenges
 ];
