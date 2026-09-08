@@ -188,3 +188,10 @@ levels:
       command: ./verify.sh
       description: Once you think you've solved the challenge, run the verification script. If it fails it will tell you which
         checks didn't pass. If it passes, it generates a Certificate of Completion you can paste into the discussion.
+upcoming_levels:
+  - level: intermediate
+    name: Intermediate
+    difficulty: Intermediate
+  - level: expert
+    name: Expert
+    difficulty: Expert
