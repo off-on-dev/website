@@ -2,19 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://community.offon.dev</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://community.offon.dev/c/community-voices/38</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://community.offon.dev/c/challenges/11</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -289,20 +289,8 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://community.offon.dev/t/cluster-api-proxmox-local-kubernetes-magic-step-by-step-tutorial/99</loc>
-    <lastmod>2025-11-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://community.offon.dev/t/whats-hot-in-cloud-and-ai-native-and-what-we-learned-from-the-aws-outage/97</loc>
     <lastmod>2025-11-05</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://community.offon.dev/t/the-ultimate-guide-to-sampling-in-opentelemetry/94</loc>
-    <lastmod>2025-11-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -313,20 +301,8 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://community.offon.dev/t/switch-to-otel-operator-managed-collectors/88</loc>
-    <lastmod>2025-10-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://community.offon.dev/t/podcast-alert-why-open-source-is-the-best-thing-that-happened-to-it/87</loc>
     <lastmod>2025-10-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://community.offon.dev/t/how-much-energy-does-your-prompt-use-measuring-ai-impact-with-ecologits/81</loc>
-    <lastmod>2025-10-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
