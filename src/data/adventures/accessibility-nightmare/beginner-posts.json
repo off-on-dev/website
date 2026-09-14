@@ -1,6 +1,14 @@
 {
   "discussionUrl": "https://community.offon.dev/t/the-initial-audit-september-2026-adventure-beginner/1779",
-  "discussionPosts": [],
-  "totalReplies": 0,
+  "discussionPosts": [
+    {
+      "username": "KatharinaSick",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/katharinasick/40/9_2.png",
+      "cooked": "Thank you for contributing this adventure @Ehtasham I really enjoyed playing it!",
+      "created_at": "2026-09-14T08:25:15.691Z",
+      "topicUrl": "https://community.offon.dev/t/the-initial-audit-september-2026-adventure-beginner/1779"
+    }
+  ],
+  "totalReplies": 1,
   "solvers": []
 }
