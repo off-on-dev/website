@@ -197,7 +197,7 @@ levels:
     emoji: 🟡
     title: The Checkout Trap
     devcontainer: accessibility-nightmare_intermediate
-    community_url: ""
+    community_url: https://community.offon.dev/t/the-checkout-trap-september-2026-adventure-intermediate/1823
     topics:
       - axe-core
       - Playwright
