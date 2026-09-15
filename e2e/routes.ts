@@ -93,6 +93,7 @@ export const A11Y_PAGES: string[] = [
   // GENERATED:accessibility-nightmare-a11y
   "/adventures/accessibility-nightmare/",
   "/adventures/accessibility-nightmare/levels/beginner/",
+  "/adventures/accessibility-nightmare/levels/intermediate/",
   // /GENERATED:accessibility-nightmare-a11y
 ];
 
@@ -135,5 +136,6 @@ export const ROUTES_WITHOUT_FULL_COVERAGE: string[] = [
   "/challenges/lighthouse/",
   "/challenges/wcag-2-2/",
   "/challenges/react/",
+  "/challenges/guidepup-virtual-screen-reader/",
   // /GENERATED:accessibility-nightmare-challenges
 ];
