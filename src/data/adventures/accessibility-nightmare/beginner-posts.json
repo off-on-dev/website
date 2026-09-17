@@ -6,6 +6,7 @@
       "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/sinduriguntupalli/40/194_2.png",
       "cooked": "Thank you for the Challenge. It was fun playing this. — CERTIFICATE START — Adventure: accessibility-nightmare Level: beginner User: Sinduri Repo: off-on-dev/open-source-challenges Date: Tue Sep 15 11:06:08 UTC 2026 Url: — CERTIFICATE END —",
       "created_at": "2026-09-15T11:07:20.822Z",
+      "challengeSolved": true,
       "topicUrl": "https://community.offon.dev/t/the-initial-audit-september-2026-adventure-beginner/1779"
     },
     {
@@ -17,5 +18,11 @@
     }
   ],
   "totalReplies": 2,
-  "solvers": []
+  "solvers": [
+    {
+      "username": "SinduriGuntupalli",
+      "avatarUrl": "https://community.offon.dev/user_avatar/community.offon.dev/sinduriguntupalli/40/194_2.png",
+      "solvedAt": "2026-09-15T11:07:20.822Z"
+    }
+  ]
 }
