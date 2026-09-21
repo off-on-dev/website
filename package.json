@@ -25,7 +25,7 @@
     "fast-uri": "^3.1.4"
   },
   "dependencies": {
-    "@astrojs/vue": "^7.0.1",
+    "@astrojs/vue": "^7.0.3",
     "@iconify-json/lucide": "^1.2.131",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.3.2",
