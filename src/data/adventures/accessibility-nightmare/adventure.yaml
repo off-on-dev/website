@@ -427,7 +427,7 @@ levels:
       - The components are repaired. The legal team needs proof of continuous compliance for the EAA audit next week.
         Every merge passes the accessibility check, and its run history has been green for months.
       - But one complaint in the original legal notice was never reproduced. A user reported that following any link
-        left them with no idea where they had landed — the page had changed, and their screen reader carried on as
+        left them with no idea where they had landed. The page had changed, and their screen reader carried on as
         though nothing had. Nobody could make the check report it.
       - The payment page was added to the flow after the gate was written, and the checkout before that. Nobody widened
         its scope. Its green history is not a history of the product being accessible, it is a history of the same page
@@ -440,13 +440,13 @@ levels:
     what_you_learn:
       - "Why a green accessibility gate means nothing until you know which pages and states it actually tested. ([WCAG
         2.4: Navigable](https://www.w3.org/WAI/WCAG22/Understanding/navigable))"
-      - Why automated scanners cannot detect faults that only exist when a user does something — and which layer catches
+      - Why automated scanners cannot detect faults that only exist when a user does something, and which layer catches
         them instead. ([Test and Evaluate Accessibility](https://www.w3.org/WAI/test-evaluate/))
       - "How a single-page application can silently break the navigation contract that assistive technology depends on,
         and what it takes to restore it. ([WCAG 4.1:
         Compatible](https://www.w3.org/WAI/WCAG22/Understanding/compatible))"
-      - How a compliance report is evidence of conformance over time — what was tested, how it was tested, and that it
-        passed.
+      - "How a compliance report is evidence of conformance over time: what was tested, how it was tested, and that it
+        passed."
     architecture:
       - "A React and Vite storefront runs on port 5173 inside the Dev Container. All three checkout components arrive
         repaired: the basket confirmation is a proper modal, the size picker follows the ARIA combobox pattern, and the
@@ -458,7 +458,7 @@ levels:
         have found the fault. The page components under src/pages/ and the repaired widgets under src/components/ are
         not.
       - "Your editing surface: tests/compliance.spec.js (the gate), playwright.config.js (the reporter), and src/App.jsx
-        (the fix). Leave everything else alone — it defines the problem."
+        (the fix). Leave everything else alone; it defines the problem."
     toolbox:
       - name: Virtual Screen Reader
         url: https://github.com/guidepup/virtual-screen-reader
@@ -542,11 +542,11 @@ levels:
           Work in `tests/compliance.spec.js`, `playwright.config.js`, and `src/App.jsx`.
 
           Start with coverage. Tag your new scanner tests `@scan` so the verify script
-          can find them. The gate should visit every page a customer passes through —
+          can find them. The gate should visit every page a customer passes through:
           homepage, product, checkout, and payment.
 
           axe-core reads the markup. If the markup is correct at every moment it looks, there is
-          nothing for it to report — which tells you where to look next, not that you are done.
+          nothing for it to report, which tells you where to look next, not that you are done.
 
           Tag your navigation tests `@transition`. A detector for this moves between routes the
           way a customer would and asserts that the destination made itself known. Assert the
@@ -593,7 +593,7 @@ levels:
     helpful_links:
       - title: Compliance Gate Coverage
         url: http://localhost:5173/coverage-table.html
-        description: A reference table — served by the dev server — showing which checks each testing layer (axe-core, keyboard,
+        description: A reference table served by the dev server, showing which checks each testing layer (axe-core, keyboard,
           screen reader) can and cannot detect, and which gate tag covers each one.
       - title: How to Meet WCAG 2.2 (Quick Reference)
         url: https://www.w3.org/WAI/WCAG22/quickref/
