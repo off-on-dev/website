@@ -408,7 +408,7 @@ levels:
     emoji: 🔴
     title: The Compliance Engine
     devcontainer: accessibility-nightmare_expert
-    community_url: ""
+    community_url: https://community.offon.dev/t/the-compliance-engine-september-2026-adventure-expert/1844
     topics:
       - axe-core
       - Playwright
